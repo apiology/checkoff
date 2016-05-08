@@ -1,5 +1,6 @@
 # Courtesy of:
-# https://raw.github.com/cupakromer/tao-of-tdd/master/adder/spec/support/capture_exec.rb
+# https://raw.github.com/cupakromer/tao-of-tdd/master/
+#     adder/spec/support/capture_exec.rb
 require 'open3'
 
 def exec_io(*cmd)
