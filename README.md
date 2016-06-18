@@ -5,7 +5,7 @@ Command-line and gem client for Asana (unofficial)
 
 ## Using
 
-```bash
+```
 $ checkoff --help
 View tasks:
   checkoff view workspace project [section]
@@ -15,18 +15,14 @@ View tasks:
 
 Checkoff outputs things in JSON.  'jq' is a great tool to use in combination:
 
-```bash
+```
 $ checkoff view 'Personal Projects' 'Create demo'
-Looking for Create demo under Personal Projects
 {"":[{"name":"This is a task that doesn't belong to any sections."}],"Write it:":[{"name":"Write something"}],"Publish to github:":[{"name":"git push!"}],"Make sure it looks OK!:":[{"name":"Looks it up in your browser..."}]}
 $
 ```
 
-```bash
-$ checkoff view 'Personal Projects' 'Create demo' | jq
-Looking for Create demo under Personal Projects
-```
 ```json
+$ checkoff view 'Personal Projects' 'Create demo' | jq
 {
   "": [
     {
@@ -55,17 +51,13 @@ You can drill down into a section on the command line:
 
 ```
 $ checkoff view 'Personal Projects' 'Create demo' 'Publish to github:'
-Looking for Create demo under Personal Projects
 [{"name":"git push!"}]
 ```
 
 You can use fun `jq` tricks:
 
-```
-$ checkoff view 'Personal Projects' 'Create demo' | jq 'to_entries | map(.value) | flatten | map(.name)'
-Looking for Create demo under Personal Projects
-```
 ```json
+$ checkoff view 'Personal Projects' 'Create demo' | jq 'to_entries | map(.value) | flatten | map(.name)'
 [
   "This is a task that doesn't belong to any sections.",
   "Write something",
@@ -78,7 +70,6 @@ And even gather counts for project metrics:
 
 ```bash
 $ checkoff view 'Personal Projects' 'Create demo' | jq 'to_entries | map(.value) | flatten | map(.name) | length'
-Looking for Create demo under Personal Projects
 4
 $ 
 ```

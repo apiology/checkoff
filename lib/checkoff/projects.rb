@@ -64,7 +64,6 @@ module Checkoff
       if project_name.is_a?(Symbol) && project_name.to_s.start_with?('my_tasks')
         my_tasks(workspace_name)
       else
-        STDERR.puts "Looking for #{project_name} under #{workspace_name}"
         projects = projects_by_workspace_name(workspace_name)
         projects.find do |project|
           project.name == project_name
