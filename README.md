@@ -93,8 +93,12 @@ clear the cache.
 
 ## Installing
 
+This will work under OS X:
+
 ```bash
 brew install memcached
+ln -sfv /usr/local/opt/memcached/*.plist ~/Library/LaunchAgents
+launchctl load ~/Library/LaunchAgents/homebrew.mxcl.memcached.plist
 gem install checkoff
 
 ```
