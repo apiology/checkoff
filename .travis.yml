@@ -7,5 +7,5 @@ rvm:
   - ruby-2.3.1
 #   - jruby-head # see https://github.com/apiology/quality/issues/59
 #   - jruby-9.0 # see https://github.com/apiology/quality/issues/59
-  - ruby-head  
+#   - ruby-head # Upstream bug - see https://travis-ci.org/apiology/checkoff/jobs/138626934
 
