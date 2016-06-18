@@ -13,6 +13,10 @@ View tasks:
 'project' can be set to a project name, or :my_tasks, :my_tasks_upcoming, :my_tasks_new, or :my_tasks_today
 ```
 
+Let's say we have a project like this:
+
+![project screenshot from asana.com](https://github.com/apiology/checkoff/raw/master/docs/example_project.png "Example project")
+
 Checkoff outputs things in JSON.  'jq' is a great tool to use in combination:
 
 ```
