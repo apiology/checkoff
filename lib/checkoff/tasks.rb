@@ -12,8 +12,8 @@ module Checkoff
     LONG_CACHE_TIME = MINUTE * 15
     SHORT_CACHE_TIME = MINUTE * 5
 
-    def initialize
-      @sections = Checkoff::Sections.new
+    def initialize(sections: Checkoff::Sections.new)
+      @sections = sections
     end
 
     def tasks_minus_sections(tasks)

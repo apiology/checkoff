@@ -9,12 +9,24 @@ class TestCLI < ClassTest
     task.expects(:name).returns(task_name).at_least(0)
   end
 
+  def expect_task_due_on(task, due_on)
+    task.expects(:due_on).returns(due_on).at_least(0)
+  end
+
+  def expect_task_due_at(task, due_at)
+    task.expects(:due_at).returns(due_at).at_least(0)
+  end
+
   def three_tasks
     { task_a => 'task_a', task_b => 'task_b', task_c => 'task_c' }
   end
 
-  def expect_three_tasks_named
-    three_tasks.each { |task, task_name| expect_task_named(task, task_name) }
+  def expect_three_tasks_queried
+    three_tasks.each do |task, task_name|
+      expect_task_named(task, task_name)
+      expect_task_due_on(task, nil)
+      expect_task_due_at(task, nil)
+    end
   end
 
   def section_name_str
@@ -23,16 +35,16 @@ class TestCLI < ClassTest
 
   let_mock :project_name
 
-  def expect_three_tasks_pulled_and_named
+  def expect_three_tasks_pulled_and_queried
     @mocks[:sections].expects(:tasks).with(workspace_name, project_name,
                                            section_name_str)
                      .returns(three_tasks.keys)
-    expect_three_tasks_named
+    expect_three_tasks_queried
   end
 
   def mock_run_with_section_specified_normal_project
     project_name.expects(:start_with?).with(':').returns(false)
-    expect_three_tasks_pulled_and_named
+    expect_three_tasks_pulled_and_queried
   end
 
   def test_run_with_section_specified_normal_project
@@ -57,7 +69,7 @@ class TestCLI < ClassTest
   def mock_run_with_no_section_specified_normal_project
     project_name.expects(:start_with?).with(':').returns(false)
     expect_tasks_by_section_pulled
-    expect_three_tasks_named
+    expect_three_tasks_queried
   end
 
   def test_run_with_no_section_specified_normal_project

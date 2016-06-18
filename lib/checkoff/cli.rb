@@ -21,9 +21,15 @@ module Checkoff
     end
 
     def task_to_hash(task)
-      {
+      task_out = {
         name: task.name,
       }
+      if task.due_on
+        task_out[:due] = task.due_on
+      elsif task.due_at
+        task_out[:due] = task.due_at
+      end
+      task_out
     end
 
     def tasks_to_hash(tasks)
