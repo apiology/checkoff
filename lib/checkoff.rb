@@ -1,5 +1,4 @@
 require 'checkoff/version'
-
-module Checkoff
-  # Your code goes here...
-end
+require 'checkoff/projects'
+require 'checkoff/sections'
+require 'checkoff/tasks'
