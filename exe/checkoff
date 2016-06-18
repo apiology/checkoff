@@ -1,3 +1,7 @@
 #!/usr/bin/env ruby
 
-puts 'USAGE: checkoff'
+require 'checkoff/cli'
+
+CacheMethod.config.storage = Dalli::Client.new('memcached:11211')
+cli = Checkoff::CLI.new
+puts cli.run(ARGV)

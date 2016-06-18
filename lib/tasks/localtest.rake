@@ -1,1 +1,1 @@
-task localtest: [:clear_metrics, :spec, :quality]
+task localtest: [:clear_metrics, :test, :quality]
