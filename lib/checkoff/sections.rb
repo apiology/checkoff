@@ -5,7 +5,7 @@ module Checkoff
     LONG_CACHE_TIME = MINUTE * 15
     SHORT_CACHE_TIME = MINUTE * 5
 
-    attr_reader :projects
+    attr_reader :projects, :time
 
     def initialize(projects: Checkoff::Projects.new,
                    time: Time)

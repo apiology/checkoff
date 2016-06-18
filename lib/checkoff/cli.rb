@@ -10,10 +10,14 @@ require_relative 'sections'
 module Checkoff
   # Provide ability for CLI to pull Asana items
   class CLI
-    attr_reader :sections
+    attr_reader :sections, :stderr
 
-    def initialize(sections: Checkoff::Sections.new)
+    def initialize(sections: Checkoff::Sections.new,
+                   stderr: STDERR,
+                   kernel: Kernel)
       @sections = sections
+      @kernel = kernel
+      @stderr = stderr
     end
 
     def task_to_hash(task)
@@ -55,11 +59,11 @@ module Checkoff
     end
 
     def output_help
-      puts "View tasks:"
-      puts "  #{$PROGRAM_NAME} view workspace project [section]"
-      puts
-      puts "'project' can be set to a project name, or :my_tasks, " \
-           ':my_tasks_upcoming, :my_tasks_new, or :my_tasks_today'
+      stderr.puts 'View tasks:'
+      stderr.puts "  #{$PROGRAM_NAME} view workspace project [section]"
+      stderr.puts
+      stderr.puts "'project' can be set to a project name, or :my_tasks, " \
+                  ':my_tasks_upcoming, :my_tasks_new, or :my_tasks_today'
     end
 
     def run(args)

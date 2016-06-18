@@ -11,6 +11,7 @@ require 'asana'
 #  _task_names: Returns an array of strings, no sections included
 #  _by_section: Returns a hash from section name to array
 module Checkoff
+  # Work with projects in Asana
   class Projects
     MINUTE = 60
     HOUR = MINUTE * 60
@@ -88,16 +89,5 @@ module Checkoff
       project.tasks(task_options).to_a
     end
     cache_method :tasks_from_project, LONG_CACHE_TIME
-
-    def projects_i_own_or_co_own(workspace_name)
-      project_names = @config[:projects_i_own_or_co_own].to_set
-      workspace = workspace_by_name(workspace_name)
-      all_projects =
-        projects.find_by_workspace(workspace: workspace.id)
-      all_projects.select do |project|
-        project_names.include? project.name
-      end
-    end
-    cache_method :projects_i_own_or_co_own, LONG_CACHE_TIME
   end
 end

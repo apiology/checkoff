@@ -29,4 +29,6 @@ Gem::Specification.new do |spec|
   spec.add_development_dependency 'rspec', '>=3.4'
   spec.add_development_dependency 'quality'
   spec.add_development_dependency 'simplecov'
+  spec.add_development_dependency 'minitest-profile'
+  spec.add_development_dependency 'mocha'
 end
