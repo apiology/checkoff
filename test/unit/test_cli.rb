@@ -24,7 +24,7 @@ class TestCLI < ClassTest
   def expect_three_tasks_queried
     three_tasks.each do |task, task_name|
       expect_task_named(task, task_name)
-      expect_task_due_on(task, nil)
+      expect_task_due_on(task, 'fake_date')
       expect_task_due_at(task, nil)
     end
   end
@@ -47,12 +47,17 @@ class TestCLI < ClassTest
     expect_three_tasks_pulled_and_queried
   end
 
+  def expected_json_section_specified
+    '[{"name":"task_a","due":"fake_date"},' \
+    '{"name":"task_b","due":"fake_date"},' \
+    '{"name":"task_c","due":"fake_date"}]'
+  end
+
   def test_run_with_section_specified_normal_project
     asana_my_tasks = get_test_object do
       mock_run_with_section_specified_normal_project
     end
-    expected_json = '[{"name":"task_a"},{"name":"task_b"},{"name":"task_c"}]'
-    assert_equal(expected_json,
+    assert_equal(expected_json_section_specified,
                  asana_my_tasks.run(['view',
                                      workspace_name,
                                      project_name,
@@ -72,14 +77,17 @@ class TestCLI < ClassTest
     expect_three_tasks_queried
   end
 
+  def expected_json_no_section_specified
+    '{"":[{"name":"task_a","due":"fake_date"}],' \
+    '"section_name:":[{"name":"task_b","due":"fake_date"},' \
+    '{"name":"task_c","due":"fake_date"}]}'
+  end
+
   def test_run_with_no_section_specified_normal_project
     asana_my_tasks = get_test_object do
       mock_run_with_no_section_specified_normal_project
     end
-    expected_json =
-      '{"":[{"name":"task_a"}],' \
-      '"section_name:":[{"name":"task_b"},{"name":"task_c"}]}'
-    assert_equal(expected_json,
+    assert_equal(expected_json_no_section_specified,
                  asana_my_tasks.run(['view',
                                      workspace_name,
                                      project_name]))
