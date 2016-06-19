@@ -5,7 +5,7 @@ require 'active_support/core_ext/hash'
 class ConfigLoader
   def self.load(sym)
     file = "#{sym}.yml"
-    YAML.load_file(File.expand_path("~/private/#{file}"))
+    YAML.load_file(File.expand_path("~/.#{file}"))
         .with_indifferent_access
   end
 end

@@ -100,7 +100,30 @@ brew install memcached
 ln -sfv /usr/local/opt/memcached/*.plist ~/Library/LaunchAgents
 launchctl load ~/Library/LaunchAgents/homebrew.mxcl.memcached.plist
 gem install checkoff
+```
 
+## Configuring
+
+You'll need to create a file called `.asana.yml` in your home directory, that looks like this:
+
+```yaml
+---
+
+#
+# when you click on 'My Tasks' in Asana, put the number (just the
+# number) from the URL in the mapping below.
+#
+my_tasks:
+  'Your workspace name here': 'some_long_number'
+
+#
+
+# Click on your profile in the uppper right in Asana, go to 'My
+# Profile Settings', click on 'Apps', got o 'Manage Developer Apps',
+# and select 'Create New Personal Access Token'.  Note down the key
+# in this section.
+#
+personal_access_token: 'some_big_long_string_from_asana.com_here'
 ```
 
 ## Developing
