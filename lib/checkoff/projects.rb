@@ -22,7 +22,7 @@ module Checkoff
 
     # XXX: Move low-level functions private
 
-    def initialize(config: ConfigLoader.load(:asana),
+    def initialize(config: Checkoff::ConfigLoader.load(:asana),
                    asana_client: Asana::Client)
       @config = config
       @asana_client = asana_client
