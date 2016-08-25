@@ -1,5 +1,6 @@
 #!/usr/bin/env ruby
 
+# frozen_string_literal: true
 require 'ostruct'
 require 'dalli'
 require 'cache_method'

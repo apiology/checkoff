@@ -1,5 +1,6 @@
 require_relative 'config_loader'
 
+# frozen_string_literal: true
 require 'cache_method'
 require 'asana'
 

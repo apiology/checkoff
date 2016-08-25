@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 module Checkoff
   # Query different sections of Asana projects
   class Sections
