@@ -40,6 +40,29 @@ module Checkoff
     end
     cache_method :projects, LONG_CACHE_TIME
 
+    def add_task(name,
+                 workspace_id: default_workspace_id,
+                 assignee_id: default_assignee_id)
+      Asana::Resources::Task.create(client,
+                                    assignee: assignee_id,
+                                    workspace: workspace_id, name: name)
+    end
+
+    def default_workspace_id
+      @config[:default_workspace_id]
+    end
+
+    def default_assignee_id
+      @config[:default_assignee_id]
+    end
+
+    def user_by_name(name, workspace_id: raise)
+      client.users.find_all(workspace: workspace_id).find do |user|
+        print(user)
+        user.name == name
+      end || raise("Could not find user #{email}")
+    end
+
     def workspace_by_name(workspace_name)
       client.workspaces.find_all.find do |workspace|
         workspace.name == workspace_name

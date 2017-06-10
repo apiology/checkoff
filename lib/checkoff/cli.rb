@@ -13,9 +13,11 @@ module Checkoff
   class CLI
     attr_reader :sections, :stderr
 
-    def initialize(sections: Checkoff::Sections.new,
+    def initialize(projects: Checkoff::Projects.new,
+                   sections: Checkoff::Sections.new(projects: projects),
                    stderr: STDERR,
                    kernel: Kernel)
+      @projects = projects
       @sections = sections
       @kernel = kernel
       @stderr = stderr
@@ -52,9 +54,12 @@ module Checkoff
       tasks_to_hash(tasks).to_json
     end
 
+    def quickadd(task_name)
+      @projects.add_task(task_name)
+    end
+
     def validate_args!(args)
-      mode, _workspace, project, _section = args
-      return unless project.nil? || mode != 'view'
+      return unless args.length < 2 || !%w(view quickadd).include?(args[0])
 
       output_help
       exit(1)
@@ -62,24 +67,42 @@ module Checkoff
 
     def parse_args(args)
       validate_args!(args)
-      args[1..-1]
+      mode = args[0]
+      subargs = OpenStruct.new
+      if mode == 'view'
+        subargs.workspace = args[1]
+        subargs.project = args[2]
+      elsif mode == 'quickadd'
+        subargs.task_name = args[1]
+      else
+        raise
+      end
+      [mode, subargs]
     end
 
     def output_help
       stderr.puts 'View tasks:'
       stderr.puts "  #{$PROGRAM_NAME} view workspace project [section]"
+      stderr.puts "  #{$PROGRAM_NAME} quickadd task_name"
       stderr.puts
       stderr.puts "'project' can be set to a project name, or :my_tasks, " \
                   ':my_tasks_upcoming, :my_tasks_new, or :my_tasks_today'
     end
 
     def run(args)
-      workspace, project, section = parse_args(args)
-      project = project[1..-1].to_sym if project.start_with? ':'
-      if section.nil?
-        run_on_project(workspace, project)
+      command, subargs = parse_args(args)
+      if command == 'view'
+        project = subargs.project
+        project = project[1..-1].to_sym if project.start_with? ':'
+        if section.nil?
+          run_on_project(subargs.workspace, project)
+        else
+          run_on_section(subargs.workspace, project, subargs.section)
+        end
+      elsif command == 'quickadd'
+        quickadd(subargs.task_name)
       else
-        run_on_section(workspace, project, section)
+        raise
       end
     end
   end
