@@ -56,13 +56,6 @@ module Checkoff
       @config[:default_assignee_id]
     end
 
-    def user_by_name(name, workspace_id: raise)
-      client.users.find_all(workspace: workspace_id).find do |user|
-        print(user)
-        user.name == name
-      end || raise("Could not find user #{email}")
-    end
-
     def workspace_by_name(workspace_name)
       client.workspaces.find_all.find do |workspace|
         workspace.name == workspace_name

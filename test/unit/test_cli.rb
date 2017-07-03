@@ -101,6 +101,15 @@ class TestCLI < ClassTest
     assert_raises(SystemExit) { asana_my_tasks.run(['--help']) }
   end
 
+  # TODO: This should take an argument for workspace
+  # TODO: add_task should not live in :projects
+  def test_quickadd
+    asana_my_tasks = get_test_object do
+      @mocks[:projects].expects(:add_task).with('my task name')
+    end
+    asana_my_tasks.run(['quickadd', 'my task name'])
+  end
+
   def class_under_test
     Checkoff::CLI
   end
