@@ -72,6 +72,7 @@ module Checkoff
       if mode == 'view'
         subargs.workspace = args[1]
         subargs.project = args[2]
+        subargs.section = args[3]
       elsif mode == 'quickadd'
         subargs.task_name = args[1]
       else
@@ -94,6 +95,7 @@ module Checkoff
       if command == 'view'
         project = subargs.project
         project = project[1..-1].to_sym if project.start_with? ':'
+        section = subargs.section
         if section.nil?
           run_on_project(subargs.workspace, project)
         else
