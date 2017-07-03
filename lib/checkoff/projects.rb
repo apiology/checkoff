@@ -102,14 +102,19 @@ module Checkoff
 
     def task_options
       {
+        per_page: 100,
         options: {
-          fields: %w(name assignee_status completed_at due_at due_on),
+          fields: %w(name completed_at due_at due_on),
         },
       }
     end
 
-    def tasks_from_project(project)
-      project.tasks(task_options).to_a
+    def tasks_from_project(project, only_uncompleted: true, extra_fields: [])
+      options = task_options
+      options[:completed_since] = '9999-12-01' if only_uncompleted
+      options[:project] = project.id
+      options[:options][:fields] += extra_fields
+      client.tasks.find_all(options).to_a
     end
     cache_method :tasks_from_project, LONG_CACHE_TIME
   end

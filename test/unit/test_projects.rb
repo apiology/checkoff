@@ -63,7 +63,13 @@ class TestProjects < BaseAsana
   end
 
   def mock_tasks_from_project
-    project_a.expects(:tasks).with(task_options).returns(tasks)
+    setup_config
+    setup_client_created
+    project_a.expects(:id).returns(a_id)
+    client.expects(:tasks).returns(tasks)
+    options = task_options
+    options[:project] = a_id
+    tasks.expects(:find_all).with(options).returns(tasks)
     tasks.expects(:to_a).returns(tasks)
   end
 
