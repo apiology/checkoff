@@ -1,10 +1,15 @@
 # frozen_string_literal: true
+
+require 'forwardable'
+
 module Checkoff
   # Query different sections of Asana projects
   class Sections
     MINUTE = 60
     LONG_CACHE_TIME = MINUTE * 15
     SHORT_CACHE_TIME = MINUTE * 5
+
+    extend Forwardable
 
     attr_reader :projects, :time
 
@@ -14,9 +19,7 @@ module Checkoff
       @time = time
     end
 
-    def client
-      @projects.client
-    end
+    def_delegators :@projects, :client
 
     def file_task_by_section(current_section, by_section, task)
       if task.name =~ /:$/

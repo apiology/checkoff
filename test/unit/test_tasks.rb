@@ -1,9 +1,10 @@
 # frozen_string_literal: true
-require_relative 'class_test'
+
+require_relative 'base_asana'
 require 'checkoff/cli'
 
 # Test the Checkoff::Tasks class
-class TestTasks < ClassTest
+class TestTasks < BaseAsana
   let_mock :mock_tasks, :modified_mock_tasks, :tasks_by_section,
            :unflattened_modified_mock_tasks
 
@@ -22,6 +23,21 @@ class TestTasks < ClassTest
     end
     assert_equal(modified_mock_tasks,
                  tasks.tasks_minus_sections(mock_tasks))
+  end
+
+  let_mock :workspace_id, :task_name, :default_assignee_id
+
+  def test_add_task
+    tasks = get_test_object do
+      @mocks[:config].expects(:[]).with(:default_assignee_id)
+        .returns(default_assignee_id)
+      @mocks[:sections].expects(:client).returns(client)
+      @mocks[:asana_task].expects(:create).with(client,
+                                                assignee: default_assignee_id,
+                                                workspace: workspace_id,
+                                                name: task_name)
+    end
+    tasks.add_task(task_name, workspace_id: workspace_id)
   end
 
   def class_under_test

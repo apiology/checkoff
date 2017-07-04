@@ -27,6 +27,14 @@ class TestWorkspaces < BaseAsana
     assert_equal(workspace_a, asana.workspace_by_name(workspace_a_name))
   end
 
+  def test_default_workspace_id
+    asana = get_test_object do
+      @mocks[:config].expects(:[]).with(:default_workspace_id)
+        .returns(workspace_a_id)
+    end
+    assert_equal(workspace_a_id, asana.default_workspace_id)
+  end
+
   def class_under_test
     Checkoff::Workspaces
   end

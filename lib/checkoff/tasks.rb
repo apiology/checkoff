@@ -15,9 +15,11 @@ module Checkoff
     SHORT_CACHE_TIME = MINUTE * 5
 
     def initialize(config: Checkoff::ConfigLoader.load(:asana),
-                   sections: Checkoff::Sections.new)
+                   sections: Checkoff::Sections.new,
+                   asana_task: Asana::Resources::Task)
       @config = config
       @sections = sections
+      @asana_task = asana_task
     end
 
     def client
@@ -31,9 +33,9 @@ module Checkoff
     def add_task(name,
                  workspace_id: default_workspace_id,
                  assignee_id: default_assignee_id)
-      Asana::Resources::Task.create(client,
-                                    assignee: assignee_id,
-                                    workspace: workspace_id, name: name)
+      @asana_task.create(client,
+                         assignee: assignee_id,
+                         workspace: workspace_id, name: name)
     end
 
     def default_assignee_id

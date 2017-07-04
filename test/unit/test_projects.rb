@@ -91,6 +91,26 @@ class TestProjects < BaseAsana
     assert_equal(my_tasks_project, asana.project('My Workspace', :my_tasks))
   end
 
+  let_mock :my_tasks_config
+
+  def unconfigured_workspace_name
+    'Unconfigured workspace name'
+  end
+
+  def test_project_my_tasks_not_configured
+    asana = get_test_object do
+      @mocks[:config].expects(:[]).with(:my_tasks).returns(my_tasks_config)
+        .at_least(1)
+      my_tasks_config.expects(:[]).with(unconfigured_workspace_name)
+        .returns(nil)
+    end
+    e = assert_raises() do
+      asana.my_tasks(unconfigured_workspace_name)
+    end
+    assert_equal('Please define [:my_tasks][Unconfigured workspace name] in config file',
+                 e.message)
+  end
+
   def class_under_test
     Checkoff::Projects
   end
