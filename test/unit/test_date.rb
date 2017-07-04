@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # Module which adds helpers to run tests as if it was a specific date.
 module TestDate
   attr_writer :time_period
@@ -53,67 +55,5 @@ module TestDate
     zone = Time.now.zone
     zone = 'US/Eastern' if %w[EST EDT].include? zone
     mock_now_with_zone(zone)
-  end
-
-  def mock_time_clazz
-    time = mock('time')
-    time.expects(:now).returns(mock_now).at_least(0)
-    time
-  end
-
-  def mock_date_clazz
-    date = mock('date')
-    date.expects(:today).returns(mock_date).at_least(0)
-    date
-  end
-
-  def date_time_args
-    {
-      time: mock_time_clazz,
-      date: mock_date_clazz,
-    }
-  end
-
-  def setup_is_saturday
-    self.mock_date_str = '2015-05-02'
-  end
-
-  def setup_is_sunday
-    self.mock_date_str = '2015-05-03'
-  end
-
-  def setup_is_monday
-    self.mock_date_str = '2015-05-04'
-  end
-
-  def setup_is_tuesday
-    self.mock_date_str = '2015-05-05'
-  end
-
-  def setup_is_wednesday
-    self.mock_date_str = '2015-05-06'
-  end
-
-  def setup_is_thursday
-    self.mock_date_str = '2015-05-07'
-  end
-
-  def setup_is_friday
-    self.mock_date_str = '2015-05-08'
-  end
-
-  def setup_before_work
-    setup_is_monday
-    self.time_period = :morning
-  end
-
-  def setup_work_time
-    setup_is_monday
-    self.time_period = :afternoon
-  end
-
-  def setup_after_work
-    setup_is_monday
-    self.time_period = :evening
   end
 end
