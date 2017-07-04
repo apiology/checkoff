@@ -32,31 +32,6 @@ class TestProjects < BaseAsana
     end
   end
 
-  def setup_workspaces_pulled
-    client.expects(:workspaces).returns(workspaces)
-  end
-
-  def expect_workspaces_found(all_workspaces)
-    workspaces.expects(:find_all).returns(all_workspaces)
-  end
-
-  def expect_workspace_described(workspace, name, id)
-    workspace.expects(:name).returns(name).at_least(0)
-    workspace.expects(:id).returns(id).at_least(0)
-  end
-
-  def setup_all_workspaces_pulled
-    setup_workspaces_pulled
-    expect_workspaces_found([workspace_workspace, some_other_workspace,
-                             workspace_1])
-    expect_workspace_described(workspace_workspace, 'My Workspace',
-                               my_workspace_id)
-    some_other_workspace
-      .expects(:name).returns('Some other workspace')
-      .at_least(0)
-    expect_workspace_described(workspace_1, 'Workspace 1', workspace_1_id)
-  end
-
   def setup_client_pulled
     @mocks[:workspaces].expects(:client).returns(client)
   end

@@ -15,11 +15,6 @@ class BaseAsana < ClassTest
 
   let_mock :a_completed_at, :b_completed_at, :section_1
 
-  def setup_client_created
-    @mocks[:asana_client].expects(:new).yields(client).returns(client)
-    client.expects(:authentication).with(:access_token, personal_access_token)
-  end
-
   def task_options
     {
       per_page: 100,
