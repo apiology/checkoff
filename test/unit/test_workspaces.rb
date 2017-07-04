@@ -9,18 +9,26 @@ class TestWorkspaces < BaseAsana
            :workspace_b_name, :workspace_b, :workspace_b_id,
            :workspaces
 
-  def setup_client_created
+  def expect_client_object_created
     @mocks[:asana_client].expects(:new).yields(client).returns(client)
+  end
+
+  def expect_personal_access_token_pulled
     @mocks[:config].expects(:[]).with(:personal_access_token)
       .returns(personal_access_token)
-    client.expects(:workspaces).returns(workspaces)
-    workspaces.expects(:find_all).returns([workspace_a, workspace_b])
-    workspace_a.expects(:name).returns(workspace_a_name)
+  end
+
+  def setup_client_created
+    expect_client_object_created
+    expect_personal_access_token_pulled
     client.expects(:authentication).with(:access_token, personal_access_token)
   end
 
   def mock_workspace_by_name
     setup_client_created
+    client.expects(:workspaces).returns(workspaces)
+    workspaces.expects(:find_all).returns([workspace_a, workspace_b])
+    workspace_a.expects(:name).returns(workspace_a_name)
   end
 
   def test_workspace_by_name
