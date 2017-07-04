@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 require_relative 'test_helper'
 require_relative 'base_asana'
 
@@ -63,8 +64,8 @@ class TestProjects < BaseAsana
   end
 
   def setup_workspace_pulled
-    @mocks[:workspaces].expects(:workspace_by_name).
-      with('Workspace 1').returns(workspace_1)
+    @mocks[:workspaces].expects(:workspace_by_name)
+                       .with('Workspace 1').returns(workspace_1)
     workspace_1.expects(:id).returns(workspace_1_id)
   end
 
@@ -100,11 +101,11 @@ class TestProjects < BaseAsana
   def test_project_my_tasks_not_configured
     asana = get_test_object do
       @mocks[:config].expects(:[]).with(:my_tasks).returns(my_tasks_config)
-        .at_least(1)
+                     .at_least(1)
       my_tasks_config.expects(:[]).with(unconfigured_workspace_name)
-        .returns(nil)
+                     .returns(nil)
     end
-    e = assert_raises() do
+    e = assert_raises do
       asana.my_tasks(unconfigured_workspace_name)
     end
     assert_equal('Please define [:my_tasks][Unconfigured workspace name] in config file',

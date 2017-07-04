@@ -1,6 +1,7 @@
 #!/usr/bin/env ruby
 
 # frozen_string_literal: true
+
 require 'ostruct'
 require 'dalli'
 require 'cache_method'
@@ -66,7 +67,7 @@ module Checkoff
     end
 
     def validate_args!(args)
-      return unless args.length < 2 || !%w(view quickadd).include?(args[0])
+      return unless args.length < 2 || !%w[view quickadd].include?(args[0])
 
       output_help
       exit(1)

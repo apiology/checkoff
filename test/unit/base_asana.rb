@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 require_relative 'test_helper'
 require_relative 'class_test'
 
@@ -19,7 +20,7 @@ class BaseAsana < ClassTest
     {
       per_page: 100,
       options: {
-        fields: %w(name completed_at due_at due_on),
+        fields: %w[name completed_at due_at due_on],
       },
       completed_since: '9999-12-01',
     }

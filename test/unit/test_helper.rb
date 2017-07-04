@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 require 'simplecov'
 SimpleCov.start do
   # this dir used by TravisCI/CircleCI
@@ -68,7 +69,7 @@ module TestDate
 
   def mock_now
     zone = Time.now.zone
-    zone = 'US/Eastern' if %w(EST EDT).include? zone
+    zone = 'US/Eastern' if %w[EST EDT].include? zone
     mock_now_with_zone(zone)
   end
 

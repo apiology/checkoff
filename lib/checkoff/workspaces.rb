@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Checkoff
   class Workspaces
     def initialize(config: Checkoff::ConfigLoader.load(:asana),

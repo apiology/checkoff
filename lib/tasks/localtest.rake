@@ -1,2 +1,3 @@
 # frozen_string_literal: true
-task localtest: [:clear_metrics, :test, :quality]
+
+task localtest: %i[clear_metrics test quality]

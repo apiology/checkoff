@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 require 'quality/rake/task'
 
 Quality::Rake::Task.new do |task|

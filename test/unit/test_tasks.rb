@@ -30,7 +30,7 @@ class TestTasks < BaseAsana
   def test_add_task
     tasks = get_test_object do
       @mocks[:config].expects(:[]).with(:default_assignee_id)
-        .returns(default_assignee_id)
+                     .returns(default_assignee_id)
       @mocks[:sections].expects(:client).returns(client)
       @mocks[:asana_task].expects(:create).with(client,
                                                 assignee: default_assignee_id,

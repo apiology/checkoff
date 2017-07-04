@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 require_relative 'class_test'
 require 'checkoff/cli'
 
@@ -103,8 +104,8 @@ class TestCLI < ClassTest
 
   def test_quickadd
     asana_my_tasks = get_test_object do
-      @mocks[:workspaces].expects(:workspace_by_name).with(workspace_name).
-        returns(workspace)
+      @mocks[:workspaces].expects(:workspace_by_name).with(workspace_name)
+                         .returns(workspace)
       workspace.expects(:id).returns(workspace_id)
       @mocks[:tasks].expects(:add_task).with('my task name',
                                              workspace_id: workspace_id)
