@@ -73,17 +73,24 @@ module Checkoff
       exit(1)
     end
 
+    def parse_view_args(subargs, args)
+      subargs.workspace = args[1]
+      subargs.project = args[2]
+      subargs.section = args[3]
+    end
+
+    def parse_quickadd_args(subargs, args)
+      subargs.workspace = args[1]
+      subargs.task_name = args[2]
+    end
+
     def parse_args(args)
-      validate_args!(args)
       mode = args[0]
       subargs = OpenStruct.new
       if mode == 'view'
-        subargs.workspace = args[1]
-        subargs.project = args[2]
-        subargs.section = args[3]
+        parse_view_args(subargs, args)
       elsif mode == 'quickadd'
-        subargs.workspace = args[1]
-        subargs.task_name = args[2]
+        parse_quickadd_args(subargs, args)
       else
         raise
       end
@@ -99,17 +106,20 @@ module Checkoff
                   ':my_tasks_upcoming, :my_tasks_new, or :my_tasks_today'
     end
 
+    def view(workspace_name, project_name, section_name)
+      project_name = project_name[1..-1].to_sym if project_name.start_with? ':'
+      if section_name.nil?
+        run_on_project(workspace_name, project_name)
+      else
+        run_on_section(workspace_name, project_name, section_name)
+      end
+    end
+
     def run(args)
+      validate_args!(args)
       command, subargs = parse_args(args)
       if command == 'view'
-        project = subargs.project
-        project = project[1..-1].to_sym if project.start_with? ':'
-        section = subargs.section
-        if section.nil?
-          run_on_project(subargs.workspace, project)
-        else
-          run_on_section(subargs.workspace, project, subargs.section)
-        end
+        view(subargs.workspace, subargs.project, subargs.section)
       elsif command == 'quickadd'
         quickadd(subargs.workspace, subargs.task_name)
       else
