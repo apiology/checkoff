@@ -17,6 +17,9 @@ ParameterLists:
 TrivialAccessors:
    ExactNameMatch: true
 
+Layout/MultilineMethodCallIndentation:
+  EnforcedStyle: indented
+
 #
 # Add 'XXX' to the standard list
 #

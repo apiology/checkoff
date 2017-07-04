@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 module Checkoff
+  # Query different workspaces of Asana projects
   class Workspaces
     def initialize(config: Checkoff::ConfigLoader.load(:asana),
                    asana_client: Asana::Client)

@@ -40,7 +40,7 @@ class TestCLI < ClassTest
   def expect_three_tasks_pulled_and_queried
     @mocks[:sections].expects(:tasks).with(workspace_name, project_name,
                                            section_name_str)
-                     .returns(three_tasks.keys)
+      .returns(three_tasks.keys)
     expect_three_tasks_queried
   end
 
@@ -102,13 +102,17 @@ class TestCLI < ClassTest
     assert_raises(SystemExit) { asana_my_tasks.run(['--help']) }
   end
 
+  def mock_quickadd
+    @mocks[:workspaces].expects(:workspace_by_name).with(workspace_name)
+      .returns(workspace)
+    workspace.expects(:id).returns(workspace_id)
+    @mocks[:tasks].expects(:add_task).with('my task name',
+                                           workspace_id: workspace_id)
+  end
+
   def test_quickadd
     asana_my_tasks = get_test_object do
-      @mocks[:workspaces].expects(:workspace_by_name).with(workspace_name)
-                         .returns(workspace)
-      workspace.expects(:id).returns(workspace_id)
-      @mocks[:tasks].expects(:add_task).with('my task name',
-                                             workspace_id: workspace_id)
+      mock_quickadd
     end
     asana_my_tasks.run(['quickadd', workspace_name, 'my task name'])
   end

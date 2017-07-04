@@ -37,15 +37,19 @@ class TestProjects < BaseAsana
     @mocks[:workspaces].expects(:client).returns(client)
   end
 
+  def expect_tasks_found
+    options = task_options
+    options[:project] = a_id
+    tasks.expects(:find_all).with(options).returns(tasks)
+    tasks.expects(:to_a).returns(tasks)
+  end
+
   def mock_tasks_from_project
     setup_config
     setup_client_pulled
     project_a.expects(:id).returns(a_id)
     client.expects(:tasks).returns(tasks)
-    options = task_options
-    options[:project] = a_id
-    tasks.expects(:find_all).with(options).returns(tasks)
-    tasks.expects(:to_a).returns(tasks)
+    expect_tasks_found
   end
 
   def test_tasks_from_project
@@ -65,7 +69,7 @@ class TestProjects < BaseAsana
 
   def setup_workspace_pulled
     @mocks[:workspaces].expects(:workspace_by_name)
-                       .with('Workspace 1').returns(workspace_1)
+      .with('Workspace 1').returns(workspace_1)
     workspace_1.expects(:id).returns(workspace_1_id)
   end
 
@@ -101,9 +105,9 @@ class TestProjects < BaseAsana
   def test_project_my_tasks_not_configured
     asana = get_test_object do
       @mocks[:config].expects(:[]).with(:my_tasks).returns(my_tasks_config)
-                     .at_least(1)
+        .at_least(1)
       my_tasks_config.expects(:[]).with(unconfigured_workspace_name)
-                     .returns(nil)
+        .returns(nil)
     end
     e = assert_raises do
       asana.my_tasks(unconfigured_workspace_name)

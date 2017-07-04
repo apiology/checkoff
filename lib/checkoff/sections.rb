@@ -54,7 +54,7 @@ module Checkoff
       raw_tasks = projects.tasks_from_project(project)
       by_assignee_status =
         projects.active_tasks(raw_tasks)
-                .group_by(&:assignee_status)
+          .group_by(&:assignee_status)
       active_tasks = by_assignee_status[assignee_status]
       by_section(active_tasks)
     end
