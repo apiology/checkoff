@@ -4,7 +4,7 @@ require 'checkoff/cli'
 
 # Test the Checkoff::CLI class
 class TestCLI < ClassTest
-  let_mock :workspace_name, :task_a, :task_b, :task_c
+  let_mock :workspace_name, :workspace, :workspace_id, :task_a, :task_b, :task_c
 
   def expect_task_named(task, task_name)
     task.expects(:name).returns(task_name).at_least(0)
@@ -101,13 +101,15 @@ class TestCLI < ClassTest
     assert_raises(SystemExit) { asana_my_tasks.run(['--help']) }
   end
 
-  # TODO: This should take an argument for workspace
-  # TODO: add_task should not live in :projects
   def test_quickadd
     asana_my_tasks = get_test_object do
-      @mocks[:projects].expects(:add_task).with('my task name')
+      @mocks[:workspaces].expects(:workspace_by_name).with(workspace_name).
+        returns(workspace)
+      workspace.expects(:id).returns(workspace_id)
+      @mocks[:tasks].expects(:add_task).with('my task name',
+                                             workspace_id: workspace_id)
     end
-    asana_my_tasks.run(['quickadd', 'my task name'])
+    asana_my_tasks.run(['quickadd', workspace_name, 'my task name'])
   end
 
   def class_under_test

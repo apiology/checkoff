@@ -14,6 +14,10 @@ module Checkoff
       @time = time
     end
 
+    def client
+      @projects.client
+    end
+
     def file_task_by_section(current_section, by_section, task)
       if task.name =~ /:$/
         current_section = task.name

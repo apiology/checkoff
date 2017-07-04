@@ -11,11 +11,6 @@ class TestProjects < BaseAsana
     }
   end
 
-  def setup_client_created
-    @mocks[:asana_client].expects(:new).yields(client).returns(client)
-    client.expects(:authentication).with(:access_token, personal_access_token)
-  end
-
   def setup_projects_pulled
     client.expects(:projects).returns(projects).at_least(1)
   end
@@ -62,9 +57,13 @@ class TestProjects < BaseAsana
     expect_workspace_described(workspace_1, 'Workspace 1', workspace_1_id)
   end
 
+  def setup_client_pulled
+    @mocks[:workspaces].expects(:client).returns(client)
+  end
+
   def mock_tasks_from_project
     setup_config
-    setup_client_created
+    setup_client_pulled
     project_a.expects(:id).returns(a_id)
     client.expects(:tasks).returns(tasks)
     options = task_options
@@ -88,11 +87,17 @@ class TestProjects < BaseAsana
     assert_equal([task_b], asana.active_tasks([task_a, task_b]))
   end
 
+  def setup_workspace_pulled
+    @mocks[:workspaces].expects(:workspace_by_name).
+      with('Workspace 1').returns(workspace_1)
+    workspace_1.expects(:id).returns(workspace_1_id)
+  end
+
   def test_project_regular
     asana = get_test_object do
       setup_config
-      setup_client_created
-      setup_all_workspaces_pulled
+      setup_client_pulled
+      setup_workspace_pulled
       setup_projects_pulled
       setup_projects_queried(workspace_id: workspace_1_id)
     end
@@ -102,7 +107,7 @@ class TestProjects < BaseAsana
   def test_project_my_tasks
     asana = get_test_object do
       setup_config
-      setup_client_created
+      setup_client_pulled
       setup_projects_pulled
       projects
         .expects(:find_by_id).with(my_tasks_in_workspace_id)

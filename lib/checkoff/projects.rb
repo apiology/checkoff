@@ -24,15 +24,15 @@ module Checkoff
     # XXX: Move low-level functions private
 
     def initialize(config: Checkoff::ConfigLoader.load(:asana),
-                   asana_client: Asana::Client)
+                   asana_client: Asana::Client,
+                   workspaces: Checkoff::Workspaces.new)
       @config = config
       @asana_client = asana_client
+      @workspaces = workspaces
     end
 
     def client
-      @client ||= @asana_client.new do |c|
-        c.authentication :access_token, @config[:personal_access_token]
-      end
+      @workspaces.client
     end
 
     def projects
@@ -40,30 +40,8 @@ module Checkoff
     end
     cache_method :projects, LONG_CACHE_TIME
 
-    def add_task(name,
-                 workspace_id: default_workspace_id,
-                 assignee_id: default_assignee_id)
-      Asana::Resources::Task.create(client,
-                                    assignee: assignee_id,
-                                    workspace: workspace_id, name: name)
-    end
-
-    def default_workspace_id
-      @config[:default_workspace_id]
-    end
-
-    def default_assignee_id
-      @config[:default_assignee_id]
-    end
-
-    def workspace_by_name(workspace_name)
-      client.workspaces.find_all.find do |workspace|
-        workspace.name == workspace_name
-      end || raise("Could not find workspace #{workspace_name}")
-    end
-
     def projects_by_workspace_name(workspace_name)
-      workspace = workspace_by_name(workspace_name)
+      workspace = @workspaces.workspace_by_name(workspace_name)
       raise "Could not find workspace named #{workspace_name}" unless workspace
       projects.find_by_workspace(workspace: workspace.id)
     end
