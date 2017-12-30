@@ -26,6 +26,17 @@ module Checkoff
       @sections.client
     end
 
+    def projects
+      @projects ||= @sections.projects
+    end
+
+    def task(workspace_name, project_name, task_name, only_uncompleted: true)
+      project = projects.project(workspace_name, project_name)
+      tasks = projects.tasks_from_project(project,
+                                          only_uncompleted: only_uncompleted)
+      tasks.find { |task| task.name == task_name }
+    end
+
     def tasks_minus_sections(tasks)
       @sections.by_section(tasks).values.flatten
     end
