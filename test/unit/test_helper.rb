@@ -10,6 +10,7 @@ SimpleCov.refuse_coverage_drop
 require 'minitest/autorun'
 require 'mocha/setup'
 require 'minitest/profile'
+require 'ostruct'
 
 require_relative 'cachemethoddouble'
 require_relative '../../lib/checkoff'
@@ -48,5 +49,5 @@ def get_initializer_mocks(clazz, skip_these_keys: [])
   mock_syms = named_parameters.map { |_name, value| value } - skip_these_keys
 
   # create a hash of argument name to a new mock
-  Hash[*mock_syms.map { |sym| [sym, mock(sym.to_s)] }.flatten]
+  OpenStruct.new Hash[*mock_syms.map { |sym| [sym, mock(sym.to_s)] }.flatten]
 end

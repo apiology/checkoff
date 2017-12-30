@@ -13,6 +13,6 @@ class ClassTest < Minitest::Test
   end
 
   def create_object
-    class_under_test.new(@mocks)
+    class_under_test.new(@mocks.to_h)
   end
 end
