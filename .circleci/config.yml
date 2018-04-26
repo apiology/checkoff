@@ -8,6 +8,7 @@ jobs:
       - checkout
       - type: cache-restore
         key: checkoff-{{ checksum "Gemfile.lock" }}
+      - run: bundle install
       - run: bundle exec rake --jobs=4 test
       - run: bundle exec rake --jobs=4 quality
       - type: cache-save
