@@ -2,10 +2,14 @@ before_install:
   - gem install bundler
 language: ruby
 rvm:
-  - ruby-2.5.0
-  - ruby-2.4.3
-  - ruby-2.3.6
-  - ruby-2.2.9
-#   - jruby-head # see https://github.com/apiology/quality/issues/59
-#   - jruby-9.0 # see https://github.com/apiology/quality/issues/59
-#   - ruby-head # Upstream bug - see https://travis-ci.org/apiology/checkoff/jobs/138626934
+  - ruby-2.5.1
+  - ruby-2.4.4
+  - ruby-2.3.7
+  # - ruby-2.2.10 # no longer supported
+  #
+  # - jruby-head # JRuby not supported by dependencies
+  # - jruby-9.0  # see:
+  #    https://github.com/apiology/quality/issues/59
+  #    https://github.com/brianmario/charlock_holmes/issues/124
+  #
+  - ruby-head # Upstream bug - see https://travis-ci.org/apiology/checkoff/jobs/138626934
