@@ -5,8 +5,8 @@ require_relative 'base_asana'
 
 # Test the Checkoff::Workspaces class
 class TestWorkspaces < BaseAsana
-  let_mock :workspace_a_name, :workspace_a, :workspace_a_id,
-           :workspace_b_name, :workspace_b, :workspace_b_id,
+  let_mock :workspace_a_name, :workspace_a, :workspace_a_gid,
+           :workspace_b_name, :workspace_b, :workspace_b_gid,
            :workspaces
 
   def expect_client_object_created
@@ -22,6 +22,8 @@ class TestWorkspaces < BaseAsana
     expect_client_object_created
     expect_personal_access_token_pulled
     client.expects(:authentication).with(:access_token, personal_access_token)
+    client.expects(:default_headers).with("asana-enable" =>
+                                          "string_ids,new_sections")
   end
 
   def mock_workspace_by_name
@@ -36,12 +38,12 @@ class TestWorkspaces < BaseAsana
     assert_equal(workspace_a, asana.workspace_by_name(workspace_a_name))
   end
 
-  def test_default_workspace_id
+  def test_default_workspace_gid
     asana = get_test_object do
-      @mocks[:config].expects(:[]).with(:default_workspace_id)
-        .returns(workspace_a_id)
+      @mocks[:config].expects(:[]).with(:default_workspace_gid)
+        .returns(workspace_a_gid)
     end
-    assert_equal(workspace_a_id, asana.default_workspace_id)
+    assert_equal(workspace_a_gid, asana.default_workspace_gid)
   end
 
   def class_under_test

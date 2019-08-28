@@ -63,7 +63,7 @@ module Checkoff
     def quickadd(workspace_name, task_name)
       workspace = @workspaces.workspace_by_name(workspace_name)
       @tasks.add_task(task_name,
-                      workspace_id: workspace.id)
+                      workspace_gid: workspace.gid)
     end
 
     def validate_args!(args)

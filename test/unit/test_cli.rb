@@ -5,7 +5,8 @@ require 'checkoff/cli'
 
 # Test the Checkoff::CLI class
 class TestCLI < ClassTest
-  let_mock :workspace_name, :workspace, :workspace_id, :task_a, :task_b, :task_c
+  let_mock :workspace_name, :workspace, :workspace_gid,
+           :task_a, :task_b, :task_c
 
   def expect_task_named(task, task_name)
     task.expects(:name).returns(task_name).at_least(0)
@@ -105,9 +106,9 @@ class TestCLI < ClassTest
   def mock_quickadd
     @mocks[:workspaces].expects(:workspace_by_name).with(workspace_name)
       .returns(workspace)
-    workspace.expects(:id).returns(workspace_id)
+    workspace.expects(:gid).returns(workspace_gid)
     @mocks[:tasks].expects(:add_task).with('my task name',
-                                           workspace_id: workspace_id)
+                                           workspace_gid: workspace_gid)
   end
 
   def test_quickadd

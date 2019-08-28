@@ -29,18 +29,18 @@ class TestTasks < BaseAsana
                  tasks.tasks_minus_sections(mock_tasks))
   end
 
-  let_mock :workspace_id, :task_name, :default_assignee_id
+  let_mock :workspace_gid, :task_name, :default_assignee_gid
 
   def expect_task_created
     @mocks[:asana_task].expects(:create).with(client,
-                                              assignee: default_assignee_id,
-                                              workspace: workspace_id,
+                                              assignee: default_assignee_gid,
+                                              workspace: workspace_gid,
                                               name: task_name)
   end
 
   def mock_add_task
-    @mocks[:config].expects(:[]).with(:default_assignee_id)
-      .returns(default_assignee_id)
+    @mocks[:config].expects(:[]).with(:default_assignee_gid)
+      .returns(default_assignee_gid)
     @mocks[:sections].expects(:client).returns(client)
     expect_task_created
   end
@@ -49,7 +49,7 @@ class TestTasks < BaseAsana
     tasks = get_test_object do
       mock_add_task
     end
-    tasks.add_task(task_name, workspace_id: workspace_id)
+    tasks.add_task(task_name, workspace_gid: workspace_gid)
   end
 
   let_mock :workspace_name, :project_name, :task_name, :only_uncompleted, :task,

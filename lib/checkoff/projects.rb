@@ -43,16 +43,16 @@ module Checkoff
     def projects_by_workspace_name(workspace_name)
       workspace = @workspaces.workspace_by_name(workspace_name)
       raise "Could not find workspace named #{workspace_name}" unless workspace
-      projects.find_by_workspace(workspace: workspace.id)
+      projects.find_by_workspace(workspace: workspace.gid)
     end
 
     def my_tasks(workspace_name)
       my_tasks = @config[:my_tasks]
-      id = @config[:my_tasks][workspace_name] unless my_tasks.nil?
-      if my_tasks.nil? || id.nil?
+      gid = @config[:my_tasks][workspace_name] unless my_tasks.nil?
+      if my_tasks.nil? || gid.nil?
         raise "Please define [:my_tasks][#{workspace_name}] in config file"
       end
-      projects.find_by_id(id)
+      projects.find_by_gid(gid)
     end
 
     def project(workspace_name, project_name)
@@ -83,7 +83,7 @@ module Checkoff
     def tasks_from_project(project, only_uncompleted: true, extra_fields: [])
       options = task_options
       options[:completed_since] = '9999-12-01' if only_uncompleted
-      options[:project] = project.id
+      options[:project] = project.gid
       options[:options][:fields] += extra_fields
       client.tasks.find_all(options).to_a
     end

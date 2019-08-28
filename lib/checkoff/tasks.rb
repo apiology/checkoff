@@ -42,15 +42,15 @@ module Checkoff
     end
 
     def add_task(name,
-                 workspace_id: default_workspace_id,
-                 assignee_id: default_assignee_id)
+                 workspace_gid: default_workspace_gid,
+                 assignee_gid: default_assignee_gid)
       @asana_task.create(client,
-                         assignee: assignee_id,
-                         workspace: workspace_id, name: name)
+                         assignee: assignee_gid,
+                         workspace: workspace_gid, name: name)
     end
 
-    def default_assignee_id
-      @config[:default_assignee_id]
+    def default_assignee_gid
+      @config[:default_assignee_gid]
     end
   end
 end

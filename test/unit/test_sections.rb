@@ -64,7 +64,7 @@ class TestSections < BaseAsana
                  asana.project_task_names('Workspace 1', a_name))
   end
 
-  let_mock :workspace_1_id
+  let_mock :workspace_1_gid
 
   def test_tasks
     asana = get_test_object do

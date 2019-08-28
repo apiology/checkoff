@@ -8,7 +8,7 @@ class TestProjects < BaseAsana
   def setup_config
     @mocks[:config] = {
       personal_access_token: personal_access_token,
-      my_tasks: { 'My Workspace' => my_tasks_in_workspace_id },
+      my_tasks: { 'My Workspace' => my_tasks_in_workspace_gid },
     }
   end
 
@@ -17,16 +17,17 @@ class TestProjects < BaseAsana
   end
 
   let_mock :workspaces, :workspace_workspace, :some_other_workspace,
-           :workspace_1, :workspace_1_id, :my_workspace_id, :n, :workspace_name,
-           :all_workspaces, :my_tasks_project, :tasks, :task_a, :task_b
+           :workspace_1, :workspace_1_gid, :my_workspace_gid, :n,
+           :workspace_name, :all_workspaces, :my_tasks_project, :tasks,
+           :task_a, :task_b
 
   def sample_projects
     { project_a => a_name, project_b => b_name, project_c => c_name }
   end
 
-  def setup_projects_queried(workspace_id: my_workspace_id)
+  def setup_projects_queried(workspace_gid: my_workspace_gid)
     projects
-      .expects(:find_by_workspace).with(workspace: workspace_id)
+      .expects(:find_by_workspace).with(workspace: workspace_gid)
       .returns(sample_projects.keys)
     sample_projects.each do |project, name|
       project.expects(:name).returns(name).at_least(0)
@@ -39,7 +40,7 @@ class TestProjects < BaseAsana
 
   def expect_tasks_found
     options = task_options
-    options[:project] = a_id
+    options[:project] = a_gid
     tasks.expects(:find_all).with(options).returns(tasks)
     tasks.expects(:to_a).returns(tasks)
   end
@@ -47,7 +48,7 @@ class TestProjects < BaseAsana
   def mock_tasks_from_project
     setup_config
     setup_client_pulled
-    project_a.expects(:id).returns(a_id)
+    project_a.expects(:gid).returns(a_gid)
     client.expects(:tasks).returns(tasks)
     expect_tasks_found
   end
@@ -70,7 +71,7 @@ class TestProjects < BaseAsana
   def setup_workspace_pulled
     @mocks[:workspaces].expects(:workspace_by_name)
       .with('Workspace 1').returns(workspace_1)
-    workspace_1.expects(:id).returns(workspace_1_id)
+    workspace_1.expects(:gid).returns(workspace_1_gid)
   end
 
   def test_project_regular
@@ -79,7 +80,7 @@ class TestProjects < BaseAsana
       setup_client_pulled
       setup_workspace_pulled
       setup_projects_pulled
-      setup_projects_queried(workspace_id: workspace_1_id)
+      setup_projects_queried(workspace_gid: workspace_1_gid)
     end
     assert_equal(project_a, asana.project('Workspace 1', a_name))
   end
@@ -90,7 +91,7 @@ class TestProjects < BaseAsana
       setup_client_pulled
       setup_projects_pulled
       projects
-        .expects(:find_by_id).with(my_tasks_in_workspace_id)
+        .expects(:find_by_gid).with(my_tasks_in_workspace_gid)
         .returns(my_tasks_project)
     end
     assert_equal(my_tasks_project, asana.project('My Workspace', :my_tasks))
