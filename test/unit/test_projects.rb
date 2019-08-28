@@ -91,7 +91,7 @@ class TestProjects < BaseAsana
       setup_client_pulled
       setup_projects_pulled
       projects
-        .expects(:find_by_gid).with(my_tasks_in_workspace_gid)
+        .expects(:find_by_id).with(my_tasks_in_workspace_gid)
         .returns(my_tasks_project)
     end
     assert_equal(my_tasks_project, asana.project('My Workspace', :my_tasks))

@@ -52,7 +52,7 @@ module Checkoff
       if my_tasks.nil? || gid.nil?
         raise "Please define [:my_tasks][#{workspace_name}] in config file"
       end
-      projects.find_by_gid(gid)
+      projects.find_by_id(gid)
     end
 
     def project(workspace_name, project_name)
