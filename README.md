@@ -75,7 +75,7 @@ And even gather counts for project metrics:
 ```bash
 $ checkoff view 'Personal Projects' 'Create demo' | jq 'to_entries | map(.value) | flatten | map(.name) | length'
 4
-$ 
+$
 ```
 
 ## Caching
