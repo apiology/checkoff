@@ -12,7 +12,7 @@ module Checkoff
     def client
       @client ||= @asana_client.new do |c|
         c.authentication :access_token, @config[:personal_access_token]
-        c.default_headers "asana-enable" => "string_ids,new_sections"
+        c.default_headers 'asana-enable' => 'string_ids,new_sections'
       end
     end
 

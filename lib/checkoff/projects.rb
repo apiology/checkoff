@@ -43,6 +43,7 @@ module Checkoff
     def projects_by_workspace_name(workspace_name)
       workspace = @workspaces.workspace_by_name(workspace_name)
       raise "Could not find workspace named #{workspace_name}" unless workspace
+
       projects.find_by_workspace(workspace: workspace.gid)
     end
 
@@ -52,6 +53,7 @@ module Checkoff
       if my_tasks.nil? || gid.nil?
         raise "Please define [:my_tasks][#{workspace_name}] in config file"
       end
+
       projects.find_by_id(gid)
     end
 
