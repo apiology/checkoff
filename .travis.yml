@@ -2,7 +2,7 @@ before_install:
   - gem install bundler
 language: ruby
 rvm:
-  - ruby-2.7.0-preview3
+  - ruby-2.7.0-preview2
   - ruby-2.6.5
   - ruby-2.5.7
   - ruby-2.4.9
