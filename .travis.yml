@@ -14,4 +14,4 @@ rvm:
   #    https://github.com/apiology/quality/issues/59
   #    https://github.com/brianmario/charlock_holmes/issues/124
   #
-  - ruby-head # Upstream bug - see https://travis-ci.org/apiology/checkoff/jobs/138626934
+  # - ruby-head # Upstream bug - see https://travis-ci.org/apiology/checkoff/jobs/616891434
