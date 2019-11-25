@@ -1,7 +1,7 @@
-# frozen_string_literal: true
 # coding: ascii
+# frozen_string_literal: true
 
-lib = File.expand_path('../lib', __FILE__)
+lib = File.expand_path('lib', __dir__)
 $LOAD_PATH.unshift(lib) unless $LOAD_PATH.include?(lib)
 require 'checkoff/version'
 
@@ -27,7 +27,7 @@ Gem::Specification.new do |spec|
   spec.add_runtime_dependency 'cache_method'
   spec.add_runtime_dependency 'dalli'
 
-  spec.add_development_dependency 'bundler', '~> 1.12'
+  spec.add_development_dependency 'bundler'
   spec.add_development_dependency 'minitest-profile'
   spec.add_development_dependency 'mocha'
   spec.add_development_dependency 'quality'

@@ -40,3 +40,6 @@ Style/CommentAnnotation:
        W"
     - "XX\
        X"
+
+AllCops:
+  TargetRubyVersion: 2.3

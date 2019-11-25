@@ -48,6 +48,7 @@ module TestDate
   def mock_now_with_zone(zone)
     time = time_by_period(zone)[time_period]
     raise if time.nil?
+
     time
   end
 
