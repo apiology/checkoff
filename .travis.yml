@@ -1,7 +1,5 @@
 before_install:
-  - gem --version
   - gem install bundler
-  - gem install bundler -v "~>1.0"
 language: ruby
 rvm:
   - ruby-2.5.1
