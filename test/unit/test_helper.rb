@@ -8,7 +8,7 @@ end
 SimpleCov.refuse_coverage_drop
 
 require 'minitest/autorun'
-require 'mocha/setup'
+require 'mocha/minitest'
 require 'minitest/profile'
 require 'ostruct'
 
