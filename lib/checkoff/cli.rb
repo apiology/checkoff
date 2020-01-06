@@ -103,7 +103,7 @@ module Checkoff
       stderr.puts "  #{$PROGRAM_NAME} quickadd workspace task_name"
       stderr.puts
       stderr.puts "'project' can be set to a project name, or :my_tasks, " \
-                  ':my_tasks_upcoming, :my_tasks_new, or :my_tasks_today'
+                  ":my_tasks_upcoming, :my_tasks_new, or :my_tasks_today"
     end
 
     def view(workspace_name, project_name, section_name)

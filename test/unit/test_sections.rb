@@ -136,8 +136,7 @@ class TestSections < BaseAsana
       task_a.expects(:due_at).returns(nil)
       task_a.expects(:due_on).returns(nil)
     end
-    assert_equal(true,
-                 asana.task_due?(task_a))
+    assert(asana.task_due?(task_a))
   end
 
   def expect_today_pulled
@@ -155,7 +154,7 @@ class TestSections < BaseAsana
 
   def test_task_due_by_due_on
     asana = get_test_object { mock_task_due_by_due_on }
-    assert_equal(true, asana.task_due?(task_a))
+    assert(asana.task_due?(task_a))
   end
 
   def expect_now_pulled
@@ -168,8 +167,7 @@ class TestSections < BaseAsana
       task_a
         .expects(:due_at).returns((mock_now - 1.minute).to_s).at_least(1)
     end
-    assert_equal(true,
-                 asana.task_due?(task_a))
+    assert(asana.task_due?(task_a))
   end
 
   let_mock :subtasks
