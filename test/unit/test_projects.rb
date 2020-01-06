@@ -70,7 +70,7 @@ class TestProjects < BaseAsana
 
   def setup_workspace_pulled
     @mocks[:workspaces].expects(:workspace_by_name)
-      .with('Workspace 1').returns(workspace_1)
+                       .with('Workspace 1').returns(workspace_1)
     workspace_1.expects(:gid).returns(workspace_1_gid)
   end
 
@@ -105,7 +105,7 @@ class TestProjects < BaseAsana
 
   def mock_project_my_tasks_not_configured
     @mocks[:config].expects(:[]).with(:my_tasks).returns(my_tasks_config)
-      .at_least(1)
+                   .at_least(1)
     my_tasks_config.expects(:[]).with(unconfigured_workspace_name).returns(nil)
   end
 

@@ -15,7 +15,7 @@ class TestWorkspaces < BaseAsana
 
   def expect_personal_access_token_pulled
     @mocks[:config].expects(:[]).with(:personal_access_token)
-      .returns(personal_access_token)
+                   .returns(personal_access_token)
   end
 
   def setup_client_created
@@ -41,7 +41,7 @@ class TestWorkspaces < BaseAsana
   def test_default_workspace_gid
     asana = get_test_object do
       @mocks[:config].expects(:[]).with(:default_workspace_gid)
-        .returns(workspace_a_gid)
+                     .returns(workspace_a_gid)
     end
     assert_equal(workspace_a_gid, asana.default_workspace_gid)
   end

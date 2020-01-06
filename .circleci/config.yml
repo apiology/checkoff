@@ -6,6 +6,12 @@ jobs:
       - image: apiology/circleci-ruby:latest
     steps:
       - checkout
-      - run: bundle install
-      - run: bundle exec rake --jobs=4 test
-      - run: bundle exec rake --jobs=4 quality
+      - type: cache-restore
+        key: checkoff-{{ checksum "checkoff.gemspec" }}-{{ checksum "Gemfile" }}
+      - run: gem install --no-document bundler
+      - run: bundle install --path vendor/bundle --jobs=4
+      - type: cache-save
+        key: checkoff-{{ checksum "checkoff.gemspec" }}-{{ checksum "Gemfile" }}
+        paths:
+          - "vendor/bundle"
+      - run: bundle exec rake --jobs=4 ci
