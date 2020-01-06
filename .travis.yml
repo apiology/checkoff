@@ -1,17 +1,17 @@
-before_install:
-  - gem install bundler
 language: ruby
+cache: bundler
+before_install:
+  # https://bundler.io/blog/2019/05/14/
+  #   solutions-for-cant-find-gem-bundler-with-executable-bundle.html
+  - gem update --system
+  - gem install bundler
 rvm:
-  # - ruby-2.7.0-preview2 # Upstream bug - see https://travis-ci.org/apiology/checkoff/jobs/616899244
-  - ruby-2.6.5
-  - ruby-2.5.7
-  - ruby-2.4.9
-  # - ruby-2.3.7 # no longer supported
-  # - ruby-2.2.10 # no longer supported
-  #
-  # - jruby-head # JRuby not supported by dependencies
-  # - jruby-9.0  # see:
-  #    https://github.com/apiology/quality/issues/59
-  #    https://github.com/brianmario/charlock_holmes/issues/124
-  #
-  # - ruby-head # Upstream bug - see https://travis-ci.org/apiology/checkoff/jobs/616891434
+  # JRuby error with native code build - possibly can be overcome?
+  # checking for main() in -lstdc++... RuntimeError: The compiler failed to generate
+  # https://travis-ci.com/apiology/pronto-punchlist/jobs/264907931
+  # - jruby-head
+  - ruby-head
+  - ruby-2.7
+  - ruby-2.6
+  - ruby-2.5
+  - ruby-2.4
