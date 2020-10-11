@@ -89,6 +89,6 @@ module Checkoff
       options[:options][:fields] += extra_fields
       client.tasks.find_all(options).to_a
     end
-    cache_method :tasks_from_project, LONG_CACHE_TIME
+    cache_method :tasks_from_project, SHORT_CACHE_TIME
   end
 end
