@@ -21,23 +21,17 @@ module Checkoff
 
     def_delegators :@projects, :client
 
-    def file_task_by_section(current_section, by_section, task)
-      if task.name =~ /:$/
-        current_section = task.name
-        by_section[current_section] = []
-      else
-        by_section[current_section] ||= []
-        by_section[current_section] << task
-      end
-      [current_section, by_section]
+    def file_task_by_section(by_section, task, project_gid)
+      membership = task.memberships.find { |m| m.project.gid == project_gid }
+      current_section = membership.section.name
+      by_section[current_section] ||= []
+      by_section[current_section] << task
     end
 
-    def by_section(tasks)
-      current_section = nil
+    def by_section(tasks, project_gid)
       by_section = {}
       tasks.each do |task|
-        current_section, by_section = file_task_by_section(current_section,
-                                                           by_section, task)
+        file_task_by_section(by_section, task, project_gid)
       end
       by_section
     end
@@ -46,7 +40,7 @@ module Checkoff
     def tasks_by_section_for_project(project)
       raw_tasks = projects.tasks_from_project(project)
       active_tasks = projects.active_tasks(raw_tasks)
-      by_section(active_tasks)
+      by_section(active_tasks, project.gid)
     end
 
     def tasks_by_section_for_project_and_assignee_status(project,

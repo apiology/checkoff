@@ -77,7 +77,8 @@ module Checkoff
       {
         per_page: 100,
         options: {
-          fields: %w[name completed_at due_at due_on assignee_status tags],
+          fields: %w[name completed_at due_at due_on assignee_status tags
+                     memberships.project.gid memberships.section.name],
         },
       }
     end
