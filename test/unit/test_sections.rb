@@ -115,11 +115,6 @@ class TestSections < BaseAsana
     task_a.expects(:name).returns('task a').at_least(0)
   end
 
-  def test_raw_subtasks
-    asana = get_test_object { mock_raw_subtasks }
-    assert_equal(subtasks, asana.raw_subtasks(task_a))
-  end
-
   def class_under_test
     Checkoff::Sections
   end
