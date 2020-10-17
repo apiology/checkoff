@@ -77,7 +77,8 @@ module Checkoff
       {
         per_page: 100,
         options: {
-          fields: %w[name completed_at due_at due_on assignee_status tags],
+          fields: %w[name completed_at due_at due_on assignee_status tags
+                     memberships.project.gid memberships.section.name],
         },
       }
     end
@@ -87,7 +88,7 @@ module Checkoff
       options[:completed_since] = '9999-12-01' if only_uncompleted
       options[:project] = project.gid
       options[:options][:fields] += extra_fields
-      client.tasks.find_all(options).to_a
+      client.tasks.find_all(**options).to_a
     end
     cache_method :tasks_from_project, SHORT_CACHE_TIME
   end
