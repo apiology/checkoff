@@ -50,7 +50,7 @@ module Checkoff
         projects.active_tasks(raw_tasks)
                 .group_by(&:assignee_status)
       active_tasks = by_assignee_status[assignee_status]
-      by_section(active_tasks)
+      by_section(active_tasks, project.gid)
     end
 
     def project_or_raise(workspace_name, project_name)
