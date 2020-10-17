@@ -28,6 +28,7 @@ module Checkoff
       end
 
       current_section = membership.section.name
+      current_section = nil if current_section == '(no section)'
       by_section[current_section] ||= []
       by_section[current_section] << task
     end
