@@ -94,12 +94,6 @@ module Checkoff
     end
     cache_method :section_task_names, SHORT_CACHE_TIME
 
-    # Returns all subtasks, including section headers
-    def raw_subtasks(task)
-      task.subtasks(projects.task_options)
-    end
-    cache_method :raw_subtasks, LONG_CACHE_TIME
-
     def task_due?(task)
       if task.due_at
         Time.parse(task.due_at) <= time.now
