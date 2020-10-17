@@ -23,6 +23,10 @@ module Checkoff
 
     def file_task_by_section(by_section, task, project_gid)
       membership = task.memberships.find { |m| m.project.gid == project_gid }
+      if membership.nil?
+        raise "Could not find task in project_gid #{project_gid}: #{task}"
+      end
+
       current_section = membership.section.name
       by_section[current_section] ||= []
       by_section[current_section] << task
@@ -43,6 +47,27 @@ module Checkoff
       by_section(active_tasks, project.gid)
     end
 
+    def legacy_file_task_by_section(current_section, by_section, task)
+      if task.name =~ /:$/
+        current_section = task.name
+        by_section[current_section] = []
+      else
+        by_section[current_section] ||= []
+        by_section[current_section] << task
+      end
+      [current_section, by_section]
+    end
+
+    def legacy_by_section(tasks)
+      current_section = nil
+      by_section = {}
+      tasks.each do |task|
+        current_section, by_section =
+          legacy_file_task_by_section(current_section, by_section, task)
+      end
+      by_section
+    end
+
     def tasks_by_section_for_project_and_assignee_status(project,
                                                          assignee_status)
       raw_tasks = projects.tasks_from_project(project)
@@ -50,7 +75,7 @@ module Checkoff
         projects.active_tasks(raw_tasks)
                 .group_by(&:assignee_status)
       active_tasks = by_assignee_status[assignee_status]
-      by_section(active_tasks, project.gid)
+      legacy_by_section(active_tasks)
     end
 
     def project_or_raise(workspace_name, project_name)
