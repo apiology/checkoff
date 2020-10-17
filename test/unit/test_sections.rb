@@ -38,7 +38,7 @@ class TestSections < BaseAsana
   def expect_project_a_tasks_pulled
     expect_tasks_and_sections_pulled('Workspace 1', project_a, a_name)
     project_a.expects(:gid).returns(a_gid)
-    section_1.expects(:memberships).returns([{  }])
+    section_1.expects(:memberships).returns([{}])
   end
 
   def mock_section_pulled
