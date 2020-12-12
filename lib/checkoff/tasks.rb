@@ -15,7 +15,7 @@ module Checkoff
     SHORT_CACHE_TIME = MINUTE * 5
 
     def initialize(config: Checkoff::ConfigLoader.load(:asana),
-                   sections: Checkoff::Sections.new,
+                   sections: Checkoff::Sections.new(config: config),
                    asana_task: Asana::Resources::Task)
       @config = config
       @sections = sections
