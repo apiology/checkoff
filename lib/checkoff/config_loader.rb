@@ -3,7 +3,6 @@
 require 'yaml'
 require 'active_support/core_ext/hash'
 
-# frozen_string_literal: true
 module Checkoff
   # Load configuration file
   class ConfigLoader

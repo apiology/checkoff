@@ -19,7 +19,7 @@ module Checkoff
                    projects: Checkoff::Projects.new,
                    sections: Checkoff::Sections.new(projects: projects),
                    tasks: Checkoff::Tasks.new,
-                   stderr: STDERR,
+                   stderr: $stderr,
                    kernel: Kernel)
       @workspaces = workspaces
       @projects = projects
@@ -87,9 +87,10 @@ module Checkoff
     def parse_args(args)
       mode = args[0]
       subargs = OpenStruct.new
-      if mode == 'view'
+      case mode
+      when 'view'
         parse_view_args(subargs, args)
-      elsif mode == 'quickadd'
+      when 'quickadd'
         parse_quickadd_args(subargs, args)
       else
         raise
@@ -107,7 +108,7 @@ module Checkoff
     end
 
     def view(workspace_name, project_name, section_name)
-      project_name = project_name[1..-1].to_sym if project_name.start_with? ':'
+      project_name = project_name[1..].to_sym if project_name.start_with? ':'
       if section_name.nil?
         run_on_project(workspace_name, project_name)
       else
@@ -118,9 +119,10 @@ module Checkoff
     def run(args)
       validate_args!(args)
       command, subargs = parse_args(args)
-      if command == 'view'
+      case command
+      when 'view'
         view(subargs.workspace, subargs.project, subargs.section)
-      elsif command == 'quickadd'
+      when 'quickadd'
         quickadd(subargs.workspace, subargs.task_name)
       else
         raise
