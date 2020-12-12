@@ -113,7 +113,7 @@ class TestProjects < BaseAsana
     asana = get_test_object do
       mock_project_my_tasks_not_configured
     end
-    exception = assert_raises(String) { asana.my_tasks(unconfigured_workspace_name) }
+    exception = assert_raises(RuntimeError) { asana.my_tasks(unconfigured_workspace_name) }
     expected_message =
       'Please define [:my_tasks][Unconfigured workspace name] in config file'
     assert_equal(expected_message, exception.message)
