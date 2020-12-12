@@ -2,6 +2,7 @@
 
 require_relative 'test_helper'
 require_relative 'base_asana'
+require 'active_support/time'
 
 # Test the Checkoff::Sections class
 class TestSections < BaseAsana

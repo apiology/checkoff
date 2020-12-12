@@ -186,7 +186,8 @@ Minitest/RefuteKindOf: # (new in 0.10)
 Minitest/RefutePathExists: # (new in 0.10)
   Enabled: true
 Minitest/TestMethodName: # (new in 0.10)
-  Enabled: true
+  # This gives false positives when non-test methods exist...
+  Enabled: false
 Minitest/UnspecifiedException: # (new in 0.10)
   Enabled: true
 RSpec/StubbedMock: # (new in 1.44)

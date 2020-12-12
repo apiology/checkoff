@@ -6,13 +6,13 @@ require_relative 'test_helper'
 class ClassTest < Minitest::Test
   # Implement 'class_under_test' returning the class name to be
   # initialized with keyword mocks
-  def test_get_test_object(&twiddle_mocks)
+  def get_test_object(&twiddle_mocks)
     @mocks = get_initializer_mocks(class_under_test)
     yield @mocks if twiddle_mocks
     create_object
   end
 
-  def test_create_object
+  def create_object
     class_under_test.new(**@mocks.to_h)
   end
 end
