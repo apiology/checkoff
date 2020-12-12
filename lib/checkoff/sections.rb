@@ -23,9 +23,7 @@ module Checkoff
 
     def file_task_by_section(by_section, task, project_gid)
       membership = task.memberships.find { |m| m.project.gid == project_gid }
-      if membership.nil?
-        raise "Could not find task in project_gid #{project_gid}: #{task}"
-      end
+      raise "Could not find task in project_gid #{project_gid}: #{task}" if membership.nil?
 
       current_section = membership.section.name
       current_section = nil if current_section == '(no section)'
@@ -90,11 +88,12 @@ module Checkoff
 
     def tasks_by_section(workspace_name, project_name)
       project = project_or_raise(workspace_name, project_name)
-      if project_name == :my_tasks_new
+      case project_name
+      when :my_tasks_new
         tasks_by_section_for_project_and_assignee_status(project, 'inbox')
-      elsif project_name == :my_tasks_today
+      when :my_tasks_today
         tasks_by_section_for_project_and_assignee_status(project, 'today')
-      elsif project_name == :my_tasks_upcoming
+      when :my_tasks_upcoming
         tasks_by_section_for_project_and_assignee_status(project, 'upcoming')
       else
         tasks_by_section_for_project(project)

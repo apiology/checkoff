@@ -2,8 +2,7 @@
 
 # Module which adds helpers to run tests as if it was a specific date.
 module TestDate
-  attr_writer :time_period
-  attr_writer :mock_date_str
+  attr_writer :time_period, :mock_date_str
 
   def time_period
     @time_period ||= :afternoon

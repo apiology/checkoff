@@ -1,6 +1,7 @@
+# frozen_string_literal: true
+
 require_relative 'config_loader'
 
-# frozen_string_literal: true
 require 'cache_method'
 require 'asana'
 
@@ -50,9 +51,7 @@ module Checkoff
     def my_tasks(workspace_name)
       my_tasks = @config[:my_tasks]
       gid = @config[:my_tasks][workspace_name] unless my_tasks.nil?
-      if my_tasks.nil? || gid.nil?
-        raise "Please define [:my_tasks][#{workspace_name}] in config file"
-      end
+      raise "Please define [:my_tasks][#{workspace_name}] in config file" if my_tasks.nil? || gid.nil?
 
       projects.find_by_id(gid)
     end
