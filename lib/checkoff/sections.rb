@@ -13,7 +13,8 @@ module Checkoff
 
     attr_reader :projects, :time
 
-    def initialize(projects: Checkoff::Projects.new,
+    def initialize(config: Checkoff::ConfigLoader.load(:asana),
+                   projects: Checkoff::Projects.new(config: config),
                    time: Time)
       @projects = projects
       @time = time

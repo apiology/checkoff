@@ -26,7 +26,7 @@ module Checkoff
 
     def initialize(config: Checkoff::ConfigLoader.load(:asana),
                    asana_client: Asana::Client,
-                   workspaces: Checkoff::Workspaces.new)
+                   workspaces: Checkoff::Workspaces.new(config: config))
       @config = config
       @asana_client = asana_client
       @workspaces = workspaces

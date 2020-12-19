@@ -15,10 +15,12 @@ module Checkoff
   class CLI
     attr_reader :sections, :stderr
 
-    def initialize(workspaces: Checkoff::Workspaces.new,
-                   projects: Checkoff::Projects.new,
-                   sections: Checkoff::Sections.new(projects: projects),
-                   tasks: Checkoff::Tasks.new,
+    def initialize(config: Checkoff::ConfigLoader.load(:asana),
+                   workspaces: Checkoff::Workspaces.new(config: config),
+                   projects: Checkoff::Projects.new(config: config),
+                   sections: Checkoff::Sections.new(config: config,
+                                                    projects: projects),
+                   tasks: Checkoff::Tasks.new(config: config),
                    stderr: $stderr,
                    kernel: Kernel)
       @workspaces = workspaces
