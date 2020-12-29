@@ -23,7 +23,7 @@ module Checkoff
     def_delegators :@projects, :client
 
     def file_task_by_section(by_section, task, project_gid)
-      membership = task.memberships.find { |m| m.project.gid == project_gid }
+      membership = task.memberships.find { |m| m['project']['gid'] == project_gid }
       raise "Could not find task in project_gid #{project_gid}: #{task}" if membership.nil?
 
       current_section = membership.section.name
