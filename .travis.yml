@@ -10,8 +10,13 @@ rvm:
   # checking for main() in -lstdc++... RuntimeError: The compiler failed to generate
   # https://travis-ci.com/apiology/pronto-punchlist/jobs/264907931
   # - jruby-head
-  - ruby-head
-  - ruby-3.0
+
+  # These are currently pending ruby-asana fixes:
+  #
+  # https://github.com/Asana/ruby-asana/pull/99
+  #
+  # - ruby-head
+  # - ruby-3.0
   - ruby-2.7
   - ruby-2.6
   - ruby-2.5
