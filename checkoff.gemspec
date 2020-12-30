@@ -13,7 +13,7 @@ Gem::Specification.new do |spec|
   spec.summary       = 'Command-line and gem client for Asana (unofficial)'
   spec.homepage      = 'http://github.com/apiology/checkoff'
   spec.license       = 'MIT'
-  spec.required_ruby_version = '>= 2.6'
+  spec.required_ruby_version = '>= 2.5'
 
   spec.files = `git ls-files -z`.split("\x0").reject do |f|
     f.match(%r{^(test|spec|features)/})
