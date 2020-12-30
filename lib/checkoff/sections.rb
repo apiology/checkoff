@@ -26,7 +26,7 @@ module Checkoff
       membership = task.memberships.find { |m| m['project']['gid'] == project_gid }
       raise "Could not find task in project_gid #{project_gid}: #{task}" if membership.nil?
 
-      current_section = membership.section.name
+      current_section = membership['section']['name']
       current_section = nil if current_section == '(no section)'
       by_section[current_section] ||= []
       by_section[current_section] << task
