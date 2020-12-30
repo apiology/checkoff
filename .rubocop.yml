@@ -194,7 +194,7 @@ RSpec/StubbedMock: # (new in 1.44)
   Enabled: true
 
 AllCops:
-  TargetRubyVersion: 2.6
+  TargetRubyVersion: 2.5
 
 require:
   - rubocop-rspec
