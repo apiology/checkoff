@@ -50,7 +50,7 @@ module Checkoff
     end
 
     def default_assignee_gid
-      @config[:default_assignee_gid]
+      @config.fetch(:default_assignee_gid)
     end
   end
 end
