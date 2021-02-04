@@ -6,8 +6,12 @@ require_relative 'class_test'
 class TestConfigLoader < Minitest::Test
   let_mock :yaml_results
 
-  def mock_yaml_loaded
+  def mock_load_yaml_file_called
     Checkoff::ConfigLoader.expects(:load_yaml_file).with(:foo).returns(yaml_results)
+  end
+
+  def mock_yaml_loaded
+    mock_load_yaml_file_called
     yaml_results.expects(:[]).with(:env_only_key).returns(nil).at_least(0)
     yaml_results.expects(:[]).with(:no_key_found).returns(nil).at_least(0)
     yaml_results.expects(:[]).with(:bar).returns('yaml_value').at_least(0)

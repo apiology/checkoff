@@ -4,6 +4,8 @@ require 'yaml'
 require 'active_support/core_ext/hash'
 
 module Checkoff
+  # Use the provided config from a YAML file, and fall back to env
+  # variable if it's not populated for a key'
   class EnvFallbackConfigLoader
     def initialize(config, sym, yaml_filename)
       @config = config
