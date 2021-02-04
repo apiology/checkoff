@@ -126,6 +126,8 @@ my_tasks:
 personal_access_token: 'some_big_long_string_from_asana.com_here'
 ```
 
+Alternately you can set environment variables to match - e.g., `ASANA__PERSONAL_ACCESS_TOKEN`
+
 ## Developing
 
 ```bash
