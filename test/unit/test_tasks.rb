@@ -39,7 +39,7 @@ class TestTasks < BaseAsana
   end
 
   def mock_add_task
-    @mocks[:config].expects(:[]).with(:default_assignee_gid)
+    @mocks[:config].expects(:fetch).with(:default_assignee_gid)
                    .returns(default_assignee_gid)
     @mocks[:sections].expects(:client).returns(client)
     expect_task_created
