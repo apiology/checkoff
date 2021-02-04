@@ -30,6 +30,7 @@ Gem::Specification.new do |spec|
   spec.add_development_dependency 'bundler'
   spec.add_development_dependency 'minitest-profile'
   spec.add_development_dependency 'mocha'
+  spec.add_development_dependency 'overcommit'
   spec.add_development_dependency 'quality', '~> 38'
   spec.add_development_dependency 'rake', '~> 13.0'
   spec.add_development_dependency 'rspec', '>=3.4'

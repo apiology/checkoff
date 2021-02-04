@@ -11,13 +11,13 @@ module Checkoff
 
     def client
       @client ||= @asana_client.new do |c|
-        c.authentication :access_token, @config[:personal_access_token]
+        c.authentication :access_token, @config.fetch(:personal_access_token)
         c.default_headers 'asana-enable' => 'string_ids,new_sections'
       end
     end
 
     def default_workspace_gid
-      @config[:default_workspace_gid]
+      @config.fetch(:default_workspace_gid)
     end
 
     def workspace_by_name(workspace_name)
