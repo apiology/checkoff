@@ -86,6 +86,20 @@ class TestCLI < ClassTest
     '{"name":"task_c","due":"fake_date"}]}'
   end
 
+  def mock_run_with_no_project_specified
+    @mocks[:stderr].expects(:puts).at_least(1)
+  end
+
+  def test_run_with_no_project_specified
+    asana_my_tasks = get_test_object do
+      mock_run_with_no_project_specified
+    end
+    assert_raises(SystemExit) do
+      asana_my_tasks.run(['view',
+                          workspace_name])
+    end
+  end
+
   def test_run_with_no_section_specified_normal_project
     asana_my_tasks = get_test_object do
       mock_run_with_no_section_specified_normal_project
