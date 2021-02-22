@@ -41,6 +41,12 @@ module Checkoff
     end
     cache_method :by_section, LONG_CACHE_TIME
 
+    def legacy_tasks_by_section_for_project(project)
+      raw_tasks = projects.tasks_from_project(project)
+      active_tasks = projects.active_tasks(raw_tasks)
+      legacy_by_section(active_tasks)
+    end
+
     def tasks_by_section_for_project(project)
       raw_tasks = projects.tasks_from_project(project)
       active_tasks = projects.active_tasks(raw_tasks)
@@ -90,6 +96,8 @@ module Checkoff
     def tasks_by_section(workspace_name, project_name)
       project = project_or_raise(workspace_name, project_name)
       case project_name
+      when :my_tasks
+        legacy_tasks_by_section_for_project(project)
       when :my_tasks_new
         tasks_by_section_for_project_and_assignee_status(project, 'inbox')
       when :my_tasks_today
