@@ -31,3 +31,10 @@ PreCommit:
 #
 #  IndexTags:
 #    enabled: true # Generate a tags file with `ctags` each time HEAD changes
+
+PrePush:
+  Minitest:
+    command: ['ruby', '-Ilib:test/unit:lib/checkoff', '-rbundler/setup', '-rminitest', "-e 'exit! Minitest.run'"]
+    include:
+      - 'test/unit/**/test*.rb'
+    enabled: true
