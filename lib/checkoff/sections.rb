@@ -11,12 +11,14 @@ module Checkoff
 
     extend Forwardable
 
-    attr_reader :projects, :time
+    attr_reader :projects, :workspaces, :time
 
     def initialize(config: Checkoff::ConfigLoader.load(:asana),
                    projects: Checkoff::Projects.new(config: config),
+                   workspaces: Checkoff::Workspaces.new(config: config),
                    time: Time)
       @projects = projects
+      @workspaces = workspaces
       @time = time
     end
 
@@ -74,8 +76,8 @@ module Checkoff
       by_section
     end
 
-    def tasks_by_section_for_project_and_assignee_status(project,
-                                                         assignee_status)
+    def legacy_tasks_by_section_for_project_and_assignee_status(project,
+                                                                assignee_status)
       raw_tasks = projects.tasks_from_project(project)
       by_assignee_status =
         projects.active_tasks(raw_tasks)
@@ -93,17 +95,40 @@ module Checkoff
       project
     end
 
+    def verify_legacy_user_task_list!(workspace_name)
+      return unless user_task_list_migrated_to_real_sections?(workspace_name)
+
+      raise NotImplementedError, 'Section-based user task lists not yet supported'
+    end
+
+    ASSIGNEE_STATUS_BY_PROJECT_NAME = {
+      my_tasks_new: 'inbox',
+      my_tasks_today: 'today',
+      my_tasks_upcoming: 'upcoming',
+    }.freeze
+
+    def user_task_list_by_section(workspace_name, project_name)
+      verify_legacy_user_task_list!(workspace_name)
+
+      if project_name == :my_tasks
+        legacy_tasks_by_section_for_project(project_name)
+      else
+        legacy_tasks_by_section_for_project_and_assignee_status(project_name,
+                                                                ASSIGNEE_STATUS_BY_PROJECT_NAME.fetch(project_name))
+      end
+    end
+
     def tasks_by_section(workspace_name, project_name)
       project = project_or_raise(workspace_name, project_name)
       case project_name
       when :my_tasks
-        legacy_tasks_by_section_for_project(project)
+        user_task_list_by_section(workspace_name, project_name)
       when :my_tasks_new
-        tasks_by_section_for_project_and_assignee_status(project, 'inbox')
+        user_task_list_by_section(workspace_name, project_name)
       when :my_tasks_today
-        tasks_by_section_for_project_and_assignee_status(project, 'today')
+        user_task_list_by_section(workspace_name, project_name)
       when :my_tasks_upcoming
-        tasks_by_section_for_project_and_assignee_status(project, 'upcoming')
+        user_task_list_by_section(workspace_name, project_name)
       else
         tasks_by_section_for_project(project)
       end
@@ -127,6 +152,13 @@ module Checkoff
       tasks.map(&:name)
     end
     cache_method :section_task_names, SHORT_CACHE_TIME
+
+    def user_task_list_migrated_to_real_sections?(workspace_name)
+      workspace = workspaces.workspace_by_name(workspace_name)
+      result = client.user_task_lists.get_user_task_list_for_user(user_gid: 'me',
+                                                                  workspace: workspace.gid)
+      result.migration_status != 'not_migrated'
+    end
 
     def task_due?(task)
       if task.due_at

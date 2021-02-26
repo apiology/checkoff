@@ -24,6 +24,8 @@ class TestWorkspaces < BaseAsana
     client.expects(:authentication).with(:access_token, personal_access_token)
     client.expects(:default_headers).with('asana-enable' =>
                                           'string_ids,new_sections')
+    client.expects(:default_headers).with('asana-disable' =>
+                                          'new_user_task_lists')
   end
 
   def mock_workspace_by_name
