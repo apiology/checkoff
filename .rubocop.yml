@@ -195,6 +195,8 @@ RSpec/StubbedMock: # (new in 1.44)
 
 AllCops:
   TargetRubyVersion: 2.5
+  Exclude:
+    - 'bin/*'
 
 require:
   - rubocop-rspec
