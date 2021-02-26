@@ -9,6 +9,19 @@ require 'active_support/time'
 class TestSections < BaseAsana
   let_mock :project, :inactive_task_b, :a_membership, :a_membership_project, :a_membership_section
 
+  def mock_project_task_names
+    expect_project_a_tasks_pulled
+    expect_named(task_c, 'c')
+  end
+
+  def test_project_task_names
+    asana = get_test_object do
+      mock_project_task_names
+    end
+    out = asana.project_task_names('Workspace 1', a_name)
+    assert_equal(['Section 1:', ['c']], out)
+  end
+
   def expect_named(task, name)
     task.expects(:name).returns(name).at_least(1)
   end
