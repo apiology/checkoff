@@ -1,7 +1,7 @@
 Command-line and gem client for Asana (unofficial)
 
 [![Circle CI](https://circleci.com/gh/apiology/checkoff.svg?style=svg)](https://circleci.com/gh/apiology/checkoff)
-[![Travis CI](https://travis-ci.org/apiology/checkoff.svg?branch=master)](https://travis-ci.org/apiology/checkoff)
+[![Travis CI](https://travis-ci.org/apiology/checkoff.svg?branch=main)](https://travis-ci.org/apiology/checkoff)
 
 ## Using
 
@@ -15,7 +15,7 @@ View tasks:
 
 Let's say we have a project like this:
 
-![project screenshot from asana.com](https://github.com/apiology/checkoff/raw/master/docs/example_project.png "Example project")
+![project screenshot from asana.com](https://github.com/apiology/checkoff/raw/main/docs/example_project.png "Example project")
 
 Checkoff outputs things in JSON.  'jq' is a great tool to use in combination:
 
