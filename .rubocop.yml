@@ -1,30 +1,48 @@
-# I like trailing commas in hashes.  They let me insert new elements and
-# see them as one line in a diff, not two.
-Style/TrailingCommaInHashLiteral:
-  EnforcedStyleForMultiline: comma
+---
+Layout/LineLength:
+  Max: 120
 
-Style/TrailingCommaInArrayLiteral:
-  EnforcedStyleForMultiline: comma
+Layout/MultilineMethodCallIndentation:
+  EnforcedStyle: indented
+
+Lint/UnusedMethodArgument:
+  AllowUnusedKeywordArguments: true
+
+# https://stackoverflow.com/questions/40934345/rubocop-25-line-block-size-and-rspec-tests
+Metrics/BlockLength:
+  # Exclude DSLs
+  Exclude:
+    - 'Rakefile'
+    - '*.gemspec'
+    - '**/*.rake'
+    - 'spec/**/*.rb'
+    - 'feature/**/*.rb'
 
 # I use keyword arguments for a poor man's dependency injection to cut
 # down on the magic in my tests.
 Metrics/ParameterLists:
   CountKeywordArgs: false
 
-# If I'm using one function name and returning the contents of an
-# attribute, that's OK.  The alternative would be this, which I find
-# confusing and often not really what I mean:
-#
-# attr_reader :something_else
-# alias_method :something, :something_else
-Style/TrivialAccessors:
-   ExactNameMatch: true
+Naming/HeredocDelimiterNaming:
+  Enabled: false
+
+Naming/MethodParameterName:
+  Enabled: true
+  AllowedNames:
+    # I don't think things on this list are a terribly hard convention
+    # for folks to learn.  bbatsov also doesn't care much for this
+    # check:
+    #
+    # https://github.com/rubocop-hq/rubocop/issues/3666
+    - e # exception
+    - x # cartesian coordinates
+    - y # cartesian coordinates
 
 #
 # Add 'XX X' to the standard list
 #
 Style/CommentAnnotation:
-   Keywords:
+  Keywords:
     - "TOD\
        O"
     - "FIXM\
@@ -38,167 +56,36 @@ Style/CommentAnnotation:
     - "XX\
        X"
 
-# https://stackoverflow.com/questions/40934345/rubocop-25-line-block-size-and-rspec-tests
-Metrics/BlockLength:
-  # Exclude DSLs
-  Exclude:
-    - 'Rakefile'
-    - '*.gemspec'
-    - '**/*.rake'
-    - 'spec/**/*.rb'
-    - 'feature/**/*.rb'
-
-# http://www.betterspecs.org/#single
-#
-# > in tests that are not isolated (e.g. ones that integrate with a
-# > DB, an external webservice, or end-to-end-tests), you take a
-# > massive performance hit to do the same setup over and over again,
-# > just to set a different expectation in each test. In these sorts
-# > of slower tests, I think it's fine to specify more than one
-# > isolated behavior.
-RSpec/MultipleExpectations:
-  Exclude:
-    - 'feature/**/*.rb'
-
 Style/StringLiterals:
-    EnforcedStyle: single_quotes
-    SupportedStyles:
-      - single_quotes
-      - double_quotes
-    ConsistentQuotesInMultiline: true
+  EnforcedStyle: single_quotes
+  SupportedStyles:
+    - single_quotes
+    - double_quotes
+  ConsistentQuotesInMultiline: true
 
-Layout/BeginEndAlignment: # (new in 0.91)
-  Enabled: true
-Layout/EmptyLinesAroundAttributeAccessor: # (new in 0.83)
-  Enabled: true
-Layout/SpaceAroundMethodCallOperator: # (new in 0.82)
-  Enabled: true
-Lint/BinaryOperatorWithIdenticalOperands: # (new in 0.89)
-  Enabled: true
-Lint/ConstantDefinitionInBlock: # (new in 0.91)
-  Enabled: true
-Lint/DeprecatedOpenSSLConstant: # (new in 0.84)
-  Enabled: true
-Lint/DuplicateElsifCondition: # (new in 0.88)
-  Enabled: true
-Lint/DuplicateRequire: # (new in 0.90)
-  Enabled: true
-Lint/DuplicateRescueException: # (new in 0.89)
-  Enabled: true
-Lint/EmptyConditionalBody: # (new in 0.89)
-  Enabled: true
-Lint/EmptyFile: # (new in 0.90)
-  Enabled: true
-Lint/FloatComparison: # (new in 0.89)
-  Enabled: true
-Lint/IdentityComparison: # (new in 0.91)
-  Enabled: true
-Lint/MissingSuper: # (new in 0.89)
-  Enabled: true
-Lint/MixedRegexpCaptureTypes: # (new in 0.85)
-  Enabled: true
-Lint/OutOfRangeRegexpRef: # (new in 0.89)
-  Enabled: true
-Lint/RaiseException: # (new in 0.81)
-  Enabled: true
-Lint/SelfAssignment: # (new in 0.89)
-  Enabled: true
-Lint/StructNewOverride: # (new in 0.81)
-  Enabled: true
-Lint/TopLevelReturnWithArgument: # (new in 0.89)
-  Enabled: true
-Lint/TrailingCommaInAttributeDeclaration: # (new in 0.90)
-  Enabled: true
-Lint/UnreachableLoop: # (new in 0.89)
-  Enabled: true
-Lint/UselessMethodDefinition: # (new in 0.90)
-  Enabled: true
-Lint/UselessTimes: # (new in 0.91)
-  Enabled: true
-Style/AccessorGrouping: # (new in 0.87)
-  Enabled: true
-Style/BisectedAttrAccessor: # (new in 0.87)
-  Enabled: true
-Style/CaseLikeIf: # (new in 0.88)
-  Enabled: true
-Style/CombinableLoops: # (new in 0.90)
-  Enabled: true
-Style/ExplicitBlockArgument: # (new in 0.89)
-  Enabled: true
-Style/ExponentialNotation: # (new in 0.82)
-  Enabled: true
-Style/GlobalStdStream: # (new in 0.89)
-  Enabled: true
-Style/HashAsLastArrayItem: # (new in 0.88)
-  Enabled: true
-Style/HashEachMethods: # (new in 0.80)
-  Enabled: true
-Style/HashLikeCase: # (new in 0.88)
-  Enabled: true
-Style/HashTransformKeys: # (new in 0.80)
-  Enabled: true
-Style/HashTransformValues: # (new in 0.80)
-  Enabled: true
-Style/KeywordParametersOrder: # (new in 0.90)
-  Enabled: true
-Style/OptionalBooleanParameter: # (new in 0.89)
-  Enabled: true
-Style/RedundantAssignment: # (new in 0.87)
-  Enabled: true
-Style/RedundantFetchBlock: # (new in 0.86)
-  Enabled: true
-Style/RedundantFileExtensionInRequire: # (new in 0.88)
-  Enabled: true
-Style/RedundantRegexpCharacterClass: # (new in 0.85)
-  Enabled: true
-Style/RedundantRegexpEscape: # (new in 0.85)
-  Enabled: true
-Style/RedundantSelfAssignment: # (new in 0.90)
-  Enabled: true
-Style/SingleArgumentDig: # (new in 0.89)
-  Enabled: true
-Style/SlicingWithRange: # (new in 0.83)
-  Enabled: true
-Style/SoleNestedConditional: # (new in 0.89)
-  Enabled: true
-Style/StringConcatenation: # (new in 0.89)
-  Enabled: true
-Minitest/AssertInDelta: # (new in 0.10)
-  Enabled: true
-Minitest/AssertionInLifecycleHook: # (new in 0.10)
-  Enabled: true
-Minitest/AssertKindOf: # (new in 0.10)
-  Enabled: true
-Minitest/AssertOutput: # (new in 0.10)
-  Enabled: true
-Minitest/AssertPathExists: # (new in 0.10)
-  Enabled: true
-Minitest/AssertSilent: # (new in 0.10)
-  Enabled: true
-Minitest/LiteralAsActualArgument: # (new in 0.10)
-  Enabled: true
-Minitest/MultipleAssertions: # (new in 0.10)
-  Enabled: true
-Minitest/RefuteInDelta: # (new in 0.10)
-  Enabled: true
-Minitest/RefuteKindOf: # (new in 0.10)
-  Enabled: true
-Minitest/RefutePathExists: # (new in 0.10)
-  Enabled: true
-Minitest/TestMethodName: # (new in 0.10)
-  # This gives false positives when non-test methods exist...
-  Enabled: false
-Minitest/UnspecifiedException: # (new in 0.10)
-  Enabled: true
-RSpec/StubbedMock: # (new in 1.44)
-  Enabled: true
+# I like trailing commas in arrays and hashes.  They let me insert new
+# elements and see them as one line in a diff, not two.
+Style/TrailingCommaInArrayLiteral:
+  EnforcedStyleForMultiline: comma
+
+Style/TrailingCommaInHashLiteral:
+  EnforcedStyleForMultiline: comma
+
+# If I'm using one function name and returning the contents of an
+# attribute, that's OK.  The alternative would be this, which I find
+# confusing and often not really what I mean:
+#
+# attr_reader :something_else
+# alias_method :something, :something_else
+Style/TrivialAccessors:
+  ExactNameMatch: true
 
 AllCops:
+  NewCops: enable
   TargetRubyVersion: 2.5
   Exclude:
     - 'bin/*'
 
 require:
-  - rubocop-rspec
-  - rubocop-minitest
   - rubocop-rake
+  - rubocop-minitest

@@ -3,6 +3,8 @@ Command-line and gem client for Asana (unofficial)
 [![Circle CI](https://circleci.com/gh/apiology/checkoff.svg?style=svg)](https://circleci.com/gh/apiology/checkoff)
 [![Travis CI](https://travis-ci.org/apiology/checkoff.svg?branch=main)](https://travis-ci.org/apiology/checkoff)
 
+Command-line and gem client for Asana (unofficial)
+
 ## Using
 
 ```
@@ -133,4 +135,13 @@ Alternately you can set environment variables to match - e.g., `ASANA__PERSONAL_
 ```bash
 bundle install
 bundle exec exe/checkoff --help
+```
+
+To publish new version as a maintainer:
+
+```sh
+git log "v$(bump current)..."
+# Set type_of_bump to patch, minor, or major
+bump --tag --tag-prefix=v ${type_of_bump:?}
+rake release
 ```

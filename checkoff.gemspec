@@ -27,6 +27,7 @@ Gem::Specification.new do |spec|
   spec.add_runtime_dependency 'cache_method'
   spec.add_runtime_dependency 'dalli'
 
+  spec.add_development_dependency 'bump'
   spec.add_development_dependency 'bundler'
   spec.add_development_dependency 'minitest-profile'
   spec.add_development_dependency 'mocha'
@@ -34,5 +35,8 @@ Gem::Specification.new do |spec|
   spec.add_development_dependency 'quality', '~> 38'
   spec.add_development_dependency 'rake', '~> 13.0'
   spec.add_development_dependency 'rspec', '>=3.4'
+  spec.add_development_dependency 'rubocop'
+  spec.add_development_dependency 'rubocop-rake'
+  spec.add_development_dependency 'rubocop-rspec'
   spec.add_development_dependency 'simplecov'
 end
