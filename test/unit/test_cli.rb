@@ -42,7 +42,7 @@ class TestCLI < ClassTest
   def expect_three_tasks_pulled_and_queried
     @mocks[:sections].expects(:tasks).with(workspace_name, project_name,
                                            section_name_str)
-                     .returns(three_tasks.keys)
+      .returns(three_tasks.keys)
     expect_three_tasks_queried
   end
 
@@ -120,7 +120,7 @@ class TestCLI < ClassTest
 
   def mock_quickadd
     @mocks[:workspaces].expects(:workspace_by_name).with(workspace_name)
-                       .returns(workspace)
+      .returns(workspace)
     workspace.expects(:gid).returns(workspace_gid)
     @mocks[:tasks].expects(:add_task).with('my task name',
                                            workspace_gid: workspace_gid)

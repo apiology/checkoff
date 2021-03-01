@@ -40,7 +40,7 @@ class TestTasks < BaseAsana
 
   def mock_add_task
     @mocks[:config].expects(:fetch).with(:default_assignee_gid)
-                   .returns(default_assignee_gid)
+      .returns(default_assignee_gid)
     @mocks[:sections].expects(:client).returns(client)
     expect_task_created
   end
@@ -57,14 +57,14 @@ class TestTasks < BaseAsana
 
   def expect_tasks_from_project_pulled
     projects.expects(:tasks_from_project)
-            .with(project, only_uncompleted: only_uncompleted)
-            .returns([task])
+      .with(project, only_uncompleted: only_uncompleted)
+      .returns([task])
     task.expects(:name).returns(task_name)
   end
 
   def expect_project_pulled
     projects.expects(:project).with(workspace_name, project_name)
-            .returns(project)
+      .returns(project)
   end
 
   def expect_projects_pulled
