@@ -22,19 +22,7 @@ clean: ## remove all built artifacts
 test: spec ## run tests quickly
 
 quality:  ## run precommit quality checks
-	@bundle exec rake quality
-
-bigfiles:
-	@bundle exec rake bigfiles
-
-pronto: ## run pronto
-	@bundle exec rake pronto
-
-rubocop: ## run RuboCop with quality ratcheting
-	@bundle exec rake rubocop
-
-punchlist: ## run punchlist with quality ratcheting
-	@bundle exec rake punchlist
+	@bundle exec overcommit --run
 
 spec: ## Run lower-level tests
 	@bundle exec rake spec
@@ -42,8 +30,7 @@ spec: ## Run lower-level tests
 feature: ## Run higher-level tests
 	@bundle exec rake feature
 
-localtest: ## run default local actions
-	@bundle exec rake localtest
+localtest: spec quality feature ## run default local actions
 
 update_from_cookiecutter: ## Bring in changes from template project used to create this repo
 	IN_COOKIECUTTER_PROJECT_UPGRADER=1 cookiecutter_project_upgrader || true

@@ -4,6 +4,7 @@ require 'forwardable'
 
 module Checkoff
   # Query different sections of Asana projects
+  # rubocop:disable Metrics/ClassLength
   class Sections
     MINUTE = 60
     LONG_CACHE_TIME = MINUTE * 15
@@ -81,7 +82,7 @@ module Checkoff
       raw_tasks = projects.tasks_from_project(project)
       by_assignee_status =
         projects.active_tasks(raw_tasks)
-                .group_by(&:assignee_status)
+          .group_by(&:assignee_status)
       active_tasks = by_assignee_status[assignee_status]
       legacy_by_section(active_tasks)
     end
@@ -118,6 +119,7 @@ module Checkoff
       end
     end
 
+    # rubocop:disable Metrics/MethodLength
     def tasks_by_section(workspace_name, project_name)
       project = project_or_raise(workspace_name, project_name)
       case project_name
@@ -134,6 +136,7 @@ module Checkoff
       end
     end
     cache_method :tasks_by_section, SHORT_CACHE_TIME
+    # rubocop:enable Metrics/MethodLength
 
     # XXX: Rename to section_tasks
     def tasks(workspace_name, project_name, section_name)
@@ -183,4 +186,5 @@ module Checkoff
     end
     cache_method :project_task_names, SHORT_CACHE_TIME
   end
+  # rubocop:enable Metrics/ClassLength
 end
