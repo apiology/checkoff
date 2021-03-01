@@ -1,3 +1,4 @@
+---
 # Use this file to configure the Overcommit hooks you wish to use. This will
 # extend the default configuration defined in:
 # https://github.com/sds/overcommit/blob/master/config/default.yml
@@ -19,18 +20,29 @@ PreCommit:
   RuboCop:
     enabled: true
     on_warn: fail # Treat all warnings as failures
-#
-#  TrailingWhitespace:
-#    enabled: true
-#    exclude:
-#      - '**/db/structure.sql' # Ignore trailing whitespace in generated files
-#
-#PostCheckout:
-#  ALL: # Special hook name that customizes all hooks of this type
-#    quiet: true # Change all post-checkout hooks to only display output on failure
-#
-#  IndexTags:
-#    enabled: true # Generate a tags file with `ctags` each time HEAD changes
+    command: ['bundle', 'exec', 'rubocop']
+    include:
+      - '**/*.gemspec'
+      - '**/*.rake'
+      - '**/*.rb'
+      - '**/*.ru'
+      - '**/Gemfile'
+      - '**/Rakefile'
+      - 'bin/*'
+  PythonFlake8:
+    enabled: true
+  ShellCheck:
+    enabled: true
+    on_warn: fail
+  YamlLint:
+    enabled: true
+    on_warn: fail
+  CircleCi:
+    required_executable: 'circleci'
+    flags: ['config', 'validate']
+    include:
+      - '.circleci/config.yml'
+    enabled: true
 
 PrePush:
   Minitest:
