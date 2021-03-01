@@ -11,7 +11,7 @@ Gem::Specification.new do |spec|
   spec.authors       = ['Vince Broz']
   spec.email         = ['vince@broz.cc']
   spec.summary       = 'Command-line and gem client for Asana (unofficial)'
-  spec.homepage      = 'http://github.com/apiology/checkoff'
+  spec.homepage      = 'https://github.com/apiology/checkoff'
   spec.license       = 'MIT'
   spec.required_ruby_version = '>= 2.5'
 
