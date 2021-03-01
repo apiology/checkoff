@@ -259,6 +259,8 @@ ensure_ruby_versions
 
 set_ruby_local_version
 
+install_package cmake # needed by rugged, needed by github-linguist, needed by quality
+
 ensure_bundle
 
 ensure_pyenv
