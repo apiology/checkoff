@@ -1,0 +1,13 @@
+{
+    "_template": "https://github.com/apiology/cookiecutter-gem",
+    "email": "vince@broz.cc",
+    "full_name": "Vince Broz",
+    "github_username": "apiology",
+    "module_name": "Checkoff",
+    "open_source_license": "MIT license",
+    "project_name": "Checkoff",
+    "project_short_description": "Command-line and gem client for Asana (unofficial)",
+    "project_slug": "checkoff",
+    "type_of_github_repo": "public",
+    "version": "0.8.0"
+}
