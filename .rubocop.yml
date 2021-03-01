@@ -23,6 +23,13 @@ Metrics/BlockLength:
 Metrics/ParameterLists:
   CountKeywordArgs: false
 
+# Can try removing this after I have a release installed with this
+# fix (probably in rubocop-minitest 0.10.3):
+#
+# https://github.com/rubocop-hq/rubocop-minitest/pull/116
+Minitest/TestMethodName:
+  Enabled: false
+
 Naming/HeredocDelimiterNaming:
   Enabled: false
 
