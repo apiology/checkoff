@@ -259,6 +259,7 @@ ensure_ruby_versions
 
 set_ruby_local_version
 
+install_package icu4c libicu-dev # needed by rugged, needed by github-linguist, needed by quality
 install_package pkg-config # needed by rugged, needed by github-linguist, needed by quality
 install_package cmake # needed by rugged, needed by github-linguist, needed by quality
 
