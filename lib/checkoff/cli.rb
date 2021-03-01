@@ -12,6 +12,7 @@ require_relative 'sections'
 
 module Checkoff
   # Provide ability for CLI to pull Asana items
+  # rubocop:disable Metrics/ClassLength
   class CLI
     attr_reader :sections, :stderr
 
@@ -86,6 +87,7 @@ module Checkoff
       subargs.task_name = args[2]
     end
 
+    # rubocop:disable Metrics/MethodLength
     def parse_args(args)
       mode = args[0]
       subargs = OpenStruct.new
@@ -99,6 +101,7 @@ module Checkoff
       end
       [mode, subargs]
     end
+    # rubocop:enable Metrics/MethodLength
 
     def output_help
       stderr.puts 'View tasks:'
@@ -135,4 +138,5 @@ module Checkoff
       end
     end
   end
+  # rubocop:enable Metrics/ClassLength
 end
