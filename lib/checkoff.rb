@@ -1,5 +1,3 @@
-require "checkoff/version"
+# frozen_string_literal: true
 
-module Checkoff
-  # Your code goes here...
-end
+require 'checkoff/version'
