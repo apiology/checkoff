@@ -8,7 +8,57 @@ require 'active_support/time'
 # Test the Checkoff::Sections class
 # rubocop:disable Metrics/ClassLength
 class TestSections < BaseAsana
-  let_mock :project, :inactive_task_b, :a_membership, :a_membership_project, :a_membership_section
+  let_mock :project, :inactive_task_b, :a_membership, :a_membership_project, :a_membership_section,
+           :user_task_list_project, :workspace_one, :client, :user_task_lists, :workspace_one_gid, :user_task_list
+
+  def expect_workspace_pulled(workspace_name, workspace)
+    @mocks[:workspaces].expects(:workspace_by_name).with(workspace_name).returns(workspace)
+  end
+
+  def expect_legacy_project_and_workspace_pulled(workspace_name, workspace, project, project_name)
+    expect_project_pulled(workspace_name, project, project_name)
+    expect_workspace_pulled(workspace_name, workspace)
+  end
+
+  def expect_client_pulled
+    @mocks[:projects].expects(:client).returns(client)
+  end
+
+  def expect_user_task_lists_object_pulled_from_client
+    client.expects(:user_task_lists).returns(user_task_lists)
+  end
+
+  def expect_user_task_lists_queried
+    user_task_lists.expects(:get_user_task_list_for_user).with(user_gid: 'me',
+                                                               workspace: workspace_one_gid)
+      .returns(user_task_list)
+  end
+
+  def expect_user_task_list_pulled
+    expect_client_pulled
+    expect_user_task_lists_object_pulled_from_client
+    workspace_one.expects(:gid).returns(workspace_one_gid)
+    expect_user_task_lists_queried
+    user_task_list.expects(:migration_status).returns('not_migrated')
+  end
+
+  def mock_tasks_by_section_my_tasks_legacy
+    expect_legacy_project_and_workspace_pulled('Workspace 1',
+                                               workspace_one,
+                                               user_task_list_project,
+                                               :my_tasks)
+    expect_user_task_list_pulled
+    expect_tasks_pulled(user_task_list_project, [task_c], [task_c])
+    expect_named(task_c, 'c')
+  end
+
+  def test_tasks_by_section_my_tasks_legacy
+    asana = get_test_object do
+      mock_tasks_by_section_my_tasks_legacy
+    end
+    out = asana.tasks_by_section('Workspace 1', :my_tasks)
+    assert_equal({ nil => [task_c] }, out)
+  end
 
   def mock_project_task_names
     expect_project_a_tasks_pulled
