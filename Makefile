@@ -24,13 +24,10 @@ test: spec ## run tests quickly
 quality:  ## run precommit quality checks
 	@bundle exec overcommit --run
 
-spec: ## Run lower-level tests
-	@bundle exec rake spec
+test: ## Run lower-level tests
+	@bundle exec rake test
 
-feature: ## Run higher-level tests
-	@bundle exec rake feature
-
-localtest: spec quality feature ## run default local actions
+localtest: test quality feature ## run default local actions
 
 update_from_cookiecutter: ## Bring in changes from template project used to create this repo
 	IN_COOKIECUTTER_PROJECT_UPGRADER=1 cookiecutter_project_upgrader || true
