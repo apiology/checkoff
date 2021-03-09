@@ -49,10 +49,10 @@ module Checkoff
     end
 
     def my_tasks(workspace_name)
-      my_tasks = @config.fetch(:my_tasks)
-      gid = my_tasks[workspace_name] unless my_tasks.nil?
-      raise "Please define [:my_tasks][#{workspace_name}] in config file" if my_tasks.nil? || gid.nil?
-
+      workspace = @workspaces.workspace_by_name(workspace_name)
+      result = client.user_task_lists.get_user_task_list_for_user(user_gid: 'me',
+                                                                  workspace: workspace.gid)
+      gid = result.gid
       projects.find_by_id(gid)
     end
 
