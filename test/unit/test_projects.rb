@@ -8,7 +8,6 @@ class TestProjects < BaseAsana
   def setup_config
     @mocks[:config] = {
       personal_access_token: personal_access_token,
-      my_tasks: { 'My Workspace' => my_tasks_in_workspace_gid },
     }
   end
 
@@ -19,7 +18,7 @@ class TestProjects < BaseAsana
   let_mock :workspaces, :workspace_workspace, :some_other_workspace,
            :workspace_1, :workspace_1_gid, :my_workspace_gid, :n,
            :workspace_name, :all_workspaces, :my_tasks_project, :tasks,
-           :task_a, :task_b
+           :task_a, :task_b, :user_task_lists, :user_task_list
 
   def sample_projects
     { project_a => a_name, project_b => b_name, project_c => c_name }
@@ -35,7 +34,7 @@ class TestProjects < BaseAsana
   end
 
   def setup_client_pulled
-    @mocks[:workspaces].expects(:client).returns(client)
+    @mocks[:workspaces].expects(:client).returns(client).at_least(1)
   end
 
   def expect_tasks_found
@@ -85,16 +84,30 @@ class TestProjects < BaseAsana
     assert_equal(project_a, asana.project('Workspace 1', a_name))
   end
 
+  def setup_user_task_list_pulled
+    client.expects(:user_task_lists).returns(user_task_lists)
+    user_task_lists.expects(:get_user_task_list_for_user)
+      .with(user_gid: 'me', workspace: workspace_1_gid)
+      .returns(user_task_list)
+    user_task_list.expects(:gid).returns(my_tasks_in_workspace_gid)
+  end
+
+  def mock_project_my_tasks
+    setup_config
+    setup_client_pulled
+    setup_workspace_pulled
+    setup_projects_pulled
+    setup_user_task_list_pulled
+    projects
+      .expects(:find_by_id).with(my_tasks_in_workspace_gid)
+      .returns(my_tasks_project)
+  end
+
   def test_project_my_tasks
     asana = get_test_object do
-      setup_config
-      setup_client_pulled
-      setup_projects_pulled
-      projects
-        .expects(:find_by_id).with(my_tasks_in_workspace_gid)
-        .returns(my_tasks_project)
+      mock_project_my_tasks
     end
-    assert_equal(my_tasks_project, asana.project('My Workspace', :my_tasks))
+    assert_equal(my_tasks_project, asana.project('Workspace 1', :my_tasks))
   end
 
   let_mock :my_tasks_config
@@ -107,16 +120,6 @@ class TestProjects < BaseAsana
     @mocks[:config].expects(:fetch).with(:my_tasks).returns(my_tasks_config)
       .at_least(1)
     my_tasks_config.expects(:[]).with(unconfigured_workspace_name).returns(nil)
-  end
-
-  def test_project_my_tasks_not_configured
-    asana = get_test_object do
-      mock_project_my_tasks_not_configured
-    end
-    exception = assert_raises(RuntimeError) { asana.my_tasks(unconfigured_workspace_name) }
-    expected_message =
-      'Please define [:my_tasks][Unconfigured workspace name] in config file'
-    assert_equal(expected_message, exception.message)
   end
 
   def class_under_test
