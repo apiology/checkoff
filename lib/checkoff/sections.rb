@@ -111,10 +111,11 @@ module Checkoff
     def user_task_list_by_section(workspace_name, project_name)
       verify_legacy_user_task_list!(workspace_name)
 
+      project = projects.project(workspace_name, project_name)
       if project_name == :my_tasks
-        legacy_tasks_by_section_for_project(project_name)
+        legacy_tasks_by_section_for_project(project)
       else
-        legacy_tasks_by_section_for_project_and_assignee_status(project_name,
+        legacy_tasks_by_section_for_project_and_assignee_status(project,
                                                                 ASSIGNEE_STATUS_BY_PROJECT_NAME.fetch(project_name))
       end
     end
