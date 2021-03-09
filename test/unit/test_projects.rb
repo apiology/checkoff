@@ -6,9 +6,7 @@ require_relative 'base_asana'
 # Test the Checkoff::Projects class
 class TestProjects < BaseAsana
   def setup_config
-    @mocks[:config] = {
-      personal_access_token: personal_access_token,
-    }
+    @mocks[:config] = { personal_access_token: personal_access_token }
   end
 
   def setup_projects_pulled
