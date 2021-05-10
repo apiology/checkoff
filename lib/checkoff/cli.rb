@@ -117,7 +117,7 @@ module Checkoff
         stderr.puts 'Please specify a project name'
         exit(1)
       end
-      project_name = project_name[1..-1].to_sym if project_name.start_with? ':'
+      project_name = project_name[1..].to_sym if project_name.start_with? ':'
       if section_name.nil?
         run_on_project(workspace_name, project_name)
       else
