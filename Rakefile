@@ -1,11 +1,4 @@
 # frozen_string_literal: true
 
-#
-# bundle exec rake release to release a new gem
-#
-require 'bundler/gem_tasks'
-
-Dir['lib/tasks/**/*.rake'].each { |t| load t }
-
-desc 'Default: Run specs and check quality.'
-task default: [:localtest]
+# Add your own tasks in files placed in lib/tasks ending in .rake,
+# for example lib/tasks/capistrano.rake, and they will automatically be available to Rake.
