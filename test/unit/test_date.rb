@@ -41,7 +41,7 @@ module TestDate
     times = TIME_BY_PERIOD.map do |sym, time|
       [sym, Time.parse("#{mock_date_str} #{time} #{zone}")]
     end
-    Hash[times]
+    times.to_h
   end
 
   def mock_now_with_zone(zone)

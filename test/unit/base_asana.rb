@@ -14,7 +14,7 @@ class BaseAsana < ClassTest
            :project_a, :project_b, :project_c,
            :a_name, :b_name, :c_name, :a_gid, :b_gid, :c_gid
 
-  let_mock :a_completed_at, :b_completed_at, :section_1
+  let_mock :a_completed_at, :b_completed_at, :section_one
 
   def task_options
     {

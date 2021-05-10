@@ -14,7 +14,7 @@ class TestProjects < BaseAsana
   end
 
   let_mock :workspaces, :workspace_workspace, :some_other_workspace,
-           :workspace_1, :workspace_1_gid, :my_workspace_gid, :n,
+           :workspace_one, :workspace_one_gid, :my_workspace_gid, :n,
            :workspace_name, :all_workspaces, :my_tasks_project, :tasks,
            :task_a, :task_b, :user_task_lists, :user_task_list
 
@@ -67,8 +67,8 @@ class TestProjects < BaseAsana
 
   def setup_workspace_pulled
     @mocks[:workspaces].expects(:workspace_by_name)
-      .with('Workspace 1').returns(workspace_1)
-    workspace_1.expects(:gid).returns(workspace_1_gid)
+      .with('Workspace 1').returns(workspace_one)
+    workspace_one.expects(:gid).returns(workspace_one_gid)
   end
 
   def test_project_regular
@@ -77,7 +77,7 @@ class TestProjects < BaseAsana
       setup_client_pulled
       setup_workspace_pulled
       setup_projects_pulled
-      setup_projects_queried(workspace_gid: workspace_1_gid)
+      setup_projects_queried(workspace_gid: workspace_one_gid)
     end
     assert_equal(project_a, asana.project('Workspace 1', a_name))
   end
@@ -85,7 +85,7 @@ class TestProjects < BaseAsana
   def setup_user_task_list_pulled
     client.expects(:user_task_lists).returns(user_task_lists)
     user_task_lists.expects(:get_user_task_list_for_user)
-      .with(user_gid: 'me', workspace: workspace_1_gid)
+      .with(user_gid: 'me', workspace: workspace_one_gid)
       .returns(user_task_list)
     user_task_list.expects(:gid).returns(my_tasks_in_workspace_gid)
   end

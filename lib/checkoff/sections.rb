@@ -120,24 +120,16 @@ module Checkoff
       end
     end
 
-    # rubocop:disable Metrics/MethodLength
     def tasks_by_section(workspace_name, project_name)
       project = project_or_raise(workspace_name, project_name)
       case project_name
-      when :my_tasks
-        user_task_list_by_section(workspace_name, project_name)
-      when :my_tasks_new
-        user_task_list_by_section(workspace_name, project_name)
-      when :my_tasks_today
-        user_task_list_by_section(workspace_name, project_name)
-      when :my_tasks_upcoming
+      when :my_tasks, :my_tasks_new, :my_tasks_today, :my_tasks_upcoming
         user_task_list_by_section(workspace_name, project_name)
       else
         tasks_by_section_for_project(project)
       end
     end
     cache_method :tasks_by_section, SHORT_CACHE_TIME
-    # rubocop:enable Metrics/MethodLength
 
     # XXX: Rename to section_tasks
     def tasks(workspace_name, project_name, section_name)
