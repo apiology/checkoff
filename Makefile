@@ -26,7 +26,6 @@ pip_install: requirements_dev.txt.installed ## Install Python dependencies
 Gemfile.lock:
 	bundle install
 
-test: spec ## run tests quickly
 Gemfile.lock.installed: Gemfile.lock
 	bundle install
 	touch Gemfile.lock.installed
