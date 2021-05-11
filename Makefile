@@ -41,6 +41,7 @@ test: ## Run lower-level tests
 	@bundle exec rake test
 
 localtest: ## run default local actions
+	@bundle exec rake localtest
 
 update_from_cookiecutter: ## Bring in changes from template project used to create this repo
 	bundle exec overcommit --uninstall
