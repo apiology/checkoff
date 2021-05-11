@@ -1,4 +1,4 @@
-.PHONY: clean test help quality localtest spec feature
+.PHONY: clean test help quality localtest
 .DEFAULT_GOAL := default
 
 define PRINT_HELP_PYSCRIPT
@@ -40,7 +40,7 @@ quality: ## run precommit quality checks
 test: ## Run lower-level tests
 	@bundle exec rake test
 
-localtest: test quality feature ## run default local actions
+localtest: ## run default local actions
 
 update_from_cookiecutter: ## Bring in changes from template project used to create this repo
 	bundle exec overcommit --uninstall
