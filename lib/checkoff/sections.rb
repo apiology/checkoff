@@ -133,7 +133,7 @@ module Checkoff
 
     # XXX: Rename to section_tasks
     def tasks(workspace_name, project_name, section_name)
-      tasks_by_section(workspace_name, project_name)[section_name]
+      tasks_by_section(workspace_name, project_name).fetch(section_name, [])
     end
     cache_method :tasks, SHORT_CACHE_TIME
 
