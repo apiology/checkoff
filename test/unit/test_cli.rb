@@ -37,18 +37,19 @@ class TestCLI < ClassTest
     'section_name:'
   end
 
-  let_mock :project_name
+  def project_name
+    'my_project'
+  end
 
-  def expect_three_tasks_pulled_and_queried
+  def expect_three_tasks_pulled_and_queried(project_name)
     @mocks[:sections].expects(:tasks).with(workspace_name, project_name,
                                            section_name_str)
       .returns(three_tasks.keys)
     expect_three_tasks_queried
   end
 
-  def mock_run_with_section_specified_normal_project
-    project_name.expects(:start_with?).with(':').returns(false)
-    expect_three_tasks_pulled_and_queried
+  def mock_view_run_with_section_specified_normal_project(project_name)
+    expect_three_tasks_pulled_and_queried(project_name)
   end
 
   def expected_json_section_specified
@@ -57,15 +58,26 @@ class TestCLI < ClassTest
     '{"name":"task_c","due":"fake_date"}]'
   end
 
-  def test_run_with_section_specified_normal_project
-    asana_my_tasks = get_test_object do
-      mock_run_with_section_specified_normal_project
+  def test_view_run_with_section_specified_normal_project_colon_project
+    cli = get_test_object do
+      mock_view_run_with_section_specified_normal_project(project_name.to_sym)
     end
     assert_equal(expected_json_section_specified,
-                 asana_my_tasks.run(['view',
-                                     workspace_name,
-                                     project_name,
-                                     section_name_str]))
+                 cli.run(['view',
+                          workspace_name,
+                          ":#{project_name}",
+                          section_name_str]))
+  end
+
+  def test_view_run_with_section_specified_normal_project
+    cli = get_test_object do
+      mock_view_run_with_section_specified_normal_project(project_name)
+    end
+    assert_equal(expected_json_section_specified,
+                 cli.run(['view',
+                          workspace_name,
+                          project_name,
+                          section_name_str]))
   end
 
   def expect_tasks_by_section_pulled
@@ -76,7 +88,6 @@ class TestCLI < ClassTest
   end
 
   def mock_run_with_no_section_specified_normal_project
-    project_name.expects(:start_with?).with(':').returns(false)
     expect_tasks_by_section_pulled
     expect_three_tasks_queried
   end
