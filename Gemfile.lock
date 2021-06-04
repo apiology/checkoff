@@ -62,9 +62,10 @@ GEM
       multi_json (~> 1.3)
       multi_xml (~> 0.5)
       rack (>= 1.2, < 3)
-    overcommit (0.57.0)
+    overcommit (0.58.0)
       childprocess (>= 0.6.3, < 5)
       iniparse (~> 1.4)
+      rexml (~> 3.2)
     parallel (1.20.1)
     parser (3.0.1.1)
       ast (~> 2.4.1)
@@ -129,4 +130,4 @@ DEPENDENCIES
   undercover
 
 BUNDLED WITH
-   2.2.17
+   2.2.19
