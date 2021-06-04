@@ -28,7 +28,10 @@ Gem::Specification.new do |spec|
   spec.add_development_dependency 'bundler'
   spec.add_development_dependency 'minitest-profile'
   spec.add_development_dependency 'mocha'
-  spec.add_development_dependency 'overcommit'
+  # 0.58.0 and 0.57.0 don't seem super compatible with signatures, and
+  # magit doesn't seem to want to use the bundled version at the moment,
+  # so let's favor the more recent version...
+  spec.add_development_dependency 'overcommit', ['>=0.58.0']
   spec.add_development_dependency 'rake', '~> 13.0'
   spec.add_development_dependency 'rspec', '>=3.4'
   spec.add_development_dependency 'rubocop'
