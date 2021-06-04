@@ -41,15 +41,17 @@ class TestCLI < ClassTest
     'my_project'
   end
 
-  def expect_three_tasks_pulled_and_queried(project_name)
+  def expect_three_tasks_pulled_and_queried(project_name:,
+                                            section_name:)
     @mocks[:sections].expects(:tasks).with(workspace_name, project_name,
-                                           section_name_str)
+                                           section_name)
       .returns(three_tasks.keys)
     expect_three_tasks_queried
   end
 
-  def mock_view_run_with_section_specified_normal_project(project_name)
-    expect_three_tasks_pulled_and_queried(project_name)
+  def mock_view_run_with_section_specified_normal_project(project_name:, section_name:)
+    expect_three_tasks_pulled_and_queried(project_name: project_name,
+                                          section_name: section_name)
   end
 
   def expected_json_section_specified
@@ -58,9 +60,22 @@ class TestCLI < ClassTest
     '{"name":"task_c","due":"fake_date"}]'
   end
 
+  def test_view_run_with_section_specified_empty_section
+    cli = get_test_object do
+      mock_view_run_with_section_specified_normal_project(project_name: project_name,
+                                                          section_name: nil)
+    end
+    assert_equal(expected_json_section_specified,
+                 cli.run(['view',
+                          workspace_name,
+                          project_name,
+                          '']))
+  end
+
   def test_view_run_with_section_specified_normal_project_colon_project
     cli = get_test_object do
-      mock_view_run_with_section_specified_normal_project(project_name.to_sym)
+      mock_view_run_with_section_specified_normal_project(project_name: project_name.to_sym,
+                                                          section_name: section_name_str)
     end
     assert_equal(expected_json_section_specified,
                  cli.run(['view',
@@ -71,7 +86,8 @@ class TestCLI < ClassTest
 
   def test_view_run_with_section_specified_normal_project
     cli = get_test_object do
-      mock_view_run_with_section_specified_normal_project(project_name)
+      mock_view_run_with_section_specified_normal_project(project_name: project_name,
+                                                          section_name: section_name_str)
     end
     assert_equal(expected_json_section_specified,
                  cli.run(['view',
