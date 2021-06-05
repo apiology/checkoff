@@ -25,11 +25,11 @@ class TestCLI < ClassTest
     { task_a => 'task_a', task_b => 'task_b', task_c => 'task_c' }
   end
 
-  def expect_three_tasks_queried
+  def expect_three_tasks_queried(due_on:, due_at:)
     three_tasks.each do |task, task_name|
       expect_task_named(task, task_name)
-      expect_task_due_on(task, 'fake_date')
-      expect_task_due_at(task, nil)
+      expect_task_due_on(task, due_on)
+      expect_task_due_at(task, due_at)
     end
   end
 
@@ -37,18 +37,26 @@ class TestCLI < ClassTest
     'section_name:'
   end
 
-  let_mock :project_name
-
-  def expect_three_tasks_pulled_and_queried
-    @mocks[:sections].expects(:tasks).with(workspace_name, project_name,
-                                           section_name_str)
-      .returns(three_tasks.keys)
-    expect_three_tasks_queried
+  def project_name
+    'my_project'
   end
 
-  def mock_run_with_section_specified_normal_project
-    project_name.expects(:start_with?).with(':').returns(false)
-    expect_three_tasks_pulled_and_queried
+  def expect_three_tasks_pulled_and_queried(project_name:,
+                                            section_name:,
+                                            due_on:,
+                                            due_at:)
+    @mocks[:sections].expects(:tasks).with(workspace_name, project_name,
+                                           section_name)
+      .returns(three_tasks.keys)
+    expect_three_tasks_queried(due_on: due_on, due_at: due_at)
+  end
+
+  def mock_view(project_name:, section_name:,
+                due_at:, due_on:)
+    expect_three_tasks_pulled_and_queried(project_name: project_name,
+                                          section_name: section_name,
+                                          due_at: due_at,
+                                          due_on: due_on)
   end
 
   def expected_json_section_specified
@@ -57,15 +65,58 @@ class TestCLI < ClassTest
     '{"name":"task_c","due":"fake_date"}]'
   end
 
-  def test_run_with_section_specified_normal_project
-    asana_my_tasks = get_test_object do
-      mock_run_with_section_specified_normal_project
+  def mock_view_run_with_section_specified_empty_section
+    mock_view(project_name: project_name,
+              section_name: nil,
+              due_on: 'fake_date',
+              due_at: nil)
+  end
+
+  def test_view_run_with_section_specified_empty_section
+    cli = get_test_object do
+      mock_view_run_with_section_specified_empty_section
     end
     assert_equal(expected_json_section_specified,
-                 asana_my_tasks.run(['view',
-                                     workspace_name,
-                                     project_name,
-                                     section_name_str]))
+                 cli.run(['view',
+                          workspace_name,
+                          project_name,
+                          '']))
+  end
+
+  def mock_view_run_with_section_specified_normal_project_colon_project
+    mock_view(project_name: project_name.to_sym,
+              section_name: section_name_str,
+              due_on: 'fake_date',
+              due_at: nil)
+  end
+
+  def test_view_run_with_section_specified_normal_project_colon_project
+    cli = get_test_object do
+      mock_view_run_with_section_specified_normal_project_colon_project
+    end
+    assert_equal(expected_json_section_specified,
+                 cli.run(['view',
+                          workspace_name,
+                          ":#{project_name}",
+                          section_name_str]))
+  end
+
+  def mock_view_run_with_section_specified_normal_project
+    mock_view(project_name: project_name,
+              section_name: section_name_str,
+              due_on: 'fake_date',
+              due_at: nil)
+  end
+
+  def test_view_run_with_section_specified_normal_project
+    cli = get_test_object do
+      mock_view_run_with_section_specified_normal_project
+    end
+    assert_equal(expected_json_section_specified,
+                 cli.run(['view',
+                          workspace_name,
+                          project_name,
+                          section_name_str]))
   end
 
   def expect_tasks_by_section_pulled
@@ -75,10 +126,9 @@ class TestCLI < ClassTest
       .returns(nil => [task_a], section_name_str => [task_b, task_c])
   end
 
-  def mock_run_with_no_section_specified_normal_project
-    project_name.expects(:start_with?).with(':').returns(false)
+  def mock_run_with_no_section_specified_normal_project(due_on:, due_at:)
     expect_tasks_by_section_pulled
-    expect_three_tasks_queried
+    expect_three_tasks_queried(due_on: due_on, due_at: due_at)
   end
 
   def expected_json_no_section_specified
@@ -101,9 +151,39 @@ class TestCLI < ClassTest
     end
   end
 
+  def expected_json_view_not_due
+    '{"":[{"name":"task_a"}],"section_name:":[{"name":"task_b"},{"name":"task_c"}]}'
+  end
+
+  def test_view_not_due
+    asana_my_tasks = get_test_object do
+      mock_run_with_no_section_specified_normal_project(due_on: nil, due_at: nil)
+    end
+    assert_equal(expected_json_view_not_due,
+                 asana_my_tasks.run(['view',
+                                     workspace_name,
+                                     project_name]))
+  end
+
+  def expected_json_view_due_at
+    '{"":[{"name":"task_a","due":"fake time"}],' \
+    '"section_name:":[{"name":"task_b","due":"fake time"},' \
+    '{"name":"task_c","due":"fake time"}]}'
+  end
+
+  def test_view_due_at
+    asana_my_tasks = get_test_object do
+      mock_run_with_no_section_specified_normal_project(due_on: nil, due_at: 'fake time')
+    end
+    assert_equal(expected_json_view_due_at,
+                 asana_my_tasks.run(['view',
+                                     workspace_name,
+                                     project_name]))
+  end
+
   def test_run_with_no_section_specified_normal_project
     asana_my_tasks = get_test_object do
-      mock_run_with_no_section_specified_normal_project
+      mock_run_with_no_section_specified_normal_project(due_on: 'fake_date', due_at: nil)
     end
     assert_equal(expected_json_no_section_specified,
                  asana_my_tasks.run(['view',

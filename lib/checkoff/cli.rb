@@ -41,7 +41,9 @@ module Checkoff
       when 'quickadd'
         quickadd(subargs.workspace, subargs.task_name)
       else
-        raise
+        # :nocov:
+        raise IllegalStateException # shouldn't happen; validate_args! should handle this
+        # :nocov:
       end
     end
 
@@ -79,7 +81,9 @@ module Checkoff
       when 'quickadd'
         parse_quickadd_args(subargs, args)
       else
-        raise
+        # :nocov:
+        raise IllegalStateException # shouldn't happen; validate_args! should handle this
+        # :nocov:
       end
       [mode, subargs]
     end
