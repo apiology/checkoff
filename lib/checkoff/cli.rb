@@ -10,9 +10,99 @@ require_relative 'projects'
 require_relative 'tasks'
 require_relative 'sections'
 
+# CLI subcommand that shows tasks in JSON form
+class ViewSubcommand
+  def initialize(workspace_name, project_name, section_name,
+                 sections: Checkoff::Sections.new(config: config,
+                                                  projects: projects),
+                 stderr: $stderr)
+    @workspace_name = workspace_name
+    @stderr = stderr
+    validate_and_assign_project_name(project_name)
+    @section_name = section_name
+    @sections = sections
+  end
+
+  def run
+    if section_name.nil?
+      run_on_project(workspace_name, project_name)
+    else
+      run_on_section(workspace_name, project_name, section_name)
+    end
+  end
+
+  private
+
+  def validate_and_assign_project_name(project_name)
+    if project_name.nil?
+      stderr.puts 'Please specify a project name'
+      exit(1)
+    end
+    @project_name = if project_name.start_with? ':'
+                      project_name[1..].to_sym
+                    else
+                      project_name
+                    end
+  end
+
+  def run_on_project(workspace, project)
+    tasks_by_section =
+      sections.tasks_by_section(workspace, project)
+    tasks_by_section.update(tasks_by_section) do |_key, tasks|
+      tasks_to_hash(tasks)
+    end
+    tasks_by_section.to_json
+  end
+
+  def run_on_section(workspace, project, section)
+    section = nil if section == ''
+    tasks = sections.tasks(workspace, project, section) || []
+    tasks_to_hash(tasks).to_json
+  end
+
+  def task_to_hash(task)
+    task_out = {
+      name: task.name,
+    }
+    if task.due_on
+      task_out[:due] = task.due_on
+    elsif task.due_at
+      task_out[:due] = task.due_at
+    end
+    task_out
+  end
+
+  def tasks_to_hash(tasks)
+    tasks.map { |task| task_to_hash(task) }
+  end
+
+  attr_reader :workspace_name, :project_name, :section_name, :sections, :stderr
+end
+
+# CLI subcommand that creates a task
+class QuickaddSubcommand
+  def initialize(workspace_name, task_name,
+                 workspaces: Checkoff::Workspaces.new(config: config),
+                 tasks: Checkoff::Tasks.new(config: config))
+    @workspace_name = workspace_name
+    @task_name = task_name
+    @workspaces = workspaces
+    @tasks = tasks
+  end
+
+  def run
+    workspace = @workspaces.workspace_by_name(workspace_name)
+    @tasks.add_task(task_name,
+                    workspace_gid: workspace.gid)
+  end
+
+  private
+
+  attr_reader :workspace_name, :task_name
+end
+
 module Checkoff
   # Provide ability for CLI to pull Asana items
-  # rubocop:disable Metrics/ClassLength
   class CLI
     attr_reader :sections, :stderr
 
@@ -50,16 +140,9 @@ module Checkoff
     private
 
     def view(workspace_name, project_name, section_name)
-      if project_name.nil?
-        stderr.puts 'Please specify a project name'
-        exit(1)
-      end
-      project_name = project_name[1..].to_sym if project_name.start_with? ':'
-      if section_name.nil?
-        run_on_project(workspace_name, project_name)
-      else
-        run_on_section(workspace_name, project_name, section_name)
-      end
+      ViewSubcommand.new(workspace_name, project_name, section_name,
+                         sections: sections,
+                         stderr: stderr).run
     end
 
     def output_help
@@ -108,41 +191,9 @@ module Checkoff
     end
 
     def quickadd(workspace_name, task_name)
-      workspace = @workspaces.workspace_by_name(workspace_name)
-      @tasks.add_task(task_name,
-                      workspace_gid: workspace.gid)
-    end
-
-    def run_on_section(workspace, project, section)
-      section = nil if section == ''
-      tasks = sections.tasks(workspace, project, section) || []
-      tasks_to_hash(tasks).to_json
-    end
-
-    def run_on_project(workspace, project)
-      tasks_by_section =
-        sections.tasks_by_section(workspace, project)
-      tasks_by_section.update(tasks_by_section) do |_key, tasks|
-        tasks_to_hash(tasks)
-      end
-      tasks_by_section.to_json
-    end
-
-    def task_to_hash(task)
-      task_out = {
-        name: task.name,
-      }
-      if task.due_on
-        task_out[:due] = task.due_on
-      elsif task.due_at
-        task_out[:due] = task.due_at
-      end
-      task_out
-    end
-
-    def tasks_to_hash(tasks)
-      tasks.map { |task| task_to_hash(task) }
+      QuickaddSubcommand.new(workspace_name, task_name,
+                             workspaces: @workspaces,
+                             tasks: @tasks).run
     end
   end
-  # rubocop:enable Metrics/ClassLength
 end
