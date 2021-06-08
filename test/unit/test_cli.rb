@@ -5,9 +5,13 @@ require 'checkoff/cli'
 
 # Test the Checkoff::CLI class
 # rubocop:disable Metrics/ClassLength
-class TestCLI < ClassTest
-  let_mock :workspace_name, :workspace, :workspace_gid,
-           :task_a, :task_b, :task_c
+class TestCLI < Minitest::Test
+  let_mock :workspace, :workspace_gid, :task_a, :task_b, :task_c,
+           :config, :workspaces, :sections, :tasks
+
+  def workspace_name
+    'my workspace'
+  end
 
   def expect_task_named(task, task_name)
     task.expects(:name).returns(task_name).at_least(0)
@@ -75,8 +79,9 @@ class TestCLI < ClassTest
   def test_view_run_with_section_specified_empty_section
     cli = get_test_object do
       mock_view_run_with_section_specified_empty_section
+      @mocks[:stdout].expects(:puts).with(expected_json_section_specified)
     end
-    assert_equal(expected_json_section_specified,
+    assert_equal(0,
                  cli.run(['view',
                           workspace_name,
                           project_name,
@@ -93,8 +98,9 @@ class TestCLI < ClassTest
   def test_view_run_with_section_specified_normal_project_colon_project
     cli = get_test_object do
       mock_view_run_with_section_specified_normal_project_colon_project
+      @mocks[:stdout].expects(:puts).with(expected_json_section_specified)
     end
-    assert_equal(expected_json_section_specified,
+    assert_equal(0,
                  cli.run(['view',
                           workspace_name,
                           ":#{project_name}",
@@ -111,8 +117,9 @@ class TestCLI < ClassTest
   def test_view_run_with_section_specified_normal_project
     cli = get_test_object do
       mock_view_run_with_section_specified_normal_project
+      @mocks[:stdout].expects(:puts).with(expected_json_section_specified)
     end
-    assert_equal(expected_json_section_specified,
+    assert_equal(0,
                  cli.run(['view',
                           workspace_name,
                           project_name,
@@ -144,11 +151,9 @@ class TestCLI < ClassTest
   def test_run_with_no_project_specified
     asana_my_tasks = get_test_object do
       mock_run_with_no_project_specified
+      @mocks[:stdout].expects(:puts)
     end
-    assert_raises(SystemExit) do
-      asana_my_tasks.run(['view',
-                          workspace_name])
-    end
+    assert_equal(64, asana_my_tasks.run(['view', workspace_name]))
   end
 
   def expected_json_view_not_due
@@ -158,8 +163,9 @@ class TestCLI < ClassTest
   def test_view_not_due
     asana_my_tasks = get_test_object do
       mock_run_with_no_section_specified_normal_project(due_on: nil, due_at: nil)
+      @mocks[:stdout].expects(:puts).with(expected_json_view_not_due)
     end
-    assert_equal(expected_json_view_not_due,
+    assert_equal(0,
                  asana_my_tasks.run(['view',
                                      workspace_name,
                                      project_name]))
@@ -174,8 +180,9 @@ class TestCLI < ClassTest
   def test_view_due_at
     asana_my_tasks = get_test_object do
       mock_run_with_no_section_specified_normal_project(due_on: nil, due_at: 'fake time')
+      @mocks[:stdout].expects(:puts).with(expected_json_view_due_at)
     end
-    assert_equal(expected_json_view_due_at,
+    assert_equal(0,
                  asana_my_tasks.run(['view',
                                      workspace_name,
                                      project_name]))
@@ -184,8 +191,9 @@ class TestCLI < ClassTest
   def test_run_with_no_section_specified_normal_project
     asana_my_tasks = get_test_object do
       mock_run_with_no_section_specified_normal_project(due_on: 'fake_date', due_at: nil)
+      @mocks[:stdout].expects(:puts).with(expected_json_no_section_specified)
     end
-    assert_equal(expected_json_no_section_specified,
+    assert_equal(0,
                  asana_my_tasks.run(['view',
                                      workspace_name,
                                      project_name]))
@@ -193,14 +201,14 @@ class TestCLI < ClassTest
 
   def test_run_with_help_arg
     asana_my_tasks = get_test_object do
-      @mocks[:stderr].expects(:puts).at_least(1)
+      @mocks[:stdout].expects(:puts).at_least(1)
     end
-    assert_raises(SystemExit) { asana_my_tasks.run(['--help']) }
+    assert_equal(0, asana_my_tasks.run(['--help']))
   end
 
   def mock_quickadd
-    @mocks[:workspaces].expects(:workspace_by_name).with(workspace_name)
-      .returns(workspace)
+    @mocks[:workspaces].expects(:workspace_by_name).with(workspace_name).returns(workspace)
+
     workspace.expects(:gid).returns(workspace_gid)
     @mocks[:tasks].expects(:add_task).with('my task name',
                                            workspace_gid: workspace_gid)
@@ -213,8 +221,42 @@ class TestCLI < ClassTest
     asana_my_tasks.run(['quickadd', workspace_name, 'my task name'])
   end
 
-  def class_under_test
-    Checkoff::CLI
+  def set_mocks
+    @mocks = {
+      config: config,
+      workspaces: workspaces,
+      sections: sections,
+      tasks: tasks,
+      stderr: $stderr,
+      stdout: $stdout,
+    }
+  end
+
+  def expect_workspaces_created
+    Checkoff::Workspaces.expects(:new).returns(workspaces).at_least(0)
+  end
+
+  def expect_config_loaded
+    Checkoff::ConfigLoader.expects(:load).returns(config).at_least(0)
+  end
+
+  def expect_sections_created
+    Checkoff::Sections.expects(:new).returns(sections).at_least(0)
+  end
+
+  def expect_tasks_created
+    Checkoff::Tasks.expects(:new).returns(tasks).at_least(0)
+  end
+
+  def get_test_object(&twiddle_mocks)
+    set_mocks
+    expect_workspaces_created
+    expect_config_loaded
+    expect_sections_created
+    expect_tasks_created
+
+    yield @mocks if twiddle_mocks
+    Checkoff::CheckoffGLIApp
   end
 end
 # rubocop:enable Metrics/ClassLength

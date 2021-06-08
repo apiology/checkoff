@@ -4,6 +4,7 @@
 
 require 'ostruct'
 require 'dalli'
+require 'gli'
 require 'cache_method'
 require_relative 'workspaces'
 require_relative 'projects'
@@ -13,6 +14,8 @@ require_relative 'sections'
 # CLI subcommand that shows tasks in JSON form
 class ViewSubcommand
   def initialize(workspace_name, project_name, section_name,
+                 config: Checkoff::ConfigLoader.load(:asana),
+                 projects: Checkoff::Projects.new(config: config),
                  sections: Checkoff::Sections.new(config: config,
                                                   projects: projects),
                  stderr: $stderr)
@@ -34,10 +37,6 @@ class ViewSubcommand
   private
 
   def validate_and_assign_project_name(project_name)
-    if project_name.nil?
-      stderr.puts 'Please specify a project name'
-      exit(1)
-    end
     @project_name = if project_name.start_with? ':'
                       project_name[1..].to_sym
                     else
@@ -82,6 +81,7 @@ end
 # CLI subcommand that creates a task
 class QuickaddSubcommand
   def initialize(workspace_name, task_name,
+                 config: Checkoff::ConfigLoader.load(:asana),
                  workspaces: Checkoff::Workspaces.new(config: config),
                  tasks: Checkoff::Tasks.new(config: config))
     @workspace_name = workspace_name
@@ -103,97 +103,38 @@ end
 
 module Checkoff
   # Provide ability for CLI to pull Asana items
-  class CLI
-    attr_reader :sections, :stderr
+  class CheckoffGLIApp
+    extend GLI::App
 
-    def initialize(config: Checkoff::ConfigLoader.load(:asana),
-                   workspaces: Checkoff::Workspaces.new(config: config),
-                   projects: Checkoff::Projects.new(config: config),
-                   sections: Checkoff::Sections.new(config: config,
-                                                    projects: projects),
-                   tasks: Checkoff::Tasks.new(config: config),
-                   stderr: $stderr,
-                   kernel: Kernel)
-      @workspaces = workspaces
-      @projects = projects
-      @sections = sections
-      @tasks = tasks
-      @kernel = kernel
-      @stderr = stderr
-    end
+    program_desc 'Command-line client for Asana (unofficial)'
 
-    def run(args)
-      validate_args!(args)
-      command, subargs = parse_args(args)
-      case command
-      when 'view'
-        view(subargs.workspace, subargs.project, subargs.section)
-      when 'quickadd'
-        quickadd(subargs.workspace, subargs.task_name)
-      else
-        # :nocov:
-        raise IllegalStateException # shouldn't happen; validate_args! should handle this
-        # :nocov:
+    subcommand_option_handling :normal
+    arguments :strict
+
+    desc 'Add a short task to Asana'
+    arg 'workspace'
+    arg 'task_name'
+    command :quickadd do |c|
+      c.action do |_global_options, _options, args|
+        workspace_name = args.fetch(0)
+        task_name = args.fetch(1)
+
+        QuickaddSubcommand.new(workspace_name, task_name).run
       end
     end
 
-    private
+    desc 'Output representation of Asana tasks'
+    arg 'workspace'
+    arg 'project'
+    arg 'section', :optional
+    command :view do |c|
+      c.action do |_global_options, _options, args|
+        workspace_name = args.fetch(0)
+        project_name = args.fetch(1)
+        section_name = args[2]
 
-    def view(workspace_name, project_name, section_name)
-      ViewSubcommand.new(workspace_name, project_name, section_name,
-                         sections: sections,
-                         stderr: stderr).run
-    end
-
-    def output_help
-      stderr.puts 'View tasks:'
-      stderr.puts "  #{$PROGRAM_NAME} view workspace project [section]"
-      stderr.puts "  #{$PROGRAM_NAME} quickadd workspace task_name"
-      stderr.puts
-      stderr.puts "'project' can be set to a project name, or :my_tasks, " \
-                  ":my_tasks_upcoming, :my_tasks_new, or :my_tasks_today"
-    end
-
-    # rubocop:disable Metrics/MethodLength
-    def parse_args(args)
-      mode = args[0]
-      subargs = OpenStruct.new
-      case mode
-      when 'view'
-        parse_view_args(subargs, args)
-      when 'quickadd'
-        parse_quickadd_args(subargs, args)
-      else
-        # :nocov:
-        raise IllegalStateException # shouldn't happen; validate_args! should handle this
-        # :nocov:
+        puts ViewSubcommand.new(workspace_name, project_name, section_name).run
       end
-      [mode, subargs]
-    end
-    # rubocop:enable Metrics/MethodLength
-
-    def parse_quickadd_args(subargs, args)
-      subargs.workspace = args[1]
-      subargs.task_name = args[2]
-    end
-
-    def parse_view_args(subargs, args)
-      subargs.workspace = args[1]
-      subargs.project = args[2]
-      subargs.section = args[3]
-    end
-
-    def validate_args!(args)
-      return unless args.length < 2 || !%w[view quickadd].include?(args[0])
-
-      output_help
-      exit(1)
-    end
-
-    def quickadd(workspace_name, task_name)
-      QuickaddSubcommand.new(workspace_name, task_name,
-                             workspaces: @workspaces,
-                             tasks: @tasks).run
     end
   end
 end

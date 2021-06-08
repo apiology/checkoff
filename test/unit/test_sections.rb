@@ -77,10 +77,6 @@ class TestSections < BaseAsana
     task.expects(:name).returns(name).at_least(1)
   end
 
-  def expect_section_one_queried
-    expect_named(section_one, 'Section 1:')
-  end
-
   def expect_tasks_pulled(project, tasks_arr, active_tasks_arr)
     @mocks[:projects]
       .expects(:tasks_from_project).with(project)
@@ -132,13 +128,6 @@ class TestSections < BaseAsana
   end
 
   let_mock :workspace_1_gid
-
-  def mock_tasks_on_my_tasks(assignee_status, project_sym)
-    expect_tasks_and_sections_pulled('My Workspace', my_tasks_in_workspace,
-                                     project_sym)
-    section_one.expects(:assignee_status).returns(assignee_status)
-    tapsk_c.expects(:assignee_status).returns(assignee_status)
-  end
 
   def test_tasks_normal_project
     asana = get_test_object do

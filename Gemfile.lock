@@ -6,6 +6,7 @@ PATH
       asana (> 0.10.0)
       cache_method
       dalli
+      gli
 
 GEM
   remote: https://rubygems.org/
@@ -44,6 +45,7 @@ GEM
     faraday_middleware-multi_json (0.0.6)
       faraday_middleware
       multi_json
+    gli (2.20.0)
     i18n (1.8.10)
       concurrent-ruby (~> 1.0)
     imagen (0.1.8)
