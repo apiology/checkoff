@@ -37,10 +37,6 @@ class ViewSubcommand
   private
 
   def validate_and_assign_project_name(project_name)
-    if project_name.nil?
-      stderr.puts 'Please specify a project name'
-      exit(1)
-    end
     @project_name = if project_name.start_with? ':'
                       project_name[1..].to_sym
                     else
