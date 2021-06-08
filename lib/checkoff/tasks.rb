@@ -5,7 +5,7 @@
 require_relative 'sections'
 
 module Checkoff
-  # Pull things from 'my tasks' in Asana
+  # Pull tasks from Asana
   class Tasks
     MINUTE = 60
     HOUR = MINUTE * 60
