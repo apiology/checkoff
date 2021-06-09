@@ -22,8 +22,6 @@ module Checkoff
     LONG_CACHE_TIME = MINUTE * 15
     SHORT_CACHE_TIME = MINUTE * 5
 
-    # XXX: Move low-level functions private
-
     def initialize(config: Checkoff::ConfigLoader.load(:asana),
                    asana_client: Asana::Client,
                    workspaces: Checkoff::Workspaces.new(config: config))
@@ -32,9 +30,40 @@ module Checkoff
       @workspaces = workspaces
     end
 
+    # Returns Asana Ruby API Client object
     def client
       @workspaces.client
     end
+
+    # pulls an Asana API project class given a name
+    def project(workspace_name, project_name)
+      if project_name.is_a?(Symbol) && project_name.to_s.start_with?('my_tasks')
+        my_tasks(workspace_name)
+      else
+        projects = projects_by_workspace_name(workspace_name)
+        projects.find do |project|
+          project.name == project_name
+        end
+      end
+    end
+    cache_method :project, LONG_CACHE_TIME
+
+    # find uncompleted tasks in a list
+    def active_tasks(tasks)
+      tasks.select { |task| task.completed_at.nil? }
+    end
+
+    # pull task objects from a named project
+    def tasks_from_project(project, only_uncompleted: true, extra_fields: [])
+      options = task_options
+      options[:completed_since] = '9999-12-01' if only_uncompleted
+      options[:project] = project.gid
+      options[:options][:fields] += extra_fields
+      client.tasks.find_all(**options).to_a
+    end
+    cache_method :tasks_from_project, SHORT_CACHE_TIME
+
+    private
 
     def projects
       client.projects
@@ -56,22 +85,6 @@ module Checkoff
       projects.find_by_id(gid)
     end
 
-    def project(workspace_name, project_name)
-      if project_name.is_a?(Symbol) && project_name.to_s.start_with?('my_tasks')
-        my_tasks(workspace_name)
-      else
-        projects = projects_by_workspace_name(workspace_name)
-        projects.find do |project|
-          project.name == project_name
-        end
-      end
-    end
-    cache_method :project, LONG_CACHE_TIME
-
-    def active_tasks(tasks)
-      tasks.select { |task| task.completed_at.nil? }
-    end
-
     def task_options
       {
         per_page: 100,
@@ -81,14 +94,5 @@ module Checkoff
         },
       }
     end
-
-    def tasks_from_project(project, only_uncompleted: true, extra_fields: [])
-      options = task_options
-      options[:completed_since] = '9999-12-01' if only_uncompleted
-      options[:project] = project.gid
-      options[:options][:fields] += extra_fields
-      client.tasks.find_all(**options).to_a
-    end
-    cache_method :tasks_from_project, SHORT_CACHE_TIME
   end
 end

@@ -23,6 +23,71 @@ module Checkoff
       @time = time
     end
 
+    # Given a list of tasks, pull a Hash of tasks with section name -> task list
+    def by_section(tasks, project_gid)
+      by_section = {}
+      tasks.each do |task|
+        file_task_by_section(by_section, task, project_gid)
+      end
+      by_section
+    end
+    cache_method :by_section, LONG_CACHE_TIME
+
+    # Given a project object, pull all tasks, then provide a Hash of
+    # tasks with section name -> task list of the uncompleted tasks
+    def tasks_by_section_for_project(project)
+      raw_tasks = projects.tasks_from_project(project)
+      active_tasks = projects.active_tasks(raw_tasks)
+      by_section(active_tasks, project.gid)
+    end
+
+    # Given a workspace name and project name, then provide a Hash of
+    # tasks with section name -> task list of the uncompleted tasks
+    def tasks_by_section(workspace_name, project_name)
+      project = project_or_raise(workspace_name, project_name)
+      case project_name
+      when :my_tasks, :my_tasks_new, :my_tasks_today, :my_tasks_upcoming
+        user_task_list_by_section(workspace_name, project_name)
+      else
+        tasks_by_section_for_project(project)
+      end
+    end
+    cache_method :tasks_by_section, SHORT_CACHE_TIME
+
+    # XXX: Rename to section_tasks
+    #
+    # Pulls task objects from a specified section
+    def tasks(workspace_name, project_name, section_name)
+      tasks_by_section(workspace_name, project_name).fetch(section_name, [])
+    end
+    cache_method :tasks, SHORT_CACHE_TIME
+
+    # Pulls just names of tasks from a given section.
+    def section_task_names(workspace_name, project_name, section_name)
+      tasks = tasks(workspace_name, project_name, section_name)
+      if tasks.nil?
+        by_section = tasks_by_section(workspace_name, project_name)
+        desc = "#{workspace_name} | #{project_name} | #{section_name}"
+        raise "Could not find task names for #{desc}.  " \
+              "Valid sections: #{by_section.keys}"
+      end
+      tasks.map(&:name)
+    end
+    cache_method :section_task_names, SHORT_CACHE_TIME
+
+    # returns if a task's due field is at or before the current date/time
+    def task_due?(task)
+      if task.due_at
+        Time.parse(task.due_at) <= time.now
+      elsif task.due_on
+        Date.parse(task.due_on) <= time.today
+      else
+        true # set a due date if you don't want to do this now
+      end
+    end
+
+    private
+
     def_delegators :@projects, :client
 
     def file_task_by_section(by_section, task, project_gid)
@@ -35,25 +100,10 @@ module Checkoff
       by_section[current_section] << task
     end
 
-    def by_section(tasks, project_gid)
-      by_section = {}
-      tasks.each do |task|
-        file_task_by_section(by_section, task, project_gid)
-      end
-      by_section
-    end
-    cache_method :by_section, LONG_CACHE_TIME
-
     def legacy_tasks_by_section_for_project(project)
       raw_tasks = projects.tasks_from_project(project)
       active_tasks = projects.active_tasks(raw_tasks)
       legacy_by_section(active_tasks)
-    end
-
-    def tasks_by_section_for_project(project)
-      raw_tasks = projects.tasks_from_project(project)
-      active_tasks = projects.active_tasks(raw_tasks)
-      by_section(active_tasks, project.gid)
     end
 
     def legacy_file_task_by_section(current_section, by_section, task)
@@ -120,50 +170,11 @@ module Checkoff
       end
     end
 
-    def tasks_by_section(workspace_name, project_name)
-      project = project_or_raise(workspace_name, project_name)
-      case project_name
-      when :my_tasks, :my_tasks_new, :my_tasks_today, :my_tasks_upcoming
-        user_task_list_by_section(workspace_name, project_name)
-      else
-        tasks_by_section_for_project(project)
-      end
-    end
-    cache_method :tasks_by_section, SHORT_CACHE_TIME
-
-    # XXX: Rename to section_tasks
-    def tasks(workspace_name, project_name, section_name)
-      tasks_by_section(workspace_name, project_name).fetch(section_name, [])
-    end
-    cache_method :tasks, SHORT_CACHE_TIME
-
-    def section_task_names(workspace_name, project_name, section_name)
-      tasks = tasks(workspace_name, project_name, section_name)
-      if tasks.nil?
-        by_section = tasks_by_section(workspace_name, project_name)
-        desc = "#{workspace_name} | #{project_name} | #{section_name}"
-        raise "Could not find task names for #{desc}.  " \
-              "Valid sections: #{by_section.keys}"
-      end
-      tasks.map(&:name)
-    end
-    cache_method :section_task_names, SHORT_CACHE_TIME
-
     def user_task_list_migrated_to_real_sections?(workspace_name)
       workspace = workspaces.workspace_by_name(workspace_name)
       result = client.user_task_lists.get_user_task_list_for_user(user_gid: 'me',
                                                                   workspace: workspace.gid)
       result.migration_status != 'not_migrated'
-    end
-
-    def task_due?(task)
-      if task.due_at
-        Time.parse(task.due_at) <= time.now
-      elsif task.due_on
-        Date.parse(task.due_on) <= time.today
-      else
-        true # set a due date if you don't want to do this now
-      end
     end
 
     def project_task_names(workspace_name, project_name)
