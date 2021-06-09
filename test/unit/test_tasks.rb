@@ -26,7 +26,7 @@ class TestTasks < BaseAsana
       mock_tasks_minus_sections
     end
     assert_equal(modified_mock_tasks,
-                 tasks.tasks_minus_sections(mock_tasks))
+                 tasks.send(:tasks_minus_sections, mock_tasks))
   end
 
   let_mock :workspace_gid, :task_name, :default_assignee_gid
@@ -49,7 +49,7 @@ class TestTasks < BaseAsana
     tasks = get_test_object do
       mock_add_task
     end
-    tasks.add_task(task_name, workspace_gid: workspace_gid)
+    tasks.send(:add_task, task_name, workspace_gid: workspace_gid)
   end
 
   let_mock :workspace_name, :project_name, :task_name, :only_uncompleted, :task,

@@ -69,7 +69,7 @@ class TestSections < BaseAsana
     asana = get_test_object do
       mock_project_task_names
     end
-    out = asana.project_task_names('Workspace 1', a_name)
+    out = asana.send(:project_task_names, 'Workspace 1', a_name)
     assert_equal(['Section 1:', ['c']], out)
   end
 
