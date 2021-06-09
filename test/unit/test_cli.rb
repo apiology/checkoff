@@ -4,7 +4,6 @@ require_relative 'class_test'
 require 'checkoff/cli'
 
 # Test the Checkoff::CLI class
-# rubocop:disable Metrics/ClassLength
 class TestCLI < Minitest::Test
   let_mock :workspace, :workspace_gid, :task_a, :task_b, :task_c,
            :config, :workspaces, :sections, :tasks
@@ -259,4 +258,3 @@ class TestCLI < Minitest::Test
     Checkoff::CheckoffGLIApp
   end
 end
-# rubocop:enable Metrics/ClassLength

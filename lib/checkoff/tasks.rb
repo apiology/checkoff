@@ -23,10 +23,16 @@ module Checkoff
     end
 
     # Pull a specific task by name
-    def task(workspace_name, project_name, task_name, only_uncompleted: true)
+    def task(workspace_name, project_name, task_name,
+             section_name: :unspecified,
+             only_uncompleted: true)
       project = projects.project(workspace_name, project_name)
-      tasks = projects.tasks_from_project(project,
-                                          only_uncompleted: only_uncompleted)
+      tasks = if section_name == :unspecified
+                projects.tasks_from_project(project,
+                                            only_uncompleted: only_uncompleted)
+              else
+                @sections.tasks(workspace_name, project_name, section_name)
+              end
       tasks.find { |task| task.name == task_name }
     end
 
