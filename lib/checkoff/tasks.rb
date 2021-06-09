@@ -22,19 +22,22 @@ module Checkoff
       @asana_task = asana_task
     end
 
+    # Pull a specific task by name
+    def task(workspace_name, project_name, task_name, only_uncompleted: true)
+      project = projects.project(workspace_name, project_name)
+      tasks = projects.tasks_from_project(project,
+                                          only_uncompleted: only_uncompleted)
+      tasks.find { |task| task.name == task_name }
+    end
+
+    private
+
     def client
       @sections.client
     end
 
     def projects
       @projects ||= @sections.projects
-    end
-
-    def task(workspace_name, project_name, task_name, only_uncompleted: true)
-      project = projects.project(workspace_name, project_name)
-      tasks = projects.tasks_from_project(project,
-                                          only_uncompleted: only_uncompleted)
-      tasks.find { |task| task.name == task_name }
     end
 
     def tasks_minus_sections(tasks)

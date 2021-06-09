@@ -13,10 +13,6 @@ module Checkoff
       @yaml_filename = yaml_filename
     end
 
-    def envvar_name(key)
-      "#{@envvar_prefix}__#{key.upcase}"
-    end
-
     def [](key)
       config_value = @config[key]
       return config_value unless config_value.nil?
@@ -31,25 +27,35 @@ module Checkoff
       raise KeyError,
             "Please configure either the #{key} key in #{@yaml_filename} or set #{envvar_name(key)}"
     end
+
+    private
+
+    def envvar_name(key)
+      "#{@envvar_prefix}__#{key.upcase}"
+    end
   end
 
   # Load configuration file
   class ConfigLoader
-    def self.yaml_filename(sym)
-      file = "#{sym}.yml"
-      File.expand_path("~/.#{file}")
-    end
+    class << self
+      def load(sym)
+        yaml_result = load_yaml_file(sym)
+        EnvFallbackConfigLoader.new(yaml_result, sym, yaml_filename(sym))
+      end
 
-    def self.load_yaml_file(sym)
-      filename = yaml_filename(sym)
-      return {} unless File.exist?(filename)
+      private
 
-      YAML.load_file(filename).with_indifferent_access
-    end
+      def load_yaml_file(sym)
+        filename = yaml_filename(sym)
+        return {} unless File.exist?(filename)
 
-    def self.load(sym)
-      yaml_result = load_yaml_file(sym)
-      EnvFallbackConfigLoader.new(yaml_result, sym, yaml_filename(sym))
+        YAML.load_file(filename).with_indifferent_access
+      end
+
+      def yaml_filename(sym)
+        file = "#{sym}.yml"
+        File.expand_path("~/.#{file}")
+      end
     end
   end
 end

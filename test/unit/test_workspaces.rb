@@ -45,7 +45,7 @@ class TestWorkspaces < BaseAsana
       @mocks[:config].expects(:fetch).with(:default_workspace_gid)
         .returns(workspace_a_gid)
     end
-    assert_equal(workspace_a_gid, asana.default_workspace_gid)
+    assert_equal(workspace_a_gid, asana.send(:default_workspace_gid))
   end
 
   def class_under_test
