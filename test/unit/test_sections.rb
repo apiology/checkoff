@@ -6,7 +6,6 @@ require 'active_support'
 require 'active_support/time'
 
 # Test the Checkoff::Sections class
-# rubocop:disable Metrics/ClassLength
 class TestSections < BaseAsana
   let_mock :project, :inactive_task_b, :a_membership, :a_membership_project, :a_membership_section,
            :user_task_list_project, :workspace_one, :client, :user_task_lists, :workspace_one_gid, :user_task_list
@@ -202,4 +201,3 @@ class TestSections < BaseAsana
     Checkoff::Sections
   end
 end
-# rubocop:enable Metrics/ClassLength
