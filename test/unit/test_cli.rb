@@ -28,11 +28,15 @@ class TestCLI < Minitest::Test
     { task_a => 'task_a', task_b => 'task_b', task_c => 'task_c' }
   end
 
+  def expect_task_queried(task, task_name, due_on, due_at)
+    expect_task_named(task, task_name)
+    expect_task_due_on(task, due_on)
+    expect_task_due_at(task, due_at)
+  end
+
   def expect_three_tasks_queried(due_on:, due_at:)
     three_tasks.each do |task, task_name|
-      expect_task_named(task, task_name)
-      expect_task_due_on(task, due_on)
-      expect_task_due_at(task, due_at)
+      expect_task_queried(task, task_name, due_on, due_at)
     end
   end
 
@@ -42,6 +46,10 @@ class TestCLI < Minitest::Test
 
   def project_name
     'my_project'
+  end
+
+  def task_name
+    'my_task'
   end
 
   def expect_three_tasks_pulled_and_queried(project_name:,
@@ -60,6 +68,37 @@ class TestCLI < Minitest::Test
                                           section_name: section_name,
                                           due_at: due_at,
                                           due_on: due_on)
+  end
+
+  def mock_view_specific_task(section_name:)
+    tasks.expects(:task).with(workspace_name, project_name, task_name,
+                              section_name: section_name).returns(task_a)
+    expect_task_queried(task_a, task_name, nil, nil)
+    @mocks[:stdout].expects(:puts).with('{"name":"my_task"}')
+  end
+
+  def test_view_specific_task_nil_section
+    cli = get_test_object do
+      mock_view_specific_task(section_name: nil)
+    end
+    assert_equal(0,
+                 cli.run(['view',
+                          workspace_name,
+                          project_name,
+                          '',
+                          task_name]))
+  end
+
+  def test_view_specific_task
+    cli = get_test_object do
+      mock_view_specific_task(section_name: section_name_str)
+    end
+    assert_equal(0,
+                 cli.run(['view',
+                          workspace_name,
+                          project_name,
+                          section_name_str,
+                          task_name]))
   end
 
   def expected_json_section_specified
