@@ -15,23 +15,30 @@ module Checkoff
   # CLI subcommand that shows tasks in JSON form
   class ViewSubcommand
     def initialize(workspace_name, project_name, section_name,
+                   task_name,
                    config: Checkoff::ConfigLoader.load(:asana),
                    projects: Checkoff::Projects.new(config: config),
                    sections: Checkoff::Sections.new(config: config,
                                                     projects: projects),
+                   tasks: Checkoff::Tasks.new(config: config,
+                                              sections: sections),
                    stderr: $stderr)
       @workspace_name = workspace_name
       @stderr = stderr
       validate_and_assign_project_name(project_name)
       @section_name = section_name
+      @task_name = task_name
       @sections = sections
+      @tasks = tasks
     end
 
     def run
       if section_name.nil?
         run_on_project(workspace_name, project_name)
-      else
+      elsif task_name.nil?
         run_on_section(workspace_name, project_name, section_name)
+      else
+        run_on_task(workspace_name, project_name, section_name, task_name)
       end
     end
 
@@ -60,6 +67,12 @@ module Checkoff
       tasks_to_hash(tasks).to_json
     end
 
+    def run_on_task(workspace, project, section, task_name)
+      section = nil if section == ''
+      task = tasks.task(workspace, project, task_name, section_name: section)
+      task_to_hash(task).to_json
+    end
+
     def task_to_hash(task)
       task_out = {
         name: task.name,
@@ -76,7 +89,7 @@ module Checkoff
       tasks.map { |task| task_to_hash(task) }
     end
 
-    attr_reader :workspace_name, :project_name, :section_name, :sections, :stderr
+    attr_reader :workspace_name, :project_name, :section_name, :task_name, :sections, :tasks, :stderr
   end
 
   # CLI subcommand that creates a task
@@ -127,13 +140,15 @@ module Checkoff
     arg 'workspace'
     arg 'project'
     arg 'section', :optional
+    arg 'task_name', :optional
     command :view do |c|
       c.action do |_global_options, _options, args|
         workspace_name = args.fetch(0)
         project_name = args.fetch(1)
         section_name = args[2]
+        task_name = args[3]
 
-        puts ViewSubcommand.new(workspace_name, project_name, section_name).run
+        puts ViewSubcommand.new(workspace_name, project_name, section_name, task_name).run
       end
     end
   end

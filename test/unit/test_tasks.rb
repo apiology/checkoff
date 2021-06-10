@@ -52,8 +52,8 @@ class TestTasks < BaseAsana
     tasks.send(:add_task, task_name, workspace_gid: workspace_gid)
   end
 
-  let_mock :workspace_name, :project_name, :task_name, :only_uncompleted, :task,
-           :projects, :project
+  let_mock :workspace_name, :project_name, :section_name, :task_name,
+           :only_uncompleted, :task, :projects, :project
 
   def expect_tasks_from_project_pulled
     projects.expects(:tasks_from_project)
@@ -69,6 +69,24 @@ class TestTasks < BaseAsana
 
   def expect_projects_pulled
     sections.expects(:projects).returns(projects)
+  end
+
+  def expect_tasks_from_section_pulled
+    sections.expects(:tasks).with(workspace_name, project_name, section_name).returns([task])
+    task.expects(:name).returns(task_name)
+  end
+
+  def mock_task_with_section
+    expect_projects_pulled
+    expect_project_pulled
+    expect_tasks_from_section_pulled
+  end
+
+  def test_task_with_section
+    tasks = get_test_object { mock_task_with_section }
+    returned_task = tasks.task(workspace_name, project_name, task_name,
+                               only_uncompleted: only_uncompleted, section_name: section_name)
+    assert_equal(task, returned_task)
   end
 
   def mock_task
