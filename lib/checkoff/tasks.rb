@@ -36,6 +36,14 @@ module Checkoff
       tasks.find { |task| task.name == task_name }
     end
 
+    def add_task(name,
+                 workspace_gid: default_workspace_gid,
+                 assignee_gid: default_assignee_gid)
+      @asana_task.create(client,
+                         assignee: assignee_gid,
+                         workspace: workspace_gid, name: name)
+    end
+
     private
 
     def client
@@ -48,14 +56,6 @@ module Checkoff
 
     def tasks_minus_sections(tasks)
       @sections.by_section(tasks).values.flatten
-    end
-
-    def add_task(name,
-                 workspace_gid: default_workspace_gid,
-                 assignee_gid: default_assignee_gid)
-      @asana_task.create(client,
-                         assignee: assignee_gid,
-                         workspace: workspace_gid, name: name)
     end
 
     def default_assignee_gid
