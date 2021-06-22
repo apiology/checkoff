@@ -151,5 +151,34 @@ module Checkoff
         puts ViewSubcommand.new(workspace_name, project_name, section_name, task_name).run
       end
     end
+
+    desc 'Move tasks from one section to another within a project'
+
+    command :mv do |c|
+      c.flag :from_workspace,
+             type: String,
+             default_value: :default_workspace,
+             desc: 'Workspace to move tasks from'
+      c.flag :from_project,
+             type: String,
+             required: true,
+             desc: 'Project to move tasks from'
+      c.flag :from_section,
+             type: String,
+             default_value: :all_sections,
+             desc: 'Section to move tasks from'
+      c.flag :to_workspace,
+             type: String,
+             default_value: :source_workspace,
+             desc: 'Workspace to move tasks to'
+      c.flag :to_project,
+             type: String,
+             default_value: :source_project,
+             desc: 'Section to move tasks to'
+      c.flag :to_section,
+             type: String,
+             default_value: :source_section,
+             desc: 'Section to move tasks to'
+    end
   end
 end
