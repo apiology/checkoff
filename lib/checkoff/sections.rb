@@ -23,6 +23,12 @@ module Checkoff
       @time = time
     end
 
+    # Returns a list of Asana API section objects for a given project
+    def sections_or_raise(workspace_name, project_name)
+      project = project_or_raise(workspace_name, project_name)
+      client.sections.get_sections_for_project(project_gid: project.gid)
+    end
+
     # Given a project object, pull all tasks, then provide a Hash of
     # tasks with section name -> task list of the uncompleted tasks
     def tasks_by_section_for_project(project)
@@ -114,8 +120,7 @@ module Checkoff
     end
 
     def section(workspace_name, project_name, section_name)
-      project = project_or_raise(workspace_name, project_name)
-      sections = client.sections.get_sections_for_project(project_gid: project.gid)
+      sections = sections_or_raise(workspace_name, project_name)
       sections.find { |section| section.name.chomp(':') == section_name.chomp(':') }
     end
 
