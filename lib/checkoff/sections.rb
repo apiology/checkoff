@@ -45,22 +45,26 @@ module Checkoff
     # tasks with section name -> task list of the uncompleted tasks
     def tasks_by_section(workspace_name, project_name)
       project = project_or_raise(workspace_name, project_name)
-      case project_name
-      when :my_tasks, :my_tasks_new, :my_tasks_today, :my_tasks_upcoming
-        user_task_list_by_section(workspace_name, project_name)
-      else
-        tasks_by_section_for_project(project)
-      end
+      tasks_by_section_for_project(project)
     end
     cache_method :tasks_by_section, SHORT_CACHE_TIME
 
     # XXX: Rename to section_tasks
     #
     # Pulls task objects from a specified section
-    def tasks(workspace_name, project_name, section_name)
-      tasks_by_section(workspace_name, project_name).fetch(section_name, [])
+    def tasks(workspace_name, project_name, section_name,
+              only_uncompleted: true,
+              extra_fields: [])
+      section = section_or_raise(workspace_name, project_name, section_name)
+      options = projects.task_options
+      # asana-0.10.3 gem doesn't support per_page - not sure if API
+      # itself does
+      options.delete(:per_page)
+      options[:options][:fields] += extra_fields
+      client.tasks.get_tasks_for_section(section_gid: section.gid,
+                                         **options).to_a
     end
-    cache_method :tasks, SHORT_CACHE_TIME
+    # cache_method :tasks, SHORT_CACHE_TIME # TODO restore
 
     # Pulls just names of tasks from a given section.
     def section_task_names(workspace_name, project_name, section_name)
@@ -100,43 +104,6 @@ module Checkoff
       by_section[current_section] << task
     end
 
-    def legacy_tasks_by_section_for_project(project)
-      raw_tasks = projects.tasks_from_project(project)
-      active_tasks = projects.active_tasks(raw_tasks)
-      legacy_by_section(active_tasks)
-    end
-
-    def legacy_file_task_by_section(current_section, by_section, task)
-      if task.name =~ /:$/
-        current_section = task.name
-        by_section[current_section] = []
-      else
-        by_section[current_section] ||= []
-        by_section[current_section] << task
-      end
-      [current_section, by_section]
-    end
-
-    def legacy_by_section(tasks)
-      current_section = nil
-      by_section = {}
-      tasks.each do |task|
-        current_section, by_section =
-          legacy_file_task_by_section(current_section, by_section, task)
-      end
-      by_section
-    end
-
-    def legacy_tasks_by_section_for_project_and_assignee_status(project,
-                                                                assignee_status)
-      raw_tasks = projects.tasks_from_project(project)
-      by_assignee_status =
-        projects.active_tasks(raw_tasks)
-          .group_by(&:assignee_status)
-      active_tasks = by_assignee_status[assignee_status]
-      legacy_by_section(active_tasks)
-    end
-
     def project_or_raise(workspace_name, project_name)
       project = projects.project(workspace_name, project_name)
       if project.nil?
@@ -146,35 +113,19 @@ module Checkoff
       project
     end
 
-    def verify_legacy_user_task_list!(workspace_name)
-      return unless user_task_list_migrated_to_real_sections?(workspace_name)
-
-      raise NotImplementedError, 'Section-based user task lists not yet supported'
+    def section(workspace_name, project_name, section_name)
+      project = project_or_raise(workspace_name, project_name)
+      sections = client.sections.get_sections_for_project(project_gid: project.gid)
+      sections.find { |section| section.name.chomp(':') == section_name.chomp(':') }
     end
 
-    ASSIGNEE_STATUS_BY_PROJECT_NAME = {
-      my_tasks_new: 'inbox',
-      my_tasks_today: 'today',
-      my_tasks_upcoming: 'upcoming',
-    }.freeze
-
-    def user_task_list_by_section(workspace_name, project_name)
-      verify_legacy_user_task_list!(workspace_name)
-
-      project = projects.project(workspace_name, project_name)
-      if project_name == :my_tasks
-        legacy_tasks_by_section_for_project(project)
-      else
-        legacy_tasks_by_section_for_project_and_assignee_status(project,
-                                                                ASSIGNEE_STATUS_BY_PROJECT_NAME.fetch(project_name))
+    def section_or_raise(workspace_name, project_name, section_name)
+      section = section(workspace_name, project_name, section_name)
+      if section.nil?
+        raise "Could not find section #{section_name} under project #{project_name} " \
+              "under workspace #{workspace_name}"
       end
-    end
-
-    def user_task_list_migrated_to_real_sections?(workspace_name)
-      workspace = workspaces.workspace_by_name(workspace_name)
-      result = client.user_task_lists.get_user_task_list_for_user(user_gid: 'me',
-                                                                  workspace: workspace.gid)
-      result.migration_status != 'not_migrated'
+      section
     end
 
     def project_task_names(workspace_name, project_name)

@@ -8,7 +8,9 @@ require 'active_support/time'
 # Test the Checkoff::Sections class
 class TestSections < BaseAsana
   let_mock :project, :inactive_task_b, :a_membership, :a_membership_project, :a_membership_section,
-           :user_task_list_project, :workspace_one, :client, :user_task_lists, :workspace_one_gid, :user_task_list
+           :user_task_list_project, :workspace_one, :client, :user_task_lists, :workspace_one_gid,
+           :user_task_list, :sections, :section1, :section2, :task_options, :tasks,
+           :section1_gid
 
   def expect_workspace_pulled(workspace_name, workspace)
     @mocks[:workspaces].expects(:workspace_by_name).with(workspace_name).returns(workspace)
@@ -20,7 +22,7 @@ class TestSections < BaseAsana
   end
 
   def expect_client_pulled
-    @mocks[:projects].expects(:client).returns(client)
+    @mocks[:projects].expects(:client).returns(client).at_least(1)
   end
 
   def expect_user_task_lists_object_pulled_from_client
@@ -39,37 +41,6 @@ class TestSections < BaseAsana
     workspace_one.expects(:gid).returns(workspace_one_gid)
     expect_user_task_lists_queried
     user_task_list.expects(:migration_status).returns('not_migrated')
-  end
-
-  def mock_tasks_by_section_my_tasks_legacy
-    expect_legacy_project_and_workspace_pulled('Workspace 1',
-                                               workspace_one,
-                                               user_task_list_project,
-                                               :my_tasks)
-    expect_user_task_list_pulled
-    expect_tasks_pulled(user_task_list_project, [task_c], [task_c])
-    expect_named(task_c, 'c')
-  end
-
-  def test_tasks_by_section_my_tasks_legacy
-    asana = get_test_object do
-      mock_tasks_by_section_my_tasks_legacy
-    end
-    out = asana.tasks_by_section('Workspace 1', :my_tasks)
-    assert_equal({ nil => [task_c] }, out)
-  end
-
-  def mock_project_task_names
-    expect_project_a_tasks_pulled
-    expect_named(task_c, 'c')
-  end
-
-  def test_project_task_names
-    asana = get_test_object do
-      mock_project_task_names
-    end
-    out = asana.send(:project_task_names, 'Workspace 1', a_name)
-    assert_equal(['Section 1:', ['c']], out)
   end
 
   def expect_named(task, name)
@@ -117,20 +88,80 @@ class TestSections < BaseAsana
     expect_task_memberships_queried
   end
 
-  def expect_project_a_tasks_pulled
-    expect_tasks_and_sections_pulled('Workspace 1', project_a, a_name)
-    project_a.expects(:gid).returns(a_gid)
+  def expect_project_gid_pulled(project, gid)
+    project.expects(:gid).returns(gid)
   end
 
-  def mock_section_pulled
-    expect_project_a_tasks_pulled
+  def expect_project_a_tasks_pulled
+    expect_tasks_and_sections_pulled('Workspace 1', project_a, a_name)
+    expect_project_gid_pulled(project_a, a_gid)
+  end
+
+  def expect_sections_client_pulled
+    client.expects(:sections).returns(sections)
+  end
+
+  def expect_project_sections_pulled(project_gid, sections_array)
+    sections.expects(:get_sections_for_project).with(project_gid: project_gid)
+      .returns(sections_array)
+  end
+
+  def original_task_options
+    {
+      foo: 'bar',
+      per_page: 100,
+      options: {
+        fields: [],
+      },
+    }
+  end
+
+  def fixed_task_options
+    {
+      foo: 'bar',
+      options: { fields: [] },
+    }
+  end
+
+  def expect_original_task_options_pulled
+    @mocks[:projects].expects(:task_options).with.returns(original_task_options)
+  end
+
+  def expect_tasks_api_called_for_section
+    tasks.expects(:get_tasks_for_section).with(section_gid: section1_gid,
+                                               **fixed_task_options).returns([task_c])
+  end
+
+  def expect_section_gid_pulled
+    section1.expects(:gid).returns(section1_gid)
+  end
+
+  def expect_client_tasks_api_pulled
+    client.expects(:tasks).returns(tasks)
+  end
+
+  def expect_section_tasks_pulled
+    expect_original_task_options_pulled
+    expect_client_tasks_api_pulled
+    expect_section_gid_pulled
+    expect_tasks_api_called_for_section
+  end
+
+  def mock_tasks_normal_project
+    expect_client_pulled
+    expect_project_pulled('Workspace 1', project_a, a_name)
+    expect_sections_client_pulled
+    expect_project_gid_pulled(project_a, a_gid)
+    expect_project_sections_pulled(a_gid, [section1, section2])
+    section1.expects(:name).returns('Section 1')
+    expect_section_tasks_pulled
   end
 
   let_mock :workspace_1_gid
 
   def test_tasks_normal_project
     asana = get_test_object do
-      mock_section_pulled
+      mock_tasks_normal_project
     end
     out = asana.tasks('Workspace 1', a_name, 'Section 1:')
     assert_equal([task_c], out)
@@ -189,10 +220,12 @@ class TestSections < BaseAsana
 
   let_mock :subtasks
 
-  let_mock :task_options
+  def expect_task_options_pulled
+    @mocks[:projects].expects(:task_options).returns(task_options)
+  end
 
   def mock_raw_subtasks
-    @mocks[:projects].expects(:task_options).returns(task_options)
+    expect_task_options_pulled
     task_a.expects(:subtasks).with(task_options).returns(subtasks)
     task_a.expects(:name).returns('task a').at_least(0)
   end

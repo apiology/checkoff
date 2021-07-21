@@ -12,7 +12,7 @@ $ checkoff --help
 View tasks:
   checkoff view workspace project [section]
 
-'project' can be set to a project name, or :my_tasks, :my_tasks_upcoming, :my_tasks_new, or :my_tasks_today
+'project' can be set to a project name, or :my_tasks for your user task list.
 ```
 
 Let's say we have a project like this:
