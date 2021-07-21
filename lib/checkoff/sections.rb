@@ -23,16 +23,6 @@ module Checkoff
       @time = time
     end
 
-    # Given a list of tasks, pull a Hash of tasks with section name -> task list
-    def by_section(tasks, project_gid)
-      by_section = {}
-      tasks.each do |task|
-        file_task_by_section(by_section, task, project_gid)
-      end
-      by_section
-    end
-    cache_method :by_section, LONG_CACHE_TIME
-
     # Given a project object, pull all tasks, then provide a Hash of
     # tasks with section name -> task list of the uncompleted tasks
     def tasks_by_section_for_project(project)
@@ -64,7 +54,7 @@ module Checkoff
       client.tasks.get_tasks_for_section(section_gid: section.gid,
                                          **options).to_a
     end
-    # cache_method :tasks, SHORT_CACHE_TIME # TODO restore
+    cache_method :tasks, SHORT_CACHE_TIME
 
     # Pulls just names of tasks from a given section.
     def section_task_names(workspace_name, project_name, section_name)
@@ -93,6 +83,16 @@ module Checkoff
     private
 
     def_delegators :@projects, :client
+
+    # Given a list of tasks, pull a Hash of tasks with section name -> task list
+    def by_section(tasks, project_gid)
+      by_section = {}
+      tasks.each do |task|
+        file_task_by_section(by_section, task, project_gid)
+      end
+      by_section
+    end
+    cache_method :by_section, LONG_CACHE_TIME
 
     def file_task_by_section(by_section, task, project_gid)
       membership = task.memberships.find { |m| m['project']['gid'] == project_gid }
