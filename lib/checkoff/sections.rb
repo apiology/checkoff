@@ -29,14 +29,6 @@ module Checkoff
       client.sections.get_sections_for_project(project_gid: project.gid)
     end
 
-    # Given a project object, pull all tasks, then provide a Hash of
-    # tasks with section name -> task list of the uncompleted tasks
-    def tasks_by_section_for_project(project)
-      raw_tasks = projects.tasks_from_project(project)
-      active_tasks = projects.active_tasks(raw_tasks)
-      by_section(active_tasks, project.gid)
-    end
-
     # Given a workspace name and project name, then provide a Hash of
     # tasks with section name -> task list of the uncompleted tasks
     def tasks_by_section(workspace_name, project_name)
@@ -87,6 +79,14 @@ module Checkoff
     end
 
     private
+
+    # Given a project object, pull all tasks, then provide a Hash of
+    # tasks with section name -> task list of the uncompleted tasks
+    def tasks_by_section_for_project(project)
+      raw_tasks = projects.tasks_from_project(project)
+      active_tasks = projects.active_tasks(raw_tasks)
+      by_section(active_tasks, project.gid)
+    end
 
     def_delegators :@projects, :client
 
