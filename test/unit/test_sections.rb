@@ -45,6 +45,24 @@ class TestSections < BaseAsana
     assert_equal([section1, section2], sections.sections_or_raise('Workspace 1', a_name))
   end
 
+  def mock_tasks_by_section_missing_membership
+    expect_project_pulled('Workspace 1', project_a, :my_tasks)
+    expect_tasks_pulled(project_a, [task_a, task_b, task_c],
+                        [task_c])
+    expect_project_gid_pulled(project_a, a_gid)
+    task_c.expects(:memberships).returns([])
+  end
+
+  def test_tasks_by_section_missing_membership
+    # This can happen as of 2021-07-22 if called with :my_tasks as a
+    # section, due to a limitation in the early implementation of the
+    # breaking change around user tasks lists.
+    sections = get_test_object do
+      mock_tasks_by_section_missing_membership
+    end
+    assert_raises(RuntimeError) { sections.tasks_by_section('Workspace 1', :my_tasks) }
+  end
+
   def test_tasks_by_section_some_in_empty_section
     sections = get_test_object do
       expect_tasks_and_sections_pulled('Workspace 1', project_a, a_name, '(no section)')
