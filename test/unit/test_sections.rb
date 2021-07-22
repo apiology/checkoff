@@ -52,35 +52,8 @@ class TestSections < BaseAsana
     assert_equal({ 'Section 1:' => [task_c] }, sections.tasks_by_section('Workspace 1', a_name))
   end
 
-  def expect_workspace_pulled(workspace_name, workspace)
-    @mocks[:workspaces].expects(:workspace_by_name).with(workspace_name).returns(workspace)
-  end
-
-  def expect_legacy_project_and_workspace_pulled(workspace_name, workspace, project, project_name)
-    expect_project_pulled(workspace_name, project, project_name)
-    expect_workspace_pulled(workspace_name, workspace)
-  end
-
   def expect_client_pulled
     @mocks[:projects].expects(:client).returns(client).at_least(1)
-  end
-
-  def expect_user_task_lists_object_pulled_from_client
-    client.expects(:user_task_lists).returns(user_task_lists)
-  end
-
-  def expect_user_task_lists_queried
-    user_task_lists.expects(:get_user_task_list_for_user).with(user_gid: 'me',
-                                                               workspace: workspace_one_gid)
-      .returns(user_task_list)
-  end
-
-  def expect_user_task_list_pulled
-    expect_client_pulled
-    expect_user_task_lists_object_pulled_from_client
-    workspace_one.expects(:gid).returns(workspace_one_gid)
-    expect_user_task_lists_queried
-    user_task_list.expects(:migration_status).returns('not_migrated')
   end
 
   def expect_named(task, name)
@@ -219,34 +192,7 @@ class TestSections < BaseAsana
     end
   end
 
-  def expect_today_pulled
-    @mocks[:time].expects(:today).returns(mock_date)
-  end
-
-  def mock_task_due_by_due_on
-    task_a.expects(:due_at).returns(nil)
-    task_a
-      .expects(:due_on)
-      .returns((mock_date - 1.day).to_s)
-      .at_least(1)
-    expect_today_pulled
-  end
-
-  def expect_now_pulled
-    @mocks[:time].expects(:now).returns(mock_now).at_least(0)
-  end
-
   let_mock :subtasks
-
-  def expect_task_options_pulled
-    @mocks[:projects].expects(:task_options).returns(task_options)
-  end
-
-  def mock_raw_subtasks
-    expect_task_options_pulled
-    task_a.expects(:subtasks).with(task_options).returns(subtasks)
-    task_a.expects(:name).returns('task a').at_least(0)
-  end
 
   def class_under_test
     Checkoff::Sections
