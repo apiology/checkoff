@@ -45,6 +45,14 @@ class TestSections < BaseAsana
     assert_equal([section1, section2], sections.sections_or_raise('Workspace 1', a_name))
   end
 
+  def test_tasks_by_section_some_in_empty_section
+    sections = get_test_object do
+      expect_tasks_and_sections_pulled('Workspace 1', project_a, a_name, '(no section)')
+      expect_project_gid_pulled(project_a, a_gid)
+    end
+    assert_equal({ nil => [task_c] }, sections.tasks_by_section('Workspace 1', a_name))
+  end
+
   def test_tasks_by_section
     sections = get_test_object do
       expect_project_a_tasks_pulled
@@ -83,40 +91,40 @@ class TestSections < BaseAsana
     a_membership_project.expects(:[]).with('gid').returns(a_gid)
   end
 
-  def expect_task_section_memberships_queried
+  def expect_task_section_memberships_queried(section_name)
     a_membership.expects(:[]).with('section').returns(a_membership_section)
-    a_membership_section.expects(:[]).with('name').returns('Section 1:')
+    a_membership_section.expects(:[]).with('name').returns(section_name)
   end
 
-  def expect_task_memberships_queried
+  def expect_task_memberships_queried(section_name)
     task_c.expects(:memberships).returns([a_membership])
     expect_task_project_memberships_queried
-    expect_task_section_memberships_queried
+    expect_task_section_memberships_queried(section_name)
   end
 
-  def expect_tasks_and_sections_pulled(workspace, project, project_name)
+  def expect_tasks_and_sections_pulled(workspace, project, project_name, section_name)
     expect_project_pulled(workspace, project, project_name)
-    expect_tasks_pulled(project, [task_a, task_b, section_one, task_c],
+    expect_tasks_pulled(project, [task_a, task_b, task_c],
                         [task_c])
-    expect_task_memberships_queried
+    expect_task_memberships_queried(section_name)
   end
 
   def expect_project_gid_pulled(project, gid)
-    project.expects(:gid).returns(gid)
+    project.expects(:gid).returns(gid).at_least(1)
   end
 
   def expect_project_a_tasks_pulled
-    expect_tasks_and_sections_pulled('Workspace 1', project_a, a_name)
+    expect_tasks_and_sections_pulled('Workspace 1', project_a, a_name, 'Section 1:')
     expect_project_gid_pulled(project_a, a_gid)
   end
 
   def expect_sections_client_pulled
-    client.expects(:sections).returns(sections)
+    client.expects(:sections).returns(sections).at_least(1)
   end
 
   def expect_project_sections_pulled(project_gid, sections_array)
     sections.expects(:get_sections_for_project).with(project_gid: project_gid)
-      .returns(sections_array)
+      .returns(sections_array).at_least(1)
   end
 
   def original_task_options
@@ -178,6 +186,19 @@ class TestSections < BaseAsana
     end
     out = sections.tasks('Workspace 1', a_name, 'Section 1:')
     assert_equal([task_c], out)
+  end
+
+  def test_tasks_section_not_found
+    sections = get_test_object do
+      expect_project_pulled('Workspace 1', project_a, a_name)
+      expect_client_pulled
+      expect_sections_client_pulled
+      expect_project_gid_pulled(project_a, a_gid)
+      expect_project_sections_pulled(a_gid, [])
+    end
+    assert_raises(RuntimeError) do
+      sections.tasks('Workspace 1', a_name, 'not found')
+    end
   end
 
   def test_tasks_project_not_found
