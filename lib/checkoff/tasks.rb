@@ -54,10 +54,6 @@ module Checkoff
       @projects ||= @sections.projects
     end
 
-    def tasks_minus_sections(tasks)
-      @sections.by_section(tasks).values.flatten
-    end
-
     def default_assignee_gid
       @config.fetch(:default_assignee_gid)
     end
