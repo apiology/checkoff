@@ -55,7 +55,8 @@ class TestTasks < BaseAsana
   end
 
   def expect_tasks_from_section_pulled
-    sections.expects(:tasks).with(workspace_name, project_name, section_name).returns([task])
+    sections.expects(:tasks).with(workspace_name, project_name, section_name,
+                                  only_uncompleted: only_uncompleted).returns([task])
     task.expects(:name).returns(task_name)
   end
 

@@ -110,16 +110,6 @@ class TestProjects < BaseAsana
 
   let_mock :my_tasks_config
 
-  def unconfigured_workspace_name
-    'Unconfigured workspace name'
-  end
-
-  def mock_project_my_tasks_not_configured
-    @mocks[:config].expects(:fetch).with(:my_tasks).returns(my_tasks_config)
-      .at_least(1)
-    my_tasks_config.expects(:[]).with(unconfigured_workspace_name).returns(nil)
-  end
-
   def class_under_test
     Checkoff::Projects
   end

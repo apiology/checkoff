@@ -14,7 +14,7 @@ class TestSections < BaseAsana
 
   def test_section_task_names_no_tasks
     sections = get_test_object do
-      mock_tasks_normal_project
+      mock_tasks_normal_project(only_uncompleted: true)
       expect_named(task_c, 'c')
     end
     assert_equal(['c'],
@@ -23,7 +23,7 @@ class TestSections < BaseAsana
 
   def test_section_task_names
     sections = get_test_object do
-      mock_tasks_normal_project
+      mock_tasks_normal_project(only_uncompleted: true)
       expect_named(task_c, 'c')
     end
     assert_equal(['c'],
@@ -155,20 +155,24 @@ class TestSections < BaseAsana
     }
   end
 
-  def fixed_task_options
-    {
+  def fixed_task_options(only_uncompleted:)
+    out = {
       foo: 'bar',
       options: { fields: [] },
     }
+    out[:completed_since] = '9999-12-01' if only_uncompleted
+    out
   end
 
   def expect_original_task_options_pulled
     @mocks[:projects].expects(:task_options).with.returns(original_task_options)
   end
 
-  def expect_tasks_api_called_for_section
+  def expect_tasks_api_called_for_section(only_uncompleted:)
+    options = fixed_task_options(only_uncompleted: only_uncompleted)
     tasks.expects(:get_tasks_for_section).with(section_gid: section1_gid,
-                                               **fixed_task_options).returns([task_c])
+                                               **options)
+      .returns([task_c])
   end
 
   def expect_section_gid_pulled
@@ -179,28 +183,37 @@ class TestSections < BaseAsana
     client.expects(:tasks).returns(tasks)
   end
 
-  def expect_section_tasks_pulled
+  def expect_section_tasks_pulled(only_uncompleted:)
     expect_original_task_options_pulled
     expect_client_tasks_api_pulled
     expect_section_gid_pulled
-    expect_tasks_api_called_for_section
+    expect_tasks_api_called_for_section(only_uncompleted: only_uncompleted)
   end
 
-  def mock_tasks_normal_project
+  def test_tasks_not_only_uncompleted
+    sections = get_test_object do
+      mock_tasks_normal_project(only_uncompleted: false)
+    end
+    out = sections.tasks('Workspace 1', a_name, 'Section 1:',
+                         only_uncompleted: false)
+    assert_equal([task_c], out)
+  end
+
+  def mock_tasks_normal_project(only_uncompleted:)
     expect_client_pulled
     expect_project_pulled('Workspace 1', project_a, a_name)
     expect_sections_client_pulled
     expect_project_gid_pulled(project_a, a_gid)
     expect_project_sections_pulled(a_gid, [section1, section2])
     section1.expects(:name).returns('Section 1')
-    expect_section_tasks_pulled
+    expect_section_tasks_pulled(only_uncompleted: only_uncompleted)
   end
 
   let_mock :workspace_1_gid
 
   def test_tasks_normal_project
     sections = get_test_object do
-      mock_tasks_normal_project
+      mock_tasks_normal_project(only_uncompleted: true)
     end
     out = sections.tasks('Workspace 1', a_name, 'Section 1:')
     assert_equal([task_c], out)

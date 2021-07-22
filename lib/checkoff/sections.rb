@@ -48,6 +48,7 @@ module Checkoff
       # itself does
       options.delete(:per_page)
       options[:options][:fields] += extra_fields
+      options[:completed_since] = '9999-12-01' if only_uncompleted
       client.tasks.get_tasks_for_section(section_gid: section.gid,
                                          **options).to_a
     end
