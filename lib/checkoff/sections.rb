@@ -57,12 +57,6 @@ module Checkoff
     # Pulls just names of tasks from a given section.
     def section_task_names(workspace_name, project_name, section_name)
       tasks = tasks(workspace_name, project_name, section_name)
-      if tasks.nil?
-        by_section = tasks_by_section(workspace_name, project_name)
-        desc = "#{workspace_name} | #{project_name} | #{section_name}"
-        raise "Could not find task names for #{desc}.  " \
-              "Valid sections: #{by_section.keys}"
-      end
       tasks.map(&:name)
     end
     cache_method :section_task_names, SHORT_CACHE_TIME
@@ -127,8 +121,10 @@ module Checkoff
     def section_or_raise(workspace_name, project_name, section_name)
       section = section(workspace_name, project_name, section_name)
       if section.nil?
+        valid_sections = sections_or_raise(workspace_name, project_name).map(&:name)
+
         raise "Could not find section #{section_name} under project #{project_name} " \
-              "under workspace #{workspace_name}"
+              "under workspace #{workspace_name}.  Valid sections: #{valid_sections}"
       end
       section
     end
