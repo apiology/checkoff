@@ -12,6 +12,46 @@ class TestSections < BaseAsana
            :user_task_list, :sections, :section1, :section2, :task_options, :tasks,
            :section1_gid
 
+  def test_section_task_names_no_tasks
+    sections = get_test_object do
+      mock_tasks_normal_project
+      expect_named(task_c, 'c')
+    end
+    assert_equal(['c'],
+                 sections.section_task_names('Workspace 1', a_name, 'Section 1:'))
+  end
+
+  def test_section_task_names
+    sections = get_test_object do
+      mock_tasks_normal_project
+      expect_named(task_c, 'c')
+    end
+    assert_equal(['c'],
+                 sections.section_task_names('Workspace 1', a_name, 'Section 1:'))
+  end
+
+  def mock_sections_or_raise
+    expect_client_pulled
+    expect_project_pulled('Workspace 1', project_a, a_name)
+    expect_project_gid_pulled(project_a, a_gid)
+    expect_sections_client_pulled
+    expect_project_sections_pulled(a_gid, [section1, section2])
+  end
+
+  def test_sections_or_raise
+    sections = get_test_object do
+      mock_sections_or_raise
+    end
+    assert_equal([section1, section2], sections.sections_or_raise('Workspace 1', a_name))
+  end
+
+  def test_tasks_by_section
+    sections = get_test_object do
+      expect_project_a_tasks_pulled
+    end
+    assert_equal({ 'Section 1:' => [task_c] }, sections.tasks_by_section('Workspace 1', a_name))
+  end
+
   def expect_workspace_pulled(workspace_name, workspace)
     @mocks[:workspaces].expects(:workspace_by_name).with(workspace_name).returns(workspace)
   end
@@ -160,31 +200,23 @@ class TestSections < BaseAsana
   let_mock :workspace_1_gid
 
   def test_tasks_normal_project
-    asana = get_test_object do
+    sections = get_test_object do
       mock_tasks_normal_project
     end
-    out = asana.tasks('Workspace 1', a_name, 'Section 1:')
+    out = sections.tasks('Workspace 1', a_name, 'Section 1:')
     assert_equal([task_c], out)
   end
 
   def test_tasks_project_not_found
-    asana = get_test_object do
+    sections = get_test_object do
       @mocks[:projects]
         .expects(:project).with('Workspace 1', 'not found')
         .returns(nil)
     end
     assert_raises(RuntimeError) do
       # XXX: Deal with colon at end...
-      asana.tasks('Workspace 1', 'not found', 'Section 1:')
+      sections.tasks('Workspace 1', 'not found', 'Section 1:')
     end
-  end
-
-  def test_task_due_by_default
-    asana = get_test_object do
-      task_a.expects(:due_at).returns(nil)
-      task_a.expects(:due_on).returns(nil)
-    end
-    assert(asana.task_due?(task_a))
   end
 
   def expect_today_pulled
@@ -200,22 +232,8 @@ class TestSections < BaseAsana
     expect_today_pulled
   end
 
-  def test_task_due_by_due_on
-    asana = get_test_object { mock_task_due_by_due_on }
-    assert(asana.task_due?(task_a))
-  end
-
   def expect_now_pulled
     @mocks[:time].expects(:now).returns(mock_now).at_least(0)
-  end
-
-  def test_task_due_by_due_at
-    asana = get_test_object do
-      expect_now_pulled
-      task_a
-        .expects(:due_at).returns((mock_now - 1.minute).to_s).at_least(1)
-    end
-    assert(asana.task_due?(task_a))
   end
 
   let_mock :subtasks
