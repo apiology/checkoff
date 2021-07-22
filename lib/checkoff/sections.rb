@@ -4,7 +4,6 @@ require 'forwardable'
 
 module Checkoff
   # Query different sections of Asana projects
-  # rubocop:disable Metrics/ClassLength
   class Sections
     MINUTE = 60
     LONG_CACHE_TIME = MINUTE * 15
@@ -60,17 +59,6 @@ module Checkoff
       tasks.map(&:name)
     end
     cache_method :section_task_names, SHORT_CACHE_TIME
-
-    # returns if a task's due field is at or before the current date/time
-    def task_due?(task)
-      if task.due_at
-        Time.parse(task.due_at) <= time.now
-      elsif task.due_on
-        Date.parse(task.due_on) <= time.today
-      else
-        true # set a due date if you don't want to do this now
-      end
-    end
 
     private
 
@@ -128,19 +116,5 @@ module Checkoff
       end
       section
     end
-
-    def project_task_names(workspace_name, project_name)
-      by_section = tasks_by_section(workspace_name, project_name)
-      by_section.flat_map do |section_name, tasks|
-        task_names = tasks.map(&:name)
-        if section_name.nil?
-          task_names
-        else
-          [section_name, task_names]
-        end
-      end
-    end
-    cache_method :project_task_names, SHORT_CACHE_TIME
   end
-  # rubocop:enable Metrics/ClassLength
 end
