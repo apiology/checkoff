@@ -35,6 +35,17 @@ module Checkoff
       @workspaces.client
     end
 
+    # Default options used in Asana API to pull taskso
+    def task_options
+      {
+        per_page: 100,
+        options: {
+          fields: %w[name completed_at due_at due_on tags
+                     memberships.project.gid memberships.section.name dependencies],
+        },
+      }
+    end
+
     # pulls an Asana API project class given a name
     def project(workspace_name, project_name)
       if project_name.is_a?(Symbol) && project_name.to_s.start_with?('my_tasks')
@@ -83,16 +94,6 @@ module Checkoff
                                                                   workspace: workspace.gid)
       gid = result.gid
       projects.find_by_id(gid)
-    end
-
-    def task_options
-      {
-        per_page: 100,
-        options: {
-          fields: %w[name completed_at due_at due_on assignee_status tags
-                     memberships.project.gid memberships.section.name dependencies],
-        },
-      }
     end
   end
 end

@@ -31,7 +31,8 @@ module Checkoff
                 projects.tasks_from_project(project,
                                             only_uncompleted: only_uncompleted)
               else
-                @sections.tasks(workspace_name, project_name, section_name)
+                @sections.tasks(workspace_name, project_name, section_name,
+                                only_uncompleted: only_uncompleted)
               end
       tasks.find { |task| task.name == task_name }
     end
@@ -52,10 +53,6 @@ module Checkoff
 
     def projects
       @projects ||= @sections.projects
-    end
-
-    def tasks_minus_sections(tasks)
-      @sections.by_section(tasks).values.flatten
     end
 
     def default_assignee_gid

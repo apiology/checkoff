@@ -1,5 +1,6 @@
 # frozen_string_literal: true
 
+# :nocov:
 # Module which adds helpers to run tests as if it was a specific date.
 module TestDate
   attr_writer :time_period, :mock_date_str
@@ -57,3 +58,4 @@ module TestDate
     mock_now_with_zone(zone)
   end
 end
+# :nocov:
