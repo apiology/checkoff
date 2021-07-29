@@ -12,6 +12,94 @@ require_relative 'tasks'
 require_relative 'sections'
 
 module Checkoff
+  # Move tasks from one place to another
+  class MvSubcommand
+    def validate_and_assign_from_location(from_workspace, from_project, from_section)
+      if from_workspace == :default_workspace
+        # Figure out what to do here - we accept a default
+        # workspace gid and default workspace_gid arguments elsewhere.
+        # however, there are undefaulted workspace_name arguments as
+        # well...
+        raise NotImplementedError, 'Not implemented: Teach me how to look up default workspace name'
+      end
+
+      @from_workspace = from_workspace
+      @from_project = translate_project_name(from_project)
+      @from_section = from_section
+    end
+
+    def validate_and_assign_to_location(to_workspace, to_project, to_section)
+      to_workspace = from_workspace if to_workspace == :source_workspace
+      @to_workspace = to_workspace
+      to_project = from_project if to_project == :source_project
+      @to_project = translate_project_name(to_project)
+      to_section = from_section if to_section == :source_section
+      @to_section = to_section
+    end
+
+    def initialize(from_workspace:,
+                   from_project:,
+                   from_section:,
+                   to_workspace:,
+                   to_project:,
+                   to_section:,
+                   config: Checkoff::ConfigLoader.load(:asana),
+                   projects: Checkoff::Projects.new(config: config),
+                   sections: Checkoff::Sections.new(config: config))
+      validate_and_assign_from_location(from_workspace, from_project, from_section)
+      validate_and_assign_to_location(to_workspace, to_project, to_section)
+
+      @projects = projects
+      @sections = sections
+    end
+
+    def move_tasks(tasks, target_project, target_section)
+      tasks.each do |task|
+        # a. check if already in correct project and section (TODO)
+        # b. if not, put it there
+        puts "Moving #{task.name}..."
+        task.add_project(project: target_project.gid, section: target_section.gid)
+      end
+    end
+
+    def fetch_tasks(from_workspace, from_project, from_section)
+      if from_section == :all_sections
+        raise NotImplementedError, 'Not implemented: Teach me how to move all sections of a project'
+      end
+
+      sections.tasks(from_workspace, from_project, from_section)
+    end
+
+    def run
+      # 0. Look up project and section gids
+      target_project = projects.project_or_raise(to_workspace, to_project)
+      target_section = sections.section_or_raise(to_workspace, to_project, to_section)
+
+      # 1. Get list of tasks which match
+      tasks = fetch_tasks(from_workspace, from_project, from_section)
+      # 2. for each task,
+      move_tasks(tasks, target_project, target_section)
+      # 3. tell the user we're done'
+      puts 'Done moving tasks'
+    end
+
+    private
+
+    attr_reader :from_workspace, :from_project, :from_section,
+                :to_workspace, :to_project, :to_section,
+                :projects, :sections
+
+    def translate_project_name(project_name)
+      return project_name if project_name.is_a? Symbol
+
+      if project_name.start_with? ':'
+        project_name[1..].to_sym
+      else
+        project_name
+      end
+    end
+  end
+
   # CLI subcommand that shows tasks in JSON form
   class ViewSubcommand
     def initialize(workspace_name, project_name, section_name,
@@ -154,6 +242,7 @@ module Checkoff
 
     desc 'Move tasks from one section to another within a project'
 
+    # rubocop:disable Metrics/BlockLength
     command :mv do |c|
       c.flag :from_workspace,
              type: String,
@@ -179,6 +268,21 @@ module Checkoff
              type: String,
              default_value: :source_section,
              desc: 'Section to move tasks to'
+      c.action do |_global_options, options, _args|
+        from_workspace = options.fetch('from_workspace')
+        from_project = options.fetch('from_project')
+        from_section = options.fetch('from_section')
+        to_workspace = options.fetch('to_workspace')
+        to_project = options.fetch('to_project')
+        to_section = options.fetch('to_section')
+        MvSubcommand.new(from_workspace: from_workspace,
+                         from_project: from_project,
+                         from_section: from_section,
+                         to_workspace: to_workspace,
+                         to_project: to_project,
+                         to_section: to_section).run
+      end
     end
+    # rubocop:enable Metrics/BlockLength
   end
 end
