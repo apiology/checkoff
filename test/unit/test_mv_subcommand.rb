@@ -19,12 +19,6 @@ class TestMvSubcommand < ClassTest
               :from_workspace_name, :from_project_name, :from_section_name,
               :to_workspace_name, :to_project_name, :to_section_name
 
-  def name_to_argument(name)
-    return ":#{arg}" if name.is_a? Symbol
-
-    name.to_s
-  end
-
   def argument_to_name(arg)
     if arg.start_with? ':'
       arg[1..].to_sym
@@ -109,7 +103,7 @@ class TestMvSubcommand < ClassTest
   end
 
   def expect_task_added_to_section(task, task_name)
-    return if from_section_name == :all_sections  # not implemented yet
+    return if from_section_name == :all_sections # not implemented yet
 
     expect_task_named(task, task_name)
     expect_section_named(to_section, to_section_name)
@@ -135,10 +129,32 @@ class TestMvSubcommand < ClassTest
   def expect_run
     set_names
     set_initializer_arguments
+
+    return if from_workspace_name != to_workspace_name # not implemented yet
+
     expect_to_objects_pulled
     expect_tasks_pulled(from_workspace_name, from_project_name, from_section_name, [task_a])
     expect_task_added_to_section(task_a, task_a_name)
     allow_logger_used
+  end
+
+  def mock_run_to_different_workspace
+    @from_workspace_arg = 'My workspace'
+    @from_project_arg = 'My project'
+    @from_section_arg = 'My section'
+    @to_workspace_arg = 'Some other workspace'
+    @to_project_arg = 'Some other project'
+    @to_section_arg = :source_section
+
+    expect_run
+  end
+
+  def test_run_to_different_workspace
+    assert_raises(NotImplementedError) do
+      get_test_object do
+        mock_run_to_different_workspace
+      end
+    end
   end
 
   def mock_run_from_all_sections
@@ -159,6 +175,24 @@ class TestMvSubcommand < ClassTest
     assert_raises(NotImplementedError) do
       mv_subcommand.run
     end
+  end
+
+  def mock_run_from_regular_project
+    @from_workspace_arg = 'My workspace'
+    @from_project_arg = 'My project'
+    @from_section_arg = 'My section'
+    @to_workspace_arg = :source_workspace
+    @to_project_arg = 'Some other project'
+    @to_section_arg = :source_section
+
+    expect_run
+  end
+
+  def test_run_from_regular_project
+    mv_subcommand = get_test_object do
+      mock_run_from_regular_project
+    end
+    mv_subcommand.run
   end
 
   def mock_run_to_same_section_different_project

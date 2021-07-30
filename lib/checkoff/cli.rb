@@ -49,6 +49,10 @@ module Checkoff
       @to_workspace_name = from_workspace_name if to_workspace_arg == :source_workspace
       @to_project_name = create_to_project_name(to_project_arg)
       @to_section_name = create_to_section_name(to_section_arg)
+
+      return unless from_workspace_name != to_workspace_name
+
+      raise NotImplementedError, 'Not implemented: Teach me how to move tasks between workspaces'
     end
 
     def initialize(from_workspace_arg:,
