@@ -14,8 +14,8 @@ require_relative 'sections'
 module Checkoff
   # Move tasks from one place to another
   class MvSubcommand
-    def validate_and_assign_from_location(from_workspace_name, from_project_name, from_section_name)
-      if from_workspace_name == :default_workspace
+    def validate_and_assign_from_location(from_workspace_arg, from_project_arg, from_section_arg)
+      if from_workspace_arg == :default_workspace
         # Figure out what to do here - we accept a default
         # workspace gid and default workspace_gid arguments elsewhere.
         # however, there are undefaulted workspace_name arguments as
@@ -23,31 +23,46 @@ module Checkoff
         raise NotImplementedError, 'Not implemented: Teach me how to look up default workspace name'
       end
 
-      @from_workspace_name = from_workspace_name
-      @from_project_name = translate_project_name(from_project_name)
-      @from_section_name = from_section_name
+      @from_workspace_name = from_workspace_arg
+      @from_project_name = project_arg_to_name(from_project_arg)
+      @from_section_name = from_section_arg
     end
 
-    def validate_and_assign_to_location(to_workspace_name, to_project_name, to_section_name)
-      to_workspace_name = from_workspace_name if to_workspace_name == :source_workspace
-      @to_workspace_name = to_workspace_name
-      to_project_name = from_project_name if to_project_name == :source_project
-      @to_project_name = translate_project_name(to_project_name)
-      to_section_name = from_section_name if to_section_name == :source_section
-      @to_section_name = to_section_name
+    def create_to_project_name(to_project_arg)
+      if to_project_arg == :source_project
+        from_project_name
+      else
+        project_arg_to_name(to_project_arg)
+      end
     end
 
-    def initialize(from_workspace_name:,
-                   from_project_name:,
-                   from_section_name:,
-                   to_workspace_name:,
-                   to_project_name:,
-                   to_section_name:,
+    def create_to_section_name(to_section_arg)
+      if to_section_arg == :source_section
+        from_section_name
+      else
+        to_section_arg
+      end
+    end
+
+    def validate_and_assign_to_location(to_workspace_arg, to_project_arg, to_section_arg)
+      @to_workspace_name = to_workspace_arg
+      @to_workspace_name = from_workspace_name if to_workspace_arg == :source_workspace
+      @to_project_name = create_to_project_name(to_project_arg)
+      @to_section_name = create_to_section_name(to_section_arg)
+      puts "@to_section_name: #{@to_section_name}"
+    end
+
+    def initialize(from_workspace_arg:,
+                   from_project_arg:,
+                   from_section_arg:,
+                   to_workspace_arg:,
+                   to_project_arg:,
+                   to_section_arg:,
                    config: Checkoff::ConfigLoader.load(:asana),
                    projects: Checkoff::Projects.new(config: config),
                    sections: Checkoff::Sections.new(config: config))
-      validate_and_assign_from_location(from_workspace_name, from_project_name, from_section_name)
-      validate_and_assign_to_location(to_workspace_name, to_project_name, to_section_name)
+      validate_and_assign_from_location(from_workspace_arg, from_project_arg, from_section_arg)
+      validate_and_assign_to_location(to_workspace_arg, to_project_arg, to_section_arg)
 
       @projects = projects
       @sections = sections
@@ -57,7 +72,7 @@ module Checkoff
       tasks.each do |task|
         # a. check if already in correct project and section (TODO)
         # b. if not, put it there
-        puts "Moving #{task.name}..."
+        puts "Moving #{task.name} to #{to_section.name}..."
         task.add_project(project: to_project.gid, section: to_section.gid)
       end
     end
@@ -89,13 +104,13 @@ module Checkoff
                 :to_workspace_name, :to_project_name, :to_section_name,
                 :projects, :sections
 
-    def translate_project_name(project_name)
-      return project_name if project_name.is_a? Symbol
+    def project_arg_to_name(project_arg)
+      return project_arg if project_arg.is_a? Symbol
 
-      if project_name.start_with? ':'
-        project_name[1..].to_sym
+      if project_arg.start_with? ':'
+        project_arg[1..].to_sym
       else
-        project_name
+        project_arg
       end
     end
   end
@@ -275,12 +290,12 @@ module Checkoff
         to_workspace = options.fetch('to_workspace')
         to_project = options.fetch('to_project')
         to_section = options.fetch('to_section')
-        MvSubcommand.new(from_workspace_name: from_workspace,
-                         from_project_name: from_project,
-                         from_section_name: from_section,
-                         to_workspace_name: to_workspace,
-                         to_project_name: to_project,
-                         to_section_name: to_section).run
+        MvSubcommand.new(from_workspace_arg: from_workspace,
+                         from_project_arg: from_project,
+                         from_section_arg: from_section,
+                         to_workspace_arg: to_workspace,
+                         to_project_arg: to_project,
+                         to_section_arg: to_section).run
       end
     end
     # rubocop:enable Metrics/BlockLength
