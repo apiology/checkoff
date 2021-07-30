@@ -36,6 +36,7 @@ Gem::Specification.new do |spec|
   # magit doesn't seem to want to use the bundled version at the moment,
   # so let's favor the more recent version...
   spec.add_development_dependency 'overcommit', ['>=0.58.0']
+  spec.add_development_dependency 'pry'
   spec.add_development_dependency 'rake', '~> 13.0'
   spec.add_development_dependency 'rubocop'
   spec.add_development_dependency 'rubocop-minitest'
