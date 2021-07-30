@@ -21,8 +21,10 @@ development.  See the `.envrc` file for detail.
 To publish new version as a maintainer:
 
 ```sh
+git checkout main && git pull
 git log "v$(bump current)..."
 # Set type_of_bump to patch, minor, or major
 bump --tag --tag-prefix=v ${type_of_bump:?}
 rake release
+git push
 ```
