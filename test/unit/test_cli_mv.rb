@@ -48,12 +48,12 @@ class TestCLIMv < Minitest::Test
   let_mock :mv_subcommand
 
   def mock_mv_original_use_case
-    Checkoff::MvSubcommand.expects(:new).with(from_workspace: 'from_workspace_name',
-                                              from_project: ':my_tasks',
-                                              from_section: 'Recently assigned',
-                                              to_workspace: :source_workspace,
-                                              to_project: :source_project,
-                                              to_section: 'Later').returns(mv_subcommand)
+    Checkoff::MvSubcommand.expects(:new).with(from_workspace_arg: 'from_workspace_name',
+                                              from_project_arg: ':my_tasks',
+                                              from_section_arg: 'Recently assigned',
+                                              to_workspace_arg: :source_workspace,
+                                              to_project_arg: :source_project,
+                                              to_section_arg: 'Later').returns(mv_subcommand)
     mv_subcommand.expects(:run)
   end
 
