@@ -129,6 +129,24 @@ class TestMvSubcommand < ClassTest
     allow_logger_used
   end
 
+  def mock_run_with_explicit_to_project
+    @from_workspace_arg = 'My workspace'
+    @from_project_arg = ':my_tasks'
+    @from_section_arg = 'Recently assigned'
+    @to_workspace_arg = :source_workspace
+    @to_project_arg = 'Some other project'
+    @to_section_arg = 'Later'
+
+    expect_run
+  end
+
+  def test_run_with_explicit_to_project
+    mv_subcommand = get_test_object do
+      mock_run_with_explicit_to_project
+    end
+    mv_subcommand.run
+  end
+
   def mock_run_from_my_tasks
     @from_workspace_arg = 'My workspace'
     @from_project_arg = ':my_tasks'
