@@ -1,3 +1,14 @@
+GIT
+  remote: https://github.com/apiology/ruby-asana
+  revision: 83732f040728a4ef1cfc9ed61f65878dbee6aa23
+  branch: checkoff_fixes
+  specs:
+    asana (0.10.4)
+      faraday (~> 1.0)
+      faraday_middleware (~> 1.0)
+      faraday_middleware-multi_json (~> 0.0)
+      oauth2 (~> 1.4)
+
 PATH
   remote: .
   specs:
@@ -17,11 +28,6 @@ GEM
       minitest (>= 5.1)
       tzinfo (~> 2.0)
       zeitwerk (~> 2.3)
-    asana (0.10.3)
-      faraday (~> 1.0)
-      faraday_middleware (~> 1.0)
-      faraday_middleware-multi_json (~> 0.0)
-      oauth2 (~> 1.4)
     ast (2.4.2)
     bump (0.10.0)
     cache (0.4.1)
@@ -125,6 +131,7 @@ PLATFORMS
   x86_64-linux
 
 DEPENDENCIES
+  asana!
   bump
   bundler
   checkoff!

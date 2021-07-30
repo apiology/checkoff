@@ -12,6 +12,112 @@ require_relative 'tasks'
 require_relative 'sections'
 
 module Checkoff
+  # Move tasks from one place to another
+  class MvSubcommand
+    def validate_and_assign_from_location(from_workspace_arg, from_project_arg, from_section_arg)
+      if from_workspace_arg == :default_workspace
+        # Figure out what to do here - we accept a default
+        # workspace gid and default workspace_gid arguments elsewhere.
+        # however, there are undefaulted workspace_name arguments as
+        # well...
+        raise NotImplementedError, 'Not implemented: Teach me how to look up default workspace name'
+      end
+
+      @from_workspace_name = from_workspace_arg
+      @from_project_name = project_arg_to_name(from_project_arg)
+      @from_section_name = from_section_arg
+    end
+
+    def create_to_project_name(to_project_arg)
+      if to_project_arg == :source_project
+        from_project_name
+      else
+        project_arg_to_name(to_project_arg)
+      end
+    end
+
+    def create_to_section_name(to_section_arg)
+      if to_section_arg == :source_section
+        from_section_name
+      else
+        to_section_arg
+      end
+    end
+
+    def validate_and_assign_to_location(to_workspace_arg, to_project_arg, to_section_arg)
+      @to_workspace_name = to_workspace_arg
+      @to_workspace_name = from_workspace_name if to_workspace_arg == :source_workspace
+      @to_project_name = create_to_project_name(to_project_arg)
+      @to_section_name = create_to_section_name(to_section_arg)
+
+      return unless from_workspace_name != to_workspace_name
+
+      raise NotImplementedError, 'Not implemented: Teach me how to move tasks between workspaces'
+    end
+
+    def initialize(from_workspace_arg:,
+                   from_project_arg:,
+                   from_section_arg:,
+                   to_workspace_arg:,
+                   to_project_arg:,
+                   to_section_arg:,
+                   config: Checkoff::ConfigLoader.load(:asana),
+                   projects: Checkoff::Projects.new(config: config),
+                   sections: Checkoff::Sections.new(config: config),
+                   logger: $stderr)
+      validate_and_assign_from_location(from_workspace_arg, from_project_arg, from_section_arg)
+      validate_and_assign_to_location(to_workspace_arg, to_project_arg, to_section_arg)
+
+      @projects = projects
+      @sections = sections
+      @logger = logger
+    end
+
+    def move_tasks(tasks, to_project, to_section)
+      tasks.each do |task|
+        # a. check if already in correct project and section (TODO)
+        # b. if not, put it there
+        @logger.puts "Moving #{task.name} to #{to_section.name}..."
+        task.add_project(project: to_project.gid, section: to_section.gid)
+      end
+    end
+
+    def fetch_tasks(from_workspace_name, from_project_name, from_section_name)
+      if from_section_name == :all_sections
+        raise NotImplementedError, 'Not implemented: Teach me how to move all sections of a project'
+      end
+
+      sections.tasks(from_workspace_name, from_project_name, from_section_name)
+    end
+
+    def run
+      # 0. Look up project and section gids
+      to_project = projects.project_or_raise(to_workspace_name, to_project_name)
+      to_section = sections.section_or_raise(to_workspace_name, to_project_name, to_section_name)
+
+      # 1. Get list of tasks which match
+      tasks = fetch_tasks(from_workspace_name, from_project_name, from_section_name)
+      # 2. for each task,
+      move_tasks(tasks, to_project, to_section)
+      # 3. tell the user we're done'
+      @logger.puts 'Done moving tasks'
+    end
+
+    private
+
+    attr_reader :from_workspace_name, :from_project_name, :from_section_name,
+                :to_workspace_name, :to_project_name, :to_section_name,
+                :projects, :sections
+
+    def project_arg_to_name(project_arg)
+      if project_arg.start_with? ':'
+        project_arg[1..].to_sym
+      else
+        project_arg
+      end
+    end
+  end
+
   # CLI subcommand that shows tasks in JSON form
   class ViewSubcommand
     def initialize(workspace_name, project_name, section_name,
@@ -151,5 +257,50 @@ module Checkoff
         puts ViewSubcommand.new(workspace_name, project_name, section_name, task_name).run
       end
     end
+
+    desc 'Move tasks from one section to another within a project'
+
+    # rubocop:disable Metrics/BlockLength
+    command :mv do |c|
+      c.flag :from_workspace,
+             type: String,
+             default_value: :default_workspace,
+             desc: 'Workspace to move tasks from'
+      c.flag :from_project,
+             type: String,
+             required: true,
+             desc: 'Project to move tasks from'
+      c.flag :from_section,
+             type: String,
+             default_value: :all_sections,
+             desc: 'Section to move tasks from'
+      c.flag :to_workspace,
+             type: String,
+             default_value: :source_workspace,
+             desc: 'Workspace to move tasks to'
+      c.flag :to_project,
+             type: String,
+             default_value: :source_project,
+             desc: 'Section to move tasks to'
+      c.flag :to_section,
+             type: String,
+             default_value: :source_section,
+             desc: 'Section to move tasks to'
+      c.action do |_global_options, options, _args|
+        from_workspace = options.fetch('from_workspace')
+        from_project = options.fetch('from_project')
+        from_section = options.fetch('from_section')
+        to_workspace = options.fetch('to_workspace')
+        to_project = options.fetch('to_project')
+        to_section = options.fetch('to_section')
+        MvSubcommand.new(from_workspace_arg: from_workspace,
+                         from_project_arg: from_project,
+                         from_section_arg: from_section,
+                         to_workspace_arg: to_workspace,
+                         to_project_arg: to_project,
+                         to_section_arg: to_section).run
+      end
+    end
+    # rubocop:enable Metrics/BlockLength
   end
 end

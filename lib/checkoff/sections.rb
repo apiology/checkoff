@@ -44,13 +44,10 @@ module Checkoff
               extra_fields: [])
       section = section_or_raise(workspace_name, project_name, section_name)
       options = projects.task_options
-      # asana-0.10.3 gem doesn't support per_page - not sure if API
-      # itself does
-      options.delete(:per_page)
       options[:options][:fields] += extra_fields
       options[:completed_since] = '9999-12-01' if only_uncompleted
-      client.tasks.get_tasks_for_section(section_gid: section.gid,
-                                         **options).to_a
+      client.tasks.get_tasks(section: section.gid,
+                             **options)
     end
     cache_method :tasks, SHORT_CACHE_TIME
 
@@ -60,6 +57,18 @@ module Checkoff
       tasks.map(&:name)
     end
     cache_method :section_task_names, SHORT_CACHE_TIME
+
+    def section_or_raise(workspace_name, project_name, section_name)
+      section = section(workspace_name, project_name, section_name)
+      if section.nil?
+        valid_sections = sections_or_raise(workspace_name, project_name).map(&:name)
+
+        raise "Could not find section #{section_name} under project #{project_name} " \
+              "under workspace #{workspace_name}.  Valid sections: #{valid_sections}"
+      end
+      section
+    end
+    cache_method :section_or_raise, LONG_CACHE_TIME
 
     private
 
@@ -105,17 +114,6 @@ module Checkoff
     def section(workspace_name, project_name, section_name)
       sections = sections_or_raise(workspace_name, project_name)
       sections.find { |section| section.name.chomp(':') == section_name.chomp(':') }
-    end
-
-    def section_or_raise(workspace_name, project_name, section_name)
-      section = section(workspace_name, project_name, section_name)
-      if section.nil?
-        valid_sections = sections_or_raise(workspace_name, project_name).map(&:name)
-
-        raise "Could not find section #{section_name} under project #{project_name} " \
-              "under workspace #{workspace_name}.  Valid sections: #{valid_sections}"
-      end
-      section
     end
   end
 end

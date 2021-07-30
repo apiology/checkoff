@@ -156,10 +156,7 @@ class TestSections < BaseAsana
   end
 
   def fixed_task_options(only_uncompleted:)
-    out = {
-      foo: 'bar',
-      options: { fields: [] },
-    }
+    out = original_task_options
     out[:completed_since] = '9999-12-01' if only_uncompleted
     out
   end
@@ -170,8 +167,8 @@ class TestSections < BaseAsana
 
   def expect_tasks_api_called_for_section(only_uncompleted:)
     options = fixed_task_options(only_uncompleted: only_uncompleted)
-    tasks.expects(:get_tasks_for_section).with(section_gid: section1_gid,
-                                               **options)
+    tasks.expects(:get_tasks).with(section: section1_gid,
+                                   **options)
       .returns([task_c])
   end
 
