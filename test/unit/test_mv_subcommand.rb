@@ -147,10 +147,35 @@ class TestMvSubcommand < ClassTest
     mv_subcommand.run
   end
 
+  def mock_init_default_workspace_not_implemented
+    @from_workspace_arg = :default_workspace
+    @from_project_arg = ':my_tasks'
+    @from_section_arg = 'Recently assigned'
+    @to_workspace_arg = :source_workspace
+    @to_project_arg = :source_project
+    @to_section_arg = 'Later'
+
+    set_initializer_arguments
+  end
+
+  def test_init_default_workspace_not_implemented
+    assert_raises(NotImplementedError) do
+      get_test_object do
+        mock_init_default_workspace_not_implemented
+      end
+    end
+  end
+
   def test_init
     mv_subcommand = get_test_object do
-      @mocks[:from_project_arg] = ':my_tasks'
-      @mocks[:to_project_arg] = :source_project
+      @from_workspace_arg = 'My workspace'
+      @from_project_arg = ':my_tasks'
+      @from_section_arg = 'Recently assigned'
+      @to_workspace_arg = :source_workspace
+      @to_project_arg = :source_project
+      @to_section_arg = 'Later'
+
+      set_initializer_arguments
     end
     refute mv_subcommand.nil?
   end
