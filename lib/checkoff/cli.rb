@@ -14,8 +14,8 @@ require_relative 'sections'
 module Checkoff
   # Move tasks from one place to another
   class MvSubcommand
-    def validate_and_assign_from_location(from_workspace, from_project, from_section)
-      if from_workspace == :default_workspace
+    def validate_and_assign_from_location(from_workspace_name, from_project_name, from_section_name)
+      if from_workspace_name == :default_workspace
         # Figure out what to do here - we accept a default
         # workspace gid and default workspace_gid arguments elsewhere.
         # however, there are undefaulted workspace_name arguments as
@@ -23,70 +23,70 @@ module Checkoff
         raise NotImplementedError, 'Not implemented: Teach me how to look up default workspace name'
       end
 
-      @from_workspace = from_workspace
-      @from_project = translate_project_name(from_project)
-      @from_section = from_section
+      @from_workspace_name = from_workspace_name
+      @from_project_name = translate_project_name(from_project_name)
+      @from_section_name = from_section_name
     end
 
-    def validate_and_assign_to_location(to_workspace, to_project, to_section)
-      to_workspace = from_workspace if to_workspace == :source_workspace
-      @to_workspace = to_workspace
-      to_project = from_project if to_project == :source_project
-      @to_project = translate_project_name(to_project)
-      to_section = from_section if to_section == :source_section
-      @to_section = to_section
+    def validate_and_assign_to_location(to_workspace_name, to_project_name, to_section_name)
+      to_workspace_name = from_workspace_name if to_workspace_name == :source_workspace
+      @to_workspace_name = to_workspace_name
+      to_project_name = from_project_name if to_project_name == :source_project
+      @to_project_name = translate_project_name(to_project_name)
+      to_section_name = from_section_name if to_section_name == :source_section
+      @to_section_name = to_section_name
     end
 
-    def initialize(from_workspace:,
-                   from_project:,
-                   from_section:,
-                   to_workspace:,
-                   to_project:,
-                   to_section:,
+    def initialize(from_workspace_name:,
+                   from_project_name:,
+                   from_section_name:,
+                   to_workspace_name:,
+                   to_project_name:,
+                   to_section_name:,
                    config: Checkoff::ConfigLoader.load(:asana),
                    projects: Checkoff::Projects.new(config: config),
                    sections: Checkoff::Sections.new(config: config))
-      validate_and_assign_from_location(from_workspace, from_project, from_section)
-      validate_and_assign_to_location(to_workspace, to_project, to_section)
+      validate_and_assign_from_location(from_workspace_name, from_project_name, from_section_name)
+      validate_and_assign_to_location(to_workspace_name, to_project_name, to_section_name)
 
       @projects = projects
       @sections = sections
     end
 
-    def move_tasks(tasks, target_project, target_section)
+    def move_tasks(tasks, to_project, to_section)
       tasks.each do |task|
         # a. check if already in correct project and section (TODO)
         # b. if not, put it there
         puts "Moving #{task.name}..."
-        task.add_project(project: target_project.gid, section: target_section.gid)
+        task.add_project(project: to_project.gid, section: to_section.gid)
       end
     end
 
-    def fetch_tasks(from_workspace, from_project, from_section)
-      if from_section == :all_sections
+    def fetch_tasks(from_workspace_name, from_project_name, from_section_name)
+      if from_section_name == :all_sections
         raise NotImplementedError, 'Not implemented: Teach me how to move all sections of a project'
       end
 
-      sections.tasks(from_workspace, from_project, from_section)
+      sections.tasks(from_workspace_name, from_project_name, from_section_name)
     end
 
     def run
       # 0. Look up project and section gids
-      target_project = projects.project_or_raise(to_workspace, to_project)
-      target_section = sections.section_or_raise(to_workspace, to_project, to_section)
+      to_project = projects.project_or_raise(to_workspace_name, to_project_name)
+      to_section = sections.section_or_raise(to_workspace_name, to_project_name, to_section_name)
 
       # 1. Get list of tasks which match
-      tasks = fetch_tasks(from_workspace, from_project, from_section)
+      tasks = fetch_tasks(from_workspace_name, from_project_name, from_section_name)
       # 2. for each task,
-      move_tasks(tasks, target_project, target_section)
+      move_tasks(tasks, to_project, to_section)
       # 3. tell the user we're done'
       puts 'Done moving tasks'
     end
 
     private
 
-    attr_reader :from_workspace, :from_project, :from_section,
-                :to_workspace, :to_project, :to_section,
+    attr_reader :from_workspace_name, :from_project_name, :from_section_name,
+                :to_workspace_name, :to_project_name, :to_section_name,
                 :projects, :sections
 
     def translate_project_name(project_name)
@@ -275,12 +275,12 @@ module Checkoff
         to_workspace = options.fetch('to_workspace')
         to_project = options.fetch('to_project')
         to_section = options.fetch('to_section')
-        MvSubcommand.new(from_workspace: from_workspace,
-                         from_project: from_project,
-                         from_section: from_section,
-                         to_workspace: to_workspace,
-                         to_project: to_project,
-                         to_section: to_section).run
+        MvSubcommand.new(from_workspace_name: from_workspace,
+                         from_project_name: from_project,
+                         from_section_name: from_section,
+                         to_workspace_name: to_workspace,
+                         to_project_name: to_project,
+                         to_section_name: to_section).run
       end
     end
     # rubocop:enable Metrics/BlockLength
