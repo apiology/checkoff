@@ -117,9 +117,9 @@ class TestCLIQuickadd < Minitest::Test
   end
 
   def test_quickadd
-    asana_my_tasks = get_test_object do
+    cli = get_test_object do
       mock_quickadd
     end
-    asana_my_tasks.run(['quickadd', workspace_name, 'my task name'])
+    cli.run(['quickadd', workspace_name, 'my task name'])
   end
 end

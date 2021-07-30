@@ -109,14 +109,14 @@ class TestCLIView < Minitest::Test
   end
 
   def test_run_with_no_section_specified_normal_project
-    asana_my_tasks = get_test_object do
+    cli = get_test_object do
       mock_run_with_no_section_specified_normal_project(due_on: 'fake_date', due_at: nil)
       @mocks[:stdout].expects(:puts).with(expected_json_no_section_specified)
     end
     assert_equal(0,
-                 asana_my_tasks.run(['view',
-                                     workspace_name,
-                                     project_name]))
+                 cli.run(['view',
+                          workspace_name,
+                          project_name]))
   end
 
   def expect_three_tasks_pulled_and_queried(project_name:,
@@ -236,11 +236,11 @@ class TestCLIView < Minitest::Test
   end
 
   def test_run_with_no_project_specified
-    asana_my_tasks = get_test_object do
+    cli = get_test_object do
       mock_run_with_no_project_specified
       @mocks[:stdout].expects(:puts)
     end
-    assert_equal(64, asana_my_tasks.run(['view', workspace_name]))
+    assert_equal(64, cli.run(['view', workspace_name]))
   end
 
   def expected_json_view_not_due
@@ -248,14 +248,14 @@ class TestCLIView < Minitest::Test
   end
 
   def test_view_not_due
-    asana_my_tasks = get_test_object do
+    cli = get_test_object do
       mock_run_with_no_section_specified_normal_project(due_on: nil, due_at: nil)
       @mocks[:stdout].expects(:puts).with(expected_json_view_not_due)
     end
     assert_equal(0,
-                 asana_my_tasks.run(['view',
-                                     workspace_name,
-                                     project_name]))
+                 cli.run(['view',
+                          workspace_name,
+                          project_name]))
   end
 
   def expected_json_view_due_at
@@ -265,13 +265,13 @@ class TestCLIView < Minitest::Test
   end
 
   def test_view_due_at
-    asana_my_tasks = get_test_object do
+    cli = get_test_object do
       mock_run_with_no_section_specified_normal_project(due_on: nil, due_at: 'fake time')
       @mocks[:stdout].expects(:puts).with(expected_json_view_due_at)
     end
     assert_equal(0,
-                 asana_my_tasks.run(['view',
-                                     workspace_name,
-                                     project_name]))
+                 cli.run(['view',
+                          workspace_name,
+                          project_name]))
   end
 end
