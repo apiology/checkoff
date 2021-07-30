@@ -106,8 +106,6 @@ module Checkoff
                 :projects, :sections
 
     def project_arg_to_name(project_arg)
-      return project_arg if project_arg.is_a? Symbol
-
       if project_arg.start_with? ':'
         project_arg[1..].to_sym
       else
