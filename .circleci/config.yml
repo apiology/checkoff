@@ -37,7 +37,9 @@ commands:
           sed -E -e 's/checkoff \([[:digit:]]+.[[:digit:]]+.[[:digit:]]+\)/checkoff (0.1.0)/g' \
           Gemfile.lock > Gemfile.lock.deversioned
       - restore_cache:
-          key: gems-v4-{{ checksum "Gemfile.lock.deversioned" }}
+          key: gems-v1-{{ checksum "Gemfile.lock.deversioned" }}
+      - restore_cache:
+          key: wheels-v1-{{ checksum "requirements_dev.txt" }}
       - run:
           name: Initialize packages
           command: |
@@ -52,9 +54,13 @@ commands:
               exit 1
             fi
       - save_cache:
-          key: gems-v4-{{ checksum "Gemfile.lock.deversioned" }}
+          key: gems-v1-{{ checksum "Gemfile.lock.deversioned" }}
           paths:
             - "vendor/bundle"
+      - save_cache:
+          key: wheels-v1-{{ checksum "requirements_dev.txt" }}
+          paths:
+            - "/home/circleci/.cache/pip/wheels"
       - run:
           name: Download new circleci tool
           command: |
@@ -78,7 +84,7 @@ commands:
 jobs:
   overcommit:
     docker:
-      - image: apiology/circleci:latest
+      - image: apiology/circleci-ruby:latest
     steps:
       - when:
           condition:
@@ -93,7 +99,7 @@ jobs:
   build:
     working_directory: ~/checkoff
     docker:
-      - image: apiology/circleci:latest
+      - image: apiology/circleci-ruby:latest
     steps:
       - set_up_environment
       - run_with_languages:
@@ -117,6 +123,7 @@ workflows:
                 - main
     jobs:
       - build
+      - overcommit
   overcommit:
     jobs:
       - overcommit

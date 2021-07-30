@@ -148,7 +148,7 @@ DEPENDENCIES
   rubocop
   rubocop-minitest
   rubocop-rake
-  simplecov
+  simplecov (>= 0.18.0)
   simplecov-lcov
   undercover
 
