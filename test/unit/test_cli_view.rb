@@ -97,14 +97,14 @@ class TestCLIView < Minitest::Test
     }
   end
 
-  def get_test_object(&twiddle_mocks)
+  def get_test_object(&_twiddle_mocks)
     set_mocks
     expect_workspaces_created
     expect_config_loaded
     expect_sections_created
     expect_tasks_created
 
-    yield @mocks if twiddle_mocks
+    yield @mocks
     Checkoff::CheckoffGLIApp
   end
 
