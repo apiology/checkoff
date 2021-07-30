@@ -59,6 +59,14 @@ module Checkoff
     end
     cache_method :project, LONG_CACHE_TIME
 
+    def project_or_raise(workspace_name, project_name)
+      project = project(workspace_name, project_name)
+      raise "Could not find project #{project_name} under workspace #{workspace_name}." if project.nil?
+
+      project
+    end
+    cache_method :project_or_raise, LONG_CACHE_TIME
+
     # find uncompleted tasks in a list
     def active_tasks(tasks)
       tasks.select { |task| task.completed_at.nil? }
@@ -95,5 +103,6 @@ module Checkoff
       gid = result.gid
       projects.find_by_id(gid)
     end
+    cache_method :my_tasks, LONG_CACHE_TIME
   end
 end

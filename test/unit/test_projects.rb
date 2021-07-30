@@ -90,6 +90,30 @@ class TestProjects < BaseAsana
     user_task_list.expects(:gid).returns(my_tasks_in_workspace_gid)
   end
 
+  def mock_project_or_raise_unknown
+    setup_config
+    setup_client_pulled
+    setup_workspace_pulled
+    setup_projects_pulled
+    setup_projects_queried(workspace_gid: workspace_one_gid)
+  end
+
+  def test_project_or_raise_unknown
+    asana = get_test_object do
+      mock_project_or_raise_unknown
+    end
+    assert_raises(RuntimeError) do
+      asana.project_or_raise('Workspace 1', 'Does not exist')
+    end
+  end
+
+  def test_project_or_raise_my_tasks
+    asana = get_test_object do
+      mock_project_my_tasks
+    end
+    assert_equal(my_tasks_project, asana.project_or_raise('Workspace 1', :my_tasks))
+  end
+
   def mock_project_my_tasks
     setup_config
     setup_client_pulled

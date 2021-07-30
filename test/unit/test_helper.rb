@@ -53,7 +53,7 @@ end
 def get_initializer_mocks(clazz, skip_these_keys: [])
   parameters = clazz.instance_method(:initialize).parameters
   named_parameters = parameters.select do |name, _value|
-    name == :key
+    %i[key keyreq].include? name
   end
   mock_syms = named_parameters.map { |_name, value| value } - skip_these_keys
 
