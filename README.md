@@ -1,7 +1,4 @@
-Command-line and gem client for Asana (unofficial)
-
-[![Circle CI](https://circleci.com/gh/apiology/checkoff.svg?style=svg)](https://circleci.com/gh/apiology/checkoff)
-[![Travis CI](https://travis-ci.org/apiology/checkoff.svg?branch=main)](https://travis-ci.org/apiology/checkoff)
+[![CircleCI](https://circleci.com/gh/apiology/checkoff.svg?style=svg)](https://circleci.com/gh/apiology/checkoff)
 
 Command-line and gem client for Asana (unofficial)
 

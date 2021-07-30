@@ -1,4 +1,4 @@
 # frozen_string_literal: true
 
-desc 'Load up VLD in pry'
+desc 'Load up checkoff in pry'
 task repl: [:console]
