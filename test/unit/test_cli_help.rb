@@ -10,8 +10,8 @@ class TestCLIHelp < Minitest::Test
 
   def expected_json_no_section_specified
     '{"":[{"name":"task_a","due":"fake_date"}],' \
-    '"section_name:":[{"name":"task_b","due":"fake_date"},' \
-    '{"name":"task_c","due":"fake_date"}]}'
+      '"section_name:":[{"name":"task_b","due":"fake_date"},' \
+      '{"name":"task_c","due":"fake_date"}]}'
   end
 
   def section_name_str
