@@ -11,6 +11,11 @@ module Checkoff
 
     extend Forwardable
 
+    def initialize(config: Checkoff::ConfigLoader.load(:asana),
+                   projects: Checkoff::Projects.new(config: config))
+      @projects = projects
+    end
+
     # pulls a Hash of subtasks broken out by section
     def by_section(tasks)
       current_section = nil
@@ -29,6 +34,8 @@ module Checkoff
     cache_method :raw_subtasks, LONG_CACHE_TIME
 
     private
+
+    attr_reader :projects
 
     def file_task_by_section(current_section, by_section, task)
       if task.name =~ /:$/
