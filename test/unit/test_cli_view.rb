@@ -10,8 +10,8 @@ class TestCLIView < Minitest::Test
 
   def expected_json_no_section_specified
     '{"":[{"name":"task_a","due":"fake_date"}],' \
-    '"section_name:":[{"name":"task_b","due":"fake_date"},' \
-    '{"name":"task_c","due":"fake_date"}]}'
+      '"section_name:":[{"name":"task_b","due":"fake_date"},' \
+      '{"name":"task_c","due":"fake_date"}]}'
   end
 
   def section_name_str
@@ -170,8 +170,8 @@ class TestCLIView < Minitest::Test
 
   def expected_json_section_specified
     '[{"name":"task_a","due":"fake_date"},' \
-    '{"name":"task_b","due":"fake_date"},' \
-    '{"name":"task_c","due":"fake_date"}]'
+      '{"name":"task_b","due":"fake_date"},' \
+      '{"name":"task_c","due":"fake_date"}]'
   end
 
   def mock_view_run_with_section_specified_empty_section
@@ -260,8 +260,8 @@ class TestCLIView < Minitest::Test
 
   def expected_json_view_due_at
     '{"":[{"name":"task_a","due":"fake time"}],' \
-    '"section_name:":[{"name":"task_b","due":"fake time"},' \
-    '{"name":"task_c","due":"fake time"}]}'
+      '"section_name:":[{"name":"task_b","due":"fake time"},' \
+      '{"name":"task_c","due":"fake time"}]}'
   end
 
   def test_view_due_at
