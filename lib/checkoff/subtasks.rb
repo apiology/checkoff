@@ -16,6 +16,11 @@ module Checkoff
       @projects = projects
     end
 
+    # true if the subtask passed in is actually a section header for subtasks
+    def subtask_section?(task)
+      task.name.end_with?(':')
+    end
+
     # pulls a Hash of subtasks broken out by section
     def by_section(tasks)
       current_section = nil
@@ -38,7 +43,7 @@ module Checkoff
     attr_reader :projects
 
     def file_task_by_section(current_section, by_section, task)
-      if task.name =~ /:$/
+      if subtask_section?(task)
         current_section = task.name
         by_section[current_section] = []
       else
