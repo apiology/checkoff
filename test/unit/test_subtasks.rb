@@ -27,10 +27,6 @@ class TestSubtasks < ClassTest
     refute(subtasks.all_subtasks_completed?(task))
   end
 
-  def expect_subtask_completed(subtask)
-    subtask.expects(:completed_at).returns('2020-01-01 12:00pm')
-  end
-
   def expect_active_subtasks_pulled(active_subtasks)
     projects.expects(:active_tasks).with(raw_subtasks).returns(active_subtasks)
   end
