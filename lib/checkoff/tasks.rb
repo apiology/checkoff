@@ -45,6 +45,11 @@ module Checkoff
                          workspace: workspace_gid, name: name)
     end
 
+    # Return an end-user URL to the task in question
+    def url_of_task(task)
+      "https://app.asana.com/0/0/#{task.gid}/f"
+    end
+
     private
 
     def client

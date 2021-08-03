@@ -14,6 +14,13 @@ class TestTasks < BaseAsana
 
   let_mock :workspace_gid, :task_name, :default_assignee_gid
 
+  def test_url_of_task
+    tasks = get_test_object do
+      task.expects(:gid).returns('my_gid')
+    end
+    assert_equal('https://app.asana.com/0/0/my_gid/f', tasks.url_of_task(task))
+  end
+
   def expect_task_created
     @mocks[:asana_task].expects(:create).with(client,
                                               assignee: default_assignee_gid,
