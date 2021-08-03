@@ -37,17 +37,24 @@ module Checkoff
 
     # Returns all subtasks, including section headers
     def raw_subtasks(task)
-      task.subtasks(projects.task_options)
+      task_options = projects.task_options
+      task_options[:options][:fields] << 'is_rendered_as_separator'
+      task.subtasks(task_options)
     end
-    cache_method :raw_subtasks, LONG_CACHE_TIME
+    cache_method :raw_subtasks, SHORT_CACHE_TIME
+
+    # True if the subtask passed in represents a section in the subtasks
+    #
+    # Note: expect this to be removed in a future version, as Asana is
+    # expected to move to the new-style way of representing sections
+    # as memberships with a separate API within a task.
+    def subtask_section?(subtask)
+      subtask.is_rendered_as_separator
+    end
 
     private
 
     attr_reader :projects
-
-    def subtask_section?(task)
-      task.name.end_with?(':')
-    end
 
     def file_task_by_section(current_section, by_section, task)
       if subtask_section?(task)

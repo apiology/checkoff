@@ -8,11 +8,32 @@ class TestSubtasks < ClassTest
 
   def_delegators(:@mocks, :projects)
 
-  let_mock :task, :task_options, :raw_subtasks,
+  let_mock :task, :raw_subtasks,
            :subtask,
            :subtask_section_1, :subtask_1a, :subtask_1b,
            :subtask_section_2,
-           :subtask_section_3, :subtask_3a
+           :subtask_section_3, :subtask_3a,
+           :is_rendered_as_separator
+
+  def task_options
+    {
+      task_options: true,
+      options: {
+        task_options_options: true,
+        fields: ['task_field'],
+      },
+    }
+  end
+
+  def subtask_options
+    {
+      task_options: true,
+      options: {
+        task_options_options: true,
+        fields: %w[task_field is_rendered_as_separator],
+      },
+    }
+  end
 
   def test_all_subtasks_completed_false
     subtasks = get_test_object do
@@ -22,13 +43,22 @@ class TestSubtasks < ClassTest
                          subtask_section_2,
                          subtask_section_3, subtask_3a]
       expect_active_subtasks_pulled(active_subtasks)
-      allow_subtask_names_queried
+      allow_all_section_status_queried
     end
     refute(subtasks.all_subtasks_completed?(task))
   end
 
   def expect_active_subtasks_pulled(active_subtasks)
     projects.expects(:active_tasks).with(raw_subtasks).returns(active_subtasks)
+  end
+
+  def allow_all_section_status_queried
+    allow_subtask_section_status_queried(subtask_section_1, true)
+    allow_subtask_section_status_queried(subtask_section_2, true)
+    allow_subtask_section_status_queried(subtask_section_3, true)
+    allow_subtask_section_status_queried(subtask_1a, false)
+    allow_subtask_section_status_queried(subtask_1b, false)
+    allow_subtask_section_status_queried(subtask_3a, false)
   end
 
   def test_all_subtasks_completed_true
@@ -39,23 +69,20 @@ class TestSubtasks < ClassTest
                          subtask_section_2,
                          subtask_section_3]
       expect_active_subtasks_pulled(active_subtasks)
-      allow_subtask_names_queried
+      allow_all_section_status_queried
     end
     assert(subtasks.all_subtasks_completed?(task))
   end
 
-  def test_subtask_section_false
-    subtasks = get_test_object do
-      subtask.expects(:name).returns('foo')
-    end
-    refute(subtasks.send(:subtask_section?, subtask))
+  def allow_subtask_section_status_queried(subtask, result)
+    subtask.expects(:is_rendered_as_separator).returns(result).at_least(0)
   end
 
-  def test_subtask_section_true
+  def test_subtask_section
     subtasks = get_test_object do
-      subtask.expects(:name).returns('foo:')
+      allow_subtask_section_status_queried(subtask, is_rendered_as_separator)
     end
-    assert(subtasks.send(:subtask_section?, subtask))
+    assert_equal(subtasks.subtask_section?(subtask), is_rendered_as_separator)
   end
 
   def allow_subtask_section_1_named
@@ -79,8 +106,13 @@ class TestSubtasks < ClassTest
     allow_subtask_section_3_named
   end
 
+  def mock_by_section
+    allow_subtask_names_queried
+    allow_all_section_status_queried
+  end
+
   def test_by_section
-    subtasks = get_test_object { allow_subtask_names_queried }
+    subtasks = get_test_object { mock_by_section }
     assert_equal({
                    '1:' => [subtask_1a, subtask_1b],
                    '2:' => [],
@@ -96,7 +128,7 @@ class TestSubtasks < ClassTest
   end
 
   def expect_raw_subtasks_pulled
-    task.expects(:subtasks).with(task_options).returns(raw_subtasks)
+    task.expects(:subtasks).with(subtask_options).returns(raw_subtasks)
   end
 
   def test_raw_subtasks
