@@ -115,25 +115,6 @@ class TestTasks < BaseAsana
     task.expects(:due_on).returns(due_on).at_least(0)
   end
 
-  def mock_due_time_nil
-    expect_init_called
-    allow_due_at_pulled(task, nil)
-    allow_due_on_pulled(task, nil)
-  end
-
-  def mock_due_time_due_at_set
-    expect_init_called
-    task.expects(:due_at).returns(due_at_string).at_least(1)
-    @mocks[:time_class].expects(:parse).with(due_at_string).returns(due_at_obj)
-  end
-
-  def mock_due_time_due_on_set
-    expect_init_called
-    task.expects(:due_at).returns(nil).at_least(1)
-    task.expects(:due_on).returns(due_on_string).at_least(1)
-    @mocks[:time_class].expects(:parse).with(due_on_string).returns(due_on_obj)
-  end
-
   def test_url_of_task
     tasks = get_test_object do
       task.expects(:gid).returns('my_gid')
