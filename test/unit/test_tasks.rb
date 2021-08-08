@@ -7,12 +7,113 @@ require 'checkoff/cli'
 class TestTasks < BaseAsana
   extend Forwardable
 
-  def_delegators :@mocks, :sections
+  def_delegators :@mocks, :sections, :asana_task, :time_class
 
   let_mock :mock_tasks, :modified_mock_tasks, :tasks_by_section,
            :unflattened_modified_mock_tasks
 
   let_mock :workspace_gid, :task_name, :default_assignee_gid
+
+  let_mock :task,
+           :due_at_string, :due_at_obj,
+           :due_on_string, :due_on_obj,
+           :asana_entity_project,
+           :dependency_1, :dependency_1_gid, :client,
+           :dependency_1_full_task, :now
+
+  def expect_due_on_parsed(less_than_now:)
+    time_class.expects(:parse).with(due_on_string).returns(due_on_obj)
+    time_class.expects(:now).returns(now)
+    due_on_obj.expects(:<).with(now).returns(less_than_now)
+  end
+
+  def mock_task_ready_false_due_in_future_on_date
+    allow_client_pulled
+    expect_dependencies_pulled(task, [])
+    allow_task_due(due_on: due_on_string, due_at: nil)
+    expect_due_on_parsed(less_than_now: false)
+  end
+
+  def test_task_ready_false_due_in_future_on_date
+    tasks = get_test_object do
+      mock_task_ready_false_due_in_future_on_date
+    end
+    refute(tasks.task_ready?(task))
+  end
+
+  def expect_due_at_parsed(less_than_now:)
+    time_class.expects(:parse).with(due_at_string).returns(due_at_obj)
+    time_class.expects(:now).returns(now)
+    due_at_obj.expects(:<).with(now).returns(less_than_now)
+  end
+
+  def mock_task_ready_false_due_in_future_at_time
+    allow_client_pulled
+    expect_dependencies_pulled(task, [])
+    allow_task_due(due_on: nil, due_at: due_at_string)
+    expect_due_at_parsed(less_than_now: false)
+  end
+
+  def test_task_ready_false_due_in_future_at_time
+    tasks = get_test_object do
+      mock_task_ready_false_due_in_future_at_time
+    end
+    refute(tasks.task_ready?(task))
+  end
+
+  def expect_dependencies_pulled(task, dependencies)
+    task.expects(:dependencies).returns(dependencies)
+  end
+
+  def test_task_ready_true_no_due_anything
+    tasks = get_test_object do
+      expect_dependencies_pulled(task, [])
+      allow_task_due(due_on: nil, due_at: nil)
+    end
+    assert(tasks.task_ready?(task))
+  end
+
+  def expect_dependency_completion_pulled(dependency, dependency_gid, dependency_full_task,
+                                          completed)
+    dependency.expects(:gid).with.returns(dependency_1_gid)
+    asana_task.expects(:find_by_id).with(client,
+                                         dependency_gid,
+                                         options: { fields: ['completed'] })
+      .returns(dependency_full_task)
+    dependency_full_task.expects(:completed).returns(completed)
+  end
+
+  def allow_client_pulled
+    sections.expects(:client).returns(client).at_least(0)
+  end
+
+  def mock_task_ready_false_dependency
+    allow_client_pulled
+    allow_task_due(due_on: nil, due_at: nil)
+    expect_dependencies_pulled(task, [dependency_1])
+    expect_dependency_completion_pulled(dependency_1, dependency_1_gid, dependency_1_full_task,
+                                        false)
+  end
+
+  def test_task_ready_false_dependency
+    tasks = get_test_object do
+      mock_task_ready_false_dependency
+    end
+    refute(tasks.task_ready?(task))
+  end
+
+  def allow_task_due(due_on: nil, due_at: nil)
+    allow_due_at_pulled(task, due_at)
+    allow_due_on_pulled(task, due_on)
+  end
+
+  def allow_due_at_pulled(task, due_at)
+    task.expects(:due_at).returns(due_at).at_least(0)
+  end
+
+  def allow_due_on_pulled(task, due_on)
+    task.expects(:due_on).returns(due_on).at_least(0)
+  end
 
   def test_url_of_task
     tasks = get_test_object do

@@ -16,10 +16,22 @@ module Checkoff
 
     def initialize(config: Checkoff::ConfigLoader.load(:asana),
                    sections: Checkoff::Sections.new(config: config),
+                   time_class: Time,
                    asana_task: Asana::Resources::Task)
       @config = config
       @sections = sections
+      @time_class = time_class
       @asana_task = asana_task
+    end
+
+    def task_ready?(task)
+      return false if incomplete_dependencies?(task)
+
+      due = due_time(task)
+
+      return true if due.nil?
+
+      due < @time_class.now
     end
 
     # Pull a specific task by name
@@ -62,6 +74,22 @@ module Checkoff
 
     def default_assignee_gid
       @config.fetch(:default_assignee_gid)
+    end
+
+    def due_time(task)
+      return @time_class.parse(task.due_at) if task.due_at
+      return @time_class.parse(task.due_on) if task.due_on
+
+      nil
+    end
+
+    def incomplete_dependencies?(task)
+      task.dependencies.any? do |parent_task_info|
+        parent_task_gid = parent_task_info.gid
+        parent_task = @asana_task.find_by_id(client, parent_task_gid,
+                                             options: { fields: ['completed'] })
+        !parent_task.completed
+      end
     end
   end
 end
