@@ -4,12 +4,28 @@ Command-line and gem client for Asana (unofficial)
 
 ## Using
 
-```
+```sh
 $ checkoff --help
-View tasks:
-  checkoff view workspace project [section]
+NAME
+    checkoff - Command-line client for Asana (unofficial)
 
-'project' can be set to a project name, or :my_tasks for your user task list.
+
+SYNOPSIS
+    checkoff [global options] command [command options] [arguments...]
+
+
+
+GLOBAL OPTIONS
+    --help - Show this message
+
+
+
+COMMANDS
+    help     - Shows a list of commands or help for one command
+    mv       - Move tasks from one section to another within a project
+    quickadd - Add a short task to Asana
+    view     - Output representation of Asana tasks
+$
 ```
 
 Let's say we have a project like this:
@@ -18,7 +34,7 @@ Let's say we have a project like this:
 
 Checkoff outputs things in JSON.  'jq' is a great tool to use in combination:
 
-```
+```sh
 $ checkoff view 'Personal Projects' 'Create demo'
 {"":[{"name":"This is a task that doesn't belong to any sections."}],"Write it:":[{"name":"Write something"}],"Publish to github:":[{"name":"git push!"}],"Make sure it looks OK!:":[{"name":"Looks it up in your browser..."}]}
 $
@@ -52,7 +68,7 @@ $ checkoff view 'Personal Projects' 'Create demo' | jq
 
 You can drill down into a section on the command line:
 
-```
+```sh
 $ checkoff view 'Personal Projects' 'Create demo' 'Publish to github:'
 [{"name":"git push!"}]
 ```
@@ -71,11 +87,20 @@ $ checkoff view 'Personal Projects' 'Create demo' | jq 'to_entries | map(.value)
 
 And even gather counts for project metrics:
 
-```bash
+```sh
 $ checkoff view 'Personal Projects' 'Create demo' | jq 'to_entries | map(.value) | flatten | map(.name) | length'
 4
 $
 ```
+
+## Naming things
+
+Since checkoff looks up things by their name, if you have two things
+with the same name, you're probably going to have a bad time.
+
+If you need to talk about the section of a project which contains
+tasks that don't have a section, use `Untitled section` as the name.
+This is a quirk of the Asana API which seemed as good as any other idea.
 
 ## Caching
 
@@ -94,7 +119,7 @@ clear the cache.
 
 This will work under OS X:
 
-```bash
+```sh
 brew install memcached
 ln -sfv /usr/local/opt/memcached/*.plist ~/Library/LaunchAgents
 launchctl load ~/Library/LaunchAgents/homebrew.mxcl.memcached.plist
@@ -103,7 +128,8 @@ gem install checkoff
 
 ## Configuring
 
-You'll need to create a file called `.asana.yml` in your home directory, that looks like this:
+You'll need to create a file called `.asana.yml` in your home
+directory, that looks like this:
 
 ```yaml
 ---
@@ -129,7 +155,7 @@ Alternately you can set environment variables to match - e.g., `ASANA__PERSONAL_
 
 ## Developing
 
-```bash
+```sh
 bundle install
 bundle exec exe/checkoff --help
 ```
