@@ -9,8 +9,8 @@ require 'active_support/time'
 class TestSections < BaseAsana
   let_mock :project, :inactive_task_b, :a_membership, :a_membership_project, :a_membership_section,
            :user_task_list_project, :workspace_one, :client, :user_task_lists, :workspace_one_gid,
-           :user_task_list, :sections, :section1, :section2, :task_options, :tasks,
-           :section1_gid
+           :user_task_list, :sections, :section_1, :section_2, :task_options, :tasks,
+           :section_1_gid
 
   def test_section_task_names_no_tasks
     sections = get_test_object do
@@ -35,14 +35,14 @@ class TestSections < BaseAsana
     expect_project_pulled('Workspace 1', project_a, a_name)
     expect_project_gid_pulled(project_a, a_gid)
     expect_sections_client_pulled
-    expect_project_sections_pulled(a_gid, [section1, section2])
+    expect_project_sections_pulled(a_gid, [section_1, section_2])
   end
 
   def test_sections_or_raise
     sections = get_test_object do
       mock_sections_or_raise
     end
-    assert_equal([section1, section2], sections.sections_or_raise('Workspace 1', a_name))
+    assert_equal([section_1, section_2], sections.sections_or_raise('Workspace 1', a_name))
   end
 
   def mock_tasks_by_section_missing_membership
@@ -167,13 +167,13 @@ class TestSections < BaseAsana
 
   def expect_tasks_api_called_for_section(only_uncompleted:)
     options = fixed_task_options(only_uncompleted: only_uncompleted)
-    tasks.expects(:get_tasks).with(section: section1_gid,
+    tasks.expects(:get_tasks).with(section: section_1_gid,
                                    **options)
       .returns([task_c])
   end
 
   def expect_section_gid_pulled
-    section1.expects(:gid).returns(section1_gid)
+    section_1.expects(:gid).returns(section_1_gid)
   end
 
   def expect_client_tasks_api_pulled
@@ -201,8 +201,8 @@ class TestSections < BaseAsana
     expect_project_pulled('Workspace 1', project_a, a_name)
     expect_sections_client_pulled
     expect_project_gid_pulled(project_a, a_gid)
-    expect_project_sections_pulled(a_gid, [section1, section2])
-    section1.expects(:name).returns('Section 1')
+    expect_project_sections_pulled(a_gid, [section_1, section_2])
+    section_1.expects(:name).returns('Section 1')
     expect_section_tasks_pulled(only_uncompleted: only_uncompleted)
   end
 
