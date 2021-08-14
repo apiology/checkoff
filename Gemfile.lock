@@ -1,9 +1,9 @@
 GIT
   remote: https://github.com/apiology/ruby-asana
-  revision: 83732f040728a4ef1cfc9ed61f65878dbee6aa23
+  revision: ab9393136d9ca59b75e42a661fdddc1c65c8f7c3
   branch: checkoff_fixes
   specs:
-    asana (0.10.4)
+    asana (0.10.6)
       faraday (~> 1.0)
       faraday_middleware (~> 1.0)
       faraday_middleware-multi_json (~> 0.0)
