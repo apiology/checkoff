@@ -1,7 +1,8 @@
 # frozen_string_literal: true
 
 require_relative 'config_loader'
-
+require_relative 'workspaces'
+require_relative 'clients'
 require 'cache_method'
 require 'asana'
 
@@ -23,16 +24,12 @@ module Checkoff
     SHORT_CACHE_TIME = MINUTE * 5
 
     def initialize(config: Checkoff::ConfigLoader.load(:asana),
-                   asana_client: Asana::Client,
-                   workspaces: Checkoff::Workspaces.new(config: config))
+                   workspaces: Checkoff::Workspaces.new(config: config),
+                   clients: Checkoff::Clients.new(config: config),
+                   client: clients.client)
       @config = config
-      @asana_client = asana_client
       @workspaces = workspaces
-    end
-
-    # Returns Asana Ruby API Client object
-    def client
-      @workspaces.client
+      @client = client
     end
 
     # Default options used in Asana API to pull taskso
@@ -83,6 +80,8 @@ module Checkoff
     cache_method :tasks_from_project, SHORT_CACHE_TIME
 
     private
+
+    attr_reader :client
 
     def projects
       client.projects

@@ -7,8 +7,12 @@ require 'active_support/time'
 
 # Test the Checkoff::Sections class
 class TestSections < BaseAsana
+  extend Forwardable
+
+  def_delegators(:@mocks, :workspaces, :client)
+
   let_mock :project, :inactive_task_b, :a_membership, :a_membership_project, :a_membership_section,
-           :user_task_list_project, :workspace_one, :client, :user_task_lists, :workspace_one_gid,
+           :user_task_list_project, :workspace_one, :user_task_lists, :workspace_one_gid,
            :user_task_list, :sections, :section_1, :section_2, :task_options, :tasks,
            :section_1_gid
 
@@ -31,7 +35,6 @@ class TestSections < BaseAsana
   end
 
   def mock_sections_or_raise
-    expect_client_pulled
     expect_project_pulled('Workspace 1', project_a, a_name)
     expect_project_gid_pulled(project_a, a_gid)
     expect_sections_client_pulled
@@ -76,10 +79,6 @@ class TestSections < BaseAsana
       expect_project_a_tasks_pulled
     end
     assert_equal({ 'Section 1:' => [task_c] }, sections.tasks_by_section('Workspace 1', a_name))
-  end
-
-  def expect_client_pulled
-    @mocks[:projects].expects(:client).returns(client).at_least(1)
   end
 
   def expect_named(task, name)
@@ -197,7 +196,6 @@ class TestSections < BaseAsana
   end
 
   def mock_tasks_normal_project(only_uncompleted:)
-    expect_client_pulled
     expect_project_pulled('Workspace 1', project_a, a_name)
     expect_sections_client_pulled
     expect_project_gid_pulled(project_a, a_gid)
@@ -219,7 +217,6 @@ class TestSections < BaseAsana
   def test_tasks_section_not_found
     sections = get_test_object do
       expect_project_pulled('Workspace 1', project_a, a_name)
-      expect_client_pulled
       expect_sections_client_pulled
       expect_project_gid_pulled(project_a, a_gid)
       expect_project_sections_pulled(a_gid, [])

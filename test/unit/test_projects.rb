@@ -5,6 +5,10 @@ require_relative 'base_asana'
 
 # Test the Checkoff::Projects class
 class TestProjects < BaseAsana
+  extend Forwardable
+
+  def_delegators(:@mocks, :client)
+
   def setup_config
     @mocks[:config] = { personal_access_token: personal_access_token }
   end
@@ -31,10 +35,6 @@ class TestProjects < BaseAsana
     end
   end
 
-  def setup_client_pulled
-    @mocks[:workspaces].expects(:client).returns(client).at_least(1)
-  end
-
   def expect_tasks_found
     options = task_options
     options[:project] = a_gid
@@ -44,7 +44,6 @@ class TestProjects < BaseAsana
 
   def mock_tasks_from_project
     setup_config
-    setup_client_pulled
     project_a.expects(:gid).returns(a_gid)
     client.expects(:tasks).returns(tasks)
     expect_tasks_found
@@ -74,7 +73,6 @@ class TestProjects < BaseAsana
   def test_project_regular
     asana = get_test_object do
       setup_config
-      setup_client_pulled
       setup_workspace_pulled
       setup_projects_pulled
       setup_projects_queried(workspace_gid: workspace_one_gid)
@@ -92,7 +90,6 @@ class TestProjects < BaseAsana
 
   def mock_project_or_raise_unknown
     setup_config
-    setup_client_pulled
     setup_workspace_pulled
     setup_projects_pulled
     setup_projects_queried(workspace_gid: workspace_one_gid)
@@ -116,7 +113,6 @@ class TestProjects < BaseAsana
 
   def mock_project_my_tasks
     setup_config
-    setup_client_pulled
     setup_workspace_pulled
     setup_projects_pulled
     setup_user_task_list_pulled

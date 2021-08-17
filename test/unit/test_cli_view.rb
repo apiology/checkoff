@@ -5,7 +5,7 @@ require_relative 'test_helper'
 
 # Test the Checkoff::CLI class with view subcommand
 class TestCLIView < Minitest::Test
-  let_mock :config, :workspaces, :sections, :tasks,
+  let_mock :config, :workspaces, :sections, :tasks, :clients, :client,
            :workspace, :workspace_gid, :task_a, :task_b, :task_c
 
   def expected_json_no_section_specified
@@ -33,7 +33,12 @@ class TestCLIView < Minitest::Test
       .returns(nil => [task_a], section_name_str => [task_b, task_c])
   end
 
+  def expect_client_pulled
+    clients.expects(:client).returns(client)
+  end
+
   def mock_run_with_no_section_specified_normal_project(due_on:, due_at:)
+    expect_client_pulled
     expect_tasks_by_section_pulled
     expect_three_tasks_queried(due_on: due_on, due_at: due_at)
   end
@@ -70,20 +75,24 @@ class TestCLIView < Minitest::Test
     'my workspace'
   end
 
-  def expect_workspaces_created
+  def allow_workspaces_created
     Checkoff::Workspaces.expects(:new).returns(workspaces).at_least(0)
   end
 
-  def expect_config_loaded
+  def allow_config_loaded
     Checkoff::ConfigLoader.expects(:load).returns(config).at_least(0)
   end
 
-  def expect_sections_created
+  def allow_sections_created
     Checkoff::Sections.expects(:new).returns(sections).at_least(0)
   end
 
-  def expect_tasks_created
+  def allow_tasks_created
     Checkoff::Tasks.expects(:new).returns(tasks).at_least(0)
+  end
+
+  def allow_clients_created
+    Checkoff::Clients.expects(:new).returns(clients).at_least(0)
   end
 
   def set_mocks
@@ -99,10 +108,11 @@ class TestCLIView < Minitest::Test
 
   def get_test_object(&_twiddle_mocks)
     set_mocks
-    expect_workspaces_created
-    expect_config_loaded
-    expect_sections_created
-    expect_tasks_created
+    allow_workspaces_created
+    allow_config_loaded
+    allow_sections_created
+    allow_tasks_created
+    allow_clients_created
 
     yield @mocks
     Checkoff::CheckoffGLIApp
@@ -123,6 +133,7 @@ class TestCLIView < Minitest::Test
                                             section_name:,
                                             due_on:,
                                             due_at:)
+    expect_client_pulled
     @mocks[:sections].expects(:tasks).with(workspace_name, project_name,
                                            section_name)
       .returns(three_tasks.keys)
@@ -138,6 +149,7 @@ class TestCLIView < Minitest::Test
   end
 
   def mock_view_specific_task(section_name:)
+    expect_client_pulled
     tasks.expects(:task).with(workspace_name, project_name, task_name,
                               section_name: section_name).returns(task_a)
     expect_task_queried(task_a, task_name, nil, nil)
