@@ -7,7 +7,7 @@ require_relative 'class_test'
 class BaseAsana < ClassTest
   include TestDate
 
-  let_mock :client, :projects, :my_tasks_in_workspace_gid,
+  let_mock :projects, :my_tasks_in_workspace_gid,
            :my_tasks_in_workspace, :my_time, :tasks,
            :task_a, :task_b, :task_c,
            :personal_access_token,

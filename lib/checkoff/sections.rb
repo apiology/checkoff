@@ -1,6 +1,9 @@
 # frozen_string_literal: true
 
 require 'forwardable'
+require_relative 'projects'
+require_relative 'workspaces'
+require_relative 'clients'
 
 module Checkoff
   # Query different sections of Asana projects
@@ -16,10 +19,13 @@ module Checkoff
     def initialize(config: Checkoff::ConfigLoader.load(:asana),
                    projects: Checkoff::Projects.new(config: config),
                    workspaces: Checkoff::Workspaces.new(config: config),
+                   clients: Checkoff::Clients.new(config: config),
+                   client: clients.client,
                    time: Time)
       @projects = projects
       @workspaces = workspaces
       @time = time
+      @client = client
     end
 
     # Returns a list of Asana API section objects for a given project
@@ -72,6 +78,8 @@ module Checkoff
 
     private
 
+    attr_reader :client
+
     # Given a project object, pull all tasks, then provide a Hash of
     # tasks with section name -> task list of the uncompleted tasks
     def tasks_by_section_for_project(project)
@@ -79,8 +87,6 @@ module Checkoff
       active_tasks = projects.active_tasks(raw_tasks)
       by_section(active_tasks, project.gid)
     end
-
-    def_delegators :@projects, :client
 
     # Given a list of tasks, pull a Hash of tasks with section name -> task list
     def by_section(tasks, project_gid)

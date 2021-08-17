@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 require 'forwardable'
+require_relative 'config_loader'
+require_relative 'projects'
 
 module Checkoff
   # Query different subtasks of Asana tasks
