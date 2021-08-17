@@ -9,6 +9,7 @@ require 'asana'
 # https://developers.asana.com/docs/clients
 
 module Checkoff
+  # Pulls a configured Asana client object which can be used to access the API
   class Clients
     MINUTE = 60
     HOUR = MINUTE * 60
