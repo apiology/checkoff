@@ -65,7 +65,7 @@ class TestProjects < BaseAsana
   end
 
   def setup_workspace_pulled
-    @mocks[:workspaces].expects(:workspace_by_name)
+    @mocks[:workspaces].expects(:workspace_or_raise)
       .with('Workspace 1').returns(workspace_one)
     workspace_one.expects(:gid).returns(workspace_one_gid)
   end

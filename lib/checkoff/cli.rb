@@ -211,7 +211,7 @@ module Checkoff
     end
 
     def run
-      workspace = @workspaces.workspace_by_name(workspace_name)
+      workspace = @workspaces.workspace_or_raise(workspace_name)
       @tasks.add_task(task_name,
                       workspace_gid: workspace.gid)
     end

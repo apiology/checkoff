@@ -89,14 +89,14 @@ module Checkoff
     cache_method :projects, LONG_CACHE_TIME
 
     def projects_by_workspace_name(workspace_name)
-      workspace = @workspaces.workspace_by_name(workspace_name)
+      workspace = @workspaces.workspace_or_raise(workspace_name)
       raise "Could not find workspace named #{workspace_name}" unless workspace
 
       projects.find_by_workspace(workspace: workspace.gid)
     end
 
     def my_tasks(workspace_name)
-      workspace = @workspaces.workspace_by_name(workspace_name)
+      workspace = @workspaces.workspace_or_raise(workspace_name)
       result = client.user_task_lists.get_user_task_list_for_user(user_gid: 'me',
                                                                   workspace: workspace.gid)
       gid = result.gid

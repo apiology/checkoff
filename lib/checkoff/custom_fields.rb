@@ -37,7 +37,7 @@ module Checkoff
     cache_method :custom_field_or_raise, LONG_CACHE_TIME
 
     def custom_field(workspace_name, custom_field_name)
-      workspace = workspaces.workspace_by_name(workspace_name)
+      workspace = workspaces.workspace_or_raise(workspace_name)
       custom_fields = client.custom_fields.get_custom_fields_for_workspace(workspace_gid: workspace.gid)
       custom_fields.find { |custom_field| custom_field.name == custom_field_name }
     end

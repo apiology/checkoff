@@ -51,7 +51,7 @@ class TestCLIQuickadd < Minitest::Test
   end
 
   def mock_quickadd
-    @mocks[:workspaces].expects(:workspace_by_name).with(workspace_name).returns(workspace)
+    @mocks[:workspaces].expects(:workspace_or_raise).with(workspace_name).returns(workspace)
 
     workspace.expects(:gid).returns(workspace_gid)
     @mocks[:tasks].expects(:add_task).with('my task name',
