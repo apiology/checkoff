@@ -7,7 +7,7 @@ require 'checkoff/cli'
 class TestTasks < BaseAsana
   extend Forwardable
 
-  def_delegators :@mocks, :sections, :asana_task, :time_class
+  def_delegators :@mocks, :sections, :asana_task, :time_class, :client
 
   let_mock :mock_tasks, :modified_mock_tasks, :tasks_by_section,
            :unflattened_modified_mock_tasks
@@ -18,7 +18,7 @@ class TestTasks < BaseAsana
            :due_at_string, :due_at_obj,
            :due_on_string, :due_on_obj,
            :asana_entity_project,
-           :dependency_1, :dependency_1_gid, :client,
+           :dependency_1, :dependency_1_gid,
            :dependency_1_full_task, :now
 
   def expect_due_on_parsed(less_than_now:)
@@ -28,7 +28,6 @@ class TestTasks < BaseAsana
   end
 
   def mock_task_ready_false_due_in_future_on_date
-    allow_client_pulled
     expect_dependencies_pulled(task, [])
     allow_task_due(due_on: due_on_string, due_at: nil)
     expect_due_on_parsed(less_than_now: false)
@@ -48,7 +47,6 @@ class TestTasks < BaseAsana
   end
 
   def mock_task_ready_false_due_in_future_at_time
-    allow_client_pulled
     expect_dependencies_pulled(task, [])
     allow_task_due(due_on: nil, due_at: due_at_string)
     expect_due_at_parsed(less_than_now: false)
@@ -83,12 +81,7 @@ class TestTasks < BaseAsana
     dependency_full_task.expects(:completed).returns(completed)
   end
 
-  def allow_client_pulled
-    sections.expects(:client).returns(client).at_least(0)
-  end
-
   def mock_task_ready_false_dependency
-    allow_client_pulled
     allow_task_due(due_on: nil, due_at: nil)
     expect_dependencies_pulled(task, [dependency_1])
     expect_dependency_completion_pulled(dependency_1, dependency_1_gid, dependency_1_full_task,
@@ -132,7 +125,6 @@ class TestTasks < BaseAsana
   def mock_add_task
     @mocks[:config].expects(:fetch).with(:default_assignee_gid)
       .returns(default_assignee_gid)
-    @mocks[:sections].expects(:client).returns(client)
     expect_task_created
   end
 
