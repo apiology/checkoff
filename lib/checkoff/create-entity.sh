@@ -48,7 +48,7 @@ module Checkoff
     cache_method :${underscored_singular_name}_or_raise, LONG_CACHE_TIME
 
     def ${underscored_singular_name}(workspace_name, ${underscored_singular_name}_name)
-      workspace = workspaces.workspace_by_name(workspace_name)
+      workspace = workspaces.workspace_or_raise(workspace_name)
       ${underscored_plural_name} = client.${underscored_plural_name}.get_${underscored_plural_name}_for_workspace(workspace_gid: workspace.gid)
       ${underscored_plural_name}.find { |${underscored_singular_name}| ${underscored_singular_name}.name == ${underscored_singular_name}_name }
     end

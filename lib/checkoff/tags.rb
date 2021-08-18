@@ -37,7 +37,7 @@ module Checkoff
     cache_method :tag_or_raise, LONG_CACHE_TIME
 
     def tag(workspace_name, tag_name)
-      workspace = workspaces.workspace_by_name(workspace_name)
+      workspace = workspaces.workspace_or_raise(workspace_name)
       tags = client.tags.get_tags_for_workspace(workspace_gid: workspace.gid)
       tags.find { |tag| tag.name == tag_name }
     end

@@ -30,7 +30,7 @@ class TestTags < ClassTest
   end
 
   def expect_workspace_pulled
-    workspaces.expects(:workspace_by_name).with(workspace_name).returns(workspace)
+    workspaces.expects(:workspace_or_raise).with(workspace_name).returns(workspace)
     workspace.expects(:gid).returns(workspace_gid)
   end
 
