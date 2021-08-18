@@ -16,12 +16,15 @@ module Checkoff
 
     def initialize(config: Checkoff::ConfigLoader.load(:asana),
                    sections: Checkoff::Sections.new(config: config),
+                   clients: Checkoff::Clients.new(config: config),
+                   client: clients.client,
                    time_class: Time,
                    asana_task: Asana::Resources::Task)
       @config = config
       @sections = sections
       @time_class = time_class
       @asana_task = asana_task
+      @client = client
     end
 
     def task_ready?(task)
@@ -64,9 +67,7 @@ module Checkoff
 
     private
 
-    def client
-      @sections.client
-    end
+    attr_reader :client
 
     def projects
       @projects ||= @sections.projects
