@@ -98,10 +98,6 @@ $
 Since checkoff looks up things by their name, if you have two things
 with the same name, you're probably going to have a bad time.
 
-If you need to talk about the section of a project which contains
-tasks that don't have a section, use `Untitled section` as the name.
-This is a quirk of the Asana API which seemed as good as any other idea.
-
 ## Caching
 
 Note that I don't know of a way through the Asana API to target
