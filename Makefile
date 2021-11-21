@@ -15,7 +15,7 @@ export PRINT_HELP_PYSCRIPT
 help:
 	@python -c "$$PRINT_HELP_PYSCRIPT" < $(MAKEFILE_LIST)
 
-default: localtest ## run default typechecking and tests
+default: localtest ## run default tests and quality
 
 requirements_dev.txt.installed: requirements_dev.txt
 	pip install -q --disable-pip-version-check -r requirements_dev.txt
@@ -49,6 +49,9 @@ test: ## Run lower-level tests
 
 localtest: ## run default local actions
 	@bundle exec rake localtest
+
+repl:  ## Load up checkoff in pry
+	@bundle exec rake repl
 
 update_from_cookiecutter: ## Bring in changes from template project used to create this repo
 	bundle exec overcommit --uninstall
