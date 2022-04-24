@@ -18,8 +18,7 @@ class TestClients < ClassTest
     expect_client_created
     config.expects(:fetch).with(:personal_access_token).returns(personal_access_token)
     client.expects(:authentication).with(:access_token, personal_access_token)
-    client.expects(:default_headers).with('asana-enable' => 'string_ids,new_sections')
-    client.expects(:default_headers).with('asana-disable' => 'new_user_task_lists')
+    client.expects(:default_headers).with('asana-enable' => 'new_project_templates')
   end
 
   def test_client
