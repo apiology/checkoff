@@ -16,6 +16,26 @@ quality checks.  `bundle exec overcommit --install` will install it.
 This project uses direnv to manage environment variables used during
 development.  See the `.envrc` file for detail.
 
+## Memcached
+
+Checkoff uses the
+[`cache_method`](https://github.com/seamusabshere/cache_method) gem to
+cache results between invocations.  Configuration details can be found
+[here](https://github.com/seamusabshere/cache_method#configuration-and-supported-cache-clients).
+By default a memcached client on the default port (11211) on the host
+`memcached` will be used.
+
+You can run memcached locally on macOS with Homebrew by running:
+
+```sh
+brew install memcached
+brew services start memcached
+```
+
+You may want to add a `memcached` alias for `127.0.0.1` in `/etc/hosts`.
+
+Please make sure this is only listening on loopback for security, of course.
+
 ## Publishing
 
 To publish new version as a maintainer:
