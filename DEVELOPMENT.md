@@ -16,7 +16,7 @@ quality checks.  `bundle exec overcommit --install` will install it.
 This project uses direnv to manage environment variables used during
 development.  See the `.envrc` file for detail.
 
-## Memcached
+## cache_method
 
 Checkoff uses the
 [`cache_method`](https://github.com/seamusabshere/cache_method) gem to
@@ -35,6 +35,16 @@ brew services start memcached
 You may want to add a `memcached` alias for `127.0.0.1` in `/etc/hosts`.
 
 Please make sure this is only listening on loopback for security, of course.
+
+
+## gli
+
+Checkoff uses [`gli`](https://github.com/davetron5000/gli) on the CLI.
+To get a full stack trace when encountering a problem, run as follows:
+
+```sh
+GLI_DEBUG=true checkoff your-arguments-here
+```
 
 ## Publishing
 
