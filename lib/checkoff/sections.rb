@@ -4,6 +4,7 @@ require 'forwardable'
 require_relative 'projects'
 require_relative 'workspaces'
 require_relative 'clients'
+require_relative 'my_tasks'
 
 module Checkoff
   # Query different sections of Asana projects
@@ -14,7 +15,7 @@ module Checkoff
 
     extend Forwardable
 
-    attr_reader :projects, :workspaces, :time
+    attr_reader :projects, :workspaces, :time, :my_tasks
 
     def initialize(config: Checkoff::ConfigLoader.load(:asana),
                    projects: Checkoff::Projects.new(config: config),
@@ -24,8 +25,9 @@ module Checkoff
                    time: Time)
       @projects = projects
       @workspaces = workspaces
-      @time = time
+      @my_tasks = Checkoff::MyTasks.new(config: config, projects: projects)
       @client = client
+      @time = time
     end
 
     # Returns a list of Asana API section objects for a given project
@@ -38,7 +40,11 @@ module Checkoff
     # tasks with section name -> task list of the uncompleted tasks
     def tasks_by_section(workspace_name, project_name)
       project = project_or_raise(workspace_name, project_name)
-      tasks_by_section_for_project(project)
+      if project_name == :my_tasks
+        my_tasks.tasks_by_section_for_my_tasks(project)
+      else
+        tasks_by_section_for_project(project)
+      end
     end
     cache_method :tasks_by_section, SHORT_CACHE_TIME
 
@@ -83,7 +89,9 @@ module Checkoff
     # Given a project object, pull all tasks, then provide a Hash of
     # tasks with section name -> task list of the uncompleted tasks
     def tasks_by_section_for_project(project)
+      # print("project: #{project}")
       raw_tasks = projects.tasks_from_project(project)
+      # print("raw_tasks[0]: #{raw_tasks[0]}")
       active_tasks = projects.active_tasks(raw_tasks)
       by_section(active_tasks, project.gid)
     end
