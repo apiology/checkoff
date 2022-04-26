@@ -46,7 +46,6 @@ module Checkoff
         tasks_by_section_for_project(project)
       end
     end
-    cache_method :tasks_by_section, SHORT_CACHE_TIME
 
     # XXX: Rename to section_tasks
     #

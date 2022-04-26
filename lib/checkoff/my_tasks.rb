@@ -42,6 +42,5 @@ module Checkoff
       end
       by_section
     end
-    cache_method :by_my_tasks_section, LONG_CACHE_TIME
   end
 end
