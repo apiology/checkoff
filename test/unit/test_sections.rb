@@ -14,7 +14,7 @@ class TestSections < BaseAsana
   let_mock :project, :inactive_task_b, :a_membership, :a_membership_project, :a_membership_section,
            :user_task_list_project, :workspace_one, :user_task_lists, :workspace_one_gid,
            :user_task_list, :sections, :section_1, :section_2, :task_options, :tasks,
-           :section_1_gid
+           :section_1_gid, :assignee_section, :assignee_section_name
 
   def test_section_task_names_no_tasks
     sections = get_test_object do
@@ -48,22 +48,32 @@ class TestSections < BaseAsana
     assert_equal([section_1, section_2], sections.sections_or_raise('Workspace 1', a_name))
   end
 
-  def mock_tasks_by_section_missing_membership
-    expect_project_pulled('Workspace 1', project_a, :my_tasks)
-    expect_tasks_pulled(project_a, [task_a, task_b, task_c],
-                        [task_c])
-    expect_project_gid_pulled(project_a, a_gid)
-    task_c.expects(:memberships).returns([])
+  def expect_my_tasks_pulled(project, tasks_arr, active_tasks_arr)
+    @mocks[:projects]
+      .expects(:tasks_from_project).with(project,
+                                         extra_fields: ['assignee_section.name'])
+      .returns(tasks_arr)
+      .at_least(1)
+    @mocks[:projects]
+      .expects(:active_tasks).with(tasks_arr)
+      .returns(active_tasks_arr)
+      .at_least(1)
   end
 
-  def test_tasks_by_section_missing_membership
-    # This can happen as of 2021-07-22 if called with :my_tasks as a
-    # section, due to a limitation in the early implementation of the
-    # breaking change around user tasks lists.
+  def mock_tasks_by_section_my_tasks
+    expect_project_pulled('Workspace 1', project_a, :my_tasks)
+    expect_my_tasks_pulled(project_a, [task_a, task_b, task_c],
+                           [task_c])
+    task_c.expects(:assignee_section).returns(assignee_section).at_least(0)
+    assignee_section.expects(:name).returns(assignee_section_name)
+  end
+
+  def test_tasks_by_section_my_tasks
     sections = get_test_object do
-      mock_tasks_by_section_missing_membership
+      mock_tasks_by_section_my_tasks
     end
-    assert_raises(RuntimeError) { sections.tasks_by_section('Workspace 1', :my_tasks) }
+    assert_equal({ assignee_section_name => [task_c] },
+                 sections.tasks_by_section('Workspace 1', :my_tasks))
   end
 
   def test_tasks_by_section_some_in_empty_section
