@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+# neither ruby-asana nor gli gems are $VERBOSE-clean
+$VERBOSE = false
 require 'simplecov'
 require 'simplecov-lcov'
 SimpleCov::Formatter::LcovFormatter.config.report_with_single_file = true
