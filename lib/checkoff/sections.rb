@@ -38,12 +38,12 @@ module Checkoff
 
     # Given a workspace name and project name, then provide a Hash of
     # tasks with section name -> task list of the uncompleted tasks
-    def tasks_by_section(workspace_name, project_name)
+    def tasks_by_section(workspace_name, project_name, extra_fields: [])
       project = project_or_raise(workspace_name, project_name)
       if project_name == :my_tasks
-        my_tasks.tasks_by_section_for_my_tasks(project)
+        my_tasks.tasks_by_section_for_my_tasks(project, extra_fields: extra_fields)
       else
-        tasks_by_section_for_project(project)
+        tasks_by_section_for_project(project, extra_fields: extra_fields)
       end
     end
 
@@ -87,9 +87,9 @@ module Checkoff
 
     # Given a project object, pull all tasks, then provide a Hash of
     # tasks with section name -> task list of the uncompleted tasks
-    def tasks_by_section_for_project(project)
+    def tasks_by_section_for_project(project, extra_fields: [])
       # print("project: #{project}")
-      raw_tasks = projects.tasks_from_project(project)
+      raw_tasks = projects.tasks_from_project(project, extra_fields: extra_fields)
       # print("raw_tasks[0]: #{raw_tasks[0]}")
       active_tasks = projects.active_tasks(raw_tasks)
       by_section(active_tasks, project.gid)

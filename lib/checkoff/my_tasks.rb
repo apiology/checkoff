@@ -23,9 +23,9 @@ module Checkoff
     # Given a 'My Tasks' project object, pull all tasks, then provide
     # a Hash of tasks with section name -> task list of the
     # uncompleted tasks.
-    def tasks_by_section_for_my_tasks(project)
+    def tasks_by_section_for_my_tasks(project, extra_fields: [])
       raw_tasks = projects.tasks_from_project(project,
-                                              extra_fields: ['assignee_section.name'])
+                                              extra_fields: extra_fields + ['assignee_section.name'])
       active_tasks = projects.active_tasks(raw_tasks)
       by_my_tasks_section(active_tasks)
     end

@@ -97,7 +97,8 @@ class TestSections < BaseAsana
 
   def expect_tasks_pulled(project, tasks_arr, active_tasks_arr)
     @mocks[:projects]
-      .expects(:tasks_from_project).with(project)
+      .expects(:tasks_from_project).with(project,
+                                         extra_fields: [])
       .returns(tasks_arr)
       .at_least(1)
     @mocks[:projects]
