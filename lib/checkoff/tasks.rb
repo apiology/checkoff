@@ -85,6 +85,16 @@ module Checkoff
     end
 
     def incomplete_dependencies?(task)
+      # Avoid a reundant fetch.  Unfortunately, Ruby SDK allows
+      # dependencies to be fetched along with other attributes--but
+      # then doesn't use it and does another HTTP GET!  At least this
+      # way we can skip the extra HTTP GET in the common case when
+      # there are no dependencies.
+      #
+      # https://github.com/Asana/ruby-asana/issues/125
+      already_fetched_dependencies = task.instance_variable_get(:@dependencies)
+      return false unless already_fetched_dependencies.nil? || already_fetched_dependencies.size.positive?
+
       task.dependencies.any? do |parent_task_info|
         parent_task_gid = parent_task_info.gid
         parent_task = @asana_task.find_by_id(client, parent_task_gid,
