@@ -2,7 +2,7 @@
 
 require 'forwardable'
 require 'cache_method'
-require_relative 'config_loader'
+require_relative 'internal/config_loader'
 require_relative 'clients'
 
 # https://developers.asana.com/docs/workspaces
