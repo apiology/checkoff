@@ -27,4 +27,5 @@ git log "v$(bump current)..."
 bump --tag --tag-prefix=v ${type_of_bump:?}
 rake release
 git push
+git push --tags
 ```

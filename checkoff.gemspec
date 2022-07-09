@@ -28,6 +28,7 @@ Gem::Specification.new do |spec|
 
   spec.add_development_dependency 'bump'
   spec.add_development_dependency 'bundler'
+  spec.add_development_dependency 'mdl'
   # 0.58.0 and 0.57.0 don't seem super compatible with signatures, and
   # magit doesn't seem to want to use the bundled version at the moment,
   # so let's favor the more recent version...
