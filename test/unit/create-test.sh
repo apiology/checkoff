@@ -13,6 +13,7 @@ cat > test_"${underscored_plural_name}.rb" << EOF
 
 require_relative 'test_helper'
 require_relative 'class_test'
+require 'checkoff/${underscored_plural_name}'
 
 class Test${class_name} < ClassTest
   extend Forwardable
