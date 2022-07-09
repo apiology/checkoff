@@ -3,7 +3,7 @@
 # frozen_string_literal: true
 
 require 'forwardable'
-require_relative 'config_loader'
+require_relative 'internal/config_loader'
 require 'asana'
 
 # https://developers.asana.com/docs/clients
