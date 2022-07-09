@@ -9,6 +9,7 @@ task :console do |_t|
   puts '# https://developers.asana.com/docs/input-output-options'
   puts '> workspace_gid = ENV.fetch("ASANA__DEFAULT_WORKSPACE_GID")'
   puts "> task = client.tasks.find_by_id('1199961990964812', options: { fields: ['dependencies'] })"
+  puts '# Asana.md#ruby-asana / API shows how to manually call endpoints with a client'
   puts
   exec 'pry -I lib -r checkoff'
 end
