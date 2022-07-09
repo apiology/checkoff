@@ -57,4 +57,13 @@ git log "v$(bump current)..."
 bump --tag --tag-prefix=v ${type_of_bump:?}
 rake release
 git push
+git push --tags
+```
+
+
+## Developing
+
+```sh
+bundle install
+bundle exec exe/checkoff --help
 ```

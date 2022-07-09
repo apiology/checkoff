@@ -149,18 +149,14 @@ personal_access_token: 'some_big_long_string_from_asana.com_here'
 
 Alternately you can set environment variables to match - e.g., `ASANA__PERSONAL_ACCESS_TOKEN`
 
-## Developing
+## Contributions
 
-```sh
-bundle install
-bundle exec exe/checkoff --help
-```
+This project, as with all others, rests on the shoulders of a broad
+ecosystem supported by many volunteers doing thankless work, along
+with specific contributors.
 
-To publish new version as a maintainer:
+In particular I'd like to call out:
 
-```sh
-git log "v$(bump current)..."
-# Set type_of_bump to patch, minor, or major
-bump --tag --tag-prefix=v ${type_of_bump:?}
-rake release
-```
+* [Audrey Roy Greenfeld](https://github.com/audreyfeldroy) for the
+  cookiecutter tool and associated examples, which keep my many
+  projects building with shared boilerplate with a minimum of fuss.

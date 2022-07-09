@@ -39,6 +39,9 @@ clear_metrics: ## remove or reset result artifacts created by tests and quality 
 
 clean: clear_metrics ## remove all built artifacts
 
+
+typecheck: ## validate types in code and configuration
+
 overcommit: ## run precommit quality checks
 	bundle exec overcommit --run
 
