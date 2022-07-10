@@ -80,7 +80,7 @@ class TestCLIView < Minitest::Test
   end
 
   def allow_config_loaded
-    Checkoff::ConfigLoader.expects(:load).returns(config).at_least(0)
+    Checkoff::Internal::ConfigLoader.expects(:load).returns(config).at_least(0)
   end
 
   def allow_sections_created

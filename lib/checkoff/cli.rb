@@ -61,7 +61,7 @@ module Checkoff
                    to_workspace_arg:,
                    to_project_arg:,
                    to_section_arg:,
-                   config: Checkoff::ConfigLoader.load(:asana),
+                   config: Checkoff::Internal::ConfigLoader.load(:asana),
                    projects: Checkoff::Projects.new(config: config),
                    sections: Checkoff::Sections.new(config: config),
                    logger: $stderr)
@@ -122,7 +122,7 @@ module Checkoff
   class ViewSubcommand
     def initialize(workspace_name, project_name, section_name,
                    task_name,
-                   config: Checkoff::ConfigLoader.load(:asana),
+                   config: Checkoff::Internal::ConfigLoader.load(:asana),
                    projects: Checkoff::Projects.new(config: config),
                    sections: Checkoff::Sections.new(config: config,
                                                     projects: projects),
@@ -201,7 +201,7 @@ module Checkoff
   # CLI subcommand that creates a task
   class QuickaddSubcommand
     def initialize(workspace_name, task_name,
-                   config: Checkoff::ConfigLoader.load(:asana),
+                   config: Checkoff::Internal::ConfigLoader.load(:asana),
                    workspaces: Checkoff::Workspaces.new(config: config),
                    tasks: Checkoff::Tasks.new(config: config))
       @workspace_name = workspace_name

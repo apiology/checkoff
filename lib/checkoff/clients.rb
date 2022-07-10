@@ -18,7 +18,7 @@ module Checkoff
     LONG_CACHE_TIME = MINUTE * 15
     SHORT_CACHE_TIME = MINUTE
 
-    def initialize(config: Checkoff::ConfigLoader.load(:asana),
+    def initialize(config: Checkoff::Internal::ConfigLoader.load(:asana),
                    asana_client_class: Asana::Client)
       @config = config
       @asana_client_class = asana_client_class
