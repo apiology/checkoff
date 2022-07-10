@@ -45,12 +45,12 @@ module Checkoff
         convert_custom_field_is_arg(key, values)
       end
 
-      def convert_single_custom_field_no_value_params(remaining_params)
+      def convert_single_custom_field_no_value_params(gid, remaining_params)
         unless remaining_params.length.zero?
           raise "Teach me how to handle these remaining keys for #{variant_key}: #{remaining_params}"
         end
 
-        { 'custom_fields.1234.is_set' => 'false' }
+        { "custom_fields.#{gid}.is_set" => 'false' }
       end
 
       def convert_single_custom_field_params(gid, single_custom_field_params)
@@ -61,7 +61,7 @@ module Checkoff
         when ['is']
           return convert_single_custom_field_is_params(remaining_params)
         when ['no_value']
-          return convert_single_custom_field_no_value_params(remaining_params)
+          return convert_single_custom_field_no_value_params(gid, remaining_params)
         end
 
         raise "Teach me how to handle #{variant_key} = #{variant}"
