@@ -7,18 +7,14 @@ require 'cache_method'
 require_relative 'internal/config_loader'
 require_relative 'workspaces'
 require_relative 'clients'
+require 'asana/resource_includes/collection'
+require 'asana/resource_includes/response_helper'
+
+require 'checkoff/internal/search_url_parser'
 
 # https://developers.asana.com/docs/task-searches
-
-
 module Checkoff
-  module Internal
-  end
-end
-
-
-
-module Checkoff
+  # Run task searches against the Asana API
   class TaskSearches
     MINUTE = 60
     HOUR = MINUTE * 60
@@ -27,21 +23,27 @@ module Checkoff
     LONG_CACHE_TIME = MINUTE * 15
     SHORT_CACHE_TIME = MINUTE
 
+    include Asana::Resources::ResponseHelper
+
     def initialize(config: Checkoff::Internal::ConfigLoader.load(:asana),
                    workspaces: Checkoff::Workspaces.new(config: config),
                    clients: Checkoff::Clients.new(config: config),
-                   client: clients.client)
+                   client: clients.client,
+                   search_url_parser: Checkoff::Internal::SearchUrlParser.new)
       @workspaces = workspaces
       @client = client
+      @search_url_parser = search_url_parser
     end
 
     def task_search(workspace_name, url)
       workspace = workspaces.workspace_or_raise(workspace_name)
-      args = convert_args(url)
-      client.tasks.search_tasks_for_workspace(workspace_gid: workspace.gid, **args)
+      api_params = @search_url_parser.convert_params(url)
+      path = "/workspaces/#{workspace.gid}/tasks/search"
+      options = {}
+      Asana::Resources::Collection.new(parse(client.get(path, params: api_params, options: options)),
+                                       type: Asana::Resources::Task, client: client)
     end
     cache_method :task_search, LONG_CACHE_TIME
-
 
     attr_reader :workspaces, :client
 
