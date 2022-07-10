@@ -14,7 +14,7 @@ module Checkoff
 
     attr_reader :projects
 
-    def initialize(config: Checkoff::ConfigLoader.load(:asana),
+    def initialize(config: Checkoff::Internal::ConfigLoader.load(:asana),
                    projects: Checkoff::Projects.new(config: config))
       @config = config
       @projects = projects

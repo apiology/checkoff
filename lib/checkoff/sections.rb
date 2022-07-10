@@ -17,7 +17,7 @@ module Checkoff
 
     attr_reader :projects, :workspaces, :time, :my_tasks
 
-    def initialize(config: Checkoff::ConfigLoader.load(:asana),
+    def initialize(config: Checkoff::Internal::ConfigLoader.load(:asana),
                    projects: Checkoff::Projects.new(config: config),
                    workspaces: Checkoff::Workspaces.new(config: config),
                    clients: Checkoff::Clients.new(config: config),

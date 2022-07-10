@@ -12,7 +12,7 @@ class TestCLIMv < Minitest::Test
   end
 
   def expect_config_loaded
-    Checkoff::ConfigLoader.expects(:load).returns(config).at_least(0)
+    Checkoff::Internal::ConfigLoader.expects(:load).returns(config).at_least(0)
   end
 
   def expect_sections_created
