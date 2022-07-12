@@ -6,8 +6,6 @@ require 'forwardable'
 require 'cache_method'
 require 'json'
 require_relative 'internal/config_loader'
-require_relative 'workspaces'
-require_relative 'clients'
 
 # https://developers.asana.com/docs/task-selectors
 
@@ -21,13 +19,7 @@ module Checkoff
     LONG_CACHE_TIME = MINUTE * 15
     SHORT_CACHE_TIME = MINUTE
 
-    def initialize(config: Checkoff::Internal::ConfigLoader.load(:asana),
-                   workspaces: Checkoff::Workspaces.new(config: config),
-                   clients: Checkoff::Clients.new(config: config),
-                   client: clients.client)
-      @workspaces = workspaces
-      @client = client
-    end
+    def initialize(_deps = {}); end
 
     # @param [Hash<Symbol, Object>] task_selector Filter based on
     #        description.  Examples: {tag: 'foo'} {:not {tag: 'foo'} (:tag 'foo')
@@ -61,8 +53,6 @@ module Checkoff
     def fn?(object, fn_name)
       object.is_a?(Array) && !object.empty? && [fn_name, fn_name.to_s].include?(object[0])
     end
-
-    attr_reader :workspaces, :client
 
     # bundle exec ./task_selectors.rb
     # :nocov:
