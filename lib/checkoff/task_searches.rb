@@ -6,7 +6,9 @@ require 'forwardable'
 require 'cache_method'
 require_relative 'internal/config_loader'
 require_relative 'workspaces'
+require_relative 'projects'
 require_relative 'clients'
+require_relative 'task_selectors'
 require 'asana/resource_includes/collection'
 require 'asana/resource_includes/response_helper'
 
@@ -27,21 +29,32 @@ module Checkoff
 
     def initialize(config: Checkoff::Internal::ConfigLoader.load(:asana),
                    workspaces: Checkoff::Workspaces.new(config: config),
+                   task_selectors: Checkoff::TaskSelectors.new(config: config),
+                   projects: Checkoff::Projects.new(config: config),
                    clients: Checkoff::Clients.new(config: config),
                    client: clients.client,
                    search_url_parser: Checkoff::Internal::SearchUrlParser.new)
       @workspaces = workspaces
+      @task_selectors = task_selectors
+      @projects = projects
       @client = client
       @search_url_parser = search_url_parser
     end
 
-    def task_search(workspace_name, url)
+    def calculate_api_options(extra_fields)
+      projects.task_options[:options]
+      options[:fields] += ['custom_fields']
+      options[:fields] += extra_fields
+    end
+
+    def task_search(workspace_name, url, extra_fields: [])
       workspace = workspaces.workspace_or_raise(workspace_name)
-      api_params = @search_url_parser.convert_params(url)
+      api_params, task_selector = @search_url_parser.convert_params(url)
       path = "/workspaces/#{workspace.gid}/tasks/search"
-      options = {}
-      Asana::Resources::Collection.new(parse(client.get(path, params: api_params, options: options)),
-                                       type: Asana::Resources::Task, client: client)
+      options = calculate_api_options(extra_fields)
+      tasks = Asana::Resources::Collection.new(parse(client.get(path, params: api_params, options: options)),
+                                               type: Asana::Resources::Task, client: client)
+      tasks.select { |task| task_selectors.filter_via_task_selector(task, task_selector) }
     end
     cache_method :task_search, LONG_CACHE_TIME
 
@@ -59,6 +72,10 @@ module Checkoff
       end
     end
     # :nocov:
+
+    private
+
+    attr_reader :task_selectors, :projects
   end
 end
 

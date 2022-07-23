@@ -14,9 +14,9 @@ module Checkoff
       def convert_params(url)
         url_params = CGI.parse(URI.parse(url).query)
         custom_field_params, regular_url_params = partition_url_params(url_params)
-        custom_field_args = convert_custom_field_params(custom_field_params)
+        custom_field_args, task_selector = convert_custom_field_params(custom_field_params)
         regular_url_args = convert_regular_params(regular_url_params)
-        custom_field_args.merge(regular_url_args)
+        [custom_field_args.merge(regular_url_args), task_selector]
       end
 
       private
@@ -27,13 +27,32 @@ module Checkoff
         end.to_h
       end
 
+      def merge_args_and_task_selectors(args, new_args, task_selector, new_task_selector)
+        args = args.merge(new_args)
+        return [args, task_selector] if new_task_selector == []
+
+        raise 'Teach me how to merge task selectors' unless task_selector == []
+
+        task_selector = new_task_selector
+
+        [args, task_selector]
+      end
+
       def convert_custom_field_params(custom_field_params)
         by_custom_field = custom_field_params.group_by do |key, _value|
           gid_from_custom_field_key(key)
         end.transform_values(&:to_h)
-        by_custom_field.map do |gid, single_custom_field_params|
-          convert_single_custom_field_params(gid, single_custom_field_params)
-        end.inject(&:merge).to_h
+        args = {}
+        task_selector = []
+        by_custom_field.each do |gid, single_custom_field_params|
+          new_args, new_task_selector = convert_single_custom_field_params(gid,
+                                                                           single_custom_field_params)
+          args, task_selector = merge_args_and_task_selectors(args,
+                                                              new_args,
+                                                              task_selector,
+                                                              new_task_selector)
+        end
+        [args, task_selector]
       end
 
       def convert_single_custom_field_is_params(remaining_params)
@@ -50,7 +69,49 @@ module Checkoff
           raise "Teach me how to handle these remaining keys for #{variant_key}: #{remaining_params}"
         end
 
-        { "custom_fields.#{gid}.is_set" => 'false' }
+        empty_task_selector = []
+        [{ "custom_fields.#{gid}.is_set" => 'false' }, empty_task_selector]
+      end
+
+      def convert_single_custom_field_is_not_params_selected_options(gid, remaining_params)
+        selected_options = remaining_params.fetch("custom_field_#{gid}.selected_options")
+        raise "Teach me how to handle #{remaining_params}" unless selected_options.length == 1
+
+        [{ "custom_fields.#{gid}.is_set" => 'true' },
+         ['not',
+          ['custom_field_gid_value_contains_any_gid',
+           gid,
+           selected_options]]]
+      end
+
+      def convert_single_custom_field_is_not_params(gid, remaining_params)
+        case remaining_params.keys
+        when ["custom_field_#{gid}.selected_options"]
+          convert_single_custom_field_is_not_params_selected_options(gid, remaining_params)
+        else
+          raise "Teach me how to handle #{remaining_params}"
+        end
+      end
+
+      def convert_single_custom_field_less_than_params_max_param(max_param, gid, remaining_params)
+        max_values = remaining_params.fetch(max_param)
+        unless max_values.length == 1
+          raise "Teach me how to handle these remaining keys for #{max_param}: #{remaining_params}"
+        end
+
+        max_value = max_values[0]
+        empty_task_selector = []
+        [{ "custom_fields.#{gid}.less_than" => max_value }, empty_task_selector]
+      end
+
+      def convert_single_custom_field_less_than_params(gid, remaining_params)
+        max_param = "custom_field_#{gid}.max"
+        case remaining_params.keys
+        when [max_param]
+          convert_single_custom_field_less_than_params_max_param(max_param, gid, remaining_params)
+        else
+          raise "Teach me how to handle #{remaining_params}"
+        end
       end
 
       def convert_single_custom_field_params(gid, single_custom_field_params)
@@ -62,6 +123,10 @@ module Checkoff
           return convert_single_custom_field_is_params(remaining_params)
         when ['no_value']
           return convert_single_custom_field_no_value_params(gid, remaining_params)
+        when ['is_not']
+          return convert_single_custom_field_is_not_params(gid, remaining_params)
+        when ['less_than']
+          return convert_single_custom_field_less_than_params(gid, remaining_params)
         end
 
         raise "Teach me how to handle #{variant_key} = #{variant}"
@@ -69,11 +134,13 @@ module Checkoff
 
       def convert_custom_field_is_arg(key, values)
         gid = gid_from_custom_field_key(key)
+        empty_task_selector = []
 
         if key.end_with? '.selected_options'
           raise "Too many values found for #{key}: #{values}" if values.length != 1
 
-          return { "custom_fields.#{gid}.value" => values[0] }
+          return [{ "custom_fields.#{gid}.value" => values[0] },
+                  empty_task_selector]
         end
 
         raise "Teach me how to handle #{key} = #{values}"

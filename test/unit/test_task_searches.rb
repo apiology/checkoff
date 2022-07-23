@@ -37,10 +37,10 @@ class TestTaskSearches < ClassTest
   #   assert_equal(task_search, task_searches.task_search(workspace_name, task_search_name))
   # end
 
-  def test_convert_args
-    task_searches = get_test_object
-    assert_equal(asana_api_params, task_searches.convert_args(url))
-  end
+  # def test_convert_args
+  #   task_searches = get_test_object
+  #   assert_equal(asana_api_params, task_searches.convert_args(url))
+  # end
 
   def class_under_test
     Checkoff::TaskSearches
