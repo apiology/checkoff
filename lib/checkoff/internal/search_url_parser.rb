@@ -161,8 +161,6 @@ module Checkoff
       end
 
       def convert_arg(key, values)
-        return convert_custom_field_arg(key, values) if key.start_with? 'custom_field_'
-
         [PARAM_MAP.fetch(key), values.join(',')]
       end
     end
