@@ -33,19 +33,14 @@ module Checkoff
                    projects: Checkoff::Projects.new(config: config),
                    clients: Checkoff::Clients.new(config: config),
                    client: clients.client,
-                   search_url_parser: Checkoff::Internal::SearchUrlParser.new)
+                   search_url_parser: Checkoff::Internal::SearchUrlParser.new,
+                   asana_resources_collection_class: Asana::Resources::Collection)
       @workspaces = workspaces
       @task_selectors = task_selectors
       @projects = projects
       @client = client
       @search_url_parser = search_url_parser
-    end
-
-    def calculate_api_options(extra_fields)
-      options = projects.task_options[:options]
-      options[:fields] += ['custom_fields']
-      options[:fields] += extra_fields
-      options
+      @asana_resources_collection_class = asana_resources_collection_class
     end
 
     def task_search(workspace_name, url, extra_fields: [])
@@ -53,13 +48,23 @@ module Checkoff
       api_params, task_selector = @search_url_parser.convert_params(url)
       path = "/workspaces/#{workspace.gid}/tasks/search"
       options = calculate_api_options(extra_fields)
-      tasks = Asana::Resources::Collection.new(parse(client.get(path, params: api_params, options: options)),
-                                               type: Asana::Resources::Task, client: client)
+      tasks = @asana_resources_collection_class.new(parse(client.get(path,
+                                                                     params: api_params,
+                                                                     options: options)),
+                                                    type: Asana::Resources::Task,
+                                                    client: client)
       tasks.select { |task| task_selectors.filter_via_task_selector(task, task_selector) }
     end
     cache_method :task_search, LONG_CACHE_TIME
 
-    attr_reader :workspaces, :client
+    private
+
+    def calculate_api_options(extra_fields)
+      options = projects.task_options[:options]
+      options[:fields] += ['custom_fields']
+      options[:fields] += extra_fields
+      options
+    end
 
     # bundle exec ./task_searches.rb
     # :nocov:
@@ -74,9 +79,7 @@ module Checkoff
     end
     # :nocov:
 
-    private
-
-    attr_reader :task_selectors, :projects
+    attr_reader :task_selectors, :projects, :workspaces, :client
   end
 end
 

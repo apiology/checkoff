@@ -7,40 +7,84 @@ require 'checkoff/task_searches'
 class TestTaskSearches < ClassTest
   extend Forwardable
 
-  # def_delegators(:@mocks, :workspaces, :client)
+  def_delegators(:@mocks, :workspaces, :client, :search_url_parser, :projects,
+                 :asana_resources_collection_class, :task_selectors)
 
-  # let_mock :workspace_name, :task_search_name, :task_search, :workspace, :workspace_gid,
-  #          :task_searches_api, :wrong_task_search, :wrong_task_search_name
+  let_mock :url, :workspace_name, :workspace, :workspace_gid, :api_params,
+           :task_selector, :search_response, :body, :data, :something_else,
+           :good_task, :bad_task
 
-  # def expect_workspace_pulled
-  #   workspaces.expects(:workspace_or_raise).with(workspace_name).returns(workspace)
-  #   workspace.expects(:gid).returns(workspace_gid)
-  # end
+  def expect_workspace_pulled
+    workspaces.expects(:workspace_or_raise).with(workspace_name).returns(workspace)
+  end
 
-  # def allow_task_searches_named
-  #   wrong_task_search.expects(:name).returns(wrong_task_search_name).at_least(0)
-  #   task_search.expects(:name).returns(task_search_name).at_least(0)
-  # end
+  def expect_workspace_gid_pulled
+    workspace.expects(:gid).returns('abc')
+  end
 
-  # def expect_task_searches_pulled(task_search_arr)
-  #   expect_workspace_pulled
-  #   client.expects(:task_searches).returns(task_searches_api)
-  #   task_searches_api.expects(:get_task_searches_for_workspace).returns(task_search_arr)
-  #   allow_task_searches_named
-  # end
+  def expect_convert_params_called
+    search_url_parser.expects(:convert_params).with(url).returns([api_params, task_selector])
+  end
 
-  # def test_task_search
-  #   task_searches = get_test_object do
-  #     task_search_arr = [wrong_task_search, task_search]
-  #     expect_task_searches_pulled(task_search_arr)
-  #   end
-  #   assert_equal(task_search, task_searches.task_search(workspace_name, task_search_name))
-  # end
+  def expect_task_options_pulled
+    projects.expects(:task_options).returns({ options: { fields: [] } })
+  end
 
-  # def test_convert_args
-  #   task_searches = get_test_object
-  #   assert_equal(asana_api_params, task_searches.convert_args(url))
-  # end
+  def expect_client_get_called
+    client
+      .expects(:get)
+      .with('/workspaces/abc/tasks/search',
+            { params: api_params, options: { fields: ['custom_fields'] } })
+      .returns(search_response)
+  end
+
+  def expect_search_response_queried
+    expect_client_get_called
+    body = {
+      'data' => data,
+      'something_else' => something_else,
+    }
+    search_response.expects(:body).returns(body).at_least(1)
+    body.expects(:fetch).with('data').returns(data)
+  end
+
+  def expect_response_wrapped
+    asana_resources_collection_class
+      .expects(:new)
+      .with([data,
+             { 'something_else' => something_else }],
+            { type: Asana::Resources::Task,
+              client: client })
+      .returns([good_task, bad_task])
+  end
+
+  def expect_tasks_filtered
+    task_selectors
+      .expects(:filter_via_task_selector)
+      .with(good_task, task_selector)
+      .returns(true)
+    task_selectors
+      .expects(:filter_via_task_selector)
+      .with(bad_task, task_selector)
+      .returns(false)
+  end
+
+  def mock_task_search
+    expect_workspace_pulled
+    expect_workspace_gid_pulled
+    expect_convert_params_called
+    expect_task_options_pulled
+    expect_search_response_queried
+    expect_response_wrapped
+    expect_tasks_filtered
+  end
+
+  def test_task_search
+    task_searches = get_test_object do
+      mock_task_search
+    end
+    assert_equal([good_task], task_searches.task_search(workspace_name, url))
+  end
 
   def class_under_test
     Checkoff::TaskSearches
