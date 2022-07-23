@@ -2,8 +2,6 @@
 
 # frozen_string_literal: true
 
-require 'active_support/core_ext/hash/except'
-
 module Checkoff
   module Internal
     # base class for handling different custom_field_#{gid}.variant params
@@ -156,7 +154,7 @@ module Checkoff
       def convert_single_custom_field_params(gid, single_custom_field_params)
         variant_key = "custom_field_#{gid}.variant"
         variant = single_custom_field_params.fetch(variant_key)
-        remaining_params = single_custom_field_params.except(variant_key)
+        remaining_params = single_custom_field_params.reject { |k, _v| k == variant_key }
         raise "Teach me how to handle #{variant_key} = #{variant}" unless variant.length == 1
 
         variant_class = VARIANTS[variant[0]]
