@@ -35,23 +35,30 @@ class TestProjects < BaseAsana
     end
   end
 
-  def expect_tasks_found
-    options = task_options
+  def expect_tasks_found(options:)
     options[:project] = a_gid
     tasks.expects(:find_all).with(options).returns(tasks)
     tasks.expects(:to_a).returns(tasks)
   end
 
-  def mock_tasks_from_project
+  def mock_tasks_from_project(options:)
     setup_config
     project_a.expects(:gid).returns(a_gid)
     client.expects(:tasks).returns(tasks)
-    expect_tasks_found
+    expect_tasks_found(options: options)
+  end
+
+  def test_tasks_from_project_not_only_uncompleted
+    asana = get_test_object do
+      mock_tasks_from_project(options: task_options_with_completed)
+    end
+    assert_equal(tasks, asana.tasks_from_project(project_a,
+                                                 only_uncompleted: false))
   end
 
   def test_tasks_from_project
     asana = get_test_object do
-      mock_tasks_from_project
+      mock_tasks_from_project(options: task_options)
     end
     assert_equal(tasks, asana.tasks_from_project(project_a))
   end
