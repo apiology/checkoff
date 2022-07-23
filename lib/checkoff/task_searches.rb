@@ -42,9 +42,10 @@ module Checkoff
     end
 
     def calculate_api_options(extra_fields)
-      projects.task_options[:options]
+      options = projects.task_options[:options]
       options[:fields] += ['custom_fields']
       options[:fields] += extra_fields
+      options
     end
 
     def task_search(workspace_name, url, extra_fields: [])

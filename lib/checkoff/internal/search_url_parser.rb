@@ -81,7 +81,7 @@ module Checkoff
          ['not',
           ['custom_field_gid_value_contains_any_gid',
            gid,
-           selected_options]]]
+           selected_options.fetch(0).split('~')]]]
       end
 
       def convert_single_custom_field_is_not_params(gid, remaining_params)

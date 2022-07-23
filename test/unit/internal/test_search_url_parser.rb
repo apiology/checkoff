@@ -46,6 +46,17 @@ class TestSearchUrlParser < ClassTest
                  search_url_parser.convert_params(url))
   end
 
+  def test_convert_params_4
+    search_url_parser = get_test_object
+    url = 'https://app.asana.com/0/search?custom_field_123.variant=is_not&custom_field_123.selected_options=456~789'
+    asana_api_params = {
+      'custom_fields.123.is_set' => 'true',
+    }
+    task_selector = ['not', ['custom_field_gid_value_contains_any_gid', '123', %w[456 789]]]
+    assert_equal([asana_api_params, task_selector],
+                 search_url_parser.convert_params(url))
+  end
+
   def class_under_test
     Checkoff::Internal::SearchUrlParser
   end
