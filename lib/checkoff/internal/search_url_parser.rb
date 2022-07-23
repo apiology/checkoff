@@ -6,39 +6,14 @@ require 'active_support/core_ext/hash/except'
 
 module Checkoff
   module Internal
-    # Parse Asana search URLs into parameters suitable to pass into
-    # the /workspaces/{workspace_gid}/tasks/search endpoint
-    class SearchUrlParser
-      def initialize(_deps = {}); end
-
-      def convert_params(url)
-        url_params = CGI.parse(URI.parse(url).query)
-        custom_field_params, regular_url_params = partition_url_params(url_params)
-        custom_field_args, task_selector = convert_custom_field_params(custom_field_params)
-        regular_url_args = convert_regular_params(regular_url_params)
-        [custom_field_args.merge(regular_url_args), task_selector]
+    # Convert custom field parameters from an Asana search URL into
+    # API search arguments and Checkoff task selectors
+    class CustomFieldParamConverter
+      def initialize(custom_field_params:)
+        @custom_field_params = custom_field_params
       end
 
-      private
-
-      def convert_regular_params(regular_url_params)
-        regular_url_params.to_a.map do |key, values|
-          convert_arg(key, values)
-        end.to_h
-      end
-
-      def merge_args_and_task_selectors(args, new_args, task_selector, new_task_selector)
-        args = args.merge(new_args)
-        return [args, task_selector] if new_task_selector == []
-
-        raise 'Teach me how to merge task selectors' unless task_selector == []
-
-        task_selector = new_task_selector
-
-        [args, task_selector]
-      end
-
-      def convert_custom_field_params(custom_field_params)
+      def convert
         by_custom_field = custom_field_params.group_by do |key, _value|
           gid_from_custom_field_key(key)
         end.transform_values(&:to_h)
@@ -52,6 +27,19 @@ module Checkoff
                                                               task_selector,
                                                               new_task_selector)
         end
+        [args, task_selector]
+      end
+
+      private
+
+      def merge_args_and_task_selectors(args, new_args, task_selector, new_task_selector)
+        args = args.merge(new_args)
+        return [args, task_selector] if new_task_selector == []
+
+        raise 'Teach me how to merge task selectors' unless task_selector == []
+
+        task_selector = new_task_selector
+
         [args, task_selector]
       end
 
@@ -114,6 +102,20 @@ module Checkoff
         end
       end
 
+      def convert_custom_field_is_arg(key, values)
+        gid = gid_from_custom_field_key(key)
+        empty_task_selector = []
+
+        if key.end_with? '.selected_options'
+          raise "Too many values found for #{key}: #{values}" if values.length != 1
+
+          return [{ "custom_fields.#{gid}.value" => values[0] },
+                  empty_task_selector]
+        end
+
+        raise "Teach me how to handle #{key} = #{values}"
+      end
+
       def convert_single_custom_field_params(gid, single_custom_field_params)
         variant_key = "custom_field_#{gid}.variant"
         variant = single_custom_field_params.fetch(variant_key)
@@ -132,18 +134,36 @@ module Checkoff
         raise "Teach me how to handle #{variant_key} = #{variant}"
       end
 
-      def convert_custom_field_is_arg(key, values)
-        gid = gid_from_custom_field_key(key)
-        empty_task_selector = []
+      def gid_from_custom_field_key(key)
+        key.split('_')[2].split('.')[0]
+      end
 
-        if key.end_with? '.selected_options'
-          raise "Too many values found for #{key}: #{values}" if values.length != 1
+      attr_reader :custom_field_params
+    end
 
-          return [{ "custom_fields.#{gid}.value" => values[0] },
-                  empty_task_selector]
-        end
+    # Parse Asana search URLs into parameters suitable to pass into
+    # the /workspaces/{workspace_gid}/tasks/search endpoint
+    class SearchUrlParser
+      def initialize(_deps = {}); end
 
-        raise "Teach me how to handle #{key} = #{values}"
+      def convert_params(url)
+        url_params = CGI.parse(URI.parse(url).query)
+        custom_field_params, regular_url_params = partition_url_params(url_params)
+        custom_field_args, task_selector = convert_custom_field_params(custom_field_params)
+        regular_url_args = convert_regular_params(regular_url_params)
+        [custom_field_args.merge(regular_url_args), task_selector]
+      end
+
+      private
+
+      def convert_regular_params(regular_url_params)
+        regular_url_params.to_a.map do |key, values|
+          convert_arg(key, values)
+        end.to_h
+      end
+
+      def convert_custom_field_params(custom_field_params)
+        CustomFieldParamConverter.new(custom_field_params: custom_field_params).convert
       end
 
       def partition_url_params(url_params)
@@ -155,10 +175,6 @@ module Checkoff
       PARAM_MAP = {
         'any_projects.ids' => 'projects.any',
       }.freeze
-
-      def gid_from_custom_field_key(key)
-        key.split('_')[2].split('.')[0]
-      end
 
       def convert_arg(key, values)
         [PARAM_MAP.fetch(key), values.join(',')]
