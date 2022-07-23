@@ -13,19 +13,20 @@ module Checkoff
         @custom_field_params = custom_field_params
       end
 
-      def convert
-        by_custom_field = custom_field_params.group_by do |key, _value|
+      def by_custom_field
+        custom_field_params.group_by do |key, _value|
           gid_from_custom_field_key(key)
         end.transform_values(&:to_h)
+      end
+
+      def convert
         args = {}
         task_selector = []
         by_custom_field.each do |gid, single_custom_field_params|
           new_args, new_task_selector = convert_single_custom_field_params(gid,
                                                                            single_custom_field_params)
-          args, task_selector = merge_args_and_task_selectors(args,
-                                                              new_args,
-                                                              task_selector,
-                                                              new_task_selector)
+          args, task_selector = merge_args_and_task_selectors(args, new_args,
+                                                              task_selector, new_task_selector)
         end
         [args, task_selector]
       end
