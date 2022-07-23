@@ -8,3 +8,6 @@ Metrics/ClassLength:
   #
   # https://stackoverflow.com/questions/6453235/what-does-damp-not-dry-mean-when-talking-about-unit-tests
   Max: 250
+
+Metrics/MethodLength:
+  Max: 25
