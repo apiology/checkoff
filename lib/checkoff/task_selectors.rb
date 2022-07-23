@@ -6,6 +6,7 @@ require 'forwardable'
 require 'cache_method'
 require 'json'
 require_relative 'internal/config_loader'
+require_relative 'internal/task_selector_evaluator'
 
 # https://developers.asana.com/docs/task-selectors
 
@@ -19,39 +20,15 @@ module Checkoff
     LONG_CACHE_TIME = MINUTE * 15
     SHORT_CACHE_TIME = MINUTE
 
-    def initialize(_deps = {}); end
+    def initialize(config: Checkoff::Internal::ConfigLoader.load(:asana))
+      @config = config
+    end
 
     # @param [Hash<Symbol, Object>] task_selector Filter based on
     #        description.  Examples: {tag: 'foo'} {:not {tag: 'foo'} (:tag 'foo')
     def filter_via_task_selector(task, task_selector)
-      return true if task_selector == []
-
-      return !filter_via_task_selector(task, task_selector.fetch(1)) if fn?(task_selector, :not)
-
-      return filter_via_task_selector(task, task_selector.fetch(1)).nil? if fn?(task_selector, :nil?)
-
-      return contains_tag?(task, task_selector.fetch(1)) if fn?(task_selector, :tag)
-
-      return custom_field_value(task, task_selector.fetch(1)) if fn?(task_selector, :custom_field_value)
-
-      raise "Syntax issue trying to handle #{task_selector}"
-    end
-
-    private
-
-    def contains_tag?(task, tag_name)
-      task.tags.map(&:name).include? tag_name
-    end
-
-    def custom_field_value(task, custom_field_name)
-      custom_field = task.custom_fields.find { |field| field.fetch('name') == custom_field_name }
-      return nil if custom_field.nil?
-
-      custom_field['display_value']
-    end
-
-    def fn?(object, fn_name)
-      object.is_a?(Array) && !object.empty? && [fn_name, fn_name.to_s].include?(object[0])
+      evaluator = TaskSelectorEvaluator.new(task: task)
+      evaluator.evaluate(task_selector)
     end
 
     # bundle exec ./task_selectors.rb
@@ -74,12 +51,13 @@ module Checkoff
         require 'checkoff/projects'
 
         task_selectors = Checkoff::TaskSelectors.new
-        extra_fields = []
+        extra_fields = ['custom_fields']
         projects = Checkoff::Projects.new
-        project = projects.project(workspace_name, project_name)
+        project = projects.project_or_raise(workspace_name, project_name)
         raw_tasks = projects.tasks_from_project(project, extra_fields: extra_fields)
         tasks = raw_tasks.filter { |task| task_selectors.filter_via_task_selector(task, task_selector) }
-        puts "Results: #{tasks}"
+        # avoid n+1 queries generating the full task formatting
+        puts JSON.pretty_generate(tasks.map(&:to_h))
       end
     end
     # :nocov:
