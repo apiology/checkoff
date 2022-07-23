@@ -26,4 +26,14 @@ class BaseAsana < ClassTest
       completed_since: '9999-12-01',
     }
   end
+
+  def task_options_with_completed
+    {
+      per_page: 100,
+      options: {
+        fields: %w[name completed_at due_at due_on tags
+                   memberships.project.gid memberships.section.name dependencies],
+      },
+    }
+  end
 end
