@@ -1,7 +1,7 @@
 ---
 inherit_from: ../../.rubocop.yml
 
-Merics/ClassLength:
+Metrics/ClassLength:
   # Per discussion on DCTech #ruby, folks tend to relieve class length
   # pressure on unit tests, both to avoid pushing regular code limits
   # way below 100 and to allow for DAMP tests.
