@@ -213,6 +213,14 @@ module Checkoff
           raise "Teach me how to handle #{key} = #{values}" if value != 'incomplete'
 
           ['completed', false]
+        when 'not_tags.ids'
+          raise "Teach me how to handle #{key} = #{values}" if values.length != 1
+
+          value = values.fetch(0)
+          tag_ids = value.split('~')
+          ['tags.not', tag_ids.join(',')]
+        else
+          raise "Teach me how to handle #{key} = #{values}"
         end
       end
     end
