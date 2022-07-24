@@ -201,12 +201,19 @@ module Checkoff
         end.map(&:to_h)
       end
 
-      PARAM_MAP = {
-        'any_projects.ids' => 'projects.any',
-      }.freeze
-
+      # https://developers.asana.com/docs/search-tasks-in-a-workspace
       def convert_arg(key, values)
-        [PARAM_MAP.fetch(key), values.join(',')]
+        case key
+        when 'any_projects.ids'
+          ['projects.any', values.join(',')]
+        when 'completion'
+          raise "Teach me how to handle #{key} = #{values}" if values.length != 1
+
+          value = values.fetch(0)
+          raise "Teach me how to handle #{key} = #{values}" if value != 'incomplete'
+
+          ['completed', false]
+        end
       end
     end
   end

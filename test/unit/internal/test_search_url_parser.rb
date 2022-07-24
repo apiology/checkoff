@@ -57,6 +57,19 @@ class TestSearchUrlParser < ClassTest
                  search_url_parser.convert_params(url))
   end
 
+  def test_convert_params_5
+    search_url_parser = get_test_object
+    url = 'https://app.asana.com/0/search?completion=incomplete&any_projects.ids=123&custom_field_456.variant=no_value'
+    asana_api_params = {
+      'custom_fields.456.is_set' => 'false',
+      'completed' => false,
+      'projects.any' => '123',
+    }
+    task_selector = []
+    assert_equal([asana_api_params, task_selector],
+                 search_url_parser.convert_params(url))
+  end
+
   def class_under_test
     Checkoff::Internal::SearchUrlParser
   end
