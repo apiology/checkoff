@@ -12,7 +12,7 @@ require_relative 'task_selectors'
 require 'asana/resource_includes/collection'
 require 'asana/resource_includes/response_helper'
 
-require 'checkoff/internal/search_url_parser'
+require 'checkoff/internal/search_url'
 
 # https://developers.asana.com/docs/task-searches
 module Checkoff
@@ -33,7 +33,7 @@ module Checkoff
                    projects: Checkoff::Projects.new(config: config),
                    clients: Checkoff::Clients.new(config: config),
                    client: clients.client,
-                   search_url_parser: Checkoff::Internal::SearchUrlParser.new,
+                   search_url_parser: Checkoff::Internal::SearchUrl::Parser.new,
                    asana_resources_collection_class: Asana::Resources::Collection)
       @workspaces = workspaces
       @task_selectors = task_selectors
