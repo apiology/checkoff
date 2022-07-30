@@ -2,7 +2,7 @@
 
 require_relative '../test_helper'
 require_relative '../class_test'
-require 'checkoff/internal/search_url_parser'
+require 'checkoff/internal/search_url'
 
 class TestSearchUrlParser < ClassTest
   def test_convert_params_1
@@ -88,6 +88,6 @@ class TestSearchUrlParser < ClassTest
   end
 
   def class_under_test
-    Checkoff::Internal::SearchUrlParser
+    Checkoff::Internal::SearchUrl::Parser
   end
 end
