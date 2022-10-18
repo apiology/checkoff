@@ -279,7 +279,7 @@ class TestMvSubcommand < ClassTest
 
       set_initializer_arguments
     end
-    refute mv_subcommand.nil?
+    refute_nil mv_subcommand
   end
 
   def class_under_test
