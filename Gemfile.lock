@@ -89,7 +89,7 @@ GEM
       tomlrb
     mixlib-shellout (3.2.7)
       chef-utils
-    mocha (1.12.0)
+    mocha (2.0.0.alpha.1)
     multi_json (1.15.0)
     multi_xml (0.6.0)
     multipart-post (2.1.1)
@@ -176,7 +176,7 @@ DEPENDENCIES
   checkoff!
   mdl
   minitest-profile
-  mocha
+  mocha (~> 2.0.0.alpha.1)
   overcommit (>= 0.58.0)
   pry
   rake (~> 13.0)
