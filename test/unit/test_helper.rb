@@ -20,6 +20,12 @@ SimpleCov.refuse_coverage_drop
 
 require 'minitest/autorun'
 require 'mocha/minitest'
+
+Mocha.configure do |c|
+  # Detect Ruby 2 -> 3 kwarg issues
+  c.strict_keyword_argument_matching = true
+end
+
 require 'minitest/profile'
 require 'ostruct'
 
