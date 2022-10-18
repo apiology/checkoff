@@ -56,9 +56,9 @@ module Checkoff
         end
 
         def convert
-          simple_url_params.to_a.map do |key, values|
+          simple_url_params.to_a.to_h do |key, values|
             convert_arg(key, values)
-          end.to_h
+          end
         end
 
         private

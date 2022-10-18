@@ -141,7 +141,7 @@ class TestSubtasks < ClassTest
 
   def test_init
     subtasks = get_test_object
-    refute subtasks.nil?
+    refute_nil subtasks
   end
 
   def class_under_test
