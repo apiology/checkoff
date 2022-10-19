@@ -17,7 +17,8 @@ SimpleCov.start do
   enable_coverage(:branch) # Report branch coverage to trigger branch-level undercover warnings
 end
 SimpleCov.refuse_coverage_drop
-
+require 'fakeweb'
+FakeWeb.allow_net_connect = false
 require 'minitest/autorun'
 require 'mocha/minitest'
 
@@ -27,11 +28,11 @@ Mocha.configure do |c|
 end
 
 require 'minitest/profile'
-require 'ostruct'
+require 'minitest/reporters'
+Minitest::Reporters.use! [Minitest::Reporters::DefaultReporter.new(show_test_location: true)]
 
 require_relative 'cachemethoddouble'
 require_relative '../../lib/checkoff'
-require_relative 'test_date'
 
 ENV['TZ'] = 'US/Eastern'
 
@@ -58,13 +59,47 @@ def define_singleton_method_by_proc(obj, name, block)
   metaclass.send(:define_method, name, block)
 end
 
-def get_initializer_mocks(clazz, skip_these_keys: [])
-  parameters = clazz.instance_method(:initialize).parameters
-  named_parameters = parameters.select do |name, _value|
-    %i[key keyreq].include? name
+class MyOpenStruct < OpenStruct
+  def delete(sym)
+    delete_field(sym) if respond_to? sym
   end
+
+  def merge!(hash)
+    hash.each do |k, v|
+      self[k] = v
+    end
+  end
+end
+
+def ensure_respond_like(mocks, respond_like_instance_of, respond_like)
+  mocks.to_h.each do |mock_name, mock|
+    if respond_like_instance_of.include?(mock_name)
+      mock.responds_like_instance_of(respond_like_instance_of.fetch(mock_name.to_sym))
+    elsif respond_like.include?(mock_name)
+      mock.responds_like(respond_like.fetch(mock_name.to_sym))
+    else
+      raise "Please specify type of #{mock_name} in your 'respond_like_instance_of' or 'respond_like' methods"
+    end
+  end
+end
+
+def create_hash_of_mocks(mock_syms)
+  Hash[*mock_syms.map { |sym| [sym, mock(sym.to_s)] }.flatten]
+end
+
+def get_initializer_mocks(clazz,
+                          respond_like_instance_of:,
+                          respond_like:,
+                          skip_these_keys: [])
+  method = clazz.instance_method(:initialize)
+  named_parameters = method.parameters.select { |name, _value| %i[key keyreq].include? name }
+
   mock_syms = named_parameters.map { |_name, value| value } - skip_these_keys
 
   # create a hash of argument name to a new mock
-  OpenStruct.new Hash[*mock_syms.map { |sym| [sym, mock(sym.to_s)] }.flatten]
+  mocks = MyOpenStruct.new create_hash_of_mocks(mock_syms)
+  unless respond_like_instance_of.nil? && respond_like.nil?
+    ensure_respond_like(mocks, respond_like_instance_of, respond_like)
+  end
+  mocks
 end
