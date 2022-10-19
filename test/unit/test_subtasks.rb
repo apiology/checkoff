@@ -128,7 +128,7 @@ class TestSubtasks < ClassTest
   end
 
   def expect_raw_subtasks_pulled
-    task.expects(:subtasks).with(subtask_options).returns(raw_subtasks)
+    task.expects(:subtasks).with(**subtask_options).returns(raw_subtasks)
   end
 
   def test_raw_subtasks

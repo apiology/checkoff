@@ -41,7 +41,7 @@ module Checkoff
     def raw_subtasks(task)
       task_options = projects.task_options
       task_options[:options][:fields] << 'is_rendered_as_separator'
-      task.subtasks(task_options)
+      task.subtasks(**task_options)
     end
     cache_method :raw_subtasks, SHORT_CACHE_TIME
 
