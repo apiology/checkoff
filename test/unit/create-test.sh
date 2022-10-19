@@ -69,6 +69,16 @@ class Test${class_name} < ClassTest
   def class_under_test
     Checkoff::${class_name}
   end
+
+  def respond_like_instance_of
+    {
+    }
+  end
+
+  def respond_like
+    {
+    }
+  end
 end
 EOF
 

@@ -89,4 +89,22 @@ class TestTaskSearches < ClassTest
   def class_under_test
     Checkoff::TaskSearches
   end
+
+  def respond_like_instance_of
+    {
+      config: Checkoff::Internal::EnvFallbackConfigLoader,
+      workspaces: Checkoff::Workspaces,
+      task_selectors: Checkoff::TaskSelectors,
+      projects: Checkoff::Projects,
+      clients: Checkoff::Clients,
+      search_url_parser: Checkoff::Internal::SearchUrl::Parser,
+      client: Asana::Client,
+    }
+  end
+
+  def respond_like
+    {
+      asana_resources_collection_class: Asana::Resources::Collection,
+    }
+  end
 end
