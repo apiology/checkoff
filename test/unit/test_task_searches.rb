@@ -34,7 +34,7 @@ class TestTaskSearches < ClassTest
     client
       .expects(:get)
       .with('/workspaces/abc/tasks/search',
-            { params: api_params, options: { fields: ['custom_fields'] } })
+            params: api_params, options: { fields: ['custom_fields'] })
       .returns(search_response)
   end
 
@@ -53,8 +53,8 @@ class TestTaskSearches < ClassTest
       .expects(:new)
       .with([data,
              { 'something_else' => something_else }],
-            { type: Asana::Resources::Task,
-              client: client })
+            type: Asana::Resources::Task,
+            client: client)
       .returns([good_task, bad_task])
   end
 

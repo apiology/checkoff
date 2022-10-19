@@ -37,7 +37,7 @@ class TestProjects < BaseAsana
 
   def expect_tasks_found(options:)
     options[:project] = a_gid
-    tasks.expects(:find_all).with(options).returns(tasks)
+    tasks.expects(:find_all).with(**options).returns(tasks)
     tasks.expects(:to_a).returns(tasks)
   end
 
