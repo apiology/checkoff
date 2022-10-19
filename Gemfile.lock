@@ -12,7 +12,7 @@ GIT
 PATH
   remote: .
   specs:
-    checkoff (0.19.2)
+    checkoff (0.20.0)
       activesupport
       asana (> 0.10.0)
       cache_method
@@ -22,12 +22,11 @@ PATH
 GEM
   remote: https://rubygems.org/
   specs:
-    activesupport (6.1.6.1)
+    activesupport (7.0.4)
       concurrent-ruby (~> 1.0, >= 1.0.2)
       i18n (>= 1.6, < 2)
       minitest (>= 5.1)
       tzinfo (~> 2.0)
-      zeitwerk (~> 2.3)
     ansi (1.5.0)
     ast (2.4.2)
     builder (3.2.4)
@@ -169,7 +168,6 @@ GEM
       rainbow (>= 2.1, < 4.0)
       rugged (>= 0.27, < 1.6)
     unicode-display_width (2.3.0)
-    zeitwerk (2.6.0)
 
 PLATFORMS
   ruby
