@@ -75,7 +75,7 @@ GEM
       rexml
     kramdown-parser-gfm (1.1.0)
       kramdown (~> 2.0)
-    mdl (0.11.0)
+    mdl (0.12.0)
       kramdown (~> 2.3)
       kramdown-parser-gfm (~> 1.1)
       mixlib-cli (~> 2.1, >= 2.1.1)
@@ -189,4 +189,4 @@ DEPENDENCIES
   undercover
 
 BUNDLED WITH
-   2.2.33
+   2.3.23
