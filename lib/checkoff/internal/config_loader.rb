@@ -18,7 +18,7 @@ module Checkoff
         config_value = @config[key]
         return config_value unless config_value.nil?
 
-        ENV[envvar_name(key)]
+        ENV.fetch(envvar_name(key), nil)
       end
 
       def fetch(key)

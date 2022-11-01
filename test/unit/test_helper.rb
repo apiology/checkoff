@@ -59,6 +59,10 @@ def define_singleton_method_by_proc(obj, name, block)
   metaclass.send(:define_method, name, block)
 end
 
+# No security (symbold denial of servie) issue; not building
+# OpenStruct from untrusted user data.
+#
+# rubocop:disable Style/OpenStructUse
 class MyOpenStruct < OpenStruct
   def delete(sym)
     delete_field(sym) if respond_to? sym
@@ -70,6 +74,7 @@ class MyOpenStruct < OpenStruct
     end
   end
 end
+# rubocop:enable Style/OpenStructUse
 
 def ensure_respond_like(mocks, respond_like_instance_of, respond_like)
   mocks.to_h.each do |mock_name, mock|
