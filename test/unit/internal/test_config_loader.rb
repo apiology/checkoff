@@ -15,7 +15,7 @@ class TestConfigLoader < Minitest::Test
 
     config_hash = Checkoff::Internal::ConfigLoader.load(:foo)
 
-    ENV.expects(:[]).with('FOO__NO_KEY_FOUND').returns(nil).at_least(2)
+    ENV.expects(:fetch).with('FOO__NO_KEY_FOUND', nil).returns(nil).at_least(2)
 
     assert_nil(config_hash[:no_key_found])
     assert_raises(KeyError) do
@@ -28,7 +28,7 @@ class TestConfigLoader < Minitest::Test
 
     config_hash = Checkoff::Internal::ConfigLoader.load(:foo)
 
-    ENV.expects(:[]).with('FOO__ENV_ONLY_KEY').returns('123').at_least(2)
+    ENV.expects(:fetch).with('FOO__ENV_ONLY_KEY', nil).returns('123').at_least(2)
     assert_equal('123', config_hash[:env_only_key])
     assert_equal('123', config_hash.fetch(:env_only_key))
   end

@@ -11,7 +11,9 @@ module Checkoff
       # Parse Asana search URLs into parameters suitable to pass into
       # the /workspaces/{workspace_gid}/tasks/search endpoint
       class Parser
-        def initialize(_deps = {}); end
+        def initialize(_deps = {})
+          # allow dependencies to be passed in by tests
+        end
 
         def convert_params(url)
           url_params = CGI.parse(URI.parse(url).query)
