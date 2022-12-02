@@ -110,7 +110,8 @@ module Checkoff
       raise "Could not find task in project_gid #{project_gid}: #{task}" if membership.nil?
 
       current_section = membership['section']['name']
-      current_section = nil if ['(no section)', 'Untitled section'].include?(current_section)
+      inbox_section_names = ['(no section)', 'Untitled section', 'Inbox']
+      current_section = nil if inbox_section_names.include?(current_section)
       by_section[current_section] ||= []
       by_section[current_section] << task
     end
