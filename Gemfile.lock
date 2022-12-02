@@ -183,6 +183,7 @@ PLATFORMS
   ruby
   x86_64-darwin-19
   x86_64-darwin-20
+  x86_64-darwin-21
   x86_64-linux
 
 DEPENDENCIES
@@ -208,4 +209,4 @@ DEPENDENCIES
   webmock
 
 BUNDLED WITH
-   2.3.24
+   2.3.26
