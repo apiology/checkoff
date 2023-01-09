@@ -5,32 +5,69 @@ require_relative 'custom_field_param_converter'
 module Checkoff
   module Internal
     module SearchUrl
+      # See
+      # https://developers.asana.com/docs/search-tasks-in-a-workspace
+      # for the return value of 'convert' here:
       module SimpleParam
         # base class for handling different types of search url params
         class SimpleParam
-          def initialize(values:)
+          def initialize(key:, values:)
+            @key = key
             @values = values
           end
 
           private
 
-          attr_reader :values
+          def single_value
+            @single_value ||= begin
+              raise "Teach me how to handle #{key} = #{values}" if values.length != 1
+
+              values.fetch(0)
+            end
+          end
+
+          attr_reader :key, :values
         end
 
         # Handle 'any_projects.ids' search url param
         class AnyProjectsIds < SimpleParam
+          def projects
+            @projects ||= []
+          end
+
+          def sections
+            @sections ||= []
+          end
+
+          def parse!
+            # Inputs:
+            #   123_column_456 means "abc" project, "def" section
+            #   123 means "abc" project
+            #   123~456 means "abc" and "def" projects
+            project_section_pairs = single_value.split('~')
+            project_section_pairs.each do |project_section_pair|
+              project, section = project_section_pair.split('_column_')
+              if section.nil?
+                projects << project
+              else
+                sections << section
+              end
+            end
+          end
+
           def convert
-            ['projects.any', values.join(',')]
+            parse!
+            out = {}
+            out['projects.any'] = projects.join(',') unless projects.empty?
+            out['sections.any'] = sections.join(',') unless sections.empty?
+            out.to_a.flatten
           end
         end
 
         # Handle 'completion' search url param
         class Completion < SimpleParam
           def convert
-            raise "Teach me how to handle #{key} = #{values}" if values.length != 1
-
-            value = values.fetch(0)
-            raise "Teach me how to handle #{key} = #{values}" if value != 'incomplete'
+            raise "Teach me how to handle #{key} = #{values}" if single_value != 'incomplete'
 
             ['completed', false]
           end
@@ -39,11 +76,25 @@ module Checkoff
         # Handle 'not_tags.ids' search url param
         class NotTagsIds < SimpleParam
           def convert
-            raise "Teach me how to handle #{key} = #{values}" if values.length != 1
-
-            value = values.fetch(0)
-            tag_ids = value.split('~')
+            tag_ids = single_value.split('~')
             ['tags.not', tag_ids.join(',')]
+          end
+        end
+
+        # handle 'subtask' search url param
+        class Subtask < SimpleParam
+          def convert
+            return ['is_subtask', false] if single_value == 'is_not_subtask'
+
+            raise "Teach me how to handle #{key} = #{values}"
+          end
+        end
+
+        # Handle 'any_tags.ids' search url param
+        class AnyTagsIds < SimpleParam
+          def convert
+            tag_ids = single_value.split('~')
+            ['tags.any', tag_ids.join(',')]
           end
         end
       end
@@ -56,9 +107,9 @@ module Checkoff
         end
 
         def convert
-          simple_url_params.to_a.to_h do |key, values|
-            convert_arg(key, values)
-          end
+          simple_url_params.to_a.flat_map do |key, values|
+            convert_arg(key, values).each_slice(2).to_a
+          end.to_h
         end
 
         private
@@ -67,12 +118,14 @@ module Checkoff
           'any_projects.ids' => SimpleParam::AnyProjectsIds,
           'completion' => SimpleParam::Completion,
           'not_tags.ids' => SimpleParam::NotTagsIds,
+          'any_tags.ids' => SimpleParam::AnyTagsIds,
+          'subtask' => SimpleParam::Subtask,
         }.freeze
 
         # https://developers.asana.com/docs/search-tasks-in-a-workspace
         def convert_arg(key, values)
           clazz = ARGS.fetch(key)
-          clazz.new(values: values).convert
+          clazz.new(key: key, values: values).convert
         end
 
         attr_reader :simple_url_params

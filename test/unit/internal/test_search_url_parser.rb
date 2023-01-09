@@ -87,6 +87,72 @@ class TestSearchUrlParser < ClassTest
                  search_url_parser.convert_params(url))
   end
 
+  def test_convert_params_7
+    search_url_parser = get_test_object
+    url = 'https://app.asana.com/0/search?any_tags.ids=123&any_projects.ids=456_column_789~12'
+    asana_api_params = {
+      'tags.any' => '123',
+      'projects.any' => '12',
+      'sections.any' => '789',
+    }
+    task_selector = []
+    assert_equal([asana_api_params, task_selector],
+                 search_url_parser.convert_params(url))
+  end
+
+  def test_convert_params_8
+    search_url_parser = get_test_object
+    url = 'https://app.asana.com/0/search?any_tags.ids=123&any_projects.ids=456_column_789'
+    asana_api_params = {
+      'tags.any' => '123',
+      'sections.any' => '789',
+    }
+    task_selector = []
+    assert_equal([asana_api_params, task_selector],
+                 search_url_parser.convert_params(url))
+  end
+
+  def test_convert_params_9
+    search_url_parser = get_test_object
+    url = 'https://app.asana.com/0/search?subtask=is_not_subtask&any_tags.ids=123&not_tags.ids=456~789~12~34&any_projects.ids=56_column_78'
+    asana_api_params = {
+      'is_subtask' => false,
+      'tags.any' => '123',
+      'tags.not' => '456,789,12,34',
+      'sections.any' => '78',
+    }
+    task_selector = []
+    assert_equal([asana_api_params, task_selector],
+                 search_url_parser.convert_params(url))
+  end
+
+  def test_convert_params_10
+    search_url_parser = get_test_object
+    url = 'https://app.asana.com/0/search?subtask=bogus&any_tags.ids=123&not_tags.ids=456~789~12~34&any_projects.ids=56_column_78'
+    e = assert_raises(RuntimeError) do
+      search_url_parser.convert_params(url)
+    end
+    assert_equal 'Teach me how to handle subtask = ["bogus"]', e.message
+  end
+
+  def test_convert_params_11
+    search_url_parser = get_test_object
+    url = 'https://app.asana.com/0/search?subtask=bogus&subtask=another_bogus&any_tags.ids=123&not_tags.ids=456~789~12~34&any_projects.ids=56_column_78'
+    e = assert_raises(RuntimeError) do
+      search_url_parser.convert_params(url)
+    end
+    assert_equal 'Teach me how to handle subtask = ["bogus", "another_bogus"]', e.message
+  end
+
+  def test_convert_params_12
+    search_url_parser = get_test_object
+    url = 'https://app.asana.com/0/search?completion=bogus&any_projects.ids=123&custom_field_456.variant=no_value'
+    e = assert_raises(RuntimeError) do
+      search_url_parser.convert_params(url)
+    end
+    assert_equal 'Teach me how to handle completion = ["bogus"]', e.message
+  end
+
   def class_under_test
     Checkoff::Internal::SearchUrl::Parser
   end
