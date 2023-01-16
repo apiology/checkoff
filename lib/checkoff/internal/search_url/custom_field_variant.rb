@@ -3,6 +3,7 @@
 module Checkoff
   module Internal
     module SearchUrl
+      # https://developers.asana.com/docs/search-tasks-in-a-workspace
       module CustomFieldVariant
         # base class for handling different custom_field_#{gid}.variant params
         class CustomFieldVariant
@@ -48,28 +49,33 @@ module Checkoff
           end
         end
 
+        # This is used in the UI for select fields
+        #
         # custom_field_#{gid}.variant = 'is_not'
         class IsNot < CustomFieldVariant
           def convert
-            case remaining_params.keys
-            when ["custom_field_#{gid}.selected_options"]
-              convert_single_custom_field_is_not_params_selected_options
-            else
-              raise "Teach me how to handle #{remaining_params}"
-            end
-          end
-
-          private
-
-          def convert_single_custom_field_is_not_params_selected_options
-            selected_options = remaining_params.fetch("custom_field_#{gid}.selected_options")
-            raise "Teach me how to handle #{remaining_params}" unless selected_options.length == 1
+            selected_options = fetch_solo_param("custom_field_#{gid}.selected_options").split('~')
 
             [{ "custom_fields.#{gid}.is_set" => 'true' },
              ['not',
               ['custom_field_gid_value_contains_any_gid',
                gid,
-               selected_options.fetch(0).split('~')]]]
+               selected_options]]]
+          end
+        end
+
+        # This is used in the UI for multi-select fields
+        #
+        # custom_field_#{gid}.variant = 'doesnt_contain_any'
+        class DoesntContainAny < CustomFieldVariant
+          def convert
+            selected_options = fetch_solo_param("custom_field_#{gid}.selected_options").split('~')
+
+            [{ "custom_fields.#{gid}.is_set" => 'true' },
+             ['not',
+              ['custom_field_gid_value_contains_any_gid',
+               gid,
+               selected_options]]]
           end
         end
 
