@@ -153,6 +153,40 @@ class TestSearchUrlParser < ClassTest
     assert_equal 'Teach me how to handle completion = ["bogus"]', e.message
   end
 
+  def test_convert_params_13
+    search_url_parser = get_test_object
+    url = 'https://app.asana.com/0/search?completion=incomplete&any_projects.ids=123&custom_field_456.variant=greater_than&custom_field_456.min=99999'
+    asana_api_params = {
+      'custom_fields.456.greater_than' => '99999',
+      'completed' => false,
+      'projects.any' => '123',
+    }
+    task_selector = []
+    assert_equal([asana_api_params, task_selector],
+                 search_url_parser.convert_params(url))
+  end
+
+  def test_convert_params_14
+    search_url_parser = get_test_object
+    url = 'https://app.asana.com/0/search?completion=incomplete&any_projects.ids=123&custom_field_456.variant=greater_than&custom_field_456.min=99999&custom_field_456.blah=123'
+    e = assert_raises(RuntimeError) do
+      search_url_parser.convert_params(url)
+    end
+    assert_equal 'Teach me how to handle {"custom_field_456.min"=>["99999"], "custom_field_456.blah"=>["123"]}',
+                 e.message
+  end
+
+  def test_convert_params_15
+    search_url_parser = get_test_object
+    url = 'https://app.asana.com/0/search?completion=incomplete&any_projects.ids=123&custom_field_456.variant=greater_than&custom_field_456.min=99999&custom_field_456.min=123'
+    e = assert_raises(RuntimeError) do
+      search_url_parser.convert_params(url)
+    end
+    assert_equal 'Teach me how to handle these remaining keys for custom_field_456.min: ' \
+                 '{"custom_field_456.min"=>["99999", "123"]}',
+                 e.message
+  end
+
   def class_under_test
     Checkoff::Internal::SearchUrl::Parser
   end

@@ -14,31 +14,37 @@ module Checkoff
           private
 
           attr_reader :gid, :remaining_params
+
+          def fetch_solo_param(param_name)
+            case remaining_params.keys
+            when [param_name]
+              param_values = remaining_params.fetch(param_name)
+              unless param_values.length == 1
+                raise "Teach me how to handle these remaining keys for #{param_name}: #{remaining_params}"
+              end
+
+              param_values[0]
+            else
+              raise "Teach me how to handle #{remaining_params}"
+            end
+          end
         end
 
         # custom_field_#{gid}.variant = 'less_than'
         class LessThan < CustomFieldVariant
           def convert
-            max_param = "custom_field_#{gid}.max"
-            case remaining_params.keys
-            when [max_param]
-              convert_single_custom_field_less_than_params_max_param(max_param)
-            else
-              raise "Teach me how to handle #{remaining_params}"
-            end
-          end
-
-          private
-
-          def convert_single_custom_field_less_than_params_max_param(max_param)
-            max_values = remaining_params.fetch(max_param)
-            unless max_values.length == 1
-              raise "Teach me how to handle these remaining keys for #{max_param}: #{remaining_params}"
-            end
-
-            max_value = max_values[0]
+            max_value = fetch_solo_param("custom_field_#{gid}.max")
             empty_task_selector = []
             [{ "custom_fields.#{gid}.less_than" => max_value }, empty_task_selector]
+          end
+        end
+
+        # custom_field_#{gid}.variant = 'greater_than'
+        class GreaterThan < CustomFieldVariant
+          def convert
+            max_value = fetch_solo_param("custom_field_#{gid}.min")
+            empty_task_selector = []
+            [{ "custom_fields.#{gid}.greater_than" => max_value }, empty_task_selector]
           end
         end
 
