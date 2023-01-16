@@ -187,6 +187,21 @@ class TestSearchUrlParser < ClassTest
                  e.message
   end
 
+  def test_convert_params_16
+    search_url_parser = get_test_object
+    url = 'https://app.asana.com/0/search?completion=incomplete&subtask=is_not_subtask&any_projects.ids=123_column_456~123_column_789~12~34_column_56~123_column_78~123_column_1&custom_field_6.variant=doesnt_contain_any&custom_field_6.selected_options=7'
+    asana_api_params = {
+      'custom_fields.6.is_set' => 'true',
+      'completed' => false,
+      'is_subtask' => false,
+      'projects.any' => '12',
+      'sections.any' => '456,789,56,78,1',
+    }
+    task_selector = ['not', ['custom_field_gid_value_contains_any_gid', '6', ['7']]]
+    assert_equal([asana_api_params, task_selector],
+                 search_url_parser.convert_params(url))
+  end
+
   def class_under_test
     Checkoff::Internal::SearchUrl::Parser
   end

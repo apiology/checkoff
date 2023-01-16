@@ -105,24 +105,40 @@ module Checkoff
       end
 
       matched_custom_field = custom_fields.find { |data| data.fetch('gid') == custom_field_gid }
-      raise "Could not find custom field with gid #{custom_field_gid}" if matched_custom_field.nil?
+      if matched_custom_field.nil?
+        raise "Could not find custom field with gid #{custom_field_gid} in #{task.gid} with #{custom_fields}"
+      end
 
       matched_custom_field
     end
 
-    def pull_custom_field_values_gids(task, custom_field_gid)
-      matched_custom_field = pull_custom_field_or_raise(task, custom_field_gid)
-
-      enum_value = matched_custom_field.fetch('enum_value')
-      actual_custom_field_values_gids = []
-      unless enum_value.nil?
-        if enum_value.fetch('enabled') == false
-          raise "Unexpected enabled value on custom field: #{matched_custom_field}"
-        end
-
-        actual_custom_field_values_gids = [enum_value.fetch('gid')]
+    def pull_enum_values(custom_field)
+      resource_subtype = custom_field.fetch('resource_subtype')
+      case resource_subtype
+      when 'enum'
+        [custom_field.fetch('enum_value')]
+      when 'multi_enum'
+        custom_field.fetch('multi_enum_values')
+      else
+        raise "Teach me how to handle resource_subtype #{resource_subtype}"
       end
-      actual_custom_field_values_gids
+    end
+
+    def find_gids(custom_field, enum_value)
+      if enum_value.nil?
+        []
+      else
+        raise "Unexpected enabled value on custom field: #{custom_field}" if enum_value.fetch('enabled') == false
+
+        [enum_value.fetch('gid')]
+      end
+    end
+
+    def pull_custom_field_values_gids(task, custom_field_gid)
+      custom_field = pull_custom_field_or_raise(task, custom_field_gid)
+      pull_enum_values(custom_field).flat_map do |enum_value|
+        find_gids(custom_field, enum_value)
+      end
     end
   end
 
