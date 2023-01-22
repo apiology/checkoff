@@ -21,7 +21,7 @@ module Checkoff
     DAY = 24 * HOUR
     REALLY_LONG_CACHE_TIME = HOUR * 1
     LONG_CACHE_TIME = MINUTE * 15
-    SHORT_CACHE_TIME = MINUTE * 5
+    SHORT_CACHE_TIME = MINUTE
 
     def initialize(config: Checkoff::Internal::ConfigLoader.load(:asana),
                    workspaces: Checkoff::Workspaces.new(config: config),
