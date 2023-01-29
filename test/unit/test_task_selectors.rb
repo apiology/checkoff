@@ -203,6 +203,11 @@ class TestTaskSelectors < ClassTest
     refute(task_selectors.filter_via_task_selector(task, [:not, []]))
   end
 
+  def test_filter_via_task_selector_and
+    task_selectors = get_test_object
+    assert(task_selectors.filter_via_task_selector(task, [:and, [], []]))
+  end
+
   def test_filter_via_task_selector_simple
     task_selectors = get_test_object
     assert(task_selectors.filter_via_task_selector(task, []))

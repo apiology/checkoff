@@ -205,10 +205,19 @@ class TestSearchUrlParser < ClassTest
   def test_convert_params_17
     search_url_parser = get_test_object
     url = 'https://app.asana.com/0/search?completion=incomplete&subtask=is_not_subtask&any_projects.ids=123&not_projects.ids=456&custom_field_789.variant=contains_any&custom_field_789.selected_options=12~34~56~78~90~1~2&custom_field_3.variant=is_not&custom_field_3.selected_options=4'
-    e = assert_raises(RuntimeError) do
-      search_url_parser.convert_params(url)
-    end
-    assert_equal 'Teach me how to merge task selectors', e.message
+    asana_api_params = {
+      'custom_fields.789.is_set' => 'true',
+      'custom_fields.3.is_set' => 'true',
+      'completed' => false,
+      'is_subtask' => false,
+      'projects.any' => '123',
+      'projects.not' => '456',
+    }
+    task_selector = [:and,
+                     ['custom_field_gid_value_contains_any_gid', '789', %w[12 34 56 78 90 1 2]],
+                     ['not', ['custom_field_gid_value_contains_any_gid', '3', ['4']]]]
+    assert_equal([asana_api_params, task_selector],
+                 search_url_parser.convert_params(url))
   end
 
   def test_convert_params_18

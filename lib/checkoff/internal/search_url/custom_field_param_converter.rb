@@ -33,14 +33,17 @@ module Checkoff
         end
 
         def merge_args_and_task_selectors(args, new_args, task_selector, new_task_selector)
-          args = args.merge(new_args)
-          return [args, task_selector] if new_task_selector == []
+          final_args = args.merge(new_args)
 
-          raise 'Teach me how to merge task selectors' unless task_selector == []
+          final_task_selector = if new_task_selector == []
+                                  task_selector
+                                elsif task_selector == []
+                                  new_task_selector
+                                else
+                                  [:and, task_selector, new_task_selector]
+                                end
 
-          task_selector = new_task_selector
-
-          [args, task_selector]
+          [final_args, final_task_selector]
         end
 
         VARIANTS = {
