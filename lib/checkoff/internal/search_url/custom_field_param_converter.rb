@@ -50,6 +50,7 @@ module Checkoff
           'less_than' => CustomFieldVariant::LessThan,
           'greater_than' => CustomFieldVariant::GreaterThan,
           'doesnt_contain_any' => CustomFieldVariant::DoesntContainAny,
+          'contains_any' => CustomFieldVariant::ContainsAny,
         }.freeze
 
         def convert_single_custom_field_params(gid, single_custom_field_params)

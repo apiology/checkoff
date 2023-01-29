@@ -27,25 +27,13 @@ module Checkoff
           end
 
           attr_reader :key, :values
-        end
 
-        # Handle 'any_projects.ids' search url param
-        class AnyProjectsIds < SimpleParam
-          def projects
-            @projects ||= []
-          end
-
-          def sections
-            @sections ||= []
-          end
-
-          def parse!
-            # Inputs:
-            #   123_column_456 means "abc" project, "def" section
-            #   123 means "abc" project
-            #   123~456 means "abc" and "def" projects
-            project_section_pairs = single_value.split('~')
-            project_section_pairs.each do |project_section_pair|
+          # Inputs:
+          #   123_column_456 means "abc" project, "def" section
+          #   123 means "abc" project
+          #   123~456 means "abc" and "def" projects
+          def parse_projects_and_sections(projects, sections)
+            single_value.split('~').each do |project_section_pair|
               project, section = project_section_pair.split('_column_')
               if section.nil?
                 projects << project
@@ -55,12 +43,28 @@ module Checkoff
             end
           end
 
-          def convert
-            parse!
+          def convert_from_projects_and_sections(verb)
+            projects = []
+            sections = []
+            parse_projects_and_sections(projects, sections)
             out = {}
-            out['projects.any'] = projects.join(',') unless projects.empty?
-            out['sections.any'] = sections.join(',') unless sections.empty?
+            out["projects.#{verb}"] = projects.join(',') unless projects.empty?
+            out["sections.#{verb}"] = sections.join(',') unless sections.empty?
             out.to_a.flatten
+          end
+        end
+
+        # Handle 'any_projects.ids' search url param
+        class AnyProjectsIds < SimpleParam
+          def convert
+            convert_from_projects_and_sections('any')
+          end
+        end
+
+        # Handle 'not_projects.ids' search url param
+        class NotProjectsIds < SimpleParam
+          def convert
+            convert_from_projects_and_sections('not')
           end
         end
 
@@ -116,6 +120,7 @@ module Checkoff
 
         ARGS = {
           'any_projects.ids' => SimpleParam::AnyProjectsIds,
+          'not_projects.ids' => SimpleParam::NotProjectsIds,
           'completion' => SimpleParam::Completion,
           'not_tags.ids' => SimpleParam::NotTagsIds,
           'any_tags.ids' => SimpleParam::AnyTagsIds,
