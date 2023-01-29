@@ -79,6 +79,20 @@ module Checkoff
           end
         end
 
+        # This is used in the UI for multi-select fields
+        #
+        # custom_field_#{gid}.variant = 'contains_any'
+        class ContainsAny < CustomFieldVariant
+          def convert
+            selected_options = fetch_solo_param("custom_field_#{gid}.selected_options").split('~')
+
+            [{ "custom_fields.#{gid}.is_set" => 'true' },
+             ['custom_field_gid_value_contains_any_gid',
+              gid,
+              selected_options]]
+          end
+        end
+
         # custom_field_#{gid}.variant = 'no_value'
         class NoValue < CustomFieldVariant
           def convert
