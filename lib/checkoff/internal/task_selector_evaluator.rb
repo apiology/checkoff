@@ -20,6 +20,17 @@ module Checkoff
     attr_reader :task_selector
   end
 
+  # :and function
+  class AndFunctionEvaluator < FunctionEvaluator
+    def matches?
+      fn?(task_selector, :and)
+    end
+
+    def evaluate(_task, lhs, rhs)
+      lhs && rhs
+    end
+  end
+
   # :not function
   class NotFunctionEvaluator < FunctionEvaluator
     def matches?
@@ -154,6 +165,7 @@ module Checkoff
       TagPFunctionEvaluator,
       CustomFieldValueFunctionEvaluator,
       CustomFieldGidValueContainsAnyGidFunctionEvaluator,
+      AndFunctionEvaluator,
     ].freeze
 
     def evaluate(task_selector)
