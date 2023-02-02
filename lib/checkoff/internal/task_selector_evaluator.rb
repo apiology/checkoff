@@ -135,7 +135,9 @@ module Checkoff
     def evaluate(task, custom_field_gid, custom_field_values_gids)
       actual_custom_field_values_gids = pull_custom_field_values_gids(task, custom_field_gid)
 
-      (custom_field_values_gids - actual_custom_field_values_gids).empty?
+      actual_custom_field_values_gids.any? do |custom_field_value|
+        custom_field_values_gids.include?(custom_field_value)
+      end
     end
 
     private
