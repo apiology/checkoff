@@ -7,7 +7,7 @@ require 'checkoff/task_selectors'
 class TestTaskSelectors < ClassTest
   extend Forwardable
 
-  let_mock :custom_field, :task, :custom_field_gid
+  let_mock :custom_field, :task, :custom_field_gid, :task_gid
 
   def test_filter_via_custom_field_gid_values_gids_no_enum_value
     custom_field_gid = '123'
@@ -169,6 +169,22 @@ class TestTaskSelectors < ClassTest
                                                             'custom_field_name']]))
   end
 
+  def mock_filter_via_custom_field_gid_value_gid_nil
+    custom_fields = [custom_field]
+    custom_field.expects(:fetch).with('gid').returns(custom_field_gid)
+    task.expects(:custom_fields).returns(custom_fields)
+    custom_field.expects(:[]).with('display_value').returns(nil)
+  end
+
+  def test_filter_via_custom_field_gid_value_gid_nil
+    task_selectors = get_test_object do
+      mock_filter_via_custom_field_gid_value_gid_nil
+    end
+    assert(task_selectors.filter_via_task_selector(task,
+                                                   [:nil?, [:custom_field_gid_value,
+                                                            custom_field_gid]]))
+  end
+
   def test_filter_via_custom_field_value_custom_fields_not_provided
     task_selectors = get_test_object do
       task.expects(:custom_fields).returns(nil)
@@ -189,6 +205,20 @@ class TestTaskSelectors < ClassTest
     assert(task_selectors.filter_via_task_selector(task,
                                                    [:nil?, [:custom_field_value,
                                                             'custom_field_name']]))
+  end
+
+  def test_filter_via_custom_field_value_gid_nil_none_found
+    task_selectors = get_test_object do
+      custom_fields = []
+      task.expects(:gid).returns('task_gid')
+      task.expects(:custom_fields).returns(custom_fields)
+    end
+    e = assert_raises(RuntimeError) do
+      task_selectors.filter_via_task_selector(task,
+                                              [:nil?, [:custom_field_gid_value,
+                                                       custom_field_gid]])
+    end
+    assert_match(/Could not find custom field with gid/, e.message)
   end
 
   def test_filter_via_task_selector_tag
