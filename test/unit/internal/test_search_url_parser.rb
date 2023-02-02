@@ -236,6 +236,28 @@ class TestSearchUrlParser < ClassTest
                  search_url_parser.convert_params(url))
   end
 
+  def test_convert_params_19
+    search_url_parser = get_test_object
+    url = 'https://app.asana.com/0/search?custom_field_123.variant=is&custom_field_123.selected_options=456~789&custom_field_12.variant=any_value'
+    asana_api_params = {
+      'custom_fields.123.is_set' => 'true',
+      'custom_fields.12.is_set' => 'true',
+    }
+    task_selector = [:custom_field_gid_value_contains_any_gid, '123', %w[456 789]]
+    assert_equal([asana_api_params, task_selector],
+                 search_url_parser.convert_params(url))
+  end
+
+  def test_convert_params_20
+    search_url_parser = get_test_object
+    url = 'https://app.asana.com/0/search?custom_field_123.variant=is&custom_field_123.selected_options=456~789&custom_field_12.variant=any_value&custom_field_12.bogus=bogus'
+    e = assert_raises(RuntimeError) do
+      search_url_parser.convert_params(url)
+    end
+    assert_equal 'Teach me how to handle these remaining keys: {"custom_field_12.bogus"=>["bogus"]}',
+                 e.message
+  end
+
   def class_under_test
     Checkoff::Internal::SearchUrl::Parser
   end

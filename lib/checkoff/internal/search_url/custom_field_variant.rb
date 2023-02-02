@@ -16,6 +16,12 @@ module Checkoff
 
           attr_reader :gid, :remaining_params
 
+          def ensure_no_remaining_params!
+            return if remaining_params.length.zero?
+
+            raise "Teach me how to handle these remaining keys: #{remaining_params}"
+          end
+
           def fetch_solo_param(param_name)
             case remaining_params.keys
             when [param_name]
@@ -96,9 +102,7 @@ module Checkoff
         # custom_field_#{gid}.variant = 'no_value'
         class NoValue < CustomFieldVariant
           def convert
-            unless remaining_params.length.zero?
-              raise "Teach me how to handle these remaining keys for #{variant_key}: #{remaining_params}"
-            end
+            ensure_no_remaining_params!
 
             api_params = { "custom_fields.#{gid}.is_set" => 'false' }
             # As of 2023-02, the 'is_set' => 'false' seems to not do
@@ -112,30 +116,38 @@ module Checkoff
           end
         end
 
+        # custom_field_#{gid}.variant = 'any_value'
+        #
+        # Not used for multi-select fields
+        class AnyValue < CustomFieldVariant
+          def convert
+            ensure_no_remaining_params!
+
+            api_params = { "custom_fields.#{gid}.is_set" => 'true' }
+            task_selector = []
+            [api_params, task_selector]
+          end
+        end
+
         # custom_field_#{gid}.variant = 'is'
         class Is < CustomFieldVariant
           def convert
-            unless remaining_params.length == 1
-              raise "Teach me how to handle these remaining keys for #{variant_key}: #{remaining_params}"
-            end
+            selected_options = fetch_solo_param("custom_field_#{gid}.selected_options").split('~')
 
-            key, values = remaining_params.to_a[0]
-            convert_custom_field_is_arg(key, values)
-          end
-
-          private
-
-          def convert_custom_field_is_arg(key, values)
             empty_task_selector = []
-
-            if key.end_with? '.selected_options'
-              raise "Too many values found for #{key}: #{values}" if values.length != 1
-
-              return [{ "custom_fields.#{gid}.value" => values[0] },
-                      empty_task_selector]
+            if selected_options.length == 1
+              [{ "custom_fields.#{gid}.value" => selected_options[0] },
+               empty_task_selector]
+            else
+              # As of 2023-01,
+              # https://developers.asana.com/reference/searchtasksforworkspace
+              # says "Not Supported: searching for multiple exact
+              # matches of a custom field".  So I guess we have to
+              # search this manually.
+              api_params = { "custom_fields.#{gid}.is_set" => 'true' }
+              task_selector = [:custom_field_gid_value_contains_any_gid, gid, selected_options]
+              [api_params, task_selector]
             end
-
-            raise "Teach me how to handle #{key} = #{values}"
           end
         end
       end

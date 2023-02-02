@@ -49,6 +49,7 @@ module Checkoff
         VARIANTS = {
           'is' => CustomFieldVariant::Is,
           'no_value' => CustomFieldVariant::NoValue,
+          'any_value' => CustomFieldVariant::AnyValue,
           'is_not' => CustomFieldVariant::IsNot,
           'less_than' => CustomFieldVariant::LessThan,
           'greater_than' => CustomFieldVariant::GreaterThan,
