@@ -17,6 +17,21 @@ module Checkoff
       object.is_a?(Array) && !object.empty? && [fn_name, fn_name.to_s].include?(object[0])
     end
 
+    def pull_custom_field_or_raise(task, custom_field_gid)
+      custom_fields = task.custom_fields
+      if custom_fields.nil?
+        raise "Could not find custom_fields under task (was 'custom_fields' included in 'extra_fields'?)"
+      end
+
+      matched_custom_field = custom_fields.find { |data| data.fetch('gid') == custom_field_gid }
+      if matched_custom_field.nil?
+        raise "Could not find custom field with gid #{custom_field_gid} " \
+              "in task #{task.gid} with custom fields #{custom_fields}"
+      end
+
+      matched_custom_field
+    end
+
     attr_reader :task_selector
   end
 
@@ -91,6 +106,22 @@ module Checkoff
     end
   end
 
+  # :custom_field_gid_value function
+  class CustomFieldGidValueFunctionEvaluator < FunctionEvaluator
+    def matches?
+      fn?(task_selector, :custom_field_gid_value)
+    end
+
+    def evaluate_arg?(_index)
+      false
+    end
+
+    def evaluate(task, custom_field_gid)
+      custom_field = pull_custom_field_or_raise(task, custom_field_gid)
+      custom_field['display_value']
+    end
+  end
+
   # :custom_field_gid_value_contains_any_gid function
   class CustomFieldGidValueContainsAnyGidFunctionEvaluator < FunctionEvaluator
     def matches?
@@ -108,20 +139,6 @@ module Checkoff
     end
 
     private
-
-    def pull_custom_field_or_raise(task, custom_field_gid)
-      custom_fields = task.custom_fields
-      if custom_fields.nil?
-        raise "Could not find custom_fields under task (was 'custom_fields' included in 'extra_fields'?)"
-      end
-
-      matched_custom_field = custom_fields.find { |data| data.fetch('gid') == custom_field_gid }
-      if matched_custom_field.nil?
-        raise "Could not find custom field with gid #{custom_field_gid} in #{task.gid} with #{custom_fields}"
-      end
-
-      matched_custom_field
-    end
 
     def pull_enum_values(custom_field)
       resource_subtype = custom_field.fetch('resource_subtype')
@@ -164,6 +181,7 @@ module Checkoff
       NilPFunctionEvaluator,
       TagPFunctionEvaluator,
       CustomFieldValueFunctionEvaluator,
+      CustomFieldGidValueFunctionEvaluator,
       CustomFieldGidValueContainsAnyGidFunctionEvaluator,
       AndFunctionEvaluator,
     ].freeze

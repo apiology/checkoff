@@ -100,8 +100,15 @@ module Checkoff
               raise "Teach me how to handle these remaining keys for #{variant_key}: #{remaining_params}"
             end
 
-            empty_task_selector = []
-            [{ "custom_fields.#{gid}.is_set" => 'false' }, empty_task_selector]
+            api_params = { "custom_fields.#{gid}.is_set" => 'false' }
+            # As of 2023-02, the 'is_set' => 'false' seems to not do
+            # the intuitive thing on multi-select fields; it either
+            # operates as a no-op or operates the same as 'true'; not
+            # sure.
+            #
+            # Let's handle those with a filter afterwards.
+            task_selector = [:nil?, [:custom_field_gid_value, gid]]
+            [api_params, task_selector]
           end
         end
 
