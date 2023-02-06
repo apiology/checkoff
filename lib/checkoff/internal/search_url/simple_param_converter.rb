@@ -71,9 +71,14 @@ module Checkoff
         # Handle 'completion' search url param
         class Completion < SimpleParam
           def convert
-            raise "Teach me how to handle #{key} = #{values}" if single_value != 'incomplete'
-
-            ['completed', false]
+            case single_value
+            when 'incomplete'
+              ['completed', false]
+            when 'complete'
+              ['completed', true]
+            else
+              raise "Teach me how to handle #{key} = #{values}"
+            end
           end
         end
 
