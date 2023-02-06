@@ -258,6 +258,19 @@ class TestSearchUrlParser < ClassTest
                  e.message
   end
 
+  def test_convert_params_21
+    search_url_parser = get_test_object
+    url = 'https://app.asana.com/0/search?completion=complete&subtask=is_not_subtask&any_projects.ids=123_column_456'
+    asana_api_params = {
+      'completed' => true,
+      'is_subtask' => false,
+      'sections.any' => '456',
+    }
+    task_selector = []
+    assert_equal([asana_api_params, task_selector],
+                 search_url_parser.convert_params(url))
+  end
+
   def class_under_test
     Checkoff::Internal::SearchUrl::Parser
   end
