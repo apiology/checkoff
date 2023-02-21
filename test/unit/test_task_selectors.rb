@@ -7,6 +7,8 @@ require 'checkoff/task_selectors'
 class TestTaskSelectors < ClassTest
   extend Forwardable
 
+  def_delegators(:@mocks, :tasks)
+
   let_mock :custom_field, :task, :custom_field_gid, :task_gid
 
   def test_filter_via_custom_field_gid_values_gids_no_enum_value
@@ -241,6 +243,13 @@ class TestTaskSelectors < ClassTest
   def test_filter_via_task_selector_simple
     task_selectors = get_test_object
     assert(task_selectors.filter_via_task_selector(task, []))
+  end
+
+  def test_filter_via_task_selector_due
+    task_selectors = get_test_object do
+      tasks.expects(:task_ready?).with(task).returns(true)
+    end
+    assert(task_selectors.filter_via_task_selector(task, [:due]))
   end
 
   def class_under_test
