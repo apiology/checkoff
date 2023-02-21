@@ -3,8 +3,10 @@
 module Checkoff
   # Base class to evaluate a task selector function given fully evaluated arguments
   class FunctionEvaluator
-    def initialize(task_selector:)
+    def initialize(task_selector:,
+                   tasks:)
       @task_selector = task_selector
+      @tasks = tasks
     end
 
     def evaluate_arg?(_index)
@@ -80,6 +82,17 @@ module Checkoff
 
     def evaluate(task, tag_name)
       task.tags.map(&:name).include? tag_name
+    end
+  end
+
+  # :due function
+  class DuePFunctionEvaluator < FunctionEvaluator
+    def matches?
+      fn?(task_selector, :due)
+    end
+
+    def evaluate(task)
+      @tasks.task_ready?(task)
     end
   end
 
@@ -174,8 +187,10 @@ module Checkoff
 
   # Evaluator task selectors against a task
   class TaskSelectorEvaluator
-    def initialize(task:)
+    def initialize(task:,
+                   tasks: Checkoff::Tasks.new)
       @task = task
+      @tasks = tasks
     end
 
     FUNCTION_EVALUTORS = [
@@ -186,13 +201,15 @@ module Checkoff
       CustomFieldGidValueFunctionEvaluator,
       CustomFieldGidValueContainsAnyGidFunctionEvaluator,
       AndFunctionEvaluator,
+      DuePFunctionEvaluator,
     ].freeze
 
     def evaluate(task_selector)
       return true if task_selector == []
 
       FUNCTION_EVALUTORS.each do |evaluator_class|
-        evaluator = evaluator_class.new(task_selector: task_selector)
+        evaluator = evaluator_class.new(task_selector: task_selector,
+                                        tasks: tasks)
 
         next unless evaluator.matches?
 
@@ -216,6 +233,6 @@ module Checkoff
       evaluator.evaluate(task, *evaluated_args)
     end
 
-    attr_reader :task, :task_selector
+    attr_reader :task, :tasks, :task_selector
   end
 end

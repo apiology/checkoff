@@ -20,16 +20,22 @@ module Checkoff
     LONG_CACHE_TIME = MINUTE * 15
     SHORT_CACHE_TIME = MINUTE
 
-    def initialize(config: Checkoff::Internal::ConfigLoader.load(:asana))
+    def initialize(config: Checkoff::Internal::ConfigLoader.load(:asana),
+                   tasks: Checkoff::Tasks.new)
       @config = config
+      @tasks = tasks
     end
 
     # @param [Hash<Symbol, Object>] task_selector Filter based on
     #        description.  Examples: {tag: 'foo'} {:not {tag: 'foo'} (:tag 'foo')
     def filter_via_task_selector(task, task_selector)
-      evaluator = TaskSelectorEvaluator.new(task: task)
+      evaluator = TaskSelectorEvaluator.new(task: task, tasks: tasks)
       evaluator.evaluate(task_selector)
     end
+
+    private
+
+    attr_reader :tasks
 
     # bundle exec ./task_selectors.rb
     # :nocov:
