@@ -24,9 +24,9 @@ module Checkoff
     SHORT_CACHE_TIME = MINUTE
 
     def initialize(config: Checkoff::Internal::ConfigLoader.load(:asana),
-                   workspaces: Checkoff::Workspaces.new(config: config),
-                   clients: Checkoff::Clients.new(config: config),
-                   client: clients.client)
+                   client: Checkoff::Clients.new(config: config).client,
+                   workspaces: Checkoff::Workspaces.new(config: config,
+                                                        client: client))
       @config = config
       @workspaces = workspaces
       @client = client
