@@ -252,6 +252,28 @@ class TestTaskSelectors < ClassTest
     assert(task_selectors.filter_via_task_selector(task, [:due]))
   end
 
+  def test_filter_via_custom_field_gid_value_contains_all_gids
+    custom_field_gid = '123'
+    enum_value_gid = '456'
+    custom_field = {
+      'gid' => custom_field_gid,
+      'enum_value' => {
+        'gid' => enum_value_gid,
+        'enabled' => true,
+      },
+      'resource_type' => 'custom_field',
+      'resource_subtype' => 'enum',
+    }
+    task_selectors = get_test_object do
+      custom_fields = [custom_field]
+      task.expects(:custom_fields).returns(custom_fields)
+    end
+    assert(task_selectors.filter_via_task_selector(task,
+                                                   ['custom_field_gid_value_contains_all_gids',
+                                                    custom_field_gid,
+                                                    [enum_value_gid]]))
+  end
+
   def class_under_test
     Checkoff::TaskSelectors
   end

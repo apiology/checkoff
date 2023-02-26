@@ -4,6 +4,7 @@ require_relative '../test_helper'
 require_relative '../class_test'
 require 'checkoff/internal/search_url'
 
+# rubocop:disable Metrics/ClassLength
 class TestSearchUrlParser < ClassTest
   def test_convert_params_1
     search_url_parser = get_test_object
@@ -271,7 +272,28 @@ class TestSearchUrlParser < ClassTest
                  search_url_parser.convert_params(url))
   end
 
+  def test_convert_params_22
+    search_url_parser = get_test_object
+    url = 'https://app.asana.com/0/search?subtask=is_not_subtask&any_projects.ids=123&not_projects.ids=123_column_456~123_column_789~123_column_12~123_column_34~56_column_78~56_column_90~56_column_1&custom_field_2.variant=no_value&custom_field_3.variant=no_value&custom_field_4.variant=contains_all&custom_field_4.selected_options=5~6~7~8'
+    asana_api_params = {
+      'custom_fields.2.is_set' => 'false',
+      'custom_fields.3.is_set' => 'false',
+      'custom_fields.4.is_set' => 'true',
+      'is_subtask' => false,
+      'projects.any' => '123',
+      'sections.not' => '456,789,12,34,78,90,1',
+    }
+    task_selector = [:and,
+                     [:and,
+                      [:nil?, [:custom_field_gid_value, '2']],
+                      [:nil?, [:custom_field_gid_value, '3']]],
+                     ['custom_field_gid_value_contains_all_gids', '4', %w[5 6 7 8]]]
+    assert_equal([asana_api_params, task_selector],
+                 search_url_parser.convert_params(url))
+  end
+
   def class_under_test
     Checkoff::Internal::SearchUrl::Parser
   end
 end
+# rubocop:enable Metrics/ClassLength

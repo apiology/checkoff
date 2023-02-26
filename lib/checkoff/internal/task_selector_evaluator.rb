@@ -35,6 +35,35 @@ module Checkoff
     end
 
     attr_reader :task_selector
+
+    def pull_enum_values(custom_field)
+      resource_subtype = custom_field.fetch('resource_subtype')
+      case resource_subtype
+      when 'enum'
+        [custom_field.fetch('enum_value')]
+      when 'multi_enum'
+        custom_field.fetch('multi_enum_values')
+      else
+        raise "Teach me how to handle resource_subtype #{resource_subtype}"
+      end
+    end
+
+    def find_gids(custom_field, enum_value)
+      if enum_value.nil?
+        []
+      else
+        raise "Unexpected enabled value on custom field: #{custom_field}" if enum_value.fetch('enabled') == false
+
+        [enum_value.fetch('gid')]
+      end
+    end
+
+    def pull_custom_field_values_gids(task, custom_field_gid)
+      custom_field = pull_custom_field_or_raise(task, custom_field_gid)
+      pull_enum_values(custom_field).flat_map do |enum_value|
+        find_gids(custom_field, enum_value)
+      end
+    end
   end
 
   # :and function
@@ -152,35 +181,23 @@ module Checkoff
         custom_field_values_gids.include?(custom_field_value)
       end
     end
+  end
 
-    private
-
-    def pull_enum_values(custom_field)
-      resource_subtype = custom_field.fetch('resource_subtype')
-      case resource_subtype
-      when 'enum'
-        [custom_field.fetch('enum_value')]
-      when 'multi_enum'
-        custom_field.fetch('multi_enum_values')
-      else
-        raise "Teach me how to handle resource_subtype #{resource_subtype}"
-      end
+  # :custom_field_gid_value_contains_all_gids function
+  class CustomFieldGidValueContainsAllGidsFunctionEvaluator < FunctionEvaluator
+    def matches?
+      fn?(task_selector, :custom_field_gid_value_contains_all_gids)
     end
 
-    def find_gids(custom_field, enum_value)
-      if enum_value.nil?
-        []
-      else
-        raise "Unexpected enabled value on custom field: #{custom_field}" if enum_value.fetch('enabled') == false
-
-        [enum_value.fetch('gid')]
-      end
+    def evaluate_arg?(_index)
+      false
     end
 
-    def pull_custom_field_values_gids(task, custom_field_gid)
-      custom_field = pull_custom_field_or_raise(task, custom_field_gid)
-      pull_enum_values(custom_field).flat_map do |enum_value|
-        find_gids(custom_field, enum_value)
+    def evaluate(task, custom_field_gid, custom_field_values_gids)
+      actual_custom_field_values_gids = pull_custom_field_values_gids(task, custom_field_gid)
+
+      custom_field_values_gids.all? do |custom_field_value|
+        actual_custom_field_values_gids.include?(custom_field_value)
       end
     end
   end
@@ -200,6 +217,7 @@ module Checkoff
       CustomFieldValueFunctionEvaluator,
       CustomFieldGidValueFunctionEvaluator,
       CustomFieldGidValueContainsAnyGidFunctionEvaluator,
+      CustomFieldGidValueContainsAllGidsFunctionEvaluator,
       AndFunctionEvaluator,
       DuePFunctionEvaluator,
     ].freeze
