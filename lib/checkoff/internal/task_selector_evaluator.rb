@@ -125,6 +125,17 @@ module Checkoff
     end
   end
 
+  # :due_date_set function
+  class DueDateSetPFunctionEvaluator < FunctionEvaluator
+    def matches?
+      fn?(task_selector, :due_date_set)
+    end
+
+    def evaluate(task)
+      !task.due_at.nil? || !task.due_on.nil?
+    end
+  end
+
   # :custom_field_value function
   class CustomFieldValueFunctionEvaluator < FunctionEvaluator
     def matches?
@@ -220,6 +231,7 @@ module Checkoff
       CustomFieldGidValueContainsAllGidsFunctionEvaluator,
       AndFunctionEvaluator,
       DuePFunctionEvaluator,
+      DueDateSetPFunctionEvaluator,
     ].freeze
 
     def evaluate(task_selector)
