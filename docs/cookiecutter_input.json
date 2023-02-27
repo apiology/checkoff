@@ -1,4 +1,5 @@
 {
+    "_output_dir": "/Users/broz/src/checkoff/.git/cookiecutter",
     "_template": "https://github.com/apiology/cookiecutter-gem",
     "email": "vince@broz.cc",
     "full_name": "Vince Broz",
