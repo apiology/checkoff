@@ -33,11 +33,13 @@ Gem::Specification.new do |spec|
   # 0.58.0 and 0.57.0 don't seem super compatible with signatures, and
   # magit doesn't seem to want to use the bundled version at the moment,
   # so let's favor the more recent version...
-  spec.add_development_dependency 'overcommit', ['>=0.58.0']
+  spec.add_development_dependency 'overcommit', ['>=0.60.0', '<0.61.0']
   spec.add_development_dependency 'pry'
   spec.add_development_dependency 'rake', '~> 13.0'
   spec.add_development_dependency 'rspec', '>=3.4'
-  spec.add_development_dependency 'rubocop', ['~> 1.36']
+  # I haven't adapted things to Gemspec/DevelopmentDependencies yet,
+  # which arrives in 1.44
+  spec.add_development_dependency 'rubocop', ['~> 1.36', '<1.44']
   spec.add_development_dependency 'rubocop-rake'
   # ensure version with RSpec/VerifiedDoubleReference
   spec.add_development_dependency 'rubocop-rspec', ['>=2.10.0']
