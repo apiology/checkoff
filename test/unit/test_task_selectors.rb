@@ -4,6 +4,7 @@ require_relative 'test_helper'
 require_relative 'class_test'
 require 'checkoff/task_selectors'
 
+# rubocop:disable Metrics/ClassLength
 class TestTaskSelectors < ClassTest
   extend Forwardable
 
@@ -274,7 +275,16 @@ class TestTaskSelectors < ClassTest
                                                     [enum_value_gid]]))
   end
 
+  def test_filter_via_task_selector_due_date_set
+    task_selectors = get_test_object do
+      task.expects(:due_at).returns(nil)
+      task.expects(:due_on).returns(nil)
+    end
+    refute(task_selectors.filter_via_task_selector(task, [:due_date_set]))
+  end
+
   def class_under_test
     Checkoff::TaskSelectors
   end
 end
+# rubocop:enable Metrics/ClassLength
