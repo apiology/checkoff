@@ -54,37 +54,6 @@ Naming/VariableNumber:
   Enabled: true
   EnforcedStyle: snake_case
 
-# http://www.betterspecs.org/#single
-#
-# > in tests that are not isolated (e.g. ones that integrate with a
-# > DB, an external webservice, or end-to-end-tests), you take a
-# > massive performance hit to do the same setup over and over again,
-# > just to set a different expectation in each test. In these sorts
-# > of slower tests, I think it's fine to specify more than one
-# > isolated behavior.
-RSpec/MultipleExpectations:
-  Exclude:
-    - 'feature/**/*.rb'
-
-# Bump this up a bit for now.  I find useful, readable specs at level
-# 4, for now at least.
-#
-# The logic here makes sense to me:
-# https://github.com/datarockets/ruby-style/issues/36
-RSpec/NestedGroups:
-  Max: 4
-
-# Likewise
-RSpec/MultipleMemoizedHelpers:
-  Max: 8
-
-# Ensure we reference constants on classes in instance_double() so
-# that a renamed class is caught and doubles are always actually
-# verified.
-RSpec/VerifiedDoubleReference:
-  Enabled: true
-  EnforcedStyle: constant
-
 #
 # Add 'XX X' to the standard list
 #
