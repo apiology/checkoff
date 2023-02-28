@@ -15,8 +15,11 @@ module Checkoff
     attr_reader :projects
 
     def initialize(config: Checkoff::Internal::ConfigLoader.load(:asana),
-                   projects: Checkoff::Projects.new(config: config))
+                   client: Checkoff::Clients.new(config: config).client,
+                   projects: Checkoff::Projects.new(config: config,
+                                                    client: client))
       @config = config
+      @client = client
       @projects = projects
     end
 
@@ -27,20 +30,32 @@ module Checkoff
       raw_tasks = projects.tasks_from_project(project,
                                               extra_fields: extra_fields + ['assignee_section.name'])
       active_tasks = projects.active_tasks(raw_tasks)
-      by_my_tasks_section(active_tasks)
+      by_my_tasks_section(active_tasks, project.gid)
+    end
+
+    def section_key(name)
+      return nil if name == 'Recently assigned'
+
+      name
     end
 
     # Given a list of tasks in 'My Tasks', pull a Hash of tasks with
     # section name -> task list
-    def by_my_tasks_section(tasks)
+    def by_my_tasks_section(tasks, project_gid)
       by_section = {}
+      sections = client.sections.get_sections_for_project(project_gid: project_gid)
+      sections.each { |section| by_section[section_key(section.name)] = [] }
       tasks.each do |task|
         assignee_section = task.assignee_section
-        current_section = assignee_section.name
+        current_section = section_key(assignee_section.name)
         by_section[current_section] ||= []
         by_section[current_section] << task
       end
       by_section
     end
+
+    private
+
+    attr_reader :client
   end
 end
