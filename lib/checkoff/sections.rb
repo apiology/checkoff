@@ -26,7 +26,7 @@ module Checkoff
                    time: Time)
       @projects = projects
       @workspaces = workspaces
-      @my_tasks = Checkoff::MyTasks.new(config: config, projects: projects)
+      @my_tasks = Checkoff::MyTasks.new(config: config, projects: projects, client: client)
       @client = client
       @time = time
     end
@@ -89,19 +89,24 @@ module Checkoff
     # Given a project object, pull all tasks, then provide a Hash of
     # tasks with section name -> task list of the uncompleted tasks
     def tasks_by_section_for_project(project, extra_fields: [])
-      # print("project: #{project}")
       raw_tasks = projects.tasks_from_project(project, extra_fields: extra_fields)
-      # print("raw_tasks[0]: #{raw_tasks[0]}")
       active_tasks = projects.active_tasks(raw_tasks)
       by_section(active_tasks, project.gid)
+    end
+
+    def section_key(name)
+      inbox_section_names = ['(no section)', 'Untitled section', 'Inbox']
+      return nil if inbox_section_names.include?(name)
+
+      name
     end
 
     # Given a list of tasks, pull a Hash of tasks with section name -> task list
     def by_section(tasks, project_gid)
       by_section = {}
-      tasks.each do |task|
-        file_task_by_section(by_section, task, project_gid)
-      end
+      sections = client.sections.get_sections_for_project(project_gid: project_gid)
+      sections.each { |section| by_section[section_key(section.name)] = [] }
+      tasks.each { |task| file_task_by_section(by_section, task, project_gid) }
       by_section
     end
     cache_method :by_section, LONG_CACHE_TIME
@@ -110,11 +115,9 @@ module Checkoff
       membership = task.memberships.find { |m| m['project']['gid'] == project_gid }
       raise "Could not find task in project_gid #{project_gid}: #{task}" if membership.nil?
 
-      current_section = membership['section']['name']
-      inbox_section_names = ['(no section)', 'Untitled section', 'Inbox']
-      current_section = nil if inbox_section_names.include?(current_section)
-      by_section[current_section] ||= []
-      by_section[current_section] << task
+      current_section = section_key(membership['section']['name'])
+
+      by_section.fetch(current_section) << task
     end
 
     def project_or_raise(workspace_name, project_name)
