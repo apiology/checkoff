@@ -29,7 +29,7 @@ module Checkoff
     # pulls a Hash of subtasks broken out by section
     def by_section(tasks)
       current_section = nil
-      by_section = {}
+      by_section = { nil => [] }
       tasks.each do |task|
         current_section, by_section = file_task_by_section(current_section,
                                                            by_section, task)
