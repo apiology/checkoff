@@ -61,9 +61,10 @@ module Checkoff
     def file_task_by_section(current_section, by_section, task)
       if subtask_section?(task)
         current_section = task.name
+        raise "More than one section named #{task.name}" if by_section.key? task.name
+
         by_section[current_section] = []
       else
-        by_section[current_section] ||= []
         by_section[current_section] << task
       end
       [current_section, by_section]

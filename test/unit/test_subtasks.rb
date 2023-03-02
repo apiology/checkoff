@@ -123,6 +123,17 @@ class TestSubtasks < ClassTest
                                       subtask_section_3, subtask_3a]))
   end
 
+  def test_by_section_dupes
+    subtasks = get_test_object { mock_by_section }
+    e = assert_raises(RuntimeError) do
+      subtasks.by_section([subtask_section_1, subtask_1a, subtask_1b,
+                           subtask_section_1, subtask_1a, subtask_1b,
+                           subtask_section_2,
+                           subtask_section_3, subtask_3a])
+    end
+    assert_equal('More than one section named 1:', e.message)
+  end
+
   def expect_task_options_pulled
     projects.expects(:task_options).returns(task_options)
   end
