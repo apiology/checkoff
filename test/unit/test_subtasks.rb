@@ -114,11 +114,13 @@ class TestSubtasks < ClassTest
   def test_by_section
     subtasks = get_test_object { mock_by_section }
     assert_equal({
-                   '1:' => [subtask_1a, subtask_1b],
+                   nil => [subtask_1a],
+                   '1:' => [subtask_1b],
                    '2:' => [],
                    '3:' => [subtask_3a],
                  },
-                 subtasks.by_section([subtask_section_1, subtask_1a, subtask_1b,
+                 subtasks.by_section([subtask_1a,
+                                      subtask_section_1, subtask_1b,
                                       subtask_section_2,
                                       subtask_section_3, subtask_3a]))
   end
