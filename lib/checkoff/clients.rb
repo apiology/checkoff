@@ -27,7 +27,7 @@ module Checkoff
     def client
       @client ||= @asana_client_class.new do |c|
         c.authentication :access_token, @config.fetch(:personal_access_token)
-        c.default_headers 'asana-enable' => 'new_project_templates,new_user_task_lists,new_memberships'
+        c.default_headers 'asana-enable' => 'new_project_templates,new_user_task_lists,new_memberships,new_goal_memberships'
       end
     end
 
