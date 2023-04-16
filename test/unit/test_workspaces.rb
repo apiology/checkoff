@@ -7,11 +7,11 @@ require_relative 'base_asana'
 class TestWorkspaces < BaseAsana
   extend Forwardable
 
-  def_delegators(:@mocks, :client)
+  def_delegators(:@mocks, :client, :asana_workspace)
 
   let_mock :workspace_a_name, :workspace_a, :workspace_a_gid,
            :workspace_b_name, :workspace_b, :workspace_b_gid,
-           :workspaces
+           :workspaces, :workspace_a
 
   def mock_workspace_or_raise_nil
     client.expects(:workspaces).returns(workspaces)
@@ -37,12 +37,24 @@ class TestWorkspaces < BaseAsana
     assert_equal(workspace_a, asana.workspace_or_raise(workspace_a_name))
   end
 
+  def expect_default_workspace_gid_config_fetched
+    @mocks[:config].expects(:fetch).with(:default_workspace_gid)
+      .returns(workspace_a_gid)
+  end
+
   def test_default_workspace_gid
     asana = get_test_object do
-      @mocks[:config].expects(:fetch).with(:default_workspace_gid)
-        .returns(workspace_a_gid)
+      expect_default_workspace_gid_config_fetched
     end
     assert_equal(workspace_a_gid, asana.send(:default_workspace_gid))
+  end
+
+  def test_default_workspace
+    asana = get_test_object do
+      expect_default_workspace_gid_config_fetched
+      asana_workspace.expects(:find_by_id).with(client, workspace_a_gid).returns(workspace_a)
+    end
+    assert_equal(workspace_a, asana.default_workspace)
   end
 
   def class_under_test
