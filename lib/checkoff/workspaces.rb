@@ -18,9 +18,11 @@ module Checkoff
     SHORT_CACHE_TIME = MINUTE
 
     def initialize(config: Checkoff::Internal::ConfigLoader.load(:asana),
-                   client: Checkoff::Clients.new(config: config).client)
+                   client: Checkoff::Clients.new(config: config).client,
+                   asana_workspace: Asana::Resources::Workspace)
       @config = config
       @client = client
+      @asana_workspace = asana_workspace
     end
 
     # Pulls an Asana workspace object
@@ -28,6 +30,10 @@ module Checkoff
       client.workspaces.find_all.find do |workspace|
         workspace.name == workspace_name
       end
+    end
+
+    def default_workspace
+      @asana_workspace.find_by_id(client, default_workspace_gid)
     end
 
     def workspace_or_raise(workspace_name)
