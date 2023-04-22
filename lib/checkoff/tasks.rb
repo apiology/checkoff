@@ -40,15 +40,13 @@ module Checkoff
     # Pull a specific task by name
     def task(workspace_name, project_name, task_name,
              section_name: :unspecified,
-             only_uncompleted: true)
-      project = projects.project(workspace_name, project_name)
-      tasks = if section_name == :unspecified
-                projects.tasks_from_project(project,
-                                            only_uncompleted: only_uncompleted)
-              else
-                @sections.tasks(workspace_name, project_name, section_name,
-                                only_uncompleted: only_uncompleted)
-              end
+             only_uncompleted: true,
+             extra_fields: [])
+      tasks = tasks_from_section(workspace_name,
+                                 project_name,
+                                 section_name: section_name,
+                                 only_uncompleted: only_uncompleted,
+                                 extra_fields: extra_fields)
       tasks.find { |task| task.name == task_name }
     end
 
@@ -66,6 +64,22 @@ module Checkoff
     end
 
     private
+
+    def tasks_from_section(workspace_name, project_name,
+                           section_name:,
+                           only_uncompleted:,
+                           extra_fields:)
+      if section_name == :unspecified
+        project = projects.project(workspace_name, project_name)
+        projects.tasks_from_project(project,
+                                    only_uncompleted: only_uncompleted,
+                                    extra_fields: extra_fields)
+      else
+        @sections.tasks(workspace_name, project_name, section_name,
+                        only_uncompleted: only_uncompleted,
+                        extra_fields: extra_fields)
+      end
+    end
 
     attr_reader :client
 
