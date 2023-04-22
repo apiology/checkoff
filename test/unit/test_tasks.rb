@@ -140,7 +140,9 @@ class TestTasks < BaseAsana
 
   def expect_tasks_from_project_pulled
     projects.expects(:tasks_from_project)
-      .with(project, only_uncompleted: only_uncompleted)
+      .with(project,
+            only_uncompleted: only_uncompleted,
+            extra_fields: [])
       .returns([task])
     task.expects(:name).returns(task_name)
   end
@@ -156,13 +158,12 @@ class TestTasks < BaseAsana
 
   def expect_tasks_from_section_pulled
     sections.expects(:tasks).with(workspace_name, project_name, section_name,
-                                  only_uncompleted: only_uncompleted).returns([task])
+                                  only_uncompleted: only_uncompleted,
+                                  extra_fields: []).returns([task])
     task.expects(:name).returns(task_name)
   end
 
   def mock_task_with_section
-    expect_projects_pulled
-    expect_project_pulled
     expect_tasks_from_section_pulled
   end
 
