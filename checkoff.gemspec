@@ -52,6 +52,7 @@ Gem::Specification.new do |spec|
   # ensure version with branch coverage
   spec.add_development_dependency 'simplecov', ['>=0.18.0']
   spec.add_development_dependency 'simplecov-lcov'
+  spec.add_development_dependency 'solargraph'
   spec.add_development_dependency 'undercover'
   spec.add_development_dependency 'webmock'
   spec.metadata = {
