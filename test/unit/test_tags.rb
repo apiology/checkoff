@@ -6,10 +6,11 @@ require_relative 'class_test'
 class TestTags < ClassTest
   extend Forwardable
 
-  def_delegators(:@mocks, :workspaces, :client)
+  def_delegators(:@mocks, :workspaces, :client, :projects)
 
   let_mock :workspace_name, :tag_name, :tag, :workspace, :workspace_gid,
-           :tags_api, :wrong_tag, :wrong_tag_name
+           :tags_api, :wrong_tag, :wrong_tag_name, :task_collection, :response,
+           :parsed_data, :response_body, :response_body_data
 
   def test_tag_or_raise_raises
     tags = get_test_object do
@@ -52,6 +53,102 @@ class TestTags < ClassTest
       expect_tags_pulled(tag_arr)
     end
     assert_equal(tag, tags.tag(workspace_name, tag_name))
+  end
+
+  def mock_tasks(only_uncompleted: true)
+    task_params = build_task_params(only_uncompleted)
+    task_options = generate_task_options
+    merged_task_options = generate_merged_task_options
+    task_endpoint = generate_task_endpoint
+    response_body = build_response_body
+
+    setup_project_expects(task_options)
+    setup_client_expects(task_endpoint, task_params, merged_task_options)
+    setup_response_expects(response_body)
+    setup_collection_expects
+  end
+
+  def build_task_params(only_uncompleted)
+    task_params = { limit: 100 }
+    task_params[:completed_since] = '9999-12-01' if only_uncompleted
+    task_params
+  end
+
+  def build_response_body
+    {
+      'data' => response_body_data,
+    }
+  end
+
+  def setup_project_expects(task_options)
+    projects.expects(:task_options).returns(task_options)
+  end
+
+  def setup_client_expects(task_endpoint, task_params, merged_task_options)
+    client.expects(:get).with(task_endpoint, params: task_params, options: merged_task_options).returns(response)
+  end
+
+  def setup_response_expects(response_body)
+    response.expects(:body).returns(response_body).at_least(1)
+  end
+
+  def setup_collection_expects
+    Asana::Collection.expects(:new).with([response_body_data, {}],
+                                         type: Asana::Resources::Task,
+                                         client: client)
+      .returns(task_collection)
+  end
+
+  def generate_task_options
+    {
+      per_page: 100,
+      options: {
+        fields: %w[name completed_at due_at due_on tags
+                   memberships.project.gid memberships.section.name dependencies],
+      },
+    }
+  end
+
+  def generate_merged_task_options
+    {
+      fields: %w[name completed_at due_at due_on tags
+                 memberships.project.gid memberships.section.name dependencies field1 field2],
+    }
+  end
+
+  def generate_task_endpoint
+    tag.expects(:gid).returns('tag_gid').at_least(1)
+    "/tags/#{tag.gid}/tasks"
+  end
+
+  def test_tasks
+    tags = get_test_object do
+      mock_tasks(only_uncompleted: true)
+    end
+
+    # Stub the tag_or_raise method to return the tag mock object
+    tags.stubs(:tag_or_raise).returns(tag)
+
+    # Call the tasks method with the necessary arguments
+    result = tags.tasks(workspace_name, tag_name, only_uncompleted: true, extra_fields: %w[field1 field2])
+
+    # Check that the tasks method returned the expected result
+    assert_equal(task_collection, result)
+  end
+
+  def test_tasks_with_completed
+    tags = get_test_object do
+      mock_tasks(only_uncompleted: false)
+    end
+
+    # Stub the tag_or_raise method to return the tag mock object
+    tags.stubs(:tag_or_raise).returns(tag)
+
+    # Call the tasks method with the necessary arguments and only_uncompleted set to false
+    result = tags.tasks(workspace_name, tag_name, only_uncompleted: false, extra_fields: %w[field1 field2])
+
+    # Check that the tasks method returned the expected result
+    assert_equal(task_collection, result)
   end
 
   def class_under_test

@@ -21,11 +21,28 @@ module Checkoff
     SHORT_CACHE_TIME = MINUTE
 
     def initialize(config: Checkoff::Internal::ConfigLoader.load(:asana),
-                   workspaces: Checkoff::Workspaces.new(config: config),
-                   clients: Checkoff::Clients.new(config: config),
-                   client: clients.client)
+                   clients: Checkoff::Clients.new(config: config).client,
+                   client: clients.client,
+                   projects: Checkoff::Projects.new(config: config, client: client),
+                   workspaces: Checkoff::Workspaces.new(config: config, client: client))
       @workspaces = workspaces
+      @projects = projects
       @client = client
+    end
+
+    def tasks(workspace_name, tag_name,
+              only_uncompleted: true,
+              extra_fields: [])
+      tag = tag_or_raise(workspace_name, tag_name)
+
+      options = build_task_options(projects.task_options, extra_fields, only_uncompleted)
+
+      params = build_params(options)
+
+      Asana::Collection.new(parse(client.get("/tags/#{tag.gid}/tasks",
+                                             params: params, options: options[:options])),
+                            type: Asana::Resources::Task,
+                            client: client)
     end
 
     def tag_or_raise(workspace_name, tag_name)
@@ -45,7 +62,26 @@ module Checkoff
 
     private
 
-    attr_reader :workspaces, :client
+    attr_reader :workspaces, :projects, :client
+
+    def build_task_options(task_options, extra_fields, only_uncompleted)
+      task_options[:options][:fields] += extra_fields
+      task_options[:completed_since] = '9999-12-01' if only_uncompleted
+      task_options
+    end
+
+    def build_params(options)
+      { limit: options[:per_page], completed_since: options[:completed_since] }.reject do |_, v|
+        v.nil? || Array(v).empty?
+      end
+    end
+
+    # https://github.com/Asana/ruby-asana/blob/master/lib/asana/resource_includes/response_helper.rb#L7
+    def parse(response)
+      data = response.body.fetch('data')
+      extra = response.body.except('data')
+      [data, extra]
+    end
 
     # bundle exec ./tags.rb
     # :nocov:
