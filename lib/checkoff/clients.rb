@@ -24,6 +24,7 @@ module Checkoff
       @asana_client_class = asana_client_class
     end
 
+    # @return [Asana::Client]
     def client
       @client ||= @asana_client_class.new do |c|
         c.authentication :access_token, @config.fetch(:personal_access_token)

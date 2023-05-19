@@ -56,6 +56,7 @@ module Checkoff
     end
     cache_method :project, LONG_CACHE_TIME
 
+    # @return [Asana::Project]
     def project_or_raise(workspace_name, project_name)
       project = project(workspace_name, project_name)
       raise "Could not find project #{project_name} under workspace #{workspace_name}." if project.nil?
