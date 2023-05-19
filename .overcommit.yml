@@ -35,7 +35,7 @@ PreCommit:
       - '**/Gemfile'
       - '**/Rakefile'
       - 'bin/*'
-      - 'script/*'
+      - 'exe/*'
     exclude:
       - db/migrate/*.rb
       - db/schema.rb
@@ -71,8 +71,6 @@ PreCommit:
 PrePush:
   Minitest:
     command: ['ruby', '-Ilib:test/unit:lib/checkoff', '-rbundler/setup', '-rminitest', "-e 'exit! Minitest.run'"]
-    include:
-      - 'test/unit/**/test*.rb'
     enabled: true
 
 #PostCheckout:
