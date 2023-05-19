@@ -140,6 +140,7 @@ GEM
     rack (3.0.6.1)
     rainbow (3.1.1)
     rake (13.0.3)
+    rbs (3.1.0)
     regexp_parser (2.6.0)
     reverse_markdown (2.1.1)
       nokogiri
@@ -237,6 +238,7 @@ DEPENDENCIES
   pry
   punchlist
   rake (~> 13.0)
+  rbs (> 3.0.3)
   rspec (>= 3.4)
   rubocop (~> 1.36, < 1.44)
   rubocop-minitest
