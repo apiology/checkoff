@@ -14,7 +14,7 @@ require 'asana/resource_includes/response_helper'
 
 require 'checkoff/internal/search_url'
 
-# https://developers.asana.com/docs/task-searches
+# https://developers.asana.com/reference/searchtasksforworkspace
 module Checkoff
   # Run task searches against the Asana API
   class TaskSearches
@@ -43,6 +43,10 @@ module Checkoff
       @asana_resources_collection_class = asana_resources_collection_class
     end
 
+    # @param [String] workspace_name
+    # @param [String] url
+    # @param [Array<String>] extra_fields
+    # @return [Array<Asana::Resources::Task>]
     def task_search(workspace_name, url, extra_fields: [])
       workspace = workspaces.workspace_or_raise(workspace_name)
       api_params, task_selector = @search_url_parser.convert_params(url)
