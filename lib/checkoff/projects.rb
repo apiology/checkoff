@@ -33,6 +33,7 @@ module Checkoff
     end
 
     # Default options used in Asana API to pull taskso
+    # @return [Hash]
     def task_options
       {
         per_page: 100,

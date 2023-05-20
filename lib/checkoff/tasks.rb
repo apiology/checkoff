@@ -3,6 +3,7 @@
 # frozen_string_literal: true
 
 require_relative 'sections'
+require 'asana'
 
 module Checkoff
   # Pull tasks from Asana
@@ -14,6 +15,7 @@ module Checkoff
     LONG_CACHE_TIME = MINUTE * 15
     SHORT_CACHE_TIME = MINUTE * 5
 
+    # @param sections [Checkoff::Sections]
     def initialize(config: Checkoff::Internal::ConfigLoader.load(:asana),
                    client: Checkoff::Clients.new(config: config).client,
                    sections: Checkoff::Sections.new(config: config,
@@ -38,6 +40,7 @@ module Checkoff
     end
 
     # Pull a specific task by name
+    # @return [Asana::Resources::Task, nil]
     def task(workspace_name, project_name, task_name,
              section_name: :unspecified,
              only_uncompleted: true,
@@ -50,6 +53,7 @@ module Checkoff
       tasks.find { |task| task.name == task_name }
     end
 
+    # @return [Asana::Resources::Task]
     def add_task(name,
                  workspace_gid: default_workspace_gid,
                  assignee_gid: default_assignee_gid)
@@ -65,12 +69,13 @@ module Checkoff
 
     private
 
+    # @return [Array<Asana::Resources::Task>]
     def tasks_from_section(workspace_name, project_name,
                            section_name:,
                            only_uncompleted:,
                            extra_fields:)
       if section_name == :unspecified
-        project = projects.project(workspace_name, project_name)
+        project = projects.project_or_raise(workspace_name, project_name)
         projects.tasks_from_project(project,
                                     only_uncompleted: only_uncompleted,
                                     extra_fields: extra_fields)
@@ -83,10 +88,12 @@ module Checkoff
 
     attr_reader :client
 
+    # @return [Checkoff::Projects]
     def projects
       @projects ||= @sections.projects
     end
 
+    # @return [String]
     def default_assignee_gid
       @config.fetch(:default_assignee_gid)
     end
@@ -99,13 +106,16 @@ module Checkoff
     end
 
     def incomplete_dependencies?(task)
-      # Avoid a reundant fetch.  Unfortunately, Ruby SDK allows
+      # Avoid a redundant fetch.  Unfortunately, Ruby SDK allows
       # dependencies to be fetched along with other attributes--but
       # then doesn't use it and does another HTTP GET!  At least this
       # way we can skip the extra HTTP GET in the common case when
       # there are no dependencies.
       #
       # https://github.com/Asana/ruby-asana/issues/125
+
+      # @sg-ignore
+      # @type [Array<Asana::Resources::Task>, nil]
       already_fetched_dependencies = task.instance_variable_get(:@dependencies)
       return false unless already_fetched_dependencies.nil? || already_fetched_dependencies.size.positive?
 
