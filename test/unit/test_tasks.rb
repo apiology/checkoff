@@ -148,7 +148,7 @@ class TestTasks < BaseAsana
   end
 
   def expect_project_pulled
-    projects.expects(:project).with(workspace_name, project_name)
+    projects.expects(:project_or_raise).with(workspace_name, project_name)
       .returns(project)
   end
 

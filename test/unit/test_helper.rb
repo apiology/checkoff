@@ -28,7 +28,7 @@ end
 
 require 'minitest/profile'
 require 'minitest/reporters'
-Minitest::Reporters.use! [Minitest::Reporters::DefaultReporter.new(show_test_location: true)]
+Minitest::Reporters.use! [Minitest::Reporters::DefaultReporter.new(location: true)]
 
 require_relative 'cachemethoddouble'
 require_relative '../../lib/checkoff'
