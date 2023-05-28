@@ -27,7 +27,7 @@ GEM
     imagen (0.1.8)
       parser (>= 2.5, != 2.5.1.1)
     iniparse (1.5.0)
-    jaro_winkler (1.5.4)
+    jaro_winkler (1.5.5)
     json (2.6.3)
     kramdown (2.4.0)
       rexml
@@ -45,9 +45,9 @@ GEM
       tomlrb
     mixlib-shellout (3.2.7)
       chef-utils
-    nokogiri (1.15.0-x86_64-darwin)
+    nokogiri (1.15.2-x86_64-darwin)
       racc (~> 1.4)
-    nokogiri (1.15.0-x86_64-linux)
+    nokogiri (1.15.2-x86_64-linux)
       racc (~> 1.4)
     overcommit (0.60.0)
       childprocess (>= 0.6.3, < 5)
@@ -172,4 +172,4 @@ DEPENDENCIES
   webmock
 
 BUNDLED WITH
-   2.2.33
+   2.3.26
