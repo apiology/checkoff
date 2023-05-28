@@ -2,6 +2,8 @@
 
 # frozen_string_literal: true
 
+require 'cgi'
+require 'uri'
 require_relative 'simple_param_converter'
 require_relative 'custom_field_param_converter'
 

@@ -46,7 +46,6 @@ Gem::Specification.new do |spec|
   spec.add_development_dependency 'rake', '~> 13.0'
   # ensure recent definitions
   spec.add_development_dependency 'rbs', ['>3.0.3']
-  spec.add_development_dependency 'rspec', '>=3.4'
   # I haven't adapted things to Gemspec/DevelopmentDependencies yet,
   # which arrives in 1.44
   spec.add_development_dependency 'rubocop', ['~> 1.36', '<1.44']

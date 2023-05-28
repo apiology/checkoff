@@ -36,6 +36,8 @@ module Checkoff
       @asana_workspace.find_by_id(client, default_workspace_gid)
     end
 
+    # @param [String] workspace_name
+    # @return [Asana::Resources::Workspace]
     def workspace_or_raise(workspace_name)
       workspace = workspace(workspace_name)
       raise "Could not find workspace #{workspace_name}" if workspace.nil?
