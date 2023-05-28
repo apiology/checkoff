@@ -12,7 +12,7 @@ GIT
 PATH
   remote: .
   specs:
-    checkoff (0.36.0)
+    checkoff (0.36.1)
       activesupport
       asana (> 0.10.0)
       cache_method
@@ -145,19 +145,6 @@ GEM
     reverse_markdown (2.1.1)
       nokogiri
     rexml (3.2.5)
-    rspec (3.11.0)
-      rspec-core (~> 3.11.0)
-      rspec-expectations (~> 3.11.0)
-      rspec-mocks (~> 3.11.0)
-    rspec-core (3.11.0)
-      rspec-support (~> 3.11.0)
-    rspec-expectations (3.11.1)
-      diff-lcs (>= 1.2.0, < 2.0)
-      rspec-support (~> 3.11.0)
-    rspec-mocks (3.11.1)
-      diff-lcs (>= 1.2.0, < 2.0)
-      rspec-support (~> 3.11.0)
-    rspec-support (3.11.1)
     rubocop (1.36.0)
       json (~> 2.3)
       parallel (~> 1.10)
@@ -239,7 +226,6 @@ DEPENDENCIES
   punchlist
   rake (~> 13.0)
   rbs (> 3.0.3)
-  rspec (>= 3.4)
   rubocop (~> 1.36, < 1.44)
   rubocop-minitest
   rubocop-rake
