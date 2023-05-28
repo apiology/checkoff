@@ -112,6 +112,21 @@ module Checkoff
             ['tags.any', tag_ids.join(',')]
           end
         end
+
+        # Handle 'sort' search url param
+        class Sort < SimpleParam
+          def convert
+            # https://developers.asana.com/reference/searchtasksforworkspace
+            conversion = {
+              'last_modified' => 'modified_at',
+              'due_date' => 'due_date',
+              'creation_time' => 'created_at',
+              'completion_time' => 'completed_at',
+              'likes' => 'likes',
+            }
+            ['sort_by', conversion.fetch(single_value)]
+          end
+        end
       end
 
       # Convert simple parameters - ones where the param name itself
@@ -139,6 +154,7 @@ module Checkoff
           'not_tags.ids' => SimpleParam::NotTagsIds,
           'any_tags.ids' => SimpleParam::AnyTagsIds,
           'subtask' => SimpleParam::Subtask,
+          'sort' => SimpleParam::Sort,
         }.freeze
 
         # https://developers.asana.com/docs/search-tasks-in-a-workspace
