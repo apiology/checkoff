@@ -19,7 +19,9 @@ module Checkoff
 
         def convert_params(url)
           url_params = CGI.parse(URI.parse(url).query)
+          # @sg-ignore
           custom_field_params, simple_url_params = partition_url_params(url_params)
+          # @sg-ignore
           custom_field_args, task_selector = convert_custom_field_params(custom_field_params)
           simple_url_args = convert_simple_params(simple_url_params)
           [custom_field_args.merge(simple_url_args), task_selector]
@@ -35,6 +37,8 @@ module Checkoff
           CustomFieldParamConverter.new(custom_field_params: custom_field_params).convert
         end
 
+        # @param url_params [Hash<String, String>]
+        # @return [Array(Hash<String, String>, Hash<String, String>)]
         def partition_url_params(url_params)
           url_params.to_a.partition do |key, _values|
             key.start_with? 'custom_field_'
