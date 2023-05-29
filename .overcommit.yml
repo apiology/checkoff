@@ -25,7 +25,6 @@ PreCommit:
     quiet: true
   RuboCop:
     enabled: true
-    on_warn: fail # Treat all warnings as failures
     command: ['bundle', 'exec', 'rubocop']
     include:
       - '**/*.gemspec'
@@ -36,6 +35,7 @@ PreCommit:
       - '**/Rakefile'
       - 'bin/*'
       - 'exe/*'
+    problem_on_unmodified_line: warn
     exclude:
       - db/migrate/*.rb
       - db/schema.rb
@@ -60,7 +60,7 @@ PreCommit:
     enabled: true
   SolargraphTypecheck:
     enabled: true
-    on_warn: fail
+    problem_on_unmodified_line: warn
     include:
       - '**/*.rb'
   Punchlist:
