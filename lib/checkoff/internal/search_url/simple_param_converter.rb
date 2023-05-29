@@ -99,9 +99,14 @@ module Checkoff
         # handle 'subtask' search url param
         class Subtask < SimpleParam
           def convert
-            return ['is_subtask', false] if single_value == 'is_not_subtask'
-
-            raise "Teach me how to handle #{key} = #{values}"
+            case single_value
+            when 'is_not_subtask'
+              ['is_subtask', false]
+            when 'is_subtask'
+              ['is_subtask', true]
+            else
+              raise "Teach me how to handle #{key} = #{values}"
+            end
           end
         end
 
