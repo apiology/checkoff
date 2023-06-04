@@ -14,7 +14,6 @@ require_relative 'tasks'
 module Checkoff
   # Filter lists of tasks using declarative selectors.
   class TaskSelectors
-    # @type [Integer]
     MINUTE = 60
     HOUR = MINUTE * 60
     DAY = 24 * HOUR
@@ -30,8 +29,10 @@ module Checkoff
       @tasks = tasks
     end
 
+    # @param [Asana::Resources::Task] task
     # @param [Hash<Symbol, Object>] task_selector Filter based on
     #        description.  Examples: {tag: 'foo'} {:not {tag: 'foo'} (:tag 'foo')
+    # @return [Boolean]
     def filter_via_task_selector(task, task_selector)
       evaluator = TaskSelectorEvaluator.new(task: task, tasks: tasks)
       evaluator.evaluate(task_selector)
