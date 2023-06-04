@@ -12,7 +12,7 @@ GIT
 PATH
   remote: .
   specs:
-    checkoff (0.39.0)
+    checkoff (0.39.1)
       activesupport
       asana (> 0.10.0)
       cache_method
@@ -74,7 +74,7 @@ GEM
       multi_json
     gli (2.21.0)
     hashdiff (1.0.1)
-    i18n (1.13.0)
+    i18n (1.14.0)
       concurrent-ruby (~> 1.0)
     imagen (0.1.8)
       parser (>= 2.5, != 2.5.1.1)
