@@ -39,6 +39,10 @@ module Checkoff
 
     # Given a workspace name and project name, then provide a Hash of
     # tasks with section name -> task list of the uncompleted tasks
+    # @param workspace_name [String]
+    # @param project_name [String, Symbol]
+    # @param extra_fields [Array<String>]
+    # @return [Hash{[String, nil] => Array<Asana::Resources::Task>}]
     def tasks_by_section(workspace_name, project_name, extra_fields: [])
       project = project_or_raise(workspace_name, project_name)
       if project_name == :my_tasks
@@ -64,6 +68,10 @@ module Checkoff
     cache_method :tasks, SHORT_CACHE_TIME
 
     # Pulls just names of tasks from a given section.
+    # @param workspace_name [String]
+    # @param project_name [String, Symbol]
+    # @param section_name [String, nil]
+    # @return [Array<String>]
     def section_task_names(workspace_name, project_name, section_name)
       tasks = tasks(workspace_name, project_name, section_name)
       tasks.map(&:name)
@@ -88,6 +96,8 @@ module Checkoff
 
     # Given a project object, pull all tasks, then provide a Hash of
     # tasks with section name -> task list of the uncompleted tasks
+    # @param project [Asana::Resources::Project]
+    # @return [Hash<[String,nil], Array<Asana::Resources::Task>>]
     def tasks_by_section_for_project(project, extra_fields: [])
       raw_tasks = projects.tasks_from_project(project, extra_fields: extra_fields)
       active_tasks = projects.active_tasks(raw_tasks)
@@ -102,6 +112,9 @@ module Checkoff
     end
 
     # Given a list of tasks, pull a Hash of tasks with section name -> task list
+    # @param tasks [Array<Asana::Resources::Task>]
+    # @param project_gid [String]
+    # @return [Hash<[String,nil], Array<Asana::Resources::Task>>]
     def by_section(tasks, project_gid)
       by_section = {}
       sections = client.sections.get_sections_for_project(project_gid: project_gid)
