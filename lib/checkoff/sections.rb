@@ -9,14 +9,23 @@ require_relative 'my_tasks'
 module Checkoff
   # Query different sections of Asana projects
   class Sections
+    # @!parse
+    #   extend CacheMethod::ClassMethods
+
     MINUTE = 60
+    # @sg-ignore
     LONG_CACHE_TIME = MINUTE * 15
+    # @sg-ignore
     SHORT_CACHE_TIME = MINUTE * 5
 
     extend Forwardable
 
     attr_reader :projects, :workspaces, :time, :my_tasks
 
+    # @param client [Asana::Client]
+    # @param projects [Checkoff::Projects]
+    # @param workspaces [Checkoff::Workspaces]
+    # @param time [Class<Time>]
     def initialize(config: Checkoff::Internal::ConfigLoader.load(:asana),
                    client: Checkoff::Clients.new(config: config).client,
                    projects: Checkoff::Projects.new(config: config,
@@ -32,8 +41,13 @@ module Checkoff
     end
 
     # Returns a list of Asana API section objects for a given project
+    # @param workspace_name [String]
+    # @param project_name [String, Symbol]
+    #
+    # @return [Array<Asana::Resources::Section>]
     def sections_or_raise(workspace_name, project_name)
       project = project_or_raise(workspace_name, project_name)
+      # @sg-ignore
       client.sections.get_sections_for_project(project_gid: project.gid)
     end
 
@@ -55,6 +69,14 @@ module Checkoff
     # XXX: Rename to section_tasks
     #
     # Pulls task objects from a specified section
+    #
+    # @param workspace_name [String]
+    # @param project_name [String, Symbol]
+    # @param section_name [String, nil]
+    # @param only_uncompleted [Boolean]
+    # @param extra_fields [Array<String>]
+    #
+    # @return [Array<Asana::Resources::Task>]
     def tasks(workspace_name, project_name, section_name,
               only_uncompleted: true,
               extra_fields: [])
@@ -71,27 +93,35 @@ module Checkoff
     # @param workspace_name [String]
     # @param project_name [String, Symbol]
     # @param section_name [String, nil]
+    #
     # @return [Array<String>]
     def section_task_names(workspace_name, project_name, section_name)
-      tasks = tasks(workspace_name, project_name, section_name)
-      tasks.map(&:name)
+      task_array = tasks(workspace_name, project_name, section_name)
+      task_array.map(&:name)
     end
     cache_method :section_task_names, SHORT_CACHE_TIME
 
+    # @param workspace_name [String]
+    # @param project_name [String, Symbol]
+    # @param section_name [String, nil]
+    #
+    # @return [Asana::Resources::Section]
     def section_or_raise(workspace_name, project_name, section_name)
-      section = section(workspace_name, project_name, section_name)
-      if section.nil?
+      s = section(workspace_name, project_name, section_name)
+      if s.nil?
         valid_sections = sections_or_raise(workspace_name, project_name).map(&:name)
 
         raise "Could not find section #{section_name} under project #{project_name} " \
               "under workspace #{workspace_name}.  Valid sections: #{valid_sections}"
       end
-      section
+      s
     end
     cache_method :section_or_raise, LONG_CACHE_TIME
 
     private
 
+    # @!attribute [r] client
+    #   @return [Asana::Client]
     attr_reader :client
 
     # Given a project object, pull all tasks, then provide a Hash of
@@ -117,6 +147,7 @@ module Checkoff
     # @return [Hash<[String,nil], Array<Asana::Resources::Task>>]
     def by_section(tasks, project_gid)
       by_section = {}
+      # @sg-ignore
       sections = client.sections.get_sections_for_project(project_gid: project_gid)
       sections.each { |section| by_section[section_key(section.name)] = [] }
       tasks.each { |task| file_task_by_section(by_section, task, project_gid) }
@@ -124,15 +155,25 @@ module Checkoff
     end
     cache_method :by_section, LONG_CACHE_TIME
 
+    # @param by_section [Hash{[String, nil] => Array<Asana::Resources::Task>}]
+    # @param task [Asana::Resources::Task]
+    # @param project_gid [String]
+    # @return [void]
     def file_task_by_section(by_section, task, project_gid)
+      # @type [Array<Hash>]
       membership = task.memberships.find { |m| m['project']['gid'] == project_gid }
       raise "Could not find task in project_gid #{project_gid}: #{task}" if membership.nil?
 
+      # @type [String, nil]
       current_section = section_key(membership['section']['name'])
 
+      # @sg-ignore
       by_section.fetch(current_section) << task
     end
 
+    # @param workspace_name [String]
+    # @param project_name [String, Symbol]
+    # @return [Asana::Resources::Project]
     def project_or_raise(workspace_name, project_name)
       project = projects.project(workspace_name, project_name)
       if project.nil?

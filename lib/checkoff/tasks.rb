@@ -64,13 +64,13 @@ module Checkoff
     end
 
     # Pull a specific task by name
+    # @param task_gid [String]
+    # @param extra_fields [Array<String>]
     # @return [Asana::Resources::Task, nil]
     def task_by_gid(task_gid,
-                    only_uncompleted: true,
                     extra_fields: [])
-      options = projects.task_options
-      options[:options][:fields] += extra_fields
-      options[:completed_since] = '9999-12-01' if only_uncompleted
+      options = projects.task_options.fetch(:options, {})
+      options[:fields] += extra_fields
       client.tasks.find_by_id(task_gid, options: options)
     end
 
