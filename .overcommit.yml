@@ -71,6 +71,7 @@ PreCommit:
 PrePush:
   RakeTarget:
     enabled: true
+    command: ['bundle', 'exec', 'rake']
     include:
       - 'Rakefile'
     targets:
