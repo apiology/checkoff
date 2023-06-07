@@ -185,7 +185,7 @@ module Checkoff
 
     def section(workspace_name, project_name, section_name)
       sections = sections_or_raise(workspace_name, project_name)
-      sections.find { |section| section.name.chomp(':') == section_name.chomp(':') }
+      sections.find { |section| section_key(section.name)&.chomp(':') == section_name&.chomp(':') }
     end
   end
 end
