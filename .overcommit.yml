@@ -75,9 +75,9 @@ PrePush:
     include:
       - 'Rakefile'
     targets:
-      - 'clean-coverage'
+      - 'clear_metrics'
       - 'test'
-      - 'coverage'
+      - 'undercover'
 
 #PostCheckout:
 #  ALL: # Special hook name that customizes all hooks of this type
