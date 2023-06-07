@@ -275,6 +275,23 @@ class TestSections < BaseAsana
     assert_equal([task_c], out)
   end
 
+  def mock_tasks_inbox
+    expect_project_pulled('Workspace 1', project_a, a_name)
+    expect_project_gid_pulled(project_a, a_gid)
+    expect_sections_client_pulled
+    expect_project_sections_pulled(a_gid, [empty_section])
+    allow_empty_section_name_pulled
+    expect_section_tasks_pulled(empty_section, empty_section_gid, [task_c],
+                                only_uncompleted: true)
+  end
+
+  def test_tasks_inbox
+    sections = get_test_object do
+      mock_tasks_inbox
+    end
+    assert_equal([task_c], sections.tasks('Workspace 1', a_name, nil))
+  end
+
   def test_tasks_section_not_found
     sections = get_test_object do
       expect_project_pulled('Workspace 1', project_a, a_name)
