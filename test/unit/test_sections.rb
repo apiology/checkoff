@@ -226,11 +226,11 @@ class TestSections < BaseAsana
     client.expects(:tasks).returns(tasks)
   end
 
-  def expect_section_tasks_pulled(only_uncompleted:)
+  def expect_section_tasks_pulled(section, section_gid, task_list, only_uncompleted:)
     expect_original_task_options_pulled
     expect_client_tasks_api_pulled
-    expect_section_1_gid_pulled
-    expect_tasks_api_called_for_section(section_1_gid, [task_c], only_uncompleted: only_uncompleted)
+    section.expects(:gid).returns(section_gid)
+    expect_tasks_api_called_for_section(section_gid, task_list, only_uncompleted: only_uncompleted)
   end
 
   def test_tasks_not_only_uncompleted
@@ -261,7 +261,8 @@ class TestSections < BaseAsana
     expect_project_sections_pulled(a_gid, [section_1, section_2])
     allow_section_1_name_pulled
     allow_section_2_name_pulled
-    expect_section_tasks_pulled(only_uncompleted: only_uncompleted)
+    expect_section_tasks_pulled(section_1, section_1_gid, [task_c],
+                                only_uncompleted: only_uncompleted)
   end
 
   let_mock :workspace_1_gid
