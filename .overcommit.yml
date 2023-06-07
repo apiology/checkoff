@@ -69,9 +69,14 @@ PreCommit:
     problem_on_unmodified_line: warn
 
 PrePush:
-  Minitest:
-    command: ['ruby', '-Ilib:test/unit:lib/checkoff', '-rbundler/setup', '-rminitest', "-e 'exit! Minitest.run'"]
+  RakeTarget:
     enabled: true
+    include:
+      - 'Rakefile'
+    targets:
+      - 'clean-coverage'
+      - 'test'
+      - 'coverage'
 
 #PostCheckout:
 #  ALL: # Special hook name that customizes all hooks of this type
