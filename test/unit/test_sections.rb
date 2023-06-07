@@ -218,10 +218,6 @@ class TestSections < BaseAsana
     section_1.expects(:gid).returns(section_1_gid)
   end
 
-  def expect_empty_section_gid_pulled
-    empty_section.expects(:gid).returns(empty_section_gid)
-  end
-
   def expect_client_tasks_api_pulled
     client.expects(:tasks).returns(tasks)
   end
