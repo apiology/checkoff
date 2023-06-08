@@ -17,7 +17,7 @@ module Checkoff
           attr_reader :gid, :remaining_params
 
           def ensure_no_remaining_params!
-            return if remaining_params.length.zero?
+            return if remaining_params.empty?
 
             raise "Teach me how to handle these remaining keys: #{remaining_params}"
           end
