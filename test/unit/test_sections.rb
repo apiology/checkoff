@@ -51,6 +51,11 @@ class TestSections < BaseAsana
     assert_equal([section_1, section_2], sections.sections_or_raise('Workspace 1', a_name))
   end
 
+  def test_sections_or_raise_nil_project_name
+    sections = get_test_object
+    assert_raises(ArgumentError) { sections.sections_or_raise('Workspace 1', nil) }
+  end
+
   def expect_my_tasks_pulled(project, tasks_arr, active_tasks_arr)
     @mocks[:projects]
       .expects(:tasks_from_project).with(project,
@@ -98,6 +103,16 @@ class TestSections < BaseAsana
     end
     assert_equal({ nil => [], assignee_section_name => [task_c] },
                  sections.tasks_by_section('Workspace 1', :my_tasks))
+  end
+
+  def test_tasks_by_section_nil_workspace_name
+    sections = get_test_object
+    assert_raises(ArgumentError) { sections.tasks_by_section(nil, :my_tasks) }
+  end
+
+  def test_tasks_by_section_nil_project_name
+    sections = get_test_object
+    assert_raises(ArgumentError) { sections.tasks_by_section('Workspace 1', nil) }
   end
 
   def test_tasks_by_section_some_in_empty_section
