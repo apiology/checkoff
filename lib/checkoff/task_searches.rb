@@ -100,5 +100,5 @@ end
 
 # :nocov:
 abs_program_name = File.expand_path($PROGRAM_NAME)
-Checkoff::TaskSearches.run if abs_program_name == __FILE__
+Checkoff::TaskSearches.run if abs_program_name == File.expand_path(__FILE__)
 # :nocov:

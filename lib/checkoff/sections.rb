@@ -58,6 +58,9 @@ module Checkoff
     # @param extra_fields [Array<String>]
     # @return [Hash{[String, nil] => Array<Asana::Resources::Task>}]
     def tasks_by_section(workspace_name, project_name, extra_fields: [])
+      raise 'Provided nil workspace name' if workspace_name.nil?
+      raise 'Provided nil project name' if project_name.nil?
+
       project = project_or_raise(workspace_name, project_name)
       if project_name == :my_tasks
         my_tasks.tasks_by_section_for_my_tasks(project, extra_fields: extra_fields)
@@ -175,6 +178,8 @@ module Checkoff
     # @param project_name [String, Symbol]
     # @return [Asana::Resources::Project]
     def project_or_raise(workspace_name, project_name)
+      raise 'Provide nil project_name' if project_name.nil?
+
       project = projects.project(workspace_name, project_name)
       if project.nil?
         raise "Could not find project #{project_name} " \

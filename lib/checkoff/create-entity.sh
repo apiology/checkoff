@@ -75,7 +75,7 @@ end
 
 # :nocov:
 abs_program_name = File.expand_path(\$PROGRAM_NAME)
-Checkoff::${class_name}.run if abs_program_name == __FILE__
+Checkoff::${class_name}.run if abs_program_name == File.expand_path(__FILE__)
 # :nocov:
 EOF
 
