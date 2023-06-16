@@ -41,7 +41,6 @@ class TestSearchUrlParser < ClassTest
       'projects.any' => '123',
       'custom_fields.456.is_set' => 'false',
       'custom_fields.789.value' => '1234',
-      'custom_fields.5678.is_set' => 'true',
       'custom_fields.34.less_than' => '100',
     }
 
@@ -56,9 +55,7 @@ class TestSearchUrlParser < ClassTest
   def test_convert_params_4
     search_url_parser = get_test_object
     url = 'https://app.asana.com/0/search?custom_field_123.variant=is_not&custom_field_123.selected_options=456~789'
-    asana_api_params = {
-      'custom_fields.123.is_set' => 'true',
-    }
+    asana_api_params = {}
     task_selector = ['not', ['custom_field_gid_value_contains_any_gid', '123', %w[456 789]]]
 
     assert_equal([asana_api_params, task_selector],
@@ -227,7 +224,6 @@ class TestSearchUrlParser < ClassTest
     url = 'https://app.asana.com/0/search?completion=incomplete&subtask=is_not_subtask&any_projects.ids=123&not_projects.ids=456&custom_field_789.variant=contains_any&custom_field_789.selected_options=12~34~56~78~90~1~2&custom_field_3.variant=is_not&custom_field_3.selected_options=4'
     asana_api_params = {
       'custom_fields.789.is_set' => 'true',
-      'custom_fields.3.is_set' => 'true',
       'completed' => false,
       'is_subtask' => false,
       'projects.any' => '123',
