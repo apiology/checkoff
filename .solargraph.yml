@@ -4,6 +4,7 @@ include:
   - ".git-hooks/**/*.rb"
 exclude:
   - spec/**/*
+  - feature/**/*
   - test/**/*
   - vendor/**/*
   - ".bundle/**/*"
@@ -12,7 +13,7 @@ domains: []
 reporters:
   - rubocop
   - require_not_found
-  - typecheck:strict
+  - typecheck:strong
   - update_errors
 formatter:
   rubocop:
