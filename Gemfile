@@ -19,15 +19,14 @@ gem 'overcommit', ['>=0.60.0', '<0.61.0']
 gem 'pry'
 gem 'punchlist'
 gem 'rake', '~> 13.0'
-# ensure recent definitions
-gem 'rbs', ['>3.0.3']
+gem 'rbs'
 gem 'rubocop', ['~> 1.52']
 gem 'rubocop-minitest'
 gem 'rubocop-rake'
 # ensure version with branch coverage
 gem 'simplecov', ['>=0.18.0']
 gem 'simplecov-lcov'
-gem 'solargraph'
+gem 'solargraph', ['>=0.49.0']
 gem 'undercover'
 gem 'webmock'
 
