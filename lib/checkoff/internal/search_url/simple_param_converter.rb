@@ -149,6 +149,16 @@ module Checkoff
             ['sort_by', conversion.fetch(single_value)]
           end
         end
+
+        # Handle 'milestone' search url param
+        class Milestone < SimpleParam
+          # @return [Array<String>]
+          def convert
+            return %w[resource_subtype milestone] if single_value == 'is_milestone'
+
+            raise "Teach me how to handle #{key} = #{values}"
+          end
+        end
       end
 
       # Convert simple parameters - ones where the param name itself
@@ -177,6 +187,7 @@ module Checkoff
           'any_tags.ids' => SimpleParam::AnyTagsIds,
           'subtask' => SimpleParam::Subtask,
           'sort' => SimpleParam::Sort,
+          'milestone' => SimpleParam::Milestone,
         }.freeze
 
         # https://developers.asana.com/docs/search-tasks-in-a-workspace
