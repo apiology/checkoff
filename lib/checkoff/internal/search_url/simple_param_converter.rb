@@ -31,12 +31,20 @@ module Checkoff
             end
           end
 
-          attr_reader :key, :values
+          # @return [String]
+          attr_reader :key
+
+          # @return [Array<String>]
+          attr_reader :values
 
           # Inputs:
           #   123_column_456 means "abc" project, "def" section
           #   123 means "abc" project
           #   123~456 means "abc" and "def" projects
+          #
+          # @param projects [Array<String>]
+          # @param sections [Array<String>]
+          # @return [void]
           def parse_projects_and_sections(projects, sections)
             single_value.split('~').each do |project_section_pair|
               # @sg-ignore
@@ -49,6 +57,8 @@ module Checkoff
             end
           end
 
+          # @param verb [String]
+          # @return [Array<String>]
           def convert_from_projects_and_sections(verb)
             projects = []
             sections = []
@@ -62,6 +72,7 @@ module Checkoff
 
         # Handle 'any_projects.ids' search url param
         class AnyProjectsIds < SimpleParam
+          # @return [Array<String>]
           def convert
             convert_from_projects_and_sections('any')
           end
@@ -69,6 +80,7 @@ module Checkoff
 
         # Handle 'not_projects.ids' search url param
         class NotProjectsIds < SimpleParam
+          # @return [Array<String>]
           def convert
             convert_from_projects_and_sections('not')
           end
@@ -76,6 +88,7 @@ module Checkoff
 
         # Handle 'completion' search url param
         class Completion < SimpleParam
+          # @return [Array<String>]
           def convert
             case single_value
             when 'incomplete'
@@ -90,6 +103,7 @@ module Checkoff
 
         # Handle 'not_tags.ids' search url param
         class NotTagsIds < SimpleParam
+          # @return [Array<String>]
           def convert
             tag_ids = single_value.split('~')
             ['tags.not', tag_ids.join(',')]
@@ -98,6 +112,7 @@ module Checkoff
 
         # handle 'subtask' search url param
         class Subtask < SimpleParam
+          # @return [Array<[String, Boolean]>]
           def convert
             case single_value
             when 'is_not_subtask'
@@ -112,6 +127,7 @@ module Checkoff
 
         # Handle 'any_tags.ids' search url param
         class AnyTagsIds < SimpleParam
+          # @return [Array<String>]
           def convert
             tag_ids = single_value.split('~')
             ['tags.any', tag_ids.join(',')]
@@ -120,6 +136,7 @@ module Checkoff
 
         # Handle 'sort' search url param
         class Sort < SimpleParam
+          # @return [Array<String>]
           def convert
             # https://developers.asana.com/reference/searchtasksforworkspace
             conversion = {
@@ -170,12 +187,14 @@ module Checkoff
         def convert_arg(key, values)
           # @type [Class<SimpleParam::SimpleParam>]
           clazz = ARGS.fetch(key)
+          # @sg-ignore
           # @type [SimpleParam::SimpleParam]
           obj = clazz.new(key: key, values: values)
           # @sg-ignore
           obj.convert
         end
 
+        # @return [Hash<String, Array<String>>]
         attr_reader :simple_url_params
       end
     end
