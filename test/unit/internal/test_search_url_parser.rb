@@ -342,6 +342,29 @@ class TestSearchUrlParser < ClassTest
                  search_url_parser.convert_params(url))
   end
 
+  def test_convert_params_25
+    search_url_parser = get_test_object
+    url = 'https://app.asana.com/0/search?milestone=is_milestone&any_projects.ids=123_column_456'
+    asana_api_params = {
+      'resource_subtype' => 'milestone',
+      'sections.any' => '456',
+    }
+    task_selector = []
+
+    assert_equal([asana_api_params, task_selector],
+                 search_url_parser.convert_params(url))
+  end
+
+  def test_convert_params_26
+    search_url_parser = get_test_object
+    url = 'https://app.asana.com/0/search?milestone=garbage&any_projects.ids=123_column_456'
+    e = assert_raises(RuntimeError) do
+      search_url_parser.convert_params(url)
+    end
+    assert_equal('Teach me how to handle milestone = ["garbage"]',
+                 e.message)
+  end
+
   def class_under_test
     Checkoff::Internal::SearchUrl::Parser
   end
