@@ -21,6 +21,10 @@ module Checkoff
     LONG_CACHE_TIME = MINUTE * 15
     SHORT_CACHE_TIME = MINUTE
 
+    # @sg-ignore
+    # @param [Hash] config
+    # @param [Asana::Client] client
+    # @param [Checkoff::Tasks] tasks
     def initialize(config: Checkoff::Internal::ConfigLoader.load(:asana),
                    client: Checkoff::Clients.new(config: config).client,
                    tasks: Checkoff::Tasks.new(config: config,
@@ -30,8 +34,8 @@ module Checkoff
     end
 
     # @param [Asana::Resources::Task] task
-    # @param [Hash<Symbol, Object>] task_selector Filter based on
-    #        description.  Examples: {tag: 'foo'} {:not {tag: 'foo'} (:tag 'foo')
+    # @param [Array<(Symbol, Array)>] task_selector Filter based on
+    #        task details.  Examples: [:tag, 'foo'] [:not, [:tag, 'foo']] [:tag, 'foo']
     # @return [Boolean]
     def filter_via_task_selector(task, task_selector)
       evaluator = TaskSelectorEvaluator.new(task: task, tasks: tasks)
@@ -40,16 +44,19 @@ module Checkoff
 
     private
 
+    # @return [Checkoff::Tasks]
     attr_reader :tasks
 
     # bundle exec ./task_selectors.rb
     # :nocov:
     class << self
+      # @sg-ignore
       # @return [String]
       def project_name
         ARGV[1] || raise('Please pass project name to pull tasks from as first argument')
       end
 
+      # @sg-ignore
       # @return [String]
       def workspace_name
         ARGV[0] || raise('Please pass workspace name as first argument')
@@ -61,6 +68,7 @@ module Checkoff
         JSON.parse(task_selector_json)
       end
 
+      # @return [void]
       def run
         require 'checkoff/projects'
 

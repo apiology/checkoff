@@ -3,28 +3,47 @@
 module Checkoff
   # Base class to evaluate a task selector function given fully evaluated arguments
   class FunctionEvaluator
+    # @param task_selector [Array<(Symbol, Array)>]
+    # @param tasks [Checkoff::Tasks]
     def initialize(task_selector:,
                    tasks:)
       @task_selector = task_selector
       @tasks = tasks
     end
 
+    # @sg-ignore
+    # @param _index [Integer]
     def evaluate_arg?(_index)
       true
     end
 
+    # @sg-ignore
+    # @return [Boolean]
+    def matches?
+      raise 'Override me!'
+    end
+
     private
 
+    # @param object [Object]
+    # @param fn_name [Symbol]
     def fn?(object, fn_name)
       object.is_a?(Array) && !object.empty? && [fn_name, fn_name.to_s].include?(object[0])
     end
 
+    # @sg-ignore
+    # @param task [Asana::Resources::Task]
+    # @param custom_field_gid [String]
+    # @return [Hash]
     def pull_custom_field_or_raise(task, custom_field_gid)
+      # @type [Array<Hash>]
       custom_fields = task.custom_fields
       if custom_fields.nil?
         raise "Could not find custom_fields under task (was 'custom_fields' included in 'extra_fields'?)"
       end
 
+      # @sg-ignore
+      # @type [Hash, nil]
       matched_custom_field = custom_fields.find { |data| data.fetch('gid') == custom_field_gid }
       if matched_custom_field.nil?
         raise "Could not find custom field with gid #{custom_field_gid} " \
@@ -34,8 +53,12 @@ module Checkoff
       matched_custom_field
     end
 
+    # @return [Array<(Symbol, Array)>]
     attr_reader :task_selector
 
+    # @sg-ignore
+    # @param custom_field [Hash]
+    # @return [Array<String>]
     def pull_enum_values(custom_field)
       resource_subtype = custom_field.fetch('resource_subtype')
       case resource_subtype
@@ -48,6 +71,9 @@ module Checkoff
       end
     end
 
+    # @param custom_field [Hash]
+    # @param enum_value [Object, nil]
+    # @return [Array<String>]
     def find_gids(custom_field, enum_value)
       if enum_value.nil?
         []
@@ -58,6 +84,9 @@ module Checkoff
       end
     end
 
+    # @param task [Asana::Resources::Task]
+    # @param custom_field_gid [String]
+    # @return [Array<String>]
     def pull_custom_field_values_gids(task, custom_field_gid)
       custom_field = pull_custom_field_or_raise(task, custom_field_gid)
       pull_enum_values(custom_field).flat_map do |enum_value|
@@ -72,6 +101,10 @@ module Checkoff
       fn?(task_selector, :and)
     end
 
+    # @param _task [Asana::Resources::Task]
+    # @param lhs [Object]
+    # @param rhs [Object]
+    # @return [Object]
     def evaluate(_task, lhs, rhs)
       lhs && rhs
     end
@@ -83,6 +116,9 @@ module Checkoff
       fn?(task_selector, :not)
     end
 
+    # @param _task [Asana::Resources::Task]
+    # @param subvalue [Object]
+    # @return [Boolean]
     def evaluate(_task, subvalue)
       !subvalue
     end
@@ -94,6 +130,9 @@ module Checkoff
       fn?(task_selector, :nil?)
     end
 
+    # @param _task [Asana::Resources::Task]
+    # @param subvalue [Object]
+    # @return [Boolean]
     def evaluate(_task, subvalue)
       subvalue.nil?
     end
@@ -105,10 +144,15 @@ module Checkoff
       fn?(task_selector, :tag)
     end
 
+    # @param _index [Integer]
     def evaluate_arg?(_index)
       false
     end
 
+    # @sg-ignore
+    # @param task [Asana::Resources::Task]
+    # @param tag_name [String]
+    # @return [Boolean]
     def evaluate(task, tag_name)
       task.tags.map(&:name).include? tag_name
     end
@@ -120,6 +164,8 @@ module Checkoff
       fn?(task_selector, :due)
     end
 
+    # @param task [Asana::Resources::Task]
+    # @return [Boolean]
     def evaluate(task)
       @tasks.task_ready?(task)
     end
@@ -131,6 +177,9 @@ module Checkoff
       fn?(task_selector, :due_date_set)
     end
 
+    # @sg-ignore
+    # @param task [Asana::Resources::Task]
+    # @return [Boolean]
     def evaluate(task)
       !task.due_at.nil? || !task.due_on.nil?
     end
@@ -142,16 +191,22 @@ module Checkoff
       fn?(task_selector, :custom_field_value)
     end
 
+    # @param _index [Integer]
     def evaluate_arg?(_index)
       false
     end
 
+    # @param task [Asana::Resources::Task]
+    # @param custom_field_name [String]
+    # @return [String, nil]
     def evaluate(task, custom_field_name)
       custom_fields = task.custom_fields
       if custom_fields.nil?
         raise "custom fields not found on task - did you add 'custom_field' in your extra_fields argument?"
       end
 
+      # @sg-ignore
+      # @type [Hash, nil]
       custom_field = custom_fields.find { |field| field.fetch('name') == custom_field_name }
       return nil if custom_field.nil?
 
@@ -169,6 +224,10 @@ module Checkoff
       false
     end
 
+    # @sg-ignore
+    # @param task [Asana::Resources::Task]
+    # @param custom_field_gid [String]
+    # @return [String, nil]
     def evaluate(task, custom_field_gid)
       custom_field = pull_custom_field_or_raise(task, custom_field_gid)
       custom_field['display_value']
@@ -185,6 +244,10 @@ module Checkoff
       false
     end
 
+    # @param task [Asana::Resources::Task]
+    # @param custom_field_gid [String]
+    # @param custom_field_values_gids [Array<String>]
+    # @return [Boolean]
     def evaluate(task, custom_field_gid, custom_field_values_gids)
       actual_custom_field_values_gids = pull_custom_field_values_gids(task, custom_field_gid)
 
@@ -204,6 +267,10 @@ module Checkoff
       false
     end
 
+    # @param task [Asana::Resources::Task]
+    # @param custom_field_gid [String]
+    # @param custom_field_values_gids [Array<String>]
+    # @return [Boolean]
     def evaluate(task, custom_field_gid, custom_field_values_gids)
       actual_custom_field_values_gids = pull_custom_field_values_gids(task, custom_field_gid)
 
@@ -215,6 +282,8 @@ module Checkoff
 
   # Evaluator task selectors against a task
   class TaskSelectorEvaluator
+    # @param task [Asana::Resources::Task]
+    # @param tasks [Checkoff::Tasks]
     def initialize(task:,
                    tasks: Checkoff::Tasks.new)
       @task = task
@@ -234,10 +303,15 @@ module Checkoff
       DueDateSetPFunctionEvaluator,
     ].freeze
 
+    # @param task_selector [Array]
+    # @return [Boolean, Object, nil]
     def evaluate(task_selector)
-      return true if task_selector == []
+      return true if task_selector.empty?
 
+      # @param evaluator_class [Class<FunctionEvaluator>]
       FUNCTION_EVALUTORS.each do |evaluator_class|
+        # @sg-ignore
+        # @type [FunctionEvaluator]
         evaluator = evaluator_class.new(task_selector: task_selector,
                                         tasks: tasks)
 
@@ -246,11 +320,15 @@ module Checkoff
         return try_this_evaluator(task_selector, evaluator)
       end
 
-      raise "Syntax issue trying to handle #{task_selector}"
+      raise "Syntax issue trying to handle #{task_selector.inspect}"
     end
 
     private
 
+    # @sg-ignore
+    # @param task_selector [Array]
+    # @param evaluator [FunctionEvaluator]
+    # @return [Boolean, Object, nil]
     def try_this_evaluator(task_selector, evaluator)
       evaluated_args = task_selector[1..].map.with_index do |item, index|
         if evaluator.evaluate_arg?(index)
@@ -263,6 +341,11 @@ module Checkoff
       evaluator.evaluate(task, *evaluated_args)
     end
 
-    attr_reader :task, :tasks, :task_selector
+    # @return [Asana::Resources::Task]
+    attr_reader :task
+    # @return [Checkoff::Tasks]
+    attr_reader :tasks
+    # @return [Array<(Symbol, Array)>]
+    attr_reader :task_selector
   end
 end

@@ -19,12 +19,9 @@ module Checkoff
   # Run task searches against the Asana API
   class TaskSearches
     MINUTE = 60
-    # @sg-ignore
     HOUR = MINUTE * 60
     DAY = 24 * HOUR
-    # @sg-ignore
     REALLY_LONG_CACHE_TIME = HOUR * 1
-    # @sg-ignore
     LONG_CACHE_TIME = MINUTE * 15
     SHORT_CACHE_TIME = MINUTE
 
@@ -62,7 +59,6 @@ module Checkoff
                                                     client: client)
       tasks.select { |task| task_selectors.filter_via_task_selector(task, task_selector) }
     end
-    # @sg-ignore
     cache_method :task_search, LONG_CACHE_TIME
 
     private
@@ -81,11 +77,7 @@ module Checkoff
     # :nocov:
     class << self
       def run
-        # @sg-ignore
-        # @type [String]
         workspace_name = ARGV[0] || raise('Please pass workspace name as first argument')
-        # @sg-ignore
-        # @type [String]
         url = ARGV[1] || raise('Please pass task search URL as second argument')
         task_searches = Checkoff::TaskSearches.new
         task_search = task_searches.task_search(workspace_name, url)
