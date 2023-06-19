@@ -93,6 +93,33 @@ module Checkoff
         find_gids(custom_field, enum_value)
       end
     end
+
+    # @sg-ignore
+    # @param task [Asana::Resources::Task]
+    # @param custom_field_name [String]
+    # @return [Hash, nil]
+    def pull_custom_field_by_name(task, custom_field_name)
+      custom_fields = task.custom_fields
+      if custom_fields.nil?
+        raise "custom fields not found on task - did you add 'custom_field' in your extra_fields argument?"
+      end
+
+      # @sg-ignore
+      # @type [Hash, nil]
+      custom_fields.find { |field| field.fetch('name') == custom_field_name }
+    end
+
+    # @param task [Asana::Resources::Task]
+    # @param custom_field_name [String]
+    # @return [Hash]
+    def pull_custom_field_by_name_or_raise(task, custom_field_name)
+      custom_field = pull_custom_field_by_name(task, custom_field_name)
+      if custom_field.nil?
+        raise "Could not find custom field with name #{custom_field_name} " \
+              "in task #{task.gid} with custom fields #{task.custom_fields}"
+      end
+      custom_field
+    end
   end
 
   # :and function
@@ -200,14 +227,7 @@ module Checkoff
     # @param custom_field_name [String]
     # @return [String, nil]
     def evaluate(task, custom_field_name)
-      custom_fields = task.custom_fields
-      if custom_fields.nil?
-        raise "custom fields not found on task - did you add 'custom_field' in your extra_fields argument?"
-      end
-
-      # @sg-ignore
-      # @type [Hash, nil]
-      custom_field = custom_fields.find { |field| field.fetch('name') == custom_field_name }
+      custom_field = pull_custom_field_by_name(task, custom_field_name)
       return nil if custom_field.nil?
 
       custom_field['display_value']
@@ -280,6 +300,30 @@ module Checkoff
     end
   end
 
+  # :custom_field_less_than_n_days_from_now function
+  class CustomFieldLessThanNDaysFromNowFunctionEvaluator < FunctionEvaluator
+    def matches?
+      fn?(task_selector, :custom_field_less_than_n_days_from_now)
+    end
+
+    def evaluate_arg?(_index)
+      false
+    end
+
+    # @param task [Asana::Resources::Task]
+    # @param custom_field_name [String]
+    # @param num_days [Integer]
+    # @return [Boolean]
+    def evaluate(task, custom_field_name, num_days)
+      custom_field = pull_custom_field_by_name_or_raise(task, custom_field_name)
+
+      time_str = custom_field.fetch('display_value')
+      time = Time.parse(time_str)
+      n_days_from_now = (Time.now + (num_days * 24 * 60 * 60))
+      time < n_days_from_now
+    end
+  end
+
   # Evaluator task selectors against a task
   class TaskSelectorEvaluator
     # @param task [Asana::Resources::Task]
@@ -301,6 +345,7 @@ module Checkoff
       AndFunctionEvaluator,
       DuePFunctionEvaluator,
       DueDateSetPFunctionEvaluator,
+      CustomFieldLessThanNDaysFromNowFunctionEvaluator,
     ].freeze
 
     # @param task_selector [Array]

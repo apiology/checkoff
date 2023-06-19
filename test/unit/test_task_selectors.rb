@@ -25,6 +25,7 @@ class TestTaskSelectors < ClassTest
       custom_fields = [custom_field]
       task.expects(:custom_fields).returns(custom_fields)
     end
+
     refute(task_selectors.filter_via_task_selector(task,
                                                    ['custom_field_gid_value_contains_any_gid',
                                                     custom_field_gid,
@@ -44,6 +45,7 @@ class TestTaskSelectors < ClassTest
       custom_fields = [custom_field]
       task.expects(:custom_fields).returns(custom_fields)
     end
+
     refute(task_selectors.filter_via_task_selector(task,
                                                    ['custom_field_gid_value_contains_any_gid',
                                                     custom_field_gid,
@@ -69,6 +71,7 @@ class TestTaskSelectors < ClassTest
                                                custom_field_gid,
                                                [enum_value_gid]])
     end
+
     assert_match(/Teach me how to handle resource_subtype something_unknown/, e.message)
   end
 
@@ -94,6 +97,7 @@ class TestTaskSelectors < ClassTest
                                                custom_field_gid,
                                                [enum_value_gid]])
     end
+
     assert_match(/Unexpected enabled value on custom field/, e.message)
   end
 
@@ -110,6 +114,7 @@ class TestTaskSelectors < ClassTest
                                                custom_field_gid,
                                                [enum_value_gid]])
     end
+
     assert_match(/custom field with gid/, e.message)
   end
 
@@ -125,6 +130,7 @@ class TestTaskSelectors < ClassTest
                                                custom_field_gid,
                                                [enum_value_gid]])
     end
+
     assert_match(/extra_fields/, e.message)
   end
 
@@ -144,6 +150,7 @@ class TestTaskSelectors < ClassTest
       custom_fields = [custom_field]
       task.expects(:custom_fields).returns(custom_fields)
     end
+
     assert(task_selectors.filter_via_task_selector(task,
                                                    ['custom_field_gid_value_contains_any_gid',
                                                     custom_field_gid,
@@ -157,6 +164,7 @@ class TestTaskSelectors < ClassTest
                                               [:bad_predicate?, [:custom_field_value,
                                                                  'custom_field_name']])
     end
+
     assert_match(/Syntax issue/, e.message)
   end
 
@@ -167,6 +175,7 @@ class TestTaskSelectors < ClassTest
       custom_field.expects(:[]).with('display_value').returns('some value')
       task.expects(:custom_fields).returns(custom_fields)
     end
+
     refute(task_selectors.filter_via_task_selector(task,
                                                    [:nil?, [:custom_field_value,
                                                             'custom_field_name']]))
@@ -183,6 +192,7 @@ class TestTaskSelectors < ClassTest
     task_selectors = get_test_object do
       mock_filter_via_custom_field_gid_value_gid_nil
     end
+
     assert(task_selectors.filter_via_task_selector(task,
                                                    [:nil?, [:custom_field_gid_value,
                                                             custom_field_gid]]))
@@ -197,6 +207,7 @@ class TestTaskSelectors < ClassTest
                                               [:nil?, [:custom_field_value,
                                                        'custom_field_name']])
     end
+
     assert_match(/extra_fields/, e.message)
   end
 
@@ -205,6 +216,7 @@ class TestTaskSelectors < ClassTest
       custom_fields = []
       task.expects(:custom_fields).returns(custom_fields)
     end
+
     assert(task_selectors.filter_via_task_selector(task,
                                                    [:nil?, [:custom_field_value,
                                                             'custom_field_name']]))
@@ -221,6 +233,7 @@ class TestTaskSelectors < ClassTest
                                               [:nil?, [:custom_field_gid_value,
                                                        custom_field_gid]])
     end
+
     assert_match(/Could not find custom field with gid/, e.message)
   end
 
@@ -228,21 +241,25 @@ class TestTaskSelectors < ClassTest
     task_selectors = get_test_object do
       task.expects(:tags).returns([])
     end
+
     refute(task_selectors.filter_via_task_selector(task, [:tag, 'tag_name']))
   end
 
   def test_filter_via_task_selector_not
     task_selectors = get_test_object
+
     refute(task_selectors.filter_via_task_selector(task, [:not, []]))
   end
 
   def test_filter_via_task_selector_and
     task_selectors = get_test_object
+
     assert(task_selectors.filter_via_task_selector(task, [:and, [], []]))
   end
 
   def test_filter_via_task_selector_simple
     task_selectors = get_test_object
+
     assert(task_selectors.filter_via_task_selector(task, []))
   end
 
@@ -250,6 +267,7 @@ class TestTaskSelectors < ClassTest
     task_selectors = get_test_object do
       tasks.expects(:task_ready?).with(task).returns(true)
     end
+
     assert(task_selectors.filter_via_task_selector(task, [:due]))
   end
 
@@ -269,6 +287,7 @@ class TestTaskSelectors < ClassTest
       custom_fields = [custom_field]
       task.expects(:custom_fields).returns(custom_fields)
     end
+
     assert(task_selectors.filter_via_task_selector(task,
                                                    ['custom_field_gid_value_contains_all_gids',
                                                     custom_field_gid,
@@ -280,7 +299,33 @@ class TestTaskSelectors < ClassTest
       task.expects(:due_at).returns(nil)
       task.expects(:due_on).returns(nil)
     end
+
     refute(task_selectors.filter_via_task_selector(task, [:due_date_set]))
+  end
+
+  def test_filter_via_task_selector_custom_field_less_than_n_days_from_now
+    task_selectors = get_test_object do
+      Time.expects(:now).returns(Time.new(2000, 1, 1, 0, 0, 0, '+00:00')).at_least(1)
+      task.expects(:custom_fields).returns([{ 'name' => 'start date',
+                                              'display_value' => '2000-01-15' }]).at_least(1)
+    end
+
+    assert(task_selectors.filter_via_task_selector(task, [:custom_field_less_than_n_days_from_now, 'start date', 90]))
+  end
+
+  def test_filter_via_task_selector_custom_field_less_than_n_days_from_now_custom_field_not_foundc
+    task_selectors = get_test_object do
+      task.expects(:gid).returns('123')
+      task.expects(:custom_fields).returns([{ 'name' => 'end date',
+                                              'display_value' => '2000-01-15' }]).at_least(1)
+    end
+
+    e = assert_raises(RuntimeError) do
+      task_selectors.filter_via_task_selector(task, [:custom_field_less_than_n_days_from_now, 'start date', 90])
+    end
+
+    assert_match(/Could not find custom field with name start date in task 123 with custom fields/,
+                 e.message)
   end
 
   def class_under_test
