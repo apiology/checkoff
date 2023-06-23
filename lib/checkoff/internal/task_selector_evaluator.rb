@@ -3,7 +3,7 @@
 module Checkoff
   # Base class to evaluate a task selector function given fully evaluated arguments
   class FunctionEvaluator
-    # @param task_selector [Array<(Symbol, Array)>]
+    # @param task_selector [Array<(Symbol, Array)>,String]
     # @param tasks [Checkoff::Tasks]
     def initialize(task_selector:,
                    tasks:)
@@ -162,6 +162,21 @@ module Checkoff
     # @return [Boolean]
     def evaluate(_task, subvalue)
       subvalue.nil?
+    end
+  end
+
+  # :equals? function
+  class EqualsPFunctionEvaluator < FunctionEvaluator
+    def matches?
+      fn?(task_selector, :equals?)
+    end
+
+    # @param _task [Asana::Resources::Task]
+    # @param lhs [Object]
+    # @param rhs [Object]
+    # @return [Boolean]
+    def evaluate(_task, lhs, rhs)
+      lhs == rhs
     end
   end
 
@@ -324,6 +339,20 @@ module Checkoff
     end
   end
 
+  # String literals
+  class StringLiteralEvaluator < FunctionEvaluator
+    def matches?
+      task_selector.is_a?(String)
+    end
+
+    # @sg-ignore
+    # @param _task [Asana::Resources::Task]
+    # @return [String]
+    def evaluate(_task)
+      task_selector
+    end
+  end
+
   # Evaluator task selectors against a task
   class TaskSelectorEvaluator
     # @param task [Asana::Resources::Task]
@@ -337,6 +366,7 @@ module Checkoff
     FUNCTION_EVALUTORS = [
       NotFunctionEvaluator,
       NilPFunctionEvaluator,
+      EqualsPFunctionEvaluator,
       TagPFunctionEvaluator,
       CustomFieldValueFunctionEvaluator,
       CustomFieldGidValueFunctionEvaluator,
@@ -346,6 +376,7 @@ module Checkoff
       DuePFunctionEvaluator,
       DueDateSetPFunctionEvaluator,
       CustomFieldLessThanNDaysFromNowFunctionEvaluator,
+      StringLiteralEvaluator,
     ].freeze
 
     # @param task_selector [Array]
@@ -375,13 +406,18 @@ module Checkoff
     # @param evaluator [FunctionEvaluator]
     # @return [Boolean, Object, nil]
     def try_this_evaluator(task_selector, evaluator)
-      evaluated_args = task_selector[1..].map.with_index do |item, index|
-        if evaluator.evaluate_arg?(index)
-          evaluate(item)
-        else
-          item
-        end
-      end
+      # if task_selector is an array
+      evaluated_args = if task_selector.is_a?(Array)
+                         task_selector[1..].map.with_index do |item, index|
+                           if evaluator.evaluate_arg?(index)
+                             evaluate(item)
+                           else
+                             item
+                           end
+                         end
+                       else
+                         []
+                       end
 
       evaluator.evaluate(task, *evaluated_args)
     end

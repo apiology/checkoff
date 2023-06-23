@@ -328,6 +328,26 @@ class TestTaskSelectors < ClassTest
                  e.message)
   end
 
+  def test_filter_via_task_selector_custom_field_equal_to_date
+    task_selectors = get_test_object do
+      task.expects(:custom_fields).returns([{ 'name' => 'end date',
+                                              'display_value' => '2000-01-15' }]).at_least(1)
+    end
+
+    assert(task_selectors.filter_via_task_selector(task,
+                                                   [:equals?, [:custom_field_value, 'end date'], '2000-01-15']))
+  end
+
+  def test_filter_via_task_selector_custom_field_not_equal_to_date
+    task_selectors = get_test_object do
+      task.expects(:custom_fields).returns([{ 'name' => 'end date',
+                                              'display_value' => '2000-01-15' }]).at_least(1)
+    end
+
+    refute(task_selectors.filter_via_task_selector(task,
+                                                   [:equals?, [:custom_field_value, 'end date'], '2001-01-15']))
+  end
+
   def class_under_test
     Checkoff::TaskSelectors
   end
