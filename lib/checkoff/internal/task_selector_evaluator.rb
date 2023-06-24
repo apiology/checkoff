@@ -101,7 +101,7 @@ module Checkoff
     def pull_custom_field_by_name(task, custom_field_name)
       custom_fields = task.custom_fields
       if custom_fields.nil?
-        raise "custom fields not found on task - did you add 'custom_field' in your extra_fields argument?"
+        raise "custom fields not found on task - did you add 'custom_fields' in your extra_fields argument?"
       end
 
       # @sg-ignore
