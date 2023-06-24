@@ -27,6 +27,17 @@ module Checkoff
 
     include Asana::Resources::ResponseHelper
 
+    # @!parse
+    #   extend CacheMethod::ClassMethods
+
+    # @param config [Hash<Symbol, Object>]
+    # @param workspaces [Checkoff::Workspaces]
+    # @param task_selectors [Checkoff::TaskSelectors]
+    # @param projects [Checkoff::Projects]
+    # @param clients [Checkoff::Clients]
+    # @param client [Asana::Client]
+    # @param search_url_parser [Checkoff::Internal::SearchUrl::Parser]
+    # @param asana_resources_collection_class [Class<Asana::Resources::Collection>]
     def initialize(config: Checkoff::Internal::ConfigLoader.load(:asana),
                    workspaces: Checkoff::Workspaces.new(config: config),
                    task_selectors: Checkoff::TaskSelectors.new(config: config),
@@ -49,6 +60,7 @@ module Checkoff
     # @return [Array<Asana::Resources::Task>]
     def task_search(workspace_name, url, extra_fields: [])
       workspace = workspaces.workspace_or_raise(workspace_name)
+      # @sg-ignore
       api_params, task_selector = @search_url_parser.convert_params(url)
       path = "/workspaces/#{workspace.gid}/tasks/search"
       options = calculate_api_options(extra_fields)
@@ -76,8 +88,13 @@ module Checkoff
     # bundle exec ./task_searches.rb
     # :nocov:
     class << self
+      # @return [void]
       def run
+        # @sg-ignore
+        # @type [String]
         workspace_name = ARGV[0] || raise('Please pass workspace name as first argument')
+        # @sg-ignore
+        # @type [String]
         url = ARGV[1] || raise('Please pass task search URL as second argument')
         task_searches = Checkoff::TaskSearches.new
         task_search = task_searches.task_search(workspace_name, url)
@@ -86,7 +103,14 @@ module Checkoff
     end
     # :nocov:
 
-    attr_reader :task_selectors, :projects, :workspaces, :client
+    # @return [Checkoff::TaskSelectors]
+    attr_reader :task_selectors
+    # @return [Checkoff::Projects]
+    attr_reader :projects
+    # @return [Checkoff::Workspaces]
+    attr_reader :workspaces
+    # @return [Asana::Client]
+    attr_reader :client
   end
 end
 
