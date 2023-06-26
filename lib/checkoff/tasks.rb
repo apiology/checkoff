@@ -4,25 +4,25 @@
 
 require_relative 'sections'
 require_relative 'workspaces'
+require_relative 'internal/config_loader'
 require 'asana'
 
 module Checkoff
   # Pull tasks from Asana
   class Tasks
     MINUTE = 60
-    # @sg-ignore
     HOUR = MINUTE * 60
     DAY = 24 * HOUR
     REALLY_LONG_CACHE_TIME = HOUR
-    # @sg-ignore
     LONG_CACHE_TIME = MINUTE * 15
-    # @sg-ignore
     SHORT_CACHE_TIME = MINUTE * 5
 
+    # @param config [Hash<Symbol, Object>]
     # @param client [Asana::Client]
     # @param workspaces [Checkoff::Workspaces]
-    # @param time_class [Class<Time>]
     # @param sections [Checkoff::Sections]
+    # @param time_class [Class<Time>]
+    # @param asana_task [Class<Asana::Resources::Task>]
     def initialize(config: Checkoff::Internal::ConfigLoader.load(:asana),
                    client: Checkoff::Clients.new(config: config).client,
                    workspaces: Checkoff::Workspaces.new(config: config,
@@ -39,8 +39,10 @@ module Checkoff
       @workspaces = workspaces
     end
 
-    def task_ready?(task)
-      return false if incomplete_dependencies?(task)
+    # @param task [Asana::Resources::Task]
+    # @param ignore_dependencies [Boolean]
+    def task_ready?(task, ignore_dependencies: false)
+      return false if !ignore_dependencies && incomplete_dependencies?(task)
 
       due = due_time(task)
 
@@ -50,11 +52,19 @@ module Checkoff
     end
 
     # Pull a specific task by name
+    # @param workspace_name [String]
+    # @param project_name [String, Symbol]
+    # @param section_name [String, nil, Symbol]
+    # @param task_name [String]
+    # @param only_uncompleted [Boolean]
+    # @param extra_fields [Array<String>]
+    # @sg-ignore
     # @return [Asana::Resources::Task, nil]
     def task(workspace_name, project_name, task_name,
              section_name: :unspecified,
              only_uncompleted: true,
              extra_fields: [])
+      # @sg-ignore
       tasks = tasks_from_section(workspace_name,
                                  project_name,
                                  section_name: section_name,
@@ -74,6 +84,7 @@ module Checkoff
       client.tasks.find_by_id(task_gid, options: options)
     end
 
+    # @param name [String]
     # @param workspace_gid [String]
     # @param assignee_gid [String]
     # @return [Asana::Resources::Task]
@@ -85,13 +96,19 @@ module Checkoff
                          workspace: workspace_gid, name: name)
     end
 
-    # Return an end-user URL to the task in question
+    # @param task [Asana::Resources::Task]
+    # @return [String] end-user URL to the task in question
     def url_of_task(task)
       "https://app.asana.com/0/0/#{task.gid}/f"
     end
 
     private
 
+    # @param workspace_name [String]
+    # @param project_name [String, Symbol]
+    # @param section_name [String, nil, :unspecified]
+    # @param only_uncompleted [Boolean]
+    # @param extra_fields [Array<String>]
     # @return [Array<Asana::Resources::Task>]
     def tasks_from_section(workspace_name, project_name,
                            section_name:,
@@ -109,6 +126,7 @@ module Checkoff
       end
     end
 
+    # @return [Asana::Client]
     attr_reader :client
 
     # @return [Checkoff::Projects]
@@ -131,6 +149,7 @@ module Checkoff
       nil
     end
 
+    # @param task [Asana::Resources::Task]
     def incomplete_dependencies?(task)
       # Avoid a redundant fetch.  Unfortunately, Ruby SDK allows
       # dependencies to be fetched along with other attributes--but
