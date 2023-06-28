@@ -313,7 +313,7 @@ class TestTaskSelectors < ClassTest
     assert(task_selectors.filter_via_task_selector(task, [:custom_field_less_than_n_days_from_now, 'start date', 90]))
   end
 
-  def test_filter_via_task_selector_custom_field_less_than_n_days_from_now_custom_field_not_foundc
+  def test_filter_via_task_selector_custom_field_less_than_n_days_from_now_custom_field_not_found
     task_selectors = get_test_object do
       task.expects(:gid).returns('123')
       task.expects(:custom_fields).returns([{ 'name' => 'end date',
@@ -322,6 +322,35 @@ class TestTaskSelectors < ClassTest
 
     e = assert_raises(RuntimeError) do
       task_selectors.filter_via_task_selector(task, [:custom_field_less_than_n_days_from_now, 'start date', 90])
+    end
+
+    assert_match(/Could not find custom field with name start date in task 123 with custom fields/,
+                 e.message)
+  end
+
+  def test_filter_via_task_selector_custom_field_greater_than_or_equal_to_n_days_from_now
+    task_selectors = get_test_object do
+      Time.expects(:now).returns(Time.new(2000, 1, 1, 0, 0, 0, '+00:00')).at_least(1)
+      task.expects(:custom_fields).returns([{ 'name' => 'start date',
+                                              'display_value' => '2000-01-15' }]).at_least(1)
+    end
+
+    refute(task_selectors.filter_via_task_selector(task,
+                                                   [:custom_field_greater_than_or_equal_to_n_days_from_now,
+                                                    'start date', 90]))
+  end
+
+  def test_filter_via_task_selector_custom_field_greater_than_or_equal_to_n_days_from_now_custom_field_not_found
+    task_selectors = get_test_object do
+      task.expects(:gid).returns('123')
+      task.expects(:custom_fields).returns([{ 'name' => 'end date',
+                                              'display_value' => '2000-01-15' }]).at_least(1)
+    end
+
+    e = assert_raises(RuntimeError) do
+      task_selectors.filter_via_task_selector(task,
+                                              [:custom_field_greater_than_or_equal_to_n_days_from_now, 'start date',
+                                               90])
     end
 
     assert_match(/Could not find custom field with name start date in task 123 with custom fields/,
