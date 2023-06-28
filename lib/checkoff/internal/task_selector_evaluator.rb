@@ -339,6 +339,30 @@ module Checkoff
     end
   end
 
+  # :custom_field_greater_than_or_equal_to_n_days_from_now function
+  class CustomFieldGreaterThanOrEqualToNDaysFromNowFunctionEvaluator < FunctionEvaluator
+    def matches?
+      fn?(task_selector, :custom_field_greater_than_or_equal_to_n_days_from_now)
+    end
+
+    def evaluate_arg?(_index)
+      false
+    end
+
+    # @param task [Asana::Resources::Task]
+    # @param custom_field_name [String]
+    # @param num_days [Integer]
+    # @return [Boolean]
+    def evaluate(task, custom_field_name, num_days)
+      custom_field = pull_custom_field_by_name_or_raise(task, custom_field_name)
+
+      time_str = custom_field.fetch('display_value')
+      time = Time.parse(time_str)
+      n_days_from_now = (Time.now + (num_days * 24 * 60 * 60))
+      time >= n_days_from_now
+    end
+  end
+
   # String literals
   class StringLiteralEvaluator < FunctionEvaluator
     def matches?
@@ -376,6 +400,7 @@ module Checkoff
       DuePFunctionEvaluator,
       DueDateSetPFunctionEvaluator,
       CustomFieldLessThanNDaysFromNowFunctionEvaluator,
+      CustomFieldGreaterThanOrEqualToNDaysFromNowFunctionEvaluator,
       StringLiteralEvaluator,
     ].freeze
 
