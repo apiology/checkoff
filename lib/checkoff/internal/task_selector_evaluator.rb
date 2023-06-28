@@ -1,379 +1,399 @@
 # frozen_string_literal: true
 
 module Checkoff
-  # Base class to evaluate a task selector function given fully evaluated arguments
-  class FunctionEvaluator
-    # @param task_selector [Array<(Symbol, Array)>,String]
-    # @param tasks [Checkoff::Tasks]
-    def initialize(task_selector:,
-                   tasks:)
-      @task_selector = task_selector
-      @tasks = tasks
-    end
-
-    # @sg-ignore
-    # @param _index [Integer]
-    def evaluate_arg?(_index)
-      true
-    end
-
-    # @sg-ignore
-    # @return [Boolean]
-    def matches?
-      raise 'Override me!'
-    end
-
-    private
-
-    # @param object [Object]
-    # @param fn_name [Symbol]
-    def fn?(object, fn_name)
-      object.is_a?(Array) && !object.empty? && [fn_name, fn_name.to_s].include?(object[0])
-    end
-
-    # @sg-ignore
-    # @param task [Asana::Resources::Task]
-    # @param custom_field_gid [String]
-    # @return [Hash]
-    def pull_custom_field_or_raise(task, custom_field_gid)
-      # @type [Array<Hash>]
-      custom_fields = task.custom_fields
-      if custom_fields.nil?
-        raise "Could not find custom_fields under task (was 'custom_fields' included in 'extra_fields'?)"
+  module TaskSelectorClasses
+    # Base class to evaluate a task selector function given fully evaluated arguments
+    class FunctionEvaluator
+      # @param task_selector [Array<(Symbol, Array)>,String]
+      # @param tasks [Checkoff::Tasks]
+      def initialize(task_selector:,
+                     tasks:)
+        @task_selector = task_selector
+        @tasks = tasks
       end
 
       # @sg-ignore
-      # @type [Hash, nil]
-      matched_custom_field = custom_fields.find { |data| data.fetch('gid') == custom_field_gid }
-      if matched_custom_field.nil?
-        raise "Could not find custom field with gid #{custom_field_gid} " \
-              "in task #{task.gid} with custom fields #{custom_fields}"
-      end
-
-      matched_custom_field
-    end
-
-    # @return [Array<(Symbol, Array)>]
-    attr_reader :task_selector
-
-    # @sg-ignore
-    # @param custom_field [Hash]
-    # @return [Array<String>]
-    def pull_enum_values(custom_field)
-      resource_subtype = custom_field.fetch('resource_subtype')
-      case resource_subtype
-      when 'enum'
-        [custom_field.fetch('enum_value')]
-      when 'multi_enum'
-        custom_field.fetch('multi_enum_values')
-      else
-        raise "Teach me how to handle resource_subtype #{resource_subtype}"
-      end
-    end
-
-    # @param custom_field [Hash]
-    # @param enum_value [Object, nil]
-    # @return [Array<String>]
-    def find_gids(custom_field, enum_value)
-      if enum_value.nil?
-        []
-      else
-        raise "Unexpected enabled value on custom field: #{custom_field}" if enum_value.fetch('enabled') == false
-
-        [enum_value.fetch('gid')]
-      end
-    end
-
-    # @param task [Asana::Resources::Task]
-    # @param custom_field_gid [String]
-    # @return [Array<String>]
-    def pull_custom_field_values_gids(task, custom_field_gid)
-      custom_field = pull_custom_field_or_raise(task, custom_field_gid)
-      pull_enum_values(custom_field).flat_map do |enum_value|
-        find_gids(custom_field, enum_value)
-      end
-    end
-
-    # @sg-ignore
-    # @param task [Asana::Resources::Task]
-    # @param custom_field_name [String]
-    # @return [Hash, nil]
-    def pull_custom_field_by_name(task, custom_field_name)
-      custom_fields = task.custom_fields
-      if custom_fields.nil?
-        raise "custom fields not found on task - did you add 'custom_fields' in your extra_fields argument?"
+      # @param _index [Integer]
+      def evaluate_arg?(_index)
+        true
       end
 
       # @sg-ignore
-      # @type [Hash, nil]
-      custom_fields.find { |field| field.fetch('name') == custom_field_name }
-    end
-
-    # @param task [Asana::Resources::Task]
-    # @param custom_field_name [String]
-    # @return [Hash]
-    def pull_custom_field_by_name_or_raise(task, custom_field_name)
-      custom_field = pull_custom_field_by_name(task, custom_field_name)
-      if custom_field.nil?
-        raise "Could not find custom field with name #{custom_field_name} " \
-              "in task #{task.gid} with custom fields #{task.custom_fields}"
+      # @return [Boolean]
+      def matches?
+        raise 'Override me!'
       end
-      custom_field
-    end
-  end
 
-  # :and function
-  class AndFunctionEvaluator < FunctionEvaluator
-    def matches?
-      fn?(task_selector, :and)
-    end
+      private
 
-    # @param _task [Asana::Resources::Task]
-    # @param lhs [Object]
-    # @param rhs [Object]
-    # @return [Object]
-    def evaluate(_task, lhs, rhs)
-      lhs && rhs
-    end
-  end
+      # @param object [Object]
+      # @param fn_name [Symbol]
+      def fn?(object, fn_name)
+        object.is_a?(Array) && !object.empty? && [fn_name, fn_name.to_s].include?(object[0])
+      end
 
-  # :not function
-  class NotFunctionEvaluator < FunctionEvaluator
-    def matches?
-      fn?(task_selector, :not)
-    end
+      # @sg-ignore
+      # @param task [Asana::Resources::Task]
+      # @param custom_field_gid [String]
+      # @return [Hash]
+      def pull_custom_field_or_raise(task, custom_field_gid)
+        # @type [Array<Hash>]
+        custom_fields = task.custom_fields
+        if custom_fields.nil?
+          raise "Could not find custom_fields under task (was 'custom_fields' included in 'extra_fields'?)"
+        end
 
-    # @param _task [Asana::Resources::Task]
-    # @param subvalue [Object]
-    # @return [Boolean]
-    def evaluate(_task, subvalue)
-      !subvalue
-    end
-  end
+        # @sg-ignore
+        # @type [Hash, nil]
+        matched_custom_field = custom_fields.find { |data| data.fetch('gid') == custom_field_gid }
+        if matched_custom_field.nil?
+          raise "Could not find custom field with gid #{custom_field_gid} " \
+                "in task #{task.gid} with custom fields #{custom_fields}"
+        end
 
-  # :nil? function
-  class NilPFunctionEvaluator < FunctionEvaluator
-    def matches?
-      fn?(task_selector, :nil?)
-    end
+        matched_custom_field
+      end
 
-    # @param _task [Asana::Resources::Task]
-    # @param subvalue [Object]
-    # @return [Boolean]
-    def evaluate(_task, subvalue)
-      subvalue.nil?
-    end
-  end
+      # @return [Array<(Symbol, Array)>]
+      attr_reader :task_selector
 
-  # :equals? function
-  class EqualsPFunctionEvaluator < FunctionEvaluator
-    def matches?
-      fn?(task_selector, :equals?)
-    end
+      # @sg-ignore
+      # @param custom_field [Hash]
+      # @return [Array<String>]
+      def pull_enum_values(custom_field)
+        resource_subtype = custom_field.fetch('resource_subtype')
+        case resource_subtype
+        when 'enum'
+          [custom_field.fetch('enum_value')]
+        when 'multi_enum'
+          custom_field.fetch('multi_enum_values')
+        else
+          raise "Teach me how to handle resource_subtype #{resource_subtype}"
+        end
+      end
 
-    # @param _task [Asana::Resources::Task]
-    # @param lhs [Object]
-    # @param rhs [Object]
-    # @return [Boolean]
-    def evaluate(_task, lhs, rhs)
-      lhs == rhs
-    end
-  end
+      # @param custom_field [Hash]
+      # @param enum_value [Object, nil]
+      # @return [Array<String>]
+      def find_gids(custom_field, enum_value)
+        if enum_value.nil?
+          []
+        else
+          raise "Unexpected enabled value on custom field: #{custom_field}" if enum_value.fetch('enabled') == false
 
-  # :tag function
-  class TagPFunctionEvaluator < FunctionEvaluator
-    def matches?
-      fn?(task_selector, :tag)
-    end
+          [enum_value.fetch('gid')]
+        end
+      end
 
-    # @param _index [Integer]
-    def evaluate_arg?(_index)
-      false
-    end
+      # @param task [Asana::Resources::Task]
+      # @param custom_field_gid [String]
+      # @return [Array<String>]
+      def pull_custom_field_values_gids(task, custom_field_gid)
+        custom_field = pull_custom_field_or_raise(task, custom_field_gid)
+        pull_enum_values(custom_field).flat_map do |enum_value|
+          find_gids(custom_field, enum_value)
+        end
+      end
 
-    # @sg-ignore
-    # @param task [Asana::Resources::Task]
-    # @param tag_name [String]
-    # @return [Boolean]
-    def evaluate(task, tag_name)
-      task.tags.map(&:name).include? tag_name
-    end
-  end
+      # @sg-ignore
+      # @param task [Asana::Resources::Task]
+      # @param custom_field_name [String]
+      # @return [Hash, nil]
+      def pull_custom_field_by_name(task, custom_field_name)
+        custom_fields = task.custom_fields
+        if custom_fields.nil?
+          raise "custom fields not found on task - did you add 'custom_fields' in your extra_fields argument?"
+        end
 
-  # :due function
-  class DuePFunctionEvaluator < FunctionEvaluator
-    def matches?
-      fn?(task_selector, :due)
-    end
+        # @sg-ignore
+        # @type [Hash, nil]
+        custom_fields.find { |field| field.fetch('name') == custom_field_name }
+      end
 
-    # @param task [Asana::Resources::Task]
-    # @return [Boolean]
-    def evaluate(task)
-      @tasks.task_ready?(task)
-    end
-  end
-
-  # :due_date_set function
-  class DueDateSetPFunctionEvaluator < FunctionEvaluator
-    def matches?
-      fn?(task_selector, :due_date_set)
-    end
-
-    # @sg-ignore
-    # @param task [Asana::Resources::Task]
-    # @return [Boolean]
-    def evaluate(task)
-      !task.due_at.nil? || !task.due_on.nil?
-    end
-  end
-
-  # :custom_field_value function
-  class CustomFieldValueFunctionEvaluator < FunctionEvaluator
-    def matches?
-      fn?(task_selector, :custom_field_value)
-    end
-
-    # @param _index [Integer]
-    def evaluate_arg?(_index)
-      false
-    end
-
-    # @param task [Asana::Resources::Task]
-    # @param custom_field_name [String]
-    # @return [String, nil]
-    def evaluate(task, custom_field_name)
-      custom_field = pull_custom_field_by_name(task, custom_field_name)
-      return nil if custom_field.nil?
-
-      custom_field['display_value']
-    end
-  end
-
-  # :custom_field_gid_value function
-  class CustomFieldGidValueFunctionEvaluator < FunctionEvaluator
-    def matches?
-      fn?(task_selector, :custom_field_gid_value)
-    end
-
-    def evaluate_arg?(_index)
-      false
-    end
-
-    # @sg-ignore
-    # @param task [Asana::Resources::Task]
-    # @param custom_field_gid [String]
-    # @return [String, nil]
-    def evaluate(task, custom_field_gid)
-      custom_field = pull_custom_field_or_raise(task, custom_field_gid)
-      custom_field['display_value']
-    end
-  end
-
-  # :custom_field_gid_value_contains_any_gid function
-  class CustomFieldGidValueContainsAnyGidFunctionEvaluator < FunctionEvaluator
-    def matches?
-      fn?(task_selector, :custom_field_gid_value_contains_any_gid)
-    end
-
-    def evaluate_arg?(_index)
-      false
-    end
-
-    # @param task [Asana::Resources::Task]
-    # @param custom_field_gid [String]
-    # @param custom_field_values_gids [Array<String>]
-    # @return [Boolean]
-    def evaluate(task, custom_field_gid, custom_field_values_gids)
-      actual_custom_field_values_gids = pull_custom_field_values_gids(task, custom_field_gid)
-
-      actual_custom_field_values_gids.any? do |custom_field_value|
-        custom_field_values_gids.include?(custom_field_value)
+      # @param task [Asana::Resources::Task]
+      # @param custom_field_name [String]
+      # @return [Hash]
+      def pull_custom_field_by_name_or_raise(task, custom_field_name)
+        custom_field = pull_custom_field_by_name(task, custom_field_name)
+        if custom_field.nil?
+          raise "Could not find custom field with name #{custom_field_name} " \
+                "in task #{task.gid} with custom fields #{task.custom_fields}"
+        end
+        custom_field
       end
     end
-  end
 
-  # :custom_field_gid_value_contains_all_gids function
-  class CustomFieldGidValueContainsAllGidsFunctionEvaluator < FunctionEvaluator
-    def matches?
-      fn?(task_selector, :custom_field_gid_value_contains_all_gids)
-    end
+    # :and function
+    class AndFunctionEvaluator < FunctionEvaluator
+      FUNCTION_NAME = :and
 
-    def evaluate_arg?(_index)
-      false
-    end
+      def matches?
+        fn?(task_selector, FUNCTION_NAME)
+      end
 
-    # @param task [Asana::Resources::Task]
-    # @param custom_field_gid [String]
-    # @param custom_field_values_gids [Array<String>]
-    # @return [Boolean]
-    def evaluate(task, custom_field_gid, custom_field_values_gids)
-      actual_custom_field_values_gids = pull_custom_field_values_gids(task, custom_field_gid)
-
-      custom_field_values_gids.all? do |custom_field_value|
-        actual_custom_field_values_gids.include?(custom_field_value)
+      # @param _task [Asana::Resources::Task]
+      # @param lhs [Object]
+      # @param rhs [Object]
+      # @return [Object]
+      def evaluate(_task, lhs, rhs)
+        lhs && rhs
       end
     end
-  end
 
-  # :custom_field_less_than_n_days_from_now function
-  class CustomFieldLessThanNDaysFromNowFunctionEvaluator < FunctionEvaluator
-    def matches?
-      fn?(task_selector, :custom_field_less_than_n_days_from_now)
+    # :not function
+    class NotFunctionEvaluator < FunctionEvaluator
+      FUNCTION_NAME = :not
+
+      def matches?
+        fn?(task_selector, FUNCTION_NAME)
+      end
+
+      # @param _task [Asana::Resources::Task]
+      # @param subvalue [Object]
+      # @return [Boolean]
+      def evaluate(_task, subvalue)
+        !subvalue
+      end
     end
 
-    def evaluate_arg?(_index)
-      false
+    # :nil? function
+    class NilPFunctionEvaluator < FunctionEvaluator
+      def matches?
+        fn?(task_selector, :nil?)
+      end
+
+      # @param _task [Asana::Resources::Task]
+      # @param subvalue [Object]
+      # @return [Boolean]
+      def evaluate(_task, subvalue)
+        subvalue.nil?
+      end
     end
 
-    # @param task [Asana::Resources::Task]
-    # @param custom_field_name [String]
-    # @param num_days [Integer]
-    # @return [Boolean]
-    def evaluate(task, custom_field_name, num_days)
-      custom_field = pull_custom_field_by_name_or_raise(task, custom_field_name)
+    # :equals? function
+    class EqualsPFunctionEvaluator < FunctionEvaluator
+      FUNCTION_NAME = :equals?
 
-      time_str = custom_field.fetch('display_value')
-      time = Time.parse(time_str)
-      n_days_from_now = (Time.now + (num_days * 24 * 60 * 60))
-      time < n_days_from_now
-    end
-  end
+      def matches?
+        fn?(task_selector, FUNCTION_NAME)
+      end
 
-  # :custom_field_greater_than_or_equal_to_n_days_from_now function
-  class CustomFieldGreaterThanOrEqualToNDaysFromNowFunctionEvaluator < FunctionEvaluator
-    def matches?
-      fn?(task_selector, :custom_field_greater_than_or_equal_to_n_days_from_now)
+      # @param _task [Asana::Resources::Task]
+      # @param lhs [Object]
+      # @param rhs [Object]
+      # @return [Boolean]
+      def evaluate(_task, lhs, rhs)
+        lhs == rhs
+      end
     end
 
-    def evaluate_arg?(_index)
-      false
+    # :tag function
+    class TagPFunctionEvaluator < FunctionEvaluator
+      def matches?
+        fn?(task_selector, :tag)
+      end
+
+      # @param _index [Integer]
+      def evaluate_arg?(_index)
+        false
+      end
+
+      # @sg-ignore
+      # @param task [Asana::Resources::Task]
+      # @param tag_name [String]
+      # @return [Boolean]
+      def evaluate(task, tag_name)
+        task.tags.map(&:name).include? tag_name
+      end
     end
 
-    # @param task [Asana::Resources::Task]
-    # @param custom_field_name [String]
-    # @param num_days [Integer]
-    # @return [Boolean]
-    def evaluate(task, custom_field_name, num_days)
-      custom_field = pull_custom_field_by_name_or_raise(task, custom_field_name)
+    # :due function
+    class DuePFunctionEvaluator < FunctionEvaluator
+      def matches?
+        fn?(task_selector, :due)
+      end
 
-      time_str = custom_field.fetch('display_value')
-      time = Time.parse(time_str)
-      n_days_from_now = (Time.now + (num_days * 24 * 60 * 60))
-      time >= n_days_from_now
-    end
-  end
-
-  # String literals
-  class StringLiteralEvaluator < FunctionEvaluator
-    def matches?
-      task_selector.is_a?(String)
+      # @param task [Asana::Resources::Task]
+      # @return [Boolean]
+      def evaluate(task)
+        @tasks.task_ready?(task)
+      end
     end
 
-    # @sg-ignore
-    # @param _task [Asana::Resources::Task]
-    # @return [String]
-    def evaluate(_task)
-      task_selector
+    # :due_date_set function
+    class DueDateSetPFunctionEvaluator < FunctionEvaluator
+      FUNCTION_NAME = :due_date_set
+
+      def matches?
+        fn?(task_selector, FUNCTION_NAME)
+      end
+
+      # @sg-ignore
+      # @param task [Asana::Resources::Task]
+      # @return [Boolean]
+      def evaluate(task)
+        !task.due_at.nil? || !task.due_on.nil?
+      end
+    end
+
+    # :custom_field_value function
+    class CustomFieldValueFunctionEvaluator < FunctionEvaluator
+      FUNCTION_NAME = :custom_field_value
+
+      def matches?
+        fn?(task_selector, FUNCTION_NAME)
+      end
+
+      # @param _index [Integer]
+      def evaluate_arg?(_index)
+        false
+      end
+
+      # @param task [Asana::Resources::Task]
+      # @param custom_field_name [String]
+      # @return [String, nil]
+      def evaluate(task, custom_field_name)
+        custom_field = pull_custom_field_by_name(task, custom_field_name)
+        return nil if custom_field.nil?
+
+        custom_field['display_value']
+      end
+    end
+
+    # :custom_field_gid_value function
+    class CustomFieldGidValueFunctionEvaluator < FunctionEvaluator
+      def matches?
+        fn?(task_selector, :custom_field_gid_value)
+      end
+
+      def evaluate_arg?(_index)
+        false
+      end
+
+      # @sg-ignore
+      # @param task [Asana::Resources::Task]
+      # @param custom_field_gid [String]
+      # @return [String, nil]
+      def evaluate(task, custom_field_gid)
+        custom_field = pull_custom_field_or_raise(task, custom_field_gid)
+        custom_field['display_value']
+      end
+    end
+
+    # :custom_field_gid_value_contains_any_gid function
+    class CustomFieldGidValueContainsAnyGidFunctionEvaluator < FunctionEvaluator
+      FUNCTION_NAME = :custom_field_gid_value_contains_any_gid
+
+      def matches?
+        fn?(task_selector, FUNCTION_NAME)
+      end
+
+      def evaluate_arg?(_index)
+        false
+      end
+
+      # @param task [Asana::Resources::Task]
+      # @param custom_field_gid [String]
+      # @param custom_field_values_gids [Array<String>]
+      # @return [Boolean]
+      def evaluate(task, custom_field_gid, custom_field_values_gids)
+        actual_custom_field_values_gids = pull_custom_field_values_gids(task, custom_field_gid)
+
+        actual_custom_field_values_gids.any? do |custom_field_value|
+          custom_field_values_gids.include?(custom_field_value)
+        end
+      end
+    end
+
+    # :custom_field_gid_value_contains_all_gids function
+    class CustomFieldGidValueContainsAllGidsFunctionEvaluator < FunctionEvaluator
+      FUNCTION_NAME = :custom_field_gid_value_contains_all_gids
+
+      def matches?
+        fn?(task_selector, FUNCTION_NAME)
+      end
+
+      def evaluate_arg?(_index)
+        false
+      end
+
+      # @param task [Asana::Resources::Task]
+      # @param custom_field_gid [String]
+      # @param custom_field_values_gids [Array<String>]
+      # @return [Boolean]
+      def evaluate(task, custom_field_gid, custom_field_values_gids)
+        actual_custom_field_values_gids = pull_custom_field_values_gids(task, custom_field_gid)
+
+        custom_field_values_gids.all? do |custom_field_value|
+          actual_custom_field_values_gids.include?(custom_field_value)
+        end
+      end
+    end
+
+    # :custom_field_less_than_n_days_from_now function
+    class CustomFieldLessThanNDaysFromNowFunctionEvaluator < FunctionEvaluator
+      FUNCTION_NAME = :custom_field_less_than_n_days_from_now
+
+      def matches?
+        fn?(task_selector, FUNCTION_NAME)
+      end
+
+      def evaluate_arg?(_index)
+        false
+      end
+
+      # @param task [Asana::Resources::Task]
+      # @param custom_field_name [String]
+      # @param num_days [Integer]
+      # @return [Boolean]
+      def evaluate(task, custom_field_name, num_days)
+        custom_field = pull_custom_field_by_name_or_raise(task, custom_field_name)
+
+        time_str = custom_field.fetch('display_value')
+        time = Time.parse(time_str)
+        n_days_from_now = (Time.now + (num_days * 24 * 60 * 60))
+        time < n_days_from_now
+      end
+    end
+
+    # :custom_field_greater_than_or_equal_to_n_days_from_now function
+    class CustomFieldGreaterThanOrEqualToNDaysFromNowFunctionEvaluator < FunctionEvaluator
+      FUNCTION_NAME = :custom_field_greater_than_or_equal_to_n_days_from_now
+
+      def matches?
+        fn?(task_selector, FUNCTION_NAME)
+      end
+
+      def evaluate_arg?(_index)
+        false
+      end
+
+      # @param task [Asana::Resources::Task]
+      # @param custom_field_name [String]
+      # @param num_days [Integer]
+      # @return [Boolean]
+      def evaluate(task, custom_field_name, num_days)
+        custom_field = pull_custom_field_by_name_or_raise(task, custom_field_name)
+
+        time_str = custom_field.fetch('display_value')
+        time = Time.parse(time_str)
+        n_days_from_now = (Time.now + (num_days * 24 * 60 * 60))
+        time >= n_days_from_now
+      end
+    end
+
+    # String literals
+    class StringLiteralEvaluator < FunctionEvaluator
+      def matches?
+        task_selector.is_a?(String)
+      end
+
+      # @sg-ignore
+      # @param _task [Asana::Resources::Task]
+      # @return [String]
+      def evaluate(_task)
+        task_selector
+      end
     end
   end
 
@@ -388,20 +408,20 @@ module Checkoff
     end
 
     FUNCTION_EVALUTORS = [
-      NotFunctionEvaluator,
-      NilPFunctionEvaluator,
-      EqualsPFunctionEvaluator,
-      TagPFunctionEvaluator,
-      CustomFieldValueFunctionEvaluator,
-      CustomFieldGidValueFunctionEvaluator,
-      CustomFieldGidValueContainsAnyGidFunctionEvaluator,
-      CustomFieldGidValueContainsAllGidsFunctionEvaluator,
-      AndFunctionEvaluator,
-      DuePFunctionEvaluator,
-      DueDateSetPFunctionEvaluator,
-      CustomFieldLessThanNDaysFromNowFunctionEvaluator,
-      CustomFieldGreaterThanOrEqualToNDaysFromNowFunctionEvaluator,
-      StringLiteralEvaluator,
+      Checkoff::TaskSelectorClasses::NotFunctionEvaluator,
+      Checkoff::TaskSelectorClasses::NilPFunctionEvaluator,
+      Checkoff::TaskSelectorClasses::EqualsPFunctionEvaluator,
+      Checkoff::TaskSelectorClasses::TagPFunctionEvaluator,
+      Checkoff::TaskSelectorClasses::CustomFieldValueFunctionEvaluator,
+      Checkoff::TaskSelectorClasses::CustomFieldGidValueFunctionEvaluator,
+      Checkoff::TaskSelectorClasses::CustomFieldGidValueContainsAnyGidFunctionEvaluator,
+      Checkoff::TaskSelectorClasses::CustomFieldGidValueContainsAllGidsFunctionEvaluator,
+      Checkoff::TaskSelectorClasses::AndFunctionEvaluator,
+      Checkoff::TaskSelectorClasses::DuePFunctionEvaluator,
+      Checkoff::TaskSelectorClasses::DueDateSetPFunctionEvaluator,
+      Checkoff::TaskSelectorClasses::CustomFieldLessThanNDaysFromNowFunctionEvaluator,
+      Checkoff::TaskSelectorClasses::CustomFieldGreaterThanOrEqualToNDaysFromNowFunctionEvaluator,
+      Checkoff::TaskSelectorClasses::StringLiteralEvaluator,
     ].freeze
 
     # @param task_selector [Array]
