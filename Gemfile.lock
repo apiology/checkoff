@@ -235,6 +235,7 @@ DEPENDENCIES
   solargraph (>= 0.49.0)
   undercover
   webmock
+  yard
 
 BUNDLED WITH
    2.3.26
