@@ -27,3 +27,4 @@ gem 'simplecov-lcov'
 gem 'solargraph', ['>=0.49.0']
 gem 'undercover'
 gem 'webmock'
+gem 'yard'
