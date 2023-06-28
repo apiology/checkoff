@@ -2,7 +2,11 @@
 
 Command-line and gem client for Asana (unofficial)
 
-## Using
+## Using library
+
+See [docs](https://www.rubydoc.info/github/apiology/checkoff)
+
+## Using CLI
 
 ```sh
 $ checkoff --help
