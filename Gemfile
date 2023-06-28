@@ -29,6 +29,7 @@ gem 'simplecov-lcov'
 gem 'solargraph', ['>=0.49.0']
 gem 'undercover'
 gem 'webmock'
+gem 'yard'
 
 # ruby-asana gem is pending key bugfixes for checkoff as of
 # 2021-07-29:
