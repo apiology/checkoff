@@ -161,11 +161,10 @@ module Checkoff
 
       # @sg-ignore
       # @type [Array<Asana::Resources::Task>, nil]
-      already_fetched_dependencies = task.instance_variable_get(:@dependencies)
-      # @sg-ignore
-      return false unless already_fetched_dependencies.nil? || already_fetched_dependencies.size.positive?
+      dependencies = task.instance_variable_get(:@dependencies)
+      dependencies = task.dependencies if dependencies.nil?
 
-      task.dependencies.any? do |parent_task_info|
+      dependencies.any? do |parent_task_info|
         parent_task_gid = parent_task_info.gid
         parent_task = @asana_task.find_by_id(client, parent_task_gid,
                                              options: { fields: ['completed'] })

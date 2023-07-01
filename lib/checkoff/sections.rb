@@ -13,15 +13,24 @@ module Checkoff
     #   extend CacheMethod::ClassMethods
 
     MINUTE = 60
-    # @sg-ignore
     LONG_CACHE_TIME = MINUTE * 15
-    # @sg-ignore
     SHORT_CACHE_TIME = MINUTE * 5
 
     extend Forwardable
 
-    attr_reader :projects, :workspaces, :time, :my_tasks
+    # @return [Checkoff::Projects]
+    attr_reader :projects
 
+    # @return [Checkoff::Workspaces]
+    attr_reader :workspaces
+
+    # @return [Class<Time>]
+    attr_reader :time
+
+    # @return [Checkoff::MyTasks]
+    attr_reader :my_tasks
+
+    # @param config [Hash<Symbol, Object>]
     # @param client [Asana::Client]
     # @param projects [Checkoff::Projects]
     # @param workspaces [Checkoff::Workspaces]
@@ -108,6 +117,7 @@ module Checkoff
     # @param project_name [String, Symbol]
     # @param section_name [String, nil]
     #
+    # @sg-ignore
     # @return [Asana::Resources::Section]
     def section_or_raise(workspace_name, project_name, section_name)
       s = section(workspace_name, project_name, section_name)
@@ -123,13 +133,13 @@ module Checkoff
 
     private
 
-    # @!attribute [r] client
-    #   @return [Asana::Client]
+    # @return [Asana::Client]
     attr_reader :client
 
     # Given a project object, pull all tasks, then provide a Hash of
     # tasks with section name -> task list of the uncompleted tasks
     # @param project [Asana::Resources::Project]
+    # @param extra_fields [Array<String>]
     # @return [Hash<[String,nil], Array<Asana::Resources::Task>>]
     def tasks_by_section_for_project(project, extra_fields: [])
       raw_tasks = projects.tasks_from_project(project, extra_fields: extra_fields)
@@ -137,6 +147,8 @@ module Checkoff
       by_section(active_tasks, project.gid)
     end
 
+    # @param name [String]
+    # @return [String, nil]
     def section_key(name)
       inbox_section_names = ['(no section)', 'Untitled section', 'Inbox']
       return nil if inbox_section_names.include?(name)
@@ -188,6 +200,11 @@ module Checkoff
       project
     end
 
+    # @sg-ignore
+    # @param workspace_name [String]
+    # @param project_name [String, Symbol]
+    # @param section_name [String, nil]
+    # @return [Asana::Resources::Section, nil]
     def section(workspace_name, project_name, section_name)
       sections = sections_or_raise(workspace_name, project_name)
       sections.find { |section| section_key(section.name)&.chomp(':') == section_name&.chomp(':') }
