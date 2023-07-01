@@ -95,6 +95,16 @@ class TestTasks < BaseAsana
     refute(tasks.task_ready?(task))
   end
 
+  def test_task_ready_false_dependency_cached
+    tasks = get_test_object do
+      allow_task_due(due_on: nil, due_at: nil)
+      task.expects(:instance_variable_get).with(:@dependencies).returns([dependency_1])
+      expect_dependency_completion_pulled(dependency_1, dependency_1_gid, dependency_1_full_task,
+                                          false)
+    end
+    refute(tasks.task_ready?(task))
+  end
+
   def allow_task_due(due_on: nil, due_at: nil)
     allow_due_at_pulled(task, due_at)
     allow_due_on_pulled(task, due_on)
