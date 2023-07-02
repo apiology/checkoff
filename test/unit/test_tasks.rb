@@ -37,6 +37,7 @@ class TestTasks < BaseAsana
     tasks = get_test_object do
       mock_task_ready_false_due_in_future_on_date
     end
+
     refute(tasks.task_ready?(task))
   end
 
@@ -56,6 +57,7 @@ class TestTasks < BaseAsana
     tasks = get_test_object do
       mock_task_ready_false_due_in_future_at_time
     end
+
     refute(tasks.task_ready?(task))
   end
 
@@ -68,12 +70,12 @@ class TestTasks < BaseAsana
       expect_dependencies_pulled(task, [])
       allow_task_due(due_on: nil, due_at: nil)
     end
+
     assert(tasks.task_ready?(task))
   end
 
-  def expect_dependency_completion_pulled(dependency, dependency_gid, dependency_full_task,
+  def expect_dependency_completion_pulled(dependency_gid, dependency_full_task,
                                           completed)
-    dependency.expects(:gid).with.returns(dependency_1_gid)
     asana_task.expects(:find_by_id).with(client,
                                          dependency_gid,
                                          options: { fields: ['completed'] })
@@ -84,7 +86,8 @@ class TestTasks < BaseAsana
   def mock_task_ready_false_dependency
     allow_task_due(due_on: nil, due_at: nil)
     expect_dependencies_pulled(task, [dependency_1])
-    expect_dependency_completion_pulled(dependency_1, dependency_1_gid, dependency_1_full_task,
+    dependency_1.expects(:gid).with.returns(dependency_1_gid)
+    expect_dependency_completion_pulled(dependency_1_gid, dependency_1_full_task,
                                         false)
   end
 
@@ -92,16 +95,19 @@ class TestTasks < BaseAsana
     tasks = get_test_object do
       mock_task_ready_false_dependency
     end
+
     refute(tasks.task_ready?(task))
   end
 
   def test_task_ready_false_dependency_cached
     tasks = get_test_object do
       allow_task_due(due_on: nil, due_at: nil)
-      task.expects(:instance_variable_get).with(:@dependencies).returns([dependency_1])
-      expect_dependency_completion_pulled(dependency_1, dependency_1_gid, dependency_1_full_task,
+      task.expects(:instance_variable_get).with(:@dependencies)
+        .returns([{ 'gid' => dependency_1_gid }])
+      expect_dependency_completion_pulled(dependency_1_gid, dependency_1_full_task,
                                           false)
     end
+
     refute(tasks.task_ready?(task))
   end
 
@@ -122,6 +128,7 @@ class TestTasks < BaseAsana
     tasks = get_test_object do
       task.expects(:gid).returns('my_gid')
     end
+
     assert_equal('https://app.asana.com/0/0/my_gid/f', tasks.url_of_task(task))
   end
 
@@ -181,6 +188,7 @@ class TestTasks < BaseAsana
     tasks = get_test_object { mock_task_with_section }
     returned_task = tasks.task(workspace_name, project_name, task_name,
                                only_uncompleted: only_uncompleted, section_name: section_name)
+
     assert_equal(task, returned_task)
   end
 
@@ -194,6 +202,7 @@ class TestTasks < BaseAsana
     tasks = get_test_object { mock_task }
     returned_task = tasks.task(workspace_name, project_name, task_name,
                                only_uncompleted: only_uncompleted)
+
     assert_equal(task, returned_task)
   end
 
