@@ -17,19 +17,18 @@ module Checkoff
   # Work with projects in Asana
   class Projects
     MINUTE = 60
-    # @sg-ignore
     HOUR = MINUTE * 60
     DAY = 24 * HOUR
-    # @sg-ignore
     REALLY_LONG_CACHE_TIME = HOUR * 1
-    # @sg-ignore
     LONG_CACHE_TIME = MINUTE * 15
     SHORT_CACHE_TIME = MINUTE
 
     # @!parse
     #   extend CacheMethod::ClassMethods
 
+    # @param config [Hash<Symbol, Object>]
     # @param client [Asana::Client]
+    # @param workspaces [Checkoff::Workspaces]
     def initialize(config: Checkoff::Internal::ConfigLoader.load(:asana),
                    client: Checkoff::Clients.new(config: config).client,
                    workspaces: Checkoff::Workspaces.new(config: config,
@@ -59,8 +58,9 @@ module Checkoff
       if project_name.is_a?(Symbol) && project_name.to_s.start_with?('my_tasks')
         my_tasks(workspace_name)
       else
-        projects = projects_by_workspace_name(workspace_name)
-        projects.find do |project|
+        # @type [Asana::Collection<Asana::Resources::Project>]
+        ps = projects_by_workspace_name(workspace_name)
+        ps.find do |project|
           project.name == project_name
         end
       end
@@ -80,13 +80,12 @@ module Checkoff
 
     # find uncompleted tasks in a list
     # @param [Array<Asana::Resources::Task>] tasks
-    # @return [Array<Asana::Resources::Task>]
+    # @return [Enumerable<Asana::Resources::Task>]
     def active_tasks(tasks)
       tasks.select { |task| task.completed_at.nil? }
     end
 
     # pull task objects from a named project
-    # @sg-ignore
     # @param [Asana::Resources::Project] project
     # @param [Boolean] only_uncompleted
     # @param [Array<String>] extra_fields
@@ -102,17 +101,17 @@ module Checkoff
 
     private
 
+    # @return [Asana::Client]
     attr_reader :client
 
-    # @sg-ignore
+    # @return [Asana::ProxiedResourceClasses::Project]
     def projects
       client.projects
     end
     cache_method :projects, LONG_CACHE_TIME
 
-    # @sg-ignore
     # @param [String] workspace_name
-    # @return [Array<Asana::Resources::Project>]
+    # @return [Asana::Collection<Asana::Resources::Project>]
     def projects_by_workspace_name(workspace_name)
       workspace = @workspaces.workspace_or_raise(workspace_name)
       raise "Could not find workspace named #{workspace_name}" unless workspace
@@ -120,13 +119,10 @@ module Checkoff
       projects.find_by_workspace(workspace: workspace.gid)
     end
 
-    # @sg-ignore
     # @param [String] workspace_name
     # @return [Asana::Resources::Project]
     def my_tasks(workspace_name)
       workspace = @workspaces.workspace_or_raise(workspace_name)
-      # @sg-ignore
-      # @type [Asana::Resources::UserTaskList]
       result = client.user_task_lists.get_user_task_list_for_user(user_gid: 'me',
                                                                   workspace: workspace.gid)
       gid = result.gid
