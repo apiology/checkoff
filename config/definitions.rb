@@ -130,13 +130,9 @@
 #         def find_by_id(id, options: {}); end
 #       end
 #       class UserTaskList
-#
 #         # @param user_gid [String]  (required) A string identifying a user. This can either be the string \"me\", an email, or the gid of a user.
 #         # @param workspace [String]  (required) The workspace in which to get the user task list.
 #         # @param options [Hash] the request I/O options
-#         # > opt_fields [Array[String]]  Defines fields to return. Some requests return *compact* representations of objects in order to conserve resources and complete the request more efficiently. Other times requests return more information than you may need. This option allows you to list the exact set of fields that the API should be sure to return for the objects. The field names should be provided as paths, described below. The id of included objects will always be returned, regardless of the field options.
-#
-#         # > opt_pretty - [bool]  Provides “pretty” output. Provides the response in a “pretty” format. In the case of JSON this means doing proper line breaking and indentation to make it readable. This will take extra time and increase the response size so it is advisable only to use this during debugging.
 #         # @return [Asana::Resources::UserTaskList]
 #         def get_user_task_list_for_user(client, user_gid:,
 #             workspace: nil, options: {}); end

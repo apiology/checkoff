@@ -41,6 +41,7 @@ module Checkoff
         workspace.name == workspace_name
       end
     end
+    cache_method :workspace, LONG_CACHE_TIME
 
     # @return [Asana::Resources::Workspace]
     def default_workspace

@@ -116,13 +116,15 @@ module Checkoff
       workspace = @workspaces.workspace_or_raise(workspace_name)
       raise "Could not find workspace named #{workspace_name}" unless workspace
 
-      projects.find_by_workspace(workspace: workspace.gid)
+      projects.find_by_workspace(workspace: workspace.gid, per_page: 100)
     end
+    cache_method :projects_by_workspace_name, LONG_CACHE_TIME
 
     # @param [String] workspace_name
     # @return [Asana::Resources::Project]
     def my_tasks(workspace_name)
       workspace = @workspaces.workspace_or_raise(workspace_name)
+      # @sg-ignore
       result = client.user_task_lists.get_user_task_list_for_user(user_gid: 'me',
                                                                   workspace: workspace.gid)
       gid = result.gid
