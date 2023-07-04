@@ -28,7 +28,8 @@ class TestProjects < BaseAsana
 
   def setup_projects_queried(workspace_gid: my_workspace_gid)
     projects
-      .expects(:find_by_workspace).with(workspace: workspace_gid)
+      .expects(:find_by_workspace).with(workspace: workspace_gid,
+                                        per_page: 100)
       .returns(sample_projects.keys)
     sample_projects.each do |project, name|
       project.expects(:name).returns(name).at_least(0)

@@ -59,6 +59,7 @@ module Checkoff
       # @sg-ignore
       client.sections.get_sections_for_project(project_gid: project.gid)
     end
+    cache_method :sections_or_raise, SHORT_CACHE_TIME
 
     # Given a workspace name and project name, then provide a Hash of
     # tasks with section name -> task list of the uncompleted tasks
