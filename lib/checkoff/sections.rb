@@ -151,7 +151,7 @@ module Checkoff
     # @param name [String]
     # @return [String, nil]
     def section_key(name)
-      inbox_section_names = ['(no section)', 'Untitled section', 'Inbox']
+      inbox_section_names = ['(no section)', 'Untitled section', 'Inbox', 'Recently assigned']
       return nil if inbox_section_names.include?(name)
 
       name
