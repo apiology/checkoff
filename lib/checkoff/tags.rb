@@ -30,7 +30,7 @@ module Checkoff
       @client = client
     end
 
-    # @return [Array<Asana::Resources::Task>]
+    # @return [Enumerable<Asana::Resources::Task>]
     def tasks(workspace_name, tag_name,
               only_uncompleted: true,
               extra_fields: [])

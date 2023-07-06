@@ -27,8 +27,8 @@ module Checkoff
     end
 
     # pulls a Hash of subtasks broken out by section
-    # @param tasks [Array<Asana::Resources::Task>]
-    # @return [Hash<[nil,String], Array<Asana::Resources::Task>>]
+    # @param tasks [Enumerable<Asana::Resources::Task>]
+    # @return [Hash<[nil,String], Enumerable<Asana::Resources::Task>>]
     def by_section(tasks)
       current_section = nil
       by_section = { nil => [] }

@@ -53,7 +53,7 @@ module Checkoff
     # @param workspace_name [String]
     # @param project_name [String, Symbol]
     #
-    # @return [Array<Asana::Resources::Section>]
+    # @return [Enumerable<Asana::Resources::Section>]
     def sections_or_raise(workspace_name, project_name)
       project = project_or_raise(workspace_name, project_name)
       # @sg-ignore
@@ -66,7 +66,7 @@ module Checkoff
     # @param workspace_name [String]
     # @param project_name [String, Symbol]
     # @param extra_fields [Array<String>]
-    # @return [Hash{[String, nil] => Array<Asana::Resources::Task>}]
+    # @return [Hash{[String, nil] => Enumerable<Asana::Resources::Task>}]
     def tasks_by_section(workspace_name, project_name, extra_fields: [])
       raise ArgumentError, 'Provided nil workspace name' if workspace_name.nil?
       raise ArgumentError, 'Provided nil project name' if project_name.nil?
@@ -89,7 +89,7 @@ module Checkoff
     # @param only_uncompleted [Boolean]
     # @param extra_fields [Array<String>]
     #
-    # @return [Array<Asana::Resources::Task>]
+    # @return [Enumerable<Asana::Resources::Task>]
     def tasks(workspace_name, project_name, section_name,
               only_uncompleted: true,
               extra_fields: [])
@@ -141,7 +141,7 @@ module Checkoff
     # tasks with section name -> task list of the uncompleted tasks
     # @param project [Asana::Resources::Project]
     # @param extra_fields [Array<String>]
-    # @return [Hash<[String,nil], Array<Asana::Resources::Task>>]
+    # @return [Hash<[String,nil], Enumerable<Asana::Resources::Task>>]
     def tasks_by_section_for_project(project, extra_fields: [])
       raw_tasks = projects.tasks_from_project(project, extra_fields: extra_fields)
       active_tasks = projects.active_tasks(raw_tasks)
@@ -158,9 +158,9 @@ module Checkoff
     end
 
     # Given a list of tasks, pull a Hash of tasks with section name -> task list
-    # @param tasks [Array<Asana::Resources::Task>]
+    # @param tasks [Enumerable<Asana::Resources::Task>]
     # @param project_gid [String]
-    # @return [Hash<[String,nil], Array<Asana::Resources::Task>>]
+    # @return [Hash<[String,nil], Enumerable<Asana::Resources::Task>>]
     def by_section(tasks, project_gid)
       by_section = {}
       # @sg-ignore
@@ -171,7 +171,7 @@ module Checkoff
     end
     cache_method :by_section, LONG_CACHE_TIME
 
-    # @param by_section [Hash{[String, nil] => Array<Asana::Resources::Task>}]
+    # @param by_section [Hash{[String, nil] => Enumerable<Asana::Resources::Task>}]
     # @param task [Asana::Resources::Task]
     # @param project_gid [String]
     # @return [void]

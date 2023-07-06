@@ -57,7 +57,7 @@ module Checkoff
     # @param [String] workspace_name
     # @param [String] url
     # @param [Array<String>] extra_fields
-    # @return [Array<Asana::Resources::Task>]
+    # @return [Enumerable<Asana::Resources::Task>]
     def task_search(workspace_name, url, extra_fields: [])
       workspace = workspaces.workspace_or_raise(workspace_name)
       # @sg-ignore

@@ -79,7 +79,7 @@ module Checkoff
     cache_method :project_or_raise, LONG_CACHE_TIME
 
     # find uncompleted tasks in a list
-    # @param [Array<Asana::Resources::Task>] tasks
+    # @param [Enumerable<Asana::Resources::Task>] tasks
     # @return [Enumerable<Asana::Resources::Task>]
     def active_tasks(tasks)
       tasks.select { |task| task.completed_at.nil? }
@@ -89,7 +89,7 @@ module Checkoff
     # @param [Asana::Resources::Project] project
     # @param [Boolean] only_uncompleted
     # @param [Array<String>] extra_fields
-    # @return [Array<Asana::Resources::Task>]
+    # @return [Enumerable<Asana::Resources::Task>]
     def tasks_from_project(project, only_uncompleted: true, extra_fields: [])
       options = task_options
       options[:completed_since] = '9999-12-01' if only_uncompleted
