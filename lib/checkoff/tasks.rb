@@ -109,7 +109,7 @@ module Checkoff
     # @param section_name [String, nil, :unspecified]
     # @param only_uncompleted [Boolean]
     # @param extra_fields [Array<String>]
-    # @return [Array<Asana::Resources::Task>]
+    # @return [Enumerable<Asana::Resources::Task>]
     def tasks_from_section(workspace_name, project_name,
                            section_name:,
                            only_uncompleted:,
@@ -160,7 +160,7 @@ module Checkoff
       # https://github.com/Asana/ruby-asana/issues/125
 
       # @sg-ignore
-      # @type [Array<Asana::Resources::Task>, nil]
+      # @type [Enumerable<Asana::Resources::Task>, nil]
       dependencies = task.instance_variable_get(:@dependencies)
       dependencies = task.dependencies.map { |task| { 'gid' => task.gid } } if dependencies.nil?
 
