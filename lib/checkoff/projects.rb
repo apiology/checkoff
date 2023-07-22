@@ -21,6 +21,7 @@ module Checkoff
     DAY = 24 * HOUR
     REALLY_LONG_CACHE_TIME = HOUR * 1
     LONG_CACHE_TIME = MINUTE * 15
+    MEDIUM_CACHE_TIME = MINUTE * 5
     SHORT_CACHE_TIME = MINUTE
 
     # @!parse
@@ -118,7 +119,8 @@ module Checkoff
 
       projects.find_by_workspace(workspace: workspace.gid, per_page: 100)
     end
-    cache_method :projects_by_workspace_name, LONG_CACHE_TIME
+    # 15 minute cache resulted in 'Your pagination token has expired'
+    cache_method :projects_by_workspace_name, MEDIUM_CACHE_TIME
 
     # @param [String] workspace_name
     # @return [Asana::Resources::Project]
