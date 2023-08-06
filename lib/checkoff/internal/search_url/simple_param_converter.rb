@@ -171,9 +171,15 @@ module Checkoff
 
         # @return [Hash<String, String>] the converted params
         def convert
-          simple_url_params.to_a.flat_map do |key, values|
+          out = simple_url_params.to_a.flat_map do |key, values|
             convert_arg(key, values).each_slice(2).to_a
           end.to_h
+          unless out.include? 'sort_by'
+            # keep results consistent between calls; API using default
+            # sort_by does not seem to be.
+            out['sort_by'] = 'created_at'
+          end
+          out
         end
 
         private

@@ -13,6 +13,7 @@ class TestSearchUrlParser < ClassTest
       'projects.any' => '123',
       'custom_fields.456.value' => '789',
       'custom_fields.1234.is_set' => 'false',
+      'sort_by' => 'created_at',
     }
     task_selector = [:nil?, [:custom_field_gid_value, '1234']]
 
@@ -27,6 +28,7 @@ class TestSearchUrlParser < ClassTest
       'projects.any' => '123',
       'custom_fields.456.is_set' => 'false',
       'custom_fields.789.value' => '1234',
+      'sort_by' => 'created_at',
     }
     task_selector = [:nil?, [:custom_field_gid_value, '456']]
 
@@ -42,6 +44,7 @@ class TestSearchUrlParser < ClassTest
       'custom_fields.456.is_set' => 'false',
       'custom_fields.789.value' => '1234',
       'custom_fields.34.less_than' => '100',
+      'sort_by' => 'created_at',
     }
 
     task_selector = [:and,
@@ -55,7 +58,9 @@ class TestSearchUrlParser < ClassTest
   def test_convert_params_4
     search_url_parser = get_test_object
     url = 'https://app.asana.com/0/search?custom_field_123.variant=is_not&custom_field_123.selected_options=456~789'
-    asana_api_params = {}
+    asana_api_params = {
+      'sort_by' => 'created_at',
+    }
     task_selector = ['not', ['custom_field_gid_value_contains_any_gid', '123', %w[456 789]]]
 
     assert_equal([asana_api_params, task_selector],
@@ -69,6 +74,7 @@ class TestSearchUrlParser < ClassTest
       'custom_fields.456.is_set' => 'false',
       'completed' => false,
       'projects.any' => '123',
+      'sort_by' => 'created_at',
     }
     task_selector = [:nil?, [:custom_field_gid_value, '456']]
 
@@ -87,6 +93,7 @@ class TestSearchUrlParser < ClassTest
       'completed' => false,
       'tags.not' => '123,456,789',
       'projects.any' => '1234',
+      'sort_by' => 'created_at',
     }
     task_selector = [:nil?, [:custom_field_gid_value, '5678']]
 
@@ -101,6 +108,7 @@ class TestSearchUrlParser < ClassTest
       'tags.any' => '123',
       'projects.any' => '12',
       'sections.any' => '789',
+      'sort_by' => 'created_at',
     }
     task_selector = []
 
@@ -114,6 +122,7 @@ class TestSearchUrlParser < ClassTest
     asana_api_params = {
       'tags.any' => '123',
       'sections.any' => '789',
+      'sort_by' => 'created_at',
     }
     task_selector = []
 
@@ -129,6 +138,7 @@ class TestSearchUrlParser < ClassTest
       'tags.any' => '123',
       'tags.not' => '456,789,12,34',
       'sections.any' => '78',
+      'sort_by' => 'created_at',
     }
     task_selector = []
 
@@ -173,6 +183,7 @@ class TestSearchUrlParser < ClassTest
       'custom_fields.456.greater_than' => '99999',
       'completed' => false,
       'projects.any' => '123',
+      'sort_by' => 'created_at',
     }
     task_selector = []
 
@@ -212,6 +223,7 @@ class TestSearchUrlParser < ClassTest
       'is_subtask' => false,
       'projects.any' => '12',
       'sections.any' => '456,789,56,78,1',
+      'sort_by' => 'created_at',
     }
     task_selector = ['not', ['custom_field_gid_value_contains_any_gid', '6', ['7']]]
 
@@ -228,6 +240,7 @@ class TestSearchUrlParser < ClassTest
       'is_subtask' => false,
       'projects.any' => '123',
       'projects.not' => '456',
+      'sort_by' => 'created_at',
     }
     task_selector = [:and,
                      ['custom_field_gid_value_contains_any_gid', '789', %w[12 34 56 78 90 1 2]],
@@ -242,7 +255,7 @@ class TestSearchUrlParser < ClassTest
     url = 'https://app.asana.com/0/search?completion=incomplete&subtask=is_not_subtask&any_projects.ids=123&not_projects.ids=456&custom_field_789.variant=contains_any&custom_field_789.selected_options=12~34~56~78~90~1~2'
     asana_api_params = {
       'custom_fields.789.is_set' => 'true', 'completed' => false, 'is_subtask' => false,
-      'projects.any' => '123', 'projects.not' => '456'
+      'projects.any' => '123', 'projects.not' => '456', 'sort_by' => 'created_at'
     }
     task_selector = ['custom_field_gid_value_contains_any_gid', '789', %w[12 34 56 78 90 1 2]]
 
@@ -256,6 +269,7 @@ class TestSearchUrlParser < ClassTest
     asana_api_params = {
       'custom_fields.123.is_set' => 'true',
       'custom_fields.12.is_set' => 'true',
+      'sort_by' => 'created_at',
     }
     task_selector = [:custom_field_gid_value_contains_any_gid, '123', %w[456 789]]
 
@@ -281,6 +295,7 @@ class TestSearchUrlParser < ClassTest
       'completed' => true,
       'is_subtask' => false,
       'sections.any' => '456',
+      'sort_by' => 'created_at',
     }
     task_selector = []
 
@@ -298,6 +313,7 @@ class TestSearchUrlParser < ClassTest
       'is_subtask' => false,
       'projects.any' => '123',
       'sections.not' => '456,789,12,34,78,90,1',
+      'sort_by' => 'created_at',
     }
     task_selector = [:and,
                      [:and,
@@ -348,6 +364,7 @@ class TestSearchUrlParser < ClassTest
     asana_api_params = {
       'resource_subtype' => 'milestone',
       'sections.any' => '456',
+      'sort_by' => 'created_at',
     }
     task_selector = []
 
