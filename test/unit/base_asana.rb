@@ -21,7 +21,7 @@ class BaseAsana < ClassTest
     {
       per_page: 100,
       options: {
-        fields: %w[name completed_at due_at due_on tags
+        fields: %w[name completed_at start_at start_on due_at due_on tags
                    memberships.project.gid memberships.section.name dependencies],
       },
       completed_since: '9999-12-01',
@@ -32,7 +32,7 @@ class BaseAsana < ClassTest
     {
       per_page: 100,
       options: {
-        fields: %w[name completed_at due_at due_on tags
+        fields: %w[name completed_at start_at start_on due_at due_on tags
                    memberships.project.gid memberships.section.name dependencies],
       },
     }
