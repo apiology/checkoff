@@ -349,7 +349,11 @@ module Checkoff
       def evaluate(task, custom_field_name, num_days)
         custom_field = pull_custom_field_by_name_or_raise(task, custom_field_name)
 
+        # @sg-ignore
+        # @type [String, nil]
         time_str = custom_field.fetch('display_value')
+        return false if time_str.nil?
+
         time = Time.parse(time_str)
         n_days_from_now = (Time.now + (num_days * 24 * 60 * 60))
         time < n_days_from_now
@@ -375,7 +379,11 @@ module Checkoff
       def evaluate(task, custom_field_name, num_days)
         custom_field = pull_custom_field_by_name_or_raise(task, custom_field_name)
 
+        # @sg-ignore
+        # @type [String, nil]
         time_str = custom_field.fetch('display_value')
+        return false if time_str.nil?
+
         time = Time.parse(time_str)
         n_days_from_now = (Time.now + (num_days * 24 * 60 * 60))
         time >= n_days_from_now
@@ -429,10 +437,9 @@ module Checkoff
     def evaluate(task_selector)
       return true if task_selector.empty?
 
-      # @param evaluator_class [Class<FunctionEvaluator>]
+      # @param evaluator_class [Class<TaskSelectorClasses::FunctionEvaluator>]
       FUNCTION_EVALUTORS.each do |evaluator_class|
         # @sg-ignore
-        # @type [FunctionEvaluator]
         evaluator = evaluator_class.new(task_selector: task_selector,
                                         tasks: tasks)
 
@@ -448,7 +455,7 @@ module Checkoff
 
     # @sg-ignore
     # @param task_selector [Array]
-    # @param evaluator [FunctionEvaluator]
+    # @param evaluator [TaskSelectorClasses::FunctionEvaluator]
     # @return [Boolean, Object, nil]
     def try_this_evaluator(task_selector, evaluator)
       # if task_selector is an array
