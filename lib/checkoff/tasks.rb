@@ -44,11 +44,12 @@ module Checkoff
     def task_ready?(task, ignore_dependencies: false)
       return false if !ignore_dependencies && incomplete_dependencies?(task)
 
+      start = start_time(task)
       due = due_time(task)
 
-      return true if due.nil?
+      return true if start.nil? && due.nil?
 
-      due < @time_class.now
+      (start || due) < @time_class.now
     end
 
     # Pull a specific task by name
@@ -138,6 +139,15 @@ module Checkoff
     # @return [String]
     def default_assignee_gid
       @config.fetch(:default_assignee_gid)
+    end
+
+    # @param task [Asana::Resources::Task]
+    # @return [Time, nil]
+    def start_time(task)
+      return @time_class.parse(task.start_at) if task.start_at
+      return @time_class.parse(task.start_on) if task.start_on
+
+      nil
     end
 
     # @param task [Asana::Resources::Task]

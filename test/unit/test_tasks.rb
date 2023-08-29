@@ -1,5 +1,6 @@
 # frozen_string_literal: true
 
+require_relative 'test_helper'
 require_relative 'base_asana'
 require 'checkoff/cli'
 
@@ -15,20 +16,36 @@ class TestTasks < BaseAsana
   let_mock :workspace_gid, :task_name, :default_assignee_gid
 
   let_mock :task,
+           :start_on_string, :start_on_obj,
+           :start_at_string, :start_at_obj,
            :due_at_string, :due_at_obj,
            :due_on_string, :due_on_obj,
            :asana_entity_project,
            :dependency_1, :dependency_1_gid,
            :dependency_1_full_task, :now
 
+  def expect_now_pulled
+    time_class.expects(:now).returns(now).at_least_once
+  end
+
   def expect_due_on_parsed(less_than_now:)
     time_class.expects(:parse).with(due_on_string).returns(due_on_obj)
-    time_class.expects(:now).returns(now)
-    due_on_obj.expects(:<).with(now).returns(less_than_now)
+    due_on_obj.expects(:<).with(now).returns(less_than_now).at_least(0)
+  end
+
+  def expect_start_on_parsed(less_than_now:)
+    time_class.expects(:parse).with(start_on_string).returns(start_on_obj)
+    start_on_obj.expects(:<).with(now).returns(less_than_now)
+  end
+
+  def expect_start_at_parsed(less_than_now:)
+    time_class.expects(:parse).with(start_at_string).returns(start_at_obj)
+    start_at_obj.expects(:<).with(now).returns(less_than_now)
   end
 
   def mock_task_ready_false_due_in_future_on_date
     expect_dependencies_pulled(task, [])
+    expect_now_pulled
     allow_task_due(due_on: due_on_string, due_at: nil)
     expect_due_on_parsed(less_than_now: false)
   end
@@ -39,6 +56,38 @@ class TestTasks < BaseAsana
     end
 
     refute(tasks.task_ready?(task))
+  end
+
+  def mock_task_ready_true_start_in_past
+    expect_dependencies_pulled(task, [])
+    allow_task_due(start_on: start_on_string, due_on: due_on_string, due_at: nil)
+    expect_now_pulled
+    expect_start_on_parsed(less_than_now: true)
+    expect_due_on_parsed(less_than_now: false)
+  end
+
+  def test_task_ready_true_start_in_past
+    tasks = get_test_object do
+      mock_task_ready_true_start_in_past
+    end
+
+    assert(tasks.task_ready?(task))
+  end
+
+  def mock_task_ready_true_start_in_past_time
+    expect_dependencies_pulled(task, [])
+    allow_task_due(start_at: start_at_string, due_on: due_on_string, due_at: nil)
+    expect_now_pulled
+    expect_start_at_parsed(less_than_now: true)
+    expect_due_on_parsed(less_than_now: false)
+  end
+
+  def test_task_ready_true_start_in_past_time
+    tasks = get_test_object do
+      mock_task_ready_true_start_in_past_time
+    end
+
+    assert(tasks.task_ready?(task))
   end
 
   def expect_due_at_parsed(less_than_now:)
@@ -111,9 +160,19 @@ class TestTasks < BaseAsana
     refute(tasks.task_ready?(task))
   end
 
-  def allow_task_due(due_on: nil, due_at: nil)
+  def allow_task_due(start_on: nil, start_at: nil, due_on: nil, due_at: nil)
+    allow_start_at_pulled(task, start_at)
+    allow_start_on_pulled(task, start_on)
     allow_due_at_pulled(task, due_at)
     allow_due_on_pulled(task, due_on)
+  end
+
+  def allow_start_at_pulled(task, start_at)
+    task.expects(:start_at).returns(start_at).at_least(0)
+  end
+
+  def allow_start_on_pulled(task, start_on)
+    task.expects(:start_on).returns(start_on).at_least(0)
   end
 
   def allow_due_at_pulled(task, due_at)
