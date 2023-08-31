@@ -13,14 +13,21 @@ module Checkoff
       # Parse Asana search URLs into parameters suitable to pass into
       # the /workspaces/{workspace_gid}/tasks/search endpoint
       class Parser
+        # @param _deps [Hash]
         def initialize(_deps = {})
           # allow dependencies to be passed in by tests
         end
 
+        # @param url [String]
+        # @return [Array(Hash<String, String>, Hash<String, String>)]
         def convert_params(url)
           url_params = CGI.parse(URI.parse(url).query)
+          # @type custom_field_params [Hash<String, Array<String>>]
+          # @type simple_url_params [Hash<String, Array<String>>]
           # @sg-ignore
           custom_field_params, simple_url_params = partition_url_params(url_params)
+          # @type custom_field_args [Hash<String, String>]
+          # @type task_selector [Hash<String, String>]
           # @sg-ignore
           custom_field_args, task_selector = convert_custom_field_params(custom_field_params)
           simple_url_args = convert_simple_params(simple_url_params)
@@ -29,10 +36,14 @@ module Checkoff
 
         private
 
+        # @param simple_url_params [Hash<String, Array<String>>]
+        # @return [Hash<String, String>]
         def convert_simple_params(simple_url_params)
           SimpleParamConverter.new(simple_url_params: simple_url_params).convert
         end
 
+        # @param custom_field_params [Hash<String, Array<String>>]
+        # @return [Array]
         def convert_custom_field_params(custom_field_params)
           CustomFieldParamConverter.new(custom_field_params: custom_field_params).convert
         end
