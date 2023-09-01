@@ -382,6 +382,48 @@ class TestSearchUrlParser < ClassTest
                  e.message)
   end
 
+  def test_convert_params_27
+    Date.stub(:today, Date.new(2023, 1, 1)) do
+      search_url_parser = get_test_object
+      url = 'https://app.asana.com/0/search?completion=incomplete&subtask=is_not_subtask&due_date.operator=through_next&due_date.value=0&due_date.unit=day&any_projects.ids=123'
+      asana_api_params = {
+        'completed' => false,
+        'is_subtask' => false,
+        'projects.any' => '123',
+        'sort_by' => 'created_at',
+        'due_on.before' => '2023-01-01',
+      }
+      task_selector = []
+
+      assert_equal([asana_api_params, task_selector],
+                   search_url_parser.convert_params(url))
+    end
+  end
+
+  def test_convert_params_28
+    Date.stub(:today, Date.new(2023, 1, 1)) do
+      search_url_parser = get_test_object
+      url = 'https://app.asana.com/0/search?completion=incomplete&subtask=is_not_subtask&due_date.operator=something_else&due_date.value=0&due_date.unit=day&any_projects.ids=123'
+      e = assert_raises(RuntimeError) do
+        search_url_parser.convert_params(url)
+      end
+      assert_equal('Teach me how to handle other date modes',
+                   e.message)
+    end
+  end
+
+  def test_convert_params_29
+    Date.stub(:today, Date.new(2023, 1, 1)) do
+      search_url_parser = get_test_object
+      url = 'https://app.asana.com/0/search?completion=incomplete&subtask=is_not_subtask&due_date.operator=through_next&due_date.value=0&due_date.unit=something_else&any_projects.ids=123'
+      e = assert_raises(RuntimeError) do
+        search_url_parser.convert_params(url)
+      end
+      assert_equal('Teach me how to handle other time units',
+                   e.message)
+    end
+  end
+
   def class_under_test
     Checkoff::Internal::SearchUrl::Parser
   end

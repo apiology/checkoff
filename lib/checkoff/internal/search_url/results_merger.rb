@@ -13,7 +13,7 @@ module Checkoff
           # @type [Hash<String, String>]
           f = args.fetch(0)
           # rest of args
-          r = args.drop(1)
+          r = args.drop(0)
           f.merge(*r)
         end
 
