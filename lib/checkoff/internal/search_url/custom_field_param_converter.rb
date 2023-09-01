@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 require_relative 'custom_field_variant'
+require_relative 'results_merger'
 
 module Checkoff
   module Internal
@@ -20,16 +21,14 @@ module Checkoff
           # @type task_selector [Array<[Symbol, Array]>]
           task_selector = []
           by_custom_field.each do |gid, single_custom_field_params|
-            # @type new_args [Hash<String, String>]
-            # @type new_task_selector [Hash<String, String>]
             # @sg-ignore
             new_args, new_task_selector = convert_single_custom_field_params(gid,
                                                                              single_custom_field_params)
-            # @type args [Hash<String, String>]
-            # @type task_selector [Hash<String, String>]
+
+            args = ResultsMerger.merge_args(args, new_args)
+
             # @sg-ignore
-            args, task_selector = merge_args_and_task_selectors(args, new_args,
-                                                                task_selector, new_task_selector)
+            task_selector = ResultsMerger.merge_task_selectors(task_selector, new_task_selector)
           end
           [args, task_selector]
         end
@@ -42,25 +41,6 @@ module Checkoff
           custom_field_params.group_by do |key, _value|
             gid_from_custom_field_key(key)
           end.transform_values(&:to_h)
-        end
-
-        # @param args [Hash<String, String>]
-        # @param new_args [Hash<String, String>]
-        # @param task_selector [Array<[Symbol, Array]>]
-        # @param new_task_selector [Array<[Symbol, Array]>]
-        # @return [Array(Hash<String, String>, [Array<[Symbol, Array]>])]
-        def merge_args_and_task_selectors(args, new_args, task_selector, new_task_selector)
-          final_args = args.merge(new_args)
-
-          final_task_selector = if new_task_selector == []
-                                  task_selector
-                                elsif task_selector == []
-                                  new_task_selector
-                                else
-                                  [:and, task_selector, new_task_selector]
-                                end
-
-          [final_args, final_task_selector]
         end
 
         # @type [Hash<String, Class<CustomFieldVariant>]
