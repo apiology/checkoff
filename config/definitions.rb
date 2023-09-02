@@ -83,7 +83,7 @@
 #         # just because another object it is associated with (e.g. a subtask)
 #         # is modified. Actions that count as modifying the task include
 #         # assigning, renaming, completing, and adding stories.
-#         # @return [Asana::Collection<Asana::Resources::Task>]
+#         # @return [Enumerable<Asana::Resources::Task>]
 #         def find_all(assignee: nil, workspace: nil, project: nil, section: nil,
 #                      tag: nil, user_task_list: nil, completed_since: nil,
 #                      modified_since: nil, per_page: 20, options: {}); end
@@ -106,7 +106,7 @@
 #       class Section
 #         # @param project_gid [String]
 #         # @return [Enumerable<Asana::Resources::Section>]
-#         def get_sections_for_project(client, project_gid:, options: {}); end
+#         def get_sections_for_project(project_gid:, options: {}); end
 #       end
 #       class Project
 #         # Returns the compact project records for all projects in the workspace.

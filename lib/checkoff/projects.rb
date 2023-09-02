@@ -91,12 +91,14 @@ module Checkoff
     # @param [Boolean] only_uncompleted
     # @param [Array<String>] extra_fields
     # @return [Enumerable<Asana::Resources::Task>]
-    def tasks_from_project(project, only_uncompleted: true, extra_fields: [])
+    def tasks_from_project(project,
+                           only_uncompleted: true,
+                           extra_fields: [])
       options = task_options
       options[:completed_since] = '9999-12-01' if only_uncompleted
       options[:project] = project.gid
       options[:options][:fields] += extra_fields
-      client.tasks.find_all(**options).to_a
+      client.tasks.find_all(**options)
     end
     cache_method :tasks_from_project, SHORT_CACHE_TIME
 
