@@ -65,17 +65,21 @@ module Checkoff
     # tasks with section name -> task list of the uncompleted tasks
     # @param workspace_name [String]
     # @param project_name [String, Symbol]
+    # @param only_uncompleted [Boolean]
     # @param extra_fields [Array<String>]
     # @return [Hash{[String, nil] => Enumerable<Asana::Resources::Task>}]
-    def tasks_by_section(workspace_name, project_name, extra_fields: [])
+    def tasks_by_section(workspace_name,
+                         project_name,
+                         only_uncompleted: true,
+                         extra_fields: [])
       raise ArgumentError, 'Provided nil workspace name' if workspace_name.nil?
       raise ArgumentError, 'Provided nil project name' if project_name.nil?
 
       project = project_or_raise(workspace_name, project_name)
       if project_name == :my_tasks
-        my_tasks.tasks_by_section_for_my_tasks(project, extra_fields: extra_fields)
+        my_tasks.tasks_by_section_for_my_tasks(project, only_uncompleted: only_uncompleted, extra_fields: extra_fields)
       else
-        tasks_by_section_for_project(project, extra_fields: extra_fields)
+        tasks_by_section_for_project(project, only_uncompleted: only_uncompleted, extra_fields: extra_fields)
       end
     end
 
@@ -140,10 +144,15 @@ module Checkoff
     # Given a project object, pull all tasks, then provide a Hash of
     # tasks with section name -> task list of the uncompleted tasks
     # @param project [Asana::Resources::Project]
+    # @param only_uncompleted [Boolean]
     # @param extra_fields [Array<String>]
     # @return [Hash<[String,nil], Enumerable<Asana::Resources::Task>>]
-    def tasks_by_section_for_project(project, extra_fields: [])
-      raw_tasks = projects.tasks_from_project(project, extra_fields: extra_fields)
+    def tasks_by_section_for_project(project,
+                                     only_uncompleted: true,
+                                     extra_fields: [])
+      raw_tasks = projects.tasks_from_project(project,
+                                              only_uncompleted: only_uncompleted,
+                                              extra_fields: extra_fields)
       active_tasks = projects.active_tasks(raw_tasks)
       by_section(active_tasks, project.gid)
     end
@@ -165,7 +174,7 @@ module Checkoff
       by_section = {}
       # @sg-ignore
       sections = client.sections.get_sections_for_project(project_gid: project_gid)
-      sections.each { |section| by_section[section_key(section.name)] = [] }
+      sections.each_entry { |section| by_section[section_key(section.name)] = [] }
       tasks.each { |task| file_task_by_section(by_section, task, project_gid) }
       by_section
     end

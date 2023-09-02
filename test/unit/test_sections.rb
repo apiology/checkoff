@@ -59,6 +59,7 @@ class TestSections < BaseAsana
   def expect_my_tasks_pulled(project, tasks_arr, active_tasks_arr)
     @mocks[:projects]
       .expects(:tasks_from_project).with(project,
+                                         only_uncompleted: true,
                                          extra_fields: ['assignee_section.name'])
       .returns(tasks_arr)
       .at_least(1)
@@ -150,6 +151,7 @@ class TestSections < BaseAsana
   def expect_tasks_pulled(project, tasks_arr, active_tasks_arr)
     @mocks[:projects]
       .expects(:tasks_from_project).with(project,
+                                         only_uncompleted: true,
                                          extra_fields: [])
       .returns(tasks_arr)
       .at_least(1)
