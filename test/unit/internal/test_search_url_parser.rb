@@ -378,6 +378,7 @@ class TestSearchUrlParser < ClassTest
     e = assert_raises(RuntimeError) do
       search_url_parser.convert_params(url)
     end
+
     assert_equal('Teach me how to handle milestone = ["garbage"]',
                  e.message)
   end
@@ -407,7 +408,8 @@ class TestSearchUrlParser < ClassTest
       e = assert_raises(RuntimeError) do
         search_url_parser.convert_params(url)
       end
-      assert_equal('Teach me how to handle other date modes',
+
+      assert_equal('Teach me how to handle date mode: ["something_else"].',
                    e.message)
     end
   end
@@ -419,6 +421,7 @@ class TestSearchUrlParser < ClassTest
       e = assert_raises(RuntimeError) do
         search_url_parser.convert_params(url)
       end
+
       assert_equal('Teach me how to handle other time units',
                    e.message)
     end
