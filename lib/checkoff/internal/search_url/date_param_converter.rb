@@ -48,9 +48,11 @@ module Checkoff
 
         # @return [void]
         def validate_due_date_through_next!
-          return if date_url_params.fetch('due_date.operator') == ['through_next']
+          due_date_operators = date_url_params.fetch('due_date.operator')
 
-          raise 'Teach me how to handle other date modes'
+          return if due_date_operators == ['through_next']
+
+          raise "Teach me how to handle date mode: #{due_date_operators}."
         end
 
         # @return [Hash<String, Array<String>>]
