@@ -32,6 +32,17 @@ module Checkoff
         object.is_a?(Array) && !object.empty? && [fn_name, fn_name.to_s].include?(object[0])
       end
 
+      # @param task [Asana::Resources::Task]
+      # @param field_name [Symbol]
+      #
+      # @sg-ignore
+      # @return [Date, nil]
+      def pull_date_field_by_name_or_raise(task, field_name)
+        raise "Teach me how to handle field #{field_name}" unless field_name == :modified_at
+
+        task.modified_at
+      end
+
       # @sg-ignore
       # @param task [Asana::Resources::Task]
       # @param custom_field_gid [String]
@@ -330,6 +341,34 @@ module Checkoff
       end
     end
 
+    # :field_less_than_n_days_ago
+    class FieldLessThanNDaysAgoFunctionEvaluator < FunctionEvaluator
+      FUNCTION_NAME = :field_less_than_n_days_ago
+
+      def matches?
+        fn?(task_selector, FUNCTION_NAME)
+      end
+
+      def evaluate_arg?(_index)
+        false
+      end
+
+      # @param task [Asana::Resources::Task]
+      # @param field_name [Symbol]
+      # @param num_days [Integer]
+      #
+      # @return [Boolean]
+      def evaluate(task, field_name, num_days)
+        time = pull_date_field_by_name_or_raise(task, field_name)
+
+        return false if time.nil?
+
+        n_days_ago = (Time.now - (num_days * 24 * 60 * 60))
+        # @sg-ignore
+        time < n_days_ago
+      end
+    end
+
     # :custom_field_less_than_n_days_from_now function
     class CustomFieldLessThanNDaysFromNowFunctionEvaluator < FunctionEvaluator
       FUNCTION_NAME = :custom_field_less_than_n_days_from_now
@@ -427,6 +466,7 @@ module Checkoff
       Checkoff::TaskSelectorClasses::AndFunctionEvaluator,
       Checkoff::TaskSelectorClasses::DuePFunctionEvaluator,
       Checkoff::TaskSelectorClasses::DueDateSetPFunctionEvaluator,
+      Checkoff::TaskSelectorClasses::FieldLessThanNDaysAgoFunctionEvaluator,
       Checkoff::TaskSelectorClasses::CustomFieldLessThanNDaysFromNowFunctionEvaluator,
       Checkoff::TaskSelectorClasses::CustomFieldGreaterThanOrEqualToNDaysFromNowFunctionEvaluator,
       Checkoff::TaskSelectorClasses::StringLiteralEvaluator,
