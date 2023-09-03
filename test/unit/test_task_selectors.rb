@@ -377,6 +377,39 @@ class TestTaskSelectors < ClassTest
                  e.message)
   end
 
+  def test_filter_via_task_selector_field_less_than_n_days_ago
+    task_selectors = get_test_object do
+      Time.expects(:now).returns(Time.new(2000, 1, 1, 0, 0, 0, '+00:00')).at_least(1)
+      task.expects(:modified_at).returns(Time.new(1999, 12, 1, 0, 0, 0, '+00:00')).at_least(1)
+    end
+
+    assert(task_selectors.filter_via_task_selector(task,
+                                                   [:field_less_than_n_days_ago, :modified_at,
+                                                    7]))
+  end
+
+  def test_filter_via_task_selector_field_less_than_n_days_ago_nil
+    task_selectors = get_test_object do
+      Time.expects(:now).returns(Time.new(2000, 1, 1, 0, 0, 0, '+00:00')).at_least(0)
+      task.expects(:modified_at).returns(nil).at_least(1)
+    end
+
+    refute(task_selectors.filter_via_task_selector(task,
+                                                   [:field_less_than_n_days_ago, :modified_at,
+                                                    7]))
+  end
+
+  def test_filter_via_task_selector_field_less_than_n_days_ago_field_not_supported
+    task_selectors = get_test_object
+
+    e = assert_raises(RuntimeError) do
+      task_selectors.filter_via_task_selector(task,
+                                              [:field_less_than_n_days_ago, :bogus_at,
+                                               7])
+    end
+    assert_match(/Teach me how to handle field bogus_at/, e.message)
+  end
+
   def test_filter_via_task_selector_custom_field_equal_to_date
     task_selectors = get_test_object do
       task.expects(:custom_fields).returns([{ 'name' => 'end date',
