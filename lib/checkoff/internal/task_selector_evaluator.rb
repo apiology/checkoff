@@ -38,9 +38,21 @@ module Checkoff
       # @sg-ignore
       # @return [Date, nil]
       def pull_date_field_by_name_or_raise(task, field_name)
-        raise "Teach me how to handle field #{field_name}" unless field_name == :modified_at
+        if field_name == :modified
+          return Time.parse(task.modified_at).to_date unless task.modified_at.nil?
 
-        task.modified_at
+          return nil
+        end
+
+        if field_name == :due
+          return Time.parse(task.due_at).to_date unless task.due_at.nil?
+
+          return Date.parse(task.due_on) unless task.due_on.nil?
+
+          return nil
+        end
+
+        raise "Teach me how to handle field #{field_name}"
       end
 
       # @sg-ignore
@@ -372,13 +384,43 @@ module Checkoff
       #
       # @return [Boolean]
       def evaluate(task, field_name, num_days)
-        time = pull_date_field_by_name_or_raise(task, field_name)
+        date = pull_date_field_by_name_or_raise(task, field_name)
 
-        return false if time.nil?
+        return false if date.nil?
 
-        n_days_ago = (Time.now - (num_days * 24 * 60 * 60))
         # @sg-ignore
-        time < n_days_ago
+        n_days_ago = Date.today - num_days
+        # @sg-ignore
+        date < n_days_ago
+      end
+    end
+
+    # :field_greater_than_or_equal_to_n_days_from_today
+    class FieldGreaterThanOrEqualToNDaysFromTodayFunctionEvaluator < FunctionEvaluator
+      FUNCTION_NAME = :field_greater_than_or_equal_to_n_days_from_today
+
+      def matches?
+        fn?(task_selector, FUNCTION_NAME)
+      end
+
+      def evaluate_arg?(_index)
+        false
+      end
+
+      # @param task [Asana::Resources::Task]
+      # @param field_name [Symbol]
+      # @param num_days [Integer]
+      #
+      # @return [Boolean]
+      def evaluate(task, field_name, num_days)
+        date = pull_date_field_by_name_or_raise(task, field_name)
+
+        return false if date.nil?
+
+        # @sg-ignore
+        n_days_from_today = Date.today + num_days
+        # @sg-ignore
+        date >= n_days_from_today
       end
     end
 
@@ -481,6 +523,7 @@ module Checkoff
       Checkoff::TaskSelectorClasses::UnassignedPFunctionEvaluator,
       Checkoff::TaskSelectorClasses::DueDateSetPFunctionEvaluator,
       Checkoff::TaskSelectorClasses::FieldLessThanNDaysAgoFunctionEvaluator,
+      Checkoff::TaskSelectorClasses::FieldGreaterThanOrEqualToNDaysFromTodayFunctionEvaluator,
       Checkoff::TaskSelectorClasses::CustomFieldLessThanNDaysFromNowFunctionEvaluator,
       Checkoff::TaskSelectorClasses::CustomFieldGreaterThanOrEqualToNDaysFromNowFunctionEvaluator,
       Checkoff::TaskSelectorClasses::StringLiteralEvaluator,

@@ -425,23 +425,25 @@ class TestTaskSelectors < ClassTest
   def test_filter_via_task_selector_field_less_than_n_days_ago
     task_selectors = get_test_object do
       Time.expects(:now).returns(Time.new(2000, 1, 1, 0, 0, 0, '+00:00')).at_least(1)
-      task.expects(:modified_at).returns(Time.new(1999, 12, 1, 0, 0, 0, '+00:00')).at_least(1)
+      # @sg-ignore
+      task.expects(:modified_at).returns(Time.new(1999, 12, 1, 0, 0, 0, '+00:00').to_s).at_least(1)
     end
 
     assert(task_selectors.filter_via_task_selector(task,
-                                                   [:field_less_than_n_days_ago, :modified_at,
+                                                   [:field_less_than_n_days_ago, :modified,
                                                     7]))
   end
 
   # @return [void]
   def test_filter_via_task_selector_field_less_than_n_days_ago_nil
     task_selectors = get_test_object do
-      Time.expects(:now).returns(Time.new(2000, 1, 1, 0, 0, 0, '+00:00')).at_least(0)
+      # @sg-ignore
+      Time.expects(:now).returns(Time.new(2000, 1, 1, 0, 0, 0, '+00:00').to_s).at_least(0)
       task.expects(:modified_at).returns(nil).at_least(1)
     end
 
     refute(task_selectors.filter_via_task_selector(task,
-                                                   [:field_less_than_n_days_ago, :modified_at,
+                                                   [:field_less_than_n_days_ago, :modified,
                                                     7]))
   end
 
@@ -458,8 +460,68 @@ class TestTaskSelectors < ClassTest
   end
 
   # @return [void]
+  def mock_filter_via_task_selector_field_greater_than_or_equal_to_n_days_from_today_due_on
+    # @sg-ignore
+    Date.expects(:today).returns(Date.new(2000, 1, 1)).at_least(1)
+    # @sg-ignore
+    task.expects(:due_at).returns(nil)
+    # @sg-ignore
+    task.expects(:due_on).returns(Date.new(2000, 1, 8).to_s).at_least(1)
+  end
+
+  # @return [void]
+  def test_filter_via_task_selector_field_greater_than_or_equal_to_n_days_from_today_due_on
+    task_selectors = get_test_object do
+      mock_filter_via_task_selector_field_greater_than_or_equal_to_n_days_from_today_due_on
+    end
+
+    # @sg-ignore
+    assert(task_selectors.filter_via_task_selector(task,
+                                                   [:field_greater_than_or_equal_to_n_days_from_today, :due,
+                                                    7]))
+  end
+
+  # @return [void]
+  def test_filter_via_task_selector_field_greater_than_or_equal_to_n_days_from_today_due_at
+    task_selectors = get_test_object do
+      # @sg-ignore
+      Date.expects(:today).returns(Date.new(2000, 1, 1)).at_least(0)
+      # @sg-ignore
+      task.expects(:due_at).returns(Time.new(1999, 12, 1, 0, 0, 0, '+00:00').to_s).at_least(1)
+    end
+
+    # @sg-ignore
+    refute(task_selectors.filter_via_task_selector(task,
+                                                   [:field_greater_than_or_equal_to_n_days_from_today, :due,
+                                                    7]))
+  end
+
+  # @return [void]
+  def mock_filter_via_task_selector_field_greater_than_or_equal_to_n_days_from_today_due_nil
+    # @sg-ignore
+    Time.expects(:now).returns(Time.new(2000, 1, 1, 0, 0, 0, '+00:00').to_s).at_least(0)
+    # @sg-ignore
+    task.expects(:due_at).returns(nil).at_least(1)
+    # @sg-ignore
+    task.expects(:due_on).returns(nil).at_least(1)
+  end
+
+  # @return [void]
+  def test_filter_via_task_selector_field_greater_than_or_equal_to_n_days_from_today_due_nil
+    task_selectors = get_test_object do
+      mock_filter_via_task_selector_field_greater_than_or_equal_to_n_days_from_today_due_nil
+    end
+
+    # @sg-ignore
+    refute(task_selectors.filter_via_task_selector(task,
+                                                   [:field_greater_than_or_equal_to_n_days_from_today, :due,
+                                                    7]))
+  end
+
+  # @return [void]
   def test_filter_via_task_selector_custom_field_equal_to_date
     task_selectors = get_test_object do
+      # @sg-ignore
       task.expects(:custom_fields).returns([{ 'name' => 'end date',
                                               'display_value' => '2000-01-15' }]).at_least(1)
     end
@@ -471,6 +533,7 @@ class TestTaskSelectors < ClassTest
   # @return [void]
   def test_filter_via_task_selector_custom_field_not_equal_to_date
     task_selectors = get_test_object do
+      # @sg-ignore
       task.expects(:custom_fields).returns([{ 'name' => 'end date',
                                               'display_value' => '2000-01-15' }]).at_least(1)
     end
