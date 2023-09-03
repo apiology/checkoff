@@ -3,9 +3,6 @@ include:
   - "**/*.rb"
   - ".git-hooks/**/*.rb"
 exclude:
-  - spec/**/*
-  - feature/**/*
-  - test/**/*
   - vendor/**/*
   - ".bundle/**/*"
 require: []

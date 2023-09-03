@@ -6,6 +6,11 @@ require 'checkoff/internal/search_url'
 
 # rubocop:disable Metrics/ClassLength
 class TestSearchUrlParser < ClassTest
+  # @!parse
+  #  # @return [Checkoff::Internal::SearchUrl::Parser]
+  #  def get_test_object; end
+
+  # @return [void]
   def test_convert_params_1
     search_url_parser = get_test_object
     url = 'https://app.asana.com/0/search?any_projects.ids=123&custom_field_456.variant=is&custom_field_456.selected_options=789&custom_field_1234.variant=no_value'
@@ -21,6 +26,7 @@ class TestSearchUrlParser < ClassTest
                  search_url_parser.convert_params(url))
   end
 
+  # @return [void]
   def test_convert_params_2
     search_url_parser = get_test_object
     url = 'https://app.asana.com/0/search?any_projects.ids=123&custom_field_456.variant=no_value&custom_field_789.variant=is&custom_field_789.selected_options=1234'
@@ -36,6 +42,7 @@ class TestSearchUrlParser < ClassTest
                  search_url_parser.convert_params(url))
   end
 
+  # @return [void]
   def test_convert_params_3
     search_url_parser = get_test_object
     url = 'https://app.asana.com/0/search?any_projects.ids=123&custom_field_456.variant=no_value&custom_field_789.variant=is&custom_field_789.selected_options=1234&custom_field_5678.variant=is_not&custom_field_5678.selected_options=12&custom_field_34.variant=less_than&custom_field_34.max=100'
@@ -55,6 +62,7 @@ class TestSearchUrlParser < ClassTest
                  search_url_parser.convert_params(url))
   end
 
+  # @return [void]
   def test_convert_params_4
     search_url_parser = get_test_object
     url = 'https://app.asana.com/0/search?custom_field_123.variant=is_not&custom_field_123.selected_options=456~789'
@@ -67,6 +75,7 @@ class TestSearchUrlParser < ClassTest
                  search_url_parser.convert_params(url))
   end
 
+  # @return [void]
   def test_convert_params_5
     search_url_parser = get_test_object
     url = 'https://app.asana.com/0/search?completion=incomplete&any_projects.ids=123&custom_field_456.variant=no_value'
@@ -82,6 +91,7 @@ class TestSearchUrlParser < ClassTest
                  search_url_parser.convert_params(url))
   end
 
+  # @return [void]
   def test_convert_params_6
     search_url_parser = get_test_object
     url = 'https://app.asana.com/0/search?completion=incomplete&not_tags.ids=123~456~789&any_projects.ids=1234&custom_field_5678.variant=no_value&custom_field_12.variant=less_than&custom_field_12.max=2&custom_field_34.variant=less_than&custom_field_34.max=2&custom_field_56.variant=less_than&custom_field_56.max=202103'
@@ -101,6 +111,7 @@ class TestSearchUrlParser < ClassTest
                  search_url_parser.convert_params(url))
   end
 
+  # @return [void]
   def test_convert_params_7
     search_url_parser = get_test_object
     url = 'https://app.asana.com/0/search?any_tags.ids=123&any_projects.ids=456_column_789~12'
@@ -116,6 +127,7 @@ class TestSearchUrlParser < ClassTest
                  search_url_parser.convert_params(url))
   end
 
+  # @return [void]
   def test_convert_params_8
     search_url_parser = get_test_object
     url = 'https://app.asana.com/0/search?any_tags.ids=123&any_projects.ids=456_column_789'
@@ -130,6 +142,7 @@ class TestSearchUrlParser < ClassTest
                  search_url_parser.convert_params(url))
   end
 
+  # @return [void]
   def test_convert_params_9
     search_url_parser = get_test_object
     url = 'https://app.asana.com/0/search?subtask=is_not_subtask&any_tags.ids=123&not_tags.ids=456~789~12~34&any_projects.ids=56_column_78'
@@ -146,6 +159,7 @@ class TestSearchUrlParser < ClassTest
                  search_url_parser.convert_params(url))
   end
 
+  # @return [void]
   def test_convert_params_10
     search_url_parser = get_test_object
     url = 'https://app.asana.com/0/search?subtask=bogus&any_tags.ids=123&not_tags.ids=456~789~12~34&any_projects.ids=56_column_78'
@@ -156,6 +170,7 @@ class TestSearchUrlParser < ClassTest
     assert_equal 'Teach me how to handle subtask = ["bogus"]', e.message
   end
 
+  # @return [void]
   def test_convert_params_11
     search_url_parser = get_test_object
     url = 'https://app.asana.com/0/search?subtask=bogus&subtask=another_bogus&any_tags.ids=123&not_tags.ids=456~789~12~34&any_projects.ids=56_column_78'
@@ -166,6 +181,7 @@ class TestSearchUrlParser < ClassTest
     assert_equal 'Teach me how to handle subtask = ["bogus", "another_bogus"]', e.message
   end
 
+  # @return [void]
   def test_convert_params_12
     search_url_parser = get_test_object
     url = 'https://app.asana.com/0/search?completion=bogus&any_projects.ids=123&custom_field_456.variant=no_value'
@@ -176,6 +192,7 @@ class TestSearchUrlParser < ClassTest
     assert_equal 'Teach me how to handle completion = ["bogus"]', e.message
   end
 
+  # @return [void]
   def test_convert_params_13
     search_url_parser = get_test_object
     url = 'https://app.asana.com/0/search?completion=incomplete&any_projects.ids=123&custom_field_456.variant=greater_than&custom_field_456.min=99999'
@@ -191,6 +208,7 @@ class TestSearchUrlParser < ClassTest
                  search_url_parser.convert_params(url))
   end
 
+  # @return [void]
   def test_convert_params_14
     search_url_parser = get_test_object
     url = 'https://app.asana.com/0/search?completion=incomplete&any_projects.ids=123&custom_field_456.variant=greater_than&custom_field_456.min=99999&custom_field_456.blah=123'
@@ -202,6 +220,7 @@ class TestSearchUrlParser < ClassTest
                  e.message
   end
 
+  # @return [void]
   def test_convert_params_15
     search_url_parser = get_test_object
     url = 'https://app.asana.com/0/search?completion=incomplete&any_projects.ids=123&custom_field_456.variant=greater_than&custom_field_456.min=99999&custom_field_456.min=123'
@@ -214,6 +233,7 @@ class TestSearchUrlParser < ClassTest
                  e.message
   end
 
+  # @return [void]
   def test_convert_params_16
     search_url_parser = get_test_object
     url = 'https://app.asana.com/0/search?completion=incomplete&subtask=is_not_subtask&any_projects.ids=123_column_456~123_column_789~12~34_column_56~123_column_78~123_column_1&custom_field_6.variant=doesnt_contain_any&custom_field_6.selected_options=7'
@@ -231,6 +251,7 @@ class TestSearchUrlParser < ClassTest
                  search_url_parser.convert_params(url))
   end
 
+  # @return [void]
   def test_convert_params_17
     search_url_parser = get_test_object
     url = 'https://app.asana.com/0/search?completion=incomplete&subtask=is_not_subtask&any_projects.ids=123&not_projects.ids=456&custom_field_789.variant=contains_any&custom_field_789.selected_options=12~34~56~78~90~1~2&custom_field_3.variant=is_not&custom_field_3.selected_options=4'
@@ -250,6 +271,7 @@ class TestSearchUrlParser < ClassTest
                  search_url_parser.convert_params(url))
   end
 
+  # @return [void]
   def test_convert_params_18
     search_url_parser = get_test_object
     url = 'https://app.asana.com/0/search?completion=incomplete&subtask=is_not_subtask&any_projects.ids=123&not_projects.ids=456&custom_field_789.variant=contains_any&custom_field_789.selected_options=12~34~56~78~90~1~2'
@@ -263,6 +285,7 @@ class TestSearchUrlParser < ClassTest
                  search_url_parser.convert_params(url))
   end
 
+  # @return [void]
   def test_convert_params_19
     search_url_parser = get_test_object
     url = 'https://app.asana.com/0/search?custom_field_123.variant=is&custom_field_123.selected_options=456~789&custom_field_12.variant=any_value'
@@ -277,6 +300,7 @@ class TestSearchUrlParser < ClassTest
                  search_url_parser.convert_params(url))
   end
 
+  # @return [void]
   def test_convert_params_20
     search_url_parser = get_test_object
     url = 'https://app.asana.com/0/search?custom_field_123.variant=is&custom_field_123.selected_options=456~789&custom_field_12.variant=any_value&custom_field_12.bogus=bogus'
@@ -288,6 +312,7 @@ class TestSearchUrlParser < ClassTest
                  e.message
   end
 
+  # @return [void]
   def test_convert_params_21
     search_url_parser = get_test_object
     url = 'https://app.asana.com/0/search?completion=complete&subtask=is_not_subtask&any_projects.ids=123_column_456'
@@ -303,6 +328,7 @@ class TestSearchUrlParser < ClassTest
                  search_url_parser.convert_params(url))
   end
 
+  # @return [void]
   def test_convert_params_22
     search_url_parser = get_test_object
     url = 'https://app.asana.com/0/search?subtask=is_not_subtask&any_projects.ids=123&not_projects.ids=123_column_456~123_column_789~123_column_12~123_column_34~56_column_78~56_column_90~56_column_1&custom_field_2.variant=no_value&custom_field_3.variant=no_value&custom_field_4.variant=contains_all&custom_field_4.selected_options=5~6~7~8'
@@ -325,6 +351,7 @@ class TestSearchUrlParser < ClassTest
                  search_url_parser.convert_params(url))
   end
 
+  # @return [void]
   def test_convert_params_23
     search_url_parser = get_test_object
     url = 'https://app.asana.com/0/search?sort=likes&completion=incomplete&subtask=is_not_subtask&not_tags.ids=123~456~789&any_projects.ids=12&custom_field_34.variant=is&custom_field_34.selected_options=56&custom_field_78.variant=is&custom_field_78.selected_options=90'
@@ -343,6 +370,7 @@ class TestSearchUrlParser < ClassTest
                  search_url_parser.convert_params(url))
   end
 
+  # @return [void]
   def test_convert_params_24
     search_url_parser = get_test_object
     url = 'https://app.asana.com/0/search?sort=likes&completion=incomplete&subtask=is_subtask&any_projects.ids=123_column_456~123_column_789~123_column_12~123_column_34~123_column_56~123_column_78'
@@ -358,6 +386,7 @@ class TestSearchUrlParser < ClassTest
                  search_url_parser.convert_params(url))
   end
 
+  # @return [void]
   def test_convert_params_25
     search_url_parser = get_test_object
     url = 'https://app.asana.com/0/search?milestone=is_milestone&any_projects.ids=123_column_456'
@@ -372,6 +401,7 @@ class TestSearchUrlParser < ClassTest
                  search_url_parser.convert_params(url))
   end
 
+  # @return [void]
   def test_convert_params_26
     search_url_parser = get_test_object
     url = 'https://app.asana.com/0/search?milestone=garbage&any_projects.ids=123_column_456'
@@ -383,6 +413,7 @@ class TestSearchUrlParser < ClassTest
                  e.message)
   end
 
+  # @return [void]
   def test_convert_params_27
     Date.stub(:today, Date.new(2023, 1, 1)) do
       search_url_parser = get_test_object
@@ -401,6 +432,7 @@ class TestSearchUrlParser < ClassTest
     end
   end
 
+  # @return [void]
   def test_convert_params_28
     Date.stub(:today, Date.new(2023, 1, 1)) do
       search_url_parser = get_test_object
@@ -414,6 +446,7 @@ class TestSearchUrlParser < ClassTest
     end
   end
 
+  # @return [void]
   def test_convert_params_29
     Date.stub(:today, Date.new(2023, 1, 1)) do
       search_url_parser = get_test_object
@@ -427,6 +460,7 @@ class TestSearchUrlParser < ClassTest
     end
   end
 
+  # @return [void]
   def test_convert_params_30
     search_url_parser = get_test_object
     url = 'https://app.asana.com/0/search?completion=incomplete&milestone=is_not_milestone&subtask=is_not_subtask&any_projects.ids=123_column_456&custom_field_789.variant=no_value'
@@ -444,6 +478,7 @@ class TestSearchUrlParser < ClassTest
                  search_url_parser.convert_params(url))
   end
 
+  # @return [Class<Checkoff::Internal::SearchUrl::Parser>]
   def class_under_test
     Checkoff::Internal::SearchUrl::Parser
   end
