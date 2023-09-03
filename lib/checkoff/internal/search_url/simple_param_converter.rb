@@ -156,6 +156,8 @@ module Checkoff
           def convert
             return %w[resource_subtype milestone] if single_value == 'is_milestone'
 
+            return %w[resource_subtype default_task] if single_value == 'is_not_milestone'
+
             raise "Teach me how to handle #{key} = #{values}"
           end
         end
