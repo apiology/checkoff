@@ -4,9 +4,21 @@
 # @!parse
 #   class Time
 #     class << self
-#       # @param date [String]
+#       # @param time [String]
 #       # @return [Time]
+#       def parse(time); end
+#     end
+#     # https://ruby-doc.org/3.2.2/exts/date/Time.html#method-i-to_date#
+#     # @return [Date]
+#     def to_date; end
+#   end
+#   class Date
+#     class << self
+#       # @param date [String]
+#       # @return [Date]
 #       def parse(date); end
+#       # @return [Date]
+#       def today; end
 #     end
 #   end
 #   module Asana
@@ -26,6 +38,10 @@
 #     module Resources
 #       # https://developers.asana.com/reference/gettask
 #       class Task
+#         # @return [String,nil]
+#         def due_at; end
+#         # @return [String,nil]
+#         def due_on; end
 #         # @return [Hash<String, String>, nil]
 #         def assignee; end
 #         # @return [String, nil]
