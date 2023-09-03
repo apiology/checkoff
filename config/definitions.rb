@@ -24,7 +24,10 @@
 #     end
 #     class Collection < Asana::Resources::Collection; end
 #     module Resources
+#       # https://developers.asana.com/reference/gettask
 #       class Task
+#         # @return [Hash<String, String>, nil]
+#         def assignee; end
 #         # @return [String, nil]
 #         def html_notes; end
 #         class << self

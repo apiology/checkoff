@@ -8,10 +8,22 @@ require 'checkoff/task_selectors'
 class TestTaskSelectors < ClassTest
   extend Forwardable
 
+  # @!parse
+  #  # @return [Checkoff::TaskSelectors]
+  #  def get_test_object; end
+
   def_delegators(:@mocks, :tasks)
 
-  let_mock :custom_field, :task, :custom_field_gid, :task_gid
+  # @sg-ignore
+  let_mock :custom_field
+  # @sg-ignore
+  let_mock :task
+  # @sg-ignore
+  let_mock :custom_field_gid
+  # @sg-ignore
+  let_mock :task_gid
 
+  # @return [void]
   def test_filter_via_custom_field_gid_values_gids_no_enum_value
     custom_field_gid = '123'
     enum_value_gid = '456'
@@ -23,6 +35,7 @@ class TestTaskSelectors < ClassTest
     }
     task_selectors = get_test_object do
       custom_fields = [custom_field]
+      # @sg-ignore
       task.expects(:custom_fields).returns(custom_fields)
     end
 
@@ -32,6 +45,7 @@ class TestTaskSelectors < ClassTest
                                                     [enum_value_gid]]))
   end
 
+  # @return [void]
   def test_filter_via_custom_field_gid_values_gids_no_enum_value_multi_enum
     custom_field_gid = '123'
     enum_value_gid = '456'
@@ -52,6 +66,7 @@ class TestTaskSelectors < ClassTest
                                                     [enum_value_gid]]))
   end
 
+  # @return [void]
   def test_filter_via_custom_field_gid_values_gids_no_enum_value_new_type
     custom_field_gid = '123'
     enum_value_gid = '456'
@@ -76,6 +91,8 @@ class TestTaskSelectors < ClassTest
   end
 
   # not sure why this would be the case, so set an alarm so I can understand
+  #
+  # @return [void]
   def test_filter_via_custom_field_custom_field_not_enabled
     custom_field_gid = '123'
     enum_value_gid = '456'
@@ -101,6 +118,7 @@ class TestTaskSelectors < ClassTest
     assert_match(/Unexpected enabled value on custom field/, e.message)
   end
 
+  # @return [void]
   def test_filter_via_custom_field_none_matched
     custom_field_gid = '123'
     enum_value_gid = '456'
@@ -118,6 +136,7 @@ class TestTaskSelectors < ClassTest
     assert_match(/custom field with gid/, e.message)
   end
 
+  # @return [void]
   def test_filter_via_custom_field_gid_values_gids_custom_field_not_provided
     custom_field_gid = '123'
     enum_value_gid = '456'
@@ -134,6 +153,7 @@ class TestTaskSelectors < ClassTest
     assert_match(/extra_fields/, e.message)
   end
 
+  # @return [void]
   def test_filter_via_custom_field_gid_values_gids
     custom_field_gid = '123'
     enum_value_gid = '456'
@@ -157,6 +177,7 @@ class TestTaskSelectors < ClassTest
                                                     [enum_value_gid]]))
   end
 
+  # @return [void]
   def test_filter_via_invalid_syntax
     task_selectors = get_test_object
     e = assert_raises(RuntimeError) do
@@ -168,6 +189,7 @@ class TestTaskSelectors < ClassTest
     assert_match(/Syntax issue/, e.message)
   end
 
+  # @return [void]
   def test_filter_via_custom_field_value_nil_false_found
     task_selectors = get_test_object do
       custom_fields = [custom_field]
@@ -181,6 +203,7 @@ class TestTaskSelectors < ClassTest
                                                             'custom_field_name']]))
   end
 
+  # @return [void]
   def mock_filter_via_custom_field_gid_value_gid_nil
     custom_fields = [custom_field]
     custom_field.expects(:fetch).with('gid').returns(custom_field_gid)
@@ -188,6 +211,7 @@ class TestTaskSelectors < ClassTest
     custom_field.expects(:[]).with('display_value').returns(nil)
   end
 
+  # @return [void]
   def test_filter_via_custom_field_gid_value_gid_nil
     task_selectors = get_test_object do
       mock_filter_via_custom_field_gid_value_gid_nil
@@ -198,6 +222,7 @@ class TestTaskSelectors < ClassTest
                                                             custom_field_gid]]))
   end
 
+  # @return [void]
   def test_filter_via_custom_field_value_custom_fields_not_provided
     task_selectors = get_test_object do
       task.expects(:custom_fields).returns(nil)
@@ -222,6 +247,7 @@ class TestTaskSelectors < ClassTest
                                                             'custom_field_name']]))
   end
 
+  # @return [void]
   def test_filter_via_custom_field_value_gid_nil_none_found
     task_selectors = get_test_object do
       custom_fields = []
@@ -245,6 +271,7 @@ class TestTaskSelectors < ClassTest
     refute(task_selectors.filter_via_task_selector(task, [:tag, 'tag_name']))
   end
 
+  # @return [void]
   def test_filter_via_task_selector_not
     task_selectors = get_test_object
 
@@ -271,6 +298,17 @@ class TestTaskSelectors < ClassTest
     assert(task_selectors.filter_via_task_selector(task, [:due]))
   end
 
+  # @return [void]
+  def test_filter_via_task_selector_unassigned
+    task_selectors = get_test_object do
+      # @sg-ignore
+      task.expects(:assignee).returns(nil)
+    end
+
+    # @sg-ignore
+    assert(task_selectors.filter_via_task_selector(task, [:unassigned]))
+  end
+
   def test_filter_via_custom_field_gid_value_contains_all_gids
     custom_field_gid = '123'
     enum_value_gid = '456'
@@ -294,6 +332,7 @@ class TestTaskSelectors < ClassTest
                                                     [enum_value_gid]]))
   end
 
+  # @return [void]
   def test_filter_via_task_selector_due_date_set
     task_selectors = get_test_object do
       task.expects(:due_at).returns(nil)
@@ -303,6 +342,7 @@ class TestTaskSelectors < ClassTest
     refute(task_selectors.filter_via_task_selector(task, [:due_date_set]))
   end
 
+  # @return [void]
   def test_filter_via_task_selector_custom_field_less_than_n_days_from_now
     task_selectors = get_test_object do
       Time.expects(:now).returns(Time.new(2000, 1, 1, 0, 0, 0, '+00:00')).at_least(1)
@@ -322,6 +362,7 @@ class TestTaskSelectors < ClassTest
     refute(task_selectors.filter_via_task_selector(task, [:custom_field_less_than_n_days_from_now, 'start date', 90]))
   end
 
+  # @return [void]
   def test_filter_via_task_selector_custom_field_less_than_n_days_from_now_custom_field_not_found
     task_selectors = get_test_object do
       task.expects(:gid).returns('123')
@@ -337,6 +378,7 @@ class TestTaskSelectors < ClassTest
                  e.message)
   end
 
+  # @return [void]
   def test_filter_via_task_selector_custom_field_greater_than_or_equal_to_n_days_from_now
     task_selectors = get_test_object do
       Time.expects(:now).returns(Time.new(2000, 1, 1, 0, 0, 0, '+00:00')).at_least(1)
@@ -349,6 +391,7 @@ class TestTaskSelectors < ClassTest
                                                     'start date', 90]))
   end
 
+  # @return [void]
   def test_filter_via_task_selector_custom_field_greater_than_or_equal_to_n_days_from_now_nil
     task_selectors = get_test_object do
       task.expects(:custom_fields).returns([{ 'name' => 'start date',
@@ -360,6 +403,7 @@ class TestTaskSelectors < ClassTest
                                                     'start date', 90]))
   end
 
+  # @return [void]
   def test_filter_via_task_selector_custom_field_greater_than_or_equal_to_n_days_from_now_custom_field_not_found
     task_selectors = get_test_object do
       task.expects(:gid).returns('123')
@@ -377,6 +421,7 @@ class TestTaskSelectors < ClassTest
                  e.message)
   end
 
+  # @return [void]
   def test_filter_via_task_selector_field_less_than_n_days_ago
     task_selectors = get_test_object do
       Time.expects(:now).returns(Time.new(2000, 1, 1, 0, 0, 0, '+00:00')).at_least(1)
@@ -388,6 +433,7 @@ class TestTaskSelectors < ClassTest
                                                     7]))
   end
 
+  # @return [void]
   def test_filter_via_task_selector_field_less_than_n_days_ago_nil
     task_selectors = get_test_object do
       Time.expects(:now).returns(Time.new(2000, 1, 1, 0, 0, 0, '+00:00')).at_least(0)
@@ -399,6 +445,7 @@ class TestTaskSelectors < ClassTest
                                                     7]))
   end
 
+  # @return [void]
   def test_filter_via_task_selector_field_less_than_n_days_ago_field_not_supported
     task_selectors = get_test_object
 
@@ -410,6 +457,7 @@ class TestTaskSelectors < ClassTest
     assert_match(/Teach me how to handle field bogus_at/, e.message)
   end
 
+  # @return [void]
   def test_filter_via_task_selector_custom_field_equal_to_date
     task_selectors = get_test_object do
       task.expects(:custom_fields).returns([{ 'name' => 'end date',
@@ -420,6 +468,7 @@ class TestTaskSelectors < ClassTest
                                                    [:equals?, [:custom_field_value, 'end date'], '2000-01-15']))
   end
 
+  # @return [void]
   def test_filter_via_task_selector_custom_field_not_equal_to_date
     task_selectors = get_test_object do
       task.expects(:custom_fields).returns([{ 'name' => 'end date',
@@ -430,6 +479,7 @@ class TestTaskSelectors < ClassTest
                                                    [:equals?, [:custom_field_value, 'end date'], '2001-01-15']))
   end
 
+  # @return [Class<Checkoff::TaskSelectors>]
   def class_under_test
     Checkoff::TaskSelectors
   end

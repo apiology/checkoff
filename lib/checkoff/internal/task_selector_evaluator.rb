@@ -231,6 +231,19 @@ module Checkoff
       end
     end
 
+    # :unassigned function
+    class UnassignedPFunctionEvaluator < FunctionEvaluator
+      def matches?
+        fn?(task_selector, :unassigned)
+      end
+
+      # @param task [Asana::Resources::Task]
+      # @return [Boolean]
+      def evaluate(task)
+        task.assignee.nil?
+      end
+    end
+
     # :due_date_set function
     class DueDateSetPFunctionEvaluator < FunctionEvaluator
       FUNCTION_NAME = :due_date_set
@@ -465,6 +478,7 @@ module Checkoff
       Checkoff::TaskSelectorClasses::CustomFieldGidValueContainsAllGidsFunctionEvaluator,
       Checkoff::TaskSelectorClasses::AndFunctionEvaluator,
       Checkoff::TaskSelectorClasses::DuePFunctionEvaluator,
+      Checkoff::TaskSelectorClasses::UnassignedPFunctionEvaluator,
       Checkoff::TaskSelectorClasses::DueDateSetPFunctionEvaluator,
       Checkoff::TaskSelectorClasses::FieldLessThanNDaysAgoFunctionEvaluator,
       Checkoff::TaskSelectorClasses::CustomFieldLessThanNDaysFromNowFunctionEvaluator,
