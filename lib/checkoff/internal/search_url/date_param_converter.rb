@@ -14,6 +14,45 @@ module Checkoff
         end
 
         # @return [Array(Hash<String, String>, Array<[Symbol, Array]>)] See https://developers.asana.com/docs/search-tasks-in-a-workspace
+        def handle_through_next
+          due_date_value = get_single_param('due_date.value').to_i
+
+          validate_unit_is_day!
+
+          # @sg-ignore
+          # @type [Date]
+          before = Date.today + due_date_value
+          # 'due_on.before' => '2023-01-01',
+          # 'due_on.after' => '2023-01-01',
+          # [{ 'due_on.before' => '2023-09-01' }, []]
+          [{ 'due_on.before' => before.to_s }, []]
+        end
+
+        # @return [Array(Hash<String, String>, Array<[Symbol, Array]>)] See https://developers.asana.com/docs/search-tasks-in-a-workspace
+        def handle_between
+          due_date_after = get_single_param('due_date.after')
+          raise 'Teach me how to handle due_date_before' if date_url_params.key? 'due_date.before'
+
+          validate_unit_not_provided!
+
+          # Example value: 1702857600000
+          after = Time.at(due_date_after.to_i / 1000).to_date
+          [{ 'due_on.after' => after.to_s }, []]
+        end
+
+        # @param param_key [String]
+        # @return [String]
+        def get_single_param(param_key)
+          raise "Expected #{param_key} to have at least one value" unless date_url_params.key? param_key
+
+          value = date_url_params.fetch(param_key)
+
+          raise "Expected #{param_key} to have one value" if value.length != 1
+
+          value[0]
+        end
+
+        # @return [Array(Hash<String, String>, Array<[Symbol, Array]>)]
         def convert
           return [{}, []] if date_url_params.empty?
 
@@ -21,38 +60,29 @@ module Checkoff
           #   due_date.operator=through_next
           #   due_date.value=0
           #   due_date.unit=day
-          validate_due_date_through_next!
+          due_date_operator = get_single_param('due_date.operator')
 
-          value = date_url_params.fetch('due_date.value').fetch(0).to_i
+          return handle_through_next if due_date_operator == 'through_next'
 
-          # @sg-ignore
-          # @type [Date]
-          before = Date.today + value
+          return handle_between if due_date_operator == 'between'
 
-          validate_unit_is_day!
-
-          # 'due_on.before' => '2023-01-01',
-          # 'due_on.after' => '2023-01-01',
-          # [{ 'due_on.before' => '2023-09-01' }, []]
-          [{ 'due_on.before' => before.to_s }, []]
+          raise "Teach me how to handle date mode: #{due_date_operator.inspect}."
         end
 
         private
+
+        # @return [void]
+        def validate_unit_not_provided!
+          return unless date_url_params.key? 'due_date.unit'
+
+          raise "Teach me how to handle other due_date.unit for these params: #{date_url_params.inspect}"
+        end
 
         # @return [void]
         def validate_unit_is_day!
           unit = date_url_params.fetch('due_date.unit').fetch(0)
 
           raise 'Teach me how to handle other time units' unless unit == 'day'
-        end
-
-        # @return [void]
-        def validate_due_date_through_next!
-          due_date_operators = date_url_params.fetch('due_date.operator')
-
-          return if due_date_operators == ['through_next']
-
-          raise "Teach me how to handle date mode: #{due_date_operators}."
         end
 
         # @return [Hash<String, Array<String>>]
