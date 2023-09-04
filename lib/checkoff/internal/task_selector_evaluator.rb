@@ -497,6 +497,47 @@ module Checkoff
         task_selector
       end
     end
+
+    # :estimate_exceeds_duration
+    class EstimateExceedsDurationFunctionEvaluator < FunctionEvaluator
+      FUNCTION_NAME = :estimate_exceeds_duration
+
+      def matches?
+        fn?(task_selector, FUNCTION_NAME)
+      end
+
+      # @param task [Asana::Resources::Task]
+      # @return [Float]
+      def calculate_allocated_hours(task)
+        due_on = nil
+        start_on = nil
+        start_on = Date.parse(task.start_on) unless task.start_on.nil?
+        due_on = Date.parse(task.due_on) unless task.due_on.nil?
+        allocated_hours = 8.0
+        # @sg-ignore
+        allocated_hours = (due_on - start_on + 1).to_i * 8.0 if start_on && due_on
+        allocated_hours
+      end
+
+      # @param task [Asana::Resources::Task]
+      # @return [Boolean]
+      def evaluate(task)
+        custom_field = pull_custom_field_by_name_or_raise(task, 'Estimated time')
+
+        # @sg-ignore
+        # @type [Integer, nil]
+        estimate_minutes = custom_field.fetch('number_value')
+
+        # no estimate set
+        return false if estimate_minutes.nil?
+
+        estimate_hours = estimate_minutes / 60.0
+
+        allocated_hours = calculate_allocated_hours(task)
+
+        estimate_hours > allocated_hours
+      end
+    end
   end
 
   # Evaluator task selectors against a task
@@ -527,6 +568,7 @@ module Checkoff
       Checkoff::TaskSelectorClasses::CustomFieldLessThanNDaysFromNowFunctionEvaluator,
       Checkoff::TaskSelectorClasses::CustomFieldGreaterThanOrEqualToNDaysFromNowFunctionEvaluator,
       Checkoff::TaskSelectorClasses::StringLiteralEvaluator,
+      Checkoff::TaskSelectorClasses::EstimateExceedsDurationFunctionEvaluator,
     ].freeze
 
     # @param task_selector [Array]

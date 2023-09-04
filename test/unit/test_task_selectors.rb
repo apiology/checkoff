@@ -16,6 +16,9 @@ class TestTaskSelectors < ClassTest
 
   # @sg-ignore
   let_mock :custom_field
+  # @!parse
+  #  # @return [Mocha::Mock]
+  #  def task; end
   # @sg-ignore
   let_mock :task
   # @sg-ignore
@@ -432,6 +435,77 @@ class TestTaskSelectors < ClassTest
     assert(task_selectors.filter_via_task_selector(task,
                                                    [:field_less_than_n_days_ago, :modified,
                                                     7]))
+  end
+
+  # @return [void]
+  def test_estimate_exceeds_duration_true
+    task_selectors = get_test_object do
+      task.expects(:custom_fields).returns([{ 'name' => 'Estimated time',
+                                              'number_value' => 960 }]).at_least(1)
+      task.expects(:start_on).returns('2000-01-01').at_least(1)
+      task.expects(:due_on).returns('2000-01-01').at_least(1)
+    end
+
+    # @sg-ignore
+    assert(task_selectors.filter_via_task_selector(task,
+                                                   [:estimate_exceeds_duration]))
+  end
+
+  # @return [void]
+  def test_estimate_exceeds_duration_false_no_estimate_set
+    task_selectors = get_test_object do
+      task.expects(:custom_fields).returns([{ 'name' => 'Estimated time',
+                                              'number_value' => nil }]).at_least(1)
+    end
+
+    # @sg-ignore
+    refute(task_selectors.filter_via_task_selector(task,
+                                                   [:estimate_exceeds_duration]))
+  end
+
+  # @return [void]
+  def test_estimate_exceeds_duration_true_only_due_set
+    task_selectors = get_test_object do
+      task.expects(:custom_fields).returns([{ 'name' => 'Estimated time',
+                                              'number_value' => 960 }]).at_least(1)
+      task.expects(:start_on).returns(nil).at_least(1)
+      task.expects(:due_on).returns('2000-01-01').at_least(1)
+    end
+
+    # @sg-ignore
+    assert(task_selectors.filter_via_task_selector(task,
+                                                   [:estimate_exceeds_duration]))
+  end
+
+  # @return [void]
+  def test_estimate_exceeds_duration_true_no_dates_set
+    task_selectors = get_test_object do
+      task.expects(:custom_fields).returns([{ 'name' => 'Estimated time',
+                                              'number_value' => 960 }]).at_least(1)
+      task.expects(:start_on).returns(nil).at_least(1)
+      task.expects(:due_on).returns(nil).at_least(1)
+    end
+
+    # @sg-ignore
+    assert(task_selectors.filter_via_task_selector(task,
+                                                   [:estimate_exceeds_duration]))
+  end
+
+  # @return [void]
+  def test_estimate_exceeds_duration_no_estimate_field
+    task_selectors = get_test_object do
+      task.expects(:custom_fields).returns([]).at_least(1)
+      task.expects(:gid).returns('123')
+    end
+
+    e = assert_raises(RuntimeError) do
+      # @sg-ignore
+      task_selectors.filter_via_task_selector(task,
+                                              [:estimate_exceeds_duration])
+    end
+
+    assert_match(/Could not find custom field with name Estimated time in task 123 with custom fields/,
+                 e.message)
   end
 
   # @return [void]
