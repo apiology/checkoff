@@ -441,7 +441,7 @@ class TestSearchUrlParser < ClassTest
         search_url_parser.convert_params(url)
       end
 
-      assert_equal('Teach me how to handle date mode: ["something_else"].',
+      assert_equal('Teach me how to handle date mode: "something_else".',
                    e.message)
     end
   end
@@ -476,6 +476,74 @@ class TestSearchUrlParser < ClassTest
 
     assert_equal([asana_api_params, task_selector],
                  search_url_parser.convert_params(url))
+  end
+
+  # @return [void]
+  def test_convert_params_31
+    search_url_parser = get_test_object
+    url = 'https://app.asana.com/0/search?due_date.operator=between&due_date.after=1702857600000&any_projects.ids=123'
+    asana_api_params = {
+      'due_on.after' => '2023-12-17',
+      'projects.any' => '123',
+      'sort_by' => 'created_at',
+    }
+    task_selector = []
+
+    assert_equal([asana_api_params, task_selector],
+                 search_url_parser.convert_params(url))
+  end
+
+  # @return [void]
+  def test_convert_params_32
+    search_url_parser = get_test_object
+    url = 'https://app.asana.com/0/search?due_date.operator=between&due_date.after=1702857600000&due_date.before=1702857600000&any_projects.ids=123'
+
+    e = assert_raises(RuntimeError) do
+      search_url_parser.convert_params(url)
+    end
+
+    assert_equal('Teach me how to handle due_date_before',
+                 e.message)
+  end
+
+  # @return [void]
+  def test_convert_params_33
+    search_url_parser = get_test_object
+    url = 'https://app.asana.com/0/search?due_date.operator=between&any_projects.ids=123'
+
+    e = assert_raises(RuntimeError) do
+      search_url_parser.convert_params(url)
+    end
+
+    assert_equal('Expected due_date.after to have at least one value',
+                 e.message)
+  end
+
+  # @return [void]
+  def test_convert_params_34
+    search_url_parser = get_test_object
+    url = 'https://app.asana.com/0/search?due_date.operator=between&due_date.after=456&due_date.after=789,any_projects.ids=123'
+
+    e = assert_raises(RuntimeError) do
+      search_url_parser.convert_params(url)
+    end
+
+    assert_equal('Expected due_date.after to have one value',
+                 e.message)
+  end
+
+  # @return [void]
+  def test_convert_params_35
+    search_url_parser = get_test_object
+    url = 'https://app.asana.com/0/search?due_date.operator=between&due_date.after=1702857600000&due_date.unit=date&any_projects.ids=123'
+
+    e = assert_raises(RuntimeError) do
+      search_url_parser.convert_params(url)
+    end
+
+    assert_equal('Teach me how to handle other due_date.unit for these params: ' \
+                 '{"due_date.operator"=>["between"], "due_date.after"=>["1702857600000"], "due_date.unit"=>["date"]}',
+                 e.message)
   end
 
   # @return [Class<Checkoff::Internal::SearchUrl::Parser>]
