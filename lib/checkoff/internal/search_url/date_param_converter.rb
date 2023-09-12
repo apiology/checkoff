@@ -36,7 +36,10 @@ module Checkoff
           validate_unit_not_provided!
 
           # Example value: 1702857600000
-          after = Time.at(due_date_after.to_i / 1000).to_date
+          # +1 is because API seems to operate on inclusive ranges
+          # @type [Date]
+          # @sg-ignore
+          after = Time.at(due_date_after.to_i / 1000).to_date + 1
           [{ 'due_on.after' => after.to_s }, []]
         end
 

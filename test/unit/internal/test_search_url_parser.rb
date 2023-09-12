@@ -483,7 +483,7 @@ class TestSearchUrlParser < ClassTest
     search_url_parser = get_test_object
     url = 'https://app.asana.com/0/search?due_date.operator=between&due_date.after=1702857600000&any_projects.ids=123'
     asana_api_params = {
-      'due_on.after' => '2023-12-17',
+      'due_on.after' => '2023-12-18',
       'projects.any' => '123',
       'sort_by' => 'created_at',
     }
