@@ -13,34 +13,88 @@ module Checkoff
           @date_url_params = date_url_params
         end
 
-        # @return [Array(Hash<String, String>, Array<[Symbol, Array]>)] See https://developers.asana.com/docs/search-tasks-in-a-workspace
-        def handle_through_next
-          due_date_value = get_single_param('due_date.value').to_i
+        # @sg-ignore
+        # @return [Array(Hash<String, String>, Array<[Symbol, Array]>)]
+        def convert
+          return [{}, []] if date_url_params.empty?
 
-          validate_unit_is_day!
+          out = nil
+
+          %w[due_date start_date].each do |prefix|
+            next unless date_url_params.key? "#{prefix}.operator"
+            raise 'Teach me how to handle simultaneous date parameters' unless out.nil?
+
+            out = convert_for_prefix(prefix)
+          end
+
+          raise "Teach me to handle these parameters: #{date_url_params.inspect}" unless date_url_params.empty?
+
+          out
+        end
+
+        private
+
+        # @sg-ignore
+        # @param prefix [String]
+        # @return [Array(Hash<String, String>, Array<[Symbol, Array]>)]
+        def convert_for_prefix(prefix)
+          # example params:
+          #   due_date.operator=through_next
+          #   due_date.value=0
+          #   due_date.unit=day
+          operator = get_single_param("#{prefix}.operator")
+
+          out = if operator == 'through_next'
+                  handle_through_next(prefix)
+                elsif operator == 'between'
+                  handle_between(prefix)
+                else
+                  raise "Teach me how to handle date mode: #{operator.inspect}."
+                end
+
+          # mark these as done by deleting from the hash
+          date_url_params.delete_if { |k, _| k.start_with? prefix }
+
+          out
+        end
+
+        # https://developers.asana.com/docs/search-tasks-in-a-workspace
+        API_PREFIX = {
+          'due_date' => 'due_on',
+          'start_date' => 'start_on',
+        }.freeze
+
+        # @param prefix [String]
+        # @return [Array(Hash<String, String>, Array<[Symbol, Array]>)] See https://developers.asana.com/docs/search-tasks-in-a-workspace
+        def handle_through_next(prefix)
+          value = get_single_param("#{prefix}.value").to_i
+
+          validate_unit_is_day!(prefix)
 
           # @sg-ignore
           # @type [Date]
-          before = Date.today + due_date_value
+          before = Date.today + value
+
           # 'due_on.before' => '2023-01-01',
           # 'due_on.after' => '2023-01-01',
           # [{ 'due_on.before' => '2023-09-01' }, []]
-          [{ 'due_on.before' => before.to_s }, []]
+          [{ "#{API_PREFIX.fetch(prefix)}.before" => before.to_s }, []]
         end
 
+        # @param prefix [String]
         # @return [Array(Hash<String, String>, Array<[Symbol, Array]>)] See https://developers.asana.com/docs/search-tasks-in-a-workspace
-        def handle_between
-          due_date_after = get_single_param('due_date.after')
-          raise 'Teach me how to handle due_date_before' if date_url_params.key? 'due_date.before'
+        def handle_between(prefix)
+          after = get_single_param("#{prefix}.after")
+          raise "Teach me how to handle #{prefix}.before" if date_url_params.key? "#{prefix}.before"
 
-          validate_unit_not_provided!
+          validate_unit_not_provided!(prefix)
 
           # Example value: 1702857600000
           # +1 is because API seems to operate on inclusive ranges
           # @type [Date]
           # @sg-ignore
-          after = Time.at(due_date_after.to_i / 1000).to_date + 1
-          [{ 'due_on.after' => after.to_s }, []]
+          after = Time.at(after.to_i / 1000).to_date + 1
+          [{ "#{API_PREFIX.fetch(prefix)}.after" => after.to_s }, []]
         end
 
         # @param param_key [String]
@@ -55,37 +109,20 @@ module Checkoff
           value[0]
         end
 
-        # @return [Array(Hash<String, String>, Array<[Symbol, Array]>)]
-        def convert
-          return [{}, []] if date_url_params.empty?
+        # @param prefix [String]
+        # @return [void]
+        def validate_unit_not_provided!(prefix)
+          return unless date_url_params.key? "#{prefix}.unit"
 
-          # example params:
-          #   due_date.operator=through_next
-          #   due_date.value=0
-          #   due_date.unit=day
-          due_date_operator = get_single_param('due_date.operator')
-
-          return handle_through_next if due_date_operator == 'through_next'
-
-          return handle_between if due_date_operator == 'between'
-
-          raise "Teach me how to handle date mode: #{due_date_operator.inspect}."
+          raise "Teach me how to handle other #{prefix}.unit for these params: #{date_url_params.inspect}"
         end
 
-        private
-
+        # @param prefix [String]
         # @return [void]
-        def validate_unit_not_provided!
-          return unless date_url_params.key? 'due_date.unit'
+        def validate_unit_is_day!(prefix)
+          unit = date_url_params.fetch("#{prefix}.unit").fetch(0)
 
-          raise "Teach me how to handle other due_date.unit for these params: #{date_url_params.inspect}"
-        end
-
-        # @return [void]
-        def validate_unit_is_day!
-          unit = date_url_params.fetch('due_date.unit').fetch(0)
-
-          raise 'Teach me how to handle other time units' unless unit == 'day'
+          raise "Teach me how to handle other time units: #{unit}" unless unit == 'day'
         end
 
         # @return [Hash<String, Array<String>>]
