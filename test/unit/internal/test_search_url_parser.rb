@@ -455,7 +455,7 @@ class TestSearchUrlParser < ClassTest
         search_url_parser.convert_params(url)
       end
 
-      assert_equal('Teach me how to handle other time units',
+      assert_equal('Teach me how to handle other time units: something_else',
                    e.message)
     end
   end
@@ -502,7 +502,7 @@ class TestSearchUrlParser < ClassTest
       search_url_parser.convert_params(url)
     end
 
-    assert_equal('Teach me how to handle due_date_before',
+    assert_equal('Teach me how to handle due_date.before',
                  e.message)
   end
 
@@ -543,6 +543,33 @@ class TestSearchUrlParser < ClassTest
 
     assert_equal('Teach me how to handle other due_date.unit for these params: ' \
                  '{"due_date.operator"=>["between"], "due_date.after"=>["1702857600000"], "due_date.unit"=>["date"]}',
+                 e.message)
+  end
+
+  # @return [void]
+  def test_convert_params_36
+    search_url_parser = get_test_object
+    url = 'https://app.asana.com/0/search?completion=incomplete&subtask=is_not_subtask&birth_date.operator=through_next&birth_date.value=0&birth_date.unit=day&any_projects.ids=123'
+
+    e = assert_raises(RuntimeError) do
+      search_url_parser.convert_params(url)
+    end
+
+    assert_equal('Teach me to handle these parameters: {"birth_date.operator"=>["through_next"], ' \
+                 '"birth_date.value"=>["0"], "birth_date.unit"=>["day"]}',
+                 e.message)
+  end
+
+  # @return [void]
+  def test_convert_params_37
+    search_url_parser = get_test_object
+    url = 'https://app.asana.com/0/search?completion=incomplete&subtask=is_not_subtask&due_date.operator=through_next&due_date.value=2&due_date.unit=day&start_date.operator=through_next&start_date.value=0&start_date.unit=day&any_projects.ids=123_column_456'
+
+    e = assert_raises(RuntimeError) do
+      search_url_parser.convert_params(url)
+    end
+
+    assert_equal('Teach me how to handle simultaneous date parameters',
                  e.message)
   end
 
