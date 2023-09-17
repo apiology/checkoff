@@ -501,8 +501,6 @@ module Checkoff
       # @param excluding_resource_subtypes [Array<String>]
       # @return [Boolean]
       def evaluate(task, num_days, excluding_resource_subtypes)
-        # @type [Enumerable<Asana::Resources::Story>]
-
         # for whatever reason, .last on the enumerable does not impose ordering; .to_a does!
 
         # @type [Array<Asana::Resources::Story>]
