@@ -289,6 +289,12 @@ class TestTaskSelectors < ClassTest
     assert(task_selectors.filter_via_task_selector(task, [:and, [], []]))
   end
 
+  def test_filter_via_task_selector_or
+    task_selectors = get_test_object
+
+    assert(task_selectors.filter_via_task_selector(task, [:or, [], []]))
+  end
+
   def test_filter_via_task_selector_simple
     task_selectors = get_test_object
 
