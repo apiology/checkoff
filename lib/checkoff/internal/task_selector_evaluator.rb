@@ -163,6 +163,26 @@ module Checkoff
       end
     end
 
+    # :or function
+    #
+    # Does not yet shortcut, but may in future - be careful with side
+    # effects!
+    class OrFunctionEvaluator < FunctionEvaluator
+      FUNCTION_NAME = :or
+
+      def matches?
+        fn?(task_selector, FUNCTION_NAME)
+      end
+
+      # @param _task [Asana::Resources::Task]
+      # @param lhs [Object]
+      # @param rhs [Object]
+      # @return [Object]
+      def evaluate(_task, lhs, rhs)
+        lhs || rhs
+      end
+    end
+
     # :not function
     class NotFunctionEvaluator < FunctionEvaluator
       FUNCTION_NAME = :not
@@ -504,7 +524,7 @@ module Checkoff
         # for whatever reason, .last on the enumerable does not impose ordering; .to_a does!
 
         # @type [Array<Asana::Resources::Story>]
-        stories = task.stories.to_a.reject do |story|
+        stories = task.stories(per_page: 100).to_a.reject do |story|
           excluding_resource_subtypes.include? story.resource_subtype
         end
         return true if stories.empty? # no stories == infinitely old!
@@ -592,6 +612,7 @@ module Checkoff
       Checkoff::TaskSelectorClasses::CustomFieldGidValueContainsAnyGidFunctionEvaluator,
       Checkoff::TaskSelectorClasses::CustomFieldGidValueContainsAllGidsFunctionEvaluator,
       Checkoff::TaskSelectorClasses::AndFunctionEvaluator,
+      Checkoff::TaskSelectorClasses::OrFunctionEvaluator,
       Checkoff::TaskSelectorClasses::DuePFunctionEvaluator,
       Checkoff::TaskSelectorClasses::UnassignedPFunctionEvaluator,
       Checkoff::TaskSelectorClasses::DueDateSetPFunctionEvaluator,
