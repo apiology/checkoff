@@ -25,6 +25,8 @@ class TestTaskSelectors < ClassTest
   let_mock :custom_field_gid
   # @sg-ignore
   let_mock :task_gid
+  # @sg-ignore
+  let_mock :story
 
   # @return [void]
   def test_filter_via_custom_field_gid_values_gids_no_enum_value
@@ -614,6 +616,50 @@ class TestTaskSelectors < ClassTest
 
     refute(task_selectors.filter_via_task_selector(task,
                                                    [:equals?, [:custom_field_value, 'end date'], '2001-01-15']))
+  end
+
+  # @return [void]
+  def test_filter_via_task_selector_last_story_created_less_than_n_days_ago_no_stories
+    task_selectors = get_test_object do
+      task.expects(:stories).returns([])
+    end
+
+    assert(task_selectors.filter_via_task_selector(task,
+                                                   [:last_story_created_less_than_n_days_ago, 7, []]))
+  end
+
+  # @return [void]
+  def mock_filter_via_task_selector_last_story_created_less_than_n_days_ago_ancient
+    task.expects(:stories).returns([story])
+    story.expects(:resource_subtype).returns('blah')
+    Time.expects(:now).returns(Time.new(2000, 1, 1, 0, 0, 0, '+00:00')).at_least(1)
+    story.expects(:created_at).returns(Time.new(1950, 1, 1, 0, 0, 0, '+00:00').to_s)
+  end
+
+  # @return [void]
+  def test_filter_via_task_selector_last_story_created_less_than_n_days_ago_ancient
+    task_selectors = get_test_object do
+      mock_filter_via_task_selector_last_story_created_less_than_n_days_ago_ancient
+    end
+    assert(task_selectors.filter_via_task_selector(task,
+                                                   [:last_story_created_less_than_n_days_ago, 7, []]))
+  end
+
+  # @return [void]
+  def mock_filter_via_task_selector_last_story_created_less_than_n_days_ago_recent
+    task.expects(:stories).returns([story])
+    story.expects(:resource_subtype).returns('blah')
+    Time.expects(:now).returns(Time.new(2000, 1, 1, 0, 0, 0, '+00:00')).at_least(1)
+    story.expects(:created_at).returns(Time.new(1999, 12, 31, 0, 0, 0, '+00:00').to_s)
+  end
+
+  # @return [void]
+  def test_filter_via_task_selector_last_story_created_less_than_n_days_ago_recent
+    task_selectors = get_test_object do
+      mock_filter_via_task_selector_last_story_created_less_than_n_days_ago_recent
+    end
+    refute(task_selectors.filter_via_task_selector(task,
+                                                   [:last_story_created_less_than_n_days_ago, 7, []]))
   end
 
   # @return [Class<Checkoff::TaskSelectors>]

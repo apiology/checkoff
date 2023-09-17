@@ -484,6 +484,40 @@ module Checkoff
       end
     end
 
+    # :last_story_created_less_than_n_days_ago function
+    class LastStoryCreatedLessThanNDaysAgoFunctionEvaluator < FunctionEvaluator
+      FUNCTION_NAME = :last_story_created_less_than_n_days_ago
+
+      def matches?
+        fn?(task_selector, FUNCTION_NAME)
+      end
+
+      def evaluate_arg?(_index)
+        false
+      end
+
+      # @param task [Asana::Resources::Task]
+      # @param num_days [Integer]
+      # @param excluding_resource_subtypes [Array<String>]
+      # @return [Boolean]
+      def evaluate(task, num_days, excluding_resource_subtypes)
+        # @type [Enumerable<Asana::Resources::Story>]
+
+        # for whatever reason, .last on the enumerable does not impose ordering; .to_a does!
+
+        # @type [Array<Asana::Resources::Story>]
+        stories = task.stories.to_a.reject do |story|
+          excluding_resource_subtypes.include? story.resource_subtype
+        end
+        return true if stories.empty? # no stories == infinitely old!
+
+        last_story = stories.last
+        last_story_created_at = Time.parse(last_story.created_at)
+        n_days_ago = Time.now - (num_days * 24 * 60 * 60)
+        last_story_created_at < n_days_ago
+      end
+    end
+
     # String literals
     class StringLiteralEvaluator < FunctionEvaluator
       def matches?
@@ -567,6 +601,7 @@ module Checkoff
       Checkoff::TaskSelectorClasses::FieldGreaterThanOrEqualToNDaysFromTodayFunctionEvaluator,
       Checkoff::TaskSelectorClasses::CustomFieldLessThanNDaysFromNowFunctionEvaluator,
       Checkoff::TaskSelectorClasses::CustomFieldGreaterThanOrEqualToNDaysFromNowFunctionEvaluator,
+      Checkoff::TaskSelectorClasses::LastStoryCreatedLessThanNDaysAgoFunctionEvaluator,
       Checkoff::TaskSelectorClasses::StringLiteralEvaluator,
       Checkoff::TaskSelectorClasses::EstimateExceedsDurationFunctionEvaluator,
     ].freeze
