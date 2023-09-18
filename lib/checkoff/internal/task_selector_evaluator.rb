@@ -37,7 +37,7 @@ module Checkoff
       #
       # @sg-ignore
       # @return [Date, nil]
-      def pull_date_field_by_name_or_raise(task, field_name)
+      def pull_date_field_by_name(task, field_name)
         if field_name == :modified
           return Time.parse(task.modified_at).to_date unless task.modified_at.nil?
 
@@ -48,6 +48,31 @@ module Checkoff
           return Time.parse(task.due_at).to_date unless task.due_at.nil?
 
           return Date.parse(task.due_on) unless task.due_on.nil?
+
+          return nil
+        end
+
+        raise "Teach me how to handle field #{field_name}"
+      end
+
+      # @param task [Asana::Resources::Task]
+      # @param field_name [Symbol]
+      #
+      # @sg-ignore
+      # @return [Date, Time, nil]
+      def pull_date_or_time_field_by_name(task, field_name)
+        if field_name == :due
+          return Time.parse(task.due_at) unless task.due_at.nil?
+
+          return Date.parse(task.due_on) unless task.due_on.nil?
+
+          return nil
+        end
+
+        if field_name == :start
+          return Time.parse(task.start_at) unless task.start_at.nil?
+
+          return Date.parse(task.start_on) unless task.start_on.nil?
 
           return nil
         end
@@ -257,9 +282,10 @@ module Checkoff
       end
 
       # @param task [Asana::Resources::Task]
+      # @param ignore_dependencies [Boolean]
       # @return [Boolean]
-      def evaluate(task)
-        @tasks.task_ready?(task)
+      def evaluate(task, ignore_dependencies: false)
+        @tasks.task_ready?(task, ignore_dependencies: ignore_dependencies)
       end
     end
 
@@ -289,6 +315,53 @@ module Checkoff
       # @return [Boolean]
       def evaluate(task)
         !task.due_at.nil? || !task.due_on.nil?
+      end
+    end
+
+    # :due_between_n_days function
+    class DueBetweenRelativePFunctionEvaluator < FunctionEvaluator
+      FUNCTION_NAME = :due_between_relative
+
+      def matches?
+        fn?(task_selector, FUNCTION_NAME)
+      end
+
+      # @param _index [Integer]
+      def evaluate_arg?(_index)
+        false
+      end
+
+      # @param task [Asana::Resources::Task]
+      # @param beginning_num_days_from_now [Integer]
+      # @param end_num_days_from_now [Integer]
+      # @param ignore_dependencies [Boolean]
+      #
+      # @return [Boolean]
+      def evaluate(task, beginning_num_days_from_now, end_num_days_from_now, ignore_dependencies: false)
+        beginning_n_days_from_now_time = (Time.now + (beginning_num_days_from_now * 24 * 60 * 60))
+        end_n_days_from_now_time = (Time.now + (end_num_days_from_now * 24 * 60 * 60))
+
+        # @type [Date, Time, nil]
+        task_date_or_time = pull_date_or_time_field_by_name(task, :start) ||
+                            pull_date_or_time_field_by_name(task, :due)
+
+        return false if task_date_or_time.nil?
+
+        # if time
+        in_range = if task_date_or_time.is_a?(Time)
+                     task_date_or_time > beginning_n_days_from_now_time &&
+                       task_date_or_time <= end_n_days_from_now_time
+                   else
+                     # if date
+                     task_date_or_time > beginning_n_days_from_now_time.to_date &&
+                       task_date_or_time <= end_n_days_from_now_time.to_date
+                   end
+
+        return false unless in_range
+
+        return false if !ignore_dependencies && @tasks.incomplete_dependencies?(task)
+
+        true
       end
     end
 
@@ -387,7 +460,7 @@ module Checkoff
     end
 
     # :field_less_than_n_days_ago
-    class FieldLessThanNDaysAgoFunctionEvaluator < FunctionEvaluator
+    class FieldLessThanNDaysAgoPFunctionEvaluator < FunctionEvaluator
       FUNCTION_NAME = :field_less_than_n_days_ago
 
       def matches?
@@ -404,7 +477,7 @@ module Checkoff
       #
       # @return [Boolean]
       def evaluate(task, field_name, num_days)
-        date = pull_date_field_by_name_or_raise(task, field_name)
+        date = pull_date_field_by_name(task, field_name)
 
         return false if date.nil?
 
@@ -416,7 +489,7 @@ module Checkoff
     end
 
     # :field_greater_than_or_equal_to_n_days_from_today
-    class FieldGreaterThanOrEqualToNDaysFromTodayFunctionEvaluator < FunctionEvaluator
+    class FieldGreaterThanOrEqualToNDaysFromTodayPFunctionEvaluator < FunctionEvaluator
       FUNCTION_NAME = :field_greater_than_or_equal_to_n_days_from_today
 
       def matches?
@@ -433,7 +506,7 @@ module Checkoff
       #
       # @return [Boolean]
       def evaluate(task, field_name, num_days)
-        date = pull_date_field_by_name_or_raise(task, field_name)
+        date = pull_date_field_by_name(task, field_name)
 
         return false if date.nil?
 
@@ -614,10 +687,11 @@ module Checkoff
       Checkoff::TaskSelectorClasses::AndFunctionEvaluator,
       Checkoff::TaskSelectorClasses::OrFunctionEvaluator,
       Checkoff::TaskSelectorClasses::DuePFunctionEvaluator,
+      Checkoff::TaskSelectorClasses::DueBetweenRelativePFunctionEvaluator,
       Checkoff::TaskSelectorClasses::UnassignedPFunctionEvaluator,
       Checkoff::TaskSelectorClasses::DueDateSetPFunctionEvaluator,
-      Checkoff::TaskSelectorClasses::FieldLessThanNDaysAgoFunctionEvaluator,
-      Checkoff::TaskSelectorClasses::FieldGreaterThanOrEqualToNDaysFromTodayFunctionEvaluator,
+      Checkoff::TaskSelectorClasses::FieldLessThanNDaysAgoPFunctionEvaluator,
+      Checkoff::TaskSelectorClasses::FieldGreaterThanOrEqualToNDaysFromTodayPFunctionEvaluator,
       Checkoff::TaskSelectorClasses::CustomFieldLessThanNDaysFromNowFunctionEvaluator,
       Checkoff::TaskSelectorClasses::CustomFieldGreaterThanOrEqualToNDaysFromNowFunctionEvaluator,
       Checkoff::TaskSelectorClasses::LastStoryCreatedLessThanNDaysAgoFunctionEvaluator,

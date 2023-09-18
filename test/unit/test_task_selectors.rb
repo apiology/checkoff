@@ -303,10 +303,94 @@ class TestTaskSelectors < ClassTest
 
   def test_filter_via_task_selector_due
     task_selectors = get_test_object do
-      tasks.expects(:task_ready?).with(task).returns(true)
+      tasks.expects(:task_ready?).with(task, ignore_dependencies: false).returns(true)
     end
 
     assert(task_selectors.filter_via_task_selector(task, [:due]))
+  end
+
+  def test_filter_via_task_selector_due_between_relative_starts_now
+    task_selectors = get_test_object do
+      Time.expects(:now).returns(Time.new(2019, 1, 1, 0, 0, 0, 0)).at_least(1)
+      task.expects(:start_at).returns('2019-01-01T00:00:00Z').at_least(1)
+      tasks.expects(:incomplete_dependencies?).with(task).returns(false)
+    end
+
+    assert(task_selectors.filter_via_task_selector(task, [:due_between_relative, -999, 2]))
+  end
+
+  def test_filter_via_task_selector_due_between_relative_starts_today
+    task_selectors = get_test_object do
+      Time.expects(:now).returns(Time.new(2019, 1, 1, 0, 0, 0, 0)).at_least(1)
+      task.expects(:start_at).returns(nil)
+      task.expects(:start_on).returns('2019-01-01').at_least(1)
+      tasks.expects(:incomplete_dependencies?).with(task).returns(false)
+    end
+
+    assert(task_selectors.filter_via_task_selector(task, [:due_between_relative, -999, 2]))
+  end
+
+  def test_filter_via_task_selector_due_between_relative_due_now
+    task_selectors = get_test_object do
+      Time.expects(:now).returns(Time.new(2019, 1, 1, 0, 0, 0, 0)).at_least(1)
+      task.expects(:start_at).returns(nil)
+      task.expects(:start_on).returns(nil)
+      task.expects(:due_at).returns('2019-01-01T00:00:00Z').at_least(1)
+      tasks.expects(:incomplete_dependencies?).with(task).returns(false)
+    end
+
+    assert(task_selectors.filter_via_task_selector(task, [:due_between_relative, -999, 2]))
+  end
+
+  def test_filter_via_task_selector_due_between_relative_due_today
+    task_selectors = get_test_object do
+      Time.expects(:now).returns(Time.new(2019, 1, 1, 0, 0, 0, 0)).at_least(1)
+      task.expects(:start_at).returns(nil)
+      task.expects(:start_on).returns(nil)
+      task.expects(:due_at).returns(nil).at_least(1)
+      task.expects(:due_on).returns('2019-01-01').at_least(1)
+      tasks.expects(:incomplete_dependencies?).with(task).returns(false)
+    end
+
+    assert(task_selectors.filter_via_task_selector(task, [:due_between_relative, -999, 2]))
+  end
+
+  def test_filter_via_task_selector_due_between_relative_no_due
+    task_selectors = get_test_object do
+      Time.expects(:now).returns(Time.new(2019, 1, 1, 0, 0, 0, 0)).at_least(1)
+      task.expects(:start_at).returns(nil)
+      task.expects(:start_on).returns(nil)
+      task.expects(:due_at).returns(nil).at_least(1)
+      task.expects(:due_on).returns(nil).at_least(1)
+    end
+
+    refute(task_selectors.filter_via_task_selector(task, [:due_between_relative, -999, 2]))
+  end
+
+  def test_filter_via_task_selector_due_between_relative_due_far_future
+    task_selectors = get_test_object do
+      Time.expects(:now).returns(Time.new(2019, 1, 1, 0, 0, 0, 0)).at_least(1)
+      task.expects(:start_at).returns(nil)
+      task.expects(:start_on).returns(nil)
+      task.expects(:due_at).returns(nil).at_least(1)
+      task.expects(:due_on).returns('2099-01-01').at_least(1)
+      tasks.expects(:incomplete_dependencies?).with(task).returns(false).at_least(0)
+    end
+
+    refute(task_selectors.filter_via_task_selector(task, [:due_between_relative, -999, 2]))
+  end
+
+  def test_filter_via_task_selector_due_between_relative_due_today_but_dependent
+    task_selectors = get_test_object do
+      Time.expects(:now).returns(Time.new(2019, 1, 1, 0, 0, 0, 0)).at_least(1)
+      task.expects(:start_at).returns(nil)
+      task.expects(:start_on).returns(nil)
+      task.expects(:due_at).returns(nil).at_least(1)
+      task.expects(:due_on).returns('2019-01-01').at_least(1)
+      tasks.expects(:incomplete_dependencies?).with(task).returns(true)
+    end
+
+    refute(task_selectors.filter_via_task_selector(task, [:due_between_relative, -999, 2]))
   end
 
   # @return [void]
