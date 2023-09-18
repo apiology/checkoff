@@ -103,6 +103,29 @@ module Checkoff
       "https://app.asana.com/0/0/#{task.gid}/f"
     end
 
+    # @param task [Asana::Resources::Task]
+    def incomplete_dependencies?(task)
+      # Avoid a redundant fetch.  Unfortunately, Ruby SDK allows
+      # dependencies to be fetched along with other attributes--but
+      # then doesn't use it and does another HTTP GET!  At least this
+      # way we can skip the extra HTTP GET in the common case when
+      # there are no dependencies.
+      #
+      # https://github.com/Asana/ruby-asana/issues/125
+
+      # @sg-ignore
+      # @type [Enumerable<Asana::Resources::Task>, nil]
+      dependencies = task.instance_variable_get(:@dependencies)
+      dependencies = task.dependencies.map { |dependency| { 'gid' => dependency.gid } } if dependencies.nil?
+
+      dependencies.any? do |parent_task_info|
+        parent_task_gid = parent_task_info.fetch('gid')
+        parent_task = @asana_task.find_by_id(client, parent_task_gid,
+                                             options: { fields: ['completed'] })
+        !parent_task.completed
+      end
+    end
+
     private
 
     # @param workspace_name [String]
@@ -157,29 +180,6 @@ module Checkoff
       return @time_class.parse(task.due_on) if task.due_on
 
       nil
-    end
-
-    # @param task [Asana::Resources::Task]
-    def incomplete_dependencies?(task)
-      # Avoid a redundant fetch.  Unfortunately, Ruby SDK allows
-      # dependencies to be fetched along with other attributes--but
-      # then doesn't use it and does another HTTP GET!  At least this
-      # way we can skip the extra HTTP GET in the common case when
-      # there are no dependencies.
-      #
-      # https://github.com/Asana/ruby-asana/issues/125
-
-      # @sg-ignore
-      # @type [Enumerable<Asana::Resources::Task>, nil]
-      dependencies = task.instance_variable_get(:@dependencies)
-      dependencies = task.dependencies.map { |task| { 'gid' => task.gid } } if dependencies.nil?
-
-      dependencies.any? do |parent_task_info|
-        parent_task_gid = parent_task_info.fetch('gid')
-        parent_task = @asana_task.find_by_id(client, parent_task_gid,
-                                             options: { fields: ['completed'] })
-        !parent_task.completed
-      end
     end
   end
 end
