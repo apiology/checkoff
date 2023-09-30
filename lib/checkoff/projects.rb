@@ -107,8 +107,6 @@ module Checkoff
     # @return [Enumerable<Asana::Resources::Project>]
     def projects_by_workspace_name(workspace_name, extra_fields: [])
       workspace = @workspaces.workspace_or_raise(workspace_name)
-      raise "Could not find workspace named #{workspace_name}" unless workspace
-
       options = { fields: %w[name] + extra_fields }
       projects.find_by_workspace(workspace: workspace.gid, per_page: 100, options: options)
     end
