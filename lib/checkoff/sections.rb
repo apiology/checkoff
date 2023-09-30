@@ -204,7 +204,7 @@ module Checkoff
 
       project = projects.project(workspace_name, project_name)
       if project.nil?
-        raise "Could not find project #{project_name} " \
+        raise "Could not find project #{project_name.inspect} " \
               "under workspace #{workspace_name}"
       end
       project
