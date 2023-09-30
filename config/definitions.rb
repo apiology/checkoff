@@ -139,7 +139,7 @@
 #         #
 #         # @param per_page [Integer] the number of records to fetch per page.
 #         # @param options [Hash] the request I/O options.
-#         # @return [Asana::Collection<Asana::Resources::Project>]
+#         # @return [Enumerable<Asana::Resources::Project>]
 #         def find_by_workspace(client, workspace: required("workspace"), is_template: nil, archived: nil, per_page: 20, options: {}); end
 #         # Returns the complete project record for a single project.
 #         #
