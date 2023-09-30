@@ -59,7 +59,7 @@ module Checkoff
       if project_name.is_a?(Symbol) && project_name.to_s.start_with?('my_tasks')
         my_tasks(workspace_name)
       else
-        # @type [Asana::Collection<Asana::Resources::Project>]
+        # @type [Enumerable<Asana::Resources::Project>]
         ps = projects_by_workspace_name(workspace_name)
         ps.find do |project|
           project.name == project_name
@@ -102,6 +102,19 @@ module Checkoff
     end
     cache_method :tasks_from_project, SHORT_CACHE_TIME
 
+    # @param [String] workspace_name
+    # @param [Array<String>] extra_fields
+    # @return [Enumerable<Asana::Resources::Project>]
+    def projects_by_workspace_name(workspace_name, extra_fields: [])
+      workspace = @workspaces.workspace_or_raise(workspace_name)
+      raise "Could not find workspace named #{workspace_name}" unless workspace
+
+      options = { fields: %w[name] + extra_fields }
+      projects.find_by_workspace(workspace: workspace.gid, per_page: 100, options: options)
+    end
+    # 15 minute cache resulted in 'Your pagination token has expired'
+    cache_method :projects_by_workspace_name, MEDIUM_CACHE_TIME
+
     private
 
     # @return [Asana::Client]
@@ -112,17 +125,6 @@ module Checkoff
       client.projects
     end
     cache_method :projects, LONG_CACHE_TIME
-
-    # @param [String] workspace_name
-    # @return [Asana::Collection<Asana::Resources::Project>]
-    def projects_by_workspace_name(workspace_name)
-      workspace = @workspaces.workspace_or_raise(workspace_name)
-      raise "Could not find workspace named #{workspace_name}" unless workspace
-
-      projects.find_by_workspace(workspace: workspace.gid, per_page: 100)
-    end
-    # 15 minute cache resulted in 'Your pagination token has expired'
-    cache_method :projects_by_workspace_name, MEDIUM_CACHE_TIME
 
     # @param [String] workspace_name
     # @return [Asana::Resources::Project]
