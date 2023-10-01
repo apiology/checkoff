@@ -54,13 +54,14 @@ module Checkoff
     # pulls an Asana API project class given a name
     # @param [String] workspace_name
     # @param [String] project_name
+    # @param [Array<String>] extra_fields
     # @return [Asana::Resources::Project, nil]
-    def project(workspace_name, project_name)
+    def project(workspace_name, project_name, extra_fields: [])
       if project_name.is_a?(Symbol) && project_name.to_s.start_with?('my_tasks')
         my_tasks(workspace_name)
       else
         # @type [Enumerable<Asana::Resources::Project>]
-        ps = projects_by_workspace_name(workspace_name)
+        ps = projects_by_workspace_name(workspace_name, extra_fields: extra_fields)
         ps.find do |project|
           project.name == project_name
         end
@@ -73,7 +74,7 @@ module Checkoff
     # @return [Asana::Resources::Project]
     def project_or_raise(workspace_name, project_name)
       p = project(workspace_name, project_name)
-      raise "Could not find project #{project_name} under workspace #{workspace_name}." if p.nil?
+      raise "Could not find project #{project_name.inspect} under workspace #{workspace_name}." if p.nil?
 
       p
     end
