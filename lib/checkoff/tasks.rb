@@ -119,6 +119,9 @@ module Checkoff
       dependencies = task.dependencies.map { |dependency| { 'gid' => dependency.gid } } if dependencies.nil?
 
       dependencies.any? do |parent_task_info|
+        # the real bummer though is that asana doesn't let you fetch
+        # the completion status of dependencies, so we need to do this
+        # regardless:
         parent_task_gid = parent_task_info.fetch('gid')
         parent_task = @asana_task.find_by_id(client, parent_task_gid,
                                              options: { fields: ['completed'] })
