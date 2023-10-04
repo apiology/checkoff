@@ -70,6 +70,14 @@ module Checkoff
           end
         end
 
+        # Handle 'portfolios.ids' search url param
+        class PortfoliosIds < SimpleParam
+          # @return [Array<String>]
+          def convert
+            { 'portfolios.any' => single_value.split('~').join(',') }.to_a.flatten
+          end
+        end
+
         # Handle 'any_projects.ids' search url param
         class AnyProjectsIds < SimpleParam
           # @return [Array<String>]
@@ -188,6 +196,7 @@ module Checkoff
 
         # @type [Hash<String, Class<SimpleParam::SimpleParam>>] the mapping from param name to class
         ARGS = {
+          'portfolios.ids' => SimpleParam::PortfoliosIds,
           'any_projects.ids' => SimpleParam::AnyProjectsIds,
           'not_projects.ids' => SimpleParam::NotProjectsIds,
           'completion' => SimpleParam::Completion,
