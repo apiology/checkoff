@@ -1,5 +1,6 @@
 # frozen_string_literal: true
 
+require_relative 'selector_classes/common'
 require_relative 'selector_classes/task'
 require_relative 'selector_evaluator'
 
@@ -18,16 +19,16 @@ module Checkoff
     private
 
     FUNCTION_EVALUTORS = [
-      Checkoff::SelectorClasses::Task::NotFunctionEvaluator,
-      Checkoff::SelectorClasses::Task::NilPFunctionEvaluator,
-      Checkoff::SelectorClasses::Task::EqualsPFunctionEvaluator,
+      Checkoff::SelectorClasses::Common::NotFunctionEvaluator,
+      Checkoff::SelectorClasses::Common::NilPFunctionEvaluator,
+      Checkoff::SelectorClasses::Common::EqualsPFunctionEvaluator,
       Checkoff::SelectorClasses::Task::TagPFunctionEvaluator,
-      Checkoff::SelectorClasses::Task::CustomFieldValueFunctionEvaluator,
-      Checkoff::SelectorClasses::Task::CustomFieldGidValueFunctionEvaluator,
-      Checkoff::SelectorClasses::Task::CustomFieldGidValueContainsAnyGidFunctionEvaluator,
-      Checkoff::SelectorClasses::Task::CustomFieldGidValueContainsAllGidsFunctionEvaluator,
-      Checkoff::SelectorClasses::Task::AndFunctionEvaluator,
-      Checkoff::SelectorClasses::Task::OrFunctionEvaluator,
+      Checkoff::SelectorClasses::Common::CustomFieldValueFunctionEvaluator,
+      Checkoff::SelectorClasses::Common::CustomFieldGidValueFunctionEvaluator,
+      Checkoff::SelectorClasses::Common::CustomFieldGidValueContainsAnyGidFunctionEvaluator,
+      Checkoff::SelectorClasses::Common::CustomFieldGidValueContainsAllGidsFunctionEvaluator,
+      Checkoff::SelectorClasses::Common::AndFunctionEvaluator,
+      Checkoff::SelectorClasses::Common::OrFunctionEvaluator,
       Checkoff::SelectorClasses::Task::DuePFunctionEvaluator,
       Checkoff::SelectorClasses::Task::DueBetweenRelativePFunctionEvaluator,
       Checkoff::SelectorClasses::Task::UnassignedPFunctionEvaluator,
@@ -37,7 +38,7 @@ module Checkoff
       Checkoff::SelectorClasses::Task::CustomFieldLessThanNDaysFromNowFunctionEvaluator,
       Checkoff::SelectorClasses::Task::CustomFieldGreaterThanOrEqualToNDaysFromNowFunctionEvaluator,
       Checkoff::SelectorClasses::Task::LastStoryCreatedLessThanNDaysAgoFunctionEvaluator,
-      Checkoff::SelectorClasses::Task::StringLiteralEvaluator,
+      Checkoff::SelectorClasses::Common::StringLiteralEvaluator,
       Checkoff::SelectorClasses::Task::EstimateExceedsDurationFunctionEvaluator,
     ].freeze
 

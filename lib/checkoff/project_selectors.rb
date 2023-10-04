@@ -5,6 +5,7 @@
 require 'forwardable'
 require 'cache_method'
 require_relative 'internal/config_loader'
+require_relative 'internal/project_selector_evaluator'
 require_relative 'workspaces'
 require_relative 'clients'
 
@@ -22,13 +23,16 @@ module Checkoff
 
     # @param config [Hash<Symbol, Object>]
     # @param workspaces [Checkoff::Workspaces]
+    # @param projects [Checkoff::Projects]
     # @param clients [Checkoff::Clients]
     # @param client [Asana::Client]
     def initialize(config: Checkoff::Internal::ConfigLoader.load(:asana),
                    workspaces: Checkoff::Workspaces.new(config: config),
+                   projects: Checkoff::Projects.new(config: config),
                    clients: Checkoff::Clients.new(config: config),
                    client: clients.client)
       @workspaces = workspaces
+      @projects = projects
       @client = client
     end
 
@@ -37,27 +41,17 @@ module Checkoff
     #        project details.  Examples: [:tag, 'foo'] [:not, [:tag, 'foo']] [:tag, 'foo']
     # @return [Boolean]
     def filter_via_project_selector(project, project_selector)
-      if project_selector == [:custom_field_values_contain_any_value, 'Project attributes', ['timeline']]
-        custom_field = project.custom_fields.find { |field| field.fetch('name') == 'Project attributes' }
-
-        return false if custom_field.nil?
-
-        # @sg-ignore
-        # @type [Hash, nil]
-        timeline = custom_field.fetch('multi_enum_values').find do |multi_enum_value|
-          multi_enum_value.fetch('name') == 'timeline'
-        end
-
-        return !timeline.nil?
-      end
-
-      raise "Teach me how to evaluate #{project} against #{project_selector}"
+      evaluator = ProjectSelectorEvaluator.new(project: project, projects: projects)
+      evaluator.evaluate(project_selector)
     end
 
     private
 
     # @return [Checkoff::Workspaces]
     attr_reader :workspaces
+
+    # @return [Checkoff::Projects]
+    attr_reader :projects
 
     # @return [Asana::Client]
     attr_reader :client
