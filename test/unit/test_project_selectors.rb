@@ -15,10 +15,11 @@ class TestProjectSelectors < ClassTest
   let_mock :project
 
   # @return [void]
-  def test_filter_via_custom_field_values_contain_any_value_false
+  def test_filter_via_custom_field_value_contain_any_value_false
     custom_field = {
       'name' => 'Project attributes',
       'multi_enum_values' => [],
+      'display_value' => 'something else',
     }
     project_selectors = get_test_object do
       custom_fields = [custom_field]
@@ -27,7 +28,7 @@ class TestProjectSelectors < ClassTest
     end
 
     refute(project_selectors.filter_via_project_selector(project,
-                                                         [:custom_field_values_contain_any_value, 'Project attributes',
+                                                         [:custom_field_value_contains_any_value, 'Project attributes',
                                                           ['timeline']]))
   end
 
@@ -36,6 +37,7 @@ class TestProjectSelectors < ClassTest
     custom_field = {
       'name' => 'Project attributes',
       'multi_enum_values' => [{ 'name' => 'timeline' }],
+      'display_value' => 'timeline',
     }
     project_selectors = get_test_object do
       custom_fields = [custom_field]
@@ -44,20 +46,20 @@ class TestProjectSelectors < ClassTest
     end
 
     assert(project_selectors.filter_via_project_selector(project,
-                                                         [:custom_field_values_contain_any_value, 'Project attributes',
+                                                         [:custom_field_value_contains_any_value, 'Project attributes',
                                                           ['timeline']]))
   end
 
   # @return [void]
-  def test_filter_via_custom_field_values_contain_any_value_no_custom_field_false
+  def test_filter_via_custom_field_value_contains_any_value_no_custom_field_false
     project_selectors = get_test_object do
       custom_fields = []
       # @sg-ignore
-      project.expects(:custom_fields).returns(custom_fields)
+      project.expects(:custom_fields).returns(custom_fields).at_least(1)
     end
 
     refute(project_selectors.filter_via_project_selector(project,
-                                                         [:custom_field_values_contain_any_value, 'Project attributes',
+                                                         [:custom_field_value_contains_any_value, 'Project attributes',
                                                           ['timeline']]))
   end
 
@@ -67,7 +69,7 @@ class TestProjectSelectors < ClassTest
 
     e = assert_raises(RuntimeError) { project_selectors.filter_via_project_selector(project, [:bogus]) }
 
-    assert_match(/Teach me how to evaluate/, e.message)
+    assert_match(/Syntax issue trying to handle/, e.message)
   end
 
   # @return [Class<Checkoff::ProjectSelectors>]
