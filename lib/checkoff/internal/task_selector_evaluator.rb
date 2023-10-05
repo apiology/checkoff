@@ -18,29 +18,15 @@ module Checkoff
 
     private
 
-    FUNCTION_EVALUTORS = [
-      Checkoff::SelectorClasses::Common::NotFunctionEvaluator,
-      Checkoff::SelectorClasses::Common::NilPFunctionEvaluator,
-      Checkoff::SelectorClasses::Common::EqualsPFunctionEvaluator,
-      Checkoff::SelectorClasses::Task::TagPFunctionEvaluator,
-      Checkoff::SelectorClasses::Common::CustomFieldValueFunctionEvaluator,
-      Checkoff::SelectorClasses::Common::CustomFieldGidValueFunctionEvaluator,
-      Checkoff::SelectorClasses::Common::CustomFieldGidValueContainsAnyGidFunctionEvaluator,
-      Checkoff::SelectorClasses::Common::CustomFieldGidValueContainsAllGidsFunctionEvaluator,
-      Checkoff::SelectorClasses::Common::AndFunctionEvaluator,
-      Checkoff::SelectorClasses::Common::OrFunctionEvaluator,
-      Checkoff::SelectorClasses::Task::DuePFunctionEvaluator,
-      Checkoff::SelectorClasses::Task::DueBetweenRelativePFunctionEvaluator,
-      Checkoff::SelectorClasses::Task::UnassignedPFunctionEvaluator,
-      Checkoff::SelectorClasses::Task::DueDateSetPFunctionEvaluator,
-      Checkoff::SelectorClasses::Task::FieldLessThanNDaysAgoPFunctionEvaluator,
-      Checkoff::SelectorClasses::Task::FieldGreaterThanOrEqualToNDaysFromTodayPFunctionEvaluator,
-      Checkoff::SelectorClasses::Task::CustomFieldLessThanNDaysFromNowFunctionEvaluator,
-      Checkoff::SelectorClasses::Task::CustomFieldGreaterThanOrEqualToNDaysFromNowFunctionEvaluator,
-      Checkoff::SelectorClasses::Task::LastStoryCreatedLessThanNDaysAgoFunctionEvaluator,
-      Checkoff::SelectorClasses::Common::StringLiteralEvaluator,
-      Checkoff::SelectorClasses::Task::EstimateExceedsDurationFunctionEvaluator,
-    ].freeze
+    COMMON_FUNCTION_EVALUATORS = (Checkoff::SelectorClasses::Common.constants.map do |const|
+      Checkoff::SelectorClasses::Common.const_get(const)
+    end - [Checkoff::SelectorClasses::Common::FunctionEvaluator]).freeze
+
+    TASK_FUNCTION_EVALUATORS = (Checkoff::SelectorClasses::Task.constants.map do |const|
+      Checkoff::SelectorClasses::Task.const_get(const)
+    end - [Checkoff::SelectorClasses::Task::FunctionEvaluator]).freeze
+
+    FUNCTION_EVALUTORS = (COMMON_FUNCTION_EVALUATORS + TASK_FUNCTION_EVALUATORS).freeze
 
     # @return [Array<Class<TaskSelectorClasses::FunctionEvaluator>>]
     def function_evaluators
