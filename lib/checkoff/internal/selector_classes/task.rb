@@ -5,6 +5,29 @@ require_relative 'task/function_evaluator'
 module Checkoff
   module SelectorClasses
     module Task
+      # :in_section_named? function
+      class InSectionNamedPFunctionEvaluator < FunctionEvaluator
+        def matches?
+          fn?(selector, :in_section_named?)
+        end
+
+        # @param _index [Integer]
+        def evaluate_arg?(_index)
+          false
+        end
+
+        # @sg-ignore
+        # @param task [Asana::Resources::Task]
+        # @param tag_name [String]
+        # @return [Boolean]
+        def evaluate(task, section_name)
+          section_names = task.memberships.map do |membership|
+            membership.fetch('section').fetch('name')
+          end
+          section_names.include? section_name
+        end
+      end
+
       # :tag function
       class TagPFunctionEvaluator < FunctionEvaluator
         def matches?
