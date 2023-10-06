@@ -5,6 +5,29 @@ require_relative 'task/function_evaluator'
 module Checkoff
   module SelectorClasses
     module Task
+      # :section_name_starts_with? function
+      class SectionNameStartsWithPFunctionEvaluator < FunctionEvaluator
+        def matches?
+          fn?(selector, :section_name_starts_with?)
+        end
+
+        # @param _index [Integer]
+        def evaluate_arg?(_index)
+          false
+        end
+
+        # @sg-ignore
+        # @param task [Asana::Resources::Task]
+        # @param section_name_prefix [String]
+        # @return [Boolean]
+        def evaluate(task, section_name_prefix)
+          section_names = task.memberships.map do |membership|
+            membership.fetch('section').fetch('name')
+          end
+          section_names.any? { |section_name| section_name.start_with? section_name_prefix }
+        end
+      end
+
       # :in_section_named? function
       class InSectionNamedPFunctionEvaluator < FunctionEvaluator
         def matches?
@@ -18,7 +41,7 @@ module Checkoff
 
         # @sg-ignore
         # @param task [Asana::Resources::Task]
-        # @param tag_name [String]
+        # @param section_name [String]
         # @return [Boolean]
         def evaluate(task, section_name)
           section_names = task.memberships.map do |membership|
