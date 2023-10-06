@@ -769,6 +769,14 @@ class TestTaskSelectors < ClassTest
                                                    [:in_section_named?, 'foo']))
   end
 
+  def test_filter_via_task_selector_in_section_named_true
+    task_selectors = get_test_object do
+      task.expects(:memberships).returns([{ 'section' => { 'name' => 'foo [100]' } }])
+    end
+    assert(task_selectors.filter_via_task_selector(task,
+                                                   [:section_name_starts_with?, 'foo [']))
+  end
+
   # @return [Class<Checkoff::TaskSelectors>]
   def class_under_test
     Checkoff::TaskSelectors
