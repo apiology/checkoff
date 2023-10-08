@@ -46,7 +46,8 @@ module Checkoff
         per_page: 100,
         options: {
           fields: %w[name completed_at start_at start_on due_at due_on tags
-                     memberships.project.gid memberships.section.name dependencies],
+                     memberships.project.gid memberships.project.name
+                     memberships.section.name dependencies],
         },
       }
     end
