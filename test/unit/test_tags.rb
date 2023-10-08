@@ -104,7 +104,8 @@ class TestTags < ClassTest
       per_page: 100,
       options: {
         fields: %w[name completed_at due_at due_on tags
-                   memberships.project.gid memberships.section.name dependencies],
+                   memberships.project.gid memberships.project.name
+                   memberships.section.name dependencies],
       },
     }
   end
@@ -112,7 +113,8 @@ class TestTags < ClassTest
   def generate_merged_task_options
     {
       fields: %w[name completed_at due_at due_on tags
-                 memberships.project.gid memberships.section.name dependencies field1 field2],
+                 memberships.project.gid memberships.project.name
+                 memberships.section.name dependencies field1 field2],
     }
   end
 
