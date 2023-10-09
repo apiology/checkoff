@@ -10,6 +10,9 @@ require 'asana'
 module Checkoff
   # Pull tasks from Asana
   class Tasks
+    # @!parse
+    #   extend CacheMethod::ClassMethods
+
     MINUTE = 60
     HOUR = MINUTE * 60
     DAY = 24 * HOUR
@@ -84,6 +87,7 @@ module Checkoff
       options[:fields] += extra_fields
       client.tasks.find_by_id(task_gid, options: options)
     end
+    cache_method :task_by_gid, SHORT_CACHE_TIME
 
     # @param name [String]
     # @param workspace_gid [String]
