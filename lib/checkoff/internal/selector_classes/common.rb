@@ -150,7 +150,7 @@ module Checkoff
         # @param custom_field_values_gids [Array<String>]
         # @return [Boolean]
         def evaluate(resource, custom_field_gid, custom_field_values_gids)
-          actual_custom_field_values_gids = pull_custom_field_values_gids(resource, custom_field_gid)
+          actual_custom_field_values_gids = pull_custom_field_values_gids_or_raise(resource, custom_field_gid)
 
           actual_custom_field_values_gids.any? do |custom_field_value|
             custom_field_values_gids.include?(custom_field_value)
@@ -172,14 +172,14 @@ module Checkoff
 
         # @param resource [Asana::Resources::Task,Asana::Resources::Project]
         # @param custom_field_name [String]
-        # @param custom_field_values [Array<String>]
+        # @param custom_field_value_names [Array<String>]
         # @return [Boolean]
-        def evaluate(resource, custom_field_name, custom_field_values)
-          custom_field = pull_custom_field_by_name(resource, custom_field_name)
+        def evaluate(resource, custom_field_name, custom_field_value_names)
+          actual_custom_field_values_names = pull_custom_field_values_names_by_name(resource, custom_field_name)
 
-          return false if custom_field.nil?
-
-          custom_field_values.include?(custom_field.fetch('display_value'))
+          actual_custom_field_values_names.any? do |custom_field_value|
+            custom_field_value_names.include?(custom_field_value)
+          end
         end
       end
 
@@ -200,7 +200,7 @@ module Checkoff
         # @param custom_field_values_gids [Array<String>]
         # @return [Boolean]
         def evaluate(resource, custom_field_gid, custom_field_values_gids)
-          actual_custom_field_values_gids = pull_custom_field_values_gids(resource, custom_field_gid)
+          actual_custom_field_values_gids = pull_custom_field_values_gids_or_raise(resource, custom_field_gid)
 
           custom_field_values_gids.all? do |custom_field_value|
             actual_custom_field_values_gids.include?(custom_field_value)

@@ -18,6 +18,7 @@ class TestProjectSelectors < ClassTest
   def test_filter_via_custom_field_value_contain_any_value_false
     custom_field = {
       'name' => 'Project attributes',
+      'resource_subtype' => 'multi_enum',
       'multi_enum_values' => [],
       'display_value' => 'something else',
     }
@@ -36,6 +37,27 @@ class TestProjectSelectors < ClassTest
   def test_filter_via_custom_field_values_contain_any_value_true
     custom_field = {
       'name' => 'Project attributes',
+      'resource_subtype' => 'multi_enum',
+      'multi_enum_values' => [{ 'name' => 'timeline', 'enabled' => true }],
+      'display_value' => 'timeline',
+    }
+    project_selectors = get_test_object do
+      custom_fields = [custom_field]
+      # @sg-ignore
+      project.expects(:custom_fields).returns(custom_fields)
+    end
+
+    assert(project_selectors.filter_via_project_selector(project,
+                                                         [:custom_field_value_contains_any_value, 'Project attributes',
+                                                          ['timeline']]))
+  end
+
+  # @return [void]
+  def test_filter_via_custom_field_values_contain_any_value_true_single_in_multi_enum
+    custom_field = {
+      'name' => 'Project attributes',
+      'enabled' => true,
+      'resource_subtype' => 'multi_enum',
       'multi_enum_values' => [{ 'name' => 'timeline' }],
       'display_value' => 'timeline',
     }
@@ -46,6 +68,47 @@ class TestProjectSelectors < ClassTest
     end
 
     assert(project_selectors.filter_via_project_selector(project,
+                                                         [:custom_field_value_contains_any_value, 'Project attributes',
+                                                          ['timeline']]))
+  end
+
+  # @return [void]
+  def test_filter_via_custom_field_values_contain_any_value_true_multiple
+    custom_field = {
+      'name' => 'Project attributes',
+      'resource_subtype' => 'multi_enum',
+      'multi_enum_values' => [
+        { 'name' => 'timeline', 'enabled' => true },
+        { 'name' => 'something else', 'enabled' => true },
+      ],
+      'display_value' => 'timeline,something else',
+    }
+    project_selectors = get_test_object do
+      custom_fields = [custom_field]
+      # @sg-ignore
+      project.expects(:custom_fields).returns(custom_fields)
+    end
+
+    assert(project_selectors.filter_via_project_selector(project,
+                                                         [:custom_field_value_contains_any_value, 'Project attributes',
+                                                          ['timeline']]))
+  end
+
+  # @return [void]
+  def test_filter_via_custom_field_values_contain_any_value_false_nothing_set
+    custom_field = {
+      'name' => 'Project attributes',
+      'resource_subtype' => 'multi_enum',
+      'multi_enum_values' => [],
+      'display_value' => 'timeline,something else',
+    }
+    project_selectors = get_test_object do
+      custom_fields = [custom_field]
+      # @sg-ignore
+      project.expects(:custom_fields).returns(custom_fields)
+    end
+
+    refute(project_selectors.filter_via_project_selector(project,
                                                          [:custom_field_value_contains_any_value, 'Project attributes',
                                                           ['timeline']]))
   end
