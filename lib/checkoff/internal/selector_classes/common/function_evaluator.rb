@@ -116,13 +116,33 @@ module Checkoff
           end
         end
 
-        # @param project [Asana::Resources::Project]
+        # @param custom_field [Hash]
+        # @param enum_value [Object, nil]
+        # @return [Array<String>]
+        def find_names(enum_value)
+          [enum_value.fetch('name')]
+        end
+
+        # @param project [Asana::Resources::Project,Asana::Resources::Task]
         # @param custom_field_gid [String]
         # @return [Array<String>]
-        def pull_custom_field_values_gids(project, custom_field_gid)
+        def pull_custom_field_values_gids_or_raise(project, custom_field_gid)
           custom_field = pull_custom_field_or_raise(project, custom_field_gid)
+
           pull_enum_values(custom_field).flat_map do |enum_value|
             find_gids(custom_field, enum_value)
+          end
+        end
+
+        # @param resource [Asana::Resources::Project,Asana::Resources::Task]
+        # @param custom_field_name [String]
+        # @return [Array<String>]
+        def pull_custom_field_values_names_by_name(resource, custom_field_name)
+          custom_field = pull_custom_field_by_name(resource, custom_field_name)
+          return [] if custom_field.nil?
+
+          pull_enum_values(custom_field).flat_map do |enum_value|
+            find_names(enum_value)
           end
         end
 
