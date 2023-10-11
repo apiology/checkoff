@@ -51,6 +51,10 @@
 #           def create(client, assignee:, workspace:, name:); end
 #         end
 #       end
+#       class Project
+#         # @return [String,nil]
+#         def due_date; end
+#       end
 #     end
 #     module Resources
 #       class Workspace

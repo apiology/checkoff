@@ -127,6 +127,17 @@ class TestProjectSelectors < ClassTest
   end
 
   # @return [void]
+  def test_filter_via_due_date_false
+    project_selectors = get_test_object do
+      # @sg-ignore
+      project.expects(:due_date).returns('2099-01-01').at_least(1)
+    end
+
+    refute(project_selectors.filter_via_project_selector(project,
+                                                         [:nil?, [:due_date]]))
+  end
+
+  # @return [void]
   def test_bogus_raises
     project_selectors = get_test_object
 
