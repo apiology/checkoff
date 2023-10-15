@@ -76,6 +76,7 @@ module Checkoff
                                  extra_fields: extra_fields)
       tasks.find { |task| task.name == task_name }
     end
+    cache_method :task, SHORT_CACHE_TIME
 
     # Pull a specific task by name
     # @param task_gid [String]
@@ -156,6 +157,7 @@ module Checkoff
                         extra_fields: extra_fields)
       end
     end
+    cache_method :tasks_from_section, SHORT_CACHE_TIME
 
     # @return [Asana::Client]
     attr_reader :client
