@@ -51,6 +51,7 @@ module Checkoff
           'is_not' => CustomFieldVariant::IsNot,
           'less_than' => CustomFieldVariant::LessThan,
           'greater_than' => CustomFieldVariant::GreaterThan,
+          'equals' => CustomFieldVariant::Equals,
           'doesnt_contain_any' => CustomFieldVariant::DoesntContainAny,
           'contains_any' => CustomFieldVariant::ContainsAny,
           'contains_all' => CustomFieldVariant::ContainsAll,
