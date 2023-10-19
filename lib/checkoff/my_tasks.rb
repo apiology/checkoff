@@ -61,7 +61,8 @@ module Checkoff
     # @return [Hash<String, Enumerable<Asana::Resources::Task>>]
     def by_my_tasks_section(tasks, project_gid)
       by_section = {}
-      sections = client.sections.get_sections_for_project(project_gid: project_gid)
+      sections = client.sections.get_sections_for_project(project_gid: project_gid,
+                                                          options: { fields: ['name'] })
       sections.each_entry { |section| by_section[section_key(section.name)] = [] }
       tasks.each do |task|
         assignee_section = task.assignee_section

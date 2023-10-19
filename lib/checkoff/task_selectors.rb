@@ -9,8 +9,6 @@ require_relative 'internal/config_loader'
 require_relative 'internal/task_selector_evaluator'
 require_relative 'tasks'
 
-# https://developers.asana.com/docs/task-selectors
-
 module Checkoff
   # Filter lists of tasks using declarative selectors.
   class TaskSelectors

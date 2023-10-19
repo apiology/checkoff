@@ -52,12 +52,14 @@ module Checkoff
     # Returns a list of Asana API section objects for a given project
     # @param workspace_name [String]
     # @param project_name [String, Symbol]
+    # @param extra_fields [Array<String>]
     #
     # @return [Enumerable<Asana::Resources::Section>]
-    def sections_or_raise(workspace_name, project_name)
+    def sections_or_raise(workspace_name, project_name, extra_fields: [])
+      fields = %w[name] + extra_fields
       project = project_or_raise(workspace_name, project_name)
-      # @sg-ignore
-      client.sections.get_sections_for_project(project_gid: project.gid)
+      client.sections.get_sections_for_project(project_gid: project.gid,
+                                               options: { fields: fields })
     end
     cache_method :sections_or_raise, SHORT_CACHE_TIME
 
@@ -173,7 +175,8 @@ module Checkoff
     def by_section(tasks, project_gid)
       by_section = {}
       # @sg-ignore
-      sections = client.sections.get_sections_for_project(project_gid: project_gid)
+      sections = client.sections.get_sections_for_project(project_gid: project_gid,
+                                                          options: { fields: ['name'] })
       sections.each_entry { |section| by_section[section_key(section.name)] = [] }
       tasks.each { |task| file_task_by_section(by_section, task, project_gid) }
       by_section
