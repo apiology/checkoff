@@ -5,13 +5,13 @@
 require 'forwardable'
 require 'cache_method'
 require_relative 'internal/config_loader'
-require_relative 'internal/project_selector_evaluator'
+require_relative 'internal/section_selector_evaluator'
 require_relative 'workspaces'
 require_relative 'clients'
 
 module Checkoff
-  # Filter lists of projects using declarative selectors.
-  class ProjectSelectors
+  # Filter lists of sections using declarative selectors.
+  class SectionSelectors
     MINUTE = 60
     HOUR = MINUTE * 60
     DAY = 24 * HOUR
@@ -21,26 +21,27 @@ module Checkoff
 
     # @param config [Hash<Symbol, Object>]
     # @param workspaces [Checkoff::Workspaces]
-    # @param projects [Checkoff::Projects]
+    # @param sections [Checkoff::Sections]
     # @param clients [Checkoff::Clients]
     # @param client [Asana::Client]
     def initialize(config: Checkoff::Internal::ConfigLoader.load(:asana),
                    workspaces: Checkoff::Workspaces.new(config: config),
-                   projects: Checkoff::Projects.new(config: config),
+                   sections: Checkoff::Sections.new(config: config),
                    clients: Checkoff::Clients.new(config: config),
                    client: clients.client)
       @workspaces = workspaces
-      @projects = projects
+      @sections = sections
       @client = client
     end
 
-    # @param [Asana::Resources::Project] project
-    # @param [Array<(Symbol, Array)>] project_selector Filter based on
-    #        project details.  Examples: [:tag, 'foo'] [:not, [:tag, 'foo']] [:tag, 'foo']
+    # @param [Asana::Resources::Section] section
+    # @param [Array<(Symbol, Array)>] section_selector Filter based on
+    #        section details.  Examples: [:tag, 'foo'] [:not, [:tag, 'foo']] [:tag, 'foo']
     # @return [Boolean]
-    def filter_via_project_selector(project, project_selector)
-      evaluator = ProjectSelectorEvaluator.new(project: project, projects: projects)
-      evaluator.evaluate(project_selector)
+    def filter_via_section_selector(section, section_selector)
+      # @sg-ignore
+      evaluator = SectionSelectorEvaluator.new(section: section, sections: sections, client: client)
+      evaluator.evaluate(section_selector)
     end
 
     private
@@ -48,22 +49,22 @@ module Checkoff
     # @return [Checkoff::Workspaces]
     attr_reader :workspaces
 
-    # @return [Checkoff::Projects]
-    attr_reader :projects
+    # @return [Checkoff::Sections]
+    attr_reader :sections
 
     # @return [Asana::Client]
     attr_reader :client
 
-    # bundle exec ./project_selectors.rb
+    # bundle exec ./section_selectors.rb
     # :nocov:
     class << self
       # @return [void]
       def run
         # workspace_name = ARGV[0] || raise('Please pass workspace name as first argument')
-        # project_selector_name = ARGV[1] || raise('Please pass project_selector name as second argument')
-        # project_selectors = Checkoff::ProjectSelectors.new
-        # project_selector = project_selectors.project_selector_or_raise(workspace_name, project_selector_name)
-        # puts "Results: #{project_selector}"
+        # section_selector_name = ARGV[1] || raise('Please pass section_selector name as second argument')
+        # section_selectors = Checkoff::SectionSelectors.new
+        # section_selector = section_selectors.section_selector_or_raise(workspace_name, section_selector_name)
+        # puts "Results: #{section_selector}"
       end
     end
     # :nocov:
@@ -72,5 +73,5 @@ end
 
 # :nocov:
 abs_program_name = File.expand_path($PROGRAM_NAME)
-Checkoff::ProjectSelectors.run if abs_program_name == File.expand_path(__FILE__)
+Checkoff::SectionSelectors.run if abs_program_name == File.expand_path(__FILE__)
 # :nocov:

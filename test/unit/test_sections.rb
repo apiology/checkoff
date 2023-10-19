@@ -200,7 +200,7 @@ class TestSections < BaseAsana
   end
 
   def expect_project_sections_pulled(project_gid, sections_array)
-    sections.expects(:get_sections_for_project).with(project_gid: project_gid)
+    sections.expects(:get_sections_for_project).with(project_gid: project_gid, options: { fields: ['name'] })
       .returns(sections_array).at_least(1)
   end
 
