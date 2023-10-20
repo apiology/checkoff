@@ -587,17 +587,10 @@ class TestTaskSelectors < ClassTest
   def test_estimate_exceeds_duration_no_estimate_field
     task_selectors = get_test_object do
       task.expects(:custom_fields).returns([]).at_least(1)
-      task.expects(:gid).returns('123')
     end
 
-    e = assert_raises(RuntimeError) do
-      # @sg-ignore
-      task_selectors.filter_via_task_selector(task,
-                                              [:estimate_exceeds_duration])
-    end
-
-    assert_match(/Could not find custom field with name Estimated time in task 123 with custom fields/,
-                 e.message)
+    refute(task_selectors.filter_via_task_selector(task,
+                                                   [:estimate_exceeds_duration]))
   end
 
   # @return [void]

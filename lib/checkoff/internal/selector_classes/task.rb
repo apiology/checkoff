@@ -335,7 +335,9 @@ module Checkoff
         # @param task [Asana::Resources::Task]
         # @return [Boolean]
         def evaluate(task)
-          custom_field = pull_custom_field_by_name_or_raise(task, 'Estimated time')
+          custom_field = pull_custom_field_by_name(task, 'Estimated time')
+
+          return false if custom_field.nil?
 
           # @sg-ignore
           # @type [Integer, nil]
