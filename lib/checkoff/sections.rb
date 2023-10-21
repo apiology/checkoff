@@ -131,12 +131,21 @@ module Checkoff
       if s.nil?
         valid_sections = sections_or_raise(workspace_name, project_name).map(&:name)
 
-        raise "Could not find section #{section_name} under project #{project_name} " \
-              "under workspace #{workspace_name}.  Valid sections: #{valid_sections}"
+        raise "Could not find section #{section_name.inspect} under project #{project_name.inspect} " \
+              "under workspace #{workspace_name.inspect}.  Valid sections: #{valid_sections.inspect}"
       end
       s
     end
     cache_method :section_or_raise, LONG_CACHE_TIME
+
+    # @param name [String]
+    # @return [String, nil]
+    def section_key(name)
+      inbox_section_names = ['(no section)', 'Untitled section', 'Inbox', 'Recently assigned']
+      return nil if inbox_section_names.include?(name)
+
+      name
+    end
 
     private
 
@@ -157,15 +166,6 @@ module Checkoff
                                               extra_fields: extra_fields)
       active_tasks = projects.active_tasks(raw_tasks)
       by_section(active_tasks, project.gid)
-    end
-
-    # @param name [String]
-    # @return [String, nil]
-    def section_key(name)
-      inbox_section_names = ['(no section)', 'Untitled section', 'Inbox', 'Recently assigned']
-      return nil if inbox_section_names.include?(name)
-
-      name
     end
 
     # Given a list of tasks, pull a Hash of tasks with section name -> task list
