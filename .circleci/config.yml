@@ -126,7 +126,7 @@ jobs:
             bundle exec overcommit --sign pre-commit
 
             git status
-            bundle exec bump --tag --tag-prefix=v minor
+            bundle exec bump --commit-message ' [skip ci]' --tag --tag-prefix=v minor
             # bundle exec needed for overcommit hooks
             #
             # if this step fails, check that
