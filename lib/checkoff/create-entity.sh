@@ -61,6 +61,7 @@ module Checkoff
     # bundle exec ./${underscored_plural_name}.rb
     # :nocov:
     class << self
+      # @return [void]
       def run
         workspace_name = ARGV[0] || raise('Please pass workspace name as first argument')
         ${underscored_singular_name}_name = ARGV[1] || raise('Please pass ${underscored_singular_name} name as second argument')
