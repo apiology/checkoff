@@ -133,7 +133,7 @@ jobs:
             # https://app.circleci.com/settings/project/github/apiology/checkoff/ssh
             # includes a read-write 'user key':
             bundle exec git push --set-upstream origin "${CIRCLE_BRANCH:?}"
-            bundle exec rake release
+            bundle exec rake release trigger_next_builds
 
 workflows:
   version: 2
