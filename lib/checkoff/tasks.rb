@@ -48,9 +48,9 @@ module Checkoff
     # incomplete task and one of these is true:
     #
     # * start is null and due on is today
-    # * start is null and due at is after now
+    # * start is null and due at is before now
     # * start on is today
-    # * start at is after now
+    # * start at is before now
     #
     # @param task [Asana::Resources::Task]
     # @param ignore_dependencies [Boolean]
