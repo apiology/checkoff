@@ -71,10 +71,10 @@ module Checkoff
         end
       end
 
-      # :due function
+      # :ready function
       class DuePFunctionEvaluator < FunctionEvaluator
         def matches?
-          fn?(selector, :due)
+          fn?(selector, :ready)
         end
 
         # @param task [Asana::Resources::Task]
