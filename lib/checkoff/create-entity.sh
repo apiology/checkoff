@@ -8,6 +8,8 @@ underscored_plural_name="${1:?underscored plural name of entities minus .rb}"
 underscored_singular_name=$(sed -e 's/s$//g' <<< "${underscored_plural_name}")
 kabob_case_plural_name=${underscored_plural_name/_/-}
 class_name="${2:?class name without Checkoff:: prefix}"
+# shellcheck disable=SC2001
+asana_resource_class_name=Asana::Resources::$(sed -e 's/s$//g' <<< "${class_name}")
 
 cat > "${underscored_plural_name}.rb" << EOF
 #!/usr/bin/env ruby
@@ -20,10 +22,13 @@ require_relative 'internal/config_loader'
 require_relative 'workspaces'
 require_relative 'clients'
 
-# https://developers.asana.com/docs/${kabob_case_plural_name}
+# https://developers.asana.com/reference/${kabob_case_plural_name}
 
 module Checkoff
   class ${class_name}
+    # @!parse
+    #   extend CacheMethod::ClassMethods
+
     MINUTE = 60
     HOUR = MINUTE * 60
     DAY = 24 * HOUR
@@ -31,6 +36,10 @@ module Checkoff
     LONG_CACHE_TIME = MINUTE * 15
     SHORT_CACHE_TIME = MINUTE
 
+    # @param config [Hash]
+    # @param workspaces [Checkoff::Workspaces]
+    # @param clients [Checkoff::Clients]
+    # @param client [Asana::Client]
     def initialize(config: Checkoff::Internal::ConfigLoader.load(:asana),
                    workspaces: Checkoff::Workspaces.new(config: config),
                    clients: Checkoff::Clients.new(config: config),
@@ -39,31 +48,47 @@ module Checkoff
       @client = client
     end
 
+    # @param workspace_name [String]
+    # @param ${underscored_singular_name}_name [String]
+    #
+    # @return [${asana_resource_class_name}]
     def ${underscored_singular_name}_or_raise(workspace_name, ${underscored_singular_name}_name)
-      ${underscored_singular_name} = ${underscored_singular_name}(workspace_name, ${underscored_singular_name}_name)
-      raise "Could not find ${underscored_singular_name} #{${underscored_singular_name}_name} under workspace #{workspace_name}." if ${underscored_singular_name}.nil?
+      ${underscored_singular_name}_obj = ${underscored_singular_name}(workspace_name, ${underscored_singular_name}_name)
+      raise "Could not find ${underscored_singular_name} #{${underscored_singular_name}_name} under workspace #{workspace_name}." if ${underscored_singular_name}_obj.nil?
 
-      ${underscored_singular_name}
+      ${underscored_singular_name}_obj
     end
     cache_method :${underscored_singular_name}_or_raise, LONG_CACHE_TIME
 
+    # @param workspace_name [String]
+    # @param ${underscored_singular_name}_name [String]
+    #
+    # @return [${asana_resource_class_name},nil]
     def ${underscored_singular_name}(workspace_name, ${underscored_singular_name}_name)
       workspace = workspaces.workspace_or_raise(workspace_name)
-      ${underscored_plural_name} = client.${underscored_plural_name}.get_${underscored_plural_name}_for_workspace(workspace_gid: workspace.gid)
-      ${underscored_plural_name}.find { |${underscored_singular_name}| ${underscored_singular_name}.name == ${underscored_singular_name}_name }
+      ${underscored_singular_name}_objs = client.${underscored_plural_name}.get_${underscored_plural_name}_for_workspace(workspace_gid: workspace.gid)
+      ${underscored_singular_name}_objs.find { |${underscored_singular_name}_obj| ${underscored_singular_name}_obj.name == ${underscored_singular_name}_name }
     end
     cache_method :${underscored_singular_name}, LONG_CACHE_TIME
 
     private
 
-    attr_reader :workspaces, :client
+    # @return [Checkoff::Workspaces]
+    attr_reader :workspaces
+
+    # @return [Asana::Client]
+    attr_reader :client
 
     # bundle exec ./${underscored_plural_name}.rb
     # :nocov:
     class << self
       # @return [void]
       def run
+        # @sg-ignore
+        # @type [String]
         workspace_name = ARGV[0] || raise('Please pass workspace name as first argument')
+        # @sg-ignore
+        # @type [String]
         ${underscored_singular_name}_name = ARGV[1] || raise('Please pass ${underscored_singular_name} name as second argument')
         ${underscored_plural_name} = Checkoff::${class_name}.new
         ${underscored_singular_name} = ${underscored_plural_name}.${underscored_singular_name}_or_raise(workspace_name, ${underscored_singular_name}_name)

@@ -3,6 +3,7 @@
 require 'checkoff/version'
 require 'checkoff/clients'
 require 'checkoff/workspaces'
+require 'checkoff/portfolios'
 require 'checkoff/projects'
 require 'checkoff/sections'
 require 'checkoff/subtasks'

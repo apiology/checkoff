@@ -33,6 +33,10 @@
 #       def projects; end
 #       # @return [Asana::ProxiedResourceClasses::UserTaskList]
 #       def user_task_lists; end
+#       # @return [Asana::ProxiedResourceClasses::Portfolio]
+#       def portfolios; end
+#       # @return [Asana::ProxiedResourceClasses::User]
+#       def users; end
 #     end
 #     class Collection < Asana::Resources::Collection; end
 #     module Resources
@@ -159,6 +163,35 @@
 #         # @return [Asana::Resources::UserTaskList]
 #         def get_user_task_list_for_user(client, user_gid:,
 #             workspace: nil, options: {}); end
+#       end
+#       class Portfolio
+#         # Returns a list of the portfolios in compact representation that are owned
+#         # by the current API user.
+#         #
+#         # @param workspace [Gid] The workspace or organization to filter portfolios on.
+#         # @param owner [String] The user who owns the portfolio. Currently, API users can only get a
+#         # list of portfolios that they themselves own.
+#         #
+#         # @param per_page [Integer] the number of records to fetch per page.
+#         # @param options [Hash] the request I/O options.
+#         #
+#         # @return [Enumerable<Asana::Resources::Portfolio>]
+#         def find_all(workspace: required("workspace"), owner: required("owner"), per_page: 20, options: {}); end
+#         # Returns the complete record for a single portfolio.
+#         #
+#         # @param id [Gid] The portfolio to get.
+#         # @param options [Hash] the request I/O options.
+#
+#         # @return [Asana::Resources::Portfolio,nil]
+#         def find_by_id(client, id, options: {}); end
+#       end
+#       class User
+#         # Returns the full user record for the currently authenticated user.
+#         #
+#         # @param options [Hash] the request I/O options.
+#         #
+#         # @return [Asana::Resources::User]
+#         def me(options: {}); end
 #       end
 #     end
 #   end

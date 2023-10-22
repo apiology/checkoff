@@ -72,7 +72,7 @@ module Checkoff
       end
 
       # :ready function
-      class DuePFunctionEvaluator < FunctionEvaluator
+      class ReadyFunctionEvaluator < FunctionEvaluator
         def matches?
           fn?(selector, :ready)
         end
