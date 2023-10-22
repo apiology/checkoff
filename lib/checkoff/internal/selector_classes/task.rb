@@ -114,9 +114,9 @@ module Checkoff
         end
       end
 
-      # :due_between_n_days function
-      class DueBetweenRelativePFunctionEvaluator < FunctionEvaluator
-        FUNCTION_NAME = :due_between_relative
+      # :ready_between_n_days function
+      class ReadyBetweenRelativePFunctionEvaluator < FunctionEvaluator
+        FUNCTION_NAME = :ready_between_relative
 
         def matches?
           fn?(selector, FUNCTION_NAME)
