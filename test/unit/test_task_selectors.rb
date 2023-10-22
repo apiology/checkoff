@@ -309,88 +309,144 @@ class TestTaskSelectors < ClassTest
     assert(task_selectors.filter_via_task_selector(task, [:ready]))
   end
 
-  def test_filter_via_task_selector_due_between_relative_starts_now
-    task_selectors = get_test_object do
-      Time.expects(:now).returns(Time.new(2019, 1, 1, 0, 0, 0, 0)).at_least(1)
-      task.expects(:start_at).returns('2019-01-01T00:00:00Z').at_least(1)
-      tasks.expects(:incomplete_dependencies?).with(task).returns(false)
-    end
-
-    assert(task_selectors.filter_via_task_selector(task, [:due_between_relative, -999, 2]))
+  def expect_now_jan_1_2019
+    Time.expects(:now).returns(Time.new(2019, 1, 1, 0, 0, 0, 0)).at_least(1)
   end
 
-  def test_filter_via_task_selector_due_between_relative_starts_today
-    task_selectors = get_test_object do
-      Time.expects(:now).returns(Time.new(2019, 1, 1, 0, 0, 0, 0)).at_least(1)
-      task.expects(:start_at).returns(nil)
-      task.expects(:start_on).returns('2019-01-01').at_least(1)
-      tasks.expects(:incomplete_dependencies?).with(task).returns(false)
-    end
-
-    assert(task_selectors.filter_via_task_selector(task, [:due_between_relative, -999, 2]))
+  def expect_starts_jan_1_2019_midnight
+    task.expects(:start_at).returns('2019-01-01T00:00:00Z').at_least(1)
   end
 
-  def test_filter_via_task_selector_due_between_relative_due_now
-    task_selectors = get_test_object do
-      Time.expects(:now).returns(Time.new(2019, 1, 1, 0, 0, 0, 0)).at_least(1)
-      task.expects(:start_at).returns(nil)
-      task.expects(:start_on).returns(nil)
-      task.expects(:due_at).returns('2019-01-01T00:00:00Z').at_least(1)
-      tasks.expects(:incomplete_dependencies?).with(task).returns(false)
-    end
-
-    assert(task_selectors.filter_via_task_selector(task, [:due_between_relative, -999, 2]))
+  def expect_no_incomplete_dependencies
+    tasks.expects(:incomplete_dependencies?).with(task).returns(false)
   end
 
-  def test_filter_via_task_selector_due_between_relative_due_today
-    task_selectors = get_test_object do
-      Time.expects(:now).returns(Time.new(2019, 1, 1, 0, 0, 0, 0)).at_least(1)
-      task.expects(:start_at).returns(nil)
-      task.expects(:start_on).returns(nil)
-      task.expects(:due_at).returns(nil).at_least(1)
-      task.expects(:due_on).returns('2019-01-01').at_least(1)
-      tasks.expects(:incomplete_dependencies?).with(task).returns(false)
-    end
-
-    assert(task_selectors.filter_via_task_selector(task, [:due_between_relative, -999, 2]))
+  def mock_filter_via_task_selector_ready_between_relative_starts_no
+    expect_now_jan_1_2019
+    expect_starts_jan_1_2019_midnight
+    expect_no_incomplete_dependencies
   end
 
-  def test_filter_via_task_selector_due_between_relative_no_due
+  def test_filter_via_task_selector_ready_between_relative_starts_now
     task_selectors = get_test_object do
-      Time.expects(:now).returns(Time.new(2019, 1, 1, 0, 0, 0, 0)).at_least(1)
-      task.expects(:start_at).returns(nil)
-      task.expects(:start_on).returns(nil)
-      task.expects(:due_at).returns(nil).at_least(1)
-      task.expects(:due_on).returns(nil).at_least(1)
+      mock_filter_via_task_selector_ready_between_relative_starts_no
     end
 
-    refute(task_selectors.filter_via_task_selector(task, [:due_between_relative, -999, 2]))
+    assert(task_selectors.filter_via_task_selector(task, [:ready_between_relative, -999, 2]))
   end
 
-  def test_filter_via_task_selector_due_between_relative_due_far_future
-    task_selectors = get_test_object do
-      Time.expects(:now).returns(Time.new(2019, 1, 1, 0, 0, 0, 0)).at_least(1)
-      task.expects(:start_at).returns(nil)
-      task.expects(:start_on).returns(nil)
-      task.expects(:due_at).returns(nil).at_least(1)
-      task.expects(:due_on).returns('2099-01-01').at_least(1)
-      tasks.expects(:incomplete_dependencies?).with(task).returns(false).at_least(0)
-    end
-
-    refute(task_selectors.filter_via_task_selector(task, [:due_between_relative, -999, 2]))
+  def mock_filter_via_task_selector_ready_between_relative_starts_today
+    expect_now_jan_1_2019
+    task.expects(:start_at).returns(nil)
+    task.expects(:start_on).returns('2019-01-01').at_least(1)
+    expect_no_incomplete_dependencies
   end
 
-  def test_filter_via_task_selector_due_between_relative_due_today_but_dependent
+  def test_filter_via_task_selector_ready_between_relative_starts_today
     task_selectors = get_test_object do
-      Time.expects(:now).returns(Time.new(2019, 1, 1, 0, 0, 0, 0)).at_least(1)
-      task.expects(:start_at).returns(nil)
-      task.expects(:start_on).returns(nil)
-      task.expects(:due_at).returns(nil).at_least(1)
-      task.expects(:due_on).returns('2019-01-01').at_least(1)
-      tasks.expects(:incomplete_dependencies?).with(task).returns(true)
+      mock_filter_via_task_selector_ready_between_relative_starts_today
     end
 
-    refute(task_selectors.filter_via_task_selector(task, [:due_between_relative, -999, 2]))
+    assert(task_selectors.filter_via_task_selector(task, [:ready_between_relative, -999, 2]))
+  end
+
+  def mock_filter_via_task_selector_ready_between_relative_due_now
+    expect_now_jan_1_2019
+    task.expects(:start_at).returns(nil)
+    task.expects(:start_on).returns(nil)
+    task.expects(:due_at).returns('2019-01-01T00:00:00Z').at_least(1)
+    expect_no_incomplete_dependencies
+  end
+
+  def test_filter_via_task_selector_ready_between_relative_due_now
+    task_selectors = get_test_object do
+      mock_filter_via_task_selector_ready_between_relative_due_now
+    end
+
+    assert(task_selectors.filter_via_task_selector(task, [:ready_between_relative, -999, 2]))
+  end
+
+  def mock_due_on_jan_1_2019
+    task.expects(:due_at).returns(nil).at_least(0)
+    task.expects(:due_on).returns('2019-01-01').at_least(1)
+  end
+
+  def expect_no_start
+    task.expects(:start_at).returns(nil)
+    task.expects(:start_on).returns(nil)
+  end
+
+  def mock_filter_via_task_selector_ready_between_relative_due_today
+    expect_now_jan_1_2019
+    expect_no_start
+    mock_due_on_jan_1_2019
+    expect_no_incomplete_dependencies
+  end
+
+  def test_filter_via_task_selector_ready_between_relative_due_today
+    task_selectors = get_test_object do
+      mock_filter_via_task_selector_ready_between_relative_due_today
+    end
+
+    assert(task_selectors.filter_via_task_selector(task, [:ready_between_relative, -999, 2]))
+  end
+
+  def expect_no_due
+    task.expects(:due_at).returns(nil).at_least(0)
+    task.expects(:due_on).returns(nil).at_least(1)
+  end
+
+  def mock_filter_via_task_selector_ready_between_relative_no_due
+    expect_now_jan_1_2019
+    expect_no_start
+    expect_no_due
+  end
+
+  def test_filter_via_task_selector_ready_between_relative_no_due
+    task_selectors = get_test_object do
+      mock_filter_via_task_selector_ready_between_relative_no_due
+    end
+
+    refute(task_selectors.filter_via_task_selector(task, [:ready_between_relative, -999, 2]))
+  end
+
+  def expect_due_jan_1_2099
+    task.expects(:due_at).returns(nil).at_least(1)
+    task.expects(:due_on).returns('2099-01-01').at_least(1)
+  end
+
+  def mock_filter_via_task_selector_ready_between_relative_due_far_future
+    expect_now_jan_1_2019
+    expect_no_start
+    expect_due_jan_1_2099
+    expect_no_incomplete_dependencies.at_least(0)
+  end
+
+  def test_filter_via_task_selector_ready_between_relative_due_far_future
+    task_selectors = get_test_object do
+      mock_filter_via_task_selector_ready_between_relative_due_far_future
+    end
+
+    refute(task_selectors.filter_via_task_selector(task, [:ready_between_relative, -999, 2]))
+  end
+
+  def expect_incomplete_dependencies
+    tasks.expects(:incomplete_dependencies?).with(task).returns(true)
+  end
+
+  def mock_filter_via_task_selector_ready_between_relative_due_today_but_dependent
+    expect_now_jan_1_2019
+    expect_no_start
+    mock_due_on_jan_1_2019
+    expect_incomplete_dependencies
+  end
+
+  def test_filter_via_task_selector_ready_between_relative_due_today_but_dependent
+    task_selectors = get_test_object do
+      mock_filter_via_task_selector_ready_between_relative_due_today_but_dependent
+    end
+
+    refute(task_selectors.filter_via_task_selector(task, [:ready_between_relative, -999, 2]))
   end
 
   # @return [void]
@@ -430,8 +486,7 @@ class TestTaskSelectors < ClassTest
   # @return [void]
   def test_filter_via_task_selector_due_date_set
     task_selectors = get_test_object do
-      task.expects(:due_at).returns(nil)
-      task.expects(:due_on).returns(nil)
+      expect_no_due
     end
 
     refute(task_selectors.filter_via_task_selector(task, [:due_date_set]))
