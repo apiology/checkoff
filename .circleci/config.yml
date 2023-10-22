@@ -108,6 +108,32 @@ jobs:
           command: make citest cicoverage
     # This seemed to shave 5ish% of the build time off when added
     resource_class: large
+  publish_gem:
+    working_directory: ~/checkoff
+    docker:
+      - image: apiology/circleci-ruby:latest
+    steps:
+      - set_up_environment
+      - run: git config user.email 'vince@broz.cc'
+      - run: git config user.name 'Vince Broz'
+      - run_with_languages:
+          label: Make RubyGems release
+          command: |
+            # Coax overcommit into working
+            git config --global user.email "test@test.test"
+            git config --global user.name "Test Test"
+            bundle exec overcommit --sign
+            bundle exec overcommit --sign pre-commit
+
+            git status
+            bundle exec bump --commit-message ' [skip ci]' --tag --tag-prefix=v minor
+            # bundle exec needed for overcommit hooks
+            #
+            # if this step fails, check that
+            # https://app.circleci.com/settings/project/github/apiology/checkoff/ssh
+            # includes a read-write 'user key':
+            bundle exec git push --set-upstream origin "${CIRCLE_BRANCH:?}"
+            bundle exec rake release trigger_next_builds
 
 workflows:
   version: 2
@@ -128,3 +154,9 @@ workflows:
   build:
     jobs:
       - build
+      - publish_gem:
+          requires:
+            - build
+          filters:
+            branches:
+              only: main
