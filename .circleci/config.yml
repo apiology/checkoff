@@ -157,6 +157,6 @@ workflows:
       - publish_gem:
           requires:
             - build
-#          filters:
-#            branches:
-#              only: main
+          filters:
+            branches:
+              only: main
