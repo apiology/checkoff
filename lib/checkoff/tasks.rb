@@ -5,6 +5,7 @@
 require_relative 'sections'
 require_relative 'workspaces'
 require_relative 'internal/config_loader'
+require_relative 'internal/task_timing'
 require 'asana'
 
 module Checkoff
@@ -57,8 +58,8 @@ module Checkoff
     def task_ready?(task, ignore_dependencies: false)
       return false if !ignore_dependencies && incomplete_dependencies?(task)
 
-      start = start_time(task)
-      due = due_time(task)
+      start = task_timing.start_time(task)
+      due = task_timing.due_time(task)
 
       return true if start.nil? && due.nil?
 
@@ -79,12 +80,12 @@ module Checkoff
              only_uncompleted: true,
              extra_fields: [])
       # @sg-ignore
-      tasks = tasks_from_section(workspace_name,
-                                 project_name,
-                                 section_name: section_name,
-                                 only_uncompleted: only_uncompleted,
-                                 extra_fields: extra_fields)
-      tasks.find { |task| task.name == task_name }
+      t = tasks(workspace_name,
+                project_name,
+                section_name: section_name,
+                only_uncompleted: only_uncompleted,
+                extra_fields: extra_fields)
+      t.find { |task| task.name == task_name }
     end
     cache_method :task, SHORT_CACHE_TIME
 
@@ -146,16 +147,20 @@ module Checkoff
 
     private
 
+    # @return [Checkoff::Internal::TaskTiming]
+    def task_timing
+      @task_timing ||= Checkoff::Internal::TaskTiming.new(time_class: @time_class)
+    end
+
     # @param workspace_name [String]
     # @param project_name [String, Symbol]
-    # @param section_name [String, nil, :unspecified]
+    # @param section_name [String, nil, Symbol<:unspecified>]
     # @param only_uncompleted [Boolean]
     # @param extra_fields [Array<String>]
+    #
     # @return [Enumerable<Asana::Resources::Task>]
-    def tasks_from_section(workspace_name, project_name,
-                           section_name:,
-                           only_uncompleted:,
-                           extra_fields:)
+    def tasks(workspace_name, project_name,
+              only_uncompleted:, extra_fields:, section_name: :unspecified)
       if section_name == :unspecified
         project = projects.project_or_raise(workspace_name, project_name)
         projects.tasks_from_project(project,
@@ -181,24 +186,6 @@ module Checkoff
     # @return [String]
     def default_assignee_gid
       @config.fetch(:default_assignee_gid)
-    end
-
-    # @param task [Asana::Resources::Task]
-    # @return [Time, nil]
-    def start_time(task)
-      return @time_class.parse(task.start_at) if task.start_at
-      return @time_class.parse(task.start_on) if task.start_on
-
-      nil
-    end
-
-    # @param task [Asana::Resources::Task]
-    # @return [Time, nil]
-    def due_time(task)
-      return @time_class.parse(task.due_at) if task.due_at
-      return @time_class.parse(task.due_on) if task.due_on
-
-      nil
     end
   end
 end
