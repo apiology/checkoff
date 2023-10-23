@@ -50,6 +50,8 @@
 #         def assignee; end
 #         # @return [String, nil]
 #         def html_notes; end
+#         # @return [Array<Hash{String => Hash{String => String}}>]
+#         def memberships; end
 #         class << self
 #           # @return [Asana::Resources::Task]
 #           def create(client, assignee:, workspace:, name:); end
