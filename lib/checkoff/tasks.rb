@@ -6,6 +6,7 @@ require_relative 'sections'
 require_relative 'workspaces'
 require_relative 'internal/config_loader'
 require_relative 'internal/task_timing'
+require_relative 'internal/task_hashes'
 require 'asana'
 
 module Checkoff
@@ -145,11 +146,33 @@ module Checkoff
       end
     end
 
+    # Builds on the standard API representation of an Asana task with some
+    # convenience keys:
+    #
+    # <regular keys from API response>
+    # +
+    # unwrapped:
+    #  membership_by_section_gid: Hash<String, Hash (membership)>
+    #  membership_by_project_gid: Hash<String, Hash (membership)>
+    #  membership_by_project_name: Hash<String, Hash (membership)>
+    # task: String (name)
+    #
+    # @param task [Asana::Resources::Task]
+    # @return [Hash]
+    def task_to_h(task)
+      task_hashes.task_to_h(task)
+    end
+
     private
 
     # @return [Checkoff::Internal::TaskTiming]
     def task_timing
       @task_timing ||= Checkoff::Internal::TaskTiming.new(time_class: @time_class)
+    end
+
+    # @return [Checkoff::Internal::TaskHashes]
+    def task_hashes
+      @task_hashes ||= Checkoff::Internal::TaskHashes.new
     end
 
     # @param workspace_name [String]

@@ -11,7 +11,7 @@ class TestTasks < BaseAsana
   def_delegators :@mocks, :sections, :asana_task, :time_class, :client
 
   let_mock :mock_tasks, :modified_mock_tasks, :tasks_by_section,
-           :unflattened_modified_mock_tasks
+           :unflattened_modified_mock_tasks, :task_hashes
 
   let_mock :workspace_gid, :task_name, :default_assignee_gid
 
@@ -263,6 +263,14 @@ class TestTasks < BaseAsana
                                only_uncompleted: only_uncompleted)
 
     assert_equal(task, returned_task)
+  end
+
+  def test_task_to_h_delegates
+    tasks = get_test_object do
+      Checkoff::Internal::TaskHashes.expects(:new).returns(task_hashes)
+      task_hashes.expects(:task_to_h).with(task).returns(123)
+    end
+    assert_equal(123, tasks.task_to_h(task))
   end
 
   def class_under_test
