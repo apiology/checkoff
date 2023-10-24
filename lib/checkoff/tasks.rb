@@ -195,7 +195,7 @@ module Checkoff
                         extra_fields: extra_fields)
       end
     end
-    cache_method :tasks_from_section, SHORT_CACHE_TIME
+    cache_method :tasks, SHORT_CACHE_TIME
 
     # @return [Asana::Client]
     attr_reader :client
