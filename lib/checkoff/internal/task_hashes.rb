@@ -49,6 +49,7 @@ module Checkoff
       # @return [void]
       def unwrap_memberships(task_hash)
         unwrap_membership(task_hash, 'section', 'gid')
+        unwrap_membership(task_hash, 'section', 'name')
         unwrap_membership(task_hash, 'project', 'gid')
         unwrap_membership(task_hash, 'project', 'name')
       end
