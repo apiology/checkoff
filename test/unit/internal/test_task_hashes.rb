@@ -10,6 +10,7 @@ class TestTaskHashes < ClassTest
   MEMBER_OF_SECTION_A_IN_PROJECT_1 = {
     'section' => {
       'gid' => 'section_a_gid',
+      'name' => 'section_a_name',
     },
     'project' => {
       'gid' => 'project_1_gid',
@@ -49,6 +50,9 @@ class TestTaskHashes < ClassTest
       'membership_by_section_gid' => {
         'section_a_gid' => MEMBER_OF_SECTION_A_IN_PROJECT_1,
       },
+      'membership_by_section_name' => {
+        'section_a_name' => MEMBER_OF_SECTION_A_IN_PROJECT_1,
+      },
       'membership_by_project_gid' => {
         'project_1_gid' => MEMBER_OF_SECTION_A_IN_PROJECT_1,
       },
@@ -79,6 +83,7 @@ class TestTaskHashes < ClassTest
         'custom_field_x' => { 'name' => 'custom_field_x', 'display_value' => 'bar' },
       },
       'membership_by_section_gid' => {},
+      'membership_by_section_name' => {},
       'membership_by_project_gid' => {},
       'membership_by_project_name' => {},
     },
