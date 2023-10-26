@@ -9,10 +9,13 @@ module Checkoff
   class TaskSelectorEvaluator < SelectorEvaluator
     # @param task [Asana::Resources::Task]
     # @param tasks [Checkoff::Tasks]
+    # @param timelines [Checkoff::Timelines]
     def initialize(task:,
-                   tasks: Checkoff::Tasks.new)
+                   tasks: Checkoff::Tasks.new,
+                   timelines: Checkoff::Timelines.new)
       @item = task
       @tasks = tasks
+      @timelines = timelines
       super()
     end
 
@@ -35,12 +38,14 @@ module Checkoff
 
     # @return [Hash]
     def initializer_kwargs
-      { tasks: tasks }
+      { tasks: tasks, timelines: timelines }
     end
 
     # @return [Asana::Resources::Task]
     attr_reader :item
     # @return [Checkoff::Tasks]
     attr_reader :tasks
+    # @return [Checkoff::Timelines]
+    attr_reader :timelines
   end
 end

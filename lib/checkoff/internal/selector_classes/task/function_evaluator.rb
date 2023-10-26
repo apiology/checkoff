@@ -9,10 +9,13 @@ module Checkoff
       class FunctionEvaluator < ::Checkoff::SelectorClasses::FunctionEvaluator
         # @param selector [Array<(Symbol, Array)>,String]
         # @param tasks [Checkoff::Tasks]
+        # @param timelines [Checkoff::Timelines]
         def initialize(selector:,
-                       tasks:)
+                       tasks:,
+                       timelines:)
           @selector = selector
           @tasks = tasks
+          @timelines = timelines
           super()
         end
 

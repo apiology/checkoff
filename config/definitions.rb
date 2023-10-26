@@ -42,6 +42,8 @@
 #     module Resources
 #       # https://developers.asana.com/reference/gettask
 #       class Task
+#         # @return [String]
+#         def resource_subtype; end
 #         # @return [String,nil]
 #         def due_at; end
 #         # @return [String,nil]
@@ -136,6 +138,12 @@
 #         # @param project_gid [String]
 #         # @return [Enumerable<Asana::Resources::Section>]
 #         def get_sections_for_project(project_gid:, options: {}); end
+#         # Returns the complete record for a single section.
+#         #
+#         # @param [String] id - The section to get.
+#         # @param options [Hash] - the request I/O options.
+#         # @return [Asana::Resources::Section]
+#         def find_by_id(id, options: {}); end
 #       end
 #       class Project
 #         # Returns the compact project records for all projects in the workspace.
