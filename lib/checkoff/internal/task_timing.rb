@@ -59,6 +59,8 @@ module Checkoff
 
         return start_date_or_time(task) if field_name == :start
 
+        return start_date_or_time(task) || due_date_or_time(task) if field_name == :ready
+
         raise "Teach me how to handle field #{field_name}"
       end
     end
