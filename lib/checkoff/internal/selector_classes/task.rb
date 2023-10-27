@@ -114,7 +114,7 @@ module Checkoff
         end
       end
 
-      # :ready_between_n_days function
+      # :ready_between_relative function
       class ReadyBetweenRelativePFunctionEvaluator < FunctionEvaluator
         FUNCTION_NAME = :ready_between_relative
 
@@ -134,30 +134,51 @@ module Checkoff
         #
         # @return [Boolean]
         def evaluate(task, beginning_num_days_from_now, end_num_days_from_now, ignore_dependencies: false)
+          ready_between_relative?(task,
+                                  beginning_num_days_from_now, end_num_days_from_now,
+                                  ignore_dependencies: ignore_dependencies)
+        end
+
+        private
+
+        # @param task [Asana::Resources::Task]
+        # @param beginning_num_days_from_now [Integer]
+        # @param end_num_days_from_now [Integer]
+        # @param ignore_dependencies [Boolean]
+        #
+        # @return [Boolean]
+        def ready_between_relative?(task,
+                                    beginning_num_days_from_now,
+                                    end_num_days_from_now,
+                                    ignore_dependencies: false)
           beginning_n_days_from_now_time = (Time.now + (beginning_num_days_from_now * 24 * 60 * 60))
           end_n_days_from_now_time = (Time.now + (end_num_days_from_now * 24 * 60 * 60))
 
           # @type [Date, Time, nil]
-          task_date_or_time = @task_timing.date_or_time_field_by_name(task, :start) ||
-                              @task_timing.date_or_time_field_by_name(task, :due)
+          ready_date_or_time = @task_timing.date_or_time_field_by_name(task, :ready)
 
-          return false if task_date_or_time.nil?
+          return false if ready_date_or_time.nil?
 
-          # if time
-          in_range = if task_date_or_time.is_a?(Time)
-                       task_date_or_time > beginning_n_days_from_now_time &&
-                         task_date_or_time <= end_n_days_from_now_time
-                     else
-                       # if date
-                       task_date_or_time > beginning_n_days_from_now_time.to_date &&
-                         task_date_or_time <= end_n_days_from_now_time.to_date
-                     end
+          in_range = ready_in_range?(ready_date_or_time,
+                                     beginning_n_days_from_now_time,
+                                     end_n_days_from_now_time)
 
           return false unless in_range
 
           return false if !ignore_dependencies && @tasks.incomplete_dependencies?(task)
 
           true
+        end
+
+        # @param ready_date_or_time [Date, Time]
+        # @param start_time [Time]
+        # @param end_time [Time]
+        def ready_in_range?(ready_date_or_time, start_time, end_time)
+          if ready_date_or_time.is_a?(Time)
+            ready_date_or_time > start_time && ready_date_or_time <= end_time
+          else
+            ready_date_or_time > start_time.to_date && ready_date_or_time <= end_time.to_date
+          end
         end
       end
 
