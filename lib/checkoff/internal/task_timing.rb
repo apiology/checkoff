@@ -5,26 +5,61 @@ module Checkoff
     # Utility methods for working with task dates and times
     class TaskTiming
       # @param time_class [Class<Time>]
-      def initialize(time_class: Time)
+      # @param date_class [Class<Date>]
+      def initialize(time_class: Time, date_class: Date)
         @time_class = time_class
+        @date_class = date_class
       end
 
       # @param task [Asana::Resources::Task]
       # @return [Time, nil]
       def start_time(task)
-        return @time_class.parse(task.start_at) if task.start_at
-        return @time_class.parse(task.start_on) if task.start_on
-
-        nil
+        date_or_time_field_by_name(task, :start)&.to_time
       end
 
       # @param task [Asana::Resources::Task]
       # @return [Time, nil]
       def due_time(task)
-        return @time_class.parse(task.due_at) if task.due_at
-        return @time_class.parse(task.due_on) if task.due_on
+        date_or_time_field_by_name(task, :due)&.to_time
+      end
+
+      # @param task [Asana::Resources::Task]
+      # @param field_name [Symbol]
+      #
+      # @sg-ignore
+      # @return [Date, Time, nil]
+      def start_date_or_time(task)
+        return @time_class.parse(task.start_at) unless task.start_at.nil?
+
+        return @date_class.parse(task.start_on) unless task.start_on.nil?
 
         nil
+      end
+
+      # @param task [Asana::Resources::Task]
+      # @param field_name [Symbol]
+      #
+      # @sg-ignore
+      # @return [Date, Time, nil]
+      def due_date_or_time(task)
+        return @time_class.parse(task.due_at) unless task.due_at.nil?
+
+        return @date_class.parse(task.due_on) unless task.due_on.nil?
+
+        nil
+      end
+
+      # @param task [Asana::Resources::Task]
+      # @param field_name [Symbol]
+      #
+      # @sg-ignore
+      # @return [Date, Time, nil]
+      def date_or_time_field_by_name(task, field_name)
+        return due_date_or_time(task) if field_name == :due
+
+        return start_date_or_time(task) if field_name == :start
+
+        raise "Teach me how to handle field #{field_name}"
       end
     end
   end

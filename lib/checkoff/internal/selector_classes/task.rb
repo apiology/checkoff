@@ -138,8 +138,8 @@ module Checkoff
           end_n_days_from_now_time = (Time.now + (end_num_days_from_now * 24 * 60 * 60))
 
           # @type [Date, Time, nil]
-          task_date_or_time = pull_date_or_time_field_by_name(task, :start) ||
-                              pull_date_or_time_field_by_name(task, :due)
+          task_date_or_time = @task_timing.date_or_time_field_by_name(task, :start) ||
+                              @task_timing.date_or_time_field_by_name(task, :due)
 
           return false if task_date_or_time.nil?
 

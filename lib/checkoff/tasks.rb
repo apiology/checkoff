@@ -27,6 +27,7 @@ module Checkoff
     # @param workspaces [Checkoff::Workspaces]
     # @param sections [Checkoff::Sections]
     # @param time_class [Class<Time>]
+    # @param date_class [Class<Date>]
     # @param asana_task [Class<Asana::Resources::Task>]
     def initialize(config: Checkoff::Internal::ConfigLoader.load(:asana),
                    client: Checkoff::Clients.new(config: config).client,
@@ -35,10 +36,12 @@ module Checkoff
                    sections: Checkoff::Sections.new(config: config,
                                                     client: client),
                    time_class: Time,
+                   date_class: Date,
                    asana_task: Asana::Resources::Task)
       @config = config
       @sections = sections
       @time_class = time_class
+      @date_class = date_class
       @asana_task = asana_task
       @client = client
       @workspaces = workspaces
@@ -167,7 +170,7 @@ module Checkoff
 
     # @return [Checkoff::Internal::TaskTiming]
     def task_timing
-      @task_timing ||= Checkoff::Internal::TaskTiming.new(time_class: @time_class)
+      @task_timing ||= Checkoff::Internal::TaskTiming.new(time_class: @time_class, date_class: @date_class)
     end
 
     # @return [Checkoff::Internal::TaskHashes]
