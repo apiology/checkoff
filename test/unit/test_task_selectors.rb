@@ -12,7 +12,7 @@ class TestTaskSelectors < ClassTest
   #  # @return [Checkoff::TaskSelectors]
   #  def get_test_object; end
 
-  def_delegators(:@mocks, :tasks)
+  def_delegators(:@mocks, :tasks, :timelines)
 
   # @sg-ignore
   let_mock :custom_field
@@ -670,6 +670,7 @@ class TestTaskSelectors < ClassTest
                                               [:field_less_than_n_days_ago, :bogus_at,
                                                7])
     end
+
     assert_match(/Teach me how to handle field bogus_at/, e.message)
   end
 
@@ -779,6 +780,7 @@ class TestTaskSelectors < ClassTest
     task_selectors = get_test_object do
       mock_filter_via_task_selector_last_story_created_less_than_n_days_ago_ancient
     end
+
     assert(task_selectors.filter_via_task_selector(task,
                                                    [:last_story_created_less_than_n_days_ago, 7, []]))
   end
@@ -796,6 +798,7 @@ class TestTaskSelectors < ClassTest
     task_selectors = get_test_object do
       mock_filter_via_task_selector_last_story_created_less_than_n_days_ago_recent
     end
+
     refute(task_selectors.filter_via_task_selector(task,
                                                    [:last_story_created_less_than_n_days_ago, 7, []]))
   end
@@ -805,6 +808,7 @@ class TestTaskSelectors < ClassTest
     task_selectors = get_test_object do
       task.expects(:memberships).returns([])
     end
+
     refute(task_selectors.filter_via_task_selector(task,
                                                    [:in_section_named?, 'foo']))
   end
@@ -813,6 +817,7 @@ class TestTaskSelectors < ClassTest
     task_selectors = get_test_object do
       task.expects(:memberships).returns([{ 'section' => { 'name' => 'foo' } }])
     end
+
     assert(task_selectors.filter_via_task_selector(task,
                                                    [:in_section_named?, 'foo']))
   end
@@ -821,8 +826,21 @@ class TestTaskSelectors < ClassTest
     task_selectors = get_test_object do
       task.expects(:memberships).returns([{ 'section' => { 'name' => 'foo [100]' } }])
     end
+
     assert(task_selectors.filter_via_task_selector(task,
                                                    [:section_name_starts_with?, 'foo [']))
+  end
+
+  def test_dependent_on_previous_section_last_milestone
+    task_selectors = get_test_object do
+      timelines
+        .expects(:task_dependent_on_previous_section_last_milestone?)
+        .with(task,
+              limit_to_portfolio_gid: nil).returns(true)
+    end
+
+    assert(task_selectors.filter_via_task_selector(task,
+                                                   [:dependent_on_previous_section_last_milestone]))
   end
 
   # @return [Class<Checkoff::TaskSelectors>]

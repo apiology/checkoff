@@ -353,6 +353,26 @@ module Checkoff
           estimate_hours > allocated_hours
         end
       end
+
+      # :dependent_on_previous_section_last_milestone
+      class DependentOnPreviousSectionLastMilestoneFunctionEvaluator < FunctionEvaluator
+        FUNCTION_NAME = :dependent_on_previous_section_last_milestone
+
+        def matches?
+          fn?(selector, FUNCTION_NAME)
+        end
+
+        # @param task [Asana::Resources::Task]
+        # @param project_name [String]
+        # @param limit_to_portfolio_gid [String, nil] If specified,
+        # only projects in this portfolio will be evaluated.
+        #
+        # @return [Boolean]
+        def evaluate(task, limit_to_portfolio_gid: nil)
+          @timelines.task_dependent_on_previous_section_last_milestone?(task,
+                                                                        limit_to_portfolio_gid: limit_to_portfolio_gid)
+        end
+      end
     end
   end
 end

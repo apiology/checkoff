@@ -56,12 +56,22 @@ module Checkoff
     #
     # @return [Enumerable<Asana::Resources::Section>]
     def sections_or_raise(workspace_name, project_name, extra_fields: [])
-      fields = %w[name] + extra_fields
       project = project_or_raise(workspace_name, project_name)
-      client.sections.get_sections_for_project(project_gid: project.gid,
-                                               options: { fields: fields })
+      sections_by_project_gid(project.gid, extra_fields: extra_fields)
     end
     cache_method :sections_or_raise, SHORT_CACHE_TIME
+
+    # Returns a list of Asana API section objects for a given project GID
+    # @param project_gid [String]
+    # @param extra_fields [Array<String>]
+    #
+    # @return [Enumerable<Asana::Resources::Section>]
+    def sections_by_project_gid(project_gid, extra_fields: [])
+      fields = %w[name] + extra_fields
+      client.sections.get_sections_for_project(project_gid: project_gid,
+                                               options: { fields: fields })
+    end
+    cache_method :sections_by_project_gid, SHORT_CACHE_TIME
 
     # Given a workspace name and project name, then provide a Hash of
     # tasks with section name -> task list of the uncompleted tasks
@@ -83,6 +93,20 @@ module Checkoff
       else
         tasks_by_section_for_project(project, only_uncompleted: only_uncompleted, extra_fields: extra_fields)
       end
+    end
+
+    # @param section_gid [String]
+    # @param only_uncompleted [Boolean]
+    # @param extra_fields [Array<String>]
+    #
+    # @return [Enumerable<Asana::Resources::Task>]
+    def tasks_by_section_gid(section_gid,
+                             only_uncompleted: true,
+                             extra_fields: [])
+      options = projects.task_options
+      options[:options][:fields] += extra_fields
+      options[:completed_since] = '9999-12-01' if only_uncompleted
+      client.tasks.get_tasks(section: section_gid, **options)
     end
 
     # XXX: Rename to section_tasks
@@ -147,7 +171,44 @@ module Checkoff
       name
     end
 
+    # @param section [Asana::Resources::Section]
+    #
+    # @return [Asana::Resources::Section, nil]
+    def previous_section(section)
+      sections = sections_by_project_gid(section.project.fetch('gid'))
+
+      # @type [Array<Asana::Resources::Section>]
+      sections = sections.to_a
+
+      index = sections.find_index { |s| s.gid == section.gid }
+      return nil if index.nil? || index.zero?
+
+      sections[index - 1]
+    end
+    cache_method :previous_section, SHORT_CACHE_TIME
+
+    # @param gid [String]
+    #
+    # @return [Asana::Resources::Section]
+    def section_by_gid(gid)
+      options = {}
+      Asana::Resources::Section.new(parse(client.get("/sections/#{gid}", options: options)).first,
+                                    client: client)
+    end
+
     private
+
+    # https://github.com/Asana/ruby-asana/blob/master/lib/asana/resource_includes/response_helper.rb#L7
+    # @param response [Faraday::Response]
+    #
+    # @return [Array<Hash, Hash>]
+    def parse(response)
+      data = response.body.fetch('data') do
+        raise("Unexpected response body: #{response.body}")
+      end
+      extra = response.body.except('data')
+      [data, extra]
+    end
 
     # @return [Asana::Client]
     attr_reader :client
@@ -188,6 +249,7 @@ module Checkoff
     # @param project_gid [String]
     # @return [void]
     def file_task_by_section(by_section, task, project_gid)
+      # @sg-ignore
       # @type [Array<Hash>]
       membership = task.memberships.find { |m| m['project']['gid'] == project_gid }
       raise "Could not find task in project_gid #{project_gid}: #{task}" if membership.nil?

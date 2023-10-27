@@ -23,12 +23,16 @@ module Checkoff
     # @param [Hash] config
     # @param [Asana::Client] client
     # @param [Checkoff::Tasks] tasks
+    # @param [Checkoff::Timelines] timelines
     def initialize(config: Checkoff::Internal::ConfigLoader.load(:asana),
                    client: Checkoff::Clients.new(config: config).client,
                    tasks: Checkoff::Tasks.new(config: config,
-                                              client: client))
+                                              client: client),
+                   timelines: Checkoff::Timelines.new(config: config,
+                                                      client: client))
       @config = config
       @tasks = tasks
+      @timelines = timelines
     end
 
     # @param [Asana::Resources::Task] task
@@ -36,7 +40,7 @@ module Checkoff
     #        task details.  Examples: [:tag, 'foo'] [:not, [:tag, 'foo']] [:tag, 'foo']
     # @return [Boolean]
     def filter_via_task_selector(task, task_selector)
-      evaluator = TaskSelectorEvaluator.new(task: task, tasks: tasks)
+      evaluator = TaskSelectorEvaluator.new(task: task, tasks: tasks, timelines: timelines)
       evaluator.evaluate(task_selector)
     end
 
@@ -44,6 +48,9 @@ module Checkoff
 
     # @return [Checkoff::Tasks]
     attr_reader :tasks
+
+    # @return [Checkoff::Timelines]
+    attr_reader :timelines
 
     # bundle exec ./task_selectors.rb
     # :nocov:

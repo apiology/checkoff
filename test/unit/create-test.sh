@@ -72,6 +72,10 @@ class Test${class_name} < ClassTest
 
   def respond_like_instance_of
     {
+      config: Checkoff::Internal::EnvFallbackConfigLoader,
+      workspaces: Checkoff::Workspaces,
+      clients: Checkoff::Clients,
+      client: Asana::Client,
     }
   end
 
