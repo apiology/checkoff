@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 require_relative '../function_evaluator'
+require 'checkoff/internal/task_timing'
 
 module Checkoff
   module SelectorClasses
@@ -16,6 +17,7 @@ module Checkoff
           @selector = selector
           @tasks = tasks
           @timelines = timelines
+          @task_timing = ::Checkoff::Internal::TaskTiming.new
           super()
         end
 
@@ -37,31 +39,6 @@ module Checkoff
             return Time.parse(task.due_at).to_date unless task.due_at.nil?
 
             return Date.parse(task.due_on) unless task.due_on.nil?
-
-            return nil
-          end
-
-          raise "Teach me how to handle field #{field_name}"
-        end
-
-        # @param task [Asana::Resources::Task]
-        # @param field_name [Symbol]
-        #
-        # @sg-ignore
-        # @return [Date, Time, nil]
-        def pull_date_or_time_field_by_name(task, field_name)
-          if field_name == :due
-            return Time.parse(task.due_at) unless task.due_at.nil?
-
-            return Date.parse(task.due_on) unless task.due_on.nil?
-
-            return nil
-          end
-
-          if field_name == :start
-            return Time.parse(task.start_at) unless task.start_at.nil?
-
-            return Date.parse(task.start_on) unless task.start_on.nil?
 
             return nil
           end

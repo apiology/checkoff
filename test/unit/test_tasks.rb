@@ -8,7 +8,7 @@ require 'checkoff/cli'
 class TestTasks < BaseAsana
   extend Forwardable
 
-  def_delegators :@mocks, :sections, :asana_task, :time_class, :client
+  def_delegators :@mocks, :sections, :asana_task, :time_class, :date_class, :client
 
   let_mock :mock_tasks, :modified_mock_tasks, :tasks_by_section,
            :unflattened_modified_mock_tasks, :task_hashes
@@ -16,10 +16,12 @@ class TestTasks < BaseAsana
   let_mock :workspace_gid, :task_name, :default_assignee_gid
 
   let_mock :task,
-           :start_on_string, :start_on_obj,
-           :start_at_string, :start_at_obj,
-           :due_at_string, :due_at_obj,
-           :due_on_string, :due_on_obj,
+           :start_on_string, :start_on_date_obj,
+           :start_on_time_obj,
+           :start_at_string, :start_at_time_obj,
+           :due_at_string, :due_at_time_obj,
+           :due_on_string, :due_on_date_obj,
+           :due_on_time_obj,
            :asana_entity_project,
            :dependency_1, :dependency_1_gid,
            :dependency_1_full_task, :now
@@ -29,18 +31,22 @@ class TestTasks < BaseAsana
   end
 
   def expect_due_on_parsed(less_than_now:)
-    time_class.expects(:parse).with(due_on_string).returns(due_on_obj)
-    due_on_obj.expects(:<).with(now).returns(less_than_now).at_least(0)
+    date_class.expects(:parse).with(due_on_string).returns(due_on_date_obj)
+    due_on_date_obj.expects(:to_time).returns(due_on_time_obj).at_least(0)
+    due_on_time_obj.expects(:<).with(now).returns(less_than_now).at_least(0)
   end
 
   def expect_start_on_parsed(less_than_now:)
-    time_class.expects(:parse).with(start_on_string).returns(start_on_obj)
-    start_on_obj.expects(:<).with(now).returns(less_than_now)
+    date_class.expects(:parse).with(start_on_string).returns(start_on_date_obj)
+    start_on_date_obj.expects(:to_time).returns(start_on_time_obj).at_least(1)
+    start_on_time_obj.expects(:to_time).returns(start_on_time_obj).at_least(0)
+    start_on_time_obj.expects(:<).with(now).returns(less_than_now)
   end
 
   def expect_start_at_parsed(less_than_now:)
-    time_class.expects(:parse).with(start_at_string).returns(start_at_obj)
-    start_at_obj.expects(:<).with(now).returns(less_than_now)
+    time_class.expects(:parse).with(start_at_string).returns(start_at_time_obj)
+    start_at_time_obj.expects(:to_time).returns(start_at_time_obj).at_least(0)
+    start_at_time_obj.expects(:<).with(now).returns(less_than_now)
   end
 
   def mock_task_ready_false_due_in_future_on_date
@@ -91,9 +97,10 @@ class TestTasks < BaseAsana
   end
 
   def expect_due_at_parsed(less_than_now:)
-    time_class.expects(:parse).with(due_at_string).returns(due_at_obj)
+    time_class.expects(:parse).with(due_at_string).returns(due_at_time_obj)
+    due_at_time_obj.expects(:to_time).returns(due_at_time_obj).at_least(0)
     time_class.expects(:now).returns(now)
-    due_at_obj.expects(:<).with(now).returns(less_than_now)
+    due_at_time_obj.expects(:<).with(now).returns(less_than_now)
   end
 
   def mock_task_ready_false_due_in_future_at_time
