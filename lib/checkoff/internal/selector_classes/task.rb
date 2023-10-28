@@ -2,6 +2,7 @@
 
 require_relative 'task/function_evaluator'
 require 'checkoff/internal/ready_between_relative'
+require 'checkoff/internal/task_timing'
 
 module Checkoff
   module SelectorClasses
@@ -160,7 +161,9 @@ module Checkoff
         #
         # @return [Boolean]
         def evaluate(task, field_name, num_days)
-          date = pull_date_field_by_name(task, field_name)
+          task_timing = Checkoff::Internal::TaskTiming.new
+
+          date = task_timing.date_or_time_field_by_name(task, field_name)&.to_date
 
           return false if date.nil?
 
@@ -189,7 +192,8 @@ module Checkoff
         #
         # @return [Boolean]
         def evaluate(task, field_name, num_days)
-          date = pull_date_field_by_name(task, field_name)
+          task_timing = Checkoff::Internal::TaskTiming.new
+          date = task_timing.date_or_time_field_by_name(task, field_name)&.to_date
 
           return false if date.nil?
 

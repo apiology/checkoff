@@ -15,54 +15,6 @@ module Checkoff
 
         private
 
-        # @param project [Asana::Resources::Project]
-        # @param field_name [Symbol]
-        #
-        # @sg-ignore
-        # @return [Date, nil]
-        def pull_date_field_by_name(project, field_name)
-          if field_name == :modified
-            return Time.parse(project.modified_at).to_date unless project.modified_at.nil?
-
-            return nil
-          end
-
-          if field_name == :due
-            return Time.parse(project.due_at).to_date unless project.due_at.nil?
-
-            return Date.parse(project.due_on) unless project.due_on.nil?
-
-            return nil
-          end
-
-          raise "Teach me how to handle field #{field_name}"
-        end
-
-        # @param project [Asana::Resources::Project]
-        # @param field_name [Symbol]
-        #
-        # @sg-ignore
-        # @return [Date, Time, nil]
-        def pull_date_or_time_field_by_name(project, field_name)
-          if field_name == :due
-            return Time.parse(project.due_at) unless project.due_at.nil?
-
-            return Date.parse(project.due_on) unless project.due_on.nil?
-
-            return nil
-          end
-
-          if field_name == :start
-            return Time.parse(project.start_at) unless project.start_at.nil?
-
-            return Date.parse(project.start_on) unless project.start_on.nil?
-
-            return nil
-          end
-
-          raise "Teach me how to handle field #{field_name}"
-        end
-
         # @sg-ignore
         # @param project [Asana::Resources::Project]
         # @param custom_field_gid [String]
