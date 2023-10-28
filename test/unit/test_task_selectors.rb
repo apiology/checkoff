@@ -571,18 +571,22 @@ class TestTaskSelectors < ClassTest
                  e.message)
   end
 
+  def mock_filter_via_task_selector_modified_less_than_n_days_ago
+    @mocks[:tasks] = Checkoff::Tasks.new(client: client)
+    Time.expects(:now).returns(Time.new(2000, 1, 1, 0, 0, 0, '+00:00')).at_least(1)
+    # @sg-ignore
+    task.expects(:modified_at).returns(Time.new(1999, 12, 1, 0, 0, 0, '+00:00').to_s).at_least(1)
+  end
+
   # @return [void]
-  def test_filter_via_task_selector_field_less_than_n_days_ago
+  def test_filter_via_task_selector_modified_less_than_n_days_ago
     task_selectors = get_test_object do
-      @mocks[:tasks] = Checkoff::Tasks.new(client: client)
-      Time.expects(:now).returns(Time.new(2000, 1, 1, 0, 0, 0, '+00:00')).at_least(1)
-      # @sg-ignore
-      task.expects(:modified_at).returns(Time.new(1999, 12, 1, 0, 0, 0, '+00:00').to_s).at_least(1)
+      mock_filter_via_task_selector_modified_less_than_n_days_ago
     end
 
     assert(task_selectors.filter_via_task_selector(task,
-                                                   [:field_less_than_n_days_ago, :modified,
-                                                    7]))
+                                                   [:in_period?, :modified,
+                                                    [:less_than_n_days_ago, 7]]))
   end
 
   # @return [void]
@@ -650,7 +654,7 @@ class TestTaskSelectors < ClassTest
   end
 
   # @return [void]
-  def test_filter_via_task_selector_field_less_than_n_days_ago_nil
+  def test_filter_via_task_selector_modified_less_than_n_days_ago_nil
     task_selectors = get_test_object do
       @mocks[:tasks] = Checkoff::Tasks.new(client: client)
       # @sg-ignore
@@ -659,20 +663,20 @@ class TestTaskSelectors < ClassTest
     end
 
     refute(task_selectors.filter_via_task_selector(task,
-                                                   [:field_less_than_n_days_ago, :modified,
-                                                    7]))
+                                                   [:in_period?, :modified,
+                                                    [:less_than_n_days_ago, 7]]))
   end
 
   # @return [void]
-  def test_filter_via_task_selector_field_less_than_n_days_ago_field_not_supported
+  def test_filter_via_task_selector_modified_less_than_n_days_ago_field_not_supported
     task_selectors = get_test_object do
       @mocks[:tasks] = Checkoff::Tasks.new(client: client)
     end
 
     e = assert_raises(RuntimeError) do
       task_selectors.filter_via_task_selector(task,
-                                              [:field_less_than_n_days_ago, :bogus_at,
-                                               7])
+                                              [:in_period?, :bogus_at,
+                                               [:less_than_n_days_ago, 7]])
     end
 
     assert_match(/Teach me how to handle field bogus_at/, e.message)
@@ -697,24 +701,28 @@ class TestTaskSelectors < ClassTest
 
     # @sg-ignore
     assert(task_selectors.filter_via_task_selector(task,
-                                                   [:field_greater_than_or_equal_to_n_days_from_today, :due,
-                                                    7]))
+                                                   [:in_period?, :due,
+                                                    [:greater_than_or_equal_to_n_days_from_today, 7]]))
+  end
+
+  def mock_filter_via_task_selector_field_greater_than_or_equal_to_n_days_from_today_due_at
+    @mocks[:tasks] = Checkoff::Tasks.new(client: client)
+    # @sg-ignore
+    Date.expects(:today).returns(Date.new(2000, 1, 1)).at_least(0)
+    # @sg-ignore
+    task.expects(:due_at).returns(Time.new(1999, 12, 1, 0, 0, 0, '+00:00').to_s).at_least(1)
   end
 
   # @return [void]
   def test_filter_via_task_selector_field_greater_than_or_equal_to_n_days_from_today_due_at
     task_selectors = get_test_object do
-      @mocks[:tasks] = Checkoff::Tasks.new(client: client)
-      # @sg-ignore
-      Date.expects(:today).returns(Date.new(2000, 1, 1)).at_least(0)
-      # @sg-ignore
-      task.expects(:due_at).returns(Time.new(1999, 12, 1, 0, 0, 0, '+00:00').to_s).at_least(1)
+      mock_filter_via_task_selector_field_greater_than_or_equal_to_n_days_from_today_due_at
     end
 
     # @sg-ignore
     refute(task_selectors.filter_via_task_selector(task,
-                                                   [:field_greater_than_or_equal_to_n_days_from_today, :due,
-                                                    7]))
+                                                   [:in_period?, :due,
+                                                    [:greater_than_or_equal_to_n_days_from_today, 7]]))
   end
 
   # @return [void]
@@ -736,8 +744,8 @@ class TestTaskSelectors < ClassTest
 
     # @sg-ignore
     refute(task_selectors.filter_via_task_selector(task,
-                                                   [:field_greater_than_or_equal_to_n_days_from_today, :due,
-                                                    7]))
+                                                   [:in_period?, :due,
+                                                    [:greater_than_or_equal_to_n_days_from_today, 7]]))
   end
 
   # @return [void]
