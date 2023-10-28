@@ -12,7 +12,7 @@ class TestTaskSelectors < ClassTest
   #  # @return [Checkoff::TaskSelectors]
   #  def get_test_object; end
 
-  def_delegators(:@mocks, :tasks, :timelines)
+  def_delegators(:@mocks, :tasks, :timelines, :client)
 
   # @sg-ignore
   let_mock :custom_field
@@ -574,6 +574,7 @@ class TestTaskSelectors < ClassTest
   # @return [void]
   def test_filter_via_task_selector_field_less_than_n_days_ago
     task_selectors = get_test_object do
+      @mocks[:tasks] = Checkoff::Tasks.new(client: client)
       Time.expects(:now).returns(Time.new(2000, 1, 1, 0, 0, 0, '+00:00')).at_least(1)
       # @sg-ignore
       task.expects(:modified_at).returns(Time.new(1999, 12, 1, 0, 0, 0, '+00:00').to_s).at_least(1)
@@ -651,6 +652,7 @@ class TestTaskSelectors < ClassTest
   # @return [void]
   def test_filter_via_task_selector_field_less_than_n_days_ago_nil
     task_selectors = get_test_object do
+      @mocks[:tasks] = Checkoff::Tasks.new(client: client)
       # @sg-ignore
       Time.expects(:now).returns(Time.new(2000, 1, 1, 0, 0, 0, '+00:00').to_s).at_least(0)
       task.expects(:modified_at).returns(nil).at_least(1)
@@ -663,7 +665,9 @@ class TestTaskSelectors < ClassTest
 
   # @return [void]
   def test_filter_via_task_selector_field_less_than_n_days_ago_field_not_supported
-    task_selectors = get_test_object
+    task_selectors = get_test_object do
+      @mocks[:tasks] = Checkoff::Tasks.new(client: client)
+    end
 
     e = assert_raises(RuntimeError) do
       task_selectors.filter_via_task_selector(task,

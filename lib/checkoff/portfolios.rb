@@ -28,9 +28,9 @@ module Checkoff
     # @param clients [Checkoff::Clients]
     # @param client [Asana::Client]
     def initialize(config: Checkoff::Internal::ConfigLoader.load(:asana),
-                   workspaces: Checkoff::Workspaces.new(config: config),
                    clients: Checkoff::Clients.new(config: config),
-                   client: clients.client)
+                   client: clients.client,
+                   workspaces: Checkoff::Workspaces.new(config: config, client: client))
       @workspaces = workspaces
       @client = client
     end
