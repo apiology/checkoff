@@ -50,6 +50,13 @@ module Checkoff
       end
 
       # @param task [Asana::Resources::Task]
+      #
+      # @return [Time, nil]
+      def modified_time(task)
+        return @time_class.parse(task.modified_at) unless task.modified_at.nil?
+      end
+
+      # @param task [Asana::Resources::Task]
       # @param field_name [Symbol]
       #
       # @sg-ignore
@@ -58,6 +65,8 @@ module Checkoff
         return due_date_or_time(task) if field_name == :due
 
         return start_date_or_time(task) if field_name == :start
+
+        return modified_time(task) if field_name == :modified
 
         return start_date_or_time(task) || due_date_or_time(task) if field_name == :ready
 
