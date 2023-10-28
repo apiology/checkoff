@@ -193,15 +193,7 @@ module Checkoff
         #
         # @return [Boolean]
         def evaluate(task, field_name, num_days)
-          task_timing = Checkoff::Internal::TaskTiming.new
-          date = task_timing.date_or_time_field_by_name(task, field_name)&.to_date
-
-          return false if date.nil?
-
-          # @sg-ignore
-          n_days_from_today = Date.today + num_days
-          # @sg-ignore
-          date >= n_days_from_today
+          @tasks.in_period?(task, field_name, [:greater_than_or_equal_to_n_days_from_today, num_days])
         end
       end
 

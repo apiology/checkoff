@@ -691,6 +691,7 @@ class TestTaskSelectors < ClassTest
   # @return [void]
   def test_filter_via_task_selector_field_greater_than_or_equal_to_n_days_from_today_due_on
     task_selectors = get_test_object do
+      @mocks[:tasks] = Checkoff::Tasks.new(client: client)
       mock_filter_via_task_selector_field_greater_than_or_equal_to_n_days_from_today_due_on
     end
 
@@ -703,6 +704,7 @@ class TestTaskSelectors < ClassTest
   # @return [void]
   def test_filter_via_task_selector_field_greater_than_or_equal_to_n_days_from_today_due_at
     task_selectors = get_test_object do
+      @mocks[:tasks] = Checkoff::Tasks.new(client: client)
       # @sg-ignore
       Date.expects(:today).returns(Date.new(2000, 1, 1)).at_least(0)
       # @sg-ignore
@@ -728,6 +730,7 @@ class TestTaskSelectors < ClassTest
   # @return [void]
   def test_filter_via_task_selector_field_greater_than_or_equal_to_n_days_from_today_due_nil
     task_selectors = get_test_object do
+      @mocks[:tasks] = Checkoff::Tasks.new(client: client)
       mock_filter_via_task_selector_field_greater_than_or_equal_to_n_days_from_today_due_nil
     end
 
