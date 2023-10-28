@@ -78,6 +78,16 @@ module Checkoff
     end
     cache_method :portfolio_by_gid, SHORT_CACHE_TIME
 
+    # @param workspace_name [String]
+    # @param portfolio_name [String]
+    #
+    # @return [Enumerable<Asana::Resources::Project>]
+    def projects_in_portfolio(workspace_name, portfolio_name)
+      portfolio = portfolio_or_raise(workspace_name, portfolio_name)
+      portfolio.get_items
+    end
+    cache_method :projects_in_portfolio, LONG_CACHE_TIME
+
     private
 
     # @return [Checkoff::Workspaces]

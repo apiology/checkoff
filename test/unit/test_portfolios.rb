@@ -11,7 +11,7 @@ class TestPortfolios < ClassTest
 
   let_mock :workspace_name, :portfolio_name, :portfolio, :workspace, :workspace_gid,
            :portfolios_api, :wrong_portfolio, :wrong_portfolio_name, :users_api, :me, :me_gid,
-           :portfolio_gid
+           :portfolio_gid, :project_a
 
   def test_portfolio_or_raise_raises
     portfolios = get_test_object do
@@ -75,6 +75,15 @@ class TestPortfolios < ClassTest
                                                options: { fields: ['name'] }).returns(portfolio)
     end
     assert_equal(portfolio, portfolios.portfolio_by_gid(portfolio_gid))
+  end
+
+  def test_projects_in_portfolios
+    portfolios = get_test_object do
+      portfolio_arr = [portfolio]
+      expect_portfolios_pulled(portfolio_arr)
+      portfolio.expects(:get_items).returns([project_a])
+    end
+    assert_equal([project_a], portfolios.projects_in_portfolio(workspace_name, portfolio_name))
   end
 
   def class_under_test

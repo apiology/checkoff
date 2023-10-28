@@ -63,6 +63,10 @@
 #         # @return [String,nil]
 #         def due_date; end
 #       end
+#       class Portfolio
+#         # @return [Enumerable<Asana::Resources::Project>]
+#         def get_items(options = {}); end
+#       end
 #     end
 #     module Resources
 #       class Workspace
