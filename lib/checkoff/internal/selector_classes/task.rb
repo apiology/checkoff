@@ -97,6 +97,26 @@ module Checkoff
         # rubocop:enable Style/OptionalBooleanParameter
       end
 
+      # :in_period? function
+      class InPeriodPFunctionEvaluator < FunctionEvaluator
+        def matches?
+          fn?(selector, :in_period?)
+        end
+
+        # @param _index [Integer]
+        def evaluate_arg?(_index)
+          false
+        end
+
+        # @param task [Asana::Resources::Task]
+        # @param field_name [Symbol] See Checksoff::Tasks#in_period?
+        # @param period [Symbol,Array<Symbol>] See Checkoff::Timing#in_period?
+        # @return [Boolean]
+        def evaluate(task, field_name, period)
+          @tasks.in_period?(task, field_name, period)
+        end
+      end
+
       # :unassigned function
       class UnassignedPFunctionEvaluator < FunctionEvaluator
         def matches?
@@ -150,50 +170,6 @@ module Checkoff
           ready_between_relative.ready_between_relative?(task,
                                                          beginning_num_days_from_now, end_num_days_from_now,
                                                          ignore_dependencies: ignore_dependencies)
-        end
-      end
-
-      # :field_less_than_n_days_ago
-      class FieldLessThanNDaysAgoPFunctionEvaluator < FunctionEvaluator
-        FUNCTION_NAME = :field_less_than_n_days_ago
-
-        def matches?
-          fn?(selector, FUNCTION_NAME)
-        end
-
-        def evaluate_arg?(_index)
-          false
-        end
-
-        # @param task [Asana::Resources::Task]
-        # @param field_name [Symbol]
-        # @param num_days [Integer]
-        #
-        # @return [Boolean]
-        def evaluate(task, field_name, num_days)
-          @tasks.in_period?(task, field_name, [:less_than_n_days_ago, num_days])
-        end
-      end
-
-      # :field_greater_than_or_equal_to_n_days_from_today
-      class FieldGreaterThanOrEqualToNDaysFromTodayPFunctionEvaluator < FunctionEvaluator
-        FUNCTION_NAME = :field_greater_than_or_equal_to_n_days_from_today
-
-        def matches?
-          fn?(selector, FUNCTION_NAME)
-        end
-
-        def evaluate_arg?(_index)
-          false
-        end
-
-        # @param task [Asana::Resources::Task]
-        # @param field_name [Symbol]
-        # @param num_days [Integer]
-        #
-        # @return [Boolean]
-        def evaluate(task, field_name, num_days)
-          @tasks.in_period?(task, field_name, [:greater_than_or_equal_to_n_days_from_today, num_days])
         end
       end
 
