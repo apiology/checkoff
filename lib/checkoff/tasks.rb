@@ -76,6 +76,7 @@ module Checkoff
     end
 
     # Pull a specific task by name
+    #
     # @param workspace_name [String]
     # @param project_name [String, Symbol]
     # @param section_name [String, nil, Symbol]
@@ -98,7 +99,8 @@ module Checkoff
     end
     cache_method :task, SHORT_CACHE_TIME
 
-    # Pull a specific task by name
+    # Pull a specific task by GID
+    #
     # @param task_gid [String]
     # @param extra_fields [Array<String>]
     # @return [Asana::Resources::Task, nil]
@@ -110,9 +112,12 @@ module Checkoff
     end
     cache_method :task_by_gid, SHORT_CACHE_TIME
 
+    # Add a task
+    #
     # @param name [String]
     # @param workspace_gid [String]
     # @param assignee_gid [String]
+    #
     # @return [Asana::Resources::Task]
     def add_task(name,
                  workspace_gid: @workspaces.default_workspace_gid,
@@ -122,12 +127,17 @@ module Checkoff
                          workspace: workspace_gid, name: name)
     end
 
+    # Return user-accessible URL for a task
+    #
     # @param task [Asana::Resources::Task]
+    #
     # @return [String] end-user URL to the task in question
     def url_of_task(task)
       "https://app.asana.com/0/0/#{task.gid}/f"
     end
 
+    # True if any of the task's dependencies are marked incomplete
+    #
     # @param task [Asana::Resources::Task]
     def incomplete_dependencies?(task)
       # Avoid a redundant fetch.  Unfortunately, Ruby SDK allows
@@ -166,11 +176,14 @@ module Checkoff
     # task: String (name)
     #
     # @param task [Asana::Resources::Task]
+    #
     # @return [Hash]
     def task_to_h(task)
       task_hashes.task_to_h(task)
     end
 
+    # True if the task is in a project which is in the given portfolio
+    #
     # @param task [Asana::Resources::Task]
     # @param portfolio_name [String]
     # @param workspace_name [String]
