@@ -17,7 +17,6 @@ module Checkoff
           @selector = selector
           @tasks = tasks
           @timelines = timelines
-          @task_timing = ::Checkoff::Internal::TaskTiming.new
           super()
         end
 
