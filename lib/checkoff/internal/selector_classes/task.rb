@@ -394,6 +394,23 @@ module Checkoff
                                                                         limit_to_portfolio_gid: limit_to_portfolio_gid)
         end
       end
+
+      # :in_portfolio_named? function
+      class InPortfolioNamedFunctionEvaluator < FunctionEvaluator
+        FUNCTION_NAME = :in_portfolio_named?
+
+        def matches?
+          fn?(selector, FUNCTION_NAME)
+        end
+
+        # @param task [Asana::Resources::Task]
+        # @param portfolio_name [String]
+        #
+        # @return [Boolean]
+        def evaluate(task, portfolio_name)
+          @tasks.in_portfolio_named?(task, portfolio_name)
+        end
+      end
     end
   end
 end

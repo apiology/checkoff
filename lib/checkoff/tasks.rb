@@ -3,6 +3,7 @@
 # frozen_string_literal: true
 
 require_relative 'sections'
+require_relative 'portfolios'
 require_relative 'workspaces'
 require_relative 'internal/config_loader'
 require_relative 'internal/task_timing'
@@ -26,6 +27,7 @@ module Checkoff
     # @param client [Asana::Client]
     # @param workspaces [Checkoff::Workspaces]
     # @param sections [Checkoff::Sections]
+    # @param portfolios [Checkoff::Portfolios]
     # @param time_class [Class<Time>]
     # @param date_class [Class<Date>]
     # @param asana_task [Class<Asana::Resources::Task>]
@@ -35,6 +37,8 @@ module Checkoff
                                                         client: client),
                    sections: Checkoff::Sections.new(config: config,
                                                     client: client),
+                   portfolios: Checkoff::Portfolios.new(config: config,
+                                                        client: client),
                    time_class: Time,
                    date_class: Date,
                    asana_task: Asana::Resources::Task)
@@ -44,6 +48,7 @@ module Checkoff
       @date_class = date_class
       @asana_task = asana_task
       @client = client
+      @portfolios = portfolios
       @workspaces = workspaces
     end
 
@@ -164,6 +169,21 @@ module Checkoff
     # @return [Hash]
     def task_to_h(task)
       task_hashes.task_to_h(task)
+    end
+
+    # @param task [Asana::Resources::Task]
+    # @param portfolio_name [String]
+    # @param workspace_name [String]
+    def in_portfolio_named?(task,
+                            portfolio_name,
+                            workspace_name: @workspaces.default_workspace.name)
+      portfolio_projects = @portfolios.projects_in_portfolio(workspace_name, portfolio_name)
+      task.memberships.any? do |membership|
+        project_gid = membership.fetch('project').fetch('gid')
+        portfolio_projects.any? do |portfolio_project|
+          portfolio_project.gid == project_gid
+        end
+      end
     end
 
     private

@@ -843,6 +843,24 @@ class TestTaskSelectors < ClassTest
                                                    [:dependent_on_previous_section_last_milestone]))
   end
 
+  def test_in_portfolio_named_true
+    task_selectors = get_test_object do
+      tasks.expects(:in_portfolio_named?).with(task, 'foo').returns(true)
+    end
+
+    assert(task_selectors.filter_via_task_selector(task,
+                                                   [:in_portfolio_named?, 'foo']))
+  end
+
+  def test_in_portfolio_named_false
+    task_selectors = get_test_object do
+      tasks.expects(:in_portfolio_named?).with(task, 'foo').returns(false)
+    end
+
+    refute(task_selectors.filter_via_task_selector(task,
+                                                   [:in_portfolio_named?, 'foo']))
+  end
+
   # @return [Class<Checkoff::TaskSelectors>]
   def class_under_test
     Checkoff::TaskSelectors

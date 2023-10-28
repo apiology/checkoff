@@ -8,12 +8,14 @@ require 'checkoff/cli'
 class TestTasks < BaseAsana
   extend Forwardable
 
-  def_delegators :@mocks, :sections, :asana_task, :time_class, :date_class, :client
+  def_delegators :@mocks, :sections, :asana_task, :time_class, :date_class, :client, :workspaces,
+                 :portfolios
 
   let_mock :mock_tasks, :modified_mock_tasks, :tasks_by_section,
-           :unflattened_modified_mock_tasks, :task_hashes
+           :unflattened_modified_mock_tasks, :task_hashes, :project_gid, :wrong_project,
+           :wrong_project_gid
 
-  let_mock :workspace_gid, :task_name, :default_assignee_gid
+  let_mock :default_workspace, :workspace_gid, :task_name, :default_assignee_gid
 
   let_mock :task,
            :start_on_string, :start_on_date_obj,
@@ -278,6 +280,56 @@ class TestTasks < BaseAsana
       task_hashes.expects(:task_to_h).with(task).returns(123)
     end
     assert_equal(123, tasks.task_to_h(task))
+  end
+
+  def expect_default_workspace_name_pulled
+    workspaces.expects(:default_workspace).returns(default_workspace)
+    default_workspace.expects(:name).returns('default workspace')
+  end
+
+  def mock_in_portfolio_named_false_no_projects_no_memberships
+    expect_default_workspace_name_pulled
+    portfolios.expects(:projects_in_portfolio).with('default workspace', 'portfolio name')
+      .returns([])
+    task.expects(:memberships).returns([])
+  end
+
+  def test_in_portfolio_named_false_no_projects_no_memberships
+    tasks = get_test_object do
+      mock_in_portfolio_named_false_no_projects_no_memberships
+    end
+    refute(tasks.in_portfolio_named?(task, 'portfolio name'))
+  end
+
+  def mock_in_portfolio_named_false_no_projects_but_memberships
+    expect_default_workspace_name_pulled
+    portfolios.expects(:projects_in_portfolio).with('default workspace', 'portfolio name')
+      .returns([])
+    memberships = [{ 'project' => { 'gid' => project_gid } }]
+    task.expects(:memberships).returns(memberships)
+  end
+
+  def test_in_portfolio_named_false_no_projects_but_memberships
+    tasks = get_test_object do
+      mock_in_portfolio_named_false_no_projects_but_memberships
+    end
+    refute(tasks.in_portfolio_named?(task, 'portfolio name'))
+  end
+
+  def mock_in_portfolio_named_false_projects_wrong_memberships
+    expect_default_workspace_name_pulled
+    portfolios.expects(:projects_in_portfolio).with('default workspace', 'portfolio name')
+      .returns([wrong_project])
+    wrong_project.expects(:gid).returns(wrong_project_gid)
+    memberships = [{ 'project' => { 'gid' => project_gid } }]
+    task.expects(:memberships).returns(memberships)
+  end
+
+  def test_in_portfolio_named_false_projects_wrong_memberships
+    tasks = get_test_object do
+      mock_in_portfolio_named_false_projects_wrong_memberships
+    end
+    refute(tasks.in_portfolio_named?(task, 'portfolio name'))
   end
 
   def class_under_test
