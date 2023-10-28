@@ -303,7 +303,7 @@ class TestTaskSelectors < ClassTest
 
   def test_filter_via_task_selector_ready
     task_selectors = get_test_object do
-      tasks.expects(:task_ready?).with(task, ignore_dependencies: false).returns(true)
+      tasks.expects(:task_ready?).with(task, period: :now_or_before, ignore_dependencies: false).returns(true)
     end
 
     assert(task_selectors.filter_via_task_selector(task, [:ready]))
