@@ -33,7 +33,7 @@ class TestTasks < BaseAsana
   end
 
   def expect_due_on_parsed(less_than_now:)
-    date_class.expects(:parse).with(due_on_string).returns(due_on_date_obj)
+    date_class.expects(:parse).with(due_on_string).returns(due_on_date_obj).at_least(0)
     due_on_date_obj.expects(:to_time).returns(due_on_time_obj).at_least(0)
     due_on_time_obj.expects(:<).with(now).returns(less_than_now).at_least(0)
   end
