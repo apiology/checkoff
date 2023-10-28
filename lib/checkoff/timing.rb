@@ -31,13 +31,6 @@ module Checkoff
     end
 
     # @param date_or_time [Date,Time,nil]
-    def now_or_before?(date_or_time)
-      return true if date_or_time.nil?
-
-      date_or_time.to_time < @now_getter.now
-    end
-
-    # @param date_or_time [Date,Time,nil]
     # @param period [Symbol,Array<(Symbol,Integer)>]
     #
     #        Valid values: :this_week, :now_or_before, :indefinite, [:less_than_n_days_ago, Integer]
@@ -54,14 +47,26 @@ module Checkoff
         period_name = period.first
         args = period[1..]
 
-        # @sg-ignore
-        return less_than_n_days_ago?(date_or_time, *args) if period_name == :less_than_n_days_ago
+        return compound_in_period?(date_or_time, period_name, *args)
       end
 
       raise "Teach me how to handle period #{period.inspect}"
     end
 
     private
+
+    # @param date_or_time [Date,Time,nil]
+    # @param num_days [Integer]
+    def greater_than_or_equal_to_n_days_from_today?(date_or_time, num_days)
+      return false if date_or_time.nil?
+
+      date = date_or_time.to_date
+
+      # @sg-ignore
+      n_days_from_today = @today_getter.today + num_days
+      # @sg-ignore
+      date >= n_days_from_today
+    end
 
     # @param date_or_time [Date,Time,nil]
     # @param num_days [Integer]
@@ -91,6 +96,27 @@ module Checkoff
       date = date_or_time.to_date
 
       date >= beginning_of_week && date <= end_of_week
+    end
+
+    # @param date_or_time [Date,Time,nil]
+    def now_or_before?(date_or_time)
+      return true if date_or_time.nil?
+
+      date_or_time.to_time < @now_getter.now
+    end
+
+    # @param date_or_time [Date,Time,nil]
+    # @param period_name [Symbol]
+    # @param args [Object]
+    def compound_in_period?(date_or_time, period_name, *args)
+      # @sg-ignore
+      return less_than_n_days_ago?(date_or_time, *args) if period_name == :less_than_n_days_ago
+
+      if period_name == :greater_than_or_equal_to_n_days_from_today
+        return greater_than_or_equal_to_n_days_from_today?(date_or_time,
+                                                           *args)
+      end
+      raise "Teach me how to handle period [#{period_name.inspect}, #{args.join(', ')}]"
     end
 
     # bundle exec ./time.rb
