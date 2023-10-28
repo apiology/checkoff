@@ -29,10 +29,13 @@ module Checkoff
                    tasks: Checkoff::Tasks.new(config: config,
                                               client: client),
                    timelines: Checkoff::Timelines.new(config: config,
-                                                      client: client))
+                                                      client: client),
+                   custom_fields: Checkoff::CustomFields.new(config: config,
+                                                             client: client))
       @config = config
       @tasks = tasks
       @timelines = timelines
+      @custom_fields = custom_fields
     end
 
     # @param [Asana::Resources::Task] task
@@ -40,7 +43,8 @@ module Checkoff
     #        task details.  Examples: [:tag, 'foo'] [:not, [:tag, 'foo']] [:tag, 'foo']
     # @return [Boolean]
     def filter_via_task_selector(task, task_selector)
-      evaluator = TaskSelectorEvaluator.new(task: task, tasks: tasks, timelines: timelines)
+      evaluator = TaskSelectorEvaluator.new(task: task, tasks: tasks, timelines: timelines,
+                                            custom_fields: custom_fields)
       evaluator.evaluate(task_selector)
     end
 
@@ -51,6 +55,9 @@ module Checkoff
 
     # @return [Checkoff::Timelines]
     attr_reader :timelines
+
+    # @return [Checkoff::CustomFields]
+    attr_reader :custom_fields
 
     # bundle exec ./task_selectors.rb
     # :nocov:

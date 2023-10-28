@@ -11,14 +11,18 @@ module Checkoff
     # @param client [Asana::Client]
     # @param projects [Checkoff::Projects]
     # @param sections [Checkoff::Sections]
+    # @param custom_fields [Checkoff::CustomFields]
     def initialize(section:,
                    client:,
                    projects: Checkoff::Projects.new(client: client),
-                   sections: Checkoff::Sections.new)
+                   sections: Checkoff::Sections.new(client: client),
+                   custom_fields: Checkoff::CustomFields.new(client: client),
+                   **_kwargs)
       @item = section
       @client = client
       @projects = projects
       @sections = sections
+      @custom_fields = custom_fields
       super()
     end
 
@@ -41,7 +45,7 @@ module Checkoff
 
     # @return [Hash]
     def initializer_kwargs
-      { sections: sections, projects: projects, client: client }
+      { sections: sections, projects: projects, client: client, custom_fields: custom_fields }
     end
 
     # @return [Asana::Resources::Project]
@@ -50,6 +54,8 @@ module Checkoff
     attr_reader :sections
     # @return [Checkoff::Projects]
     attr_reader :projects
+    # @return [Checkoff::CustomFields]
+    attr_reader :custom_fields
     # @return [Asana::Client]
     attr_reader :client
   end

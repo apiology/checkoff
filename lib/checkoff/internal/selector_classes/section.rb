@@ -7,7 +7,7 @@ module Checkoff
     # Section selector classes
     module Section
       # :ends_with_milestone function
-      class DueDateFunctionEvaluator < FunctionEvaluator
+      class EndsWithMilestoneFunctionEvaluator < FunctionEvaluator
         FUNCTION_NAME = :ends_with_milestone
 
         def matches?

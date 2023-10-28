@@ -22,15 +22,18 @@ module Checkoff
     # @param config [Hash<Symbol, Object>]
     # @param workspaces [Checkoff::Workspaces]
     # @param sections [Checkoff::Sections]
+    # @param custom_fields [Checkoff::CustomFields]
     # @param clients [Checkoff::Clients]
     # @param client [Asana::Client]
     def initialize(config: Checkoff::Internal::ConfigLoader.load(:asana),
                    workspaces: Checkoff::Workspaces.new(config: config),
                    sections: Checkoff::Sections.new(config: config),
+                   custom_fields: Checkoff::CustomFields.new(config: config),
                    clients: Checkoff::Clients.new(config: config),
                    client: clients.client)
       @workspaces = workspaces
       @sections = sections
+      @custom_fields = custom_fields
       @client = client
     end
 
@@ -40,7 +43,8 @@ module Checkoff
     # @return [Boolean]
     def filter_via_section_selector(section, section_selector)
       # @sg-ignore
-      evaluator = SectionSelectorEvaluator.new(section: section, sections: sections, client: client)
+      evaluator = SectionSelectorEvaluator.new(section: section, sections: sections, custom_fields: custom_fields,
+                                               client: client)
       evaluator.evaluate(section_selector)
     end
 
@@ -51,6 +55,9 @@ module Checkoff
 
     # @return [Checkoff::Sections]
     attr_reader :sections
+
+    # @return [Checkoff::CustomFields]
+    attr_reader :custom_fields
 
     # @return [Asana::Client]
     attr_reader :client

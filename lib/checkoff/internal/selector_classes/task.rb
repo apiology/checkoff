@@ -190,7 +190,7 @@ module Checkoff
         # @param num_days [Integer]
         # @return [Boolean]
         def evaluate(task, custom_field_name, num_days)
-          custom_field = pull_custom_field_by_name_or_raise(task, custom_field_name)
+          custom_field = @custom_fields.resource_custom_field_by_name_or_raise(task, custom_field_name)
 
           # @sg-ignore
           # @type [String, nil]
@@ -220,7 +220,7 @@ module Checkoff
         # @param num_days [Integer]
         # @return [Boolean]
         def evaluate(task, custom_field_name, num_days)
-          custom_field = pull_custom_field_by_name_or_raise(task, custom_field_name)
+          custom_field = @custom_fields.resource_custom_field_by_name_or_raise(task, custom_field_name)
 
           # @sg-ignore
           # @type [String, nil]
@@ -289,7 +289,7 @@ module Checkoff
         # @param task [Asana::Resources::Task]
         # @return [Boolean]
         def evaluate(task)
-          custom_field = pull_custom_field_by_name(task, 'Estimated time')
+          custom_field = @custom_fields.resource_custom_field_by_name(task, 'Estimated time')
 
           return false if custom_field.nil?
 
