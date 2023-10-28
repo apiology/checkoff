@@ -9,12 +9,17 @@ class TestTiming < ClassTest
 
   def_delegators(:@mocks, :today_getter)
 
-  def test_in_period_this_week_true
+  def test_in_period_this_week_date_true
     date = Date.new(2019, 1, 4) # Friday
     timing = get_test_object do
       today_getter.expects(:today).returns(Date.new(2019, 1, 1)) # Tuesday
     end
     assert(timing.in_period?(date, :this_week))
+  end
+
+  def test_in_period_this_week_nil_true
+    timing = get_test_object
+    assert(timing.in_period?(nil, :this_week))
   end
 
   def test_in_period_indefinite_true
@@ -41,6 +46,7 @@ class TestTiming < ClassTest
   def respond_like
     {
       today_getter: Date,
+      now_getter: Time,
     }
   end
 end

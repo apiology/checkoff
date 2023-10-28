@@ -23,24 +23,38 @@ module Checkoff
     SHORT_CACHE_TIME = MINUTE
 
     # @param today_getter [Class<Date>]
-    def initialize(today_getter: Date)
+    # @param now_getter [Class<Time>]
+    def initialize(today_getter: Date,
+                   now_getter: Time)
       @today_getter = today_getter
+      @now_getter = now_getter
     end
 
-    # @param date [Date]
+    # @param date_or_time [Date,Time,nil]
+    def now_or_before?(date_or_time)
+      return true if date_or_time.nil?
+
+      date_or_time.to_time < @now_getter.now
+    end
+
+    # @param date_or_time [Date,Time,nil]
     # @param period [Symbol<:indefinite>]
-    def in_period?(date, period)
-      return this_week?(date) if period == :this_week
+    def in_period?(date_or_time, period)
+      return this_week?(date_or_time) if period == :this_week
 
       return true if period == :indefinite
+
+      return now_or_before?(date_or_time) if period == :now_or_before
 
       raise "Teach me how to handle period #{period.inspect}"
     end
 
     private
 
-    # @param date [Date]
-    def this_week?(date)
+    # @param date_or_time [Date,Time,nil]
+    def this_week?(date_or_time)
+      return true if date_or_time.nil?
+
       today = @today_getter.today
 
       # Beginning of this week (assuming week starts on Sunday)
@@ -48,6 +62,8 @@ module Checkoff
 
       # End of this week (assuming week ends on Saturday)
       end_of_week = beginning_of_week + 6
+
+      date = date_or_time.to_date
 
       date >= beginning_of_week && date <= end_of_week
     end

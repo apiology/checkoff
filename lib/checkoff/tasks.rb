@@ -50,6 +50,7 @@ module Checkoff
       @client = client
       @portfolios = portfolios
       @workspaces = workspaces
+      @timing = Timing.new(today_getter: date_class, now_getter: time_class)
     end
 
     # Indicates a task is ready for a person to work on it.  This is
@@ -63,16 +64,16 @@ module Checkoff
     # * start at is before now
     #
     # @param task [Asana::Resources::Task]
+    # @param period [Symbol<:now_or_before,:this_week>]
     # @param ignore_dependencies [Boolean]
-    def task_ready?(task, ignore_dependencies: false)
+    def task_ready?(task, period: :now_or_before, ignore_dependencies: false)
+      field_name = :ready
       return false if !ignore_dependencies && incomplete_dependencies?(task)
 
-      start = task_timing.start_time(task)
-      due = task_timing.due_time(task)
+      # @type [Date,Time,nil]
+      task_date_or_time = task_timing.date_or_time_field_by_name(task, field_name)
 
-      return true if start.nil? && due.nil?
-
-      (start || due) < @time_class.now
+      timing.in_period?(task_date_or_time, period)
     end
 
     # Pull a specific task by name
@@ -235,6 +236,9 @@ module Checkoff
 
     # @return [Asana::Client]
     attr_reader :client
+
+    # @return [Checkoff::Timing]
+    attr_reader :timing
 
     # @return [Checkoff::Projects]
     def projects
