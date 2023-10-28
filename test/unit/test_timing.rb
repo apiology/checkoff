@@ -35,6 +35,13 @@ class TestTiming < ClassTest
     assert_equal('Teach me how to handle period :invalid', e.message)
   end
 
+  def test_in_period_bad_compound_period
+    date = Date.new(2019, 1, 4) # Friday
+    timing = get_test_object
+    e = assert_raises(RuntimeError) { timing.in_period?(date, [:invalid, 123]) }
+    assert_equal('Teach me how to handle period [:invalid, 123]', e.message)
+  end
+
   def class_under_test
     Checkoff::Timing
   end

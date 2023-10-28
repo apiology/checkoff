@@ -38,7 +38,9 @@ module Checkoff
     end
 
     # @param date_or_time [Date,Time,nil]
-    # @param period [Symbol<:indefinite>]
+    # @param period [Symbol,Array<(Symbol,Integer)>]
+    #
+    #        Valid values: :this_week, :now_or_before, :indefinite, [:less_than_n_days_ago, Integer]
     def in_period?(date_or_time, period)
       return this_week?(date_or_time) if period == :this_week
 
@@ -46,10 +48,33 @@ module Checkoff
 
       return now_or_before?(date_or_time) if period == :now_or_before
 
+      if period.is_a?(Array)
+        # @sg-ignore
+        # @type [Symbol]
+        period_name = period.first
+        args = period[1..]
+
+        # @sg-ignore
+        return less_than_n_days_ago?(date_or_time, *args) if period_name == :less_than_n_days_ago
+      end
+
       raise "Teach me how to handle period #{period.inspect}"
     end
 
     private
+
+    # @param date_or_time [Date,Time,nil]
+    # @param num_days [Integer]
+    def less_than_n_days_ago?(date_or_time, num_days)
+      return false if date_or_time.nil?
+
+      date = date_or_time.to_date
+
+      # @sg-ignore
+      n_days_ago = @today_getter.today - num_days
+      # @sg-ignore
+      date < n_days_ago
+    end
 
     # @param date_or_time [Date,Time,nil]
     def this_week?(date_or_time)

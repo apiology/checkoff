@@ -94,7 +94,7 @@ module Checkoff
         def evaluate(task, period = :now_or_before, ignore_dependencies = false)
           @tasks.task_ready?(task, period: period, ignore_dependencies: ignore_dependencies)
         end
-        # rubocop:ensable Style/OptionalBooleanParameter
+        # rubocop:enable Style/OptionalBooleanParameter
       end
 
       # :unassigned function
@@ -171,16 +171,7 @@ module Checkoff
         #
         # @return [Boolean]
         def evaluate(task, field_name, num_days)
-          task_timing = Checkoff::Internal::TaskTiming.new
-
-          date = task_timing.date_or_time_field_by_name(task, field_name)&.to_date
-
-          return false if date.nil?
-
-          # @sg-ignore
-          n_days_ago = Date.today - num_days
-          # @sg-ignore
-          date < n_days_ago
+          @tasks.in_period?(task, field_name, [:less_than_n_days_ago, num_days])
         end
       end
 

@@ -67,9 +67,15 @@ module Checkoff
     # @param period [Symbol<:now_or_before,:this_week>]
     # @param ignore_dependencies [Boolean]
     def task_ready?(task, period: :now_or_before, ignore_dependencies: false)
-      field_name = :ready
       return false if !ignore_dependencies && incomplete_dependencies?(task)
 
+      in_period?(task, :ready, period)
+    end
+
+    # @param task [Asana::Resources::Task]
+    # @param field_name [Symbol]
+    # @param period [Symbol<:now_or_before,:this_week>,Array] See Checkoff::Timing#in_period?_
+    def in_period?(task, field_name, period)
       # @type [Date,Time,nil]
       task_date_or_time = task_timing.date_or_time_field_by_name(task, field_name)
 
