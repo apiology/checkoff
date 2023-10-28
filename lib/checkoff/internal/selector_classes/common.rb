@@ -105,7 +105,7 @@ module Checkoff
         # @param custom_field_name [String]
         # @return [String, nil]
         def evaluate(resource, custom_field_name)
-          custom_field = pull_custom_field_by_name(resource, custom_field_name)
+          custom_field = @custom_fields.resource_custom_field_by_name(resource, custom_field_name)
           return nil if custom_field.nil?
 
           custom_field['display_value']
@@ -127,7 +127,7 @@ module Checkoff
         # @param custom_field_gid [String]
         # @return [String, nil]
         def evaluate(resource, custom_field_gid)
-          custom_field = pull_custom_field_or_raise(resource, custom_field_gid)
+          custom_field = @custom_fields.resource_custom_field_by_gid_or_raise(resource, custom_field_gid)
           custom_field['display_value']
         end
       end
@@ -149,7 +149,8 @@ module Checkoff
         # @param custom_field_values_gids [Array<String>]
         # @return [Boolean]
         def evaluate(resource, custom_field_gid, custom_field_values_gids)
-          actual_custom_field_values_gids = pull_custom_field_values_gids_or_raise(resource, custom_field_gid)
+          actual_custom_field_values_gids = @custom_fields.resource_custom_field_values_gids_or_raise(resource,
+                                                                                                      custom_field_gid)
 
           actual_custom_field_values_gids.any? do |custom_field_value|
             custom_field_values_gids.include?(custom_field_value)
@@ -174,7 +175,9 @@ module Checkoff
         # @param custom_field_value_names [Array<String>]
         # @return [Boolean]
         def evaluate(resource, custom_field_name, custom_field_value_names)
-          actual_custom_field_values_names = pull_custom_field_values_names_by_name(resource, custom_field_name)
+          actual_custom_field_values_names =
+            @custom_fields.resource_custom_field_values_names_by_name(resource,
+                                                                      custom_field_name)
 
           actual_custom_field_values_names.any? do |custom_field_value|
             custom_field_value_names.include?(custom_field_value)
@@ -199,7 +202,9 @@ module Checkoff
         # @param custom_field_values_gids [Array<String>]
         # @return [Boolean]
         def evaluate(resource, custom_field_gid, custom_field_values_gids)
-          actual_custom_field_values_gids = pull_custom_field_values_gids_or_raise(resource, custom_field_gid)
+          actual_custom_field_values_gids =
+            @custom_fields.resource_custom_field_values_gids_or_raise(resource,
+                                                                      custom_field_gid)
 
           custom_field_values_gids.all? do |custom_field_value|
             actual_custom_field_values_gids.include?(custom_field_value)

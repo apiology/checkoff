@@ -30,11 +30,17 @@ module Checkoff
     #   extend CacheMethod::ClassMethods
 
     MINUTE = 60
+    private_constant :MINUTE
     HOUR = MINUTE * 60
+    private_constant :HOUR
     DAY = 24 * HOUR
+    private_constant :DAY
     REALLY_LONG_CACHE_TIME = HOUR * 1
+    private_constant :REALLY_LONG_CACHE_TIME
     LONG_CACHE_TIME = MINUTE * 15
+    private_constant :LONG_CACHE_TIME
     SHORT_CACHE_TIME = MINUTE
+    private_constant :SHORT_CACHE_TIME
 
     # @param config [Hash]
     # @param workspaces [Checkoff::Workspaces]

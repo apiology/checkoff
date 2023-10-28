@@ -10,12 +10,15 @@ module Checkoff
     # @param task [Asana::Resources::Task]
     # @param tasks [Checkoff::Tasks]
     # @param timelines [Checkoff::Timelines]
+    # @param custom_fields [Checkoff::CustomFields]
     def initialize(task:,
                    tasks: Checkoff::Tasks.new,
-                   timelines: Checkoff::Timelines.new)
+                   timelines: Checkoff::Timelines.new,
+                   custom_fields: Checkoff::CustomFields.new)
       @item = task
       @tasks = tasks
       @timelines = timelines
+      @custom_fields = custom_fields
       super()
     end
 
@@ -38,7 +41,7 @@ module Checkoff
 
     # @return [Hash]
     def initializer_kwargs
-      { tasks: tasks, timelines: timelines }
+      { tasks: tasks, timelines: timelines, custom_fields: custom_fields }
     end
 
     # @return [Asana::Resources::Task]
@@ -47,5 +50,7 @@ module Checkoff
     attr_reader :tasks
     # @return [Checkoff::Timelines]
     attr_reader :timelines
+    # @return [Checkoff::CustomFields]
+    attr_reader :custom_fields
   end
 end

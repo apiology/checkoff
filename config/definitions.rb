@@ -37,6 +37,8 @@
 #       def portfolios; end
 #       # @return [Asana::ProxiedResourceClasses::User]
 #       def users; end
+#       # @return [Asana::ProxiedResourceClasses::CustomField]
+#       def custom_fields; end
 #     end
 #     class Collection < Asana::Resources::Collection; end
 #     module Resources
@@ -79,6 +81,15 @@
 #       end
 #     end
 #     module ProxiedResourceClasses
+#       class CustomField
+#         # Get a workspace's custom fields
+#         #
+#         # @param workspace_gid [String]  (required) Globally unique identifier for the workspace or organization.
+#         # @param options [Hash] the request I/O options
+#         #
+#         # @return [Enumerable<Asana::Resources::CustomField>]
+#         def get_custom_fields_for_workspace(workspace_gid: required("workspace_gid"), options: {}); end
+#       end
 #       class Task
 #         # Returns the complete task record for a single task.
 #         #

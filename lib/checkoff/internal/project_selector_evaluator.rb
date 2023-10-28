@@ -9,10 +9,13 @@ module Checkoff
   class ProjectSelectorEvaluator < SelectorEvaluator
     # @param project [Asana::Resources::Project]
     # @param projects [Checkoff::Projects]
+    # @param custom_fields [Checkoff::CustomFields]
     def initialize(project:,
-                   projects: Checkoff::Projects.new)
+                   projects: Checkoff::Projects.new,
+                   custom_fields: Checkoff::CustomFields.new)
       @item = project
       @projects = projects
+      @custom_fields = custom_fields
       super()
     end
 
@@ -35,12 +38,14 @@ module Checkoff
 
     # @return [Hash]
     def initializer_kwargs
-      { projects: projects }
+      { projects: projects, custom_fields: custom_fields }
     end
 
     # @return [Asana::Resources::Project]
     attr_reader :item
     # @return [Checkoff::Projects]
     attr_reader :projects
+    # @return [Checkoff::CustomFields]
+    attr_reader :custom_fields
   end
 end

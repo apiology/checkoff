@@ -27,6 +27,7 @@ class TestTaskSelectors < ClassTest
   let_mock :task_gid
   # @sg-ignore
   let_mock :story
+  let_mock :custom_field_value_gid_1
 
   # @return [void]
   def test_filter_via_custom_field_gid_values_gids_no_enum_value
@@ -39,6 +40,7 @@ class TestTaskSelectors < ClassTest
       'resource_subtype' => 'enum',
     }
     task_selectors = get_test_object do
+      @mocks[:custom_fields] = Checkoff::CustomFields.new(client: client)
       custom_fields = [custom_field]
       # @sg-ignore
       task.expects(:custom_fields).returns(custom_fields)
@@ -61,6 +63,7 @@ class TestTaskSelectors < ClassTest
       'resource_subtype' => 'multi_enum',
     }
     task_selectors = get_test_object do
+      @mocks[:custom_fields] = Checkoff::CustomFields.new(client: client)
       custom_fields = [custom_field]
       task.expects(:custom_fields).returns(custom_fields)
     end
@@ -82,6 +85,7 @@ class TestTaskSelectors < ClassTest
       'resource_subtype' => 'something_unknown',
     }
     task_selectors = get_test_object do
+      @mocks[:custom_fields] = Checkoff::CustomFields.new(client: client)
       custom_fields = [custom_field]
       task.expects(:custom_fields).returns(custom_fields)
     end
@@ -111,6 +115,7 @@ class TestTaskSelectors < ClassTest
       'resource_subtype' => 'enum',
     }
     task_selectors = get_test_object do
+      @mocks[:custom_fields] = Checkoff::CustomFields.new(client: client)
       task.expects(:custom_fields).returns([custom_field])
     end
     e = assert_raises(RuntimeError) do
@@ -128,6 +133,7 @@ class TestTaskSelectors < ClassTest
     custom_field_gid = '123'
     enum_value_gid = '456'
     task_selectors = get_test_object do
+      @mocks[:custom_fields] = Checkoff::CustomFields.new(client: client)
       task.expects(:custom_fields).returns([])
       task.expects(:gid).returns(123)
     end
@@ -146,6 +152,7 @@ class TestTaskSelectors < ClassTest
     custom_field_gid = '123'
     enum_value_gid = '456'
     task_selectors = get_test_object do
+      @mocks[:custom_fields] = Checkoff::CustomFields.new(client: client)
       task.expects(:custom_fields).returns(nil)
     end
     e = assert_raises(RuntimeError) do
@@ -172,6 +179,7 @@ class TestTaskSelectors < ClassTest
       'resource_subtype' => 'enum',
     }
     task_selectors = get_test_object do
+      @mocks[:custom_fields] = Checkoff::CustomFields.new(client: client)
       custom_fields = [custom_field]
       task.expects(:custom_fields).returns(custom_fields)
     end
@@ -197,6 +205,7 @@ class TestTaskSelectors < ClassTest
   # @return [void]
   def test_filter_via_custom_field_value_nil_false_found
     task_selectors = get_test_object do
+      @mocks[:custom_fields] = Checkoff::CustomFields.new(client: client)
       custom_fields = [custom_field]
       custom_field.expects(:fetch).with('name').returns('custom_field_name')
       custom_field.expects(:[]).with('display_value').returns('some value')
@@ -219,6 +228,7 @@ class TestTaskSelectors < ClassTest
   # @return [void]
   def test_filter_via_custom_field_gid_value_gid_nil
     task_selectors = get_test_object do
+      @mocks[:custom_fields] = Checkoff::CustomFields.new(client: client)
       mock_filter_via_custom_field_gid_value_gid_nil
     end
 
@@ -230,6 +240,7 @@ class TestTaskSelectors < ClassTest
   # @return [void]
   def test_filter_via_custom_field_value_custom_fields_not_provided
     task_selectors = get_test_object do
+      @mocks[:custom_fields] = Checkoff::CustomFields.new(client: client)
       task.expects(:custom_fields).returns(nil)
     end
     e = assert_raises(RuntimeError) do
@@ -243,6 +254,7 @@ class TestTaskSelectors < ClassTest
 
   def test_filter_via_custom_field_value_nil_none_found
     task_selectors = get_test_object do
+      @mocks[:custom_fields] = Checkoff::CustomFields.new(client: client)
       custom_fields = []
       task.expects(:custom_fields).returns(custom_fields)
     end
@@ -255,6 +267,7 @@ class TestTaskSelectors < ClassTest
   # @return [void]
   def test_filter_via_custom_field_value_gid_nil_none_found
     task_selectors = get_test_object do
+      @mocks[:custom_fields] = Checkoff::CustomFields.new(client: client)
       custom_fields = []
       task.expects(:gid).returns('task_gid')
       task.expects(:custom_fields).returns(custom_fields)
@@ -473,6 +486,7 @@ class TestTaskSelectors < ClassTest
       'resource_subtype' => 'enum',
     }
     task_selectors = get_test_object do
+      @mocks[:custom_fields] = Checkoff::CustomFields.new(client: client)
       custom_fields = [custom_field]
       task.expects(:custom_fields).returns(custom_fields)
     end
@@ -495,6 +509,7 @@ class TestTaskSelectors < ClassTest
   # @return [void]
   def test_filter_via_task_selector_custom_field_less_than_n_days_from_now
     task_selectors = get_test_object do
+      @mocks[:custom_fields] = Checkoff::CustomFields.new(client: client)
       Time.expects(:now).returns(Time.new(2000, 1, 1, 0, 0, 0, '+00:00')).at_least(1)
       task.expects(:custom_fields).returns([{ 'name' => 'start date',
                                               'display_value' => '2000-01-15' }]).at_least(1)
@@ -505,6 +520,7 @@ class TestTaskSelectors < ClassTest
 
   def test_filter_via_task_selector_custom_field_less_than_n_days_from_now_not_set
     task_selectors = get_test_object do
+      @mocks[:custom_fields] = Checkoff::CustomFields.new(client: client)
       task.expects(:custom_fields).returns([{ 'name' => 'start date',
                                               'display_value' => nil }]).at_least(1)
     end
@@ -515,6 +531,7 @@ class TestTaskSelectors < ClassTest
   # @return [void]
   def test_filter_via_task_selector_custom_field_less_than_n_days_from_now_custom_field_not_found
     task_selectors = get_test_object do
+      @mocks[:custom_fields] = Checkoff::CustomFields.new(client: client)
       task.expects(:gid).returns('123')
       task.expects(:custom_fields).returns([{ 'name' => 'end date',
                                               'display_value' => '2000-01-15' }]).at_least(1)
@@ -524,13 +541,14 @@ class TestTaskSelectors < ClassTest
       task_selectors.filter_via_task_selector(task, [:custom_field_less_than_n_days_from_now, 'start date', 90])
     end
 
-    assert_match(/Could not find custom field with name start date in task 123 with custom fields/,
+    assert_match(/Could not find custom field with name start date in gid 123 with custom fields/,
                  e.message)
   end
 
   # @return [void]
   def test_filter_via_task_selector_custom_field_greater_than_or_equal_to_n_days_from_now
     task_selectors = get_test_object do
+      @mocks[:custom_fields] = Checkoff::CustomFields.new(client: client)
       Time.expects(:now).returns(Time.new(2000, 1, 1, 0, 0, 0, '+00:00')).at_least(1)
       task.expects(:custom_fields).returns([{ 'name' => 'start date',
                                               'display_value' => '2000-01-15' }]).at_least(1)
@@ -544,6 +562,7 @@ class TestTaskSelectors < ClassTest
   # @return [void]
   def test_filter_via_task_selector_custom_field_greater_than_or_equal_to_n_days_from_now_nil
     task_selectors = get_test_object do
+      @mocks[:custom_fields] = Checkoff::CustomFields.new(client: client)
       task.expects(:custom_fields).returns([{ 'name' => 'start date',
                                               'display_value' => nil }]).at_least(1)
     end
@@ -556,6 +575,7 @@ class TestTaskSelectors < ClassTest
   # @return [void]
   def test_filter_via_task_selector_custom_field_greater_than_or_equal_to_n_days_from_now_custom_field_not_found
     task_selectors = get_test_object do
+      @mocks[:custom_fields] = Checkoff::CustomFields.new(client: client)
       task.expects(:gid).returns('123')
       task.expects(:custom_fields).returns([{ 'name' => 'end date',
                                               'display_value' => '2000-01-15' }]).at_least(1)
@@ -567,7 +587,7 @@ class TestTaskSelectors < ClassTest
                                                90])
     end
 
-    assert_match(/Could not find custom field with name start date in task 123 with custom fields/,
+    assert_match(/Could not find custom field with name start date in gid 123 with custom fields/,
                  e.message)
   end
 
@@ -592,6 +612,7 @@ class TestTaskSelectors < ClassTest
   # @return [void]
   def test_estimate_exceeds_duration_true
     task_selectors = get_test_object do
+      @mocks[:custom_fields] = Checkoff::CustomFields.new(client: client)
       task.expects(:custom_fields).returns([{ 'name' => 'Estimated time',
                                               'number_value' => 960 }]).at_least(1)
       task.expects(:start_on).returns('2000-01-01').at_least(1)
@@ -606,6 +627,7 @@ class TestTaskSelectors < ClassTest
   # @return [void]
   def test_estimate_exceeds_duration_false_no_estimate_set
     task_selectors = get_test_object do
+      @mocks[:custom_fields] = Checkoff::CustomFields.new(client: client)
       task.expects(:custom_fields).returns([{ 'name' => 'Estimated time',
                                               'number_value' => nil }]).at_least(1)
     end
@@ -618,6 +640,7 @@ class TestTaskSelectors < ClassTest
   # @return [void]
   def test_estimate_exceeds_duration_true_only_due_set
     task_selectors = get_test_object do
+      @mocks[:custom_fields] = Checkoff::CustomFields.new(client: client)
       task.expects(:custom_fields).returns([{ 'name' => 'Estimated time',
                                               'number_value' => 960 }]).at_least(1)
       task.expects(:start_on).returns(nil).at_least(1)
@@ -632,6 +655,7 @@ class TestTaskSelectors < ClassTest
   # @return [void]
   def test_estimate_exceeds_duration_true_no_dates_set
     task_selectors = get_test_object do
+      @mocks[:custom_fields] = Checkoff::CustomFields.new(client: client)
       task.expects(:custom_fields).returns([{ 'name' => 'Estimated time',
                                               'number_value' => 960 }]).at_least(1)
       task.expects(:start_on).returns(nil).at_least(1)
@@ -646,6 +670,7 @@ class TestTaskSelectors < ClassTest
   # @return [void]
   def test_estimate_exceeds_duration_no_estimate_field
     task_selectors = get_test_object do
+      @mocks[:custom_fields] = Checkoff::CustomFields.new(client: client)
       task.expects(:custom_fields).returns([]).at_least(1)
     end
 
@@ -751,6 +776,7 @@ class TestTaskSelectors < ClassTest
   # @return [void]
   def test_filter_via_task_selector_custom_field_equal_to_date
     task_selectors = get_test_object do
+      @mocks[:custom_fields] = Checkoff::CustomFields.new(client: client)
       # @sg-ignore
       task.expects(:custom_fields).returns([{ 'name' => 'end date',
                                               'display_value' => '2000-01-15' }]).at_least(1)
@@ -763,6 +789,7 @@ class TestTaskSelectors < ClassTest
   # @return [void]
   def test_filter_via_task_selector_custom_field_not_equal_to_date
     task_selectors = get_test_object do
+      @mocks[:custom_fields] = Checkoff::CustomFields.new(client: client)
       # @sg-ignore
       task.expects(:custom_fields).returns([{ 'name' => 'end date',
                                               'display_value' => '2000-01-15' }]).at_least(1)
@@ -874,6 +901,24 @@ class TestTaskSelectors < ClassTest
 
     refute(task_selectors.filter_via_task_selector(task,
                                                    [:in_portfolio_named?, 'foo']))
+  end
+
+  def test_custom_field_gid_value_contains_any_gid_false_multi_enum
+    task_selectors = get_test_object do
+      @mocks[:custom_fields] = Checkoff::CustomFields.new(client: client)
+      custom_fields = [
+        {
+          'gid' => custom_field_gid,
+          'resource_subtype' => 'multi_enum',
+          'multi_enum_values' => [],
+        },
+      ]
+      task.expects(:custom_fields).returns(custom_fields)
+    end
+
+    refute(task_selectors.filter_via_task_selector(task,
+                                                   [:custom_field_gid_value_contains_any_gid,
+                                                    custom_field_gid, [custom_field_value_gid_1]]))
   end
 
   # @return [Class<Checkoff::TaskSelectors>]
