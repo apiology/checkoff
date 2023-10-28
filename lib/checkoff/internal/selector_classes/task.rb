@@ -74,17 +74,27 @@ module Checkoff
       end
 
       # :ready function
+      #
+      # See GLOSSARY.md and tasks.rb#task_ready? for more information.
       class ReadyFunctionEvaluator < FunctionEvaluator
         def matches?
           fn?(selector, :ready)
         end
 
+        # @param _index [Integer]
+        def evaluate_arg?(_index)
+          false
+        end
+
         # @param task [Asana::Resources::Task]
+        # @param period [Symbol<:now_or_before,:this_week>]
         # @param ignore_dependencies [Boolean]
         # @return [Boolean]
-        def evaluate(task, ignore_dependencies: false)
-          @tasks.task_ready?(task, ignore_dependencies: ignore_dependencies)
+        # rubocop:disable Style/OptionalBooleanParameter
+        def evaluate(task, period = :now_or_before, ignore_dependencies = false)
+          @tasks.task_ready?(task, period: period, ignore_dependencies: ignore_dependencies)
         end
+        # rubocop:ensable Style/OptionalBooleanParameter
       end
 
       # :unassigned function
