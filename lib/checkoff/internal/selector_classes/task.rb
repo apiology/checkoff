@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
 require_relative 'task/function_evaluator'
-require 'checkoff/internal/ready_between_relative'
 require 'checkoff/internal/task_timing'
 
 module Checkoff
@@ -143,34 +142,6 @@ module Checkoff
         # @return [Boolean]
         def evaluate(task)
           !task.due_at.nil? || !task.due_on.nil?
-        end
-      end
-
-      # :ready_between_relative function
-      class ReadyBetweenRelativePFunctionEvaluator < FunctionEvaluator
-        FUNCTION_NAME = :ready_between_relative
-
-        def matches?
-          fn?(selector, FUNCTION_NAME)
-        end
-
-        # @param _index [Integer]
-        def evaluate_arg?(_index)
-          false
-        end
-
-        # @param task [Asana::Resources::Task]
-        # @param beginning_num_days_from_now [Integer]
-        # @param end_num_days_from_now [Integer]
-        # @param ignore_dependencies [Boolean]
-        #
-        # @return [Boolean]
-        def evaluate(task, beginning_num_days_from_now, end_num_days_from_now, ignore_dependencies: false)
-          ready_between_relative = Checkoff::Internal::ReadyBetweenRelative.new(tasks: @tasks,
-                                                                                client: @client)
-          ready_between_relative.ready_between_relative?(task,
-                                                         beginning_num_days_from_now, end_num_days_from_now,
-                                                         ignore_dependencies: ignore_dependencies)
         end
       end
 
