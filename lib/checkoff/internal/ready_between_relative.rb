@@ -5,14 +5,14 @@ module Checkoff
     # Determine whether a task is due within a relative date range
     class ReadyBetweenRelative
       # @param config [Hash<Symbol, Object>]
-      # @param clients [Checkoff::Clients]
+      # @param client [Asana::Client]
       # @param task_timing [Checkoff::Internal::TaskTiming]
       # @param tasks [Checkoff::Tasks]
       def initialize(config: Checkoff::Internal::ConfigLoader.load(:asana),
-                     clients: Checkoff::Clients.new(config: config),
-                     task_timing: ::Checkoff::Internal::TaskTiming.new,
+                     client: Checkoff::Clients.new(config: config).client,
+                     task_timing: ::Checkoff::Internal::TaskTiming.new(client: client),
                      tasks: ::Checkoff::Tasks.new(config: config,
-                                                  client: clients.client))
+                                                  client: client))
         @task_timing = task_timing
         @tasks = tasks
       end

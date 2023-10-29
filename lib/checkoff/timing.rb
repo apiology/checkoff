@@ -70,6 +70,15 @@ module Checkoff
 
     # @param date_or_time [Date,Time,nil]
     # @param num_days [Integer]
+    def greater_than_or_equal_to_n_days_from_now?(date_or_time, num_days)
+      return false if date_or_time.nil?
+
+      n_days_from_now = (@now_getter.now + (num_days * 24 * 60 * 60))
+      date_or_time >= n_days_from_now
+    end
+
+    # @param date_or_time [Date,Time,nil]
+    # @param num_days [Integer]
     def less_than_n_days_ago?(date_or_time, num_days)
       return false if date_or_time.nil?
 
@@ -79,6 +88,15 @@ module Checkoff
       n_days_ago = @today_getter.today - num_days
       # @sg-ignore
       date < n_days_ago
+    end
+
+    # @param date_or_time [Date,Time,nil]
+    # @param num_days [Integer]
+    def less_than_n_days_from_now?(date_or_time, num_days)
+      return false if date_or_time.nil?
+
+      n_days_from_now = (@now_getter.now + (num_days * 24 * 60 * 60))
+      date_or_time < n_days_from_now
     end
 
     # @param date_or_time [Date,Time,nil]
@@ -112,10 +130,17 @@ module Checkoff
       # @sg-ignore
       return less_than_n_days_ago?(date_or_time, *args) if period_name == :less_than_n_days_ago
 
-      if period_name == :greater_than_or_equal_to_n_days_from_today
-        return greater_than_or_equal_to_n_days_from_today?(date_or_time,
-                                                           *args)
+      return less_than_n_days_from_now?(date_or_time, *args) if period_name == :less_than_n_days_from_now
+
+      if period_name == :greater_than_or_equal_to_n_days_from_now
+        return greater_than_or_equal_to_n_days_from_now?(date_or_time,
+                                                         *args)
       end
+
+      if period_name == :greater_than_or_equal_to_n_days_from_today
+        return greater_than_or_equal_to_n_days_from_today?(date_or_time, *args)
+      end
+
       raise "Teach me how to handle period [#{period_name.inspect}, #{args.join(', ')}]"
     end
 

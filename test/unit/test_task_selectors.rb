@@ -510,35 +510,44 @@ class TestTaskSelectors < ClassTest
   def test_filter_via_task_selector_custom_field_less_than_n_days_from_now
     task_selectors = get_test_object do
       @mocks[:custom_fields] = Checkoff::CustomFields.new(client: client)
+      @mocks[:tasks] = Checkoff::Tasks.new(client: client)
       Time.expects(:now).returns(Time.new(2000, 1, 1, 0, 0, 0, '+00:00')).at_least(1)
       task.expects(:custom_fields).returns([{ 'name' => 'start date',
                                               'display_value' => '2000-01-15' }]).at_least(1)
     end
 
-    assert(task_selectors.filter_via_task_selector(task, [:custom_field_less_than_n_days_from_now, 'start date', 90]))
+    assert(task_selectors.filter_via_task_selector(task,
+                                                   [:in_period?, [:custom_field, 'start date'],
+                                                    [:less_than_n_days_from_now, 90]]))
   end
 
   def test_filter_via_task_selector_custom_field_less_than_n_days_from_now_not_set
     task_selectors = get_test_object do
       @mocks[:custom_fields] = Checkoff::CustomFields.new(client: client)
+      @mocks[:tasks] = Checkoff::Tasks.new(client: client)
       task.expects(:custom_fields).returns([{ 'name' => 'start date',
                                               'display_value' => nil }]).at_least(1)
     end
 
-    refute(task_selectors.filter_via_task_selector(task, [:custom_field_less_than_n_days_from_now, 'start date', 90]))
+    refute(task_selectors.filter_via_task_selector(task,
+                                                   [:in_period?, [:custom_field, 'start date'],
+                                                    [:less_than_n_days_from_now, 90]]))
   end
 
   # @return [void]
   def test_filter_via_task_selector_custom_field_less_than_n_days_from_now_custom_field_not_found
     task_selectors = get_test_object do
       @mocks[:custom_fields] = Checkoff::CustomFields.new(client: client)
+      @mocks[:tasks] = Checkoff::Tasks.new(client: client)
       task.expects(:gid).returns('123')
       task.expects(:custom_fields).returns([{ 'name' => 'end date',
                                               'display_value' => '2000-01-15' }]).at_least(1)
     end
 
     e = assert_raises(RuntimeError) do
-      task_selectors.filter_via_task_selector(task, [:custom_field_less_than_n_days_from_now, 'start date', 90])
+      task_selectors.filter_via_task_selector(task,
+                                              [:in_period?, [:custom_field, 'start date'],
+                                               [:less_than_n_days_from_now, 90]])
     end
 
     assert_match(/Could not find custom field with name start date in gid 123 with custom fields/,
@@ -549,32 +558,37 @@ class TestTaskSelectors < ClassTest
   def test_filter_via_task_selector_custom_field_greater_than_or_equal_to_n_days_from_now
     task_selectors = get_test_object do
       @mocks[:custom_fields] = Checkoff::CustomFields.new(client: client)
+      @mocks[:tasks] = Checkoff::Tasks.new(client: client)
       Time.expects(:now).returns(Time.new(2000, 1, 1, 0, 0, 0, '+00:00')).at_least(1)
       task.expects(:custom_fields).returns([{ 'name' => 'start date',
                                               'display_value' => '2000-01-15' }]).at_least(1)
     end
 
     refute(task_selectors.filter_via_task_selector(task,
-                                                   [:custom_field_greater_than_or_equal_to_n_days_from_now,
-                                                    'start date', 90]))
+                                                   [:in_period?,
+                                                    [:custom_field, 'start date'],
+                                                    [:greater_than_or_equal_to_n_days_from_now,
+                                                     90]]))
   end
 
   # @return [void]
   def test_filter_via_task_selector_custom_field_greater_than_or_equal_to_n_days_from_now_nil
     task_selectors = get_test_object do
       @mocks[:custom_fields] = Checkoff::CustomFields.new(client: client)
+      @mocks[:tasks] = Checkoff::Tasks.new(client: client)
       task.expects(:custom_fields).returns([{ 'name' => 'start date',
                                               'display_value' => nil }]).at_least(1)
     end
 
     refute(task_selectors.filter_via_task_selector(task,
-                                                   [:custom_field_greater_than_or_equal_to_n_days_from_now,
-                                                    'start date', 90]))
+                                                   [:in_period?, [:custom_field, 'start date'],
+                                                    [:greater_than_or_equal_to_n_days_from_now, 90]]))
   end
 
   # @return [void]
   def test_filter_via_task_selector_custom_field_greater_than_or_equal_to_n_days_from_now_custom_field_not_found
     task_selectors = get_test_object do
+      @mocks[:tasks] = Checkoff::Tasks.new(client: client)
       @mocks[:custom_fields] = Checkoff::CustomFields.new(client: client)
       task.expects(:gid).returns('123')
       task.expects(:custom_fields).returns([{ 'name' => 'end date',
@@ -583,8 +597,8 @@ class TestTaskSelectors < ClassTest
 
     e = assert_raises(RuntimeError) do
       task_selectors.filter_via_task_selector(task,
-                                              [:custom_field_greater_than_or_equal_to_n_days_from_now, 'start date',
-                                               90])
+                                              [:in_period?, [:custom_field, 'start date'],
+                                               [:greater_than_or_equal_to_n_days_from_now, 90]])
     end
 
     assert_match(/Could not find custom field with name start date in gid 123 with custom fields/,
@@ -705,6 +719,21 @@ class TestTaskSelectors < ClassTest
     end
 
     assert_match(/Teach me how to handle field bogus_at/, e.message)
+  end
+
+  # @return [void]
+  def test_filter_via_task_selector_modified_less_than_n_days_ago_compound_field_not_supported
+    task_selectors = get_test_object do
+      @mocks[:tasks] = Checkoff::Tasks.new(client: client)
+    end
+
+    e = assert_raises(RuntimeError) do
+      task_selectors.filter_via_task_selector(task,
+                                              [:in_period?, [:bogus_compound_at],
+                                               [:less_than_n_days_ago, 7]])
+    end
+
+    assert_match(/Teach me how to handle field \[:bogus_compound_at\]/, e.message)
   end
 
   # @return [void]

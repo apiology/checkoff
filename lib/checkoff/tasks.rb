@@ -28,6 +28,7 @@ module Checkoff
     # @param workspaces [Checkoff::Workspaces]
     # @param sections [Checkoff::Sections]
     # @param portfolios [Checkoff::Portfolios]
+    # @param custom_fields [Checkoff::CustomFields]
     # @param time_class [Class<Time>]
     # @param date_class [Class<Date>]
     # @param asana_task [Class<Asana::Resources::Task>]
@@ -39,6 +40,8 @@ module Checkoff
                                                     client: client),
                    portfolios: Checkoff::Portfolios.new(config: config,
                                                         client: client),
+                   custom_fields: Checkoff::CustomFields.new(config: config,
+                                                             client: client),
                    time_class: Time,
                    date_class: Date,
                    asana_task: Asana::Resources::Task)
@@ -49,6 +52,7 @@ module Checkoff
       @asana_task = asana_task
       @client = client
       @portfolios = portfolios
+      @custom_fields = custom_fields
       @workspaces = workspaces
       @timing = Timing.new(today_getter: date_class, now_getter: time_class)
     end
@@ -73,7 +77,7 @@ module Checkoff
     end
 
     # @param task [Asana::Resources::Task]
-    # @param field_name [Symbol]
+    # @param field_name [Symbol,Array]
     # @param period [Symbol<:now_or_before,:this_week>,Array] See Checkoff::Timing#in_period?_
     def in_period?(task, field_name, period)
       # @type [Date,Time,nil]
@@ -210,7 +214,9 @@ module Checkoff
 
     # @return [Checkoff::Internal::TaskTiming]
     def task_timing
-      @task_timing ||= Checkoff::Internal::TaskTiming.new(time_class: @time_class, date_class: @date_class)
+      @task_timing ||= Checkoff::Internal::TaskTiming.new(time_class: @time_class, date_class: @date_class,
+                                                          client: client,
+                                                          custom_fields: custom_fields)
     end
 
     # @return [Checkoff::Internal::TaskHashes]
@@ -245,6 +251,9 @@ module Checkoff
 
     # @return [Checkoff::Timing]
     attr_reader :timing
+
+    # @return [Checkoff::CustomFields]
+    attr_reader :custom_fields
 
     # @return [Checkoff::Projects]
     def projects
