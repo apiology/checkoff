@@ -18,7 +18,10 @@ class TestTaskTiming < ClassTest
   end
 
   def respond_like_instance_of
-    {}
+    {
+      client: Asana::Client,
+      custom_fields: Checkoff::CustomFields,
+    }
   end
 
   def respond_like

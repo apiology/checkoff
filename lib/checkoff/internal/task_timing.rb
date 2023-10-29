@@ -6,9 +6,14 @@ module Checkoff
     class TaskTiming
       # @param time_class [Class<Time>]
       # @param date_class [Class<Date>]
-      def initialize(time_class: Time, date_class: Date)
+      # @param client [Asana::Client]
+      # @param custom_fields [Checkoff::CustomFields]
+      def initialize(time_class: Time, date_class: Date,
+                     client: Checkoff::Clients.new.client,
+                     custom_fields: Checkoff::CustomFields.new(client: client))
         @time_class = time_class
         @date_class = date_class
+        @custom_fields = custom_fields
       end
 
       # @param task [Asana::Resources::Task]
@@ -57,6 +62,20 @@ module Checkoff
       end
 
       # @param task [Asana::Resources::Task]
+      # @param custom_field_name [String]
+      #
+      # @return [Time, Date, nil]
+      def custom_field(task, custom_field_name)
+        custom_field = @custom_fields.resource_custom_field_by_name_or_raise(task, custom_field_name)
+        # @sg-ignore
+        # @type [String, nil]
+        time_str = custom_field.fetch('display_value')
+        return nil if time_str.nil?
+
+        Time.parse(time_str)
+      end
+
+      # @param task [Asana::Resources::Task]
       # @param field_name [Symbol]
       #
       # @sg-ignore
@@ -69,6 +88,15 @@ module Checkoff
         return modified_time(task) if field_name == :modified
 
         return start_date_or_time(task) || due_date_or_time(task) if field_name == :ready
+
+        if field_name.is_a?(Array)
+          # @sg-ignore
+          # @type [Symbol]
+          actual_field_name = field_name.first
+          args = field_name[1..]
+
+          return custom_field(task, *args) if actual_field_name == :custom_field
+        end
 
         raise "Teach me how to handle field #{field_name}"
       end

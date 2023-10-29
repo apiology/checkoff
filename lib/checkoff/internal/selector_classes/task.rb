@@ -166,70 +166,11 @@ module Checkoff
         #
         # @return [Boolean]
         def evaluate(task, beginning_num_days_from_now, end_num_days_from_now, ignore_dependencies: false)
-          ready_between_relative = Checkoff::Internal::ReadyBetweenRelative.new(tasks: @tasks)
+          ready_between_relative = Checkoff::Internal::ReadyBetweenRelative.new(tasks: @tasks,
+                                                                                client: @client)
           ready_between_relative.ready_between_relative?(task,
                                                          beginning_num_days_from_now, end_num_days_from_now,
                                                          ignore_dependencies: ignore_dependencies)
-        end
-      end
-
-      # :custom_field_less_than_n_days_from_now function
-      class CustomFieldLessThanNDaysFromNowFunctionEvaluator < FunctionEvaluator
-        FUNCTION_NAME = :custom_field_less_than_n_days_from_now
-
-        def matches?
-          fn?(selector, FUNCTION_NAME)
-        end
-
-        def evaluate_arg?(_index)
-          false
-        end
-
-        # @param task [Asana::Resources::Task]
-        # @param custom_field_name [String]
-        # @param num_days [Integer]
-        # @return [Boolean]
-        def evaluate(task, custom_field_name, num_days)
-          custom_field = @custom_fields.resource_custom_field_by_name_or_raise(task, custom_field_name)
-
-          # @sg-ignore
-          # @type [String, nil]
-          time_str = custom_field.fetch('display_value')
-          return false if time_str.nil?
-
-          time = Time.parse(time_str)
-          n_days_from_now = (Time.now + (num_days * 24 * 60 * 60))
-          time < n_days_from_now
-        end
-      end
-
-      # :custom_field_greater_than_or_equal_to_n_days_from_now function
-      class CustomFieldGreaterThanOrEqualToNDaysFromNowFunctionEvaluator < FunctionEvaluator
-        FUNCTION_NAME = :custom_field_greater_than_or_equal_to_n_days_from_now
-
-        def matches?
-          fn?(selector, FUNCTION_NAME)
-        end
-
-        def evaluate_arg?(_index)
-          false
-        end
-
-        # @param task [Asana::Resources::Task]
-        # @param custom_field_name [String]
-        # @param num_days [Integer]
-        # @return [Boolean]
-        def evaluate(task, custom_field_name, num_days)
-          custom_field = @custom_fields.resource_custom_field_by_name_or_raise(task, custom_field_name)
-
-          # @sg-ignore
-          # @type [String, nil]
-          time_str = custom_field.fetch('display_value')
-          return false if time_str.nil?
-
-          time = Time.parse(time_str)
-          n_days_from_now = (Time.now + (num_days * 24 * 60 * 60))
-          time >= n_days_from_now
         end
       end
 
