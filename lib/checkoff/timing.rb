@@ -73,8 +73,7 @@ module Checkoff
     def greater_than_or_equal_to_n_days_from_now?(date_or_time, num_days)
       return false if date_or_time.nil?
 
-      n_days_from_now = (@now_getter.now + (num_days * 24 * 60 * 60))
-      date_or_time >= n_days_from_now
+      date_or_time >= n_days_from_now(num_days)
     end
 
     # @param date_or_time [Date,Time,nil]
@@ -95,8 +94,7 @@ module Checkoff
     def less_than_n_days_from_now?(date_or_time, num_days)
       return false if date_or_time.nil?
 
-      n_days_from_now = (@now_getter.now + (num_days * 24 * 60 * 60))
-      date_or_time < n_days_from_now
+      date_or_time < n_days_from_now(num_days)
     end
 
     # @param date_or_time [Date,Time,nil]
@@ -123,6 +121,29 @@ module Checkoff
       date_or_time.to_time < @now_getter.now
     end
 
+    # @param num_days [Integer]
+    #
+    # @return [Time]
+    def n_days_from_now(num_days)
+      (@now_getter.now + (num_days * 24 * 60 * 60))
+    end
+
+    # @param date_or_time [Date,Time,nil]
+    # @param beginning_num_days_from_now [Integer,nil]
+    # @param end_num_days_from_now [Integer,nil]
+    def between_relative_days?(date_or_time, beginning_num_days_from_now, end_num_days_from_now)
+      start_time = n_days_from_now(beginning_num_days_from_now || -99_999)
+      end_time = n_days_from_now(end_num_days_from_now || 99_999)
+
+      return false if date_or_time.nil?
+
+      if date_or_time.is_a?(Time)
+        date_or_time > start_time && date_or_time <= end_time
+      else
+        date_or_time > start_time.to_date && date_or_time <= end_time.to_date
+      end
+    end
+
     # @param date_or_time [Date,Time,nil]
     # @param period_name [Symbol]
     # @param args [Object]
@@ -133,15 +154,17 @@ module Checkoff
       return less_than_n_days_from_now?(date_or_time, *args) if period_name == :less_than_n_days_from_now
 
       if period_name == :greater_than_or_equal_to_n_days_from_now
-        return greater_than_or_equal_to_n_days_from_now?(date_or_time,
-                                                         *args)
+        return greater_than_or_equal_to_n_days_from_now?(date_or_time, *args)
       end
 
       if period_name == :greater_than_or_equal_to_n_days_from_today
         return greater_than_or_equal_to_n_days_from_today?(date_or_time, *args)
       end
 
-      raise "Teach me how to handle period [#{period_name.inspect}, #{args.join(', ')}]"
+      # @sg-ignore
+      return between_relative_days?(date_or_time, *args) if period_name == :between_relative_days
+
+      raise "Teach me how to handle period [#{period_name.inspect}, #{args.map(&:inspect).join(', ')}]"
     end
 
     # bundle exec ./time.rb

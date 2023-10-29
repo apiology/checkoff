@@ -335,9 +335,9 @@ class TestTaskSelectors < ClassTest
   end
 
   def mock_filter_via_task_selector_ready_between_relative_starts_no
+    expect_tasks_not_mocked
     expect_now_jan_1_2019
     expect_starts_jan_1_2019_midnight
-    expect_no_incomplete_dependencies
   end
 
   def test_filter_via_task_selector_ready_between_relative_starts_now
@@ -345,22 +345,22 @@ class TestTaskSelectors < ClassTest
       mock_filter_via_task_selector_ready_between_relative_starts_no
     end
 
-    assert(task_selectors.filter_via_task_selector(task, [:ready_between_relative, -999, 2]))
+    assert(task_selectors.filter_via_task_selector(task, [:in_period?, :ready, [:between_relative_days, nil, 2]]))
   end
 
   def mock_filter_via_task_selector_ready_between_relative_starts_today
     expect_now_jan_1_2019
     task.expects(:start_at).returns(nil)
     task.expects(:start_on).returns('2019-01-01').at_least(1)
-    expect_no_incomplete_dependencies
   end
 
   def test_filter_via_task_selector_ready_between_relative_starts_today
     task_selectors = get_test_object do
+      @mocks[:tasks] = Checkoff::Tasks.new(client: client)
       mock_filter_via_task_selector_ready_between_relative_starts_today
     end
 
-    assert(task_selectors.filter_via_task_selector(task, [:ready_between_relative, -999, 2]))
+    assert(task_selectors.filter_via_task_selector(task, [:in_period?, :ready, [:between_relative_days, nil, 2]]))
   end
 
   def mock_filter_via_task_selector_ready_between_relative_due_now
@@ -368,15 +368,15 @@ class TestTaskSelectors < ClassTest
     task.expects(:start_at).returns(nil)
     task.expects(:start_on).returns(nil)
     task.expects(:due_at).returns('2019-01-01T00:00:00Z').at_least(1)
-    expect_no_incomplete_dependencies
   end
 
   def test_filter_via_task_selector_ready_between_relative_due_now
     task_selectors = get_test_object do
+      @mocks[:tasks] = Checkoff::Tasks.new(client: client)
       mock_filter_via_task_selector_ready_between_relative_due_now
     end
 
-    assert(task_selectors.filter_via_task_selector(task, [:ready_between_relative, -999, 2]))
+    assert(task_selectors.filter_via_task_selector(task, [:in_period?, :ready, [:between_relative_days, nil, 2]]))
   end
 
   def mock_due_on_jan_1_2019
@@ -390,10 +390,10 @@ class TestTaskSelectors < ClassTest
   end
 
   def mock_filter_via_task_selector_ready_between_relative_due_today
+    expect_tasks_not_mocked
     expect_now_jan_1_2019
     expect_no_start
     mock_due_on_jan_1_2019
-    expect_no_incomplete_dependencies
   end
 
   def test_filter_via_task_selector_ready_between_relative_due_today
@@ -401,7 +401,7 @@ class TestTaskSelectors < ClassTest
       mock_filter_via_task_selector_ready_between_relative_due_today
     end
 
-    assert(task_selectors.filter_via_task_selector(task, [:ready_between_relative, -999, 2]))
+    assert(task_selectors.filter_via_task_selector(task, [:in_period?, :ready, [:between_relative_days, nil, 2]]))
   end
 
   def expect_no_due
@@ -417,10 +417,11 @@ class TestTaskSelectors < ClassTest
 
   def test_filter_via_task_selector_ready_between_relative_no_due
     task_selectors = get_test_object do
+      @mocks[:tasks] = Checkoff::Tasks.new(client: client)
       mock_filter_via_task_selector_ready_between_relative_no_due
     end
 
-    refute(task_selectors.filter_via_task_selector(task, [:ready_between_relative, -999, 2]))
+    refute(task_selectors.filter_via_task_selector(task, [:in_period?, :ready, [:between_relative_days, nil, 2]]))
   end
 
   def expect_due_jan_1_2099
@@ -437,29 +438,19 @@ class TestTaskSelectors < ClassTest
 
   def test_filter_via_task_selector_ready_between_relative_due_far_future
     task_selectors = get_test_object do
+      expect_tasks_not_mocked
       mock_filter_via_task_selector_ready_between_relative_due_far_future
     end
 
-    refute(task_selectors.filter_via_task_selector(task, [:ready_between_relative, -999, 2]))
+    refute(task_selectors.filter_via_task_selector(task, [:in_period?, :ready, [:between_relative_days, nil, 2]]))
   end
 
   def expect_incomplete_dependencies
     tasks.expects(:incomplete_dependencies?).with(task).returns(true)
   end
 
-  def mock_filter_via_task_selector_ready_between_relative_due_today_but_dependent
-    expect_now_jan_1_2019
-    expect_no_start
-    mock_due_on_jan_1_2019
-    expect_incomplete_dependencies
-  end
-
-  def test_filter_via_task_selector_ready_between_relative_due_today_but_dependent
-    task_selectors = get_test_object do
-      mock_filter_via_task_selector_ready_between_relative_due_today_but_dependent
-    end
-
-    refute(task_selectors.filter_via_task_selector(task, [:ready_between_relative, -999, 2]))
+  def expect_tasks_not_mocked
+    @mocks[:tasks] = Checkoff::Tasks.new(client: client)
   end
 
   # @return [void]
@@ -510,7 +501,7 @@ class TestTaskSelectors < ClassTest
   def test_filter_via_task_selector_custom_field_less_than_n_days_from_now
     task_selectors = get_test_object do
       @mocks[:custom_fields] = Checkoff::CustomFields.new(client: client)
-      @mocks[:tasks] = Checkoff::Tasks.new(client: client)
+      expect_tasks_not_mocked
       Time.expects(:now).returns(Time.new(2000, 1, 1, 0, 0, 0, '+00:00')).at_least(1)
       task.expects(:custom_fields).returns([{ 'name' => 'start date',
                                               'display_value' => '2000-01-15' }]).at_least(1)
@@ -524,7 +515,7 @@ class TestTaskSelectors < ClassTest
   def test_filter_via_task_selector_custom_field_less_than_n_days_from_now_not_set
     task_selectors = get_test_object do
       @mocks[:custom_fields] = Checkoff::CustomFields.new(client: client)
-      @mocks[:tasks] = Checkoff::Tasks.new(client: client)
+      expect_tasks_not_mocked
       task.expects(:custom_fields).returns([{ 'name' => 'start date',
                                               'display_value' => nil }]).at_least(1)
     end
@@ -538,7 +529,7 @@ class TestTaskSelectors < ClassTest
   def test_filter_via_task_selector_custom_field_less_than_n_days_from_now_custom_field_not_found
     task_selectors = get_test_object do
       @mocks[:custom_fields] = Checkoff::CustomFields.new(client: client)
-      @mocks[:tasks] = Checkoff::Tasks.new(client: client)
+      expect_tasks_not_mocked
       task.expects(:gid).returns('123')
       task.expects(:custom_fields).returns([{ 'name' => 'end date',
                                               'display_value' => '2000-01-15' }]).at_least(1)
@@ -558,7 +549,7 @@ class TestTaskSelectors < ClassTest
   def test_filter_via_task_selector_custom_field_greater_than_or_equal_to_n_days_from_now
     task_selectors = get_test_object do
       @mocks[:custom_fields] = Checkoff::CustomFields.new(client: client)
-      @mocks[:tasks] = Checkoff::Tasks.new(client: client)
+      expect_tasks_not_mocked
       Time.expects(:now).returns(Time.new(2000, 1, 1, 0, 0, 0, '+00:00')).at_least(1)
       task.expects(:custom_fields).returns([{ 'name' => 'start date',
                                               'display_value' => '2000-01-15' }]).at_least(1)
@@ -575,7 +566,7 @@ class TestTaskSelectors < ClassTest
   def test_filter_via_task_selector_custom_field_greater_than_or_equal_to_n_days_from_now_nil
     task_selectors = get_test_object do
       @mocks[:custom_fields] = Checkoff::CustomFields.new(client: client)
-      @mocks[:tasks] = Checkoff::Tasks.new(client: client)
+      expect_tasks_not_mocked
       task.expects(:custom_fields).returns([{ 'name' => 'start date',
                                               'display_value' => nil }]).at_least(1)
     end
@@ -588,7 +579,7 @@ class TestTaskSelectors < ClassTest
   # @return [void]
   def test_filter_via_task_selector_custom_field_greater_than_or_equal_to_n_days_from_now_custom_field_not_found
     task_selectors = get_test_object do
-      @mocks[:tasks] = Checkoff::Tasks.new(client: client)
+      expect_tasks_not_mocked
       @mocks[:custom_fields] = Checkoff::CustomFields.new(client: client)
       task.expects(:gid).returns('123')
       task.expects(:custom_fields).returns([{ 'name' => 'end date',
@@ -606,7 +597,7 @@ class TestTaskSelectors < ClassTest
   end
 
   def mock_filter_via_task_selector_modified_less_than_n_days_ago
-    @mocks[:tasks] = Checkoff::Tasks.new(client: client)
+    expect_tasks_not_mocked
     Time.expects(:now).returns(Time.new(2000, 1, 1, 0, 0, 0, '+00:00')).at_least(1)
     # @sg-ignore
     task.expects(:modified_at).returns(Time.new(1999, 12, 1, 0, 0, 0, '+00:00').to_s).at_least(1)
@@ -695,7 +686,7 @@ class TestTaskSelectors < ClassTest
   # @return [void]
   def test_filter_via_task_selector_modified_less_than_n_days_ago_nil
     task_selectors = get_test_object do
-      @mocks[:tasks] = Checkoff::Tasks.new(client: client)
+      expect_tasks_not_mocked
       # @sg-ignore
       Time.expects(:now).returns(Time.new(2000, 1, 1, 0, 0, 0, '+00:00').to_s).at_least(0)
       task.expects(:modified_at).returns(nil).at_least(1)
@@ -709,7 +700,7 @@ class TestTaskSelectors < ClassTest
   # @return [void]
   def test_filter_via_task_selector_modified_less_than_n_days_ago_field_not_supported
     task_selectors = get_test_object do
-      @mocks[:tasks] = Checkoff::Tasks.new(client: client)
+      expect_tasks_not_mocked
     end
 
     e = assert_raises(RuntimeError) do
@@ -724,7 +715,7 @@ class TestTaskSelectors < ClassTest
   # @return [void]
   def test_filter_via_task_selector_modified_less_than_n_days_ago_compound_field_not_supported
     task_selectors = get_test_object do
-      @mocks[:tasks] = Checkoff::Tasks.new(client: client)
+      expect_tasks_not_mocked
     end
 
     e = assert_raises(RuntimeError) do
@@ -749,7 +740,7 @@ class TestTaskSelectors < ClassTest
   # @return [void]
   def test_filter_via_task_selector_field_greater_than_or_equal_to_n_days_from_today_due_on
     task_selectors = get_test_object do
-      @mocks[:tasks] = Checkoff::Tasks.new(client: client)
+      expect_tasks_not_mocked
       mock_filter_via_task_selector_field_greater_than_or_equal_to_n_days_from_today_due_on
     end
 
@@ -760,7 +751,7 @@ class TestTaskSelectors < ClassTest
   end
 
   def mock_filter_via_task_selector_field_greater_than_or_equal_to_n_days_from_today_due_at
-    @mocks[:tasks] = Checkoff::Tasks.new(client: client)
+    expect_tasks_not_mocked
     # @sg-ignore
     Date.expects(:today).returns(Date.new(2000, 1, 1)).at_least(0)
     # @sg-ignore
@@ -792,7 +783,7 @@ class TestTaskSelectors < ClassTest
   # @return [void]
   def test_filter_via_task_selector_field_greater_than_or_equal_to_n_days_from_today_due_nil
     task_selectors = get_test_object do
-      @mocks[:tasks] = Checkoff::Tasks.new(client: client)
+      expect_tasks_not_mocked
       mock_filter_via_task_selector_field_greater_than_or_equal_to_n_days_from_today_due_nil
     end
 
