@@ -86,6 +86,19 @@ module Checkoff
       timing.in_period?(task_date_or_time, period)
     end
 
+    # @param task [Asana::Resources::Task]
+    # @param field_name [Symbol,Array]
+    #         :start - start_at or start_on (first set)
+    #         :due - due_at or due_on (first set)
+    #         :ready - start_at or start_on or due_at or due_on (first set)
+    #         :modified - modified_at
+    #         [:custom_field, "foo"] - 'Date' custom field type named 'foo'
+    #
+    # @return [Date, Time, nil]
+    def date_or_time_field_by_name(task, field_name)
+      task_timing.date_or_time_field_by_name(task, field_name)
+    end
+
     # Pull a specific task by name
     #
     # @param workspace_name [String]
@@ -191,6 +204,13 @@ module Checkoff
     # @return [Hash]
     def task_to_h(task)
       task_hashes.task_to_h(task)
+    end
+
+    # @param task_data [Hash]
+    #
+    # @return [Asana::Resources::Task]
+    def h_to_task(task_data)
+      Asana::Resources::Task.new(task_data, client: client)
     end
 
     # True if the task is in a project which is in the given portfolio
