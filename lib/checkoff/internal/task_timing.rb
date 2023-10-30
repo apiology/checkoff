@@ -76,7 +76,7 @@ module Checkoff
       end
 
       # @param task [Asana::Resources::Task]
-      # @param field_name [Symbol]
+      # @param field_name [Symbol,Array]
       #
       # @sg-ignore
       # @return [Date, Time, nil]

@@ -332,6 +332,20 @@ class TestTasks < BaseAsana
     refute(tasks.in_portfolio_named?(task, 'portfolio name'))
   end
 
+  def test_date_or_time_field_by_name
+    tasks = get_test_object do
+      task.expects(:due_at).returns(due_at_string).at_least(1)
+      time_class.expects(:parse).with(due_at_string).returns(due_at_time_obj)
+    end
+    assert_equal(due_at_time_obj, tasks.date_or_time_field_by_name(task, :due))
+  end
+
+  def test_h_to_task
+    tasks = get_test_object
+    task = tasks.h_to_task({ 'name' => 'foo' })
+    assert_equal('foo', task.name)
+  end
+
   def class_under_test
     Checkoff::Tasks
   end
