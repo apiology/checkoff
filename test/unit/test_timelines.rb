@@ -10,53 +10,7 @@ class TestTimelines < ClassTest
   def_delegators(:@mocks, :workspaces, :client, :tasks, :sections)
 
   let_mock :task, :section_2_gid, :section_2, :section_1_gid, :section_1,
-           :milestone, :milestone_gid
-
-  # let_mock :workspace_name, :timeline_name, :timeline, :workspace, :workspace_gid,
-  #         :timelines_api, :wrong_timeline, :wrong_timeline_name
-
-  # def test_timeline_or_raise_raises
-  #   timelines = get_test_object do
-  #     timeline_arr = [wrong_timeline]
-  #     expect_timelines_pulled(timeline_arr)
-  #   end
-  #   assert_raises(RuntimeError) do
-  #     timelines.timeline_or_raise(workspace_name, timeline_name)
-  #   end
-  # end
-
-  # def test_timeline_or_raise
-  #   timelines = get_test_object do
-  #     timeline_arr = [wrong_timeline, timeline]
-  #     expect_timelines_pulled(timeline_arr)
-  #   end
-  #   assert_equal(timeline, timelines.timeline_or_raise(workspace_name, timeline_name))
-  # end
-
-  # def expect_workspace_pulled
-  #   workspaces.expects(:workspace_or_raise).with(workspace_name).returns(workspace)
-  #   workspace.expects(:gid).returns(workspace_gid)
-  # end
-
-  # def allow_timelines_named
-  #   wrong_timeline.expects(:name).returns(wrong_timeline_name).at_least(0)
-  #   timeline.expects(:name).returns(timeline_name).at_least(0)
-  # end
-
-  # def expect_timelines_pulled(timeline_arr)
-  #   expect_workspace_pulled
-  #   client.expects(:timelines).returns(timelines_api)
-  #   timelines_api.expects(:get_timelines_for_workspace).returns(timeline_arr)
-  #   allow_timelines_named
-  # end
-
-  # def test_timeline
-  #   timelines = get_test_object do
-  #     timeline_arr = [wrong_timeline, timeline]
-  #     expect_timelines_pulled(timeline_arr)
-  #   end
-  #   assert_equal(timeline, timelines.timeline(workspace_name, timeline_name))
-  # end
+           :milestone, :milestone_gid, :task_gid
 
   def test_task_dependent_on_previous_section_last_milestone_no_memberships
     timelines = get_test_object do
@@ -186,6 +140,92 @@ class TestTimelines < ClassTest
     end
 
     refute(timelines.task_dependent_on_previous_section_last_milestone?(task, limit_to_portfolio_gid: nil))
+  end
+
+  def test_last_task_milestone_depends_on_this_task_no_dependents
+    timelines = get_test_object do
+      tasks.expects(:all_dependent_tasks).with(task).returns([])
+      task.expects(:memberships).returns([])
+    end
+
+    assert(timelines.last_task_milestone_depends_on_this_task?(task))
+  end
+
+  def expect_all_dependent_tasks_pulled(task, dependents)
+    tasks.expects(:all_dependent_tasks).with(task).returns(dependents)
+  end
+
+  def expect_memberships_pulled(task, memberships)
+    task.expects(:memberships).returns(memberships)
+  end
+
+  def expect_tasks_by_section_gid_pulled(tasks)
+    sections.expects(:tasks_by_section_gid)
+      .with(section_1_gid, extra_fields: ['resource_subtype'])
+      .returns(tasks)
+  end
+
+  def expect_milestone_details_pulled
+    milestone.expects(:resource_subtype).returns('milestone')
+    milestone.expects(:gid).returns(milestone_gid).at_least(1)
+  end
+
+  def expect_task_gid_pulled
+    task.expects(:gid).returns(task_gid)
+  end
+
+  def test_last_task_milestone_depends_on_this_task_false
+    timelines = get_test_object do
+      expect_all_dependent_tasks_pulled(task, [])
+      memberships = [
+        {
+          'section' => {
+            'gid' => section_1_gid,
+          },
+        },
+      ]
+      expect_memberships_pulled(task, memberships)
+      expect_tasks_by_section_gid_pulled([milestone])
+      expect_milestone_details_pulled
+      expect_task_gid_pulled
+    end
+
+    refute(timelines.last_task_milestone_depends_on_this_task?(task))
+  end
+
+  def test_last_task_milestone_depends_on_this_task_no_milestone
+    timelines = get_test_object do
+      expect_all_dependent_tasks_pulled(task, [])
+      memberships = [
+        {
+          'section' => {
+            'gid' => section_1_gid,
+          },
+        },
+      ]
+      expect_memberships_pulled(task, memberships)
+      expect_tasks_by_section_gid_pulled([])
+    end
+
+    refute(timelines.last_task_milestone_depends_on_this_task?(task))
+  end
+
+  def test_last_task_milestone_depends_on_this_task_is_last_milestone
+    timelines = get_test_object do
+      expect_all_dependent_tasks_pulled(milestone, [])
+      memberships = [
+        {
+          'section' => {
+            'gid' => section_1_gid,
+          },
+        },
+      ]
+      expect_memberships_pulled(milestone, memberships)
+      expect_tasks_by_section_gid_pulled([milestone])
+      expect_milestone_details_pulled
+    end
+
+    assert(timelines.last_task_milestone_depends_on_this_task?(milestone))
   end
 
   def test_init

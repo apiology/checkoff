@@ -256,6 +256,22 @@ module Checkoff
           @tasks.in_portfolio_named?(task, portfolio_name)
         end
       end
+
+      # :last_task_milestone_does_not_depend_on_this_task? function
+      class LastTaskMilestoneDoesNotDependOnThisTaskPFunctionEvaluator < FunctionEvaluator
+        FUNCTION_NAME = :last_task_milestone_does_not_depend_on_this_task?
+
+        def matches?
+          fn?(selector, FUNCTION_NAME)
+        end
+
+        # @param task [Asana::Resources::Task]
+        #
+        # @return [Boolean]
+        def evaluate(task)
+          !@timelines.last_task_milestone_depends_on_this_task?(task)
+        end
+      end
     end
   end
 end

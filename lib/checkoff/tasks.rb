@@ -188,6 +188,18 @@ module Checkoff
       end
     end
 
+    # @param task [Asana::Resources::Task]
+    #
+    # @return [Array<Asana::Resources::Task>]
+    def all_dependent_tasks(task)
+      dependent_tasks = []
+      task.dependents.each do |dependent_task|
+        dependent_tasks << dependent_task
+        dependent_tasks += all_dependent_tasks(dependent_task)
+      end
+      dependent_tasks
+    end
+
     # Builds on the standard API representation of an Asana task with some
     # convenience keys:
     #
