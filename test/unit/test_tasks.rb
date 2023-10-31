@@ -26,7 +26,8 @@ class TestTasks < BaseAsana
            :due_on_time_obj,
            :asana_entity_project,
            :dependency_1, :dependency_1_gid,
-           :dependency_1_full_task, :now
+           :dependency_1_full_task, :now,
+           :dependent_1
 
   def expect_now_pulled
     time_class.expects(:now).returns(now).at_least_once
@@ -344,6 +345,22 @@ class TestTasks < BaseAsana
     tasks = get_test_object
     task = tasks.h_to_task({ 'name' => 'foo' })
     assert_equal('foo', task.name)
+  end
+
+  def test_all_dependent_tasks_empty
+    tasks = get_test_object do
+      task.expects(:dependents).returns([])
+    end
+    assert_empty(tasks.all_dependent_tasks(task))
+  end
+
+  def test_all_dependent_tasks_one
+    tasks = get_test_object do
+      task.expects(:dependents).returns([dependent_1])
+
+      dependent_1.expects(:dependents).returns([])
+    end
+    assert_equal([dependent_1], tasks.all_dependent_tasks(task))
   end
 
   def class_under_test

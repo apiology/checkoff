@@ -58,6 +58,25 @@ module Checkoff
       end
     end
 
+    # @param task [Asana::Resources::Task]
+    def last_task_milestone_depends_on_this_task?(task)
+      all_dependent_task_gids = @tasks.all_dependent_tasks(task).map(&:gid)
+      task.memberships.all? do |membership_data|
+        # @type [Hash{String => String}]
+        section_data = membership_data.fetch('section')
+        # @type [String]
+        section_gid = section_data.fetch('gid')
+
+        last_milestone = last_milestone_in_section(section_gid)
+
+        next false if last_milestone.nil?
+
+        next true if last_milestone.gid == task.gid
+
+        all_dependent_task_gids.include? last_milestone.gid
+      end
+    end
+
     # @param section_gid [String]
     #
     # @return [Asana::Resources::Task,nil]

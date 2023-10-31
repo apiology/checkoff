@@ -941,6 +941,15 @@ class TestTaskSelectors < ClassTest
                                                     custom_field_gid, [custom_field_value_gid_1]]))
   end
 
+  def test_last_task_milestone_does_not_depend_on_this_task
+    task_selectors = get_test_object do
+      timelines.expects(:last_task_milestone_depends_on_this_task?).returns(true)
+    end
+
+    refute(task_selectors.filter_via_task_selector(task,
+                                                   [:last_task_milestone_does_not_depend_on_this_task?]))
+  end
+
   # @return [Class<Checkoff::TaskSelectors>]
   def class_under_test
     Checkoff::TaskSelectors
