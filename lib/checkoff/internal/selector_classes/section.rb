@@ -26,6 +26,23 @@ module Checkoff
           tasks.last&.resource_subtype == 'milestone'
         end
       end
+
+      # :has_tasks? function
+      class HasTasksPFunctionEvaluator < FunctionEvaluator
+        FUNCTION_NAME = :has_tasks?
+
+        def matches?
+          fn?(selector, FUNCTION_NAME)
+        end
+
+        # @param section [Asana::Resources::Section]
+        #
+        # @sg-ignore
+        # @return [Boolean]
+        def evaluate(section)
+          @sections.tasks_by_section_gid(section.gid).any?
+        end
+      end
     end
   end
 end
