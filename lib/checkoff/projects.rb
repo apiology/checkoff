@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 require_relative 'internal/config_loader'
+require_relative 'internal/project_hashes'
 require_relative 'workspaces'
 require_relative 'clients'
 require 'cache_method'
@@ -30,13 +31,16 @@ module Checkoff
     # @param config [Hash<Symbol, Object>]
     # @param client [Asana::Client]
     # @param workspaces [Checkoff::Workspaces]
+    # @param project_hashes [Checkoff::Internal::ProjectHashes]
     def initialize(config: Checkoff::Internal::ConfigLoader.load(:asana),
                    client: Checkoff::Clients.new(config: config).client,
                    workspaces: Checkoff::Workspaces.new(config: config,
-                                                        client: client))
+                                                        client: client),
+                   project_hashes: Checkoff::Internal::ProjectHashes.new)
       @config = config
       @workspaces = workspaces
       @client = client
+      @project_hashes = project_hashes
     end
 
     # Default options used in Asana API to pull tasks
@@ -115,7 +119,18 @@ module Checkoff
     # 15 minute cache resulted in 'Your pagination token has expired'
     cache_method :projects_by_workspace_name, MEDIUM_CACHE_TIME
 
+    # @param project_obj [Asana::Resources::Project]
+    # @param project [String, Symbol<:not_specified, :my_tasks>]
+    #
+    # @return [Hash]
+    def project_to_h(project_obj, project: :not_specified)
+      project_hashes.project_to_h(project_obj, project: project)
+    end
+
     private
+
+    # @return [Checkoff::Internal::ProjectHashes]
+    attr_reader :project_hashes
 
     # @return [Asana::Client]
     attr_reader :client

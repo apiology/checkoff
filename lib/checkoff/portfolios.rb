@@ -80,13 +80,27 @@ module Checkoff
 
     # @param workspace_name [String]
     # @param portfolio_name [String]
+    # @param extra_project_fields [Array<String>]
     #
     # @return [Enumerable<Asana::Resources::Project>]
-    def projects_in_portfolio(workspace_name, portfolio_name)
+    def projects_in_portfolio(workspace_name, portfolio_name,
+                              extra_project_fields: [])
       portfolio = portfolio_or_raise(workspace_name, portfolio_name)
-      portfolio.get_items
+      projects_in_portfolio_obj(portfolio)
     end
     cache_method :projects_in_portfolio, LONG_CACHE_TIME
+
+    # @param portfolio [Asana::Resources::Portfolio]
+    # @param extra_project_fields [Array<String>]
+    #
+    # @return [Enumerable<Asana::Resources::Project>]
+    def projects_in_portfolio_obj(portfolio, extra_project_fields: [])
+      options = {
+        fields: ['name'],
+      }
+      options[:fields] += extra_project_fields
+      portfolio.get_items(options: options)
+    end
 
     private
 
