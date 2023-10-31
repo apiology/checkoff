@@ -112,7 +112,8 @@ class TestTimelines < ClassTest
     expect_section_2_pulled
     expect_section_2_previous_section_called
     section_1.expects(:gid).returns(section_1_gid)
-    sections.expects(:tasks_by_section_gid).with(section_1_gid).returns([])
+    sections.expects(:tasks_by_section_gid).with(section_1_gid,
+                                                 extra_fields: ['resource_subtype']).returns([])
   end
 
   def test_task_dependent_on_previous_section_last_milestone_false_no_tasks
@@ -128,7 +129,9 @@ class TestTimelines < ClassTest
   end
 
   def expect_section_1_tasks_pulled
-    sections.expects(:tasks_by_section_gid).with(section_1_gid).returns([milestone])
+    sections.expects(:tasks_by_section_gid)
+      .with(section_1_gid, extra_fields: ['resource_subtype'])
+      .returns([milestone])
   end
 
   def expect_milestone_queried

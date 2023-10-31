@@ -63,7 +63,8 @@ module Checkoff
     # @return [Asana::Resources::Task,nil]
     def last_milestone_in_section(section_gid)
       # @type [Array<Asana::Resources::Task>]
-      task_list = @sections.tasks_by_section_gid(section_gid).to_a
+      task_list = @sections.tasks_by_section_gid(section_gid,
+                                                 extra_fields: ['resource_subtype']).to_a
       last_task = task_list.last
       last_task&.resource_subtype == 'milestone' ? last_task : nil
     end
