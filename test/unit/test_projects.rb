@@ -7,7 +7,7 @@ require_relative 'base_asana'
 class TestProjects < BaseAsana
   extend Forwardable
 
-  def_delegators(:@mocks, :client)
+  def_delegators(:@mocks, :client, :project_hashes)
 
   def setup_config
     @mocks[:config] = { personal_access_token: personal_access_token }
@@ -20,7 +20,7 @@ class TestProjects < BaseAsana
   let_mock :workspaces, :workspace_workspace, :some_other_workspace,
            :workspace_one, :workspace_one_gid, :my_workspace_gid, :n,
            :workspace_name, :all_workspaces, :my_tasks_project, :tasks,
-           :task_a, :task_b, :user_task_lists, :user_task_list
+           :task_a, :task_b, :user_task_lists, :user_task_list, :project_a_hash
 
   def sample_projects
     { project_a => a_name, project_b => b_name, project_c => c_name }
@@ -50,26 +50,26 @@ class TestProjects < BaseAsana
   end
 
   def test_tasks_from_project_not_only_uncompleted
-    asana = get_test_object do
+    projects = get_test_object do
       mock_tasks_from_project(options: task_options_with_completed)
     end
-    assert_equal(tasks, asana.tasks_from_project(project_a,
-                                                 only_uncompleted: false))
+    assert_equal(tasks, projects.tasks_from_project(project_a,
+                                                    only_uncompleted: false))
   end
 
   def test_tasks_from_project
-    asana = get_test_object do
+    projects = get_test_object do
       mock_tasks_from_project(options: task_options)
     end
-    assert_equal(tasks, asana.tasks_from_project(project_a))
+    assert_equal(tasks, projects.tasks_from_project(project_a))
   end
 
   def test_active_tasks
-    asana = get_test_object do
+    projects = get_test_object do
       task_a.expects(:completed_at).returns(mock_now)
       task_b.expects(:completed_at).returns(nil)
     end
-    assert_equal([task_b], asana.active_tasks([task_a, task_b]))
+    assert_equal([task_b], projects.active_tasks([task_a, task_b]))
   end
 
   def setup_workspace_pulled
@@ -79,13 +79,13 @@ class TestProjects < BaseAsana
   end
 
   def test_project_regular
-    asana = get_test_object do
+    projects = get_test_object do
       setup_config
       setup_workspace_pulled
       setup_projects_pulled
       setup_projects_queried(workspace_gid: workspace_one_gid)
     end
-    assert_equal(project_a, asana.project('Workspace 1', a_name))
+    assert_equal(project_a, projects.project('Workspace 1', a_name))
   end
 
   def setup_user_task_list_pulled
@@ -104,19 +104,19 @@ class TestProjects < BaseAsana
   end
 
   def test_project_or_raise_unknown
-    asana = get_test_object do
+    projects = get_test_object do
       mock_project_or_raise_unknown
     end
     assert_raises(RuntimeError) do
-      asana.project_or_raise('Workspace 1', 'Does not exist')
+      projects.project_or_raise('Workspace 1', 'Does not exist')
     end
   end
 
   def test_project_or_raise_my_tasks
-    asana = get_test_object do
+    projects = get_test_object do
       mock_project_my_tasks
     end
-    assert_equal(my_tasks_project, asana.project_or_raise('Workspace 1', :my_tasks))
+    assert_equal(my_tasks_project, projects.project_or_raise('Workspace 1', :my_tasks))
   end
 
   def mock_project_my_tasks
@@ -130,10 +130,18 @@ class TestProjects < BaseAsana
   end
 
   def test_project_my_tasks
-    asana = get_test_object do
+    projects = get_test_object do
       mock_project_my_tasks
     end
-    assert_equal(my_tasks_project, asana.project('Workspace 1', :my_tasks))
+    assert_equal(my_tasks_project, projects.project('Workspace 1', :my_tasks))
+  end
+
+  def test_project_to_h
+    projects = get_test_object do
+      project_hashes.expects(:project_to_h).with(project_a, project: :not_specified)
+        .returns(project_a_hash)
+    end
+    assert_equal(project_a_hash, projects.project_to_h(project_a))
   end
 
   let_mock :my_tasks_config
