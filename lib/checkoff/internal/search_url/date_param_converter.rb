@@ -20,7 +20,7 @@ module Checkoff
 
           out = nil
 
-          %w[due_date start_date].each do |prefix|
+          %w[due_date start_date completion_date].each do |prefix|
             next unless date_url_params.key? "#{prefix}.operator"
             raise 'Teach me how to handle simultaneous date parameters' unless out.nil?
 
@@ -48,6 +48,8 @@ module Checkoff
                   handle_through_next(prefix)
                 elsif operator == 'between'
                   handle_between(prefix)
+                elsif operator == 'within_last'
+                  handle_within_last(prefix)
                 else
                   raise "Teach me how to handle date mode: #{operator.inspect}."
                 end
@@ -62,6 +64,7 @@ module Checkoff
         API_PREFIX = {
           'due_date' => 'due_on',
           'start_date' => 'start_on',
+          'completion_date' => 'completed_on',
         }.freeze
 
         # @param prefix [String]
@@ -94,6 +97,20 @@ module Checkoff
           # @type [Date]
           # @sg-ignore
           after = Time.at(after.to_i / 1000).to_date + 1
+          [{ "#{API_PREFIX.fetch(prefix)}.after" => after.to_s }, []]
+        end
+
+        # @param prefix [String]
+        # @return [Array(Hash<String, String>, Array<[Symbol, Array]>)] See https://developers.asana.com/docs/search-tasks-in-a-workspace
+        def handle_within_last(prefix)
+          value = get_single_param("#{prefix}.value").to_i
+
+          validate_unit_is_day!(prefix)
+
+          # @sg-ignore
+          # @type [Date]
+          after = Date.today - value
+
           [{ "#{API_PREFIX.fetch(prefix)}.after" => after.to_s }, []]
         end
 
