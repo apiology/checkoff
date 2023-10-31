@@ -44,11 +44,12 @@ module Checkoff
           #   due_date.unit=day
           operator = get_single_param("#{prefix}.operator")
 
-          out = if operator == 'through_next'
+          out = case operator
+                when 'through_next'
                   handle_through_next(prefix)
-                elsif operator == 'between'
+                when 'between'
                   handle_between(prefix)
-                elsif operator == 'within_last'
+                when 'within_last'
                   handle_within_last(prefix)
                 else
                   raise "Teach me how to handle date mode: #{operator.inspect}."
