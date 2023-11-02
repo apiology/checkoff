@@ -265,11 +265,17 @@ module Checkoff
           fn?(selector, FUNCTION_NAME)
         end
 
+        def evaluate_arg?(_index)
+          false
+        end
+
         # @param task [Asana::Resources::Task]
+        # @param limit_to_portfolio_name [String, nil]
         #
         # @return [Boolean]
-        def evaluate(task)
-          !@timelines.last_task_milestone_depends_on_this_task?(task)
+        def evaluate(task, limit_to_portfolio_name = nil)
+          !@timelines.last_task_milestone_depends_on_this_task?(task,
+                                                                limit_to_portfolio_name: limit_to_portfolio_name)
         end
       end
     end

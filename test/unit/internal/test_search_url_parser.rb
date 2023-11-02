@@ -613,20 +613,22 @@ class TestSearchUrlParser < ClassTest
 
   # @return [void]
   def test_convert_params_40
-    search_url_parser = get_test_object
-    url = 'https://app.asana.com/0/search?completion=complete&subtask=is_not_subtask&completion_date.operator=within_last&completion_date.value=7&completion_date.unit=day&any_projects.ids=123~456~789~12'
-    asana_api_params = {
-      'completed_on.after' => '2023-10-24',
-      'completed' => true,
-      'is_subtask' => false,
-      'projects.any' => '123,456,789,12',
-      'sort_by' => 'created_at',
-    }
+    Date.stub(:today, Date.new(2023, 1, 1)) do
+      search_url_parser = get_test_object
+      url = 'https://app.asana.com/0/search?completion=complete&subtask=is_not_subtask&completion_date.operator=within_last&completion_date.value=7&completion_date.unit=day&any_projects.ids=123~456~789~12'
+      asana_api_params = {
+        'completed_on.after' => '2022-12-25',
+        'completed' => true,
+        'is_subtask' => false,
+        'projects.any' => '123,456,789,12',
+        'sort_by' => 'created_at',
+      }
 
-    task_selector = []
+      task_selector = []
 
-    assert_equal([asana_api_params, task_selector],
-                 search_url_parser.convert_params(url))
+      assert_equal([asana_api_params, task_selector],
+                   search_url_parser.convert_params(url))
+    end
   end
 
   # @return [Class<Checkoff::Internal::SearchUrl::Parser>]
