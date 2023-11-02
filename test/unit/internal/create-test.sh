@@ -13,6 +13,10 @@ require_relative '../class_test'
 require 'checkoff/internal/${underscored_name}'
 
 class Test${class_name} < ClassTest
+  extend Forwardable
+
+  def_delegators(:@mocks, :workspaces, :client)
+
   def test_foo
     ${underscored_name} = get_test_object
     assert_equal(123, ${underscored_name}.foo)

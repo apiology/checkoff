@@ -27,17 +27,20 @@ module Checkoff
     # @param workspaces [Checkoff::Workspaces]
     # @param sections [Checkoff::Sections]
     # @param tasks [Checkoff::Tasks]
+    # @param portfolios [Checkoff::Portfolios]
     # @param clients [Checkoff::Clients]
     # @param client [Asana::Client]
     def initialize(config: Checkoff::Internal::ConfigLoader.load(:asana),
                    workspaces: Checkoff::Workspaces.new(config: config),
                    sections: Checkoff::Sections.new(config: config),
                    tasks: Checkoff::Tasks.new(config: config),
+                   portfolios: Checkoff::Portfolios.new(config: config),
                    clients: Checkoff::Clients.new(config: config),
                    client: clients.client)
       @workspaces = workspaces
       @sections = sections
       @tasks = tasks
+      @portfolios = portfolios
       @client = client
     end
 
@@ -59,9 +62,19 @@ module Checkoff
     end
 
     # @param task [Asana::Resources::Task]
-    def last_task_milestone_depends_on_this_task?(task)
+    # @param limit_to_portfolio_name [String, nil]
+    def last_task_milestone_depends_on_this_task?(task, limit_to_portfolio_name: nil)
+      unless limit_to_portfolio_name.nil?
+        limit_to_projects = @portfolios.projects_in_portfolio(@workspaces.default_workspace.name,
+                                                              limit_to_portfolio_name)
+      end
+
       all_dependent_task_gids = @tasks.all_dependent_tasks(task).map(&:gid)
       task.memberships.all? do |membership_data|
+        unless limit_to_portfolio_name.nil?
+          project_gid = membership_data.fetch('project').fetch('gid')
+          next true if limit_to_projects.map(&:gid).include? project_gid
+        end
         # @type [Hash{String => String}]
         section_data = membership_data.fetch('section')
         # @type [String]
