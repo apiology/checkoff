@@ -73,7 +73,7 @@ module Checkoff
       task.memberships.all? do |membership_data|
         unless limit_to_portfolio_name.nil?
           project_gid = membership_data.fetch('project').fetch('gid')
-          next true if limit_to_projects.map(&:gid).include? project_gid
+          next true unless limit_to_projects.map(&:gid).include? project_gid
         end
         # @type [Hash{String => String}]
         section_data = membership_data.fetch('section')
