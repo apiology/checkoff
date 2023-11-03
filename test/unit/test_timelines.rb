@@ -272,8 +272,7 @@ class TestTimelines < ClassTest
       },
     ]
     expect_memberships_pulled(milestone, memberships)
-    export_portfolio_projects_pulled([project_a])
-    project_a.expects(:gid).returns(project_a_gid)
+    export_portfolio_projects_pulled([])
   end
 
   def test_last_task_milestone_depends_on_this_task_is_last_milestone_limited_to_portfolio
