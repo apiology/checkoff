@@ -191,7 +191,7 @@ module Checkoff
               # matches of a custom field".  So I guess we have to
               # search this manually.
               api_params = { "custom_fields.#{gid}.is_set" => 'true' }
-              task_selector = [:custom_field_gid_value_contains_any_gid, gid, selected_options]
+              task_selector = [:custom_field_gid_value_contains_any_gid?, gid, selected_options]
               [api_params, task_selector]
             end
           end
