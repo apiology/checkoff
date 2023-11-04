@@ -132,9 +132,9 @@ module Checkoff
         end
       end
 
-      # :custom_field_gid_value_contains_any_gid function
-      class CustomFieldGidValueContainsAnyGidFunctionEvaluator < FunctionEvaluator
-        FUNCTION_NAME = :custom_field_gid_value_contains_any_gid
+      # :custom_field_gid_value_contains_any_gid? function
+      class CustomFieldGidValueContainsAnyGidPFunctionEvaluator < FunctionEvaluator
+        FUNCTION_NAME = :custom_field_gid_value_contains_any_gid?
 
         def matches?
           fn?(selector, FUNCTION_NAME)
@@ -158,9 +158,9 @@ module Checkoff
         end
       end
 
-      # :custom_field_value_contains_any_value
-      class CustomFieldValueContainsAnyValueFunctionEvaluator < FunctionEvaluator
-        FUNCTION_NAME = :custom_field_value_contains_any_value
+      # :custom_field_value_contains_any_value?
+      class CustomFieldValueContainsAnyValuePFunctionEvaluator < FunctionEvaluator
+        FUNCTION_NAME = :custom_field_value_contains_any_value?
 
         def matches?
           fn?(selector, FUNCTION_NAME)
@@ -185,9 +185,9 @@ module Checkoff
         end
       end
 
-      # :custom_field_gid_value_contains_all_gids function
-      class CustomFieldGidValueContainsAllGidsFunctionEvaluator < FunctionEvaluator
-        FUNCTION_NAME = :custom_field_gid_value_contains_all_gids
+      # :custom_field_gid_value_contains_all_gids? function
+      class CustomFieldGidValueContainsAllGidsPFunctionEvaluator < FunctionEvaluator
+        FUNCTION_NAME = :custom_field_gid_value_contains_all_gids?
 
         def matches?
           fn?(selector, FUNCTION_NAME)

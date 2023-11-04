@@ -32,7 +32,7 @@ class TestProjectSelectors < ClassTest
     end
 
     refute(project_selectors.filter_via_project_selector(project,
-                                                         [:custom_field_value_contains_any_value, 'Project attributes',
+                                                         [:custom_field_value_contains_any_value?, 'Project attributes',
                                                           ['timeline']]))
   end
 
@@ -52,7 +52,7 @@ class TestProjectSelectors < ClassTest
     end
 
     assert(project_selectors.filter_via_project_selector(project,
-                                                         [:custom_field_value_contains_any_value, 'Project attributes',
+                                                         [:custom_field_value_contains_any_value?, 'Project attributes',
                                                           ['timeline']]))
   end
 
@@ -73,7 +73,7 @@ class TestProjectSelectors < ClassTest
     end
 
     assert(project_selectors.filter_via_project_selector(project,
-                                                         [:custom_field_value_contains_any_value, 'Project attributes',
+                                                         [:custom_field_value_contains_any_value?, 'Project attributes',
                                                           ['timeline']]))
   end
 
@@ -96,7 +96,7 @@ class TestProjectSelectors < ClassTest
     end
 
     assert(project_selectors.filter_via_project_selector(project,
-                                                         [:custom_field_value_contains_any_value, 'Project attributes',
+                                                         [:custom_field_value_contains_any_value?, 'Project attributes',
                                                           ['timeline']]))
   end
 
@@ -116,7 +116,7 @@ class TestProjectSelectors < ClassTest
     end
 
     refute(project_selectors.filter_via_project_selector(project,
-                                                         [:custom_field_value_contains_any_value, 'Project attributes',
+                                                         [:custom_field_value_contains_any_value?, 'Project attributes',
                                                           ['timeline']]))
   end
 
@@ -130,7 +130,7 @@ class TestProjectSelectors < ClassTest
     end
 
     refute(project_selectors.filter_via_project_selector(project,
-                                                         [:custom_field_value_contains_any_value, 'Project attributes',
+                                                         [:custom_field_value_contains_any_value?, 'Project attributes',
                                                           ['timeline']]))
   end
 
