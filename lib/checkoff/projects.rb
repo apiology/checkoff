@@ -95,7 +95,7 @@ module Checkoff
     def project_by_gid(gid, extra_fields: [])
       projects.find_by_id(gid, options: { fields: %w[name] + extra_fields })
     end
-    cache_method :project_or_raise, LONG_CACHE_TIME
+    cache_method :project_by_gid, LONG_CACHE_TIME
 
     # find uncompleted tasks in a list
     # @param [Enumerable<Asana::Resources::Task>] tasks
