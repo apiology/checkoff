@@ -294,7 +294,7 @@ class TestSearchUrlParser < ClassTest
       'custom_fields.12.is_set' => 'true',
       'sort_by' => 'created_at',
     }
-    task_selector = [:custom_field_gid_value_contains_any_gid, '123', %w[456 789]]
+    task_selector = [:custom_field_gid_value_contains_any_gid?, '123', %w[456 789]]
 
     assert_equal([asana_api_params, task_selector],
                  search_url_parser.convert_params(url))
@@ -605,7 +605,7 @@ class TestSearchUrlParser < ClassTest
       'sort_by' => 'created_at',
     }
 
-    task_selector = [:custom_field_gid_value_contains_any_gid, '1', %w[2 3]]
+    task_selector = [:custom_field_gid_value_contains_any_gid?, '1', %w[2 3]]
 
     assert_equal([asana_api_params, task_selector],
                  search_url_parser.convert_params(url))
