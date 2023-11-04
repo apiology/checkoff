@@ -108,16 +108,16 @@ module Checkoff
     #
     # @return [Boolean]
     def task_data_dependent_on_previous_section_last_milestone?(task_data, section)
-      # @sg-ignore
-      # @type [Array<Hash{String => String}>]
-      dependencies = task_data.fetch('dependencies')
-      return false if dependencies.empty?
-
       previous_section = @sections.previous_section(section)
       return false if previous_section.nil?
 
       previous_section_last_milestone = last_milestone_in_section(previous_section.gid)
-      return false if previous_section_last_milestone.nil?
+      return true if previous_section_last_milestone.nil?
+
+      # @sg-ignore
+      # @type [Array<Hash{String => String}>]
+      dependencies = task_data.fetch('dependencies')
+      return false if dependencies.empty?
 
       dependencies.any? { |dependency| dependency.fetch('gid') == previous_section_last_milestone.gid }
     end
