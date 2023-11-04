@@ -60,6 +60,7 @@ module Checkoff
     # @param [String] workspace_name
     # @param [String] project_name
     # @param [Array<String>] extra_fields
+    #
     # @return [Asana::Resources::Project, nil]
     def project(workspace_name, project_name, extra_fields: [])
       if project_name.is_a?(Symbol) && project_name.to_s.start_with?('my_tasks')
@@ -76,12 +77,23 @@ module Checkoff
 
     # @param workspace_name [String]
     # @param project_name [String]
+    # @param [Array<String>] extra_fields
+    #
     # @return [Asana::Resources::Project]
-    def project_or_raise(workspace_name, project_name)
-      p = project(workspace_name, project_name)
+    def project_or_raise(workspace_name, project_name, extra_fields: [])
+      p = project(workspace_name, project_name, extra_fields: extra_fields)
       raise "Could not find project #{project_name.inspect} under workspace #{workspace_name}." if p.nil?
 
       p
+    end
+    cache_method :project_or_raise, LONG_CACHE_TIME
+
+    # @param gid [String]
+    # @param [Array<String>] extra_fields
+    #
+    # @return [Asana::Resources::Project]
+    def project_by_gid(gid, extra_fields: [])
+      projects.find_by_id(gid, options: { fields: %w[name] + extra_fields })
     end
     cache_method :project_or_raise, LONG_CACHE_TIME
 
