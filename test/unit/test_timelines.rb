@@ -31,9 +31,13 @@ class TestTimelines < ClassTest
     }
     expect_task_data_created(task, task_data)
     sections.expects(:section_by_gid).with(section_2_gid).returns(section_2)
+    expect_section_2_previous_section_called
+    expect_section_1_gid_pulled
+    expect_section_1_tasks_pulled
+    expect_milestone_queried
   end
 
-  def test_task_dependent_on_previous_section_last_milestone_false_no_dependencies
+  def test_task_dependent_on_previous_section_last_milestone_false_no_dependencies_
     timelines = get_test_object do
       mock_task_dependent_on_previous_section_last_milestone_false_no_dependencies
     end
@@ -53,7 +57,16 @@ class TestTimelines < ClassTest
     sections.expects(:previous_section).with(section_2).returns(section_1)
   end
 
-  def mock_task_dependent_on_previous_section_last_milestone_false_no_tasks
+  def expect_section_1_gid_pulled
+    section_1.expects(:gid).returns(section_1_gid)
+  end
+
+  def expect_no_section_1_tasks
+    sections.expects(:tasks_by_section_gid).with(section_1_gid,
+                                                 extra_fields: ['resource_subtype']).returns([])
+  end
+
+  def mock_task_dependent_on_previous_section_last_milestone_true_no_tasks
     memberships = [
       { 'section' => { 'gid' => section_2_gid } },
     ]
@@ -66,21 +79,16 @@ class TestTimelines < ClassTest
     expect_task_data_created(task, task_data)
     expect_section_2_pulled
     expect_section_2_previous_section_called
-    section_1.expects(:gid).returns(section_1_gid)
-    sections.expects(:tasks_by_section_gid).with(section_1_gid,
-                                                 extra_fields: ['resource_subtype']).returns([])
+    expect_section_1_gid_pulled
+    expect_no_section_1_tasks
   end
 
-  def test_task_dependent_on_previous_section_last_milestone_false_no_tasks
+  def test_task_dependent_on_previous_section_last_milestone_true_no_tasks
     timelines = get_test_object do
-      mock_task_dependent_on_previous_section_last_milestone_false_no_tasks
+      mock_task_dependent_on_previous_section_last_milestone_true_no_tasks
     end
 
-    refute(timelines.task_dependent_on_previous_section_last_milestone?(task, limit_to_portfolio_gid: nil))
-  end
-
-  def expect_section_1_gid_pulled
-    section_1.expects(:gid).returns(section_1_gid)
+    assert(timelines.task_dependent_on_previous_section_last_milestone?(task, limit_to_portfolio_gid: nil))
   end
 
   def expect_section_1_tasks_pulled
@@ -91,7 +99,7 @@ class TestTimelines < ClassTest
 
   def expect_milestone_queried
     milestone.expects(:resource_subtype).returns('milestone')
-    milestone.expects(:gid).returns(milestone_gid)
+    milestone.expects(:gid).returns(milestone_gid).at_least(0)
   end
 
   def mock_task_dependent_on_previous_section_last_milestone_true
