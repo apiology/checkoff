@@ -90,7 +90,7 @@ module Checkoff
             # note: task does not need to contain this custom field
             [{},
              ['not',
-              ['custom_field_gid_value_contains_any_gid',
+              ['custom_field_gid_value_contains_any_gid?',
                gid,
                selected_options]]]
           end
@@ -106,7 +106,7 @@ module Checkoff
 
             [{ "custom_fields.#{gid}.is_set" => 'true' },
              ['not',
-              ['custom_field_gid_value_contains_any_gid',
+              ['custom_field_gid_value_contains_any_gid?',
                gid,
                selected_options]]]
           end
@@ -121,7 +121,7 @@ module Checkoff
             selected_options = fetch_solo_param("custom_field_#{gid}.selected_options").split('~')
 
             [{ "custom_fields.#{gid}.is_set" => 'true' },
-             ['custom_field_gid_value_contains_any_gid',
+             ['custom_field_gid_value_contains_any_gid?',
               gid,
               selected_options]]
           end
