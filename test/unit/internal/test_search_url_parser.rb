@@ -56,7 +56,7 @@ class TestSearchUrlParser < ClassTest
 
     task_selector = [:and,
                      [:nil?, [:custom_field_gid_value, '456']],
-                     ['not', ['custom_field_gid_value_contains_any_gid', '5678', ['12']]]]
+                     ['not', ['custom_field_gid_value_contains_any_gid?', '5678', ['12']]]]
 
     assert_equal([asana_api_params, task_selector],
                  search_url_parser.convert_params(url))
@@ -69,7 +69,7 @@ class TestSearchUrlParser < ClassTest
     asana_api_params = {
       'sort_by' => 'created_at',
     }
-    task_selector = ['not', ['custom_field_gid_value_contains_any_gid', '123', %w[456 789]]]
+    task_selector = ['not', ['custom_field_gid_value_contains_any_gid?', '123', %w[456 789]]]
 
     assert_equal([asana_api_params, task_selector],
                  search_url_parser.convert_params(url))
@@ -245,7 +245,7 @@ class TestSearchUrlParser < ClassTest
       'sections.any' => '456,789,56,78,1',
       'sort_by' => 'created_at',
     }
-    task_selector = ['not', ['custom_field_gid_value_contains_any_gid', '6', ['7']]]
+    task_selector = ['not', ['custom_field_gid_value_contains_any_gid?', '6', ['7']]]
 
     assert_equal([asana_api_params, task_selector],
                  search_url_parser.convert_params(url))
@@ -264,8 +264,8 @@ class TestSearchUrlParser < ClassTest
       'sort_by' => 'created_at',
     }
     task_selector = [:and,
-                     ['custom_field_gid_value_contains_any_gid', '789', %w[12 34 56 78 90 1 2]],
-                     ['not', ['custom_field_gid_value_contains_any_gid', '3', ['4']]]]
+                     ['custom_field_gid_value_contains_any_gid?', '789', %w[12 34 56 78 90 1 2]],
+                     ['not', ['custom_field_gid_value_contains_any_gid?', '3', ['4']]]]
 
     assert_equal([asana_api_params, task_selector],
                  search_url_parser.convert_params(url))
@@ -279,7 +279,7 @@ class TestSearchUrlParser < ClassTest
       'custom_fields.789.is_set' => 'true', 'completed' => false, 'is_subtask' => false,
       'projects.any' => '123', 'projects.not' => '456', 'sort_by' => 'created_at'
     }
-    task_selector = ['custom_field_gid_value_contains_any_gid', '789', %w[12 34 56 78 90 1 2]]
+    task_selector = ['custom_field_gid_value_contains_any_gid?', '789', %w[12 34 56 78 90 1 2]]
 
     assert_equal([asana_api_params, task_selector],
                  search_url_parser.convert_params(url))
