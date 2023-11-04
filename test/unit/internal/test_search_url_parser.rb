@@ -345,7 +345,7 @@ class TestSearchUrlParser < ClassTest
                      [:and,
                       [:nil?, [:custom_field_gid_value, '2']],
                       [:nil?, [:custom_field_gid_value, '3']]],
-                     ['custom_field_gid_value_contains_all_gids', '4', %w[5 6 7 8]]]
+                     ['custom_field_gid_value_contains_all_gids?', '4', %w[5 6 7 8]]]
 
     assert_equal([asana_api_params, task_selector],
                  search_url_parser.convert_params(url))

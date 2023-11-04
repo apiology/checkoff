@@ -136,7 +136,7 @@ module Checkoff
             selected_options = fetch_solo_param("custom_field_#{gid}.selected_options").split('~')
 
             [{ "custom_fields.#{gid}.is_set" => 'true' },
-             ['custom_field_gid_value_contains_all_gids',
+             ['custom_field_gid_value_contains_all_gids?',
               gid,
               selected_options]]
           end
