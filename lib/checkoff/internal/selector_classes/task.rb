@@ -52,10 +52,10 @@ module Checkoff
         end
       end
 
-      # :tag function
+      # :tag? function
       class TagPFunctionEvaluator < FunctionEvaluator
         def matches?
-          fn?(selector, :tag)
+          fn?(selector, :tag?)
         end
 
         # @param _index [Integer]
@@ -72,12 +72,12 @@ module Checkoff
         end
       end
 
-      # :ready function
+      # :ready? function
       #
       # See GLOSSARY.md and tasks.rb#task_ready? for more information.
-      class ReadyFunctionEvaluator < FunctionEvaluator
+      class ReadyPFunctionEvaluator < FunctionEvaluator
         def matches?
-          fn?(selector, :ready)
+          fn?(selector, :ready?)
         end
 
         # @param _index [Integer]
@@ -116,10 +116,10 @@ module Checkoff
         end
       end
 
-      # :unassigned function
+      # :unassigned? function
       class UnassignedPFunctionEvaluator < FunctionEvaluator
         def matches?
-          fn?(selector, :unassigned)
+          fn?(selector, :unassigned?)
         end
 
         # @param task [Asana::Resources::Task]
@@ -129,9 +129,9 @@ module Checkoff
         end
       end
 
-      # :due_date_set function
+      # :due_date_set? function
       class DueDateSetPFunctionEvaluator < FunctionEvaluator
-        FUNCTION_NAME = :due_date_set
+        FUNCTION_NAME = :due_date_set?
 
         def matches?
           fn?(selector, FUNCTION_NAME)
@@ -145,9 +145,9 @@ module Checkoff
         end
       end
 
-      # :last_story_created_less_than_n_days_ago function
-      class LastStoryCreatedLessThanNDaysAgoFunctionEvaluator < FunctionEvaluator
-        FUNCTION_NAME = :last_story_created_less_than_n_days_ago
+      # :last_story_created_less_than_n_days_ago? function
+      class LastStoryCreatedLessThanNDaysAgoPFunctionEvaluator < FunctionEvaluator
+        FUNCTION_NAME = :last_story_created_less_than_n_days_ago?
 
         def matches?
           fn?(selector, FUNCTION_NAME)
@@ -177,9 +177,9 @@ module Checkoff
         end
       end
 
-      # :estimate_exceeds_duration
-      class EstimateExceedsDurationFunctionEvaluator < FunctionEvaluator
-        FUNCTION_NAME = :estimate_exceeds_duration
+      # :estimate_exceeds_duration?
+      class EstimateExceedsDurationPFunctionEvaluator < FunctionEvaluator
+        FUNCTION_NAME = :estimate_exceeds_duration?
 
         def matches?
           fn?(selector, FUNCTION_NAME)
@@ -220,9 +220,9 @@ module Checkoff
         end
       end
 
-      # :dependent_on_previous_section_last_milestone
-      class DependentOnPreviousSectionLastMilestoneFunctionEvaluator < FunctionEvaluator
-        FUNCTION_NAME = :dependent_on_previous_section_last_milestone
+      # :dependent_on_previous_section_last_milestone?
+      class DependentOnPreviousSectionLastMilestonePFunctionEvaluator < FunctionEvaluator
+        FUNCTION_NAME = :dependent_on_previous_section_last_milestone?
 
         def matches?
           fn?(selector, FUNCTION_NAME)
@@ -241,7 +241,7 @@ module Checkoff
       end
 
       # :in_portfolio_named? function
-      class InPortfolioNamedFunctionEvaluator < FunctionEvaluator
+      class InPortfolioNamedPFunctionEvaluator < FunctionEvaluator
         FUNCTION_NAME = :in_portfolio_named?
 
         def matches?

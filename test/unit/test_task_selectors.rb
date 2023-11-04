@@ -47,7 +47,7 @@ class TestTaskSelectors < ClassTest
     end
 
     refute(task_selectors.filter_via_task_selector(task,
-                                                   ['custom_field_gid_value_contains_any_gid',
+                                                   ['custom_field_gid_value_contains_any_gid?',
                                                     custom_field_gid,
                                                     [enum_value_gid]]))
   end
@@ -69,7 +69,7 @@ class TestTaskSelectors < ClassTest
     end
 
     refute(task_selectors.filter_via_task_selector(task,
-                                                   ['custom_field_gid_value_contains_any_gid',
+                                                   ['custom_field_gid_value_contains_any_gid?',
                                                     custom_field_gid,
                                                     [enum_value_gid]]))
   end
@@ -91,7 +91,7 @@ class TestTaskSelectors < ClassTest
     end
     e = assert_raises(RuntimeError) do
       task_selectors.filter_via_task_selector(task,
-                                              ['custom_field_gid_value_contains_any_gid',
+                                              ['custom_field_gid_value_contains_any_gid?',
                                                custom_field_gid,
                                                [enum_value_gid]])
     end
@@ -120,7 +120,7 @@ class TestTaskSelectors < ClassTest
     end
     e = assert_raises(RuntimeError) do
       task_selectors.filter_via_task_selector(task,
-                                              ['custom_field_gid_value_contains_any_gid',
+                                              ['custom_field_gid_value_contains_any_gid?',
                                                custom_field_gid,
                                                [enum_value_gid]])
     end
@@ -139,7 +139,7 @@ class TestTaskSelectors < ClassTest
     end
     e = assert_raises(RuntimeError) do
       task_selectors.filter_via_task_selector(task,
-                                              ['custom_field_gid_value_contains_any_gid',
+                                              ['custom_field_gid_value_contains_any_gid?',
                                                custom_field_gid,
                                                [enum_value_gid]])
     end
@@ -157,7 +157,7 @@ class TestTaskSelectors < ClassTest
     end
     e = assert_raises(RuntimeError) do
       task_selectors.filter_via_task_selector(task,
-                                              ['custom_field_gid_value_contains_any_gid',
+                                              ['custom_field_gid_value_contains_any_gid?',
                                                custom_field_gid,
                                                [enum_value_gid]])
     end
@@ -185,7 +185,7 @@ class TestTaskSelectors < ClassTest
     end
 
     assert(task_selectors.filter_via_task_selector(task,
-                                                   ['custom_field_gid_value_contains_any_gid',
+                                                   ['custom_field_gid_value_contains_any_gid?',
                                                     custom_field_gid,
                                                     [enum_value_gid]]))
   end
@@ -286,7 +286,7 @@ class TestTaskSelectors < ClassTest
       task.expects(:tags).returns([])
     end
 
-    refute(task_selectors.filter_via_task_selector(task, [:tag, 'tag_name']))
+    refute(task_selectors.filter_via_task_selector(task, [:tag?, 'tag_name']))
   end
 
   # @return [void]
@@ -319,7 +319,7 @@ class TestTaskSelectors < ClassTest
       tasks.expects(:task_ready?).with(task, period: :now_or_before, ignore_dependencies: false).returns(true)
     end
 
-    assert(task_selectors.filter_via_task_selector(task, [:ready]))
+    assert(task_selectors.filter_via_task_selector(task, [:ready?]))
   end
 
   def expect_now_jan_1_2019
@@ -461,7 +461,7 @@ class TestTaskSelectors < ClassTest
     end
 
     # @sg-ignore
-    assert(task_selectors.filter_via_task_selector(task, [:unassigned]))
+    assert(task_selectors.filter_via_task_selector(task, [:unassigned?]))
   end
 
   def test_filter_via_custom_field_gid_value_contains_all_gids
@@ -483,7 +483,7 @@ class TestTaskSelectors < ClassTest
     end
 
     assert(task_selectors.filter_via_task_selector(task,
-                                                   ['custom_field_gid_value_contains_all_gids',
+                                                   ['custom_field_gid_value_contains_all_gids?',
                                                     custom_field_gid,
                                                     [enum_value_gid]]))
   end
@@ -494,7 +494,7 @@ class TestTaskSelectors < ClassTest
       expect_no_due
     end
 
-    refute(task_selectors.filter_via_task_selector(task, [:due_date_set]))
+    refute(task_selectors.filter_via_task_selector(task, [:due_date_set?]))
   end
 
   # @return [void]
@@ -626,7 +626,7 @@ class TestTaskSelectors < ClassTest
 
     # @sg-ignore
     assert(task_selectors.filter_via_task_selector(task,
-                                                   [:estimate_exceeds_duration]))
+                                                   [:estimate_exceeds_duration?]))
   end
 
   # @return [void]
@@ -639,7 +639,7 @@ class TestTaskSelectors < ClassTest
 
     # @sg-ignore
     refute(task_selectors.filter_via_task_selector(task,
-                                                   [:estimate_exceeds_duration]))
+                                                   [:estimate_exceeds_duration?]))
   end
 
   # @return [void]
@@ -654,7 +654,7 @@ class TestTaskSelectors < ClassTest
 
     # @sg-ignore
     assert(task_selectors.filter_via_task_selector(task,
-                                                   [:estimate_exceeds_duration]))
+                                                   [:estimate_exceeds_duration?]))
   end
 
   # @return [void]
@@ -669,7 +669,7 @@ class TestTaskSelectors < ClassTest
 
     # @sg-ignore
     assert(task_selectors.filter_via_task_selector(task,
-                                                   [:estimate_exceeds_duration]))
+                                                   [:estimate_exceeds_duration?]))
   end
 
   # @return [void]
@@ -680,7 +680,7 @@ class TestTaskSelectors < ClassTest
     end
 
     refute(task_selectors.filter_via_task_selector(task,
-                                                   [:estimate_exceeds_duration]))
+                                                   [:estimate_exceeds_duration?]))
   end
 
   # @return [void]
@@ -826,7 +826,7 @@ class TestTaskSelectors < ClassTest
     end
 
     assert(task_selectors.filter_via_task_selector(task,
-                                                   [:last_story_created_less_than_n_days_ago, 7, []]))
+                                                   [:last_story_created_less_than_n_days_ago?, 7, []]))
   end
 
   # @return [void]
@@ -844,7 +844,7 @@ class TestTaskSelectors < ClassTest
     end
 
     assert(task_selectors.filter_via_task_selector(task,
-                                                   [:last_story_created_less_than_n_days_ago, 7, []]))
+                                                   [:last_story_created_less_than_n_days_ago?, 7, []]))
   end
 
   # @return [void]
@@ -862,7 +862,7 @@ class TestTaskSelectors < ClassTest
     end
 
     refute(task_selectors.filter_via_task_selector(task,
-                                                   [:last_story_created_less_than_n_days_ago, 7, []]))
+                                                   [:last_story_created_less_than_n_days_ago?, 7, []]))
   end
 
   # @return [void]
@@ -902,7 +902,7 @@ class TestTaskSelectors < ClassTest
     end
 
     assert(task_selectors.filter_via_task_selector(task,
-                                                   [:dependent_on_previous_section_last_milestone]))
+                                                   [:dependent_on_previous_section_last_milestone?]))
   end
 
   def test_in_portfolio_named_true
@@ -937,7 +937,7 @@ class TestTaskSelectors < ClassTest
     end
 
     refute(task_selectors.filter_via_task_selector(task,
-                                                   [:custom_field_gid_value_contains_any_gid,
+                                                   [:custom_field_gid_value_contains_any_gid?,
                                                     custom_field_gid, [custom_field_value_gid_1]]))
   end
 
