@@ -20,7 +20,8 @@ class TestProjects < BaseAsana
   let_mock :workspaces, :workspace_workspace, :some_other_workspace,
            :workspace_one, :workspace_one_gid, :my_workspace_gid, :n,
            :workspace_name, :all_workspaces, :my_tasks_project, :tasks,
-           :task_a, :task_b, :user_task_lists, :user_task_list, :project_a_hash
+           :task_a, :task_b, :user_task_lists, :user_task_list, :project_a_hash,
+           :project, :project_gid, :client_projects
 
   def sample_projects
     { project_a => a_name, project_b => b_name, project_c => c_name }
@@ -110,6 +111,14 @@ class TestProjects < BaseAsana
     assert_raises(RuntimeError) do
       projects.project_or_raise('Workspace 1', 'Does not exist')
     end
+  end
+
+  def test_project_by_gid
+    projects = get_test_object do
+      client.expects(:projects).returns(client_projects)
+      client_projects.expects(:find_by_id).with(project_gid, options: { fields: ['name'] }).returns(project)
+    end
+    assert_equal(project, projects.project_by_gid(project_gid))
   end
 
   def test_project_or_raise_my_tasks
