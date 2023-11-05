@@ -81,7 +81,10 @@ class TestPortfolios < ClassTest
     portfolios = get_test_object do
       portfolio_arr = [portfolio]
       expect_portfolios_pulled(portfolio_arr)
-      portfolio.expects(:get_items).returns([project_a])
+      client.expects(:portfolios).returns(portfolios_api)
+      portfolio.expects(:gid).returns(portfolio_gid)
+      portfolios_api.expects(:get_items_for_portfolio).with(portfolio_gid: portfolio_gid,
+                                                            options: { fields: ['name'] }).returns([project_a])
     end
     assert_equal([project_a], portfolios.projects_in_portfolio(workspace_name, portfolio_name))
   end

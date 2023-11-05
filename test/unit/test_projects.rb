@@ -7,7 +7,7 @@ require_relative 'base_asana'
 class TestProjects < BaseAsana
   extend Forwardable
 
-  def_delegators(:@mocks, :client, :project_hashes)
+  def_delegators(:@mocks, :client, :project_hashes, :project_timing, :timing)
 
   def setup_config
     @mocks[:config] = { personal_access_token: personal_access_token }
@@ -21,7 +21,8 @@ class TestProjects < BaseAsana
            :workspace_one, :workspace_one_gid, :my_workspace_gid, :n,
            :workspace_name, :all_workspaces, :my_tasks_project, :tasks,
            :task_a, :task_b, :user_task_lists, :user_task_list, :project_a_hash,
-           :project, :project_gid, :client_projects
+           :project, :project_gid, :client_projects, :field_name, :period,
+           :returned_date
 
   def sample_projects
     { project_a => a_name, project_b => b_name, project_c => c_name }
@@ -151,6 +152,34 @@ class TestProjects < BaseAsana
         .returns(project_a_hash)
     end
     assert_equal(project_a_hash, projects.project_to_h(project_a))
+  end
+
+  def mock_test_in_period
+    project_timing.expects(:date_or_time_field_by_name)
+      .with(project, field_name).returns(returned_date)
+    timing.expects(:in_period?).with(returned_date, period)
+      .returns(true)
+  end
+
+  def test_in_period
+    projects = get_test_object do
+      mock_test_in_period
+    end
+    assert(projects.in_period?(project, field_name, period))
+  end
+
+  def mock_project_ready
+    project_timing.expects(:date_or_time_field_by_name)
+      .with(project, :ready).returns(returned_date)
+    timing.expects(:in_period?).with(returned_date, period)
+      .returns(true)
+  end
+
+  def test_project_ready
+    projects = get_test_object do
+      mock_project_ready
+    end
+    assert(projects.project_ready?(project, period: period))
   end
 
   let_mock :my_tasks_config

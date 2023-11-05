@@ -2,6 +2,7 @@
 
 require_relative 'internal/config_loader'
 require_relative 'internal/project_hashes'
+require_relative 'internal/project_timing'
 require_relative 'workspaces'
 require_relative 'clients'
 require 'cache_method'
@@ -32,15 +33,21 @@ module Checkoff
     # @param client [Asana::Client]
     # @param workspaces [Checkoff::Workspaces]
     # @param project_hashes [Checkoff::Internal::ProjectHashes]
+    # @param project_timing [Checkoff::Internal::ProjectTiming]
+    # @param timing [Checkoff::Timing]
     def initialize(config: Checkoff::Internal::ConfigLoader.load(:asana),
                    client: Checkoff::Clients.new(config: config).client,
                    workspaces: Checkoff::Workspaces.new(config: config,
                                                         client: client),
-                   project_hashes: Checkoff::Internal::ProjectHashes.new)
+                   project_hashes: Checkoff::Internal::ProjectHashes.new,
+                   project_timing: Checkoff::Internal::ProjectTiming.new(client: client),
+                   timing: Checkoff::Timing.new)
       @config = config
       @workspaces = workspaces
       @client = client
       @project_hashes = project_hashes
+      @project_timing = project_timing
+      @timing = timing
     end
 
     # Default options used in Asana API to pull tasks
@@ -139,7 +146,36 @@ module Checkoff
       project_hashes.project_to_h(project_obj, project: project)
     end
 
+    # Indicates a project is ready for a person to work on it.  This
+    # is subtly different than what is used by Asana to mark a date as
+    # red/green!
+    #
+    # A project is ready if there is no start date, or if the start
+    # date is today or in the past.
+    #
+    # @param project [Asana::Resources::Project]
+    # @param period [Symbol<:now_or_before,:this_week>]
+    def project_ready?(project, period: :now_or_before)
+      in_period?(project, :ready, period)
+    end
+
+    # @param project [Asana::Resources::Project]
+    # @param field_name [Symbol,Array]
+    # @param period [Symbol<:now_or_before,:this_week>,Array] See Checkoff::Timing#in_period?
+    def in_period?(project, field_name, period)
+      # @type [Date,Time,nil]
+      project_date = project_timing.date_or_time_field_by_name(project, field_name)
+
+      timing.in_period?(project_date, period)
+    end
+
     private
+
+    # @return [Checkoff::Timing]
+    attr_reader :timing
+
+    # @return [Checkoff::Internal::ProjectTiming]
+    attr_reader :project_timing
 
     # @return [Checkoff::Internal::ProjectHashes]
     attr_reader :project_hashes
