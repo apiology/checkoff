@@ -209,6 +209,13 @@
 #
 #         # @return [Asana::Resources::Portfolio,nil]
 #         def find_by_id(client, id, options: {}); end
+#         # Get portfolio items
+#         #
+#         # @param portfolio_gid [String]  (required) Globally unique identifier for the portfolio.
+#         # @param options [Hash] the request I/O options
+#         #
+#         # @return [Enumerable<Asana::Resources::Project>]
+#         def get_items_for_portfolio(portfolio_gid: required("portfolio_gid"), options: {}); end
 #       end
 #       class User
 #         # Returns the full user record for the currently authenticated user.

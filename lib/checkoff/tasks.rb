@@ -54,7 +54,7 @@ module Checkoff
       @portfolios = portfolios
       @custom_fields = custom_fields
       @workspaces = workspaces
-      @timing = Timing.new(today_getter: date_class, now_getter: time_class)
+      @timing = Checkoff::Timing.new(today_getter: date_class, now_getter: time_class)
     end
 
     # Indicates a task is ready for a person to work on it.  This is

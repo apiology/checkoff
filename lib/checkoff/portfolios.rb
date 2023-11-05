@@ -99,7 +99,7 @@ module Checkoff
         fields: ['name'],
       }
       options[:fields] += extra_project_fields
-      portfolio.get_items(options: options)
+      client.portfolios.get_items_for_portfolio(portfolio_gid: portfolio.gid, options: options)
     end
 
     private

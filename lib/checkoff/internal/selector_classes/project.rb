@@ -20,6 +20,22 @@ module Checkoff
           resource.due_date
         end
       end
+
+      # :ready? function
+      class ReadyPFunctionEvaluator < FunctionEvaluator
+        FUNCTION_NAME = :ready?
+
+        def matches?
+          fn?(selector, FUNCTION_NAME)
+        end
+
+        # @param project [Asana::Resources::Project]
+        # @param period [Symbol<:now_or_before,:this_week>]
+        # @return [Boolean]
+        def evaluate(project, period = :now_or_before)
+          @projects.project_ready?(project, period: period)
+        end
+      end
     end
   end
 end

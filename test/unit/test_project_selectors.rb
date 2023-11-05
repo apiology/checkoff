@@ -7,7 +7,7 @@ require 'checkoff/project_selectors'
 class TestProjectSelectors < ClassTest
   extend Forwardable
 
-  def_delegators(:@mocks, :client)
+  def_delegators(:@mocks, :client, :projects)
 
   # @!parse
   #  # @return [Checkoff::ProjectSelectors]
@@ -143,6 +143,16 @@ class TestProjectSelectors < ClassTest
 
     refute(project_selectors.filter_via_project_selector(project,
                                                          [:nil?, [:due_date]]))
+  end
+
+  # @return [void]
+  def test_filter_via_ready_false
+    project_selectors = get_test_object do
+      projects.expects(:project_ready?).with(project, period: :now_or_before)
+    end
+
+    refute(project_selectors.filter_via_project_selector(project,
+                                                         [:ready?]))
   end
 
   # @return [void]
