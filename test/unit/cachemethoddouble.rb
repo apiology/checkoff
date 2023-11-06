@@ -2,8 +2,8 @@
 
 # double to inject cache_method, pretending to be cache_method gem
 class Class
-  def cache_method(_method_id, _ttl = nil)
-    # do nothing
+  def cache_method(method_id, _ttl = nil)
+    instance_method(method_id) # ensure method at least exists; will raise if not
   end
 end
 
