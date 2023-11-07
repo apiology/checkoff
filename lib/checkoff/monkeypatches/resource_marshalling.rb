@@ -21,13 +21,17 @@ module Asana
     class Resource
       # @return [Hash]
       def marshal_dump
-        { 'data' => @_data }
+        { 'data' => @_data,
+          'client' => @_client }
       end
 
       # @param data [Hash]
       #
       # @return [void]
       def marshal_load(data)
+        # @sg-ignore
+        # @type [Asana::Client]
+        @_client = data.fetch('client')
         # @sg-ignore
         # @type [Hash]
         @_data = data.fetch('data')
