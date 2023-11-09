@@ -119,6 +119,8 @@ jobs:
       - run_with_languages:
           label: Make RubyGems release
           command: |
+            set -x
+
             # Coax overcommit into working
             git config --global user.email "test@test.test"
             git config --global user.name "Test Test"
