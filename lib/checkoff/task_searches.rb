@@ -54,15 +54,41 @@ module Checkoff
       @asana_resources_collection_class = asana_resources_collection_class
     end
 
+    # Perform an equivalent search API to an Asana search URL in the
+    # web UI.  Not all URL parameters are supported; each one must be
+    # added here manually.  In addition, not all are supported in the
+    # Asana API in a compatible way, so they may result in more tasks
+    # being fetched than actually returned as filtering is done
+    # manually.
+    #
     # @param [String] workspace_name
     # @param [String] url
     # @param [Array<String>] extra_fields
+    #
     # @return [Enumerable<Asana::Resources::Task>]
     def task_search(workspace_name, url, extra_fields: [])
       workspace = workspaces.workspace_or_raise(workspace_name)
       # @sg-ignore
       api_params, task_selector = @search_url_parser.convert_params(url)
-      path = "/workspaces/#{workspace.gid}/tasks/search"
+      raw_task_search(api_params, workspace_gid: workspace.gid, task_selector: task_selector,
+                                  extra_fields: extra_fields)
+    end
+    cache_method :task_search, LONG_CACHE_TIME
+
+    # Perform a search using the Asana Task Search API:
+    #
+    #   https://developers.asana.com/reference/searchtasksforworkspace
+    #
+    # @param [Hash<Symbol, Object>] api_params
+    # @param [String] workspace_gid
+    # @param [String] url
+    # @param [Array<String>] extra_fields
+    # @param [Array] task_selector
+    #
+    # @return [Enumerable<Asana::Resources::Task>]
+    def raw_task_search(api_params, workspace_gid:, extra_fields: [], task_selector: [])
+      # @sg-ignore
+      path = "/workspaces/#{workspace_gid}/tasks/search"
       options = calculate_api_options(extra_fields)
       tasks = @asana_resources_collection_class.new(parse(client.get(path,
                                                                      params: api_params,
@@ -71,7 +97,6 @@ module Checkoff
                                                     client: client)
       tasks.select { |task| task_selectors.filter_via_task_selector(task, task_selector) }
     end
-    cache_method :task_search, LONG_CACHE_TIME
 
     private
 
