@@ -2,6 +2,7 @@
 
 require 'checkoff/version'
 require 'checkoff/clients'
+require 'checkoff/events'
 require 'checkoff/workspaces'
 require 'checkoff/portfolios'
 require 'checkoff/projects'
