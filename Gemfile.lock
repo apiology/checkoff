@@ -22,7 +22,7 @@ PATH
 GEM
   remote: https://rubygems.org/
   specs:
-    activesupport (7.1.1)
+    activesupport (7.1.2)
       base64
       bigdecimal
       concurrent-ruby (~> 1.0, >= 1.0.2)
@@ -104,7 +104,7 @@ GEM
       mixlib-shellout
     method_source (1.0.0)
     mini_portile2 (2.8.2)
-    minitest (5.18.0)
+    minitest (5.20.0)
     minitest-profile (0.0.2)
     minitest-reporters (1.5.0)
       ansi
@@ -116,7 +116,8 @@ GEM
       tomlrb
     mixlib-shellout (3.2.7)
       chef-utils
-    mocha (2.0.0.alpha.1)
+    mocha (2.1.0)
+      ruby2_keywords (>= 0.0.5)
     multi_json (1.15.0)
     multi_xml (0.6.0)
     multipart-post (2.1.1)
@@ -232,7 +233,7 @@ DEPENDENCIES
   mdl
   minitest-profile
   minitest-reporters
-  mocha (~> 2.0.0.alpha.1)
+  mocha (>= 2)
   overcommit (>= 0.60.0, < 0.61.0)
   pry
   punchlist
