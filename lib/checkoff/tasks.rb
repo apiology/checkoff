@@ -127,11 +127,16 @@ module Checkoff
     #
     # @param task_gid [String]
     # @param extra_fields [Array<String>]
+    # @param only_uncompleted [Boolean]
+    #
     # @return [Asana::Resources::Task, nil]
     def task_by_gid(task_gid,
-                    extra_fields: [])
+                    extra_fields: [],
+                    only_uncompleted: false)
+      # @type [Hash]
       options = projects.task_options.fetch(:options, {})
       options[:fields] += extra_fields
+      options[:completed_since] = '9999-12-01' if only_uncompleted
       client.tasks.find_by_id(task_gid, options: options)
     end
     cache_method :task_by_gid, SHORT_CACHE_TIME
@@ -182,8 +187,10 @@ module Checkoff
         # the completion status of dependencies, so we need to do this
         # regardless:
         parent_task_gid = parent_task_info.fetch('gid')
-        parent_task = @asana_task.find_by_id(client, parent_task_gid,
-                                             options: { fields: ['completed'] })
+
+        parent_task = task_by_gid(parent_task_gid,
+                                  extra_fields: ['completed'],
+                                  only_uncompleted: false)
         !parent_task.completed
       end
     end
