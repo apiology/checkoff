@@ -9,11 +9,11 @@ class TestTasks < BaseAsana
   extend Forwardable
 
   def_delegators :@mocks, :sections, :asana_task, :time_class, :date_class, :client, :workspaces,
-                 :portfolios
+                 :portfolios, :projects
 
   let_mock :mock_tasks, :modified_mock_tasks, :tasks_by_section,
            :unflattened_modified_mock_tasks, :task_hashes, :project_gid, :wrong_project,
-           :wrong_project_gid
+           :wrong_project_gid, :asana_tasks_client
 
   let_mock :default_workspace, :workspace_gid, :task_name, :default_assignee_gid
 
@@ -135,11 +135,13 @@ class TestTasks < BaseAsana
 
   def expect_dependency_completion_pulled(dependency_gid, dependency_full_task,
                                           completed)
-    asana_task.expects(:find_by_id).with(client,
-                                         dependency_gid,
-                                         options: { fields: ['completed'] })
+    sections.expects(:projects).returns(projects)
+    projects.expects(:task_options).returns({ options: { fields: ['bunch of fields'] } })
+    client.expects(:tasks).returns(asana_tasks_client)
+    asana_tasks_client.expects(:find_by_id).with(dependency_gid,
+                                                 options: { fields: ['bunch of fields'] })
       .returns(dependency_full_task)
-    dependency_full_task.expects(:completed).returns(completed)
+    dependency_full_task.expects(:completed_at).returns(completed ? 'some time' : nil)
   end
 
   def mock_task_ready_false_dependency

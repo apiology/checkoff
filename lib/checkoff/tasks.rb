@@ -189,9 +189,8 @@ module Checkoff
         parent_task_gid = parent_task_info.fetch('gid')
 
         parent_task = task_by_gid(parent_task_gid,
-                                  extra_fields: ['completed'],
                                   only_uncompleted: false)
-        !parent_task.completed
+        parent_task.completed_at.nil?
       end
     end
 
