@@ -323,7 +323,7 @@ class TestTaskSelectors < ClassTest
   end
 
   def expect_now_jan_1_2019
-    Time.expects(:now).returns(Time.new(2019, 1, 1, 0, 0, 0, 0)).at_least(1)
+    Time.expects(:now).returns(Time.new(2019, 1, 1, 0, 0, 0, 0)).at_least(0)
   end
 
   def expect_starts_jan_1_2019_midnight

@@ -9,6 +9,7 @@ require 'active_support'
 require 'forwardable'
 require 'cache_method'
 require_relative 'internal/config_loader'
+require_relative 'internal/logging'
 require_relative 'workspaces'
 require_relative 'clients'
 
@@ -21,6 +22,8 @@ module Checkoff
     REALLY_LONG_CACHE_TIME = HOUR * 1
     LONG_CACHE_TIME = MINUTE * 15
     SHORT_CACHE_TIME = MINUTE
+
+    include Logging
 
     # @param today_getter [Class<Date>]
     # @param now_getter [Class<Time>]
@@ -128,20 +131,35 @@ module Checkoff
       (@now_getter.now + (num_days * 24 * 60 * 60))
     end
 
+    # @param num_days [Integer]
+    #
+    # @return [Date]
+    def n_days_from_today(num_days)
+      (@today_getter.today + num_days)
+    end
+
     # @param date_or_time [Date,Time,nil]
     # @param beginning_num_days_from_now [Integer,nil]
     # @param end_num_days_from_now [Integer,nil]
     def between_relative_days?(date_or_time, beginning_num_days_from_now, end_num_days_from_now)
-      start_time = n_days_from_now(beginning_num_days_from_now || -99_999)
-      end_time = n_days_from_now(end_num_days_from_now || 99_999)
+      start_date = n_days_from_today(beginning_num_days_from_now || -99_999)
+      end_date = n_days_from_today(end_num_days_from_now || 99_999)
 
       return false if date_or_time.nil?
 
-      if date_or_time.is_a?(Time)
-        date_or_time > start_time && date_or_time <= end_time
-      else
-        date_or_time > start_time.to_date && date_or_time <= end_time.to_date
+      date = if date_or_time.is_a?(Time)
+               date_or_time.localtime.to_date
+             else
+               date_or_time
+             end
+      out = date > start_date && date <= end_date
+      logger.debug do
+        "Checkoff::Timing#between_relative_days?(#{date_or_time.inspect} " \
+          "(as date: #{date.inspect}) " \
+          "#{beginning_num_days_from_now.inspect}, #{end_num_days_from_now.inspect}) " \
+          "comparing with #{start_date} and #{end_date} = #{out.inspect}"
       end
+      out
     end
 
     # @param date_or_time [Date,Time,nil]
