@@ -1,5 +1,7 @@
 {
+    "_checkout": null,
     "_output_dir": "/Users/broz/src/checkoff/.git/cookiecutter",
+    "_repo_dir": "/Users/broz/.cookiecutters/cookiecutter-gem",
     "_template": "https://github.com/apiology/cookiecutter-gem",
     "email": "vince@broz.cc",
     "full_name": "Vince Broz",
