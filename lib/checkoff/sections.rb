@@ -147,13 +147,16 @@ module Checkoff
     # @param workspace_name [String]
     # @param project_name [String, Symbol]
     # @param section_name [String, nil]
+    # @param extra_section_fields [Array<String>]
     #
     # @sg-ignore
     # @return [Asana::Resources::Section]
-    def section_or_raise(workspace_name, project_name, section_name)
-      s = section(workspace_name, project_name, section_name)
+    def section_or_raise(workspace_name, project_name, section_name, extra_section_fields: [])
+      s = section(workspace_name, project_name, section_name,
+                  extra_section_fields: extra_section_fields)
       if s.nil?
-        valid_sections = sections_or_raise(workspace_name, project_name).map(&:name)
+        valid_sections = sections_or_raise(workspace_name, project_name,
+                                           extra_fields: extra_section_fields).map(&:name)
 
         raise "Could not find section #{section_name.inspect} under project #{project_name.inspect} " \
               "under workspace #{workspace_name.inspect}.  Valid sections: #{valid_sections.inspect}"
@@ -279,9 +282,12 @@ module Checkoff
     # @param workspace_name [String]
     # @param project_name [String, Symbol]
     # @param section_name [String, nil]
+    # @param extra_section_fields [Array<String>]
+    #
     # @return [Asana::Resources::Section, nil]
-    def section(workspace_name, project_name, section_name)
-      sections = sections_or_raise(workspace_name, project_name)
+    def section(workspace_name, project_name, section_name, extra_section_fields: [])
+      sections = sections_or_raise(workspace_name, project_name,
+                                   extra_fields: extra_section_fields)
       sections.find { |section| section_key(section.name)&.chomp(':') == section_name&.chomp(':') }
     end
   end
