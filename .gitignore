@@ -58,6 +58,3 @@ requirements_dev.txt.installed
 /spec/reports/
 /tmp/
 /coverage/
-
-# direnv
-/.envrc
