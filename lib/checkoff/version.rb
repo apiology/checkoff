@@ -3,5 +3,5 @@
 # Command-line and gem client for Asana (unofficial)
 module Checkoff
   # Version of library
-  VERSION = '0.138.0'
+  VERSION = '0.139.0'
 end
