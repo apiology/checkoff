@@ -65,7 +65,7 @@ module Checkoff
 
     # pulls an Asana API project class given a name
     # @param [String] workspace_name
-    # @param [String] project_name
+    # @param [String,Symbol<:my_tasks>] project_name
     # @param [Array<String>] extra_fields
     #
     # @return [Asana::Resources::Project, nil]
@@ -83,7 +83,7 @@ module Checkoff
     cache_method :project, LONG_CACHE_TIME
 
     # @param workspace_name [String]
-    # @param project_name [String]
+    # @param project_name [String,Symbol<:my_tasks>]
     # @param [Array<String>] extra_fields
     #
     # @return [Asana::Resources::Project]
