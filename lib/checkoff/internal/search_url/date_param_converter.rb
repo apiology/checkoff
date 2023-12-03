@@ -51,6 +51,8 @@ module Checkoff
                   handle_between(prefix)
                 when 'within_last'
                   handle_within_last(prefix)
+                when 'within_next'
+                  handle_within_next(prefix)
                 else
                   raise "Teach me how to handle date mode: #{operator.inspect}."
                 end
@@ -113,6 +115,20 @@ module Checkoff
           after = Date.today - value
 
           [{ "#{API_PREFIX.fetch(prefix)}.after" => after.to_s }, []]
+        end
+
+        # @param prefix [String]
+        # @return [Array(Hash<String, String>, Array<[Symbol, Array]>)] See https://developers.asana.com/docs/search-tasks-in-a-workspace
+        def handle_within_next(prefix)
+          value = get_single_param("#{prefix}.value").to_i
+
+          validate_unit_is_day!(prefix)
+
+          # @sg-ignore
+          # @type [Date]
+          before = Date.today + value + 1
+
+          [{ "#{API_PREFIX.fetch(prefix)}.before" => before.to_s }, []]
         end
 
         # @param param_key [String]
