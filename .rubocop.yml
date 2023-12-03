@@ -1,4 +1,8 @@
 ---
+Gemspec/RequireMFA:
+  # We publish via CI/CD, so MFA is not possible.
+  Enabled: false
+
 Layout/LineLength:
   Max: 120
 

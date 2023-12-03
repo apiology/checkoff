@@ -31,6 +31,6 @@ Gem::Specification.new do |spec|
   spec.add_runtime_dependency 'gli'
 
   spec.metadata = {
-    'rubygems_mfa_required' => 'true',
+    'rubygems_mfa_required' => 'false',
   }
 end
