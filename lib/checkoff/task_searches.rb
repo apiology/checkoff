@@ -98,7 +98,12 @@ module Checkoff
                                                                      options: options)),
                                                     type: Asana::Resources::Task,
                                                     client: client)
-      raise 'Maximum task length returned - not all results can be included' if tasks.length == 100
+
+      if tasks.length == 100
+        raise 'Too many results returned. ' \
+              'Please narrow your search in ways expressible through task search API: ' \
+              'https://developers.asana.com/reference/searchtasksforworkspace'
+      end
 
       debug { "#{tasks.length} raw tasks returned" }
 
