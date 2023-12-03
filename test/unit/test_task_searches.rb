@@ -48,14 +48,14 @@ class TestTaskSearches < ClassTest
     body.expects(:fetch).with('data').returns(data)
   end
 
-  def expect_response_wrapped
+  def expect_response_wrapped(response_array)
     asana_resources_collection_class
       .expects(:new)
       .with([data,
              { 'something_else' => something_else }],
             type: Asana::Resources::Task,
             client: client)
-      .returns([good_task, bad_task])
+      .returns(response_array)
   end
 
   def expect_tasks_filtered
@@ -75,7 +75,7 @@ class TestTaskSearches < ClassTest
     expect_convert_params_called
     expect_task_options_pulled
     expect_search_response_queried
-    expect_response_wrapped
+    expect_response_wrapped([good_task, bad_task])
     expect_tasks_filtered
   end
 
@@ -83,7 +83,37 @@ class TestTaskSearches < ClassTest
     task_searches = get_test_object do
       mock_task_search
     end
+
     assert_equal([good_task], task_searches.task_search(workspace_name, url))
+  end
+
+  def mock_task_search_overloaded
+    expect_workspace_pulled
+    expect_workspace_gid_pulled
+    expect_convert_params_called
+    expect_task_options_pulled
+    expect_search_response_queried
+    expect_response_wrapped(Array.new(100) { good_task })
+  end
+
+  def test_task_search_overloaded_results
+    task_searches = get_test_object do
+      mock_task_search_overloaded
+    end
+    e = assert_raises(RuntimeError) { task_searches.task_search(workspace_name, url) }
+
+    assert_equal(
+      'Too many results returned. ' \
+      'Please narrow your search in ways expressible through task search API: ' \
+      'https://developers.asana.com/reference/searchtasksforworkspace',
+      e.message
+    )
+  end
+
+  def test_as_cache_key
+    task_searches = get_test_object
+
+    assert_empty(task_searches.as_cache_key)
   end
 
   def class_under_test

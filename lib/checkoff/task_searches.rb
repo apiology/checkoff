@@ -13,6 +13,7 @@ require 'asana/resource_includes/collection'
 require 'asana/resource_includes/response_helper'
 
 require 'checkoff/internal/search_url'
+require 'checkoff/internal/logging'
 
 # https://developers.asana.com/reference/searchtasksforworkspace
 module Checkoff
@@ -25,6 +26,7 @@ module Checkoff
     LONG_CACHE_TIME = MINUTE * 15
     SHORT_CACHE_TIME = MINUTE
 
+    include Logging
     include Asana::Resources::ResponseHelper
 
     # @!parse
@@ -70,6 +72,7 @@ module Checkoff
       workspace = workspaces.workspace_or_raise(workspace_name)
       # @sg-ignore
       api_params, task_selector = @search_url_parser.convert_params(url)
+      debug { "Task search params: api_params=#{api_params}, task_selector=#{task_selector}" }
       raw_task_search(api_params, workspace_gid: workspace.gid, task_selector: task_selector,
                                   extra_fields: extra_fields)
     end
@@ -95,7 +98,21 @@ module Checkoff
                                                                      options: options)),
                                                     type: Asana::Resources::Task,
                                                     client: client)
+
+      if tasks.length == 100
+        raise 'Too many results returned. ' \
+              'Please narrow your search in ways expressible through task search API: ' \
+              'https://developers.asana.com/reference/searchtasksforworkspace'
+      end
+
+      debug { "#{tasks.length} raw tasks returned" }
+
       tasks.select { |task| task_selectors.filter_via_task_selector(task, task_selector) }
+    end
+
+    # @return [Hash]
+    def as_cache_key
+      {}
     end
 
     private
