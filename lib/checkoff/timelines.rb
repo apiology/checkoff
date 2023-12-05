@@ -69,7 +69,7 @@ module Checkoff
                                                               limit_to_portfolio_name)
       end
 
-      all_dependent_task_gids = @tasks.all_dependent_tasks(task).map(&:gid)
+      all_dependent_task_gids = nil
       task.memberships.all? do |membership_data|
         unless limit_to_portfolio_name.nil?
           project_gid = membership_data.fetch('project').fetch('gid')
@@ -85,6 +85,8 @@ module Checkoff
         next false if last_milestone.nil?
 
         next true if last_milestone.gid == task.gid
+
+        all_dependent_task_gids ||= @tasks.all_dependent_tasks(task).map(&:gid)
 
         all_dependent_task_gids.include? last_milestone.gid
       end
