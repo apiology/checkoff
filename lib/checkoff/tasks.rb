@@ -8,6 +8,7 @@ require_relative 'workspaces'
 require_relative 'internal/config_loader'
 require_relative 'internal/task_timing'
 require_relative 'internal/task_hashes'
+require_relative 'internal/logging'
 require 'asana'
 
 module Checkoff
@@ -15,6 +16,8 @@ module Checkoff
   class Tasks
     # @!parse
     #   extend CacheMethod::ClassMethods
+
+    include Logging
 
     MINUTE = 60
     HOUR = MINUTE * 60
@@ -167,6 +170,8 @@ module Checkoff
 
     # True if any of the task's dependencies are marked incomplete
     #
+    # Include 'dependencies.gid' in extra_fields of task passed in.
+    #
     # @param task [Asana::Resources::Task]
     def incomplete_dependencies?(task)
       # Avoid a redundant fetch.  Unfortunately, Ruby SDK allows
@@ -179,8 +184,7 @@ module Checkoff
 
       # @sg-ignore
       # @type [Enumerable<Asana::Resources::Task>, nil]
-      dependencies = task.instance_variable_get(:@dependencies)
-      dependencies = task.dependencies.map { |dependency| { 'gid' => dependency.gid } } if dependencies.nil?
+      dependencies = task.instance_variable_get(:@dependencies) || []
 
       dependencies.any? do |parent_task_info|
         # the real bummer though is that asana doesn't let you fetch
@@ -188,20 +192,36 @@ module Checkoff
         # regardless:
         parent_task_gid = parent_task_info.fetch('gid')
 
-        parent_task = task_by_gid(parent_task_gid,
-                                  only_uncompleted: false)
+        parent_task = task_by_gid(parent_task_gid, only_uncompleted: false)
         parent_task.completed_at.nil?
       end
     end
 
     # @param task [Asana::Resources::Task]
     #
-    # @return [Array<Asana::Resources::Task>]
+    # @return [Array<Hash>]
     def all_dependent_tasks(task)
       dependent_tasks = []
-      task.dependents.each do |dependent_task|
-        dependent_tasks << dependent_task
-        dependent_tasks += all_dependent_tasks(dependent_task)
+      # See note above - same applies as does in @dependencies
+      #
+      # @type [Array<Hash>]
+      dependents = task.instance_variable_get(:@dependents) || []
+      dependents.each do |dependent_task_hash_or_obj|
+        # seems like if we ever .inspect the task, it stashes the task
+        # object instead of the hash.  Try to avoid this - but maybe we
+        # need to convert if it does happen.
+        raise 'Found dependent task object!' if dependent_task_hash_or_obj.is_a?(Asana::Resources::Task)
+
+        dependent_task_hash = dependent_task_hash_or_obj
+
+        dependent_task = task_by_gid(dependent_task_hash.fetch('gid'),
+                                     only_uncompleted: true,
+                                     extra_fields: ['dependents'])
+        debug { "#{task.name} has dependent task #{dependent_task.name}" }
+        unless dependent_task.nil?
+          dependent_tasks << dependent_task
+          dependent_tasks += all_dependent_tasks(dependent_task)
+        end
       end
       dependent_tasks
     end
@@ -246,6 +266,11 @@ module Checkoff
           portfolio_project.gid == project_gid
         end
       end
+    end
+
+    # @return [Hash]
+    def as_cache_key
+      {}
     end
 
     private

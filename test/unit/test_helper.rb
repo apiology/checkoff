@@ -31,9 +31,9 @@ require 'minitest/reporters'
 Minitest::Reporters.use! [Minitest::Reporters::DefaultReporter.new(location: true)]
 
 require_relative 'cachemethoddouble'
-require_relative '../../lib/checkoff'
-
+ENV['LOG_LEVEL'] = 'WARN'
 ENV['TZ'] = 'US/Eastern'
+require_relative '../../lib/checkoff'
 
 def let_single_mock(mock_sym)
   define_method(mock_sym.to_s) do
