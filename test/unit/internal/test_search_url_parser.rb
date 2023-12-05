@@ -633,22 +633,24 @@ class TestSearchUrlParser < ClassTest
 
   # @return [void]
   def test_convert_params_41
-    search_url_parser = get_test_object
-    url = 'https://app.asana.com/0/search?sort=completion_time&completion=incomplete&milestone=is_not_milestone&subtask=is_not_subtask&due_date.operator=within_next&due_date.value=7&due_date.unit=day&portfolios.ids=123&custom_field_456.variant=no_value'
-    asana_api_params = {
-      'custom_fields.456.is_set' => 'false',
-      'due_on.before' => '2023-12-11',
-      'sort_by' => 'completed_at',
-      'completed' => false,
-      'resource_subtype' => 'default_task',
-      'is_subtask' => false,
-      'portfolios.any' => '123',
-    }
+    Date.stub(:today, Date.new(2023, 1, 1)) do
+      search_url_parser = get_test_object
+      url = 'https://app.asana.com/0/search?sort=completion_time&completion=incomplete&milestone=is_not_milestone&subtask=is_not_subtask&due_date.operator=within_next&due_date.value=7&due_date.unit=day&portfolios.ids=123&custom_field_456.variant=no_value'
+      asana_api_params = {
+        'custom_fields.456.is_set' => 'false',
+        'due_on.before' => '2023-01-09',
+        'sort_by' => 'completed_at',
+        'completed' => false,
+        'resource_subtype' => 'default_task',
+        'is_subtask' => false,
+        'portfolios.any' => '123',
+      }
 
-    task_selector = [:nil?, [:custom_field_gid_value, '456']]
+      task_selector = [:nil?, [:custom_field_gid_value, '456']]
 
-    assert_equal([asana_api_params, task_selector],
-                 search_url_parser.convert_params(url))
+      assert_equal([asana_api_params, task_selector],
+                   search_url_parser.convert_params(url))
+    end
   end
 
   # @return [Class<Checkoff::Internal::SearchUrl::Parser>]
