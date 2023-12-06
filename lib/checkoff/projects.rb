@@ -80,7 +80,7 @@ module Checkoff
         end
       end
     end
-    cache_method :project, LONG_CACHE_TIME
+    cache_method :project, REALLY_LONG_CACHE_TIME
 
     # @param workspace_name [String]
     # @param project_name [String,Symbol<:my_tasks>]
@@ -93,7 +93,7 @@ module Checkoff
 
       p
     end
-    cache_method :project_or_raise, LONG_CACHE_TIME
+    cache_method :project_or_raise, REALLY_LONG_CACHE_TIME
 
     # @param gid [String]
     # @param [Array<String>] extra_fields
@@ -102,7 +102,7 @@ module Checkoff
     def project_by_gid(gid, extra_fields: [])
       projects.find_by_id(gid, options: { fields: %w[name] + extra_fields })
     end
-    cache_method :project_by_gid, LONG_CACHE_TIME
+    cache_method :project_by_gid, REALLY_LONG_CACHE_TIME
 
     # find uncompleted tasks in a list
     # @param [Enumerable<Asana::Resources::Task>] tasks
@@ -133,10 +133,12 @@ module Checkoff
     def projects_by_workspace_name(workspace_name, extra_fields: [])
       workspace = @workspaces.workspace_or_raise(workspace_name)
       options = { fields: %w[name] + extra_fields }
-      projects.find_by_workspace(workspace: workspace.gid, per_page: 100, options: options)
+      # 15 minute cache resulted in 'Your pagination token has
+      # expired', so let's cache this a super long time and force
+      # evaluation
+      projects.find_by_workspace(workspace: workspace.gid, per_page: 100, options: options).to_a
     end
-    # 15 minute cache resulted in 'Your pagination token has expired'
-    cache_method :projects_by_workspace_name, MEDIUM_CACHE_TIME
+    cache_method :projects_by_workspace_name, REALLY_LONG_CACHE_TIME
 
     # @param project_obj [Asana::Resources::Project]
     # @param project [String, Symbol<:not_specified, :my_tasks>]
@@ -190,6 +192,7 @@ module Checkoff
     cache_method :projects, LONG_CACHE_TIME
 
     # @param [String] workspace_name
+    #
     # @return [Asana::Resources::Project]
     def my_tasks(workspace_name)
       workspace = @workspaces.workspace_or_raise(workspace_name)
