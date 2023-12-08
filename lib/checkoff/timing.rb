@@ -40,6 +40,9 @@ module Checkoff
     def in_period?(date_or_time, period)
       return this_week?(date_or_time) if period == :this_week
 
+      return day_of_week?(date_or_time, period) if %i[monday tuesday wednesday thursday friday saturday
+                                                      sunday].include?(period)
+
       return true if period == :indefinite
 
       return now_or_before?(date_or_time) if period == :now_or_before
@@ -115,6 +118,28 @@ module Checkoff
       date = date_or_time.to_date
 
       date >= beginning_of_week && date <= end_of_week
+    end
+
+    # @type [Hash<Symbol,Integer>]
+    WDAY_FROM_DAY_OF_WEEK = {
+      monday: 1,
+      tuesday: 2,
+      wednesday: 3,
+      thursday: 4,
+      friday: 5,
+      saturday: 6,
+      sunday: 0,
+    }.freeze
+
+    # @param date_or_time [Date,Time,nil]
+    # @param day_of_week [Symbol]
+    def day_of_week?(date_or_time, day_of_week)
+      return false if date_or_time.nil?
+
+      wday = WDAY_FROM_DAY_OF_WEEK.fetch(day_of_week)
+      today = @today_getter.today
+      date = date_or_time.to_date
+      date_or_time.wday == wday && date >= today && date < today + 7
     end
 
     # @param date_or_time [Date,Time,nil]
