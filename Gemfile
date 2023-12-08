@@ -26,7 +26,7 @@ gem 'rubocop-rake'
 # ensure version with branch coverage
 gem 'simplecov', ['>=0.18.0']
 gem 'simplecov-lcov'
-gem 'solargraph', ['>=0.49.0']
+gem 'solargraph', ['>=0.50.0']
 gem 'undercover'
 gem 'webmock'
 gem 'yard'
