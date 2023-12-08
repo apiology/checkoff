@@ -80,6 +80,7 @@ class TestProjectHashes < ClassTest
     end
 
     project_data = project_hashes.project_to_h(project, project: :my_tasks)
+
     assert_equal(:my_tasks, project_data['project'])
   end
 

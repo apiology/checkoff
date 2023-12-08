@@ -26,6 +26,7 @@ class TestCustomFields < ClassTest
       custom_field_arr = [wrong_custom_field, custom_field]
       expect_custom_fields_pulled(custom_field_arr)
     end
+
     assert_equal(custom_field, custom_fields.custom_field_or_raise(workspace_name,
                                                                    custom_field_name))
   end
@@ -52,6 +53,7 @@ class TestCustomFields < ClassTest
       custom_field_arr = [wrong_custom_field, custom_field]
       expect_custom_fields_pulled(custom_field_arr)
     end
+
     assert_equal(custom_field, custom_fields.custom_field(workspace_name, custom_field_name))
   end
 

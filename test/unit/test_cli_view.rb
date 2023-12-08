@@ -123,6 +123,7 @@ class TestCLIView < Minitest::Test
       mock_run_with_no_section_specified_normal_project(due_on: 'fake_date', due_at: nil)
       @mocks[:stdout].expects(:puts).with(expected_json_no_section_specified)
     end
+
     assert_equal(0,
                  cli.run(['view',
                           workspace_name,
@@ -160,6 +161,7 @@ class TestCLIView < Minitest::Test
     cli = get_test_object do
       mock_view_specific_task(section_name: nil)
     end
+
     assert_equal(0,
                  cli.run(['view',
                           workspace_name,
@@ -172,6 +174,7 @@ class TestCLIView < Minitest::Test
     cli = get_test_object do
       mock_view_specific_task(section_name: section_name_str)
     end
+
     assert_equal(0,
                  cli.run(['view',
                           workspace_name,
@@ -198,6 +201,7 @@ class TestCLIView < Minitest::Test
       mock_view_run_with_section_specified_empty_section
       @mocks[:stdout].expects(:puts).with(expected_json_section_specified)
     end
+
     assert_equal(0,
                  cli.run(['view',
                           workspace_name,
@@ -217,6 +221,7 @@ class TestCLIView < Minitest::Test
       mock_view_run_with_section_specified_normal_project_colon_project
       @mocks[:stdout].expects(:puts).with(expected_json_section_specified)
     end
+
     assert_equal(0,
                  cli.run(['view',
                           workspace_name,
@@ -236,6 +241,7 @@ class TestCLIView < Minitest::Test
       mock_view_run_with_section_specified_normal_project
       @mocks[:stdout].expects(:puts).with(expected_json_section_specified)
     end
+
     assert_equal(0,
                  cli.run(['view',
                           workspace_name,
@@ -252,6 +258,7 @@ class TestCLIView < Minitest::Test
       mock_run_with_no_project_specified
       @mocks[:stdout].expects(:puts)
     end
+
     assert_equal(64, cli.run(['view', workspace_name]))
   end
 
@@ -264,6 +271,7 @@ class TestCLIView < Minitest::Test
       mock_run_with_no_section_specified_normal_project(due_on: nil, due_at: nil)
       @mocks[:stdout].expects(:puts).with(expected_json_view_not_due)
     end
+
     assert_equal(0,
                  cli.run(['view',
                           workspace_name,
@@ -281,6 +289,7 @@ class TestCLIView < Minitest::Test
       mock_run_with_no_section_specified_normal_project(due_on: nil, due_at: 'fake time')
       @mocks[:stdout].expects(:puts).with(expected_json_view_due_at)
     end
+
     assert_equal(0,
                  cli.run(['view',
                           workspace_name,

@@ -50,6 +50,7 @@ class TestCLIHelp < Minitest::Test
     cli = get_test_object do
       @mocks[:stdout].expects(:puts).at_least(1)
     end
+
     assert_equal(0, cli.run(['--help']))
   end
 end

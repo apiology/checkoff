@@ -279,6 +279,7 @@ class TestMvSubcommand < ClassTest
 
       set_initializer_arguments
     end
+
     refute_nil mv_subcommand
   end
 
