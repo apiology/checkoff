@@ -884,6 +884,24 @@ class TestTaskSelectors < ClassTest
                                                    [:in_section_named?, 'foo']))
   end
 
+  def test_filter_via_task_selector_in_project_named_false
+    task_selectors = get_test_object do
+      task.expects(:memberships).returns([])
+    end
+
+    refute(task_selectors.filter_via_task_selector(task,
+                                                   [:in_project_named?, 'foo']))
+  end
+
+  def test_filter_via_task_selector_in_project_named_true
+    task_selectors = get_test_object do
+      task.expects(:memberships).returns([{ 'project' => { 'name' => 'foo' } }])
+    end
+
+    assert(task_selectors.filter_via_task_selector(task,
+                                                   [:in_project_named?, 'foo']))
+  end
+
   def test_filter_via_task_selector_in_section_name_starts_with_true
     task_selectors = get_test_object do
       task.expects(:memberships).returns([{ 'section' => { 'name' => 'foo [100]' } }])
