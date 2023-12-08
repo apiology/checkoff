@@ -21,6 +21,7 @@ class TestEvents < ClassTest
     events = get_test_object do
       mock_filter_asana_events_true
     end
+
     assert_equal([event], events.filter_asana_events(filters, [event]))
   end
 
@@ -29,6 +30,7 @@ class TestEvents < ClassTest
       asana_event_filter_class.expects(:new).with(filters: filters).returns(asana_event_filter)
       asana_event_filter.expects(:matches?).with(event).returns(false)
     end
+
     assert_empty(events.filter_asana_events(filters, [event]))
   end
 

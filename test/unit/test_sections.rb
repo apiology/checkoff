@@ -405,6 +405,7 @@ class TestSections < BaseAsana
     end
 
     e = assert_raises(RuntimeError) { sections.section_by_gid(section_1_gid) }
+
     assert_equal('Unexpected response body: {}', e.message)
   end
 

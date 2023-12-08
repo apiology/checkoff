@@ -26,6 +26,7 @@ class TestClients < ClassTest
     clients = get_test_object do
       mock_client
     end
+
     assert_equal(client, clients.client)
   end
 

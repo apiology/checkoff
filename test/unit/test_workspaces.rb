@@ -34,6 +34,7 @@ class TestWorkspaces < BaseAsana
 
   def test_workspace_or_raise
     asana = get_test_object { mock_workspace_or_raise }
+
     assert_equal(workspace_a, asana.workspace_or_raise(workspace_a_name))
   end
 
@@ -46,6 +47,7 @@ class TestWorkspaces < BaseAsana
     asana = get_test_object do
       expect_default_workspace_gid_config_fetched
     end
+
     assert_equal(workspace_a_gid, asana.send(:default_workspace_gid))
   end
 
@@ -54,6 +56,7 @@ class TestWorkspaces < BaseAsana
       expect_default_workspace_gid_config_fetched
       asana_workspace.expects(:find_by_id).with(client, workspace_a_gid).returns(workspace_a)
     end
+
     assert_equal(workspace_a, asana.default_workspace)
   end
 

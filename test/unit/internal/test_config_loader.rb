@@ -29,6 +29,7 @@ class TestConfigLoader < Minitest::Test
     config_hash = Checkoff::Internal::ConfigLoader.load(:foo)
 
     ENV.expects(:fetch).with('FOO__ENV_ONLY_KEY', nil).returns('123').at_least(2)
+
     assert_equal('123', config_hash[:env_only_key])
     assert_equal('123', config_hash.fetch(:env_only_key))
   end
