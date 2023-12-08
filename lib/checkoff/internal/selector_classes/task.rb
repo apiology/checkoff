@@ -52,6 +52,29 @@ module Checkoff
         end
       end
 
+      # :in_project_named? function
+      class InProjectNamedPFunctionEvaluator < FunctionEvaluator
+        def matches?
+          fn?(selector, :in_project_named?)
+        end
+
+        # @param _index [Integer]
+        def evaluate_arg?(_index)
+          false
+        end
+
+        # @sg-ignore
+        # @param task [Asana::Resources::Task]
+        # @param project_name [String]
+        # @return [Boolean]
+        def evaluate(task, project_name)
+          project_names = task.memberships.map do |membership|
+            membership.fetch('project').fetch('name')
+          end
+          project_names.include? project_name
+        end
+      end
+
       # :tag? function
       class TagPFunctionEvaluator < FunctionEvaluator
         def matches?
