@@ -55,6 +55,7 @@ class TestProjects < BaseAsana
     projects = get_test_object do
       mock_tasks_from_project(options: task_options_with_completed)
     end
+
     assert_equal(tasks, projects.tasks_from_project(project_a,
                                                     only_uncompleted: false))
   end
@@ -63,6 +64,7 @@ class TestProjects < BaseAsana
     projects = get_test_object do
       mock_tasks_from_project(options: task_options)
     end
+
     assert_equal(tasks, projects.tasks_from_project(project_a))
   end
 
@@ -71,6 +73,7 @@ class TestProjects < BaseAsana
       task_a.expects(:completed_at).returns(mock_now)
       task_b.expects(:completed_at).returns(nil)
     end
+
     assert_equal([task_b], projects.active_tasks([task_a, task_b]))
   end
 
@@ -87,6 +90,7 @@ class TestProjects < BaseAsana
       setup_projects_pulled
       setup_projects_queried(workspace_gid: workspace_one_gid)
     end
+
     assert_equal(project_a, projects.project('Workspace 1', a_name))
   end
 
@@ -119,6 +123,7 @@ class TestProjects < BaseAsana
       client.expects(:projects).returns(client_projects)
       client_projects.expects(:find_by_id).with(project_gid, options: { fields: ['name'] }).returns(project)
     end
+
     assert_equal(project, projects.project_by_gid(project_gid))
   end
 
@@ -126,6 +131,7 @@ class TestProjects < BaseAsana
     projects = get_test_object do
       mock_project_my_tasks
     end
+
     assert_equal(my_tasks_project, projects.project_or_raise('Workspace 1', :my_tasks))
   end
 
@@ -143,6 +149,7 @@ class TestProjects < BaseAsana
     projects = get_test_object do
       mock_project_my_tasks
     end
+
     assert_equal(my_tasks_project, projects.project('Workspace 1', :my_tasks))
   end
 
@@ -151,6 +158,7 @@ class TestProjects < BaseAsana
       project_hashes.expects(:project_to_h).with(project_a, project: :not_specified)
         .returns(project_a_hash)
     end
+
     assert_equal(project_a_hash, projects.project_to_h(project_a))
   end
 
@@ -165,6 +173,7 @@ class TestProjects < BaseAsana
     projects = get_test_object do
       mock_test_in_period
     end
+
     assert(projects.in_period?(project, field_name, period))
   end
 
@@ -179,6 +188,7 @@ class TestProjects < BaseAsana
     projects = get_test_object do
       mock_project_ready
     end
+
     assert(projects.project_ready?(project, period: period))
   end
 

@@ -27,6 +27,7 @@ class TestTags < ClassTest
       tag_arr = [wrong_tag, tag]
       expect_tags_pulled(tag_arr)
     end
+
     assert_equal(tag, tags.tag_or_raise(workspace_name, tag_name))
   end
 
@@ -52,6 +53,7 @@ class TestTags < ClassTest
       tag_arr = [wrong_tag, tag]
       expect_tags_pulled(tag_arr)
     end
+
     assert_equal(tag, tags.tag(workspace_name, tag_name))
   end
 

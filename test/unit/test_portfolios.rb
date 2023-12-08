@@ -28,6 +28,7 @@ class TestPortfolios < ClassTest
       portfolio_arr = [wrong_portfolio, portfolio]
       expect_portfolios_pulled(portfolio_arr)
     end
+
     assert_equal(portfolio, portfolios.portfolio_or_raise(workspace_name, portfolio_name))
   end
 
@@ -65,6 +66,7 @@ class TestPortfolios < ClassTest
       portfolio_arr = [wrong_portfolio, portfolio]
       expect_portfolios_pulled(portfolio_arr)
     end
+
     assert_equal(portfolio, portfolios.portfolio(workspace_name, portfolio_name))
   end
 
@@ -74,6 +76,7 @@ class TestPortfolios < ClassTest
       portfolios_api.expects(:find_by_id).with(portfolio_gid,
                                                options: { fields: ['name'] }).returns(portfolio)
     end
+
     assert_equal(portfolio, portfolios.portfolio_by_gid(portfolio_gid))
   end
 
@@ -86,6 +89,7 @@ class TestPortfolios < ClassTest
       portfolios_api.expects(:get_items_for_portfolio).with(portfolio_gid: portfolio_gid,
                                                             options: { fields: ['name'] }).returns([project_a])
     end
+
     assert_equal([project_a], portfolios.projects_in_portfolio(workspace_name, portfolio_name))
   end
 

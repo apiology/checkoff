@@ -45,6 +45,7 @@ class TestSubtasks < ClassTest
       expect_active_subtasks_pulled(active_subtasks)
       allow_all_section_status_queried
     end
+
     refute(subtasks.all_subtasks_completed?(task))
   end
 
@@ -71,6 +72,7 @@ class TestSubtasks < ClassTest
       expect_active_subtasks_pulled(active_subtasks)
       allow_all_section_status_queried
     end
+
     assert(subtasks.all_subtasks_completed?(task))
   end
 
@@ -82,6 +84,7 @@ class TestSubtasks < ClassTest
     subtasks = get_test_object do
       allow_subtask_section_status_queried(subtask, is_rendered_as_separator)
     end
+
     assert_equal(subtasks.subtask_section?(subtask), is_rendered_as_separator)
   end
 
@@ -113,6 +116,7 @@ class TestSubtasks < ClassTest
 
   def test_by_section
     subtasks = get_test_object { mock_by_section }
+
     assert_equal({
                    nil => [subtask_1a],
                    '1:' => [subtask_1b],
@@ -133,6 +137,7 @@ class TestSubtasks < ClassTest
                            subtask_section_2,
                            subtask_section_3, subtask_3a])
     end
+
     assert_equal('More than one section named 1:', e.message)
   end
 
@@ -149,11 +154,13 @@ class TestSubtasks < ClassTest
       expect_task_options_pulled
       expect_raw_subtasks_pulled
     end
+
     assert_equal(raw_subtasks, subtasks.raw_subtasks(task))
   end
 
   def test_init
     subtasks = get_test_object
+
     refute_nil subtasks
   end
 
