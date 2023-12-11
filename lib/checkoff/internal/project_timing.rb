@@ -73,7 +73,7 @@ module Checkoff
           return custom_field(project, *args) if actual_field_name == :custom_field
         end
 
-        raise "Teach me how to handle field #{field_name}"
+        raise "Teach me how to handle field #{field_name.inspect}"
       end
     end
   end

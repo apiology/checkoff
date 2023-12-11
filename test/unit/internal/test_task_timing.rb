@@ -10,7 +10,7 @@ class TestTaskTiming < ClassTest
     task_timing = get_test_object
     e = assert_raises(RuntimeError) { task_timing.date_or_time_field_by_name(task, :blah) }
 
-    assert_equal 'Teach me how to handle field blah', e.message
+    assert_equal 'Teach me how to handle field :blah', e.message
   end
 
   def class_under_test

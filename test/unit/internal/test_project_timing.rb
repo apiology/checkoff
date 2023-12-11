@@ -93,7 +93,7 @@ class TestProjectTiming < ClassTest
     project_timing = get_test_object
     e = assert_raises(RuntimeError) { project_timing.date_or_time_field_by_name(project, :blah) }
 
-    assert_equal 'Teach me how to handle field blah', e.message
+    assert_equal 'Teach me how to handle field :blah', e.message
   end
 
   def test_date_or_time_field_by_name_raises_if_unknown_array_field
