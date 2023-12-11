@@ -709,7 +709,7 @@ class TestTaskSelectors < ClassTest
                                                [:less_than_n_days_ago, 7]])
     end
 
-    assert_match(/Teach me how to handle field bogus_at/, e.message)
+    assert_match(/Teach me how to handle field :bogus_at/, e.message)
   end
 
   # @return [void]
