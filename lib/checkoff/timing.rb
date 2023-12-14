@@ -178,7 +178,7 @@ module Checkoff
                date_or_time
              end
       out = date > start_date && date <= end_date
-      logger.debug do
+      finer do
         "Checkoff::Timing#between_relative_days?(#{date_or_time.inspect} " \
           "(as date: #{date.inspect}) " \
           "#{beginning_num_days_from_now.inspect}, #{end_num_days_from_now.inspect}) " \
