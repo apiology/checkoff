@@ -84,30 +84,29 @@ module Checkoff
     #
     # @param [Hash<Symbol, Object>] api_params
     # @param [String] workspace_gid
-    # @param [String] url
     # @param [Array<String>] extra_fields
     # @param [Array] task_selector
+    # @param [Boolean] fetch_all Ensure all results are provided by manually paginating
     #
     # @return [Enumerable<Asana::Resources::Task>]
-    def raw_task_search(api_params, workspace_gid:, extra_fields: [], task_selector: [])
+    def raw_task_search(api_params,
+                        workspace_gid:, extra_fields: [], task_selector: [],
+                        fetch_all: true)
       # @sg-ignore
-      path = "/workspaces/#{workspace_gid}/tasks/search"
-      options = calculate_api_options(extra_fields)
-      tasks = @asana_resources_collection_class.new(parse(client.get(path,
-                                                                     params: api_params,
-                                                                     options: options)),
-                                                    type: Asana::Resources::Task,
-                                                    client: client)
+      tasks = api_task_search_request(api_params, workspace_gid: workspace_gid, extra_fields: extra_fields)
 
-      if tasks.length == 100
-        raise 'Too many results returned. ' \
-              'Please narrow your search in ways expressible through task search API: ' \
-              'https://developers.asana.com/reference/searchtasksforworkspace'
+      if fetch_all && tasks.count == 100
+        # @sg-ignore
+        tasks = iterated_raw_task_search(api_params, workspace_gid: workspace_gid, extra_fields: extra_fields)
       end
 
-      debug { "#{tasks.length} raw tasks returned" }
+      debug { "#{tasks.count} raw tasks returned" }
 
-      tasks.select { |task| task_selectors.filter_via_task_selector(task, task_selector) }
+      return tasks if task_selector.empty?
+
+      tasks.select do |task|
+        task_selectors.filter_via_task_selector(task, task_selector)
+      end
     end
 
     # @return [Hash]
@@ -116,6 +115,79 @@ module Checkoff
     end
 
     private
+
+    # Perform a search using the Asana Task Search API:
+    #
+    #   https://developers.asana.com/reference/searchtasksforworkspace
+    #
+    # @param [Hash<Symbol, Object>] api_params
+    # @param [String] workspace_gid
+    # @param [Array<String>] extra_fields
+    #
+    # @return [Enumerable<Asana::Resources::Task>]
+    def api_task_search_request(api_params, workspace_gid:, extra_fields:)
+      path = "/workspaces/#{workspace_gid}/tasks/search"
+      options = calculate_api_options(extra_fields)
+      @asana_resources_collection_class.new(parse(client.get(path,
+                                                             params: api_params,
+                                                             options: options)),
+                                            type: Asana::Resources::Task,
+                                            client: client)
+    end
+
+    # Perform a search using the Asana Task Search API and use manual pagination to
+    # ensure all results are returned:
+    #
+    #   https://developers.asana.com/reference/searchtasksforworkspace
+    #
+    #     "However, you can paginate manually by sorting the search
+    #     results by their creation time and then modifying each
+    #     subsequent query to exclude data you have already seen." -
+    #     see sort_by field at
+    #     https://developers.asana.com/reference/searchtasksforworkspace
+    #
+    # @param [Hash<Symbol, Object>] api_params
+    # @param [String] workspace_gid
+    # @param [String] url
+    # @param [Array<String>] extra_fields
+    # @param [Boolean] fetch_all Ensure all results are provided by manually paginating
+    #
+    # @return [Enumerable<Asana::Resources::Task>]
+    def iterated_raw_task_search(api_params, workspace_gid:, extra_fields:)
+      # https://developers.asana.com/reference/searchtasksforworkspace
+      tasks = []
+      new_api_params = api_params.dup
+      original_sort_by = new_api_params.delete('sort_by')
+      # defaults to false
+      original_sort_ascending = new_api_params.delete('sort_ascending')
+      original_created_at_before = new_api_params.delete('created_at.before')
+      raise 'Teach me how to handle original_created_at_before' unless original_created_at_before.nil?
+
+      new_api_params['sort_by'] = 'created_at'
+
+      Kernel.loop do
+        # Get the most recently created results, then iterate on until we're out of results
+
+        # @type [Array<Asana::Resources::Task>]
+        task_batch = raw_task_search(new_api_params,
+                                     workspace_gid: workspace_gid, extra_fields: extra_fields + ['created_appt'],
+                                     fetch_all: false).to_a
+        oldest = task_batch.to_a.last
+
+        break if oldest.nil?
+
+        new_api_params['created_at.before'] = oldest.created_at
+
+        tasks.concat(task_batch.to_a)
+      end
+      unless original_sort_by.nil? || original_sort_by == 'created_at'
+        raise "Teach me how to handle original_sort_by: #{original_sort_by.inspect}"
+      end
+
+      raise 'Teach me how to handle original_sort_ascending' unless original_sort_ascending.nil?
+
+      tasks
+    end
 
     # @param [Array<String>] extra_fields
     # @return [Hash<Symbol, Object>]

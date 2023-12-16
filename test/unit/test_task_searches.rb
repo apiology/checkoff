@@ -69,10 +69,15 @@ class TestTaskSearches < ClassTest
       .returns(false)
   end
 
+  def expect_task_selector_queried
+    task_selector.expects(:empty?).returns(false)
+  end
+
   def mock_task_search
     expect_workspace_pulled
     expect_workspace_gid_pulled
     expect_convert_params_called
+    expect_task_selector_queried
     expect_task_options_pulled
     expect_search_response_queried
     expect_response_wrapped([good_task, bad_task])
@@ -94,20 +99,6 @@ class TestTaskSearches < ClassTest
     expect_task_options_pulled
     expect_search_response_queried
     expect_response_wrapped(Array.new(100) { good_task })
-  end
-
-  def test_task_search_overloaded_results
-    task_searches = get_test_object do
-      mock_task_search_overloaded
-    end
-    e = assert_raises(RuntimeError) { task_searches.task_search(workspace_name, url) }
-
-    assert_equal(
-      'Too many results returned. ' \
-      'Please narrow your search in ways expressible through task search API: ' \
-      'https://developers.asana.com/reference/searchtasksforworkspace',
-      e.message
-    )
   end
 
   def test_as_cache_key
