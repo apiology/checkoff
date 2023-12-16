@@ -111,21 +111,39 @@ module Checkoff
       tasks.select { |task| task.completed_at.nil? }
     end
 
-    # pull task objects from a named project
+    # Pull task objects from a named project
+    #
     # @param [Asana::Resources::Project] project
     # @param [Boolean] only_uncompleted
     # @param [Array<String>] extra_fields
+    #
     # @return [Enumerable<Asana::Resources::Task>]
     def tasks_from_project(project,
                            only_uncompleted: true,
                            extra_fields: [])
+      tasks_from_project_gid(project.gid,
+                             only_uncompleted: only_uncompleted,
+                             extra_fields: extra_fields)
+    end
+    cache_method :tasks_from_project, SHORT_CACHE_TIME
+
+    # Pull task objects from a project identified by a gid
+    #
+    # @param [String] project_gid
+    # @param [Boolean] only_uncompleted
+    # @param [Array<String>] extra_fields
+    #
+    # @return [Enumerable<Asana::Resources::Task>]
+    def tasks_from_project_gid(project_gid,
+                               only_uncompleted: true,
+                               extra_fields: [])
       options = task_options
       options[:completed_since] = '9999-12-01' if only_uncompleted
-      options[:project] = project.gid
+      options[:project] = project_gid
       options[:options][:fields] += extra_fields
       client.tasks.find_all(**options)
     end
-    cache_method :tasks_from_project, SHORT_CACHE_TIME
+    cache_method :tasks_from_project_gid, SHORT_CACHE_TIME
 
     # @param [String] workspace_name
     # @param [Array<String>] extra_fields
