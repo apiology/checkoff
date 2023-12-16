@@ -170,7 +170,7 @@ module Checkoff
 
         # @type [Array<Asana::Resources::Task>]
         task_batch = raw_task_search(new_api_params,
-                                     workspace_gid: workspace_gid, extra_fields: extra_fields + ['created_appt'],
+                                     workspace_gid: workspace_gid, extra_fields: extra_fields + ['created_at'],
                                      fetch_all: false).to_a
         oldest = task_batch.to_a.last
 
