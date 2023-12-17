@@ -301,6 +301,50 @@ module Checkoff
                                                                 limit_to_portfolio_name: limit_to_portfolio_name)
         end
       end
+
+      # :milestone_does_not_depend_on_this_task? function
+      class MilestonePFunctionEvaluator < FunctionEvaluator
+        FUNCTION_NAME = :milestone?
+
+        def matches?
+          fn?(selector, FUNCTION_NAME)
+        end
+
+        def evaluate_arg?(_index)
+          false
+        end
+
+        # @param task [Asana::Resources::Task]
+        #
+        # @return [Boolean]
+        def evaluate(task)
+          raise 'Please add resource_subtype to extra_fields' if task.resource_subtype.nil?
+
+          task.resource_subtype == 'milestone'
+        end
+      end
+
+      # :milestone_does_not_depend_on_this_task? function
+      class NoMilestoneDependsOnThisTaskPFunctionEvaluator < FunctionEvaluator
+        FUNCTION_NAME = :no_milestone_depends_on_this_task?
+
+        def matches?
+          fn?(selector, FUNCTION_NAME)
+        end
+
+        def evaluate_arg?(_index)
+          false
+        end
+
+        # @param task [Asana::Resources::Task]
+        # @param limit_to_portfolio_name [String, nil]
+        #
+        # @return [Boolean]
+        def evaluate(task, limit_to_portfolio_name = nil)
+          !@timelines.any_milestone_depends_on_this_task?(task,
+                                                          limit_to_portfolio_name: limit_to_portfolio_name)
+        end
+      end
     end
   end
 end

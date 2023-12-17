@@ -92,6 +92,36 @@ module Checkoff
       end
     end
 
+    # @param task [Asana::Resources::Task]
+    # @param limit_to_portfolio_name [String, nil]
+    def any_milestone_depends_on_this_task?(task, limit_to_portfolio_name: nil)
+      unless limit_to_portfolio_name.nil?
+        limit_to_projects = @portfolios.projects_in_portfolio(@workspaces.default_workspace.name,
+                                                              limit_to_portfolio_name)
+      end
+
+      all_dependent_milestones = nil
+      task.memberships.all? do |membership_data|
+        unless limit_to_portfolio_name.nil?
+          project_gid = membership_data.fetch('project').fetch('gid')
+          next true unless limit_to_projects.map(&:gid).include? project_gid
+        end
+
+        all_dependent_milestones ||=
+          @tasks.all_dependent_tasks(task,
+                                     extra_task_fields: ['resource_subtype',
+                                                         'memberships.project.gid']).select do |dependent_task|
+            dependent_task.resource_subtype == 'milestone'
+          end
+
+        all_dependent_milestones.any? do |milestone|
+          milestone.memberships.any? do |milestone_membership_data|
+            milestone_membership_data.fetch('project').fetch('gid') == project_gid
+          end
+        end
+      end
+    end
+
     # @param section_gid [String]
     #
     # @return [Asana::Resources::Task,nil]

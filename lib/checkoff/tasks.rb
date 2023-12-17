@@ -198,9 +198,10 @@ module Checkoff
     end
 
     # @param task [Asana::Resources::Task]
+    # @param extra_task_fields [Array<String>]
     #
     # @return [Array<Hash>]
-    def all_dependent_tasks(task)
+    def all_dependent_tasks(task, extra_task_fields: [])
       dependent_tasks = []
       # See note above - same applies as does in @dependencies
       #
@@ -216,7 +217,7 @@ module Checkoff
 
         dependent_task = task_by_gid(dependent_task_hash.fetch('gid'),
                                      only_uncompleted: true,
-                                     extra_fields: ['dependents'])
+                                     extra_fields: ['dependents'] + extra_task_fields)
         debug { "#{task.name} has dependent task #{dependent_task.name}" }
         unless dependent_task.nil?
           dependent_tasks << dependent_task
