@@ -5,6 +5,7 @@ require_relative 'internal/project_hashes'
 require_relative 'internal/project_timing'
 require_relative 'workspaces'
 require_relative 'clients'
+require_relative 'timing'
 require 'cache_method'
 require 'asana'
 

@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require 'checkoff/custom_fields'
+
 module Checkoff
   module Internal
     # Utility methods for working with project dates and times
