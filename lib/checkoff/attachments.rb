@@ -3,7 +3,6 @@
 # frozen_string_literal: true
 
 require 'faraday'
-require 'faraday/multipart'
 require 'forwardable'
 require 'cache_method'
 require 'mime/types'
@@ -69,6 +68,8 @@ module Checkoff
       end
     end
 
+    private
+
     # Writes contents of URL to a temporary file with the same
     # extension as the URL using Net::HTTP, raising an exception if
     # not succesful
@@ -78,6 +79,7 @@ module Checkoff
     # @return [Object]
     # @sg-ignore
     def download_uri(uri, &block)
+      out = nil
       Net::HTTP.start(uri.host, uri.port, use_ssl: uri.scheme == 'https') do |http|
         # @sg-ignore
         request = Net::HTTP::Get.new(uri)
@@ -86,10 +88,11 @@ module Checkoff
           raise("Unexpected response code: #{response.code}") unless response.code == '200'
 
           write_tempfile_from_response(response) do |tempfile|
-            block.yield tempfile
+            out = block.yield tempfile
           end
         end
       end
+      out
     end
 
     # @sg-ignore
@@ -127,8 +130,6 @@ module Checkoff
                         io: tempfile)
       end
     end
-
-    private
 
     # @param url [String]
     # @param resource [Asana::Resources::Resource]
