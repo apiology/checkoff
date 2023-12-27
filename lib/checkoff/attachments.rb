@@ -93,6 +93,8 @@ module Checkoff
         end
       end
       out
+    rescue StandardError => e
+      raise "Error downloading #{uri}: #{e}"
     end
 
     # @sg-ignore
