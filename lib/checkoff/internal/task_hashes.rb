@@ -17,6 +17,17 @@ module Checkoff
         task_hash
       end
 
+      # @param task_data [Hash]
+      # @param client [Asana::Client]
+      #
+      # @return [Asana::Resources::Task]
+      def h_to_task(task_data, client:)
+        # copy of task_data without the 'unwrapped' key
+        clean_task_data = task_data.dup
+        clean_task_data.delete('unwrapped')
+        Asana::Resources::Task.new(clean_task_data, client: client)
+      end
+
       private
 
       # @param task_hash [Hash]
