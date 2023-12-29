@@ -12,7 +12,7 @@ GIT
 PATH
   remote: .
   specs:
-    checkoff (0.164.0)
+    checkoff (0.165.0)
       activesupport
       asana (> 0.10.0)
       cache_method
