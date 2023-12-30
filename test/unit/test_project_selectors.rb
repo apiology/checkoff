@@ -168,4 +168,20 @@ class TestProjectSelectors < ClassTest
   def class_under_test
     Checkoff::ProjectSelectors
   end
+
+  def respond_like_instance_of
+    {
+      config: Hash,
+      workspaces: Checkoff::Workspaces,
+      projects: Checkoff::Projects,
+      custom_fields: Checkoff::CustomFields,
+      portfolios: Checkoff::Portfolios,
+      clients: Checkoff::Clients,
+      client: Asana::Client,
+    }
+  end
+
+  def respond_like
+    {}
+  end
 end
