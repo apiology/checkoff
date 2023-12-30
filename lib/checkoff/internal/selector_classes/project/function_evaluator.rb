@@ -9,11 +9,17 @@ module Checkoff
       class FunctionEvaluator < ::Checkoff::SelectorClasses::FunctionEvaluator
         # @param selector [Array<(Symbol, Array)>,String]
         # @param projects [Checkoff::Projects]
+        # @param portfolios [Checkoff::Portfolios]
+        # @param workspaces [Checkoff::Workspaces]
         def initialize(selector:,
                        projects:,
+                       portfolios:,
+                       workspaces:,
                        **_kwargs)
           @selector = selector
           @projects = projects
+          @portfolios = portfolios
+          @workspaces = workspaces
           super()
         end
 

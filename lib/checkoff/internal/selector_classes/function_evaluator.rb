@@ -1,9 +1,13 @@
 # frozen_string_literal: true
 
+require 'checkoff/internal/logging'
+
 module Checkoff
   module SelectorClasses
     # Base class to evaluate types of selector functions
     class FunctionEvaluator
+      include Logging
+
       # @sg-ignore
       # @param _index [Integer]
       def evaluate_arg?(_index)
