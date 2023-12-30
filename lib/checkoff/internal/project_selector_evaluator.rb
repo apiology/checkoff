@@ -10,12 +10,18 @@ module Checkoff
     # @param project [Asana::Resources::Project]
     # @param projects [Checkoff::Projects]
     # @param custom_fields [Checkoff::CustomFields]
+    # @param workspaces [Checkoff::Workspaces]
+    # @param portfolios [Checkoff::Portfolios]
     def initialize(project:,
                    projects: Checkoff::Projects.new,
-                   custom_fields: Checkoff::CustomFields.new)
+                   custom_fields: Checkoff::CustomFields.new,
+                   workspaces: Checkoff::Workspaces.new,
+                   portfolios: Checkoff::Portfolios.new)
       @item = project
       @projects = projects
       @custom_fields = custom_fields
+      @workspaces = workspaces
+      @portfolios = portfolios
       super()
     end
 
@@ -38,7 +44,10 @@ module Checkoff
 
     # @return [Hash]
     def initializer_kwargs
-      { projects: projects, custom_fields: custom_fields }
+      {
+        projects: projects, custom_fields: custom_fields,
+        workspaces: workspaces, portfolios: portfolios
+      }
     end
 
     # @return [Asana::Resources::Project]
@@ -47,5 +56,9 @@ module Checkoff
     attr_reader :projects
     # @return [Checkoff::CustomFields]
     attr_reader :custom_fields
+    # @return [Checkoff::Workspaces]
+    attr_reader :workspaces
+    # @return [Checkoff::Portfolios]
+    attr_reader :portfolios
   end
 end
