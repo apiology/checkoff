@@ -249,7 +249,7 @@ module Checkoff
     #
     # @return [Asana::Resources::Task]
     def h_to_task(task_data)
-      Asana::Resources::Task.new(task_data, client: client)
+      task_hashes.h_to_task(task_data, client: client)
     end
 
     # True if the task is in a project which is in the given portfolio
