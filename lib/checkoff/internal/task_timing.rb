@@ -34,7 +34,7 @@ module Checkoff
       # @sg-ignore
       # @return [Date, Time, nil]
       def start_date_or_time(task)
-        return @time_class.parse(task.start_at) unless task.start_at.nil?
+        return @time_class.parse(task.start_at).localtime unless task.start_at.nil?
 
         return @date_class.parse(task.start_on) unless task.start_on.nil?
 
@@ -47,7 +47,7 @@ module Checkoff
       # @sg-ignore
       # @return [Date, Time, nil]
       def due_date_or_time(task)
-        return @time_class.parse(task.due_at) unless task.due_at.nil?
+        return @time_class.parse(task.due_at).localtime unless task.due_at.nil?
 
         return @date_class.parse(task.due_on) unless task.due_on.nil?
 
@@ -58,7 +58,7 @@ module Checkoff
       #
       # @return [Time, nil]
       def modified_time(task)
-        @time_class.parse(task.modified_at) unless task.modified_at.nil?
+        @time_class.parse(task.modified_at).localtime unless task.modified_at.nil?
       end
 
       # @param task [Asana::Resources::Task]

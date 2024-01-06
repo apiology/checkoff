@@ -48,6 +48,7 @@ class TestTasks < BaseAsana
 
   def expect_start_at_parsed(less_than_now:)
     time_class.expects(:parse).with(start_at_string).returns(start_at_time_obj)
+    start_at_time_obj.expects(:localtime).returns(start_at_time_obj)
     start_at_time_obj.expects(:to_time).returns(start_at_time_obj).at_least(0)
     start_at_time_obj.expects(:<).with(now).returns(less_than_now)
   end
@@ -101,6 +102,7 @@ class TestTasks < BaseAsana
 
   def expect_due_at_parsed(less_than_now:)
     time_class.expects(:parse).with(due_at_string).returns(due_at_time_obj)
+    due_at_time_obj.expects(:localtime).returns(due_at_time_obj)
     due_at_time_obj.expects(:to_time).returns(due_at_time_obj).at_least(0)
     time_class.expects(:now).returns(now)
     due_at_time_obj.expects(:<).with(now).returns(less_than_now)
@@ -350,6 +352,7 @@ class TestTasks < BaseAsana
     tasks = get_test_object do
       task.expects(:due_at).returns(due_at_string).at_least(1)
       time_class.expects(:parse).with(due_at_string).returns(due_at_time_obj)
+      due_at_time_obj.expects(:localtime).returns(due_at_time_obj)
     end
 
     assert_equal(due_at_time_obj, tasks.date_or_time_field_by_name(task, :due))
