@@ -9,6 +9,11 @@ gem 'bump'
 gem 'bundler'
 gem 'fakeweb'
 gem 'mdl'
+# not a direct dependency - but updates a lot and confuses
+# bump+overcommit+bundler when it unexpectedly updates during the
+# CircleCI publish step
+#
+# https://app.circleci.com/pipelines/github/apiology/checkoff/1209/workflows/863fa0ce-097e-4a6b-a49f-f6ed62b29908/jobs/2320
 gem 'mime-types', ['=3.5.1']
 gem 'minitest-profile'
 gem 'minitest-reporters'
