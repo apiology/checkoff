@@ -242,6 +242,7 @@ DEPENDENCIES
   checkoff!
   fakeweb
   mdl
+  mime-types (= 3.5.1)
   minitest-profile
   minitest-reporters
   mocha (>= 2)

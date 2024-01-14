@@ -9,6 +9,7 @@ gem 'bump'
 gem 'bundler'
 gem 'fakeweb'
 gem 'mdl'
+gem 'mime-types', ['=3.5.1']
 gem 'minitest-profile'
 gem 'minitest-reporters'
 gem 'mocha', ['>= 2']

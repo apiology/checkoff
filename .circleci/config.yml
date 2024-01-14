@@ -126,7 +126,6 @@ jobs:
             # Coax overcommit into working
             git config --global user.email "test@test.test"
             git config --global user.name "Test Test"
-            bundle exec overcommit --install
             bundle exec overcommit --sign
             bundle exec overcommit --sign pre-commit
             bundle exec bump --commit-message ' [skip ci]' --tag --tag-prefix=v minor
