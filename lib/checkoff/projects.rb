@@ -126,7 +126,6 @@ module Checkoff
                              only_uncompleted: only_uncompleted,
                              extra_fields: extra_fields)
     end
-    cache_method :tasks_from_project, SHORT_CACHE_TIME
 
     # Pull task objects from a project identified by a gid
     #
@@ -144,7 +143,7 @@ module Checkoff
       options[:options][:fields] += extra_fields
       client.tasks.find_all(**options)
     end
-    cache_method :tasks_from_project_gid, SHORT_CACHE_TIME
+    cache_method :tasks_from_project_gid, REALLY_LONG_CACHE_TIME
 
     # @param [String] workspace_name
     # @param [Array<String>] extra_fields
