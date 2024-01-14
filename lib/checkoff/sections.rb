@@ -13,6 +13,8 @@ module Checkoff
     #   extend CacheMethod::ClassMethods
 
     MINUTE = 60
+    HOUR = MINUTE * 60
+    REALLY_LONG_CACHE_TIME = HOUR * 1
     LONG_CACHE_TIME = MINUTE * 15
     SHORT_CACHE_TIME = MINUTE * 5
 
@@ -130,7 +132,7 @@ module Checkoff
       client.tasks.get_tasks(section: section.gid,
                              **options)
     end
-    cache_method :tasks, SHORT_CACHE_TIME
+    cache_method :tasks, REALLY_LONG_CACHE_TIME
 
     # Pulls just names of tasks from a given section.
     # @param workspace_name [String]
