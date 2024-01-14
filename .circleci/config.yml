@@ -129,7 +129,6 @@ jobs:
             bundle exec overcommit --sign
             bundle exec overcommit --sign pre-commit
 
-            git status
             bundle exec bump --commit-message ' [skip ci]' --tag --tag-prefix=v minor
             bundle install
             # bundle exec needed for overcommit hooks
@@ -138,6 +137,7 @@ jobs:
             # https://app.circleci.com/settings/project/github/apiology/checkoff/ssh
             # includes a read-write 'user key':
             bundle exec git push --set-upstream origin "${CIRCLE_BRANCH:?}"
+            git status
             bundle exec rake release trigger_next_builds
 
 workflows:
