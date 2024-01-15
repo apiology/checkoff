@@ -31,10 +31,18 @@ module Checkoff
         logger.debug { "Filtering using #{@filters.inspect}" }
         return true if @filters.nil?
 
+        failures = []
+
         @filters.any? do |filter|
-          out = filter_matches_asana_event?(filter, asana_event)
-          logger.debug { "Filter #{filter.inspect} matched? #{out} against event #{asana_event.inspect}" }
-          out
+          filter_matches = filter_matches_asana_event?(filter, asana_event, failures)
+          logger.debug { "Filter #{filter.inspect} matched? #{filter_matches} against event #{asana_event.inspect}" }
+          unless filter_matches
+            logger.info do
+              "Filter #{filter.inspect} failed to match event #{asana_event.inspect} because of #{failures.inspect}"
+            end
+            failures << filter
+          end
+          filter_matches
         end
       end
 
@@ -42,14 +50,18 @@ module Checkoff
 
       # @param filter [Hash]
       # @param asana_event [Hash]
+      # @param failures [Array<String>]
       #
       # @sg-ignore
       # @return [Boolean]
-      def filter_matches_asana_event?(filter, asana_event)
+      def filter_matches_asana_event?(filter, asana_event, failures)
         # @param key [String]
         # @param value [String, Array<String>]
         filter.all? do |key, value|
-          asana_event_matches_filter_item?(key, value, asana_event)
+          matches = asana_event_matches_filter_item?(key, value, asana_event)
+          failures << "#{key.inspect} = #{value.inspect}" unless matches
+
+          matches
         end
       end
 

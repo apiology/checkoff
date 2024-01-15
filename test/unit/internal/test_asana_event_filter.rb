@@ -51,6 +51,14 @@ class TestAsanaEventFilter < ClassTest
     assert(asana_event_filter.matches?({ 'action' => 'deleted' }))
   end
 
+  def test_matches_on_action_false
+    asana_event_filter = get_test_object do
+      @mocks[:filters] = [{ 'action' => 'deleted' }]
+    end
+
+    refute(asana_event_filter.matches?({ 'action' => 'completed' }))
+  end
+
   CUSTOM_FIELD_CHANGED_EVENT = {
     'action' => 'changed',
     'created_at' => '2023-11-23T18:00:00.271Z',
@@ -110,6 +118,24 @@ class TestAsanaEventFilter < ClassTest
     },
     'parent' => nil,
     'change' => { 'field' => 'completed', 'action' => 'changed' },
+  }.freeze
+
+  TASK_COMPLETED_EVENT_2 = {
+    'user' => {
+      'gid' => '123',
+      'resource_type' => 'user',
+    },
+    'created_at' => '2024-01-15T12:34:45.332Z',
+    'action' => 'changed',
+    'resource' => {
+      'gid' => '456',
+      'resource_type' => 'task',
+      'resource_subtype' => 'default_task',
+    },
+    'change' => {
+      'field' => 'completed',
+      'action' => 'changed',
+    },
   }.freeze
 
   def test_matches_on_fields_true
