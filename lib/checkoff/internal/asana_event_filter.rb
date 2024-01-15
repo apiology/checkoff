@@ -7,7 +7,7 @@ module Checkoff
     # Uses an enhanced version of Asana event filter configuration
     #
     # See https://developers.asana.com/reference/createwebhook | body
-    # params | data | filters for a general description of the scheme.
+    # params | data | filters | add object for a general description of the scheme.
     #
     # Additional supported filter keys:
     #
@@ -17,8 +17,11 @@ module Checkoff
       include Logging
 
       # @param filters [Array<Hash>, nil] The filters to match against
-      def initialize(filters:)
+      # @param tasks [Checkoff::Tasks]
+      def initialize(filters:,
+                     tasks: Checkoff::Tasks.new)
         @filters = filters
+        @tasks = tasks
       end
 
       # @param asana_event [Hash] The event that Asana sent
@@ -66,6 +69,25 @@ module Checkoff
           value.include? asana_event.fetch('change', {})['field']
         when 'checkoff:parent.gid'
           asana_event.fetch('parent', {})['gid'] == value
+        when 'checkoff:resource.gid'
+          asana_event.fetch('resource', {})['gid'] == value
+        when 'checkoff:fetched.completed'
+          # @type [Hash{String => String}]
+          # @sg-ignore
+          resource = asana_event.fetch('resource')
+          # @type [String]
+          resource_type = resource.fetch('resource_type')
+          unless resource_type == 'task'
+            raise "Teach me how to check #{key.inspect} on resource type #{resource_type.inspect}"
+          end
+
+          task_gid = resource.fetch('gid')
+
+          task = @tasks.task_by_gid(task_gid,
+                                    extra_fields: ['completed_at'],
+                                    only_uncompleted: false)
+          task_completed = !task.completed_at.nil?
+          task_completed == value
         else
           raise "Unknown filter key #{key}"
         end

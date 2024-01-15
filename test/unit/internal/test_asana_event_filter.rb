@@ -7,7 +7,9 @@ require 'checkoff/internal/asana_event_filter'
 class TestAsanaEventFilter < ClassTest
   extend Forwardable
 
-  def_delegators(:@mocks, :workspaces, :client)
+  def_delegators(:@mocks, :workspaces, :client, :tasks)
+
+  let_mock :task
 
   def test_matches_nil_filters_true
     asana_event_filter = get_test_object do
@@ -94,12 +96,51 @@ class TestAsanaEventFilter < ClassTest
     },
   }.freeze
 
+  TASK_COMPLETED_EVENT = {
+    'user' => {
+      'gid' => '123',
+      'resource_type' => 'user',
+    },
+    'created_at' => '2024-01-13T20:51:41.806Z',
+    'action' => 'changed',
+    'resource' => {
+      'gid' => '456',
+      'resource_type' => 'task',
+      'resource_subtype' => 'default_task',
+    },
+    'parent' => nil,
+    'change' => { 'field' => 'completed', 'action' => 'changed' },
+  }.freeze
+
   def test_matches_on_fields_true
     asana_event_filter = get_test_object do
       @mocks[:filters] = [{ 'fields' => ['custom_fields'] }]
     end
 
     assert(asana_event_filter.matches?(CUSTOM_FIELD_CHANGED_EVENT))
+  end
+
+  def test_task_completed_event_true
+    asana_event_filter = get_test_object do
+      @mocks[:filters] = [
+        {
+          'action' => 'changed',
+          'fields' => ['completed'],
+          'resource_type' => 'task',
+          'checkoff:resource.gid' => '456',
+          'checkoff:fetched.completed' => true,
+        },
+      ]
+      tasks
+        .expects(:task_by_gid)
+        .with('456',
+              extra_fields: ['completed_at'],
+              only_uncompleted: false)
+        .returns(task)
+      task.expects(:completed_at).returns(Time.now)
+    end
+
+    assert(asana_event_filter.matches?(TASK_COMPLETED_EVENT))
   end
 
   def test_matches_on_parent_gid_true
@@ -128,6 +169,7 @@ class TestAsanaEventFilter < ClassTest
   def respond_like_instance_of
     {
       filters: Array,
+      tasks: Checkoff::Tasks,
     }
   end
 
