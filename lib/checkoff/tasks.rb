@@ -22,7 +22,7 @@ module Checkoff
     MINUTE = 60
     HOUR = MINUTE * 60
     DAY = 24 * HOUR
-    REALLY_LONG_CACHE_TIME = HOUR
+    REALLY_LONG_CACHE_TIME = MINUTE * 30
     LONG_CACHE_TIME = MINUTE * 15
     SHORT_CACHE_TIME = MINUTE * 5
 
@@ -116,15 +116,31 @@ module Checkoff
              section_name: :unspecified,
              only_uncompleted: true,
              extra_fields: [])
+      task_gid = gid_for_task(workspace_name, project_name, section_name, task_name)
+
+      return nil if task_gid.nil?
+
+      task_by_gid(task_gid, only_uncompleted: only_uncompleted, extra_fields: extra_fields)
+    end
+    cache_method :task, LONG_CACHE_TIME
+
+    # @param workspace_name [String]
+    # @param project_name [String, Symbol]
+    # @param section_name [String, nil, Symbol]
+    # @param task_name [String]
+    #
+    # @return [String, nil]
+    # @sg-ignore
+    def gid_for_task(workspace_name, project_name, section_name, task_name)
       # @sg-ignore
       t = tasks(workspace_name,
                 project_name,
                 section_name: section_name,
-                only_uncompleted: only_uncompleted,
-                extra_fields: extra_fields)
-      t.find { |task| task.name == task_name }
+                only_uncompleted: false)
+      task_for_gid = t.find { |task| task.name == task_name }
+      task_for_gid&.gid
     end
-    cache_method :task, SHORT_CACHE_TIME
+    cache_method :gid_for_task, REALLY_LONG_CACHE_TIME
 
     # Pull a specific task by GID
     #
@@ -296,7 +312,7 @@ module Checkoff
     #
     # @return [Enumerable<Asana::Resources::Task>]
     def tasks(workspace_name, project_name,
-              only_uncompleted:, extra_fields:, section_name: :unspecified)
+              only_uncompleted:, extra_fields: [], section_name: :unspecified)
       if section_name == :unspecified
         project = projects.project_or_raise(workspace_name, project_name)
         projects.tasks_from_project(project,
