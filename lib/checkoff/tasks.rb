@@ -135,7 +135,7 @@ module Checkoff
     # @return [Asana::Resources::Task, nil]
     def task_by_gid(task_gid,
                     extra_fields: [],
-                    only_uncompleted: false)
+                    only_uncompleted: true)
       # @type [Hash]
       options = projects.task_options.fetch(:options, {})
       options[:fields] += extra_fields
