@@ -13,7 +13,7 @@ class TestTasks < BaseAsana
 
   let_mock :mock_tasks, :modified_mock_tasks, :tasks_by_section,
            :unflattened_modified_mock_tasks, :task_hashes, :project_gid, :wrong_project,
-           :wrong_project_gid, :asana_tasks_client
+           :wrong_project_gid, :asana_tasks_client, :task_gid
 
   let_mock :default_workspace, :workspace_gid, :task_name, :default_assignee_gid
 
@@ -137,7 +137,7 @@ class TestTasks < BaseAsana
 
   def expect_task_options_pulled
     sections.expects(:projects).returns(projects)
-    projects.expects(:task_options).returns({ options: { fields: ['bunch of fields'] } })
+    projects.expects(:task_options).returns({ options: { fields: ['bunch of fields'] } }).at_least(1)
   end
 
   def expect_asana_tasks_client_pulled
@@ -238,7 +238,7 @@ class TestTasks < BaseAsana
   def expect_tasks_from_project_pulled
     projects.expects(:tasks_from_project)
       .with(project,
-            only_uncompleted: only_uncompleted,
+            only_uncompleted: false,
             extra_fields: [])
       .returns([task])
     task.expects(:name).returns(task_name)
@@ -255,9 +255,10 @@ class TestTasks < BaseAsana
 
   def expect_tasks_from_section_pulled
     sections.expects(:tasks).with(workspace_name, project_name, section_name,
-                                  only_uncompleted: only_uncompleted,
+                                  only_uncompleted: false,
                                   extra_fields: []).returns([task])
     task.expects(:name).returns(task_name)
+    expect_task_by_gid_pulled
   end
 
   def mock_task_with_section
@@ -272,10 +273,22 @@ class TestTasks < BaseAsana
     assert_equal(task, returned_task)
   end
 
+  def expect_task_by_gid_pulled
+    task.expects(:gid).returns(task_gid)
+    expect_task_options_pulled
+    expect_asana_tasks_client_pulled
+    asana_tasks_client.expects(:find_by_id).with(task_gid,
+                                                 options: {
+                                                   fields: ['bunch of fields'],
+                                                   completed_since: '9999-12-01',
+                                                 })
+      .returns(task)
+  end
+
   def mock_task
-    expect_projects_pulled
     expect_project_pulled
     expect_tasks_from_project_pulled
+    expect_task_by_gid_pulled
   end
 
   def test_task
