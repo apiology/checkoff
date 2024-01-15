@@ -141,7 +141,10 @@ module Checkoff
       options[:completed_since] = '9999-12-01' if only_uncompleted
       options[:project] = project_gid
       options[:options][:fields] += extra_fields
-      client.tasks.find_all(**options)
+      # Note: 30 minute cache time on a raw Enumerable from SDK gives
+      # 'Your pagination token has expired' errors.  So we go ahead
+      # and eagerly evaluate here so we can enjoy the cache.
+      client.tasks.find_all(**options).to_a
     end
     cache_method :tasks_from_project_gid, REALLY_LONG_CACHE_TIME
 
