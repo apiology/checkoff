@@ -7,9 +7,9 @@ require 'checkoff/internal/asana_event_filter'
 class TestAsanaEventFilter < ClassTest
   extend Forwardable
 
-  def_delegators(:@mocks, :workspaces, :client, :tasks)
+  def_delegators(:@mocks, :workspaces, :client)
 
-  let_mock :task
+  let_mock :task, :tasks
 
   def test_matches_nil_filters_true
     asana_event_filter = get_test_object do
@@ -131,11 +131,11 @@ class TestAsanaEventFilter < ClassTest
           'checkoff:fetched.completed' => true,
         },
       ]
+      client.expects(:tasks).returns(tasks)
       tasks
-        .expects(:task_by_gid)
+        .expects(:find_by_id)
         .with('456',
-              extra_fields: ['completed_at'],
-              only_uncompleted: false)
+              options: { fields: ['completed_at'] })
         .returns(task)
       task.expects(:completed_at).returns(Time.now)
     end
@@ -169,7 +169,8 @@ class TestAsanaEventFilter < ClassTest
   def respond_like_instance_of
     {
       filters: Array,
-      tasks: Checkoff::Tasks,
+      clients: Checkoff::Clients,
+      client: Asana::Client,
     }
   end
 
