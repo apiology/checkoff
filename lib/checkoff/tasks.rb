@@ -9,6 +9,7 @@ require_relative 'internal/config_loader'
 require_relative 'internal/task_timing'
 require_relative 'internal/task_hashes'
 require_relative 'internal/logging'
+require_relative 'internal/thread_local'
 require 'asana'
 
 module Checkoff
@@ -116,8 +117,11 @@ module Checkoff
              section_name: :unspecified,
              only_uncompleted: true,
              extra_fields: [])
-      task_gid = gid_for_task(workspace_name, project_name, section_name, task_name)
-
+      thread_local = Checkoff::Internal::ThreadLocal.new
+      task_gid = thread_local.with_thread_local_variable(:suppress_asana_webhook_watch_creation,
+                                                         true) do
+        gid_for_task(workspace_name, project_name, section_name, task_name)
+      end
       return nil if task_gid.nil?
 
       task_by_gid(task_gid, only_uncompleted: only_uncompleted, extra_fields: extra_fields)
