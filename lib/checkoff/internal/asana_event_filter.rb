@@ -17,11 +17,13 @@ module Checkoff
       include Logging
 
       # @param filters [Array<Hash>, nil] The filters to match against
-      # @param tasks [Checkoff::Tasks]
+      # @param clients [Checkoff::Clients]
+      # @param client [Asana::Client]
       def initialize(filters:,
-                     tasks: Checkoff::Tasks.new)
+                     clients: Checkoff::Clients.new,
+                     client: clients.client)
         @filters = filters
-        @tasks = tasks
+        @client = client
       end
 
       # @param asana_event [Hash] The event that Asana sent
@@ -82,10 +84,10 @@ module Checkoff
           end
 
           task_gid = resource.fetch('gid')
-
-          task = @tasks.task_by_gid(task_gid,
-                                    extra_fields: ['completed_at'],
-                                    only_uncompleted: false)
+          options = {
+            fields: ['completed_at'],
+          }
+          task = @client.tasks.find_by_id(task_gid, options: options)
           task_completed = !task.completed_at.nil?
           task_completed == value
         else
