@@ -12,7 +12,7 @@ module Checkoff
         task_hash = task.to_h
         task_hash['unwrapped'] = {}
         unwrap_custom_fields(task_hash)
-        unwrap_memberships(task_hash)
+        unwrap_all_memberships(task_hash)
         task_hash['task'] = task.name
         task_hash
       end
@@ -39,15 +39,32 @@ module Checkoff
         task_hash['unwrapped']['custom_fields'] = unwrapped_custom_fields
       end
 
+      # @param [Hash<String, Hash, Array>] task_hash
+      # @param [Array<Hash>] memberships
+      #
+      # @return [void]
+      def add_user_task_list(task_hash, memberships)
+        return unless task_hash.key? 'assignee_section'
+
+        assignee_section = task_hash.fetch('assignee_section')
+        # @type [Hash]
+        assignee = task_hash.fetch('assignee')
+        memberships << {
+          'section' => assignee_section.dup,
+          'project' => {
+            'gid' => assignee.fetch('gid'),
+            'name' => :my_tasks,
+          },
+        }
+      end
+
       # @param task_hash [Hash]
       # @param resource [String]
+      # @param memberships [Array<Hash>]
       # @param key [String]
       #
       # @return [void]
-      def unwrap_membership(task_hash, resource, key)
-        # @sg-ignore
-        # @type [Array<Hash>]
-        memberships = task_hash.fetch('memberships', [])
+      def unwrap_memberships(task_hash, memberships, resource, key)
         # @sg-ignore
         # @type [Hash]
         unwrapped = task_hash.fetch('unwrapped')
@@ -58,11 +75,15 @@ module Checkoff
 
       # @param task_hash [Hash]
       # @return [void]
-      def unwrap_memberships(task_hash)
-        unwrap_membership(task_hash, 'section', 'gid')
-        unwrap_membership(task_hash, 'section', 'name')
-        unwrap_membership(task_hash, 'project', 'gid')
-        unwrap_membership(task_hash, 'project', 'name')
+      def unwrap_all_memberships(task_hash)
+        # @sg-ignore
+        # @type [Array<Hash>]
+        memberships = task_hash.fetch('memberships', []).dup
+        add_user_task_list(task_hash, memberships)
+        unwrap_memberships(task_hash, memberships, 'section', 'gid')
+        unwrap_memberships(task_hash, memberships, 'section', 'name')
+        unwrap_memberships(task_hash, memberships, 'project', 'gid')
+        unwrap_memberships(task_hash, memberships, 'project', 'name')
       end
     end
   end
