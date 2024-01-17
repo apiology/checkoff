@@ -7,9 +7,9 @@ require 'checkoff/internal/asana_event_filter'
 class TestAsanaEventFilter < ClassTest
   extend Forwardable
 
-  def_delegators(:@mocks, :workspaces, :client)
+  def_delegators(:@mocks, :workspaces, :client, :tasks)
 
-  let_mock :task, :tasks
+  let_mock :task, :asana_tasks
 
   def test_matches_nil_filters_true
     asana_event_filter = get_test_object do
@@ -58,6 +58,24 @@ class TestAsanaEventFilter < ClassTest
 
     refute(asana_event_filter.matches?({ 'action' => 'completed' }))
   end
+
+  TASK_NAME_CHANGED_EVENT = {
+    'action' => 'changed',
+    'created_at' => '2024-01-16T20:10:27.783Z',
+    'change' => {
+      'field' => 'name',
+      'action' => 'changed',
+    },
+    'resource' => {
+      'gid' => '456',
+      'resource_type' => 'task',
+      'resource_subtype' => 'default_task',
+    },
+    'user' => {
+      'gid' => '123',
+      'resource_type' => 'user',
+    },
+  }.freeze
 
   CUSTOM_FIELD_CHANGED_EVENT = {
     'action' => 'changed',
@@ -138,12 +156,36 @@ class TestAsanaEventFilter < ClassTest
     },
   }.freeze
 
+  def test_fetched_section_gid
+    asana_event_filter = get_test_object do
+      @mocks[:filters] = [{ 'checkoff:fetched.section.gid' => '123' }]
+      expect_task_fetched('456', ['memberships.section.gid', 'assignee', 'assignee_section'], task)
+      task_data = {
+        'membership_by_section_gid' => {
+          '123' => {},
+        },
+      }
+      tasks.expects(:task_to_h).with(task).returns(task_data)
+    end
+
+    assert(asana_event_filter.matches?(TASK_NAME_CHANGED_EVENT))
+  end
+
   def test_matches_on_fields_true
     asana_event_filter = get_test_object do
       @mocks[:filters] = [{ 'fields' => ['custom_fields'] }]
     end
 
     assert(asana_event_filter.matches?(CUSTOM_FIELD_CHANGED_EVENT))
+  end
+
+  def expect_task_fetched(gid, fields, task_obj)
+    client.expects(:tasks).returns(asana_tasks)
+    asana_tasks
+      .expects(:find_by_id)
+      .with(gid,
+            options: { fields: fields })
+      .returns(task_obj)
   end
 
   def test_task_completed_event_true
@@ -157,12 +199,7 @@ class TestAsanaEventFilter < ClassTest
           'checkoff:fetched.completed' => true,
         },
       ]
-      client.expects(:tasks).returns(tasks)
-      tasks
-        .expects(:find_by_id)
-        .with('456',
-              options: { fields: ['completed_at'] })
-        .returns(task)
+      expect_task_fetched('456', ['completed_at'], task)
       task.expects(:completed_at).returns(Time.now)
     end
 
@@ -196,6 +233,7 @@ class TestAsanaEventFilter < ClassTest
     {
       filters: Array,
       clients: Checkoff::Clients,
+      tasks: Checkoff::Tasks,
       client: Asana::Client,
     }
   end

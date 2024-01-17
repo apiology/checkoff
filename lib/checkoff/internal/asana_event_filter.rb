@@ -18,12 +18,15 @@ module Checkoff
 
       # @param filters [Array<Hash>, nil] The filters to match against
       # @param clients [Checkoff::Clients]
+      # @param tasks [Checkoff::Tasks]
       # @param client [Asana::Client]
       def initialize(filters:,
                      clients: Checkoff::Clients.new,
+                     tasks: Checkoff::Tasks.new,
                      client: clients.client)
         @filters = filters
         @client = client
+        @tasks = tasks
       end
 
       # @param asana_event [Hash] The event that Asana sent
@@ -85,26 +88,41 @@ module Checkoff
           asana_event.fetch('parent', {})['gid'] == value
         when 'checkoff:resource.gid'
           asana_event.fetch('resource', {})['gid'] == value
+        when 'checkoff:fetched.section.gid'
+          fields = ['memberships.section.gid', 'assignee', 'assignee_section']
+          task = uncached_fetch_task(key, asana_event, fields)
+          task_data = @tasks.task_to_h(task)
+          task_data.fetch('membership_by_section_gid').keys.include?(value)
         when 'checkoff:fetched.completed'
-          # @type [Hash{String => String}]
-          # @sg-ignore
-          resource = asana_event.fetch('resource')
-          # @type [String]
-          resource_type = resource.fetch('resource_type')
-          unless resource_type == 'task'
-            raise "Teach me how to check #{key.inspect} on resource type #{resource_type.inspect}"
-          end
-
-          task_gid = resource.fetch('gid')
-          options = {
-            fields: ['completed_at'],
-          }
-          task = @client.tasks.find_by_id(task_gid, options: options)
+          fields = ['completed_at']
+          task = uncached_fetch_task(key, asana_event, fields)
           task_completed = !task.completed_at.nil?
           task_completed == value
         else
           raise "Unknown filter key #{key}"
         end
+      end
+
+      # @param key [String]
+      # @param asana_event [Hash]
+      # @param fields [Array<String>]
+      #
+      # @return [Asana::Resources::Task]
+      def uncached_fetch_task(key, asana_event, fields)
+        # @type [Hash{String => String}]
+        # @sg-ignore
+        resource = asana_event.fetch('resource')
+        # @type [String]
+        resource_type = resource.fetch('resource_type')
+        unless resource_type == 'task'
+          raise "Teach me how to check #{key.inspect} on resource type #{resource_type.inspect}"
+        end
+
+        task_gid = resource.fetch('gid')
+        options = {
+          fields: fields,
+        }
+        @client.tasks.find_by_id(task_gid, options: options)
       end
     end
   end
