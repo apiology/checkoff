@@ -89,10 +89,11 @@ module Checkoff
         when 'checkoff:resource.gid'
           asana_event.fetch('resource', {})['gid'] == value
         when 'checkoff:fetched.section.gid'
-          fields = ['memberships.section.gid', 'assignee', 'assignee_section']
+          fields = ['memberships.project.gid', 'memberships.project.name',
+                    'memberships.section.name', 'assignee', 'assignee_section']
           task = uncached_fetch_task(key, asana_event, fields)
           task_data = @tasks.task_to_h(task)
-          task_data.fetch('membership_by_section_gid').keys.include?(value)
+          task_data.fetch('unwrapped').fetch('membership_by_section_gid').keys.include?(value)
         when 'checkoff:fetched.completed'
           fields = ['completed_at']
           task = uncached_fetch_task(key, asana_event, fields)
