@@ -159,10 +159,15 @@ class TestAsanaEventFilter < ClassTest
   def test_fetched_section_gid
     asana_event_filter = get_test_object do
       @mocks[:filters] = [{ 'checkoff:fetched.section.gid' => '123' }]
-      expect_task_fetched('456', ['memberships.section.gid', 'assignee', 'assignee_section'], task)
+      expect_task_fetched('456',
+                          ['memberships.project.gid', 'memberships.project.name',
+                           'memberships.section.name', 'assignee', 'assignee_section'],
+                          task)
       task_data = {
-        'membership_by_section_gid' => {
-          '123' => {},
+        'unwrapped' => {
+          'membership_by_section_gid' => {
+            '123' => {},
+          },
         },
       }
       tasks.expects(:task_to_h).with(task).returns(task_data)
