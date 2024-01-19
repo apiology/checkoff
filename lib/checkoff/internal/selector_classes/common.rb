@@ -33,11 +33,10 @@ module Checkoff
         end
 
         # @param _resource [Asana::Resources::Task,Asana::Resources::Project]
-        # @param lhs [Object]
-        # @param rhs [Object]
-        # @return [Object]
-        def evaluate(_resource, lhs, rhs)
-          lhs || rhs
+        # @param args [Array<Object>]
+        # @return [Boolean]
+        def evaluate(_resource, *args)
+          args.any? { |arg| arg }
         end
       end
 
