@@ -22,10 +22,10 @@ module Checkoff
         # @param section_name_prefix [String]
         # @return [Boolean]
         def evaluate(task, section_name_prefix)
-          section_names = task.memberships.map do |membership|
-            membership.fetch('section').fetch('name')
+          task_data = @tasks.task_to_h(task)
+          task_data.fetch('unwrapped').fetch('membership_by_section_name').keys.any? do |section_name|
+            section_name.start_with? section_name_prefix
           end
-          section_names.any? { |section_name| section_name.start_with? section_name_prefix }
         end
       end
 
@@ -45,10 +45,10 @@ module Checkoff
         # @param section_name [String]
         # @return [Boolean]
         def evaluate(task, section_name)
-          section_names = task.memberships.map do |membership|
-            membership.fetch('section').fetch('name')
+          task_data = @tasks.task_to_h(task)
+          task_data.fetch('unwrapped').fetch('membership_by_section_name').keys.any? do |actual_section_name|
+            actual_section_name == section_name
           end
-          section_names.include? section_name
         end
       end
 

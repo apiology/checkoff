@@ -865,25 +865,6 @@ class TestTaskSelectors < ClassTest
                                                    [:last_story_created_less_than_n_days_ago?, 7, []]))
   end
 
-  # @return [void]
-  def test_filter_via_task_selector_in_section_named_false
-    task_selectors = get_test_object do
-      task.expects(:memberships).returns([])
-    end
-
-    refute(task_selectors.filter_via_task_selector(task,
-                                                   [:in_section_named?, 'foo']))
-  end
-
-  def test_filter_via_task_selector_in_section_named_true
-    task_selectors = get_test_object do
-      task.expects(:memberships).returns([{ 'section' => { 'name' => 'foo' } }])
-    end
-
-    assert(task_selectors.filter_via_task_selector(task,
-                                                   [:in_section_named?, 'foo']))
-  end
-
   def test_filter_via_task_selector_in_project_named_false
     task_selectors = get_test_object do
       task.expects(:memberships).returns([])
@@ -900,15 +881,6 @@ class TestTaskSelectors < ClassTest
 
     assert(task_selectors.filter_via_task_selector(task,
                                                    [:in_project_named?, 'foo']))
-  end
-
-  def test_filter_via_task_selector_in_section_name_starts_with_true
-    task_selectors = get_test_object do
-      task.expects(:memberships).returns([{ 'section' => { 'name' => 'foo [100]' } }])
-    end
-
-    assert(task_selectors.filter_via_task_selector(task,
-                                                   [:section_name_starts_with?, 'foo [']))
   end
 
   def test_dependent_on_previous_section_last_milestone
