@@ -40,6 +40,8 @@ module Checkoff
     def in_period?(date_or_time, period)
       return this_week?(date_or_time) if period == :this_week
 
+      return next_week?(date_or_time) if period == :next_week
+
       return day_of_week?(date_or_time, period) if %i[monday tuesday wednesday thursday friday saturday
                                                       sunday].include?(period)
 
@@ -111,6 +113,23 @@ module Checkoff
 
       # Beginning of this week (assuming week starts on Sunday)
       beginning_of_week = today - today.wday
+
+      # End of this week (assuming week ends on Saturday)
+      end_of_week = beginning_of_week + 6
+
+      date = date_or_time.to_date
+
+      date >= beginning_of_week && date <= end_of_week
+    end
+
+    # @param date_or_time [Date,Time,nil]
+    def next_week?(date_or_time)
+      return false if date_or_time.nil?
+
+      today = @today_getter.today
+
+      # Beginning of next week (assuming week starts on Sunday)
+      beginning_of_week = today - today.wday + 7
 
       # End of this week (assuming week ends on Saturday)
       end_of_week = beginning_of_week + 6
