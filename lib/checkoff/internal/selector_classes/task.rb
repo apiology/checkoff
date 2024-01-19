@@ -6,6 +6,31 @@ require 'checkoff/internal/task_timing'
 module Checkoff
   module SelectorClasses
     module Task
+      # :in_a_real_project? function
+      class InARealProjectPFunctionEvaluator < FunctionEvaluator
+        def matches?
+          fn?(selector, :in_a_real_project?)
+        end
+
+        # @param _index [Integer]
+        def evaluate_arg?(_index)
+          false
+        end
+
+        # @sg-ignore
+        # @param task [Asana::Resources::Task]
+        # @return [Boolean]
+        def evaluate(task)
+          # @type [Hash{'unwrapped' => Hash}]
+          task_data = @tasks.task_to_h(task)
+          # @type [Hash{'membership_by_project_name' => Hash}]
+          unwrapped = task_data.fetch('unwrapped')
+          # @type [Array]
+          projects = unwrapped.fetch('membership_by_project_name').keys
+          !(projects - [:my_tasks]).empty?
+        end
+      end
+
       # :section_name_starts_with? function
       class SectionNameStartsWithPFunctionEvaluator < FunctionEvaluator
         def matches?
