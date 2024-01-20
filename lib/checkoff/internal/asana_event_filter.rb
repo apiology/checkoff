@@ -40,7 +40,7 @@ module Checkoff
           filter_matches = filter_matches_asana_event?(filter, asana_event, failures)
           logger.debug { "Filter #{filter.inspect} matched? #{filter_matches} against event #{asana_event.inspect}" }
           unless filter_matches
-            logger.info do
+            logger.debug do
               "Filter #{filter.inspect} failed to match event #{asana_event.inspect} because of #{failures.inspect}"
             end
             failures << filter
