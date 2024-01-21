@@ -211,6 +211,27 @@ module Checkoff
         end
       end
 
+      # :name_starts_with? function
+      class NameStartsWithPFunctionEvaluator < FunctionEvaluator
+        FUNCTION_NAME = :name_starts_with?
+
+        def matches?
+          fn?(selector, FUNCTION_NAME)
+        end
+
+        def evaluate_arg?(_index)
+          false
+        end
+
+        # @param resource [Asana::Resources::Task,Asana::Resources::Project]
+        # @param prefix [String]
+        # @return [Boolean]
+        # @sg-ignore
+        def evaluate(resource, prefix)
+          resource.name.start_with?(prefix)
+        end
+      end
+
       # String literals
       class StringLiteralEvaluator < FunctionEvaluator
         def matches?
