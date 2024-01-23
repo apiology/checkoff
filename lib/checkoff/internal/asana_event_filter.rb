@@ -92,11 +92,15 @@ module Checkoff
           fields = ['memberships.project.gid', 'memberships.project.name',
                     'memberships.section.name', 'assignee', 'assignee_section']
           task = uncached_fetch_task(key, asana_event, fields)
+          return false if task.nil?
+
           task_data = @tasks.task_to_h(task)
           task_data.fetch('unwrapped').fetch('membership_by_section_gid').keys.include?(value)
         when 'checkoff:fetched.completed'
           fields = ['completed_at']
           task = uncached_fetch_task(key, asana_event, fields)
+          return false if task.nil?
+
           task_completed = !task.completed_at.nil?
           task_completed == value
         else
@@ -108,7 +112,7 @@ module Checkoff
       # @param asana_event [Hash]
       # @param fields [Array<String>]
       #
-      # @return [Asana::Resources::Task]
+      # @return [Asana::Resources::Task,nil]
       def uncached_fetch_task(key, asana_event, fields)
         # @type [Hash{String => String}]
         # @sg-ignore
@@ -124,6 +128,8 @@ module Checkoff
           fields: fields,
         }
         @client.tasks.find_by_id(task_gid, options: options)
+      rescue Asana::Errors::NotFound
+        nil
       end
     end
   end
