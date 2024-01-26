@@ -5,6 +5,7 @@
 require 'forwardable'
 require 'cache_method'
 require_relative 'internal/config_loader'
+require_relative 'internal/logging'
 require_relative 'internal/asana_event_filter'
 require_relative 'workspaces'
 require_relative 'clients'
@@ -32,15 +33,18 @@ module Checkoff
 
     # @param config [Hash]
     # @param workspaces [Checkoff::Workspaces]
+    # @param tasks [Checkoff::Tasks]
     # @param clients [Checkoff::Clients]
     # @param client [Asana::Client]
     # @param asana_event_filter_class [Class<Checkoff::Internal::AsanaEventFilter>]
     def initialize(config: Checkoff::Internal::ConfigLoader.load(:asana),
                    workspaces: Checkoff::Workspaces.new(config: config),
+                   tasks: Checkoff::Tasks.new(config: config),
                    clients: Checkoff::Clients.new(config: config),
                    client: clients.client,
                    asana_event_filter_class: Checkoff::Internal::AsanaEventFilter)
       @workspaces = workspaces
+      @tasks = tasks
       @client = client
       @asana_event_filter_class = asana_event_filter_class
     end
@@ -54,7 +58,43 @@ module Checkoff
       asana_events.select { |event| asana_event_filter.matches?(event) }
     end
 
+    # Add useful info (like resource task names) into an event for
+    # human consumption
+    #
+    # @param asana_event [Hash]
+    #
+    # @return [Hash]
+    def enrich_event(asana_event)
+      finer { "Enriching event: #{asana_event}" }
+      asana_event = asana_event.dup
+      enrich_event_resource!(asana_event)
+      asana_event
+    end
+
     private
+
+    # @param asana_event [Hash{'resource' => Hash}]
+    #
+    # @return [void]
+    def enrich_event_resource!(asana_event)
+      # @type [Hash{String => String }]
+      resource = asana_event['resource']
+      # @type [String]
+      resource_type = resource.fetch('resource_type')
+      # @type [String]
+      gid = resource.fetch('gid')
+
+      if resource_type == 'task'
+        task = tasks.task_by_gid(gid, only_uncompleted: false)
+        resource['checkoff:name'] = task.name if task
+      end
+      nil
+    end
+
+    include Logging
+
+    # @return [Checkoff::Tasks]
+    attr_reader :tasks
 
     # @return [Checkoff::Workspaces]
     attr_reader :workspaces
