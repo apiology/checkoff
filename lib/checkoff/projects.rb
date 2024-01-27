@@ -3,6 +3,7 @@
 require_relative 'internal/config_loader'
 require_relative 'internal/project_hashes'
 require_relative 'internal/project_timing'
+require_relative 'internal/logging'
 require_relative 'workspaces'
 require_relative 'clients'
 require_relative 'timing'
@@ -99,9 +100,12 @@ module Checkoff
     # @param gid [String]
     # @param [Array<String>] extra_fields
     #
-    # @return [Asana::Resources::Project]
+    # @return [Asana::Resources::Project,nil]
     def project_by_gid(gid, extra_fields: [])
       projects.find_by_id(gid, options: { fields: %w[name] + extra_fields })
+    rescue Asana::Errors::NotFound => e
+      debug e
+      nil
     end
     cache_method :project_by_gid, REALLY_LONG_CACHE_TIME
 
@@ -192,7 +196,14 @@ module Checkoff
       timing.in_period?(project_date, period)
     end
 
+    # @return [Hash]
+    def as_cache_key
+      {}
+    end
+
     private
+
+    include Logging
 
     # @return [Checkoff::Timing]
     attr_reader :timing

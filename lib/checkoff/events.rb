@@ -7,6 +7,7 @@ require 'cache_method'
 require_relative 'internal/config_loader'
 require_relative 'internal/logging'
 require_relative 'internal/asana_event_filter'
+require_relative 'internal/asana_event_enrichment'
 require_relative 'workspaces'
 require_relative 'clients'
 
@@ -34,19 +35,28 @@ module Checkoff
     # @param config [Hash]
     # @param workspaces [Checkoff::Workspaces]
     # @param tasks [Checkoff::Tasks]
+    # @param sections [Checkoff::Sections]
+    # @param projects [Checkoff::Projects]
     # @param clients [Checkoff::Clients]
     # @param client [Asana::Client]
     # @param asana_event_filter_class [Class<Checkoff::Internal::AsanaEventFilter>]
+    # @param asana_event_enrichment [Checkoff::Internal::AsanaEventEnrichment]
     def initialize(config: Checkoff::Internal::ConfigLoader.load(:asana),
                    workspaces: Checkoff::Workspaces.new(config: config),
                    tasks: Checkoff::Tasks.new(config: config),
+                   sections: Checkoff::Sections.new(config: config),
+                   projects: Checkoff::Projects.new(config: config),
                    clients: Checkoff::Clients.new(config: config),
                    client: clients.client,
-                   asana_event_filter_class: Checkoff::Internal::AsanaEventFilter)
+                   asana_event_filter_class: Checkoff::Internal::AsanaEventFilter,
+                   asana_event_enrichment: Checkoff::Internal::AsanaEventEnrichment.new)
       @workspaces = workspaces
       @tasks = tasks
+      @sections = sections
+      @projects = projects
       @client = client
       @asana_event_filter_class = asana_event_filter_class
+      @asana_event_enrichment = asana_event_enrichment
     end
 
     # @param filters [Array<Hash>, nil] The filters to match against
@@ -65,33 +75,34 @@ module Checkoff
     #
     # @return [Hash]
     def enrich_event(asana_event)
-      finer { "Enriching event: #{asana_event}" }
-      asana_event = asana_event.dup
-      enrich_event_resource!(asana_event)
-      asana_event
+      asana_event_enrichment.enrich_event(asana_event)
+    end
+
+    # @param filter [Hash<String,[String,Array<String>]>]
+    #
+    # @return [Hash<String,[String,Array<String>]>]
+    def enrich_filter(filter)
+      asana_event_enrichment.enrich_filter(filter)
+    end
+
+    # @param webhook_subscription [Hash] Hash of the request made to
+    #   webhook POST endpoint - https://app.asana.com/api/1.0/webhooks
+    #   https://developers.asana.com/reference/createwebhook
+    #
+    # @return [void]
+    def enrich_webhook_subscription!(webhook_subscription)
+      asana_event_enrichment.enrich_webhook_subscription!(webhook_subscription)
     end
 
     private
 
-    # @param asana_event [Hash{'resource' => Hash}]
-    #
-    # @return [void]
-    def enrich_event_resource!(asana_event)
-      # @type [Hash{String => String }]
-      resource = asana_event['resource']
-      # @type [String]
-      resource_type = resource.fetch('resource_type')
-      # @type [String]
-      gid = resource.fetch('gid')
-
-      if resource_type == 'task'
-        task = tasks.task_by_gid(gid, only_uncompleted: false)
-        resource['checkoff:name'] = task.name if task
-      end
-      nil
-    end
-
     include Logging
+
+    # @return [Checkoff::Projects]
+    attr_reader :projects
+
+    # @return [Checkoff::Sections]
+    attr_reader :sections
 
     # @return [Checkoff::Tasks]
     attr_reader :tasks
@@ -101,6 +112,9 @@ module Checkoff
 
     # @return [Asana::Client]
     attr_reader :client
+
+    # @return [Checkoff::Internal::AsanaEventEnrichment]
+    attr_reader :asana_event_enrichment
 
     # bundle exec ./events.rb
     # :nocov:
