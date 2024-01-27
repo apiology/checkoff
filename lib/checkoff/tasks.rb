@@ -161,6 +161,9 @@ module Checkoff
       options[:fields] += extra_fields
       options[:completed_since] = '9999-12-01' if only_uncompleted
       client.tasks.find_by_id(task_gid, options: options)
+    rescue Asana::Errors::NotFound => e
+      debug e
+      nil
     end
     cache_method :task_by_gid, SHORT_CACHE_TIME
 

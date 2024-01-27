@@ -5,6 +5,7 @@ require_relative 'projects'
 require_relative 'workspaces'
 require_relative 'clients'
 require_relative 'my_tasks'
+require_relative 'internal/logging'
 
 module Checkoff
   # Query different sections of Asana projects
@@ -197,14 +198,25 @@ module Checkoff
 
     # @param gid [String]
     #
-    # @return [Asana::Resources::Section]
+    # @return [Asana::Resources::Section, nil]
     def section_by_gid(gid)
       options = {}
       Asana::Resources::Section.new(parse(client.get("/sections/#{gid}", options: options)).first,
                                     client: client)
+    rescue Asana::Errors::NotFound => e
+      debug e
+      nil
+    end
+    cache_method :section_by_gid, SHORT_CACHE_TIME
+
+    # @return [Hash]
+    def as_cache_key
+      {}
     end
 
     private
+
+    include Logging
 
     # https://github.com/Asana/ruby-asana/blob/master/lib/asana/resource_includes/response_helper.rb#L7
     # @param response [Faraday::Response]

@@ -42,6 +42,9 @@ class TestEvents < ClassTest
     {
       config: Checkoff::Internal::EnvFallbackConfigLoader,
       workspaces: Checkoff::Workspaces,
+      sections: Checkoff::Sections,
+      projects: Checkoff::Projects,
+      asana_event_enrichment: Checkoff::Internal::AsanaEventEnrichment,
       tasks: Checkoff::Tasks,
       clients: Checkoff::Clients,
       client: Asana::Client,

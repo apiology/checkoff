@@ -50,6 +50,8 @@
 #         def due_at; end
 #         # @return [String,nil]
 #         def due_on; end
+#         # @return [String,nil]
+#         def name; end
 #         # @return [Hash<String, String>, nil]
 #         def assignee; end
 #         # @return [String, nil]
@@ -61,7 +63,13 @@
 #           def create(client, assignee:, workspace:, name:); end
 #         end
 #       end
+#       class Section
+#         # @return [String,nil]
+#         def name; end
+#       end
 #       class Project
+#         # @return [String,nil]
+#         def name; end
 #         # @return [String,nil]
 #         def due_date; end
 #       end
@@ -69,6 +77,9 @@
 #         # @return [Enumerable<Asana::Resources::Project>]
 #         def get_items(options = {}); end
 #       end
+#     end
+#     module Errors
+#       class NotFound < StandardError; end
 #     end
 #     module Resources
 #       class Workspace
