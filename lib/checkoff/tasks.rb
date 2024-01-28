@@ -292,6 +292,27 @@ module Checkoff
       end
     end
 
+    # True if the task is in a project which is in the given portfolio
+    #
+    # @param task [Asana::Resources::Task]
+    # @param portfolio_name [String]
+    # @param workspace_name [String]
+    def in_portfolio_more_than_once?(task,
+                                     portfolio_name,
+                                     workspace_name: @workspaces.default_workspace.name)
+      portfolio_projects = @portfolios.projects_in_portfolio(workspace_name, portfolio_name)
+      portfolio_project_gids = portfolio_projects.map(&:gid)
+      seen = false
+      task.memberships.each do |membership|
+        project_gid = membership.fetch('project').fetch('gid')
+        next unless portfolio_project_gids.include?(project_gid)
+        return true if seen
+
+        seen = true
+      end
+      false
+    end
+
     # @return [Hash]
     def as_cache_key
       {}

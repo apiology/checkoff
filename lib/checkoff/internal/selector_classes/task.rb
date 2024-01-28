@@ -100,6 +100,26 @@ module Checkoff
         end
       end
 
+      # :in_portfolio_more_than_once? function
+      class InPortfolioMoreThanOncePFunctionEvaluator < FunctionEvaluator
+        def matches?
+          fn?(selector, :in_portfolio_more_than_once?)
+        end
+
+        # @param _index [Integer]
+        def evaluate_arg?(_index)
+          false
+        end
+
+        # @sg-ignore
+        # @param task [Asana::Resources::Task]
+        # @param portfolio_name [String]
+        # @return [Boolean]
+        def evaluate(task, portfolio_name)
+          @tasks.in_portfolio_more_than_once?(task, portfolio_name)
+        end
+      end
+
       # :tag? function
       class TagPFunctionEvaluator < FunctionEvaluator
         def matches?
