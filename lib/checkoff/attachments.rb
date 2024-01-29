@@ -75,25 +75,23 @@ module Checkoff
     # not succesful
     #
     # @param uri [URI]
+    # @param verify_mode [OpenSSL::SSL::VERIFY_NONE,OpenSSL::SSL::VERIFY_PEER]
     #
     # @return [Object]
     # @sg-ignore
-    def download_uri(uri, &block)
+    def download_uri(uri, verify_mode: OpenSSL::SSL::VERIFY_PEER, &block)
       out = nil
-      Net::HTTP.start(uri.host, uri.port, use_ssl: uri.scheme == 'https') do |http|
+      Net::HTTP.start(uri.host, uri.port, use_ssl: uri.scheme == 'https', verify_mode: verify_mode) do |http|
         # @sg-ignore
-        request = Net::HTTP::Get.new(uri)
-        http.request(request) do |response|
-          # use a block to ensure the file is closed after we're done with it
+        http.request(Net::HTTP::Get.new(uri)) do |response|
           raise("Unexpected response code: #{response.code}") unless response.code == '200'
 
-          write_tempfile_from_response(response) do |tempfile|
-            out = block.yield tempfile
-          end
+          write_tempfile_from_response(response) { |tempfile| out = block.yield tempfile }
         end
       end
       out
     rescue StandardError => e
+      debug { e }
       raise "Error downloading #{uri}: #{e}"
     end
 
