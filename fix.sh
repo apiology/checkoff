@@ -169,7 +169,11 @@ ensure_bundle() {
   then
     # need to do this first before 'bundle update --bundler' will work
     make bundle_install
+    set -x
     bundle update --bundler
+    set +x
+    echo "After updating bundler:"
+    echo "Bundler version: ${bundler_version}"
     # ensure next step installs fresh bundle
     rm -f Gemfile.lock.installed
   fi
