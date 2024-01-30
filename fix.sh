@@ -152,12 +152,12 @@ ensure_bundle() {
     need_better_bundler=true
   elif [ "${bundler_version_major}" -eq 2 ]
   then
-    if [ "${bundler_version_minor}" -lt 2 ]
+    if [ "${bundler_version_minor}" -lt 5 ]
     then
       need_better_bundler=true
-    elif [ "${bundler_version_minor}" -eq 2 ]
+    elif [ "${bundler_version_minor}" -eq 5 ]
     then
-      if [ "${bundler_version_patch}" -lt 23 ]
+      if [ "${bundler_version_patch}" -lt 5 ]
       then
         need_better_bundler=true
       fi
