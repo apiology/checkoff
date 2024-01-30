@@ -9,6 +9,7 @@ require 'mime/types'
 require 'net/http'
 require 'net/http/response'
 require 'net/http/responses'
+require 'openssl'
 require 'tempfile'
 require_relative 'internal/config_loader'
 require_relative 'internal/logging'
@@ -55,16 +56,19 @@ module Checkoff
     # @param resource [Asana::Resources::Resource]
     # @param attachment_name [String,nil]
     # @param just_the_url [Boolean]
+    # @param verify_mode [Integer<OpenSSL::SSL::VERIFY_NONE,OpenSSL::SSL::VERIFY_PEER>]
     #
     # @return [Asana::Resources::Attachment]
     def create_attachment_from_url!(url,
                                     resource,
                                     attachment_name: nil,
+                                    verify_mode: OpenSSL::SSL::VERIFY_PEER,
                                     just_the_url: false)
       if just_the_url
         create_attachment_from_url_alone!(url, resource, attachment_name: attachment_name)
       else
-        create_attachment_from_downloaded_url!(url, resource, attachment_name: attachment_name)
+        create_attachment_from_downloaded_url!(url, resource, attachment_name: attachment_name,
+                                                              verify_mode: verify_mode)
       end
     end
 
@@ -117,12 +121,14 @@ module Checkoff
     # @param url [String]
     # @param resource [Asana::Resources::Resource]
     # @param attachment_name [String,nil]
+    # @param verify_mode [Integer<OpenSSL::SSL::VERIFY_NONE,OpenSSL::SSL::VERIFY_PEER>]
     #
     # @return [Asana::Resources::Attachment]
-    def create_attachment_from_downloaded_url!(url, resource, attachment_name:)
+    def create_attachment_from_downloaded_url!(url, resource, attachment_name:,
+                                               verify_mode: OpenSSL::SSL::VERIFY_PEER)
       uri = URI(url)
       attachment_name ||= File.basename(uri.path)
-      download_uri(uri) do |tempfile|
+      download_uri(uri, verify_mode: verify_mode) do |tempfile|
         content_type ||= content_type_from_filename(attachment_name)
         content_type ||= content_type_from_filename(uri.path)
 
