@@ -163,6 +163,8 @@ ensure_bundle() {
       fi
     fi
   fi
+  echo "Bundler version: ${bundler_version}"
+  echo "Need better bundler: ${need_better_bundler}"
   if [ "${need_better_bundler}" = true ]
   then
     # need to do this first before 'bundle update --bundler' will work
