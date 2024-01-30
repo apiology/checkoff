@@ -2,6 +2,14 @@
 #
 # rubocop:disable Layout/LineLength
 # @!parse
+#   module OpenSSL
+#     module SSL
+#       # @type [Integer]
+#       VERIFY_PEER = 1
+#       # @type [Integer]
+#       VERIFY_NONE = 0
+#     end
+#   end
 #   class Time
 #     class << self
 #       # @param time [String]
