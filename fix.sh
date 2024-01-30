@@ -171,6 +171,7 @@ ensure_bundle() {
     make bundle_install
     set -x
     bundle update --bundler
+    gem install bundler:2.5.5
     set +x
     echo "After updating bundler:"
     echo "Bundler version: ${bundler_version}"
