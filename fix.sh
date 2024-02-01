@@ -174,6 +174,7 @@ ensure_bundle() {
     # need to do this first before 'bundle update --bundler' will work
     make bundle_install
     bundle update --bundler
+    gem install bundler:2.5.5
     >&2 echo "Updated bundler version: $(bundle --version)"
     # ensure next step installs fresh bundle
     rm -f Gemfile.lock.installed
