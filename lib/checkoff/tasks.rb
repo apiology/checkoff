@@ -242,10 +242,11 @@ module Checkoff
                                      only_uncompleted: true,
                                      extra_fields: ['dependents'] + extra_task_fields)
         debug { "#{task.name} has dependent task #{dependent_task.name}" }
-        unless dependent_task.nil?
-          dependent_tasks << dependent_task
-          dependent_tasks += all_dependent_tasks(dependent_task)
-        end
+        next if dependent_task.nil?
+
+        dependent_tasks << dependent_task
+        dependent_tasks += all_dependent_tasks(dependent_task,
+                                               extra_task_fields: extra_task_fields)
       end
       dependent_tasks
     end

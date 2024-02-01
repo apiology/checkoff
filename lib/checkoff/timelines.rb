@@ -107,6 +107,8 @@ module Checkoff
           next true unless limit_to_projects.map(&:gid).include? project_gid
         end
 
+        # do this once, but lazily, so we don't have to do it if all
+        # projects are excluded
         all_dependent_milestones ||=
           @tasks.all_dependent_tasks(task,
                                      extra_task_fields: ['resource_subtype',
