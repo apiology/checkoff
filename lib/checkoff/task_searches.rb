@@ -76,7 +76,7 @@ module Checkoff
       raw_task_search(api_params, workspace_gid: workspace.gid, task_selector: task_selector,
                                   extra_fields: extra_fields)
     end
-    cache_method :task_search, LONG_CACHE_TIME
+    cache_method :task_search, SHORT_CACHE_TIME
 
     # Perform a search using the Asana Task Search API:
     #
