@@ -96,6 +96,12 @@ module Checkoff
 
           task_data = @tasks.task_to_h(task)
           task_data.fetch('unwrapped').fetch('membership_by_section_gid').keys.include?(value)
+        when 'checkoff:fetched.parent_task.gid'
+          fields = ['parent']
+          task = uncached_fetch_task(key, asana_event, fields)
+          return false if task.nil?
+
+          task.parent&.fetch('gid', nil) == value
         when 'checkoff:fetched.completed'
           fields = ['completed_at']
           task = uncached_fetch_task(key, asana_event, fields)
