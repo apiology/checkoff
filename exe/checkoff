@@ -3,5 +3,4 @@
 
 require 'checkoff/cli'
 
-CacheMethod.config.storage = Dalli::Client.new('memcached:11211')
 exit(Checkoff::CheckoffGLIApp.run(ARGV))
