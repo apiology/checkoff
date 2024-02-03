@@ -3,7 +3,6 @@
 # frozen_string_literal: true
 
 require 'ostruct'
-require 'dalli'
 require 'gli'
 require 'cache_method'
 require_relative 'workspaces'
