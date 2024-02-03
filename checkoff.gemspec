@@ -27,7 +27,6 @@ Gem::Specification.new do |spec|
   spec.add_runtime_dependency 'activesupport'
   spec.add_runtime_dependency 'asana', '>0.10.0'
   spec.add_runtime_dependency 'cache_method'
-  spec.add_runtime_dependency 'dalli'
   spec.add_runtime_dependency 'gli'
   spec.add_runtime_dependency 'mime-types'
 
