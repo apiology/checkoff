@@ -77,9 +77,10 @@ module Checkoff
       else
         # @type [Enumerable<Asana::Resources::Project>]
         ps = projects_by_workspace_name(workspace_name, extra_fields: extra_fields)
-        ps.find do |project|
-          project.name == project_name
-        end
+        # @type <Asana::Resources::Project,nil>
+        # @sg-ignore
+        project = ps.find { _1.name == project_name }
+        project_by_gid(project.gid, extra_fields: extra_fields) unless project.nil?
       end
     end
     cache_method :project, REALLY_LONG_CACHE_TIME

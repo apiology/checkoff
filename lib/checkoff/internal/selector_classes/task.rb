@@ -347,7 +347,7 @@ module Checkoff
         end
       end
 
-      # :milestone_does_not_depend_on_this_task? function
+      # :milestone? function
       class MilestonePFunctionEvaluator < FunctionEvaluator
         FUNCTION_NAME = :milestone?
 

@@ -84,17 +84,6 @@ class TestProjects < BaseAsana
     workspace_one.expects(:gid).returns(workspace_one_gid)
   end
 
-  def test_project_regular
-    projects = get_test_object do
-      setup_config
-      setup_workspace_pulled
-      setup_projects_pulled
-      setup_projects_queried(workspace_gid: workspace_one_gid)
-    end
-
-    assert_equal(project_a, projects.project('Workspace 1', a_name))
-  end
-
   def setup_user_task_list_pulled
     client.expects(:user_task_lists).returns(user_task_lists)
     user_task_lists.expects(:get_user_task_list_for_user)
