@@ -90,7 +90,7 @@ module Checkoff
       # @return [Array<([String, nil], [String,nil])>]
       def enrich_gid(gid, resource_type: nil)
         # @sg-ignore
-        resource, resource_type = resources.fetch_gid(gid, resource_type: resource_type)
+        resource, resource_type = resources.resource_by_gid(gid, resource_type: resource_type)
         [resource&.name, resource_type]
       end
 
