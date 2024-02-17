@@ -37,7 +37,6 @@ class TestSubtasks < ClassTest
 
   # def test_all_subtasks_completed_false
   #   subtasks = get_test_object do
-  #     expect_task_options_pulled
   #     expect_raw_subtasks_pulled
   #     active_subtasks = [subtask_section_1, subtask_1a, subtask_1b,
   #                        subtask_section_2,
@@ -64,7 +63,6 @@ class TestSubtasks < ClassTest
 
   # def test_all_subtasks_completed_true
   #   subtasks = get_test_object do
-  #     expect_task_options_pulled
   #     expect_raw_subtasks_pulled
   #     active_subtasks = [subtask_section_1,
   #                        subtask_section_2,
@@ -141,17 +139,12 @@ class TestSubtasks < ClassTest
   #   assert_equal('More than one section named 1:', e.message)
   # end
 
-  def expect_task_options_pulled
-    projects.expects(:task_options).returns(task_options)
-  end
-
   def expect_raw_subtasks_pulled
     task.expects(:subtasks).with(**subtask_options).returns(raw_subtasks)
   end
 
   # def test_raw_subtasks
   #   subtasks = get_test_object do
-  #     expect_task_options_pulled
   #     expect_raw_subtasks_pulled
   #   end
 

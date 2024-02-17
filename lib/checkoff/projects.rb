@@ -52,17 +52,46 @@ module Checkoff
       @timing = timing
     end
 
+    # @param extra_fields [Array<String>]
+    #
+    # @return [Array<String>]
+    def task_fields(extra_fields: [])
+      (%w[name completed_at start_at start_on due_at due_on tags
+          memberships.project.gid memberships.project.name
+          memberships.section.name dependencies] + extra_fields).sort.uniq
+    end
+
     # Default options used in Asana API to pull tasks
+    #
+    # @param extra_fields [Array<String>]
+    # @param [Boolean] only_uncompleted
+    #
     # @return [Hash<Symbol, Object>]
-    def task_options
-      {
+    def task_options(extra_fields: [], only_uncompleted: false)
+      options = {
         per_page: 100,
         options: {
-          fields: %w[name completed_at start_at start_on due_at due_on tags
-                     memberships.project.gid memberships.project.name
-                     memberships.section.name dependencies],
+          fields: task_fields(extra_fields: extra_fields),
         },
       }
+      options[:completed_since] = '9999-12-01' if only_uncompleted
+      options
+    end
+
+    # @param extra_project_fields [Array<String>]
+    #
+    # @return [Array<String>]
+    def project_fields(extra_project_fields: [])
+      (%w[name custom_fields] + extra_project_fields).sort.uniq
+    end
+
+    # Default options used in Asana API to pull projects
+    #
+    # @param extra_project_fields [Array<String>]
+    #
+    # @return [Hash<Symbol, Object>]
+    def project_options(extra_project_fields: [])
+      { fields: project_fields(extra_project_fields: extra_project_fields) }
     end
 
     # pulls an Asana API project class given a name
@@ -103,7 +132,7 @@ module Checkoff
     #
     # @return [Asana::Resources::Project,nil]
     def project_by_gid(gid, extra_fields: [])
-      projects.find_by_id(gid, options: { fields: %w[name] + extra_fields })
+      projects.find_by_id(gid, options: project_options(extra_project_fields: extra_fields))
     rescue Asana::Errors::NotFound => e
       debug e
       nil
@@ -142,10 +171,8 @@ module Checkoff
     def tasks_from_project_gid(project_gid,
                                only_uncompleted: true,
                                extra_fields: [])
-      options = task_options
-      options[:completed_since] = '9999-12-01' if only_uncompleted
+      options = task_options(extra_fields: extra_fields, only_uncompleted: only_uncompleted)
       options[:project] = project_gid
-      options[:options][:fields] += extra_fields
       # Note: 30 minute cache time on a raw Enumerable from SDK gives
       # 'Your pagination token has expired' errors.  So we go ahead
       # and eagerly evaluate here so we can enjoy the cache.
@@ -158,11 +185,12 @@ module Checkoff
     # @return [Enumerable<Asana::Resources::Project>]
     def projects_by_workspace_name(workspace_name, extra_fields: [])
       workspace = @workspaces.workspace_or_raise(workspace_name)
-      options = { fields: %w[name] + extra_fields }
       # 15 minute cache resulted in 'Your pagination token has
       # expired', so let's cache this a super long time and force
       # evaluation
-      projects.find_by_workspace(workspace: workspace.gid, per_page: 100, options: options).to_a
+      projects.find_by_workspace(workspace: workspace.gid,
+                                 per_page: 100,
+                                 options: project_options(extra_project_fields: extra_fields)).to_a
     end
     cache_method :projects_by_workspace_name, REALLY_LONG_CACHE_TIME
 

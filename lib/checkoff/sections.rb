@@ -106,9 +106,8 @@ module Checkoff
     def tasks_by_section_gid(section_gid,
                              only_uncompleted: true,
                              extra_fields: [])
-      options = projects.task_options
-      options[:options][:fields] += extra_fields
-      options[:completed_since] = '9999-12-01' if only_uncompleted
+      options = projects.task_options(extra_fields: extra_fields,
+                                      only_uncompleted: only_uncompleted)
       client.tasks.get_tasks(section: section_gid, **options)
     end
 
@@ -127,9 +126,8 @@ module Checkoff
               only_uncompleted: true,
               extra_fields: [])
       section = section_or_raise(workspace_name, project_name, section_name)
-      options = projects.task_options
-      options[:options][:fields] += extra_fields
-      options[:completed_since] = '9999-12-01' if only_uncompleted
+      options = projects.task_options(extra_fields: extra_fields,
+                                      only_uncompleted: only_uncompleted)
       # Note: 30 minute cache time on a raw Enumerable from SDK gives
       # 'Your pagination token has expired' errors.  So we go ahead
       # and eagerly evaluate here so we can enjoy the cache.

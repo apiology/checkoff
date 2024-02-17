@@ -16,13 +16,14 @@ class TestSections < BaseAsana
            :a_membership_project, :a_membership_section,
            :user_task_list_project, :workspace_one, :user_task_lists,
            :workspace_one_gid, :user_task_list, :sections, :section_1,
-           :section_2, :task_options, :tasks, :section_1_gid, :section_2_gid,
+           :section_2, :tasks, :section_1_gid, :section_2_gid,
            :recently_assigned, :assignee_section,
            :assignee_section_name, :empty_section, :empty_section_gid, :project_gid,
            :get_results
 
   def test_section_task_names_no_tasks
     sections = get_test_object do
+      @mocks[:projects] = projects
       mock_tasks_normal_project(only_uncompleted: true)
       expect_named(task_c, 'c')
     end
@@ -31,8 +32,13 @@ class TestSections < BaseAsana
                  sections.section_task_names('Workspace 1', a_name, 'Section 1:'))
   end
 
+  def projects
+    @projects ||= Checkoff::Projects.new(client: client)
+  end
+
   def test_section_task_names
     sections = get_test_object do
+      @mocks[:projects] = projects
       mock_tasks_normal_project(only_uncompleted: true)
       expect_named(task_c, 'c')
     end
@@ -214,10 +220,10 @@ class TestSections < BaseAsana
 
   def original_task_options
     {
-      foo: 'bar',
       per_page: 100,
       options: {
-        fields: [],
+        fields: ['completed_at', 'dependencies', 'due_at', 'due_on', 'memberships.project.gid',
+                 'memberships.project.name', 'memberships.section.name', 'name', 'start_at', 'start_on', 'tags'],
       },
     }
   end
@@ -226,10 +232,6 @@ class TestSections < BaseAsana
     out = original_task_options
     out[:completed_since] = '9999-12-01' if only_uncompleted
     out
-  end
-
-  def expect_original_task_options_pulled
-    @mocks[:projects].expects(:task_options).with.returns(original_task_options)
   end
 
   def expect_tasks_api_called_for_section(section_gid, task_list, only_uncompleted:)
@@ -252,7 +254,6 @@ class TestSections < BaseAsana
   end
 
   def expect_section_tasks_pulled(section, section_gid, task_list, only_uncompleted:)
-    expect_original_task_options_pulled
     expect_client_tasks_api_pulled
     section.expects(:gid).returns(section_gid).at_least(0)
     expect_tasks_api_called_for_section(section_gid, task_list, only_uncompleted: only_uncompleted)
@@ -260,6 +261,7 @@ class TestSections < BaseAsana
 
   def test_tasks_not_only_uncompleted
     sections = get_test_object do
+      @mocks[:projects] = projects
       mock_tasks_normal_project(only_uncompleted: false)
     end
     out = sections.tasks('Workspace 1', a_name, 'Section 1:',
@@ -295,6 +297,7 @@ class TestSections < BaseAsana
 
   def test_tasks_normal_project
     sections = get_test_object do
+      @mocks[:projects] = projects
       mock_tasks_normal_project(only_uncompleted: true)
     end
     out = sections.tasks('Workspace 1', a_name, 'Section 1:')
@@ -304,6 +307,7 @@ class TestSections < BaseAsana
 
   def test_tasks_by_section_gid
     sections = get_test_object do
+      @mocks[:projects] = projects
       expect_section_tasks_pulled(section_1, section_1_gid, [task_c],
                                   only_uncompleted: true)
     end
@@ -314,6 +318,7 @@ class TestSections < BaseAsana
 
   def test_tasks_by_section_also_completed
     sections = get_test_object do
+      @mocks[:projects] = projects
       expect_section_tasks_pulled(section_1, section_1_gid, [task_c],
                                   only_uncompleted: false)
     end
@@ -335,6 +340,7 @@ class TestSections < BaseAsana
 
   def test_tasks_inbox
     sections = get_test_object do
+      @mocks[:projects] = projects
       mock_tasks_inbox
     end
 

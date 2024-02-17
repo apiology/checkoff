@@ -17,13 +17,13 @@ class BaseAsana < ClassTest
 
   let_mock :a_completed_at, :b_completed_at, :section_one
 
-  def task_options
+  def task_options(extra_fields: [])
     {
       per_page: 100,
       options: {
-        fields: %w[name completed_at start_at start_on due_at due_on tags
-                   memberships.project.gid memberships.project.name
-                   memberships.section.name dependencies],
+        fields: (%w[completed_at dependencies due_at due_on tags
+                    memberships.project.gid memberships.project.name
+                    memberships.section.name name start_at start_on] + extra_fields).sort.uniq,
       },
       completed_since: '9999-12-01',
     }
@@ -35,7 +35,7 @@ class BaseAsana < ClassTest
       options: {
         fields: %w[name completed_at start_at start_on due_at due_on tags
                    memberships.project.gid memberships.project.name
-                   memberships.section.name dependencies],
+                   memberships.section.name dependencies].sort.uniq,
       },
     }
   end

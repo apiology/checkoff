@@ -193,10 +193,8 @@ module Checkoff
     # @return [Hash<Symbol, Object>]
     def calculate_api_options(extra_fields)
       # @type [Hash<Symbol, Object>]
-      options = projects.task_options[:options]
-      options[:fields] += ['custom_fields']
-      options[:fields] += extra_fields
-      options
+      all_options = projects.task_options(extra_fields: ['custom_fields'] + extra_fields)
+      all_options[:options]
     end
 
     # bundle exec ./task_searches.rb

@@ -32,7 +32,7 @@ class TestProjects < BaseAsana
     projects
       .expects(:find_by_workspace).with(workspace: workspace_gid,
                                         per_page: 100,
-                                        options: { fields: %w[name] })
+                                        options: { fields: %w[custom_fields name] })
       .returns(sample_projects.keys)
     sample_projects.each do |project, name|
       project.expects(:name).returns(name).at_least(0)
@@ -63,7 +63,7 @@ class TestProjects < BaseAsana
 
   def test_tasks_from_project
     projects = get_test_object do
-      mock_tasks_from_project(options: task_options)
+      mock_tasks_from_project(options: task_options(extra_fields: []))
     end
 
     assert_equal(tasks, projects.tasks_from_project(project_a))
@@ -111,7 +111,8 @@ class TestProjects < BaseAsana
   def test_project_by_gid
     projects = get_test_object do
       client.expects(:projects).returns(client_projects)
-      client_projects.expects(:find_by_id).with(project_gid, options: { fields: ['name'] }).returns(project)
+      client_projects.expects(:find_by_id).with(project_gid,
+                                                options: { fields: %w[custom_fields name] }).returns(project)
     end
 
     assert_equal(project, projects.project_by_gid(project_gid))
