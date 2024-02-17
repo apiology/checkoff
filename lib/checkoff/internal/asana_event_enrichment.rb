@@ -18,6 +18,7 @@ module Checkoff
       # @param tasks [Checkoff::Tasks]
       # @param sections [Checkoff::Sections]
       # @param projects [Checkoff::Projects]
+      # @param resources [Checkoff::Resources]
       # @param clients [Checkoff::Clients]
       # @param client [Asana::Client]
       # @param asana_event_enrichment [Checkoff::Internal::AsanaEventEnrichment]
@@ -26,12 +27,14 @@ module Checkoff
                      tasks: Checkoff::Tasks.new(config: config),
                      sections: Checkoff::Sections.new(config: config),
                      projects: Checkoff::Projects.new(config: config),
+                     resources: Checkoff::Resources.new(config: config),
                      clients: Checkoff::Clients.new(config: config),
                      client: clients.client)
         @workspaces = workspaces
         @tasks = tasks
         @sections = sections
         @projects = projects
+        @resources = resources
         @client = client
       end
 
@@ -86,13 +89,9 @@ module Checkoff
       #
       # @return [Array<([String, nil], [String,nil])>]
       def enrich_gid(gid, resource_type: nil)
-        %w[task section project].each do |resource_type_to_try|
-          next unless [resource_type_to_try, nil].include?(resource_type)
-
-          name = method(:"enrich_#{resource_type_to_try}_gid").call(gid)
-          return [name, resource_type_to_try] if name
-        end
-        [nil, nil]
+        # @sg-ignore
+        resource, resource_type = resources.resource_by_gid(gid, resource_type: resource_type)
+        [resource&.name, resource_type]
       end
 
       # @param filter [Hash{String => String}]
@@ -106,30 +105,6 @@ module Checkoff
         name, resource_type = enrich_gid(parent_gid)
         filter['checkoff:enriched:parent.name'] = name if name
         filter['checkoff:enriched:parent.resource_type'] = resource_type if resource_type
-      end
-
-      # @param gid [String]
-      #
-      # @return [String, nil]
-      def enrich_task_gid(gid)
-        task = tasks.task_by_gid(gid, only_uncompleted: false)
-        task&.name
-      end
-
-      # @param section_gid [String]
-      #
-      # @return [String, nil]
-      def enrich_section_gid(section_gid)
-        section = sections.section_by_gid(section_gid)
-        section&.name
-      end
-
-      # @param project_gid [String]
-      #
-      # @return [String, nil]
-      def enrich_project_gid(project_gid)
-        project = projects.project_by_gid(project_gid)
-        project&.name
       end
 
       # @param filter [Hash{String => String}]
@@ -151,7 +126,8 @@ module Checkoff
         section_gid = filter['checkoff:fetched.section.gid']
         return unless section_gid
 
-        name = enrich_section_gid(section_gid)
+        section = sections.section_by_gid(section_gid)
+        name = section&.name
         filter['checkoff:enriched:fetched.section.name'] = name if name
       end
 
@@ -207,6 +183,9 @@ module Checkoff
 
       # @return [Checkoff::Workspaces]
       attr_reader :workspaces
+
+      # @return [Checkoff::Resources]
+      attr_reader :resources
 
       # @return [Asana::Client]
       attr_reader :client
