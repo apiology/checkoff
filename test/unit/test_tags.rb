@@ -6,7 +6,7 @@ require_relative 'class_test'
 class TestTags < ClassTest
   extend Forwardable
 
-  def_delegators(:@mocks, :workspaces, :client, :projects)
+  def_delegators(:@mocks, :workspaces, :client)
 
   let_mock :workspace_name, :tag_name, :tag, :workspace, :workspace_gid,
            :tags_api, :wrong_tag, :wrong_tag_name, :task_collection, :response,
@@ -59,12 +59,10 @@ class TestTags < ClassTest
 
   def mock_tasks(only_uncompleted: true)
     task_params = build_task_params(only_uncompleted)
-    task_options = generate_task_options
     merged_task_options = generate_merged_task_options
     task_endpoint = generate_task_endpoint
     response_body = build_response_body
 
-    setup_project_expects(task_options)
     setup_client_expects(task_endpoint, task_params, merged_task_options)
     setup_response_expects(response_body)
     setup_collection_expects
@@ -80,10 +78,6 @@ class TestTags < ClassTest
     {
       'data' => response_body_data,
     }
-  end
-
-  def setup_project_expects(task_options)
-    projects.expects(:task_options).returns(task_options)
   end
 
   def setup_client_expects(task_endpoint, task_params, merged_task_options)
@@ -116,7 +110,8 @@ class TestTags < ClassTest
     {
       fields: %w[name completed_at due_at due_on tags
                  memberships.project.gid memberships.project.name
-                 memberships.section.name dependencies field1 field2],
+                 memberships.section.name dependencies field1 field2
+                 start_at start_on].sort.uniq,
     }
   end
 
@@ -125,8 +120,13 @@ class TestTags < ClassTest
     "/tags/#{tag.gid}/tasks"
   end
 
+  def projects
+    Checkoff::Projects.new(client: client)
+  end
+
   def test_tasks
     tags = get_test_object do
+      @mocks[:projects] = projects
       mock_tasks(only_uncompleted: true)
     end
 
@@ -142,6 +142,7 @@ class TestTags < ClassTest
 
   def test_tasks_with_completed
     tags = get_test_object do
+      @mocks[:projects] = projects
       mock_tasks(only_uncompleted: false)
     end
 

@@ -135,21 +135,25 @@ class TestTasks < BaseAsana
     assert(tasks.task_ready?(task))
   end
 
-  def expect_task_options_pulled
-    sections.expects(:projects).returns(projects)
-    projects.expects(:task_options).returns({ options: { fields: ['bunch of fields'] } }).at_least(1)
-  end
-
   def expect_asana_tasks_client_pulled
     client.expects(:tasks).returns(asana_tasks_client)
+  end
+
+  def default_fields
+    ['completed_at', 'due_at', 'due_on', 'memberships.project.gid', 'memberships.project.name',
+     'memberships.section.name', 'name', 'start_at', 'start_on', 'tags']
+  end
+
+  def fields_including(extra_fields)
+    (default_fields + extra_fields).sort.uniq
   end
 
   def expect_dependency_completion_pulled(dependency_gid, dependency_full_task,
                                           completed)
     expect_task_options_pulled
     expect_asana_tasks_client_pulled
-    asana_tasks_client.expects(:find_by_id).with(dependency_gid,
-                                                 options: { fields: ['bunch of fields'] })
+    asana_tasks_client.expects(:find_by_id)
+      .with(dependency_gid, options: { fields: fields_including(['dependencies']) })
       .returns(dependency_full_task)
     dependency_full_task.expects(:completed_at).returns(completed ? 'some time' : nil)
   end
@@ -232,8 +236,7 @@ class TestTasks < BaseAsana
     tasks.send(:add_task, task_name, workspace_gid: workspace_gid)
   end
 
-  let_mock :workspace_name, :project_name, :section_name, :task_name,
-           :only_uncompleted, :task, :projects, :project
+  let_mock :workspace_name, :project_name, :section_name, :task_name, :task, :project
 
   def expect_tasks_from_project_pulled
     projects.expects(:tasks_from_project)
@@ -249,8 +252,16 @@ class TestTasks < BaseAsana
       .returns(project)
   end
 
-  def expect_projects_pulled
-    sections.expects(:projects).returns(projects)
+  def expect_task_by_gid_pulled(extra_fields: [])
+    task.expects(:gid).returns(task_gid)
+    expect_task_options_pulled
+    expect_asana_tasks_client_pulled
+    asana_tasks_client.expects(:find_by_id).with(task_gid,
+                                                 options: {
+                                                   fields: fields_including(extra_fields),
+                                                   completed_since: '9999-12-01',
+                                                 })
+      .returns(task)
   end
 
   def expect_tasks_from_section_pulled
@@ -258,43 +269,41 @@ class TestTasks < BaseAsana
                                   only_uncompleted: false,
                                   extra_fields: []).returns([task])
     task.expects(:name).returns(task_name)
-    expect_task_by_gid_pulled
+    expect_task_by_gid_pulled(extra_fields: ['dependencies'])
+  end
+
+  def projects
+    @projects ||= Checkoff::Projects.new(client: client,
+                                         workspaces: workspaces)
+  end
+
+  def expect_task_options_pulled
+    sections.expects(:projects).returns(projects).at_least(0)
   end
 
   def mock_task_with_section
     expect_tasks_from_section_pulled
+    expect_task_options_pulled
   end
 
   def test_task_with_section
     tasks = get_test_object { mock_task_with_section }
     returned_task = tasks.task(workspace_name, project_name, task_name,
-                               only_uncompleted: only_uncompleted, section_name: section_name)
+                               only_uncompleted: true, section_name: section_name)
 
     assert_equal(task, returned_task)
-  end
-
-  def expect_task_by_gid_pulled
-    task.expects(:gid).returns(task_gid)
-    expect_task_options_pulled
-    expect_asana_tasks_client_pulled
-    asana_tasks_client.expects(:find_by_id).with(task_gid,
-                                                 options: {
-                                                   fields: ['bunch of fields'],
-                                                   completed_since: '9999-12-01',
-                                                 })
-      .returns(task)
   end
 
   def mock_task
     expect_project_pulled
     expect_tasks_from_project_pulled
-    expect_task_by_gid_pulled
+    expect_task_by_gid_pulled(extra_fields: ['dependencies'])
   end
 
   def test_task
     tasks = get_test_object { mock_task }
     returned_task = tasks.task(workspace_name, project_name, task_name,
-                               only_uncompleted: only_uncompleted)
+                               only_uncompleted: true)
 
     assert_equal(task, returned_task)
   end
@@ -393,8 +402,7 @@ class TestTasks < BaseAsana
       expect_task_options_pulled
       expect_asana_tasks_client_pulled
       asana_tasks_client.expects(:find_by_id).with(dependent_1_gid,
-                                                   options: { fields: ['bunch of fields',
-                                                                       'dependents'],
+                                                   options: { fields: fields_including(%w[dependencies dependents]),
                                                               completed_since: '9999-12-01' })
         .returns(dependent_1)
       dependent_1.expects(:instance_variable_get).with(:@dependents).returns([])

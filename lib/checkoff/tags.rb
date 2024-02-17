@@ -36,7 +36,8 @@ module Checkoff
               extra_fields: [])
       tag = tag_or_raise(workspace_name, tag_name)
 
-      options = build_task_options(projects.task_options, extra_fields, only_uncompleted)
+      options = projects.task_options(extra_fields: extra_fields,
+                                      only_uncompleted: only_uncompleted)
 
       params = build_params(options)
 
@@ -64,12 +65,6 @@ module Checkoff
     private
 
     attr_reader :workspaces, :projects, :client
-
-    def build_task_options(task_options, extra_fields, only_uncompleted)
-      task_options[:options][:fields] += extra_fields
-      task_options[:completed_since] = '9999-12-01' if only_uncompleted
-      task_options
-    end
 
     def build_params(options)
       { limit: options[:per_page], completed_since: options[:completed_since] }.reject do |_, v|

@@ -73,12 +73,9 @@ module Checkoff
                         extra_fields: [],
                         only_uncompleted: true)
       # @type [Hash]
-      options = projects.task_options.fetch(:options, {})
-      options[:fields] += extra_fields
-      options[:fields] += %w[is_rendered_as_separator]
-      options[:fields].uniq!
-
-      options[:completed_since] = '9999-12-01' if only_uncompleted
+      all_options = projects.task_options(extra_fields: extra_fields + %w[is_rendered_as_separator],
+                                          only_uncompleted: only_uncompleted)
+      options = all_options.fetch(:options, {})
       client.tasks.get_subtasks_for_task(task_gid: task_gid,
                                          # per_page: 100, # stub doesn't have this arg available
                                          options: options)

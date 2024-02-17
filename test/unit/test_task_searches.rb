@@ -7,7 +7,7 @@ require 'checkoff/task_searches'
 class TestTaskSearches < ClassTest
   extend Forwardable
 
-  def_delegators(:@mocks, :workspaces, :client, :search_url_parser, :projects,
+  def_delegators(:@mocks, :workspaces, :client, :search_url_parser,
                  :asana_resources_collection_class, :task_selectors)
 
   let_mock :url, :workspace_name, :workspace, :workspace_gid, :api_params,
@@ -26,15 +26,16 @@ class TestTaskSearches < ClassTest
     search_url_parser.expects(:convert_params).with(url).returns([api_params, task_selector])
   end
 
-  def expect_task_options_pulled
-    projects.expects(:task_options).returns({ options: { fields: [] } })
+  def default_fields
+    ['completed_at', 'custom_fields', 'dependencies', 'due_at', 'due_on', 'memberships.project.gid',
+     'memberships.project.name', 'memberships.section.name', 'name', 'start_at', 'start_on', 'tags']
   end
 
   def expect_client_get_called
     client
       .expects(:get)
       .with('/workspaces/abc/tasks/search',
-            params: api_params, options: { fields: ['custom_fields'] })
+            params: api_params, options: { fields: default_fields })
       .returns(search_response)
   end
 
@@ -78,14 +79,18 @@ class TestTaskSearches < ClassTest
     expect_workspace_gid_pulled
     expect_convert_params_called
     expect_task_selector_queried
-    expect_task_options_pulled
     expect_search_response_queried
     expect_response_wrapped([good_task, bad_task])
     expect_tasks_filtered
   end
 
+  def projects
+    Checkoff::Projects.new(client: client)
+  end
+
   def test_task_search
     task_searches = get_test_object do
+      @mocks[:projects] = projects
       mock_task_search
     end
 
@@ -96,7 +101,6 @@ class TestTaskSearches < ClassTest
     expect_workspace_pulled
     expect_workspace_gid_pulled
     expect_convert_params_called
-    expect_task_options_pulled
     expect_search_response_queried
     expect_response_wrapped(Array.new(100) { good_task })
   end
