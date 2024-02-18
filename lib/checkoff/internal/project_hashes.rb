@@ -25,7 +25,13 @@ module Checkoff
       # @param project_hash [Hash]
       # @return [void]
       def unwrap_custom_fields(project_hash)
-        unwrapped_custom_fields = project_hash.fetch('custom_fields', []).group_by do |cf|
+        # @sg-ignore
+        # @type [Array<Hash>,nil]
+        custom_fields = project_hash.fetch('custom_fields', nil)
+
+        return if custom_fields.nil?
+
+        unwrapped_custom_fields = custom_fields.group_by do |cf|
           cf['name']
         end.transform_values(&:first)
         project_hash['unwrapped']['custom_fields'] = unwrapped_custom_fields
