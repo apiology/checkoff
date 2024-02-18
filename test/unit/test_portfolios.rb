@@ -82,12 +82,14 @@ class TestPortfolios < ClassTest
 
   def test_projects_in_portfolios
     portfolios = get_test_object do
+      @mocks[:projects] = Checkoff::Projects.new(client: client)
       portfolio_arr = [portfolio]
       expect_portfolios_pulled(portfolio_arr)
       client.expects(:portfolios).returns(portfolios_api)
       portfolio.expects(:gid).returns(portfolio_gid)
       portfolios_api.expects(:get_items_for_portfolio).with(portfolio_gid: portfolio_gid,
-                                                            options: { fields: ['name'] }).returns([project_a])
+                                                            options: { fields: %w[custom_fields
+                                                                                  name] }).returns([project_a])
     end
 
     assert_equal([project_a], portfolios.projects_in_portfolio(workspace_name, portfolio_name))
@@ -101,6 +103,7 @@ class TestPortfolios < ClassTest
     {
       config: Hash,
       workspaces: Checkoff::Workspaces,
+      projects: Checkoff::Projects,
       clients: Checkoff::Clients,
       client: Asana::Client,
     }

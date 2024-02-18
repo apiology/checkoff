@@ -7,6 +7,7 @@ require 'cache_method'
 require_relative 'internal/config_loader'
 require_relative 'workspaces'
 require_relative 'clients'
+require_relative 'projects'
 
 # https://developers.asana.com/reference/portfolios
 
@@ -27,12 +28,15 @@ module Checkoff
     # @param workspaces [Checkoff::Workspaces]
     # @param clients [Checkoff::Clients]
     # @param client [Asana::Client]
+    # @param projects [Checkoff::Projects]
     def initialize(config: Checkoff::Internal::ConfigLoader.load(:asana),
                    clients: Checkoff::Clients.new(config: config),
                    client: clients.client,
+                   projects: Checkoff::Projects.new(config: config, client: client),
                    workspaces: Checkoff::Workspaces.new(config: config, client: client))
       @workspaces = workspaces
       @client = client
+      @projects = projects
     end
 
     # @param workspace_name [String]
@@ -95,10 +99,7 @@ module Checkoff
     #
     # @return [Enumerable<Asana::Resources::Project>]
     def projects_in_portfolio_obj(portfolio, extra_project_fields: [])
-      options = {
-        fields: ['name'],
-      }
-      options[:fields] += extra_project_fields
+      options = projects.project_options(extra_project_fields: extra_project_fields)
       client.portfolios.get_items_for_portfolio(portfolio_gid: portfolio.gid, options: options)
     end
 
@@ -106,6 +107,9 @@ module Checkoff
 
     # @return [Checkoff::Workspaces]
     attr_reader :workspaces
+
+    # @return [Checkoff::Projects]
+    attr_reader :projects
 
     # @return [Asana::Client]
     attr_reader :client
