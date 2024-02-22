@@ -70,7 +70,7 @@ module Checkoff
     #
     # @return [Enumerable<Asana::Resources::Section>]
     def sections_by_project_gid(project_gid, extra_fields: [])
-      fields = %w[name] + extra_fields
+      fields = (%w[name] + extra_fields).sort.uniq
       client.sections.get_sections_for_project(project_gid: project_gid,
                                                options: { fields: fields })
     end
@@ -212,6 +212,19 @@ module Checkoff
       {}
     end
 
+    # @sg-ignore
+    # @param workspace_name [String]
+    # @param project_name [String, Symbol]
+    # @param section_name [String, nil]
+    # @param extra_section_fields [Array<String>]
+    #
+    # @return [Asana::Resources::Section, nil]
+    def section(workspace_name, project_name, section_name, extra_section_fields: [])
+      sections = sections_or_raise(workspace_name, project_name,
+                                   extra_fields: extra_section_fields)
+      sections.find { |section| section_key(section.name)&.chomp(':') == section_name&.chomp(':') }
+    end
+
     private
 
     include Logging
@@ -291,19 +304,6 @@ module Checkoff
               "under workspace #{workspace_name}"
       end
       project
-    end
-
-    # @sg-ignore
-    # @param workspace_name [String]
-    # @param project_name [String, Symbol]
-    # @param section_name [String, nil]
-    # @param extra_section_fields [Array<String>]
-    #
-    # @return [Asana::Resources::Section, nil]
-    def section(workspace_name, project_name, section_name, extra_section_fields: [])
-      sections = sections_or_raise(workspace_name, project_name,
-                                   extra_fields: extra_section_fields)
-      sections.find { |section| section_key(section.name)&.chomp(':') == section_name&.chomp(':') }
     end
   end
 end
