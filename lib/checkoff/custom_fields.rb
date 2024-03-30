@@ -80,7 +80,11 @@ module Checkoff
       return [] if custom_field.nil?
 
       resource_custom_field_enum_values(custom_field).flat_map do |enum_value|
-        find_names(enum_value)
+        if enum_value.nil?
+          []
+        else
+          [enum_value.fetch('name')]
+        end
       end
     end
 
@@ -162,13 +166,6 @@ module Checkoff
 
         [enum_value.fetch('gid')]
       end
-    end
-
-    # @param custom_field [Hash]
-    # @param enum_value [Object, nil]
-    # @return [Array<String>]
-    def find_names(enum_value)
-      [enum_value.fetch('name')]
     end
 
     # @return [Checkoff::Workspaces]
