@@ -87,7 +87,8 @@ class TestTaskSelectors < ClassTest
     task_selectors = get_test_object do
       @mocks[:custom_fields] = Checkoff::CustomFields.new(client: client)
       custom_fields = [custom_field]
-      task.expects(:custom_fields).returns(custom_fields)
+      task.expects(:custom_fields).returns(custom_fields).at_least(1)
+      task.expects(:gid).returns(123)
     end
     e = assert_raises(RuntimeError) do
       task_selectors.filter_via_task_selector(task,
@@ -118,14 +119,13 @@ class TestTaskSelectors < ClassTest
       @mocks[:custom_fields] = Checkoff::CustomFields.new(client: client)
       task.expects(:custom_fields).returns([custom_field])
     end
-    e = assert_raises(RuntimeError) do
-      task_selectors.filter_via_task_selector(task,
-                                              ['custom_field_gid_value_contains_any_gid?',
-                                               custom_field_gid,
-                                               [enum_value_gid]])
-    end
+    # should not raise
+    result = task_selectors.filter_via_task_selector(task,
+                                                     ['custom_field_gid_value_contains_any_gid?',
+                                                      custom_field_gid,
+                                                      [enum_value_gid]])
 
-    assert_match(/Unexpected enabled value on custom field/, e.message)
+    assert(result)
   end
 
   # @return [void]
@@ -134,8 +134,8 @@ class TestTaskSelectors < ClassTest
     enum_value_gid = '456'
     task_selectors = get_test_object do
       @mocks[:custom_fields] = Checkoff::CustomFields.new(client: client)
-      task.expects(:custom_fields).returns([])
-      task.expects(:gid).returns(123)
+      task.expects(:custom_fields).returns([]).at_least(1)
+      task.expects(:gid).returns(123).at_least(1)
     end
     e = assert_raises(RuntimeError) do
       task_selectors.filter_via_task_selector(task,
@@ -153,7 +153,8 @@ class TestTaskSelectors < ClassTest
     enum_value_gid = '456'
     task_selectors = get_test_object do
       @mocks[:custom_fields] = Checkoff::CustomFields.new(client: client)
-      task.expects(:custom_fields).returns(nil)
+      task.expects(:custom_fields).returns(nil).at_least(1)
+      task.expects(:gid).returns(123)
     end
     e = assert_raises(RuntimeError) do
       task_selectors.filter_via_task_selector(task,

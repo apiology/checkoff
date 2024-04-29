@@ -70,9 +70,9 @@ module Checkoff
       resource_custom_field_enum_values(custom_field).flat_map do |enum_value|
         find_gids(custom_field, enum_value)
       end
-    rescue StandardError
+    rescue StandardError => e
       raise "Could not process custom field with gid #{custom_field_gid} " \
-            "in gid #{resource.gid} with custom fields #{resource.custom_fields}"
+            "in gid #{resource.gid} with custom fields #{resource.custom_fields.inspect}: #{e}"
     end
 
     # @param resource [Asana::Resources::Project,Asana::Resources::Task]
