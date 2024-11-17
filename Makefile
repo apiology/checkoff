@@ -1,4 +1,4 @@
-.PHONY: clean test help quality localtest
+.PHONY: build-typecheck bundle_install cicoverage citypecheck citest citypecoverage clean clean-coverage clean-typecheck clean-typecoverage coverage default help localtest overcommit quality repl report-coverage report-coverage-to-codecov rubocop test typecheck typecoverage update_from_cookiecutter
 .DEFAULT_GOAL := default
 
 define PRINT_HELP_PYSCRIPT
@@ -17,7 +17,18 @@ help:
 
 default: clean-coverage test coverage clean-typecoverage typecheck typecoverage quality ## run default typechecking, tests and quality
 
+build-typecheck: ## Fetch information that type checking depends on
+	bundle install
+	bundle exec yard gems 2>&1; bundle exec yard gems --safe 2>&1; bundle exec yard gems 2>&1
+	bundle exec solargraph scan 2>&1
+
+clean-typecheck: ## Refresh information that type checking depends on
+	bundle exec solargraph clear
+	rm -fr .yardoc/
+	echo all clear
+
 typecheck: ## validate types in code and configuration
+	bundle exec solargraph typecheck --level strong
 
 citypecheck: typecheck ## Run type check from CircleCI
 
@@ -68,14 +79,6 @@ repl:  ## Load up checkoff in pry
 clean-coverage:
 	@bundle exec rake clear_metrics
 
-clean-typecheck: ## Refresh information that type checking depends on
-	bundle install
-	bundle exec solargraph clear
-	rm -fr .yardoc/
-	bundle exec yard gems
-	bundle exec solargraph scan
-	echo all clear
-
 coverage: test report-coverage ## check code coverage
 	@bundle exec rake undercover
 
@@ -90,7 +93,7 @@ update_from_cookiecutter: ## Bring in changes from template project used to crea
 	git checkout cookiecutter-template && git push && git checkout main
 	git checkout main && git pull && git checkout -b update-from-cookiecutter-$$(date +%Y-%m-%d-%H%M)
 	git merge cookiecutter-template || true
-	bundle exec overcommit --install
+	bundle exec overcommit --install || true
 	@echo
 	@echo "Please resolve any merge conflicts below and push up a PR with:"
 	@echo
