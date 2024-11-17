@@ -17,6 +17,17 @@ help:
 
 default: clean-coverage test coverage clean-typecoverage typecheck typecoverage quality ## run default typechecking, tests and quality
 
+build-typecheck: ## Fetch information that type checking depends on
+	bundle install
+	bundle exec yard gems 2>&1; bundle exec yard gems --safe 2>&1; bundle exec yard gems 2>&1
+	bundle exec solargraph scan 2>&1
+
+clean-typecheck: ## Refresh information that type checking depends on
+	bundle exec solargraph clear
+	rm -fr .yardoc/
+	rm -fr ../checkoff/.yardoc
+	echo all clear
+
 typecheck: ## validate types in code and configuration
 
 citypecheck: typecheck ## Run type check from CircleCI
@@ -67,14 +78,6 @@ repl:  ## Load up checkoff in pry
 
 clean-coverage:
 	@bundle exec rake clear_metrics
-
-clean-typecheck: ## Refresh information that type checking depends on
-	bundle install
-	bundle exec solargraph clear
-	rm -fr .yardoc/
-	bundle exec yard gems
-	bundle exec solargraph scan
-	echo all clear
 
 coverage: test report-coverage ## check code coverage
 	@bundle exec rake undercover
