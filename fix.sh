@@ -87,10 +87,12 @@ ensure_dev_library() {
   header_file_name=${1:?header file name}
   homebrew_package=${2:?homebrew package}
   apt_package=${3:-${homebrew_package}}
-  if ! [ -f /usr/include/"${header_file_name}" ] && \
+  if ! [ -f /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/usr/include/"${header_file_name}" ] && \
+      ! [ -f /opt/homebrew/include/"${header_file_name}" ] && \
+      ! [ -f /usr/include/"${header_file_name}" ] && \
       ! [ -f /usr/include/x86_64-linux-gnu/"${header_file_name}" ] && \
       ! [ -f /usr/local/include/"${header_file_name}" ] && \
-      ! [ -f  /usr/local/opt/"${homebrew_package}"/include/"${header_file_name}" ]
+      ! [ -f /usr/local/opt/"${homebrew_package}"/include/"${header_file_name}" ]
   then
     install_package "${homebrew_package}" "${apt_package}"
   fi
@@ -191,7 +193,7 @@ ensure_bundle() {
   #
   # This affects nokogiri, which will try to reinstall itself in
   # Docker builds where it's already installed if this is not run.
-  for platform in arm64-darwin-23 x86_64-darwin-23 x86_64-linux x86_64-linux-musl
+  for platform in arm64-darwin-23 x86_64-darwin-23 x86_64-linux x86_64-linux-musl aarch64-linux arm64-linux
   do
     grep "${platform:?}" Gemfile.lock >/dev/null 2>&1 || bundle lock --add-platform "${platform:?}"
   done
@@ -264,7 +266,7 @@ install_package() {
     HOMEBREW_NO_AUTO_UPDATE=1 HOMEBREW_NO_INSTALL_UPGRADE=1 brew install "${homebrew_package}"
   elif type apt-get >/dev/null 2>&1
   then
-    if ! time dpkg -s "${apt_package}" >/dev/null
+    if ! dpkg -s "${apt_package}" >/dev/null
     then
       update_apt
       sudo DEBIAN_FRONTEND=noninteractive apt-get install -y "${apt_package}"
@@ -295,7 +297,7 @@ ensure_python_build_requirements() {
   ensure_dev_library zlib.h zlib zlib1g-dev
   ensure_dev_library bzlib.h bzip2 libbz2-dev
   ensure_dev_library openssl/ssl.h openssl libssl-dev
-  ensure_dev_library ffi.h libffi libffi-dev
+  ensure_dev_library ffi/ffi.h libffi libffi-dev
   ensure_dev_library sqlite3.h sqlite3 libsqlite3-dev
   ensure_dev_library lzma.h xz liblzma-dev
   ensure_dev_library readline/readline.h readline libreadline-dev
@@ -388,6 +390,10 @@ ensure_rugged_packages_installed() {
 
 ensure_rbenv
 
+ensure_types_built() {
+  make build-typecheck
+}
+
 ensure_ruby_versions
 
 set_ruby_local_version
@@ -407,5 +413,7 @@ ensure_pip_and_wheel
 ensure_python_requirements
 
 ensure_shellcheck
+
+ensure_types_built
 
 ensure_overcommit
