@@ -35,7 +35,6 @@ commands:
       - checkout
       - run: |
           cat Gemfile.lock | \
-          sed -E -e 's/checkoff \([[:digit:]]+.[[:digit:]]+.[[:digit:]]+\)/checkoff (0.1.0)/g' Gemfile.lock \
           sed -E -e 's/checkoff \([[:digit:]]+.[[:digit:]]+.[[:digit:]]+\)/checkoff (0.1.0)/g' \
            > Gemfile.lock.deversioned
       - restore_cache:
