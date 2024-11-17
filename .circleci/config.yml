@@ -98,7 +98,12 @@ commands:
             bundle exec overcommit --sign
             bundle exec overcommit --sign pre-commit
 
-            bundle exec overcommit --run
+            if [ $(git rev-parse --abbrev-ref HEAD) == "main" ]
+            then
+              bundle exec overcommit run
+            else
+              bundle exec bin/overcommit_branch
+            fi
   update_dependencies:
     description: "Update dependencies whose build may have triggered this build"
     parameters:
