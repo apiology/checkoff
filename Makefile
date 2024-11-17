@@ -79,14 +79,6 @@ repl:  ## Load up checkoff in pry
 clean-coverage:
 	@bundle exec rake clear_metrics
 
-clean-typecheck: ## Refresh information that type checking depends on
-	bundle install
-	bundle exec solargraph clear
-	rm -fr .yardoc/
-	bundle exec yard gems
-	bundle exec solargraph scan
-	echo all clear
-
 coverage: test report-coverage ## check code coverage
 	@bundle exec rake undercover
 
