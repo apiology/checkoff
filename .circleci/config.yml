@@ -34,12 +34,26 @@ commands:
     steps:
       - checkout
       - run: |
+          cat Gemfile.lock | \
+          sed -E -e 's/checkoff \([[:digit:]]+.[[:digit:]]+.[[:digit:]]+\)/checkoff (0.1.0)/g' Gemfile.lock \
           sed -E -e 's/checkoff \([[:digit:]]+.[[:digit:]]+.[[:digit:]]+\)/checkoff (0.1.0)/g' \
-          Gemfile.lock > Gemfile.lock.deversioned
+           > Gemfile.lock.deversioned
       - restore_cache:
-          key: gems-v2-{{ checksum "Gemfile.lock.deversioned" }}
+          keys:
+            - yardoc-v1-{{ .Branch }}
+            - yardoc-v1-
+            - yardoc-
       - restore_cache:
-          key: wheels-v1-3.12.1-{{ checksum "requirements_dev.txt" }}
+          keys:
+            - gems-v2-{{ checksum "Gemfile.lock.deversioned" }}
+            - gems-v2-
+            - gems-
+      - restore_cache:
+          keys:
+            - wheels-v1-3.12.1-{{ checksum "requirements_dev.txt" }}
+            - wheels-v1-3.12.1-
+            - wheels-v1-
+            - wheels-
       - run:
           name: Initialize packages
           command: |
@@ -63,6 +77,10 @@ commands:
             - "/home/circleci/.cache/pip/wheels"
             - "/home/circleci/.pyenv/versions/3.12.1/envs/checkoff-3.12.1"
             - "/home/circleci/.pyenv/versions/checkoff-3.12.1"
+      - save_cache:
+          key: yardoc-v1-{{ .Branch }}
+          paths:
+            - ".yardoc"
       - run:
           name: Download new circleci tool
           command: |
@@ -82,32 +100,99 @@ commands:
             bundle exec overcommit --sign pre-commit
 
             bundle exec overcommit --run
+  update_dependencies:
+    description: "Update dependencies whose build may have triggered this build"
+    parameters:
+      gems:
+        type: string
+        description: "Space-separated list of gems to update"
+    steps:
+      - run_with_languages:
+          label: Update dependencies
+          command: |
+            set -x
+            for package in <<parameters.gems>>
+            do
+              REMOTE_VERSION=$(gem search "${package}" | \
+               grep "${package}" | cut -d\( -f2 | cut -d\) -f1)
+              BUNDLED_VERSION=$(bundle info "${package}" | \
+                 head -1 | cut -d\( -f2 | cut -d\) -f1)
+              if [ ${REMOTE_VERSION:?} == ${BUNDLED_VERSION:?} ]
+              then
+                continue
+              fi
 
+              bundle update --conservative "${package}"
+
+              BUNDLED_VERSION=$(bundle info "${package}" | \
+                 head -1 | cut -d\( -f2 | cut -d\) -f1)
+
+              if [ ${REMOTE_VERSION:?} == ${BUNDLED_VERSION:?} ]
+              then
+                continue
+              fi
+
+              echo "Waiting for ${package} v${REMOTE_VERSION} to be"\
+                   "available..."
+              sleep 20
+              bundle update "${package}"
+
+              BUNDLED_VERSION=$(bundle info "${package}" | \
+                 head -1 | cut -d\( -f2 | cut -d\) -f1)
+
+
+              if [ ${REMOTE_VERSION:?} != ${BUNDLED_VERSION:?} ]
+              then
+                >&2 echo "Manually upgrade to ${package}"\
+                         "v${REMOTE_VERSION}"
+                exit 1
+              fi
+            done
+            if [ -z "$(git status --porcelain Gemfile.lock)" ]
+            then
+              echo "No updates needed"
+              exit 0
+            fi
+            # Push any dependency gem updates
+            git config user.email 'vince@broz.cc'
+            git config user.name 'Vince Broz'
+            git status
+            # bundle exec so that overcommit is used from Gemfile for
+            # git hooks
+            #
+            # https://app.circleci.com/pipelines/github/apiology/"${package}"-rails/806/workflows/40fdf1ef-fa23-421b-a0f1-641ea0ed1641/jobs/1173
+            #
+            bundle exec overcommit --sign pre-commit
+            bundle exec git commit -m "Bump dependency releases" Gemfile.lock || true
+            OVERCOMMIT_DEBUG=1 bundle exec git push --set-upstream origin "${CIRCLE_BRANCH:?}"
+            echo "Avoiding double build after git push"
+            exit 1
 jobs:
   overcommit:
     working_directory: ~/checkoff
     docker:
       - image: apiology/circleci-ruby:latest
     steps:
-      - when:
-          condition:
-            equal: [<< pipeline.git.branch >>, "main"]
-          steps:
-            - overcommit
-      - unless:
-          condition:
-            equal: [<< pipeline.git.branch >>, "main"]
-          steps:
-            - run: echo "overcommit only runs on main branch"
+      - overcommit
   build:
     working_directory: ~/checkoff
     docker:
       - image: apiology/circleci-ruby:latest
     steps:
       - set_up_environment
+      - when:
+          condition:
+            equal: [<< pipeline.git.branch >>, "main"]
+          steps:
+            - update_dependencies:
+                gems: checkoff
       - run_with_languages:
-          label: test
-          command: make citest cicoverage
+          label: Typecheck
+          command: make build-typecheck citypecheck citypecoverage
+      - run_with_languages:
+          label: Test
+          command: |
+            make citest cicoverage
     # This seemed to shave 5ish% of the build time off when added
     resource_class: large
 

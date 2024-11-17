@@ -87,10 +87,12 @@ ensure_dev_library() {
   header_file_name=${1:?header file name}
   homebrew_package=${2:?homebrew package}
   apt_package=${3:-${homebrew_package}}
-  if ! [ -f /usr/include/"${header_file_name}" ] && \
+  if ! [ -f /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/usr/include/"${header_file_name}" ] && \
+      ! [ -f /opt/homebrew/include/"${header_file_name}" ] && \
+      ! [ -f /usr/include/"${header_file_name}" ] && \
       ! [ -f /usr/include/x86_64-linux-gnu/"${header_file_name}" ] && \
       ! [ -f /usr/local/include/"${header_file_name}" ] && \
-      ! [ -f  /usr/local/opt/"${homebrew_package}"/include/"${header_file_name}" ]
+      ! [ -f /usr/local/opt/"${homebrew_package}"/include/"${header_file_name}" ]
   then
     install_package "${homebrew_package}" "${apt_package}"
   fi
@@ -116,7 +118,7 @@ ensure_ruby_versions() {
 
   # You can find out which feature versions are still supported / have
   # been release here: https://www.ruby-lang.org/en/downloads/
-  ruby_versions="$(latest_ruby_version 3.0)"
+  ruby_versions="$(latest_ruby_version 3.1)"
 
   echo "Latest Ruby versions: ${ruby_versions}"
 
@@ -146,18 +148,23 @@ ensure_bundle() {
   # Version <2.2.22 of bundler isn't compatible with Ruby 3.3:
   #
   # https://stackoverflow.com/questions/70800753/rails-calling-didyoumeanspell-checkers-mergeerror-name-spell-checker-h
+  #
+  #
+  # Version 2.5.5 fixed an issue in 2.2.22 with the 'bump' gem:
+  #
+  # https://app.circleci.com/pipelines/github/apiology/checkoff/1281/workflows/f667f909-c3fc-4ae2-8593-dde2b588a7a7/jobs/2491
   need_better_bundler=false
   if [ "${bundler_version_major}" -lt 2 ]
   then
     need_better_bundler=true
   elif [ "${bundler_version_major}" -eq 2 ]
   then
-    if [ "${bundler_version_minor}" -lt 2 ]
+    if [ "${bundler_version_minor}" -lt 5 ]
     then
       need_better_bundler=true
-    elif [ "${bundler_version_minor}" -eq 2 ]
+    elif [ "${bundler_version_minor}" -eq 5 ]
     then
-      if [ "${bundler_version_patch}" -lt 23 ]
+      if [ "${bundler_version_patch}" -lt 5 ]
       then
         need_better_bundler=true
       fi
@@ -165,9 +172,12 @@ ensure_bundle() {
   fi
   if [ "${need_better_bundler}" = true ]
   then
+    >&2 echo "Original bundler version: ${bundler_version}"
     # need to do this first before 'bundle update --bundler' will work
     make bundle_install
     bundle update --bundler
+    gem install bundler:2.5.5
+    >&2 echo "Updated bundler version: $(bundle --version)"
     # ensure next step installs fresh bundle
     rm -f Gemfile.lock.installed
   fi
@@ -183,7 +193,7 @@ ensure_bundle() {
   #
   # This affects nokogiri, which will try to reinstall itself in
   # Docker builds where it's already installed if this is not run.
-  for platform in arm64-darwin-23 x86_64-darwin-23 x86_64-linux x86_64-linux-musl
+  for platform in arm64-darwin-23 x86_64-darwin-23 x86_64-linux x86_64-linux-musl aarch64-linux arm64-linux
   do
     grep "${platform:?}" Gemfile.lock >/dev/null 2>&1 || bundle lock --add-platform "${platform:?}"
   done
@@ -256,7 +266,7 @@ install_package() {
     HOMEBREW_NO_AUTO_UPDATE=1 HOMEBREW_NO_INSTALL_UPGRADE=1 brew install "${homebrew_package}"
   elif type apt-get >/dev/null 2>&1
   then
-    if ! time dpkg -s "${apt_package}" >/dev/null
+    if ! dpkg -s "${apt_package}" >/dev/null
     then
       update_apt
       sudo DEBIAN_FRONTEND=noninteractive apt-get install -y "${apt_package}"
@@ -287,7 +297,7 @@ ensure_python_build_requirements() {
   ensure_dev_library zlib.h zlib zlib1g-dev
   ensure_dev_library bzlib.h bzip2 libbz2-dev
   ensure_dev_library openssl/ssl.h openssl libssl-dev
-  ensure_dev_library ffi.h libffi libffi-dev
+  ensure_dev_library ffi/ffi.h libffi libffi-dev
   ensure_dev_library sqlite3.h sqlite3 libsqlite3-dev
   ensure_dev_library lzma.h xz liblzma-dev
   ensure_dev_library readline/readline.h readline libreadline-dev
@@ -380,6 +390,10 @@ ensure_rugged_packages_installed() {
 
 ensure_rbenv
 
+ensure_types_built() {
+  make build-typecheck
+}
+
 ensure_ruby_versions
 
 set_ruby_local_version
@@ -399,5 +413,7 @@ ensure_pip_and_wheel
 ensure_python_requirements
 
 ensure_shellcheck
+
+ensure_types_built
 
 ensure_overcommit
