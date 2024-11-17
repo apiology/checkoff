@@ -13,8 +13,10 @@ Lint/EmptyClass:
   # some workarounds for circular dependencies require empty classes
   AllowComments: true
 
+# conflicts with solargraph wanting every parameter documented with
+# actual name and subclassing
 Lint/UnusedMethodArgument:
-  AllowUnusedKeywordArguments: true
+  Enabled: false
 
 # https://stackoverflow.com/questions/40934345/rubocop-25-line-block-size-and-rspec-tests
 Metrics/BlockLength:
@@ -52,6 +54,7 @@ Naming/MethodParameterName:
     - e # exception
     - x # cartesian coordinates
     - y # cartesian coordinates
+    - n # number of things
 
 # by default (EnforcedStyle=NormalCase) this rule doesn't like
 # things like check_1, check_2, etc and wants check1, check2, etc. I
@@ -79,6 +82,11 @@ Style/CommentAnnotation:
        W"
     - "XX\
        X"
+
+Style/DocumentationMethod:
+  Enabled: true
+  Include:
+    - 'lib/checkoff/*.rb'
 
 Style/StringLiterals:
   EnforcedStyle: single_quotes
@@ -117,5 +125,6 @@ AllCops:
     - 'vendor/**/*'
 
 require:
-  - rubocop-rake
   - rubocop-minitest
+  - rubocop-performance
+  - rubocop-rake

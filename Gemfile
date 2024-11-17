@@ -7,8 +7,9 @@ gemspec
 
 gem 'bump'
 gem 'bundler'
-gem 'fakeweb'
+
 gem 'mdl'
+
 # not a direct dependency - but updates a lot and confuses
 # bump+overcommit+bundler when it unexpectedly updates during the
 # CircleCI publish step
@@ -18,21 +19,22 @@ gem 'mime-types', ['=3.5.1']
 gem 'minitest-profile'
 gem 'minitest-reporters'
 gem 'mocha', ['>= 2']
-# 0.58.0 and 0.57.0 don't seem super compatible with signatures, and
-# magit doesn't seem to want to use the bundled version at the moment,
-# so let's favor the more recent version...
-gem 'overcommit', ['>=0.60.0', '<0.61.0']
+gem 'ostruct'
+gem 'overcommit', ['>=0.64.0', '<0.65.0']
 gem 'pry'
-gem 'punchlist'
-gem 'rake', '~> 13.0'
+gem 'punchlist', ['>=1.3.1']
+gem 'rake'
 gem 'rbs'
 gem 'rubocop', ['~> 1.52']
 gem 'rubocop-minitest'
+gem 'rubocop-performance'
 gem 'rubocop-rake'
 # ensure version with branch coverage
 gem 'simplecov', ['>=0.18.0']
 gem 'simplecov-lcov'
-gem 'solargraph', ['>=0.50.0']
+gem 'solargraph',
+    git: 'https://github.com/apiology/solargraph',
+    branch: 'master'
 gem 'undercover'
 gem 'webmock'
 gem 'yard'
