@@ -123,6 +123,7 @@ AllCops:
   Exclude:
     - 'bin/*'
     - 'vendor/**/*'
+    - 'sorbet/**/*'
 
 require:
   - rubocop-minitest
