@@ -80,6 +80,7 @@ PreCommit:
       - vendor/**/*
       - spec/**/*
       - feature/**/*
+      - test/**/*
       - ".bundle/**/*"
       - ".markdownlint_style.rb"
   Punchlist:
