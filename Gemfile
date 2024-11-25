@@ -8,6 +8,7 @@ gemspec
 gem 'bump'
 gem 'bundler'
 
+gem 'brakeman'
 gem 'mdl'
 
 # not a direct dependency - but updates a lot and confuses

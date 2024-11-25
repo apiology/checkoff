@@ -62,6 +62,8 @@ GEM
     base64 (0.2.0)
     benchmark (0.4.0)
     bigdecimal (3.1.5)
+    brakeman (6.2.2)
+      racc
     builder (3.2.4)
     bump (0.10.0)
     cache (0.4.1)
@@ -252,6 +254,7 @@ PLATFORMS
 
 DEPENDENCIES
   asana!
+  brakeman
   bump
   bundler
   checkoff!
