@@ -1,4 +1,6 @@
 ---
+inherit_from: .rubocop_todo.yml
+
 Gemspec/RequireMFA:
   # We publish via CI/CD, so MFA is not possible.
   Enabled: false
