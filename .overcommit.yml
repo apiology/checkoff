@@ -89,6 +89,7 @@ PreCommit:
 PrePush:
   Brakeman:
     enabled: true
+    flags: ['--exit-on-warn', '--quiet', '--summary', '--force']
   RakeTarget:
     enabled: true
     command: ['bundle', 'exec', 'rake']
