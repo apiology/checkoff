@@ -33,20 +33,17 @@ commands:
     description: "Install source environment"
     steps:
       - checkout
-      - run: |
-          cat Gemfile.lock | \
-          sed -E -e 's/checkoff \([[:digit:]]+.[[:digit:]]+.[[:digit:]]+\)/checkoff (0.1.0)/g' \
-           > Gemfile.lock.deversioned
       - restore_cache:
           keys:
-            - yardoc-v1-{{ .Branch }}
-            - yardoc-v1-
-            - yardoc-
-      - restore_cache:
-          keys:
-            - gems-v2-{{ checksum "Gemfile.lock.deversioned" }}
+            - gems-v2-{{ checksum "Gemfile.lock" }}
             - gems-v2-
             - gems-
+      - restore_cache:
+          keys:
+            - solargraph-v2-{{ checksum "Gemfile.lock" }}-{{ .Branch }}
+            - solargraph-v2-{{ checksum "Gemfile.lock" }}-
+            - solargraph-v2-
+            - solargraph-
       - restore_cache:
           keys:
             - wheels-v1-3.12.1-{{ checksum "requirements_dev.txt" }}
@@ -67,7 +64,7 @@ commands:
               exit 1
             fi
       - save_cache:
-          key: gems-v2-{{ checksum "Gemfile.lock.deversioned" }}
+          key: gems-v2-{{ checksum "Gemfile.lock" }}
           paths:
             - "vendor/bundle"
       - save_cache:
@@ -76,17 +73,13 @@ commands:
             - "/home/circleci/.cache/pip/wheels"
             - "/home/circleci/.pyenv/versions/3.12.1/envs/checkoff-3.12.1"
             - "/home/circleci/.pyenv/versions/checkoff-3.12.1"
-      - save_cache:
-          key: yardoc-v1-{{ .Branch }}
-          paths:
-            - ".yardoc"
       - run:
           name: Download new circleci tool
           command: |
             curl -fLSs \
             https://raw.githubusercontent.com/CircleCI-Public/circleci-cli/master/install.sh | sudo bash
-  overcommit:
-    description: "Run overcommit"
+  quality:
+    description: "Quality checks"
     steps:
       - set_up_environment
       - run_with_languages:
@@ -100,9 +93,22 @@ commands:
 
             if [ $(git rev-parse --abbrev-ref HEAD) == "main" ]
             then
-              bundle exec overcommit run
+              bundle exec overcommit --run
             else
               bundle exec bin/overcommit_branch
+            fi
+      - run_with_languages:
+          label: Run brakeman
+          command: |
+            bundle exec brakeman --no-pager --force
+      - run_with_languages:
+          label: Ratchet rubocop quality
+          command: |
+            bundle exec rubocop --regenerate-todo --no-exclude-limit --auto-gen-only-exclude --no-auto-gen-timestamp
+            if [ -f .rubocop_todo.yml ]
+            then
+              git diff --exit-code .rubocop.yml
+              git diff --exit-code .rubocop_todo.yml
             fi
   update_dependencies:
     description: "Update dependencies whose build may have triggered this build"
@@ -172,12 +178,12 @@ commands:
             echo "Avoiding double build after git push"
             exit 1
 jobs:
-  overcommit:
+  quality:
     working_directory: ~/checkoff
     docker:
       - image: apiology/circleci-ruby:latest
     steps:
-      - overcommit
+      - quality
   build:
     working_directory: ~/checkoff
     docker:
@@ -192,11 +198,16 @@ jobs:
                 gems: checkoff
       # - run_with_languages:
       #     label: Typecheck
-      #     command: make build-typecheck citypecheck citypecoverage
+      #     command: make citypecheck citypecoverage
       - run_with_languages:
           label: Test
           command: |
             make citest cicoverage
+      - save_cache:
+          key: solargraph-v2-{{ checksum "Gemfile.lock" }}-{{ .Branch }}
+          paths:
+            - ".yardoc"
+            - "/home/circleci/.cache/solargraph"
     # This seemed to shave 5ish% of the build time off when added
     resource_class: large
   publish_gem:
@@ -240,10 +251,10 @@ workflows:
                 - main
     jobs:
       - build
-      - overcommit
-  overcommit:
+      - quality
+  quality:
     jobs:
-      - overcommit
+      - quality
   build:
     jobs:
       - build
