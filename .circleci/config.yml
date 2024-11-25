@@ -93,11 +93,10 @@ commands:
 
             if [ $(git rev-parse --abbrev-ref HEAD) == "main" ]
             then
-              bundle exec overcommit run
+              bundle exec overcommit --run
             else
               bundle exec bin/overcommit_branch
             fi
-            bundle exec overcommit --run
       - run_with_languages:
           label: Run brakeman
           command: |
