@@ -100,7 +100,7 @@ commands:
       - run_with_languages:
           label: Run brakeman
           command: |
-            bundle exec brakeman --no-pager
+            bundle exec brakeman --no-pager --force
       - run_with_languages:
           label: Ratchet rubocop quality
           command: |
