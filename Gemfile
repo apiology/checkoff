@@ -8,6 +8,7 @@ gemspec
 gem 'bump'
 gem 'bundler'
 
+gem 'brakeman'
 gem 'mdl'
 gem 'ostruct'
 gem 'overcommit', ['>=0.64.0', '<0.65.0']

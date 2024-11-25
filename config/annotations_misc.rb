@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+#
 # https://gist.github.com/castwide/28b349566a223dfb439a337aea29713e
 #
 # The following comments fill some of the gaps in Solargraph's
@@ -16,7 +18,7 @@
 #     # @param key [String]
 #     # @param default [Object]
 #     #
-#     # @return [Object,nil]
+#     # @return [String,Symbol<:none>,nil]
 #     def self.fetch(key, default = :none); end
 #     # @param key [String]
 #     #
