@@ -261,6 +261,6 @@ workflows:
       - publish_gem:
           requires:
             - build
-          filters:
-            branches:
-              only: main
+#          filters: # TODO
+#            branches:
+#              only: main
