@@ -55,8 +55,6 @@ commands:
           command: |
             export BUNDLE_PATH=vendor/bundle
             './fix.sh'
-            pwd
-            ls -l vendor/bundle
       - run:
           name: Verify Gemfile.lock
           command: |
@@ -269,6 +267,6 @@ workflows:
       - publish_gem:
           requires:
             - build
-#          filters: # TODO
-#            branches:
-#              only: main
+          filters:
+            branches:
+              only: main
