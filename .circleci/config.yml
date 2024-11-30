@@ -55,6 +55,8 @@ commands:
           command: |
             export BUNDLE_PATH=vendor/bundle
             './fix.sh'
+            pwd
+            ls -l vendor/bundle
       - run:
           name: Verify Gemfile.lock
           command: |
@@ -223,6 +225,7 @@ jobs:
           command: |
             set -x
 
+            pwd
             echo $BUNDLE_PATH
             ls -l vendor/bundle
             # Coax overcommit into working
