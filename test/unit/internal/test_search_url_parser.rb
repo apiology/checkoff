@@ -673,13 +673,6 @@ class TestSearchUrlParser < ClassTest
   def test_convert_params_43
     search_url_parser = get_test_object
     url = 'https://app.asana.com/0/search?searched_type=elephant&any_tags.ids=123&not_tags.ids=456'
-    asana_api_params = {
-      'tags.any' => '123',
-      'tags.not' => '456',
-      'sort_by' => 'created_at',
-    }
-
-    task_selector = []
 
     e = assert_raises(RuntimeError) do
       search_url_parser.convert_params(url)
