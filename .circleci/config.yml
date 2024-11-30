@@ -236,6 +236,7 @@ jobs:
             #
             # Let's just use the system bundle path here
             unset BUNDLE_PATH
+            bundle install
             bundle exec bump --commit-message ' [skip ci]' --tag --tag-prefix=v minor
             # bundle exec needed for overcommit hooks
             #
