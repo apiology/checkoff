@@ -226,10 +226,16 @@ jobs:
             # Coax overcommit into working
             git config --global user.email "test@test.test"
             git config --global user.name "Test Test"
-            bundle exec overcommit --sign
-            bundle exec overcommit --sign pre-commit
-            bundle exec bump --commit-message ' [skip ci]' --tag --tag-prefix=v minor
+            # bump runs 'bundle' after excluding env vars, but doesn't
+            # use --conservative or exclude env vars when running 'git
+            # commit', which might need an updated gem.  This results
+            # in periodic unexpected failures, fixed by later caching
+            # :(
+            #
+            # Let's just use the system bundle path here
+            unset BUNDLE_PATH
             bundle install
+            bundle exec bump --commit-message ' [skip ci]' --tag --tag-prefix=v minor
             # bundle exec needed for overcommit hooks
             #
             # if this step fails, check that
