@@ -5,28 +5,39 @@ source 'https://rubygems.org'
 # Specify your gem's dependencies in checkoff.gemspec
 gemspec
 
-gem 'bump'
-gem 'bundler'
+group :development, :test do
+  gem 'bundler'
+  gem 'mdl'
+  gem 'rspec'
+  # ensure version with branch coverage
+  gem 'simplecov', ['>=0.18.0']
+  gem 'simplecov-lcov'
+  gem 'undercover'
+  gem 'webmock'
+end
 
-gem 'brakeman'
-gem 'mdl'
-gem 'ostruct'
-gem 'overcommit', ['>=0.64.0', '<0.65.0']
+group :development do
+  gem 'brakeman'
+  gem 'bump'
+  gem 'overcommit', ['>=0.64.0', '<0.65.0']
+  gem 'punchlist', ['>=1.3.1']
+  # ensure recent definitions
+  gem 'rbs'
+  gem 'rubocop', ['~> 1.52']
+  gem 'rubocop-performance'
+  gem 'rubocop-rake'
+  # ensure version with RSpec/VerifiedDoubleReference
+  gem 'rubocop-rspec', ['>=2.10.0']
+  # https://github.com/castwide/solargraph/pull/727
+  # gem "solargraph", [">=0.50.0"]
+  gem 'solargraph',
+      git: 'https://github.com/apiology/solargraph',
+      branch: 'master'
+  gem 'solargraph-rails',
+      git: 'https://github.com/apiology/solargraph-rails',
+      branch: 'main'
+  gem 'yard'
+end
+
 gem 'pry'
-gem 'punchlist', ['>=1.3.1']
 gem 'rake'
-gem 'rspec'
-gem 'rubocop', ['~> 1.52']
-gem 'rubocop-performance'
-gem 'rubocop-rake'
-# ensure version with RSpec/VerifiedDoubleReference
-gem 'rubocop-rspec', ['>=2.10.0']
-# ensure version with branch coverage
-gem 'simplecov', ['>=0.18.0']
-gem 'simplecov-lcov'
-gem 'solargraph',
-    git: 'https://github.com/apiology/solargraph',
-    branch: 'master'
-gem 'undercover'
-gem 'webmock'
-gem 'yard'

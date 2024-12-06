@@ -22,7 +22,8 @@ commands:
             eval "$(pyenv init --path)"
             eval "$(pyenv virtualenv-init -)"
             eval "$(rbenv init -)"
-            export BUNDLE_PATH=vendor/bundle
+            # keep this in a single place for both main and child builds for cachability
+            export BUNDLE_PATH="$(pwd)/vendor/bundle"
 
             <<parameters.command>>
           environment:
@@ -35,8 +36,8 @@ commands:
       - checkout
       - restore_cache:
           keys:
-            - gems-v2-{{ checksum "Gemfile.lock" }}
-            - gems-v2-
+            - gems-v3-{{ checksum "Gemfile.lock" }}-
+            - gems-v3-
             - gems-
       - restore_cache:
           keys:
@@ -53,8 +54,15 @@ commands:
       - run:
           name: Initialize packages
           command: |
-            export BUNDLE_PATH=vendor/bundle
+            # measuring slows down the script - only enable when you
+            # want to debug where this is spending time
+
+            # export FIX_SH_TIMING_LOG=/tmp/fix_sh_timing.log
+
+            export BUNDLE_PATH="$(pwd)/vendor/bundle"
             './fix.sh'
+      - store_artifacts:
+          path: /tmp/fix_sh_timing.log
       - run:
           name: Verify Gemfile.lock
           command: |
@@ -64,9 +72,10 @@ commands:
               exit 1
             fi
       - save_cache:
-          key: gems-v2-{{ checksum "Gemfile.lock" }}
+          key: gems-v3-{{ checksum "Gemfile.lock" }}-{{ checksum ".ruby-version" }}
           paths:
             - "vendor/bundle"
+            - ".yardoc"
       - save_cache:
           key: wheels-v1-3.12.1-{{ checksum "requirements_dev.txt" }}
           paths:
@@ -97,10 +106,19 @@ commands:
           command: |
             bundle exec brakeman --no-pager --force
       - run_with_languages:
+          label: Run Rubocop
+          command: |
+            bundle exec rubocop
+      - run_with_languages:
           label: Ratchet rubocop quality
           command: |
+            set -x
             bundle exec rubocop --regenerate-todo --no-exclude-limit --auto-gen-only-exclude --no-auto-gen-timestamp
-            git diff -u --exit-code .rubocop_todo.yml
+            if [ -f .rubocop_todo.yml ]
+            then
+              git diff --exit-code .rubocop.yml
+              git diff --exit-code .rubocop_todo.yml
+            fi
   update_dependencies:
     description: "Update dependencies whose build may have triggered this build"
     parameters:
@@ -201,6 +219,38 @@ jobs:
             - "/home/circleci/.cache/solargraph"
     # This seemed to shave 5ish% of the build time off when added
     resource_class: large
+  publish_gem:
+    working_directory: ~/checkoff
+    docker:
+      - image: apiology/circleci-ruby:latest
+    steps:
+      - set_up_environment
+      - run_with_languages:
+          label: Make RubyGems release
+          command: |
+            set -x
+
+            # Coax overcommit into working
+            git config --global user.email "test@test.test"
+            git config --global user.name "Test Test"
+            # bump runs 'bundle' after excluding env vars, but doesn't
+            # use --conservative or exclude env vars when running 'git
+            # commit', which might need an updated gem.  This results
+            # in periodic unexpected failures, fixed by later caching
+            # :(
+            #
+            # Let's just use the system bundle path here
+            unset BUNDLE_PATH
+            bundle install
+            bundle exec bump --commit-message ' [skip ci]' --tag --tag-prefix=v minor
+            # bundle exec needed for overcommit hooks
+            #
+            # if this step fails, check that
+            # https://app.circleci.com/settings/project/github/apiology/checkoff/ssh
+            # includes a read-write 'user key':
+            bundle exec git push --set-upstream origin "${CIRCLE_BRANCH:?}"
+            git status
+            bundle exec rake release trigger_next_builds
 
 workflows:
   version: 2
@@ -221,3 +271,9 @@ workflows:
   build:
     jobs:
       - build
+      - publish_gem:
+          requires:
+            - build
+          filters:
+            branches:
+              only: main

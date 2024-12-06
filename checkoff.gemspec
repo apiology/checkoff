@@ -8,9 +8,9 @@ require 'checkoff/version'
 Gem::Specification.new do |spec|
   spec.name          = 'checkoff'
   spec.version       = Checkoff::VERSION
-  spec.authors       = ["Vince Broz"]
+  spec.authors       = ['Vince Broz']
   spec.email         = ['vince@broz.cc']
-  spec.summary       = "Command-line and gem client for Asana (unofficial)"
+  spec.summary       = 'Command-line and gem client for Asana (unofficial)'
   spec.homepage      = 'https://github.com/apiology/checkoff'
   spec.license       = 'MIT license'
   spec.required_ruby_version = '>= 3.0'
