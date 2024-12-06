@@ -24,7 +24,7 @@ end
 group :development do
   gem 'brakeman'
   gem 'bump'
-  gem 'overcommit', ['>=0.64.0', '<0.65.0']
+  gem 'overcommit', ['>=0.64.1', '<0.65.0']
   gem 'punchlist', ['>=1.3.1']
   gem 'rubocop', ['~> 1.52']
   gem 'rubocop-minitest'
