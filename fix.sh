@@ -152,6 +152,17 @@ ensure_latest_ruby_build_definitions() {
 #  fi
 }
 
+# https://stackoverflow.com/questions/2829613/how-do-you-tell-if-a-string-contains-another-string-in-posix-sh
+contains() {
+  string="$1"
+  substring="$2"
+  if [ "${string#*"$substring"}" != "$string" ]; then
+    return 0    # $substring is in $string
+  else
+    return 1    # $substring is not in $string
+  fi
+}
+
 # You can find out which feature versions are still supported / have
 # been release here: https://www.ruby-lang.org/en/downloads/
 ensure_ruby_versions() {
@@ -161,14 +172,18 @@ ensure_ruby_versions() {
   # been release here: https://www.ruby-lang.org/en/downloads/
   ruby_versions="$(latest_ruby_version 3.1)"
 
-  echo "Latest Ruby versions: ${ruby_versions}"
+  installed_ruby_versions="$(rbenv versions --bare --skip-aliases)"
 
-  ensure_ruby_build_requirements
+  echo "Latest Ruby versions: ${ruby_versions}"
 
   for ver in $ruby_versions
   do
-    rbenv install -s "${ver}"
-    hash -r  # ensure we are seeing latest bundler etc
+    if ! contains "${installed_ruby_versions}" "${ver}"$'\n'; then
+      ensure_ruby_build_requirements
+
+      rbenv install -s "${ver}"
+      hash -r  # ensure we are seeing latest bundler etc
+    fi
   done
 }
 
@@ -357,17 +372,6 @@ ensure_python_build_requirements() {
   ensure_dev_library readline/readline.h readline libreadline-dev
 }
 
-# https://stackoverflow.com/questions/2829613/how-do-you-tell-if-a-string-contains-another-string-in-posix-sh
-contains() {
-  string="$1"
-  substring="$2"
-  if [ "${string#*"$substring"}" != "$string" ]; then
-    return 0    # $substring is in $string
-  else
-    return 1    # $substring is not in $string
-  fi
-}
-
 # You can find out which feature versions are still supported / have
 # been release here: https://www.python.org/downloads/
 ensure_python_versions() {
@@ -379,10 +383,10 @@ ensure_python_versions() {
 
   echo "Latest Python versions: ${python_versions}"
 
+  installed_python_versions="$(pyenv versions --skip-envs --skip-aliases --bare)"
+
   for ver in $python_versions
   do
-    installed_python_versions="$(pyenv versions --skip-envs --skip-aliases --bare)"
-
     if ! contains "${installed_python_versions}" "${ver}"$'\n'; then
       ensure_python_build_requirements
 
@@ -401,6 +405,7 @@ ensure_python_versions() {
       else
         pyenv install -s "${ver}"
       fi
+      hash -r
     fi
   done
 }
