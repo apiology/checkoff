@@ -36,15 +36,20 @@ commands:
       - checkout
       - restore_cache:
           keys:
-            - ruby-v1-{{ checksum "Gemfile.lock" }}-
-            - ruby-v1-
+            - ruby-v2-{{ checksum "Gemfile.lock" }}-
+            - ruby-v2-
             - ruby-
       - restore_cache:
           keys:
-            - python-v1-{{ checksum "requirements_dev.txt" }}
+            - python-v1-{{ checksum "requirements_dev.txt" }}-
             - python-v1-
             - python-v1-
             - python-
+      - restore_cache:
+          keys:
+            - solargraph-v1-{{ checksum "Gemfile.lock" }}-
+            - solargraph-v1-
+            - solargraph-
       - run:
           name: Initialize packages
           command: |
@@ -67,17 +72,16 @@ commands:
               exit 1
             fi
       - save_cache:
-          key: ruby-v1-{{ checksum "Gemfile.lock" }}-{{ checksum ".ruby-version" }}
+          key: ruby-v2-{{ checksum "Gemfile.lock" }}-{{ checksum ".ruby-version" }}
           paths:
             - "vendor/bundle"
-            - ".yardoc"
             - "/home/circleci/.rbenv"
-            - "/home/circleci/.cache/solargraph"
+            - ".yardoc"
       - save_cache:
-          key: python-v1-{{ checksum "requirements_dev.txt" }}
+          key: python-v1-{{ checksum "requirements_dev.txt" }}-{{ checksum ".python-version" }}
           paths:
             - "/home/circleci/.cache/pip/wheels"
-            - "/home/circleci/.pyenv/versions"
+            - "/home/circleci/.pyenv"
       - run:
           name: Download new circleci tool
           command: |
@@ -209,6 +213,10 @@ jobs:
       # - run_with_languages:
       #     label: Typecheck
       #     command: make citypecheck citypecoverage
+      - save_cache:
+          key: solargraph-v1-{{ checksum "Gemfile.lock" }}-{{ checksum ".ruby-version" }}
+          paths:
+            - "/home/circleci/.cache/solargraph"
       - run_with_languages:
           label: Test
           command: |
