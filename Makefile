@@ -20,9 +20,7 @@ help:
 default: clean-coverage test coverage clean-typecoverage typecheck typecoverage quality ## run default typechecking, tests and quality
 
 build-typecheck: bundle_install ## Fetch information that type checking depends on
-	echo hi
-	time bundle exec yard gems --debug 2>&1 || time bundle exec yard gems --safe 2>&1 || time bundle exec yard gems 2>&1
-	echo bye
+	bundle exec yard gems --debug 2>&1 || bundle exec yard gems --safe 2>&1 || bundle exec yard gems 2>&1
 	# bundle exec solargraph scan 2>&1
 
 clean-typecheck: ## Refresh information that type checking depends on
@@ -42,7 +40,7 @@ clean-typecoverage: ## Clean out type-related coverage previous results to avoid
 citypecoverage: typecoverage ## Run type checking, ratchet coverage, and then complain if ratchet needs to be committed
 
 requirements_dev.txt.installed: requirements_dev.txt
-	time pip install -q --disable-pip-version-check -r requirements_dev.txt
+	pip install -q --disable-pip-version-check -r requirements_dev.txt
 	touch requirements_dev.txt.installed
 
 pip_install: requirements_dev.txt.installed ## Install Python dependencies

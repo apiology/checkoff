@@ -1,7 +1,5 @@
 #!/bin/bash -eu
 
-set -x
-
 if [ -n "${FIX_SH_TIMING_LOG+x}" ]; then
     rm -f "${FIX_SH_TIMING_LOG}"
     if ! type gdate >/dev/null 2>&1; then sudo ln -sf /bin/date /bin/gdate; fi
@@ -157,8 +155,6 @@ ensure_latest_ruby_build_definitions() {
 # You can find out which feature versions are still supported / have
 # been release here: https://www.ruby-lang.org/en/downloads/
 ensure_ruby_versions() {
-  debug_timing
-
   ensure_latest_ruby_build_definitions
 
   # You can find out which feature versions are still supported / have
@@ -177,8 +173,6 @@ ensure_ruby_versions() {
 }
 
 ensure_bundle() {
-  debug_timing
-
   # Not sure why this is needed a second time, but it seems to be?
   #
   # https://app.circleci.com/pipelines/github/apiology/source_finder/21/workflows/88db659f-a4f4-4751-abc0-46f5929d8e58/jobs/107
@@ -352,8 +346,6 @@ update_package() {
 }
 
 ensure_python_build_requirements() {
-  debug_timing
-
   ensure_dev_library zlib.h zlib zlib1g-dev
   ensure_dev_library bzlib.h bzip2 libbz2-dev
   ensure_dev_library openssl/ssl.h openssl libssl-dev
@@ -411,8 +403,6 @@ ensure_pyenv_virtualenvs() {
 }
 
 ensure_pip_and_wheel() {
-  debug_timing
-
   # https://cve.mitre.org/cgi-bin/cvename.cgi?name=2023-5752
   pip_version=$(pip --version | cut -d' ' -f2)
   major_pip_version=$(cut -d '.' -f 1 <<< "${pip_version}")
