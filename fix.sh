@@ -77,7 +77,6 @@ ensure_ruby_build() {
 }
 
 ensure_rbenv() {
-  ls -la ~/.rbenv
   if ! type rbenv >/dev/null 2>&1 && ! [ -f "${HOME}/.rbenv/bin/rbenv" ]
   then
     install_rbenv
