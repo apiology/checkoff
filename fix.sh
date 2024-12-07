@@ -1,7 +1,5 @@
 #!/bin/bash -eu
 
-set -x
-
 if [ -n "${FIX_SH_TIMING_LOG+x}" ]; then
     rm -f "${FIX_SH_TIMING_LOG}"
     if ! type gdate >/dev/null 2>&1; then sudo ln -sf /bin/date /bin/gdate; fi
@@ -129,7 +127,7 @@ ensure_binary_library() {
       ! [ -f /usr/local/lib/"${library_base_name}.so" ] && \
       ! [ -f /usr/local/opt/"${homebrew_package}/lib/${library_base_name}*.dylib" ]
   then
-      if ! compgen -G "/opt/homebrew/Cellar/${homebrew_package}"*/*/"lib/${library_base_name}"*.dylib
+      if ! compgen -G "/opt/homebrew/Cellar/${homebrew_package}"*/*/"lib/${library_base_name}"*.dylib >/dev/null 2>&1
       then
         install_package "${homebrew_package}" "${apt_package}"
       fi
@@ -348,6 +346,8 @@ update_package() {
 }
 
 ensure_python_build_requirements() {
+  debug_timing
+
   ensure_dev_library zlib.h zlib zlib1g-dev
   ensure_dev_library bzlib.h bzip2 libbz2-dev
   ensure_dev_library openssl/ssl.h openssl libssl-dev
@@ -355,6 +355,17 @@ ensure_python_build_requirements() {
   ensure_dev_library sqlite3.h sqlite3 libsqlite3-dev
   ensure_dev_library lzma.h xz liblzma-dev
   ensure_dev_library readline/readline.h readline libreadline-dev
+}
+
+# https://stackoverflow.com/questions/2829613/how-do-you-tell-if-a-string-contains-another-string-in-posix-sh
+contains() {
+  string="$1"
+  substring="$2"
+  if [ "${string#*"$substring"}" != "$string" ]; then
+    return 0    # $substring is in $string
+  else
+    return 1    # $substring is not in $string
+  fi
 }
 
 # You can find out which feature versions are still supported / have
@@ -368,24 +379,28 @@ ensure_python_versions() {
 
   echo "Latest Python versions: ${python_versions}"
 
-  ensure_python_build_requirements
-
   for ver in $python_versions
   do
-    if [ "$(uname)" == Darwin ]
-    then
-      if [ -z "${HOMEBREW_OPENSSL_PREFIX:-}" ]
-      then
-        HOMEBREW_OPENSSL_PREFIX="$(brew --prefix openssl)"
-      fi
-      pyenv_install() {
-        CFLAGS="-I/usr/local/opt/zlib/include -I/usr/local/opt/bzip2/include -I${HOMEBREW_OPENSSL_PREFIX}/include" LDFLAGS="-L/usr/local/opt/zlib/lib -L/usr/local/opt/bzip2/lib -L${HOMEBREW_OPENSSL_PREFIX}/lib" pyenv install --skip-existing "$@"
-      }
+    installed_python_versions="$(pyenv versions --skip-envs --skip-aliases --bare)"
 
-      major_minor="$(cut -d. -f1-2 <<<"${ver}")"
-      pyenv_install "${ver}"
-    else
-      pyenv install -s "${ver}"
+    if ! contains "${installed_python_versions}" "${ver}"$'\n'; then
+      ensure_python_build_requirements
+
+      if [ "$(uname)" == Darwin ]
+      then
+        if [ -z "${HOMEBREW_OPENSSL_PREFIX:-}" ]
+        then
+          HOMEBREW_OPENSSL_PREFIX="$(brew --prefix openssl)"
+        fi
+        pyenv_install() {
+          CFLAGS="-I/usr/local/opt/zlib/include -I/usr/local/opt/bzip2/include -I${HOMEBREW_OPENSSL_PREFIX}/include" LDFLAGS="-L/usr/local/opt/zlib/lib -L/usr/local/opt/bzip2/lib -L${HOMEBREW_OPENSSL_PREFIX}/lib" pyenv install --skip-existing "$@"
+        }
+
+        major_minor="$(cut -d. -f1-2 <<<"${ver}")"
+        pyenv_install "${ver}"
+      else
+        pyenv install -s "${ver}"
+      fi
     fi
   done
 }
@@ -419,7 +434,7 @@ ensure_pip_and_wheel() {
       pip install 'pip>=23.3'
   fi
   # wheel is helpful for being able to cache long package builds
-  type wheel || pip install wheel
+  type wheel >/dev/null 2>&1 || pip install wheel
 }
 
 ensure_python_requirements() {
