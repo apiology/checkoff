@@ -142,6 +142,8 @@ ensure_ruby_build_requirements() {
 }
 
 ensure_latest_ruby_build_definitions() {
+  debug_timing
+
   ensure_rbenv
 
 #  last_pulled_unix_epoch="$(stat -f '%m' "$(rbenv root)"/plugins/ruby-build/.git/FETCH_HEAD)"
@@ -302,6 +304,8 @@ EOF
 }
 
 set_pyenv_env_variables() {
+  debug_timing
+
   # looks like pyenv scripts aren't -u clean:
   #
   # https://app.circleci.com/pipelines/github/apiology/cookiecutter-pypackage/15/workflows/10506069-7662-46bd-b915-2992db3f795b/jobs/15
