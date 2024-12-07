@@ -352,6 +352,8 @@ update_package() {
 }
 
 ensure_python_build_requirements() {
+  debug_timing
+
   ensure_dev_library zlib.h zlib zlib1g-dev
   ensure_dev_library bzlib.h bzip2 libbz2-dev
   ensure_dev_library openssl/ssl.h openssl libssl-dev
