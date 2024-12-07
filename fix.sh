@@ -479,6 +479,8 @@ ensure_rugged_packages_installed() {
     echo "Did not find rugged gem installed; installing packages needed for rugged"
     echo "Installed gems:"
     gem list
+    echo "Gem environment:"
+    gem environment
     ensure_binary_library libicuio icu4c libicu-dev # needed by rugged, needed by undercover
     ensure_package pkg-config # needed by rugged, needed by undercover
     ensure_package cmake # needed by rugged, needed by undercover
