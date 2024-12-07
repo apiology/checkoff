@@ -22,13 +22,12 @@ commands:
             eval "$(pyenv init --path)"
             eval "$(pyenv virtualenv-init -)"
             eval "$(rbenv init -)"
+
             # keep this in a single place for both main and child builds for cachability
             BUNDLE_PATH="$(pwd)/vendor/bundle"
             export BUNDLE_PATH
-            GEM_HOME="${BUNDLE_PATH}/gems"
+            GEM_HOME="${BUNDLE_PATH}"
             export GEM_HOME
-            GEM_PATH="${GEM_PATH}:${GEM_HOME}"
-            export GEM_PATH
 
             <<parameters.command>>
           environment:
@@ -67,10 +66,8 @@ commands:
 
             BUNDLE_PATH="$(pwd)/vendor/bundle"
             export BUNDLE_PATH
-            GEM_HOME="${BUNDLE_PATH}/gems"
+            GEM_HOME="${BUNDLE_PATH}"
             export GEM_HOME
-            GEM_PATH="${GEM_PATH}:${GEM_HOME}"
-            export GEM_PATH
 
             './fix.sh'
       - store_artifacts:
