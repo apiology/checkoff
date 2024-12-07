@@ -438,7 +438,7 @@ ensure_pip_and_wheel() {
   debug_timing
 
   # https://cve.mitre.org/cgi-bin/cvename.cgi?name=2023-5752
-  pip_version=$(pip --version | cut -d' ' -f2)
+  pip_version=$(python -c "import pip; print(pip.__version__)" | cut -d' ' -f2)
   major_pip_version=$(cut -d '.' -f 1 <<< "${pip_version}")
   minor_pip_version=$(cut -d '.' -f 2 <<< "${pip_version}")
   if [[ major_pip_version -lt 23 ]]
