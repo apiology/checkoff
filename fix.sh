@@ -408,8 +408,9 @@ ensure_pip_and_wheel() {
   debug_timing
 
   # https://cve.mitre.org/cgi-bin/cvename.cgi?name=2023-5752
-  major_pip_version=$(pip --version | cut -d' ' -f2 | cut -d '.' -f 1)
-  minor_pip_version=$(pip --version | cut -d' ' -f2 | cut -d '.' -f 2)
+  pip_version=$(pip --version | cut -d' ' -f2)
+  major_pip_version=$(cut -d '.' -f 1 <<< "${pip_version}")
+  minor_pip_version=$(cut -d '.' -f 2 <<< "${pip_version}")
   if [[ major_pip_version -lt 23 ]]
   then
       pip install 'pip>=23.3'
@@ -418,7 +419,7 @@ ensure_pip_and_wheel() {
       pip install 'pip>=23.3'
   fi
   # wheel is helpful for being able to cache long package builds
-  pip show wheel >/dev/null 2>&1 || pip install wheel
+  type wheel || pip install wheel
 }
 
 ensure_python_requirements() {
