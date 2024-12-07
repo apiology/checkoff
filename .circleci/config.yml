@@ -41,8 +41,8 @@ commands:
             - gems-
       - restore_cache:
           keys:
-            - python-v1-3.12.7-{{ checksum "requirements_dev.txt" }}
-            - python-v1-3.12.7-
+            - python-v1-{{ checksum "requirements_dev.txt" }}
+            - python-v1-
             - python-v1-
             - wheels-
       - run:
@@ -73,7 +73,7 @@ commands:
             - "/home/circleci/.rbenv"
             - "/home/circleci/.cache/solargraph"
       - save_cache:
-          key: python-v1-3.12.7-{{ checksum "requirements_dev.txt" }}
+          key: python-v1-{{ checksum "requirements_dev.txt" }}
           paths:
             - "/home/circleci/.cache/pip/wheels"
             - "/home/circleci/.pyenv/versions"
@@ -190,13 +190,13 @@ jobs:
   quality:
     working_directory: ~/checkoff
     docker:
-      - image: cimg/python
+      - image: cimg/python:3
     steps:
       - quality
   build:
     working_directory: ~/checkoff
     docker:
-      - image: cimg/python
+      - image: cimg/python:3
     steps:
       - set_up_environment
       - when:
@@ -217,7 +217,7 @@ jobs:
   publish_gem:
     working_directory: ~/checkoff
     docker:
-      - image: cimg/python
+      - image: cimg/python:3
     steps:
       - set_up_environment
       - run_with_languages:
