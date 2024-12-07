@@ -179,7 +179,7 @@ ensure_ruby_versions() {
   for ver in $ruby_versions
   do
     if ! contains "${installed_ruby_versions}" "${ver}"$'\n'; then
-      echo "Installing Ruby version $ver - existing versions: installed_ruby_versions"
+      echo "Installing Ruby version $ver - existing versions: $installed_ruby_versions"
       ensure_ruby_build_requirements
 
       rbenv install -s "${ver}"
