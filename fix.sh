@@ -360,6 +360,8 @@ ensure_python_build_requirements() {
 # You can find out which feature versions are still supported / have
 # been release here: https://www.python.org/downloads/
 ensure_python_versions() {
+  debug_timing
+
   # You can find out which feature versions are still supported / have
   # been release here: https://www.python.org/downloads/
   python_versions="$(latest_python_version 3.12)"
