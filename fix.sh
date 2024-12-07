@@ -485,8 +485,10 @@ ensure_overcommit() {
 
 ensure_rugged_packages_installed() {
   # only needed if we don't already have rugged installed
-  if ! ls vendor/bundle/gems/rugged-* &>/dev/null
+  if ! ls vendor/bundle/gems/rugged-*
   then
+    echo "List of vendor/bundle/gems:"
+    ls vendor/bundle/gems
     echo "Did not find rugged gem installed; installing packages needed for rugged"
     echo "Installed gems:"
     gem list
