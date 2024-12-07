@@ -1,6 +1,8 @@
 .PHONY: build-typecheck bundle_install cicoverage citypecheck citest citypecoverage clean clean-coverage clean-typecheck clean-typecoverage coverage default help localtest overcommit quality repl report-coverage report-coverage-to-codecov rubocop test typecheck typecoverage update_from_cookiecutter
 .DEFAULT_GOAL := default
 
+SHELL:=/bin/bash
+
 define PRINT_HELP_PYSCRIPT
 import re, sys
 
