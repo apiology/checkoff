@@ -476,6 +476,9 @@ ensure_rugged_packages_installed() {
   # only needed if we don't already have rugged installed
   if ! gem list -i rugged >/dev/null 2>&1
   then
+    echo "Did not find rugged gem installed; installing packages needed for rugged"
+    echo "Installed gems:"
+    gem list
     ensure_binary_library libicuio icu4c libicu-dev # needed by rugged, needed by undercover
     ensure_package pkg-config # needed by rugged, needed by undercover
     ensure_package cmake # needed by rugged, needed by undercover

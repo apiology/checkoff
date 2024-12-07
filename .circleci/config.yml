@@ -25,7 +25,7 @@ commands:
             # keep this in a single place for both main and child builds for cachability
             export BUNDLE_PATH="$(pwd)/vendor/bundle"
             export GEM_HOME="${BUNDLE_PATH}"
-            export GEM_PATH=$GEM_PATH:${BUNDLE_PATH}
+            export GEM_PATH="$GEM_PATH:${BUNDLE_PATH}"
 
             <<parameters.command>>
           environment:
@@ -64,7 +64,7 @@ commands:
 
             export BUNDLE_PATH="$(pwd)/vendor/bundle"
             export GEM_HOME="${BUNDLE_PATH}"
-            export GEM_PATH=$GEM_PATH:${BUNDLE_PATH}
+            export GEM_PATH="$GEM_PATH:${BUNDLE_PATH}"
             './fix.sh'
       - store_artifacts:
           path: /tmp/fix_sh_timing.log
