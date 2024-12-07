@@ -19,7 +19,7 @@ default: clean-coverage test coverage clean-typecoverage typecheck typecoverage 
 
 build-typecheck: types.installed ## Fetch information that type checking depends on
 
-types.installed: bundle_install ## Install Ruby dependencies
+types.installed: Gemfile.lock Gemfile.lock.installed ## Install Ruby dependencies
 	bundle exec yard gems --debug 2>&1 || bundle exec yard gems --safe 2>&1 || bundle exec yard gems 2>&1
 	# bundle exec solargraph scan 2>&1
 	touch types.installed
