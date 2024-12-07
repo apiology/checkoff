@@ -474,6 +474,7 @@ ensure_overcommit() {
 
 ensure_rugged_packages_installed() {
   # only needed if we don't already have rugged installed
+  gem list
   if ! gem list -i rugged >/dev/null 2>&1
   then
     ensure_binary_library libicuio icu4c libicu-dev # needed by rugged, needed by undercover
