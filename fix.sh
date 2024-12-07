@@ -455,7 +455,7 @@ ensure_rugged_packages_installed() {
 ensure_rbenv
 
 ensure_types_built() {
-  make build-typecheck
+  time make build-typecheck
 }
 
 ensure_ruby_versions
