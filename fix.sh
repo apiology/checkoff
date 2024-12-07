@@ -2,15 +2,16 @@
 
 if [ -n "${FIX_SH_TIMING_LOG+x}" ]; then
     rm -f "${FIX_SH_TIMING_LOG}"
+    if ! type gdate >/dev/null 2>&1; then sudo ln -sf /bin/date /bin/gdate; fi
 fi
 
 debug_timing() {
   if [ -n "${FIX_SH_TIMING_LOG+x}" ]; then
     # shellcheck disable=SC2034
-    _lastcmd=$(ruby -e "puts (Time.now.to_f * 1000).to_i")
+    _lastcmd=$(gdate +%s%3N)
     last_command='start'
     # shellcheck disable=SC2154
-    trap '_now=$(ruby -e "puts (Time.now.to_f * 1000).to_i"); duration=$((_now - _lastcmd)); echo ${duration} ms: $last_command >> '"${FIX_SH_TIMING_LOG}"'; last_command="$BASH_COMMAND" >> '"${FIX_SH_TIMING_LOG}"'; _lastcmd=$_now' DEBUG
+    trap '_now=$(gdate +%s%3N); duration=$((_now - _lastcmd)); echo ${duration} ms: $last_command >> '"${FIX_SH_TIMING_LOG}"'; last_command="$BASH_COMMAND" >> '"${FIX_SH_TIMING_LOG}"'; _lastcmd=$_now' DEBUG
   fi
 }
 
@@ -176,7 +177,7 @@ ensure_bundle() {
   #
   # https://app.circleci.com/pipelines/github/apiology/source_finder/21/workflows/88db659f-a4f4-4751-abc0-46f5929d8e58/jobs/107
   set_rbenv_env_variables
-  bundle --version >/dev/null 2>&1 || gem install --no-document bundler
+  type bundle >/dev/null 2>&1 || gem install --no-document bundler
   bundler_version=$(bundle --version | cut -d ' ' -f3)
   bundler_version_major=$(cut -d. -f1 <<< "${bundler_version}")
   bundler_version_minor=$(cut -d. -f2 <<< "${bundler_version}")
@@ -221,7 +222,6 @@ ensure_bundle() {
     # ensure next step installs fresh bundle
     rm -f Gemfile.lock.installed
   fi
-  make bundle_install
   # https://bundler.io/v2.0/bundle_lock.html#SUPPORTING-OTHER-PLATFORMS
   #
   # "If you want your bundle to support platforms other than the one
@@ -234,6 +234,7 @@ ensure_bundle() {
   # This affects nokogiri, which will try to reinstall itself in
   # Docker builds where it's already installed if this is not run.
   bundle lock --add-platform arm64-darwin-23 x86_64-darwin-23 x86_64-linux x86_64-linux-musl aarch64-linux arm64-linux
+  make bundle_install
 }
 
 set_ruby_local_version() {
@@ -403,8 +404,9 @@ ensure_pyenv_virtualenvs() {
 
 ensure_pip_and_wheel() {
   # https://cve.mitre.org/cgi-bin/cvename.cgi?name=2023-5752
-  major_pip_version=$(pip --version | cut -d' ' -f2 | cut -d '.' -f 1)
-  minor_pip_version=$(pip --version | cut -d' ' -f2 | cut -d '.' -f 2)
+  pip_version=$(pip --version | cut -d' ' -f2)
+  major_pip_version=$(cut -d '.' -f 1 <<< "${pip_version}")
+  minor_pip_version=$(cut -d '.' -f 2 <<< "${pip_version}")
   if [[ major_pip_version -lt 23 ]]
   then
       pip install 'pip>=23.3'
@@ -413,7 +415,7 @@ ensure_pip_and_wheel() {
       pip install 'pip>=23.3'
   fi
   # wheel is helpful for being able to cache long package builds
-  pip show wheel >/dev/null 2>&1 || pip install wheel
+  type wheel || pip install wheel
 }
 
 ensure_python_requirements() {

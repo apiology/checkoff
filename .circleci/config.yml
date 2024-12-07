@@ -36,8 +36,8 @@ commands:
       - checkout
       - restore_cache:
           keys:
-            - gems-v3-{{ checksum "Gemfile.lock" }}-
-            - gems-v3-
+            - gems-v4-{{ checksum "Gemfile.lock" }}-
+            - gems-v4-
             - gems-
       - restore_cache:
           keys:
@@ -72,10 +72,11 @@ commands:
               exit 1
             fi
       - save_cache:
-          key: gems-v3-{{ checksum "Gemfile.lock" }}-{{ checksum ".ruby-version" }}
+          key: gems-v4-{{ checksum "Gemfile.lock" }}-{{ checksum ".ruby-version" }}
           paths:
             - "vendor/bundle"
             - ".yardoc"
+            - "/home/circleci/.rbenv/versions/3.1.6/lib/ruby/gems/"
       - save_cache:
           key: wheels-v1-3.12.7-{{ checksum "requirements_dev.txt" }}
           paths:
