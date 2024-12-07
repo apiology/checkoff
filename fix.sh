@@ -166,6 +166,8 @@ contains() {
 # You can find out which feature versions are still supported / have
 # been release here: https://www.ruby-lang.org/en/downloads/
 ensure_ruby_versions() {
+  debug_timing
+
   ensure_latest_ruby_build_definitions
 
   # You can find out which feature versions are still supported / have
@@ -312,6 +314,8 @@ set_pyenv_env_variables() {
 }
 
 ensure_pyenv() {
+  debug_timing
+
   if ! type pyenv >/dev/null 2>&1 && ! [ -f "${HOME}/.pyenv/bin/pyenv" ]
   then
     install_pyenv

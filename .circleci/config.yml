@@ -48,8 +48,8 @@ commands:
             done
       - restore_cache:
           keys:
-            - rbenv-v2-{{ checksum "Gemfile.lock" }}-
-            - rbenv-v2-
+            - rbenv-v3-{{ checksum "Gemfile.lock" }}-
+            - rbenv-v3-
             - rbenv-
             - ruby-
       - restore_cache:
@@ -88,9 +88,10 @@ commands:
               exit 1
             fi
       - save_cache:
-          key: rbenv-v2-{{ checksum "Gemfile.lock" }}-{{ checksum ".ruby-version" }}
+          key: rbenv-v3-{{ checksum "Gemfile.lock" }}-{{ checksum ".ruby-version" }}
           paths:
             - "Gemfile.lock.installed"
+            - "types.installed"
             - "vendor/bundle"
             - "/home/circleci/.rbenv"
             - ".yardoc"
