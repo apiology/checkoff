@@ -24,6 +24,8 @@ commands:
             eval "$(rbenv init -)"
             # keep this in a single place for both main and child builds for cachability
             export BUNDLE_PATH="$(pwd)/vendor/bundle"
+            export GEM_HOME="${BUNDLE_PATH}"
+            export GEM_PATH=$GEM_PATH:${BUNDLE_PATH}
 
             <<parameters.command>>
           environment:
