@@ -173,6 +173,8 @@ ensure_ruby_versions() {
 }
 
 ensure_bundle() {
+  debug_timing
+
   # Not sure why this is needed a second time, but it seems to be?
   #
   # https://app.circleci.com/pipelines/github/apiology/source_finder/21/workflows/88db659f-a4f4-4751-abc0-46f5929d8e58/jobs/107
