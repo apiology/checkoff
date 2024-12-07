@@ -21,7 +21,7 @@ default: clean-coverage test coverage clean-typecoverage typecheck typecoverage 
 
 build-typecheck: bundle_install ## Fetch information that type checking depends on
 	echo hi
-	time bundle exec yard gems 2>&1; time bundle exec yard gems --safe 2>&1; time bundle exec yard gems 2>&1
+	time bundle exec yard gems 2>&1 || time bundle exec yard gems --safe 2>&1 || time bundle exec yard gems 2>&1
 	echo bye
 	# bundle exec solargraph scan 2>&1
 
