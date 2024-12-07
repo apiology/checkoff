@@ -11,7 +11,7 @@ debug_timing() {
     _lastcmd=$(gdate +%s%3N)
     last_command='start'
     # shellcheck disable=SC2154
-    trap '_now=$(gdate +%s%3N).to_i"); duration=$((_now - _lastcmd)); echo ${duration} ms: $last_command >> '"${FIX_SH_TIMING_LOG}"'; last_command="$BASH_COMMAND" >> '"${FIX_SH_TIMING_LOG}"'; _lastcmd=$_now' DEBUG
+    trap '_now=$(gdate +%s%3N); duration=$((_now - _lastcmd)); echo ${duration} ms: $last_command >> '"${FIX_SH_TIMING_LOG}"'; last_command="$BASH_COMMAND" >> '"${FIX_SH_TIMING_LOG}"'; _lastcmd=$_now' DEBUG
   fi
 }
 
