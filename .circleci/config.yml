@@ -65,11 +65,10 @@ commands:
       - run:
           name: Initialize packages
           command: |
-            set -x
             # measuring slows down the script - only enable when you
             # want to debug where this is spending time
 
-            export FIX_SH_TIMING_LOG=/tmp/fix_sh_timing.log
+            # export FIX_SH_TIMING_LOG=/tmp/fix_sh_timing.log
 
             BUNDLE_PATH="$(pwd)/vendor/bundle"
             export BUNDLE_PATH

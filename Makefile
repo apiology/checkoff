@@ -20,7 +20,7 @@ default: clean-coverage test coverage clean-typecoverage typecheck typecoverage 
 build-typecheck: types.installed ## Fetch information that type checking depends on
 
 types.installed: Gemfile.lock Gemfile.lock.installed ## Install Ruby dependencies
-	bundle exec yard gems --debug 2>&1 || bundle exec yard gems --safe 2>&1 || bundle exec yard gems 2>&1
+	bundle exec yard gems 2>&1 || bundle exec yard gems --safe 2>&1 || bundle exec yard gems 2>&1
 	# bundle exec solargraph scan 2>&1
 	touch types.installed
 
@@ -41,7 +41,6 @@ clean-typecoverage: ## Clean out type-related coverage previous results to avoid
 citypecoverage: typecoverage ## Run type checking, ratchet coverage, and then complain if ratchet needs to be committed
 
 requirements_dev.txt.installed: requirements_dev.txt
-	ls -l requirements_dev.txt*
 	pip install -q --disable-pip-version-check -r requirements_dev.txt
 	touch requirements_dev.txt.installed
 
@@ -53,7 +52,6 @@ Gemfile.lock: Gemfile checkoff.gemspec
 
 # Ensure any Gemfile.lock changes ensure a bundle is installed.
 Gemfile.lock.installed: Gemfile.lock
-	ls -l Gemfile.*
 	bundle install
 	touch Gemfile.lock.installed
 
