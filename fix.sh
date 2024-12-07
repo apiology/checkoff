@@ -489,6 +489,8 @@ ensure_rugged_packages_installed() {
   then
     echo "Current directory"
     pwd
+    echo "Vendor dir"
+    ls -l vendor
     echo "List of vendor/bundle/gems:"
     ls vendor/bundle/gems
     echo "Did not find rugged gem installed; installing packages needed for rugged"
