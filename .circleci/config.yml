@@ -48,6 +48,7 @@ commands:
       - run:
           name: Initialize packages
           command: |
+            set -x
             # measuring slows down the script - only enable when you
             # want to debug where this is spending time
 
