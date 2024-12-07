@@ -36,20 +36,14 @@ commands:
       - checkout
       - restore_cache:
           keys:
-            - gems-v4-{{ checksum "Gemfile.lock" }}-
-            - gems-v4-
+            - gems-v5-{{ checksum "Gemfile.lock" }}-
+            - gems-v5-
             - gems-
       - restore_cache:
           keys:
-            - solargraph-v2-{{ checksum "Gemfile.lock" }}-{{ .Branch }}
-            - solargraph-v2-{{ checksum "Gemfile.lock" }}-
-            - solargraph-v2-
-            - solargraph-
-      - restore_cache:
-          keys:
-            - wheels-v1-3.12.7-{{ checksum "requirements_dev.txt" }}
-            - wheels-v1-3.12.7-
-            - wheels-v1-
+            - python-v1-3.12.7-{{ checksum "requirements_dev.txt" }}
+            - python-v1-3.12.7-
+            - python-v1-
             - wheels-
       - run:
           name: Initialize packages
@@ -72,17 +66,17 @@ commands:
               exit 1
             fi
       - save_cache:
-          key: gems-v4-{{ checksum "Gemfile.lock" }}-{{ checksum ".ruby-version" }}
+          key: gems-v5-{{ checksum "Gemfile.lock" }}-{{ checksum ".ruby-version" }}
           paths:
             - "vendor/bundle"
             - ".yardoc"
-            - "/home/circleci/.rbenv/versions/3.1.6/lib/ruby/gems/"
+            - "/home/circleci/.rbenv"
+            - "/home/circleci/.cache/solargraph"
       - save_cache:
-          key: wheels-v1-3.12.7-{{ checksum "requirements_dev.txt" }}
+          key: python-v1-3.12.7-{{ checksum "requirements_dev.txt" }}
           paths:
             - "/home/circleci/.cache/pip/wheels"
-            - "/home/circleci/.pyenv/versions/3.12.7/envs/checkoff-3.12.7"
-            - "/home/circleci/.pyenv/versions/checkoff-3.12.7"
+            - "/home/circleci/.pyenv/versions"
       - run:
           name: Download new circleci tool
           command: |
@@ -196,13 +190,13 @@ jobs:
   quality:
     working_directory: ~/checkoff
     docker:
-      - image: apiology/circleci-ruby:latest
+      - image: cimg/python
     steps:
       - quality
   build:
     working_directory: ~/checkoff
     docker:
-      - image: apiology/circleci-ruby:latest
+      - image: cimg/python
     steps:
       - set_up_environment
       - when:
@@ -218,17 +212,12 @@ jobs:
           label: Test
           command: |
             make citest cicoverage
-      - save_cache:
-          key: solargraph-v2-{{ checksum "Gemfile.lock" }}-{{ .Branch }}
-          paths:
-            - ".yardoc"
-            - "/home/circleci/.cache/solargraph"
     # This seemed to shave 5ish% of the build time off when added
     resource_class: large
   publish_gem:
     working_directory: ~/checkoff
     docker:
-      - image: apiology/circleci-ruby:latest
+      - image: cimg/python
     steps:
       - set_up_environment
       - run_with_languages:
