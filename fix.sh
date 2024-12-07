@@ -485,7 +485,7 @@ ensure_overcommit() {
 
 ensure_rugged_packages_installed() {
   # only needed if we don't already have rugged installed
-  if ! ls vendor/bundle/ruby/*/gems/rugged-*
+  if ! ls vendor/bundle/ruby/*/gems/rugged-* &>/dev/null
   then
     echo "Current directory"
     pwd
