@@ -179,10 +179,13 @@ ensure_ruby_versions() {
   for ver in $ruby_versions
   do
     if ! contains "${installed_ruby_versions}" "${ver}"$'\n'; then
+      echo "Installing Ruby version $ver"
       ensure_ruby_build_requirements
 
       rbenv install -s "${ver}"
       hash -r  # ensure we are seeing latest bundler etc
+    else
+      echo "Found Ruby version $ver already installed"
     fi
   done
 }
@@ -388,6 +391,7 @@ ensure_python_versions() {
   for ver in $python_versions
   do
     if ! contains "${installed_python_versions}" "${ver}"$'\n'; then
+      echo "Installing Python version $ver"
       ensure_python_build_requirements
 
       if [ "$(uname)" == Darwin ]
@@ -406,6 +410,8 @@ ensure_python_versions() {
         pyenv install -s "${ver}"
       fi
       hash -r
+    else
+      echo "Found Python version $ver already installed"
     fi
   done
 }
