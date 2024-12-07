@@ -190,13 +190,13 @@ jobs:
   quality:
     working_directory: ~/checkoff
     docker:
-      - image: cimg/python:3
+      - image: cimg/python:3.12
     steps:
       - quality
   build:
     working_directory: ~/checkoff
     docker:
-      - image: cimg/python:3
+      - image: cimg/python:3.12
     steps:
       - set_up_environment
       - when:
@@ -217,7 +217,7 @@ jobs:
   publish_gem:
     working_directory: ~/checkoff
     docker:
-      - image: cimg/python:3
+      - image: cimg/python:3.12
     steps:
       - set_up_environment
       - run_with_languages:
