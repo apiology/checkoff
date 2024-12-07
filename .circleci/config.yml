@@ -57,7 +57,7 @@ commands:
             # measuring slows down the script - only enable when you
             # want to debug where this is spending time
 
-            # export FIX_SH_TIMING_LOG=/tmp/fix_sh_timing.log
+            export FIX_SH_TIMING_LOG=/tmp/fix_sh_timing.log
 
             export BUNDLE_PATH="$(pwd)/vendor/bundle"
             './fix.sh'
