@@ -42,7 +42,7 @@ clean-typecoverage: ## Clean out type-related coverage previous results to avoid
 citypecoverage: typecoverage ## Run type checking, ratchet coverage, and then complain if ratchet needs to be committed
 
 requirements_dev.txt.installed: requirements_dev.txt
-	pip install -q --disable-pip-version-check -r requirements_dev.txt
+	time pip install -q --disable-pip-version-check -r requirements_dev.txt
 	touch requirements_dev.txt.installed
 
 pip_install: requirements_dev.txt.installed ## Install Python dependencies
