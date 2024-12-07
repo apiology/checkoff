@@ -2,15 +2,16 @@
 
 if [ -n "${FIX_SH_TIMING_LOG+x}" ]; then
     rm -f "${FIX_SH_TIMING_LOG}"
+    if ! type gdate >/dev/null 2>&1; then sudo ln -sf /bin/date /bin/gdate; fi
 fi
 
 debug_timing() {
   if [ -n "${FIX_SH_TIMING_LOG+x}" ]; then
     # shellcheck disable=SC2034
-    _lastcmd=$(ruby -e "puts (Time.now.to_f * 1000).to_i")
+    _lastcmd=$(gdate +%s%3N)
     last_command='start'
     # shellcheck disable=SC2154
-    trap '_now=$(ruby -e "puts (Time.now.to_f * 1000).to_i"); duration=$((_now - _lastcmd)); echo ${duration} ms: $last_command >> '"${FIX_SH_TIMING_LOG}"'; last_command="$BASH_COMMAND" >> '"${FIX_SH_TIMING_LOG}"'; _lastcmd=$_now' DEBUG
+    trap '_now=$(gdate +%s%3N).to_i"); duration=$((_now - _lastcmd)); echo ${duration} ms: $last_command >> '"${FIX_SH_TIMING_LOG}"'; last_command="$BASH_COMMAND" >> '"${FIX_SH_TIMING_LOG}"'; _lastcmd=$_now' DEBUG
   fi
 }
 
