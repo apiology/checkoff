@@ -50,6 +50,7 @@ Gemfile.lock: Gemfile checkoff.gemspec
 
 # Ensure any Gemfile.lock changes ensure a bundle is installed.
 Gemfile.lock.installed: Gemfile.lock
+	ls -l Gemfile.*
 	bundle install
 	touch Gemfile.lock.installed
 
