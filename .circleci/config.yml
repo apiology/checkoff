@@ -63,6 +63,8 @@ commands:
             export FIX_SH_TIMING_LOG=/tmp/fix_sh_timing.log
 
             export BUNDLE_PATH="$(pwd)/vendor/bundle"
+            export GEM_HOME="${BUNDLE_PATH}"
+            export GEM_PATH=$GEM_PATH:${BUNDLE_PATH}
             './fix.sh'
       - store_artifacts:
           path: /tmp/fix_sh_timing.log
