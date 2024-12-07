@@ -405,6 +405,8 @@ ensure_pyenv_virtualenvs() {
 }
 
 ensure_pip_and_wheel() {
+  debug_timing
+
   # https://cve.mitre.org/cgi-bin/cvename.cgi?name=2023-5752
   major_pip_version=$(pip --version | cut -d' ' -f2 | cut -d '.' -f 1)
   minor_pip_version=$(pip --version | cut -d' ' -f2 | cut -d '.' -f 2)
