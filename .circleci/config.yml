@@ -23,9 +23,12 @@ commands:
             eval "$(pyenv virtualenv-init -)"
             eval "$(rbenv init -)"
             # keep this in a single place for both main and child builds for cachability
-            export BUNDLE_PATH="$(pwd)/vendor/bundle"
-            export GEM_HOME="${BUNDLE_PATH}"
-            export GEM_PATH="$GEM_PATH:${BUNDLE_PATH}"
+            BUNDLE_PATH="$(pwd)/vendor/bundle"
+            export BUNDLE_PATH
+            GEM_HOME="${BUNDLE_PATH}/gems"
+            export GEM_HOME
+            GEM_PATH="${GEM_PATH}:${GEM_HOME}"
+            export GEM_PATH
 
             <<parameters.command>>
           environment:
@@ -62,9 +65,13 @@ commands:
 
             export FIX_SH_TIMING_LOG=/tmp/fix_sh_timing.log
 
-            export BUNDLE_PATH="$(pwd)/vendor/bundle"
-            export GEM_HOME="${BUNDLE_PATH}"
-            export GEM_PATH="$GEM_PATH:${BUNDLE_PATH}"
+            BUNDLE_PATH="$(pwd)/vendor/bundle"
+            export BUNDLE_PATH
+            GEM_HOME="${BUNDLE_PATH}/gems"
+            export GEM_HOME
+            GEM_PATH="${GEM_PATH}:${GEM_HOME}"
+            export GEM_PATH
+
             './fix.sh'
       - store_artifacts:
           path: /tmp/fix_sh_timing.log
