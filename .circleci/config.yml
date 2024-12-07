@@ -40,15 +40,14 @@ commands:
       - checkout
       - restore_cache:
           keys:
-            - rbenv-v1-{{ checksum "Gemfile.lock" }}-
-            - rbenv-v1-
+            - rbenv-v2-{{ checksum "Gemfile.lock" }}-
+            - rbenv-v2-
             - rbenv-
             - ruby-
       - restore_cache:
           keys:
-            - pyenv-v1-{{ checksum "requirements_dev.txt" }}-
-            - pyenv-v1-
-            - pyenv-v1-
+            - pyenv-v2-{{ checksum "requirements_dev.txt" }}-
+            - pyenv-v2-
             - pyenv-
       - restore_cache:
           keys:
@@ -81,14 +80,16 @@ commands:
               exit 1
             fi
       - save_cache:
-          key: rbenv-v1-{{ checksum "Gemfile.lock" }}-{{ checksum ".ruby-version" }}
+          key: rbenv-v2-{{ checksum "Gemfile.lock" }}-{{ checksum ".ruby-version" }}
           paths:
+            - "Gemfile.lock.installed"
             - "vendor/bundle"
             - "/home/circleci/.rbenv"
             - ".yardoc"
       - save_cache:
-          key: pyenv-v1-{{ checksum "requirements_dev.txt" }}-{{ checksum ".python-version" }}
+          key: pyenv-v2-{{ checksum "requirements_dev.txt" }}-{{ checksum ".python-version" }}
           paths:
+            - "requirements_dev.txt.installed"
             - "/home/circleci/.cache/pip/wheels"
             - "/home/circleci/.pyenv"
       - run:
