@@ -179,7 +179,7 @@ ensure_ruby_versions() {
   for ver in $ruby_versions
   do
     if ! contains "${installed_ruby_versions}" "${ver}"$'\n'; then
-      echo "Installing Ruby version $ver"
+      echo "Installing Ruby version $ver - existing versions: installed_ruby_versions"
       ensure_ruby_build_requirements
 
       rbenv install -s "${ver}"
@@ -391,7 +391,7 @@ ensure_python_versions() {
   for ver in $python_versions
   do
     if ! contains "${installed_python_versions}" "${ver}"$'\n'; then
-      echo "Installing Python version $ver"
+      echo "Installing Python version $ver - existing versions: $installed_python_versions"
       ensure_python_build_requirements
 
       if [ "$(uname)" == Darwin ]
