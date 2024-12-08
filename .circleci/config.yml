@@ -81,15 +81,6 @@ commands:
               exit 1
             fi
       - save_cache:
-          key: rbenv-v4-{{ checksum "Gemfile.lock" }}-{{ checksum ".ruby-version" }}
-          paths:
-            - "Gemfile.lock.installed"
-            - "types.installed"
-            - "vendor/bundle"
-            - "/home/circleci/.rbenv"
-            - ".yardoc"
-            - "/home/circleci/.cache/solargraph"
-      - save_cache:
           key: pyenv-v2-{{ checksum "requirements_dev.txt" }}-{{ checksum ".python-version" }}
           paths:
             - "requirements_dev.txt.installed"
@@ -226,6 +217,15 @@ jobs:
       # - run_with_languages:
       #     label: Typecheck
       #     command: make citypecheck citypecoverage
+      - save_cache:
+          key: rbenv-v4-{{ checksum "Gemfile.lock" }}-{{ checksum ".ruby-version" }}
+          paths:
+            - "Gemfile.lock.installed"
+            - "types.installed"
+            - "vendor/bundle"
+            - "/home/circleci/.rbenv"
+            - ".yardoc"
+            - "/home/circleci/.cache/solargraph"
       - run_with_languages:
           label: Test
           command: |
