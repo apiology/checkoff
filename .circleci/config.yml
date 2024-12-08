@@ -48,20 +48,14 @@ commands:
             done
       - restore_cache:
           keys:
-            - rbenv-v3-{{ checksum "Gemfile.lock" }}-
-            - rbenv-v3-
+            - rbenv-v4-{{ checksum "Gemfile.lock" }}-
+            - rbenv-v4-
             - rbenv-
-            - ruby-
       - restore_cache:
           keys:
             - pyenv-v2-{{ checksum "requirements_dev.txt" }}-
             - pyenv-v2-
             - pyenv-
-      - restore_cache:
-          keys:
-            - solargraph-v1-{{ checksum "Gemfile.lock" }}-
-            - solargraph-v1-
-            - solargraph-
       - run:
           name: Initialize packages
           command: |
@@ -87,13 +81,14 @@ commands:
               exit 1
             fi
       - save_cache:
-          key: rbenv-v3-{{ checksum "Gemfile.lock" }}-{{ checksum ".ruby-version" }}
+          key: rbenv-v4-{{ checksum "Gemfile.lock" }}-{{ checksum ".ruby-version" }}
           paths:
             - "Gemfile.lock.installed"
             - "types.installed"
             - "vendor/bundle"
             - "/home/circleci/.rbenv"
             - ".yardoc"
+            - "/home/circleci/.cache/solargraph"
       - save_cache:
           key: pyenv-v2-{{ checksum "requirements_dev.txt" }}-{{ checksum ".python-version" }}
           paths:
@@ -231,10 +226,6 @@ jobs:
       # - run_with_languages:
       #     label: Typecheck
       #     command: make citypecheck citypecoverage
-      - save_cache:
-          key: solargraph-v1-{{ checksum "Gemfile.lock" }}-{{ checksum ".ruby-version" }}
-          paths:
-            - "/home/circleci/.cache/solargraph"
       - run_with_languages:
           label: Test
           command: |

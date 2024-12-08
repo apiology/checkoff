@@ -195,19 +195,23 @@ ensure_bundle() {
   #
   # https://app.circleci.com/pipelines/github/apiology/source_finder/21/workflows/88db659f-a4f4-4751-abc0-46f5929d8e58/jobs/107
   set_rbenv_env_variables
-  type bundle >/dev/null 2>&1 || gem install --no-document bundler
-  bundler_version="$(ruby -e 'require "rubygems"; puts Gem::BundlerVersionFinder.bundler_version')"
+
+  bundler_version=$(ruby -e 'require "rubygems/bundler_version_finder"; puts Gem::BundlerVersionFinder.bundler_version')
+  # if bundler_version is empty
+  if [ -z "${bundler_version}" ]
+  then
+      bundler_version=$(bundle --version | cut -d ' ' -f 3)
+  fi
+  # if bundler_version is still empty
+  if [ -z "${bundler_version}" ]
+  then
+      gem install bundler
+      bundler_version=$(bundle --version | cut -d ' ' -f 3)
+  fi
+  echo "Bundler version: ${bundler_version}"
   bundler_version_major=$(cut -d. -f1 <<< "${bundler_version}")
   bundler_version_minor=$(cut -d. -f2 <<< "${bundler_version}")
   bundler_version_patch=$(cut -d. -f3 <<< "${bundler_version}")
-  # Version 2.1 of bundler seems to have some issues with nokogiri:
-  #
-  # https://app.asana.com/0/1107901397356088/1199504270687298
-
-  # Version <2.2.22 of bundler isn't compatible with Ruby 3.3:
-  #
-  # https://stackoverflow.com/questions/70800753/rails-calling-didyoumeanspell-checkers-mergeerror-name-spell-checker-h
-  #
   #
   # Version 2.5.5 fixed an issue in 2.2.22 with the 'bump' gem:
   #
@@ -482,16 +486,16 @@ ensure_rugged_packages_installed() {
     echo "Current directory"
     pwd
     echo "Vendor dir"
-    ls -l vendor
+    ls -l vendor || true
     echo "List of vendor/bundle/gems:"
-    ls vendor/bundle/gems
+    ls vendor/bundle/gems || true
     echo "Did not find rugged gem installed; installing packages needed for rugged"
     echo "Installed gems:"
     gem list
     echo "Gem environment:"
     gem environment
     echo "Bundle list:"
-    bundle list
+    bundle list || true
     ensure_binary_library libicuio icu4c libicu-dev # needed by rugged, needed by undercover
     ensure_package pkg-config # needed by rugged, needed by undercover
     ensure_package cmake # needed by rugged, needed by undercover
