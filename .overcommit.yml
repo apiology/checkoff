@@ -83,6 +83,8 @@ PreCommit:
       - test/**/*
       - ".bundle/**/*"
       - ".markdownlint_style.rb"
+  Sorbet:
+    enabled: true
   Punchlist:
     command: ['bundle', 'exec', 'punchlist']
     enabled: true
