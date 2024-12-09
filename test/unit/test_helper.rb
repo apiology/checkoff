@@ -16,8 +16,8 @@ SimpleCov.start do
   add_filter '/vendor/bundle'
   enable_coverage(:branch) # Report branch coverage to trigger branch-level undercover warnings
 end
-require 'fakeweb'
-FakeWeb.allow_net_connect = false
+require 'webmock/minitest'
+WebMock.disable_net_connect!
 require 'minitest/autorun'
 require 'mocha/minitest'
 

@@ -1,4 +1,4 @@
-.PHONY: clean test help quality localtest
+.PHONY: build-typecheck bundle_install cicoverage citypecheck citest citypecoverage clean clean-coverage clean-typecheck clean-typecoverage coverage default help localtest overcommit quality repl report-coverage report-coverage-to-codecov rubocop test typecheck typecoverage update_from_cookiecutter
 .DEFAULT_GOAL := default
 
 define PRINT_HELP_PYSCRIPT
@@ -17,7 +17,20 @@ help:
 
 default: clean-coverage test coverage clean-typecoverage typecheck typecoverage quality ## run default typechecking, tests and quality
 
+build-typecheck: types.installed ## Fetch information that type checking depends on
+
+types.installed: Gemfile.lock Gemfile.lock.installed ## Install Ruby dependencies
+	bundle exec yard gems 2>&1 || bundle exec yard gems --safe 2>&1 || bundle exec yard gems 2>&1
+	# bundle exec solargraph scan 2>&1
+	touch types.installed
+
+clean-typecheck: ## Refresh information that type checking depends on
+	bundle exec solargraph clear
+	rm -fr .yardoc/
+	echo all clear
+
 typecheck: ## validate types in code and configuration
+	bundle exec solargraph typecheck --level strong
 
 citypecheck: typecheck ## Run type check from CircleCI
 
@@ -35,7 +48,7 @@ pip_install: requirements_dev.txt.installed ## Install Python dependencies
 
 # bundle install doesn't get run here so that we can catch it below in
 # fresh-checkout and fresh-rbenv cases
-Gemfile.lock: Gemfile
+Gemfile.lock: Gemfile checkoff.gemspec
 
 # Ensure any Gemfile.lock changes ensure a bundle is installed.
 Gemfile.lock.installed: Gemfile.lock
@@ -68,14 +81,6 @@ repl:  ## Load up checkoff in pry
 clean-coverage:
 	@bundle exec rake clear_metrics
 
-clean-typecheck: ## Refresh information that type checking depends on
-	bundle install
-	bundle exec solargraph clear
-	rm -fr .yardoc/
-	bundle exec yard gems
-	bundle exec solargraph scan
-	echo all clear
-
 coverage: test report-coverage ## check code coverage
 	@bundle exec rake undercover
 
@@ -85,12 +90,23 @@ cicoverage: coverage ## check code coverage
 
 update_from_cookiecutter: ## Bring in changes from template project used to create this repo
 	bundle exec overcommit --uninstall
+	# cookiecutter_project_upgrader does its work in
+	# .git/cookiecutter/checkoff, but RuboCop wants to inherit
+	# config from all directories above it - avoid config
+	# mismatches by moving this out of the way
+	mv .rubocop.yml .rubocop-renamed.yml || true
 	cookiecutter_project_upgrader --help >/dev/null
 	IN_COOKIECUTTER_PROJECT_UPGRADER=1 cookiecutter_project_upgrader || true
-	git checkout cookiecutter-template && git push && git checkout main
-	git checkout main && git pull && git checkout -b update-from-cookiecutter-$$(date +%Y-%m-%d-%H%M)
+	mv .rubocop-renamed.yml .rubocop.yml
+	git checkout cookiecutter-template && git push --no-verify
+	git checkout main; overcommit --sign && overcommit --sign pre-commit && git checkout main && git pull && git checkout -b update-from-cookiecutter-$$(date +%Y-%m-%d-%H%M)
 	git merge cookiecutter-template || true
-	bundle exec overcommit --install
+	git checkout --ours Gemfile.lock || true
+	# update frequently security-flagged gems while we're here
+	bundle update --conservative rexml nokogiri || true
+	git add Gemfile.lock || true
+	bundle install || true
+	bundle exec overcommit --install || true
 	@echo
 	@echo "Please resolve any merge conflicts below and push up a PR with:"
 	@echo

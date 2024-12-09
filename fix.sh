@@ -1,5 +1,23 @@
 #!/bin/bash -eu
 
+if [ -n "${FIX_SH_TIMING_LOG+x}" ]; then
+    rm -f "${FIX_SH_TIMING_LOG}"
+    if ! type gdate >/dev/null 2>&1; then sudo ln -sf /bin/date /bin/gdate; fi
+fi
+
+debug_timing() {
+  if [ -n "${FIX_SH_TIMING_LOG+x}" ]; then
+    # shellcheck disable=SC2034
+    _lastcmd=$(gdate +%s%3N)
+    last_command='start'
+    # shellcheck disable=SC2154
+    trap '_now=$(gdate +%s%3N); duration=$((_now - _lastcmd)); echo ${duration} ms: $last_command >> '"${FIX_SH_TIMING_LOG}"'; last_command="$BASH_COMMAND" >> '"${FIX_SH_TIMING_LOG}"'; _lastcmd=$_now' DEBUG
+  fi
+}
+
+# copy this into any function you want to debug further
+debug_timing
+
 set -o pipefail
 
 apt_upgraded=0
@@ -87,12 +105,32 @@ ensure_dev_library() {
   header_file_name=${1:?header file name}
   homebrew_package=${2:?homebrew package}
   apt_package=${3:-${homebrew_package}}
-  if ! [ -f /usr/include/"${header_file_name}" ] && \
+  if ! [ -f /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/usr/include/"${header_file_name}" ] && \
+      ! [ -f /opt/homebrew/include/"${header_file_name}" ] && \
+      ! [ -f /usr/include/"${header_file_name}" ] && \
       ! [ -f /usr/include/x86_64-linux-gnu/"${header_file_name}" ] && \
       ! [ -f /usr/local/include/"${header_file_name}" ] && \
-      ! [ -f  /usr/local/opt/"${homebrew_package}"/include/"${header_file_name}" ]
+      ! [ -f /usr/local/opt/"${homebrew_package}"/include/"${header_file_name}" ]
   then
     install_package "${homebrew_package}" "${apt_package}"
+  fi
+}
+
+ensure_binary_library() {
+  library_base_name=${1:?library base name - like libfoo}
+  homebrew_package=${2:?homebrew package}
+  apt_package=${3:-${homebrew_package}}
+  if ! [ -f /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/usr/lib/"${library_base_name}*.dylib" ] && \
+      ! [ -f /opt/homebrew/lib/"${library_base_name}*.dylib" ] && \
+      ! [ -f /usr/lib/"${library_base_name}.so" ] && \
+      ! [ -f /usr/lib/x86_64-linux-gnu/"${library_base_name}.so" ] && \
+      ! [ -f /usr/local/lib/"${library_base_name}.so" ] && \
+      ! [ -f /usr/local/opt/"${homebrew_package}/lib/${library_base_name}*.dylib" ]
+  then
+      if ! compgen -G "/opt/homebrew/Cellar/${homebrew_package}"*/*/"lib/${library_base_name}"*.dylib >/dev/null 2>&1
+      then
+        install_package "${homebrew_package}" "${apt_package}"
+      fi
   fi
 }
 
@@ -106,7 +144,23 @@ ensure_ruby_build_requirements() {
 ensure_latest_ruby_build_definitions() {
   ensure_rbenv
 
-  git -C "$(rbenv root)"/plugins/ruby-build pull
+#  last_pulled_unix_epoch="$(stat -f '%m' "$(rbenv root)"/plugins/ruby-build/.git/FETCH_HEAD)"
+#  # if not pulled in last 24 hours
+#  if [ $(( $(date +%s) - last_pulled_unix_epoch )) -gt $(( 24 * 60 * 60 )) ]
+#  then
+      git -C "$HOME"/.rbenv/plugins/ruby-build pull
+#  fi
+}
+
+# https://stackoverflow.com/questions/2829613/how-do-you-tell-if-a-string-contains-another-string-in-posix-sh
+contains() {
+  string="$1"
+  substring="$2"
+  if [ "${string#*"$substring"}" != "$string" ]; then
+    return 0    # $substring is in $string
+  else
+    return 1    # $substring is not in $string
+  fi
 }
 
 # You can find out which feature versions are still supported / have
@@ -116,16 +170,23 @@ ensure_ruby_versions() {
 
   # You can find out which feature versions are still supported / have
   # been release here: https://www.ruby-lang.org/en/downloads/
-  ruby_versions="$(latest_ruby_version 3.0)"
+  ruby_versions="$(latest_ruby_version 3.1)"
+
+  installed_ruby_versions="$(rbenv versions --bare --skip-aliases)"
 
   echo "Latest Ruby versions: ${ruby_versions}"
 
-  ensure_ruby_build_requirements
-
   for ver in $ruby_versions
   do
-    rbenv install -s "${ver}"
-    hash -r  # ensure we are seeing latest bundler etc
+    if ! contains "${installed_ruby_versions}"$'\n' "${ver}"$'\n'; then
+      echo "Installing Ruby version $ver - existing versions: $installed_ruby_versions"
+      ensure_ruby_build_requirements
+
+      rbenv install -s "${ver}"
+      hash -r  # ensure we are seeing latest bundler etc
+    else
+      echo "Found Ruby version $ver already installed"
+    fi
   done
 }
 
@@ -134,19 +195,23 @@ ensure_bundle() {
   #
   # https://app.circleci.com/pipelines/github/apiology/source_finder/21/workflows/88db659f-a4f4-4751-abc0-46f5929d8e58/jobs/107
   set_rbenv_env_variables
-  bundle --version >/dev/null 2>&1 || gem install --no-document bundler
-  bundler_version=$(bundle --version | cut -d ' ' -f3)
+
+  bundler_version=$(ruby -e 'require "rubygems/bundler_version_finder"; puts Gem::BundlerVersionFinder.bundler_version')
+  # if bundler_version is empty
+  if [ -z "${bundler_version}" ]
+  then
+      bundler_version=$(bundle --version | cut -d ' ' -f 3)
+  fi
+  # if bundler_version is still empty
+  if [ -z "${bundler_version}" ]
+  then
+      gem install bundler
+      bundler_version=$(bundle --version | cut -d ' ' -f 3)
+  fi
+  echo "Bundler version: ${bundler_version}"
   bundler_version_major=$(cut -d. -f1 <<< "${bundler_version}")
   bundler_version_minor=$(cut -d. -f2 <<< "${bundler_version}")
   bundler_version_patch=$(cut -d. -f3 <<< "${bundler_version}")
-  # Version 2.1 of bundler seems to have some issues with nokogiri:
-  #
-  # https://app.asana.com/0/1107901397356088/1199504270687298
-
-  # Version <2.2.22 of bundler isn't compatible with Ruby 3.3:
-  #
-  # https://stackoverflow.com/questions/70800753/rails-calling-didyoumeanspell-checkers-mergeerror-name-spell-checker-h
-  #
   #
   # Version 2.5.5 fixed an issue in 2.2.22 with the 'bump' gem:
   #
@@ -179,7 +244,6 @@ ensure_bundle() {
     # ensure next step installs fresh bundle
     rm -f Gemfile.lock.installed
   fi
-  make bundle_install
   # https://bundler.io/v2.0/bundle_lock.html#SUPPORTING-OTHER-PLATFORMS
   #
   # "If you want your bundle to support platforms other than the one
@@ -191,10 +255,15 @@ ensure_bundle() {
   #
   # This affects nokogiri, which will try to reinstall itself in
   # Docker builds where it's already installed if this is not run.
-  for platform in arm64-darwin-23 x86_64-darwin-23 x86_64-linux x86_64-linux-musl
+  PLATFORMS="ruby arm64-darwin-23 x86_64-darwin-23 x86_64-linux x86_64-linux-musl aarch64-linux arm64-linux"
+  for platform in ${PLATFORMS}
   do
-    grep "${platform:?}" Gemfile.lock >/dev/null 2>&1 || bundle lock --add-platform "${platform:?}"
+    if ! grep -q "^  ${platform}$" Gemfile.lock
+    then
+      bundle lock --add-platform "${platform}"
+    fi
   done
+  make bundle_install
 }
 
 set_ruby_local_version() {
@@ -256,6 +325,20 @@ ensure_pyenv() {
   fi
 }
 
+ensure_package() {
+  homebrew_package=${1:?homebrew package}
+  apt_package=${2:-${homebrew_package}}
+  binary=${3:-${homebrew_package}}
+  if ! [ -f /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/usr/bin/"${binary}" ] && \
+      ! [ -f /opt/homebrew/bin/"${binary}" ] && \
+      ! [ -f /usr/bin/"${binary}" ] && \
+      ! [ -f /usr/local/bin/"${binary}" ] && \
+      ! [ -f /usr/local/opt/"${homebrew_package}"/bin/"${binary}" ]
+  then
+    install_package "${homebrew_package}" "${apt_package}"
+  fi
+}
+
 install_package() {
   homebrew_package=${1:?homebrew package}
   apt_package=${2:-${homebrew_package}}
@@ -264,7 +347,7 @@ install_package() {
     HOMEBREW_NO_AUTO_UPDATE=1 HOMEBREW_NO_INSTALL_UPGRADE=1 brew install "${homebrew_package}"
   elif type apt-get >/dev/null 2>&1
   then
-    if ! time dpkg -s "${apt_package}" >/dev/null
+    if ! dpkg -s "${apt_package}" >/dev/null
     then
       update_apt
       sudo DEBIAN_FRONTEND=noninteractive apt-get install -y "${apt_package}"
@@ -295,7 +378,7 @@ ensure_python_build_requirements() {
   ensure_dev_library zlib.h zlib zlib1g-dev
   ensure_dev_library bzlib.h bzip2 libbz2-dev
   ensure_dev_library openssl/ssl.h openssl libssl-dev
-  ensure_dev_library ffi.h libffi libffi-dev
+  ensure_dev_library ffi/ffi.h libffi libffi-dev
   ensure_dev_library sqlite3.h sqlite3 libsqlite3-dev
   ensure_dev_library lzma.h xz liblzma-dev
   ensure_dev_library readline/readline.h readline libreadline-dev
@@ -310,24 +393,32 @@ ensure_python_versions() {
 
   echo "Latest Python versions: ${python_versions}"
 
-  ensure_python_build_requirements
+  installed_python_versions="$(pyenv versions --skip-envs --skip-aliases --bare)"
 
   for ver in $python_versions
   do
-    if [ "$(uname)" == Darwin ]
-    then
-      if [ -z "${HOMEBREW_OPENSSL_PREFIX:-}" ]
-      then
-        HOMEBREW_OPENSSL_PREFIX="$(brew --prefix openssl)"
-      fi
-      pyenv_install() {
-        CFLAGS="-I/usr/local/opt/zlib/include -I/usr/local/opt/bzip2/include -I${HOMEBREW_OPENSSL_PREFIX}/include" LDFLAGS="-L/usr/local/opt/zlib/lib -L/usr/local/opt/bzip2/lib -L${HOMEBREW_OPENSSL_PREFIX}/lib" pyenv install --skip-existing "$@"
-      }
+    if ! contains "${installed_python_versions}"$'\n' "${ver}"$'\n'; then
+      echo "Installing Python version $ver - existing versions: $installed_python_versions"
+      ensure_python_build_requirements
 
-      major_minor="$(cut -d. -f1-2 <<<"${ver}")"
-      pyenv_install "${ver}"
+      if [ "$(uname)" == Darwin ]
+      then
+        if [ -z "${HOMEBREW_OPENSSL_PREFIX:-}" ]
+        then
+          HOMEBREW_OPENSSL_PREFIX="$(brew --prefix openssl)"
+        fi
+        pyenv_install() {
+          CFLAGS="-I/usr/local/opt/zlib/include -I/usr/local/opt/bzip2/include -I${HOMEBREW_OPENSSL_PREFIX}/include" LDFLAGS="-L/usr/local/opt/zlib/lib -L/usr/local/opt/bzip2/lib -L${HOMEBREW_OPENSSL_PREFIX}/lib" pyenv install --skip-existing "$@"
+        }
+
+        major_minor="$(cut -d. -f1-2 <<<"${ver}")"
+        pyenv_install "${ver}"
+      else
+        pyenv install -s "${ver}"
+      fi
+      hash -r
     else
-      pyenv install -s "${ver}"
+      echo "Found Python version $ver already installed"
     fi
   done
 }
@@ -335,17 +426,24 @@ ensure_python_versions() {
 ensure_pyenv_virtualenvs() {
   latest_python_version="$(cut -d' ' -f1 <<< "${python_versions}")"
   virtualenv_name="checkoff-${latest_python_version}"
-  pyenv virtualenv "${latest_python_version}" "${virtualenv_name}" || true
+  if ! [ -d ~/".pyenv/versions/${virtualenv_name}" ]
+  then
+    pyenv virtualenv "${latest_python_version}" "${virtualenv_name}" || true
+  fi
   # You can use this for your global stuff!
-  pyenv virtualenv "${latest_python_version}" mylibs || true
+  if ! [ -d ~/".pyenv/versions/mylibs" ]
+  then
+    pyenv virtualenv "${latest_python_version}" mylibs || true
+  fi
   # shellcheck disable=SC2086
   pyenv local "${virtualenv_name}" ${python_versions} mylibs
 }
 
 ensure_pip_and_wheel() {
   # https://cve.mitre.org/cgi-bin/cvename.cgi?name=2023-5752
-  major_pip_version=$(pip --version | cut -d' ' -f2 | cut -d '.' -f 1)
-  minor_pip_version=$(pip --version | cut -d' ' -f2 | cut -d '.' -f 2)
+  pip_version=$(python -c "import pip; print(pip.__version__)" | cut -d' ' -f2)
+  major_pip_version=$(cut -d '.' -f 1 <<< "${pip_version}")
+  minor_pip_version=$(cut -d '.' -f 2 <<< "${pip_version}")
   if [[ major_pip_version -lt 23 ]]
   then
       pip install 'pip>=23.3'
@@ -354,7 +452,7 @@ ensure_pip_and_wheel() {
       pip install 'pip>=23.3'
   fi
   # wheel is helpful for being able to cache long package builds
-  pip show wheel >/dev/null 2>&1 || pip install wheel
+  type wheel >/dev/null 2>&1 || pip install wheel
 }
 
 ensure_python_requirements() {
@@ -374,6 +472,7 @@ ensure_overcommit() {
   if [ -d .git ]
   then
     bundle exec overcommit --install
+    bundle exec overcommit --sign
     bundle exec overcommit --sign pre-commit
   else
     >&2 echo 'Not in a git repo; not installing git hooks'
@@ -381,12 +480,33 @@ ensure_overcommit() {
 }
 
 ensure_rugged_packages_installed() {
-  install_package icu4c libicu-dev # needed by rugged, needed by undercover
-  install_package pkg-config # needed by rugged, needed by undercover
-  install_package cmake # needed by rugged, needed by undercover
+  # only needed if we don't already have rugged installed
+  if ! ls vendor/bundle/ruby/*/gems/rugged-* &>/dev/null
+  then
+    echo "Current directory"
+    pwd
+    echo "Vendor dir"
+    ls -l vendor || true
+    echo "List of vendor/bundle/gems:"
+    ls vendor/bundle/gems || true
+    echo "Did not find rugged gem installed; installing packages needed for rugged"
+    echo "Installed gems:"
+    gem list
+    echo "Gem environment:"
+    gem environment
+    echo "Bundle list:"
+    bundle list || true
+    ensure_binary_library libicuio icu4c libicu-dev # needed by rugged, needed by undercover
+    ensure_package pkg-config # needed by rugged, needed by undercover
+    ensure_package cmake # needed by rugged, needed by undercover
+  fi
 }
 
 ensure_rbenv
+
+ensure_types_built() {
+  make build-typecheck
+}
 
 ensure_ruby_versions
 
@@ -407,5 +527,7 @@ ensure_pip_and_wheel
 ensure_python_requirements
 
 ensure_shellcheck
+
+ensure_types_built
 
 ensure_overcommit

@@ -653,6 +653,34 @@ class TestSearchUrlParser < ClassTest
     end
   end
 
+  # @return [void]
+  def test_convert_params_42
+    search_url_parser = get_test_object
+    url = 'https://app.asana.com/0/search?searched_type=task&any_tags.ids=123&not_tags.ids=456'
+    asana_api_params = {
+      'tags.any' => '123',
+      'tags.not' => '456',
+      'sort_by' => 'created_at',
+    }
+
+    task_selector = []
+
+    assert_equal([asana_api_params, task_selector],
+                 search_url_parser.convert_params(url))
+  end
+
+  # @return [void]
+  def test_convert_params_43
+    search_url_parser = get_test_object
+    url = 'https://app.asana.com/0/search?searched_type=elephant&any_tags.ids=123&not_tags.ids=456'
+
+    e = assert_raises(RuntimeError) do
+      search_url_parser.convert_params(url)
+    end
+    assert_equal('Teach me how to handle searched_type = ["elephant"]',
+                 e.message)
+  end
+
   # @return [Class<Checkoff::Internal::SearchUrl::Parser>]
   def class_under_test
     Checkoff::Internal::SearchUrl::Parser

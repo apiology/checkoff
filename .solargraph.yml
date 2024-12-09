@@ -1,13 +1,22 @@
 ---
 include:
+  # process first
+  - "config/annotations*.rb"
   - "**/*.rb"
+  - "**/.*.rb"
+  - "lib/tasks/*.rake"
   - ".git-hooks/**/*.rb"
+  - "script/*"
+  - "bin/*"
+  - "bin/overcommit_branch"
 exclude:
+  - script/.rubocop.yml
+  - vendor/**/*
   - spec/**/*
   - feature/**/*
   - test/**/*
-  - vendor/**/*
   - ".bundle/**/*"
+  - ".markdownlint_style.rb"
 require: []
 domains: []
 reporters:
