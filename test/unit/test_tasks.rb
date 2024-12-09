@@ -308,6 +308,17 @@ class TestTasks < BaseAsana
     assert_equal(task, returned_task)
   end
 
+  def test_in_portfolio_more_than_once
+    tasks = get_test_object do
+      portfolios.expects(:projects_in_portfolio).with('workspace_name', 'portfolio name')
+        .returns([])
+      task.expects(:memberships).returns([])
+    end
+
+    refute(tasks.in_portfolio_more_than_once?(task, 'portfolio name',
+                                              workspace_name: 'workspace_name'))
+  end
+
   def test_task_to_h_delegates
     tasks = get_test_object do
       Checkoff::Internal::TaskHashes.expects(:new).returns(task_hashes)

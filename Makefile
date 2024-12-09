@@ -69,7 +69,7 @@ clean: clear_metrics ## remove all built artifacts
 citest: test ## Run unit tests from CircleCI
 
 overcommit: ## run precommit quality checks
-	bundle exec overcommit --run
+	bin/overcommit_branch
 
 quality: overcommit ## run precommit quality checks
 
