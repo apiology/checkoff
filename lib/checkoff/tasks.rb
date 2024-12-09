@@ -1,5 +1,7 @@
 #!/usr/bin/env ruby
 
+# typed: true
+
 # frozen_string_literal: true
 
 require_relative 'sections'
@@ -11,12 +13,15 @@ require_relative 'internal/task_hashes'
 require_relative 'internal/logging'
 require_relative 'internal/thread_local'
 require 'asana'
+require 'sorbet-runtime'
 
 module Checkoff
   # Pull tasks from Asana
   class Tasks
     # @!parse
     #   extend CacheMethod::ClassMethods
+
+    extend T::Sig
 
     include Logging
 
@@ -227,7 +232,8 @@ module Checkoff
     #
     # @return [Array<Hash>]
     def all_dependent_tasks(task, extra_task_fields: [])
-      dependent_tasks = []
+      # @type [Array<Hash>]
+      dependent_tasks = T.let([], T::Array[Hash])
       # See note above - same applies as does in @dependencies
       #
       # @type [Array<Hash>]
@@ -305,7 +311,7 @@ module Checkoff
                                      workspace_name: @workspaces.default_workspace.name)
       portfolio_projects = @portfolios.projects_in_portfolio(workspace_name, portfolio_name)
       portfolio_project_gids = portfolio_projects.map(&:gid)
-      seen = false
+      seen = T.let(false, T::Boolean)
       task.memberships.each do |membership|
         project_gid = membership.fetch('project').fetch('gid')
         next unless portfolio_project_gids.include?(project_gid)

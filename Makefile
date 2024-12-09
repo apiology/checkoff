@@ -15,13 +15,16 @@ export PRINT_HELP_PYSCRIPT
 help:
 	@python -c "$$PRINT_HELP_PYSCRIPT" < $(MAKEFILE_LIST)
 
-default: clean-coverage test coverage clean-typecoverage typecheck typecoverage quality ## run default typechecking, tests and quality
+default: clean-typecoverage typecheck typecoverage clean-coverage test coverage quality ## run default typechecking, tests and quality
 
 build-typecheck: types.installed ## Fetch information that type checking depends on
 
 types.installed: Gemfile.lock Gemfile.lock.installed ## Install Ruby dependencies
 	bundle exec yard gems 2>&1 || bundle exec yard gems --safe 2>&1 || bundle exec yard gems 2>&1
 	# bundle exec solargraph scan 2>&1
+	bin/tapioca gems
+	bin/tapioca annotations
+	bin/tapioca dsl
 	touch types.installed
 
 clean-typecheck: ## Refresh information that type checking depends on
@@ -29,7 +32,9 @@ clean-typecheck: ## Refresh information that type checking depends on
 	rm -fr .yardoc/
 	echo all clear
 
-typecheck: ## validate types in code and configuration
+typecheck: build-typecheck ## validate types in code and configuration
+	bin/tapioca dsl --verify
+	bundle exec srb tc
 	bundle exec solargraph typecheck --level strong
 
 citypecheck: typecheck ## Run type check from CircleCI
@@ -104,6 +109,7 @@ update_from_cookiecutter: ## Bring in changes from template project used to crea
 	git checkout --ours Gemfile.lock || true
 	# update frequently security-flagged gems while we're here
 	bundle update --conservative nokogiri rack rexml yard || true
+	make build-typecheck
 	git add Gemfile.lock || true
 	bundle install || true
 	bundle exec overcommit --install || true
