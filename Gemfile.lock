@@ -49,6 +49,7 @@ PATH
       cache_method
       gli
       mime-types
+      sorbet-runtime
 
 GEM
   remote: https://rubygems.org/
