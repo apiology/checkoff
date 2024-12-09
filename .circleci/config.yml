@@ -22,7 +22,12 @@ commands:
             eval "$(pyenv init --path)"
             eval "$(pyenv virtualenv-init -)"
             eval "$(rbenv init -)"
-            export BUNDLE_PATH=vendor/bundle
+
+            # keep this in a single place for both main and child builds for cachability
+            BUNDLE_PATH="$(pwd)/vendor/bundle"
+            export BUNDLE_PATH
+            GEM_HOME="${BUNDLE_PATH}"
+            export GEM_HOME
 
             <<parameters.command>>
           environment:
@@ -33,18 +38,40 @@ commands:
     description: "Install source environment"
     steps:
       - checkout
-      - run: |
-          sed -E -e 's/checkoff \([[:digit:]]+.[[:digit:]]+.[[:digit:]]+\)/checkoff (0.1.0)/g' \
-          Gemfile.lock > Gemfile.lock.deversioned
+      - run:
+          name: Update timestamps to original commit time
+          command: |
+            git ls-tree -r --name-only HEAD | while read filename; do \
+              unixtime=$(git log -1 --format="%at" -- "${filename}")
+              touchtime=$(date -d @$unixtime +'%Y%m%d%H%M.%S')
+              touch -t ${touchtime} "${filename}"
+            done
       - restore_cache:
-          key: gems-v2-{{ checksum "Gemfile.lock.deversioned" }}
+          keys:
+            - rbenv-v4-{{ checksum "Gemfile.lock" }}-
+            - rbenv-v4-
+            - rbenv-
       - restore_cache:
-          key: wheels-v1-3.12.1-{{ checksum "requirements_dev.txt" }}
+          keys:
+            - pyenv-v2-{{ checksum "requirements_dev.txt" }}-
+            - pyenv-v2-
+            - pyenv-
       - run:
           name: Initialize packages
           command: |
-            export BUNDLE_PATH=vendor/bundle
+            # measuring slows down the script - only enable when you
+            # want to debug where this is spending time
+
+            # export FIX_SH_TIMING_LOG=/tmp/fix_sh_timing.log
+
+            BUNDLE_PATH="$(pwd)/vendor/bundle"
+            export BUNDLE_PATH
+            GEM_HOME="${BUNDLE_PATH}"
+            export GEM_HOME
+
             './fix.sh'
+      - store_artifacts:
+          path: /tmp/fix_sh_timing.log
       - run:
           name: Verify Gemfile.lock
           command: |
@@ -54,22 +81,18 @@ commands:
               exit 1
             fi
       - save_cache:
-          key: gems-v2-{{ checksum "Gemfile.lock.deversioned" }}
+          key: pyenv-v2-{{ checksum "requirements_dev.txt" }}-{{ checksum ".python-version" }}
           paths:
-            - "vendor/bundle"
-      - save_cache:
-          key: wheels-v1-3.12.1-{{ checksum "requirements_dev.txt" }}
-          paths:
+            - "requirements_dev.txt.installed"
             - "/home/circleci/.cache/pip/wheels"
-            - "/home/circleci/.pyenv/versions/3.12.1/envs/checkoff-3.12.1"
-            - "/home/circleci/.pyenv/versions/checkoff-3.12.1"
+            - "/home/circleci/.pyenv"
       - run:
           name: Download new circleci tool
           command: |
             curl -fLSs \
             https://raw.githubusercontent.com/CircleCI-Public/circleci-cli/master/install.sh | sudo bash
-  overcommit:
-    description: "Run overcommit"
+  quality:
+    description: "Quality checks"
     steps:
       - set_up_environment
       - run_with_languages:
@@ -81,43 +104,140 @@ commands:
             bundle exec overcommit --sign
             bundle exec overcommit --sign pre-commit
 
-            bundle exec overcommit --run
+            if [ $(git rev-parse --abbrev-ref HEAD) == "main" ]
+            then
+              bundle exec overcommit --run
+            else
+              bundle exec bin/overcommit_branch
+            fi
+      - run_with_languages:
+          label: Run brakeman
+          command: |
+            bundle exec brakeman --no-pager --force
+      - run_with_languages:
+          label: Run Rubocop
+          command: |
+            bundle exec rubocop
+      - run_with_languages:
+          label: Ratchet rubocop quality
+          command: |
+            set -x
+            bundle exec rubocop --regenerate-todo --no-exclude-limit --auto-gen-only-exclude --no-auto-gen-timestamp
+            if [ -f .rubocop_todo.yml ]
+            then
+              git diff --exit-code .rubocop.yml
+              git diff --exit-code .rubocop_todo.yml
+            fi
+  update_dependencies:
+    description: "Update dependencies whose build may have triggered this build"
+    parameters:
+      gems:
+        type: string
+        description: "Space-separated list of gems to update"
+    steps:
+      - run_with_languages:
+          label: Update dependencies
+          command: |
+            set -x
+            for package in <<parameters.gems>>
+            do
+              REMOTE_VERSION=$(gem search "${package}" | \
+               grep "${package}" | cut -d\( -f2 | cut -d\) -f1)
+              BUNDLED_VERSION=$(bundle info "${package}" | \
+                 head -1 | cut -d\( -f2 | cut -d\) -f1)
+              if [ ${REMOTE_VERSION:?} == ${BUNDLED_VERSION:?} ]
+              then
+                continue
+              fi
 
+              bundle update --conservative "${package}"
+
+              BUNDLED_VERSION=$(bundle info "${package}" | \
+                 head -1 | cut -d\( -f2 | cut -d\) -f1)
+
+              if [ ${REMOTE_VERSION:?} == ${BUNDLED_VERSION:?} ]
+              then
+                continue
+              fi
+
+              echo "Waiting for ${package} v${REMOTE_VERSION} to be"\
+                   "available..."
+              sleep 20
+              bundle update "${package}"
+
+              BUNDLED_VERSION=$(bundle info "${package}" | \
+                 head -1 | cut -d\( -f2 | cut -d\) -f1)
+
+
+              if [ ${REMOTE_VERSION:?} != ${BUNDLED_VERSION:?} ]
+              then
+                >&2 echo "Manually upgrade to ${package}"\
+                         "v${REMOTE_VERSION}"
+                exit 1
+              fi
+            done
+            if [ -z "$(git status --porcelain Gemfile.lock)" ]
+            then
+              echo "No updates needed"
+              exit 0
+            fi
+            # Push any dependency gem updates
+            git config user.email 'vince@broz.cc'
+            git config user.name 'Vince Broz'
+            git status
+            # bundle exec so that overcommit is used from Gemfile for
+            # git hooks
+            #
+            # https://app.circleci.com/pipelines/github/apiology/"${package}"-rails/806/workflows/40fdf1ef-fa23-421b-a0f1-641ea0ed1641/jobs/1173
+            #
+            bundle exec overcommit --sign pre-commit
+            bundle exec git commit -m "Bump dependency releases" Gemfile.lock || true
+            OVERCOMMIT_DEBUG=1 bundle exec git push --set-upstream origin "${CIRCLE_BRANCH:?}"
+            echo "Avoiding double build after git push"
+            exit 1
 jobs:
-  overcommit:
+  quality:
     working_directory: ~/checkoff
     docker:
-      - image: apiology/circleci-ruby:latest
+      - image: cimg/base:current
     steps:
+      - quality
+  build:
+    working_directory: ~/checkoff
+    docker:
+      - image: cimg/base:current
+    steps:
+      - set_up_environment
       - when:
           condition:
             equal: [<< pipeline.git.branch >>, "main"]
           steps:
-            - overcommit
-      - unless:
-          condition:
-            equal: [<< pipeline.git.branch >>, "main"]
-          steps:
-            - run: echo "overcommit only runs on main branch"
-  build:
-    working_directory: ~/checkoff
-    docker:
-      - image: apiology/circleci-ruby:latest
-    steps:
-      - set_up_environment
+            - update_dependencies:
+                gems: checkoff
+      # - run_with_languages:
+      #     label: Typecheck
+      #     command: make citypecheck citypecoverage
+      - save_cache:
+          key: rbenv-v4-{{ checksum "Gemfile.lock" }}-{{ checksum ".ruby-version" }}
+          paths:
+            - "Gemfile.lock.installed"
+            - "types.installed"
+            - "vendor/bundle"
+            - "/home/circleci/.rbenv"
+            - ".yardoc"
+            - "/home/circleci/.cache/solargraph"
       - run_with_languages:
-          label: test
-          command: make citest cicoverage
+          label: Test
+          command: |
+            make citest cicoverage
     # This seemed to shave 5ish% of the build time off when added
     resource_class: large
   publish_gem:
     working_directory: ~/checkoff
     docker:
-      - image: apiology/circleci-ruby:latest
+      - image: cimg/base:current
     steps:
       - set_up_environment
-      - run: git config user.email 'vince@broz.cc'
-      - run: git config user.name 'Vince Broz'
       - run_with_languages:
           label: Make RubyGems release
           command: |
@@ -126,10 +246,16 @@ jobs:
             # Coax overcommit into working
             git config --global user.email "test@test.test"
             git config --global user.name "Test Test"
-            bundle exec overcommit --sign
-            bundle exec overcommit --sign pre-commit
-            bundle exec bump --commit-message ' [skip ci]' --tag --tag-prefix=v minor
+            # bump runs 'bundle' after excluding env vars, but doesn't
+            # use --conservative or exclude env vars when running 'git
+            # commit', which might need an updated gem.  This results
+            # in periodic unexpected failures, fixed by later caching
+            # :(
+            #
+            # Let's just use the system bundle path here
+            unset BUNDLE_PATH
             bundle install
+            bundle exec bump --commit-message ' [skip ci]' --tag --tag-prefix=v minor
             # bundle exec needed for overcommit hooks
             #
             # if this step fails, check that
@@ -151,10 +277,10 @@ workflows:
                 - main
     jobs:
       - build
-      - overcommit
-  overcommit:
+      - quality
+  quality:
     jobs:
-      - overcommit
+      - quality
   build:
     jobs:
       - build

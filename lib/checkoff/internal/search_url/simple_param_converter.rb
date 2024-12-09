@@ -169,6 +169,16 @@ module Checkoff
             raise "Teach me how to handle #{key} = #{values}"
           end
         end
+
+        # Handle 'searched_type' search url param
+        class SearchedType < SimpleParam
+          # @return [Array<String>]
+          def convert
+            return [] if single_value == 'task'
+
+            raise "Teach me how to handle #{key} = #{values}"
+          end
+        end
       end
 
       # Convert simple parameters - ones where the param name itself
@@ -205,6 +215,7 @@ module Checkoff
           'subtask' => SimpleParam::Subtask,
           'sort' => SimpleParam::Sort,
           'milestone' => SimpleParam::Milestone,
+          'searched_type' => SimpleParam::SearchedType,
         }.freeze
 
         # https://developers.asana.com/docs/search-tasks-in-a-workspace
