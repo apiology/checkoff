@@ -17,7 +17,7 @@ help:
 
 default: clean-typecoverage typecheck typecoverage clean-coverage test coverage quality ## run default typechecking, tests and quality
 
-build-typecheck: types.installed ## Fetch information that type checking depends on
+build-typecheck: Gemfile.lock.installed types.installed ## Fetch information that type checking depends on
 
 types.installed: Gemfile.lock Gemfile.lock.installed ## Install Ruby dependencies
 	bundle exec yard gems 2>&1 || bundle exec yard gems --safe 2>&1 || bundle exec yard gems 2>&1
@@ -51,14 +51,12 @@ requirements_dev.txt.installed: requirements_dev.txt
 
 pip_install: requirements_dev.txt.installed ## Install Python dependencies
 
-# bundle install doesn't get run here so that we can catch it below in
-# fresh-checkout and fresh-rbenv cases
 Gemfile.lock: Gemfile checkoff.gemspec
+	bundle install
+	touch Gemfile.lock.installed
 
 # Ensure any Gemfile.lock changes ensure a bundle is installed.
 Gemfile.lock.installed: Gemfile.lock
-	bundle install
-	touch Gemfile.lock.installed
 
 bundle_install: Gemfile.lock.installed ## Install Ruby dependencies
 
