@@ -35,9 +35,10 @@ clean-typecheck: ## Refresh information that type checking depends on
 typecheck: build-typecheck ## validate types in code and configuration
 	bin/tapioca dsl --verify
 	bundle exec srb tc
-	bundle exec solargraph typecheck --level strong
+	bin/overcommit_branch # ideally this would just run solargraph
 
 citypecheck: typecheck ## Run type check from CircleCI
+	bundle exec solargraph typecheck --level strong
 
 typecoverage: typecheck ## Run type checking and then ratchet coverage in metrics/
 
