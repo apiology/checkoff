@@ -29,6 +29,10 @@ Metrics/BlockLength:
 Metrics/ParameterLists:
   CountKeywordArgs: false
 
+Naming/FileName:
+  Exclude:
+    - 'lib/checkoff.rb'
+
 Naming/HeredocDelimiterNaming:
   Enabled: false
 
