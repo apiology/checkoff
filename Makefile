@@ -57,6 +57,7 @@ Gemfile.lock: Gemfile checkoff.gemspec
 
 # Ensure any Gemfile.lock changes ensure a bundle is installed.
 Gemfile.lock.installed: Gemfile.lock
+	bundle install
 	touch Gemfile.lock.installed
 
 bundle_install: Gemfile.lock.installed ## Install Ruby dependencies
