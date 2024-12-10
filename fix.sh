@@ -263,6 +263,7 @@ ensure_bundle() {
       bundle lock --add-platform "${platform}"
     fi
   done
+  ls -l
   make bundle_install
 }
 

@@ -15,13 +15,16 @@ export PRINT_HELP_PYSCRIPT
 help:
 	@python -c "$$PRINT_HELP_PYSCRIPT" < $(MAKEFILE_LIST)
 
-default: clean-coverage test coverage clean-typecoverage typecheck typecoverage quality ## run default typechecking, tests and quality
+default: clean-typecoverage typecheck typecoverage clean-coverage test coverage quality ## run default typechecking, tests and quality
 
-build-typecheck: types.installed ## Fetch information that type checking depends on
+build-typecheck: Gemfile.lock.installed types.installed ## Fetch information that type checking depends on
 
 types.installed: Gemfile.lock Gemfile.lock.installed ## Install Ruby dependencies
 	bundle exec yard gems 2>&1 || bundle exec yard gems --safe 2>&1 || bundle exec yard gems 2>&1
 	# bundle exec solargraph scan 2>&1
+	bin/tapioca gems
+	bin/tapioca annotations
+	bin/tapioca dsl
 	touch types.installed
 
 clean-typecheck: ## Refresh information that type checking depends on
@@ -29,10 +32,13 @@ clean-typecheck: ## Refresh information that type checking depends on
 	rm -fr .yardoc/
 	echo all clear
 
-typecheck: ## validate types in code and configuration
-	bundle exec solargraph typecheck --level strong
+typecheck: build-typecheck ## validate types in code and configuration
+	bin/tapioca dsl --verify
+	bundle exec srb tc
+	bin/overcommit_branch # ideally this would just run solargraph
 
 citypecheck: typecheck ## Run type check from CircleCI
+	bundle exec solargraph typecheck --level strong
 
 typecoverage: typecheck ## Run type checking and then ratchet coverage in metrics/
 
@@ -46,9 +52,8 @@ requirements_dev.txt.installed: requirements_dev.txt
 
 pip_install: requirements_dev.txt.installed ## Install Python dependencies
 
-# bundle install doesn't get run here so that we can catch it below in
-# fresh-checkout and fresh-rbenv cases
 Gemfile.lock: Gemfile checkoff.gemspec
+	bundle install
 
 # Ensure any Gemfile.lock changes ensure a bundle is installed.
 Gemfile.lock.installed: Gemfile.lock
@@ -65,7 +70,7 @@ clean: clear_metrics ## remove all built artifacts
 citest: test ## Run unit tests from CircleCI
 
 overcommit: ## run precommit quality checks
-	bundle exec overcommit --run
+	bin/overcommit_branch
 
 quality: overcommit ## run precommit quality checks
 
@@ -104,6 +109,7 @@ update_from_cookiecutter: ## Bring in changes from template project used to crea
 	git checkout --ours Gemfile.lock || true
 	# update frequently security-flagged gems while we're here
 	bundle update --conservative nokogiri rack rexml yard || true
+	make build-typecheck
 	git add Gemfile.lock || true
 	bundle install || true
 	bundle exec overcommit --install || true

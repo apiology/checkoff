@@ -48,9 +48,8 @@ commands:
             done
       - restore_cache:
           keys:
-            - rbenv-v4-{{ checksum "Gemfile.lock" }}-
-            - rbenv-v4-
-            - rbenv-
+            - rbenv-v5-{{ checksum "Gemfile.lock" }}-
+            - rbenv-v5-
       - restore_cache:
           keys:
             - pyenv-v2-{{ checksum "requirements_dev.txt" }}-
@@ -218,7 +217,7 @@ jobs:
       #     label: Typecheck
       #     command: make citypecheck citypecoverage
       - save_cache:
-          key: rbenv-v4-{{ checksum "Gemfile.lock" }}-{{ checksum ".ruby-version" }}
+          key: rbenv-v5-{{ checksum "Gemfile.lock" }}-{{ checksum ".ruby-version" }}
           paths:
             - "Gemfile.lock.installed"
             - "types.installed"

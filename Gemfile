@@ -17,6 +17,7 @@ group :development, :test do
   # ensure version with branch coverage
   gem 'simplecov', ['>=0.18.0']
   gem 'simplecov-lcov'
+  gem 'tapioca', require: false
   gem 'undercover'
   gem 'webmock'
 end

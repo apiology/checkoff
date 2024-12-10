@@ -6,12 +6,13 @@
 # Note that changes in the inspected code, or installation of new
 # versions of RuboCop, may require this file to be generated again.
 
-# Offense count: 20
+# Offense count: 21
 # Configuration parameters: AllowedMethods, AllowedPatterns, CountRepeatedAttributes, Max.
 Metrics/AbcSize:
   Exclude:
     - 'lib/checkoff/internal/asana_event_filter.rb'
     - 'lib/checkoff/task_searches.rb'
+    - 'lib/checkoff/tasks.rb'
     - 'lib/checkoff/timelines.rb'
     - 'test/unit/test_portfolios.rb'
     - 'test/unit/test_task_selectors.rb'
