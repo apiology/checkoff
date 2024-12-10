@@ -14,6 +14,7 @@ group :development, :test do
   gem 'mocha', ['>= 2']
   # ensure recent definitions
   gem 'rbs'
+  gem 'sord'
   # ensure version with branch coverage
   gem 'simplecov', ['>=0.18.0']
   gem 'simplecov-lcov'
