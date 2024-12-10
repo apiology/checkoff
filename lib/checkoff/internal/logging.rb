@@ -15,35 +15,35 @@ module Logging
                 end
   end
 
-  # @param message [String,nil]
+  # @param message [Object,nil]
   #
   # @return [void]
   def error(message = nil, &block)
     logger.error(message, &block)
   end
 
-  # @param message [String,nil]
+  # @param message [Object,nil]
   #
   # @return [void]
   def warn(message = nil, &block)
     logger.warn(message, &block)
   end
 
-  # @param message [String,nil]
+  # @param message [Object,nil]
   #
   # @return [void]
   def info(message = nil, &block)
     logger.info(message, &block)
   end
 
-  # @param message [String,nil]
+  # @param message [Object,nil]
   #
   # @return [void]
   def debug(message = nil, &block)
     logger.debug(message, &block)
   end
 
-  # @param message [String,nil]
+  # @param message [Object,nil]
   #
   # @return [void]
   def finer(message = nil, &block)
