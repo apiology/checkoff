@@ -18,6 +18,8 @@ module Checkoff
     LONG_CACHE_TIME = MINUTE * 15
     SHORT_CACHE_TIME = MINUTE
 
+    # @param config [Hash]
+    # @param asana_client_class [Class<Asana::Client>]
     def initialize(config: Checkoff::Internal::ConfigLoader.load(:asana),
                    asana_client_class: Asana::Client)
       @config = config
@@ -33,13 +35,10 @@ module Checkoff
       end
     end
 
-    private
-
-    attr_reader :workspaces
-
     # bundle exec ./clients.rb
     # :nocov:
     class << self
+      # @return [void]
       def run
         clients = Checkoff::Clients.new
         client = clients.client

@@ -41,10 +41,10 @@ module Checkoff
 
       params = build_params(options)
 
-      Asana::Collection.new(parse(client.get("/tags/#{tag.gid}/tasks",
-                                             params: params, options: options[:options])),
-                            type: Asana::Resources::Task,
-                            client: client)
+      Asana::Resources::Collection.new(parse(client.get("/tags/#{tag.gid}/tasks",
+                                                        params: params, options: options[:options])),
+                                       type: Asana::Resources::Task,
+                                       client: client)
     end
 
     def tag_or_raise(workspace_name, tag_name)

@@ -222,7 +222,7 @@ module Checkoff
 
   # Provide ability for CLI to pull Asana items
   class CheckoffGLIApp
-    extend GLI::App
+    extend ::GLI::App
 
     program_desc 'Command-line client for Asana (unofficial)'
 

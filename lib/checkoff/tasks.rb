@@ -77,7 +77,7 @@ module Checkoff
     # * start at is before now
     #
     # @param task [Asana::Resources::Task]
-    # @param period [Symbol<:now_or_before,:this_week>]
+    # @param period [Symbol] - :now_or_before or :this_week
     # @param ignore_dependencies [Boolean]
     def task_ready?(task, period: :now_or_before, ignore_dependencies: false)
       return false if !ignore_dependencies && incomplete_dependencies?(task)
@@ -87,7 +87,7 @@ module Checkoff
 
     # @param task [Asana::Resources::Task]
     # @param field_name [Symbol,Array]
-    # @param period [Symbol<:now_or_before,:this_week>,Array] See Checkoff::Timing#in_period?_
+    # @param period [Symbol,Array] :now_or_before, :this_week - See Checkoff::Timing#in_period?_
     def in_period?(task, field_name, period)
       # @type [Date,Time,nil]
       task_date_or_time = task_timing.date_or_time_field_by_name(task, field_name)
@@ -123,6 +123,7 @@ module Checkoff
              only_uncompleted: true,
              extra_fields: [])
       thread_local = Checkoff::Internal::ThreadLocal.new
+      # @type [String]
       task_gid = thread_local.with_thread_local_variable(:suppress_asana_webhook_watch_creation,
                                                          true) do
         gid_for_task(workspace_name, project_name, section_name, task_name)
@@ -161,7 +162,6 @@ module Checkoff
     def task_by_gid(task_gid,
                     extra_fields: [],
                     only_uncompleted: true)
-      # @type [Hash{Symbol => Object}]
       all_options = projects.task_options(extra_fields: extra_fields,
                                           only_uncompleted: only_uncompleted)
       # @type [Hash]
@@ -223,17 +223,17 @@ module Checkoff
         parent_task_gid = parent_task_info.fetch('gid')
 
         parent_task = task_by_gid(parent_task_gid, only_uncompleted: false)
-        parent_task.completed_at.nil?
+        T.must(parent_task).completed_at.nil?
       end
     end
 
     # @param task [Asana::Resources::Task]
     # @param extra_task_fields [Array<String>]
     #
-    # @return [Array<Hash>]
+    # @return [Array<Asana::Resources::Task>]
     def all_dependent_tasks(task, extra_task_fields: [])
-      # @type [Array<Hash>]
-      dependent_tasks = T.let([], T::Array[Hash])
+      # @type [Array<Asana::Resources::Task>]
+      dependent_tasks = T.let([], T::Array[Asana::Resources::Task])
       # See note above - same applies as does in @dependencies
       #
       # @type [Array<Hash>]
@@ -249,7 +249,7 @@ module Checkoff
         dependent_task = task_by_gid(dependent_task_hash.fetch('gid'),
                                      only_uncompleted: true,
                                      extra_fields: ['dependents'] + extra_task_fields)
-        debug { "#{task.name} has dependent task #{dependent_task.name}" }
+        debug { "#{task.name} has dependent task #{T.must(dependent_task).name}" }
         next if dependent_task.nil?
 
         dependent_tasks << dependent_task
@@ -343,7 +343,7 @@ module Checkoff
 
     # @param workspace_name [String]
     # @param project_name [String, Symbol]
-    # @param section_name [String, nil, Symbol<:unspecified>]
+    # @param section_name [String, nil, Symbol] - :unspecified
     # @param only_uncompleted [Boolean]
     # @param extra_fields [Array<String>]
     #

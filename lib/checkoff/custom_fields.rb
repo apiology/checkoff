@@ -143,15 +143,18 @@ module Checkoff
 
     private
 
+    # @param custom_field [Hash{String => [Hash,Array<Hash>]}]
+    #
     # @sg-ignore
-    # @param custom_field [Hash]
-    # @return [Array<String>]
+    # @return [Array<Hash>]
     def resource_custom_field_enum_values(custom_field)
       resource_subtype = custom_field.fetch('resource_subtype')
       case resource_subtype
       when 'enum'
+        # @type [Array<Hash>]
         [custom_field.fetch('enum_value')]
       when 'multi_enum'
+        # @type [Array<Hash>]
         custom_field.fetch('multi_enum_values')
       else
         raise "Teach me how to handle resource_subtype #{resource_subtype}"
@@ -159,7 +162,7 @@ module Checkoff
     end
 
     # @param custom_field [Hash]
-    # @param enum_value [Object, nil]
+    # @param enum_value [Hash{String => String}, nil]
     # @return [Array<String>]
     def find_gids(custom_field, enum_value)
       if enum_value.nil?

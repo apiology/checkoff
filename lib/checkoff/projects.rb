@@ -66,7 +66,7 @@ module Checkoff
     # @param extra_fields [Array<String>]
     # @param [Boolean] only_uncompleted
     #
-    # @return [Hash<Symbol, Object>]
+    # @return [Hash{Symbol => Object}]
     def task_options(extra_fields: [], only_uncompleted: false)
       options = {
         per_page: 100,
@@ -96,7 +96,7 @@ module Checkoff
 
     # pulls an Asana API project class given a name
     # @param [String] workspace_name
-    # @param [String,Symbol<:my_tasks>] project_name
+    # @param [String,Symbol] project_name - :my_tasks or a project name
     # @param [Array<String>] extra_fields
     #
     # @return [Asana::Resources::Project, nil]
@@ -115,7 +115,7 @@ module Checkoff
     cache_method :project, REALLY_LONG_CACHE_TIME
 
     # @param workspace_name [String]
-    # @param project_name [String,Symbol<:my_tasks>]
+    # @param project_name [String,Symbol] - :my_tasks or a project name
     # @param [Array<String>] extra_fields
     #
     # @return [Asana::Resources::Project]
@@ -195,7 +195,7 @@ module Checkoff
     cache_method :projects_by_workspace_name, REALLY_LONG_CACHE_TIME
 
     # @param project_obj [Asana::Resources::Project]
-    # @param project [String, Symbol<:not_specified, :my_tasks>]
+    # @param project [String, Symbol] - :not_specified, :my_tasks or a project name
     #
     # @return [Hash]
     def project_to_h(project_obj, project: :not_specified)
@@ -210,14 +210,14 @@ module Checkoff
     # date is today or in the past.
     #
     # @param project [Asana::Resources::Project]
-    # @param period [Symbol<:now_or_before,:this_week>]
+    # @param period [Symbol,Array] See Checkoff::Timing#in_period? - :now_or_before,:this_week
     def project_ready?(project, period: :now_or_before)
       in_period?(project, :ready, period)
     end
 
     # @param project [Asana::Resources::Project]
     # @param field_name [Symbol,Array]
-    # @param period [Symbol<:now_or_before,:this_week>,Array] See Checkoff::Timing#in_period?
+    # @param period [Symbol,Array] See Checkoff::Timing#in_period? - :now_or_before,:this_week
     def in_period?(project, field_name, period)
       # @type [Date,Time,nil]
       project_date = project_timing.date_or_time_field_by_name(project, field_name)

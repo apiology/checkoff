@@ -82,7 +82,7 @@ module Checkoff
     #
     #   https://developers.asana.com/reference/searchtasksforworkspace
     #
-    # @param [Hash<Symbol, Object>] api_params
+    # @param [Hash<String, Object>] api_params
     # @param [String] workspace_gid
     # @param [Array<String>] extra_fields
     # @param [Array] task_selector
@@ -120,7 +120,7 @@ module Checkoff
     #
     #   https://developers.asana.com/reference/searchtasksforworkspace
     #
-    # @param [Hash<Symbol, Object>] api_params
+    # @param [Hash<String, Object>] api_params
     # @param [String] workspace_gid
     # @param [Array<String>] extra_fields
     #
@@ -146,7 +146,7 @@ module Checkoff
     #     see sort_by field at
     #     https://developers.asana.com/reference/searchtasksforworkspace
     #
-    # @param [Hash<Symbol, Object>] api_params
+    # @param [Hash<String, Object>] api_params
     # @param [String] workspace_gid
     # @param [String] url
     # @param [Array<String>] extra_fields
@@ -190,7 +190,7 @@ module Checkoff
     end
 
     # @param [Array<String>] extra_fields
-    # @return [Hash<Symbol, Object>]
+    # @return [Hash<String, Object>]
     def calculate_api_options(extra_fields)
       # @type [Hash<Symbol, Object>]
       all_options = projects.task_options(extra_fields: ['custom_fields'] + extra_fields)
