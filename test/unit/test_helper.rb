@@ -1,3 +1,4 @@
+# typed: false
 # frozen_string_literal: true
 
 # neither ruby-asana nor gli gems are $VERBOSE-clean

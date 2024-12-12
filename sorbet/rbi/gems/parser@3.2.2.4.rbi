@@ -7,7 +7,7 @@
 
 # @api public
 #
-# source://parser//lib/parser.rb#19
+# source://parser//lib/parser/current.rb#3
 module Parser
   class << self
     private

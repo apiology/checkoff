@@ -1,3 +1,4 @@
+# typed: true
 # frozen_string_literal: true
 
 # double to inject cache_method, pretending to be cache_method gem
