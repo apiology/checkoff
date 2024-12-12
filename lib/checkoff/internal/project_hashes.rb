@@ -9,7 +9,7 @@ module Checkoff
       def initialize(_deps = {}); end
 
       # @param project_obj [Asana::Resources::Project]
-      # @param project [String, Symbol<:not_specified, :my_tasks>]
+      # @param project [String, Symbol] - :not_specified, :my_tasks
       #
       # @return [Hash]
       def project_to_h(project_obj, project: :not_specified)

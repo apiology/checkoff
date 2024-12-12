@@ -1,34 +1,8 @@
+# typed: strict
 # frozen_string_literal: true
 #
 # rubocop:disable Layout/LineLength
 # @!parse
-#   module OpenSSL
-#     module SSL
-#       # @type [Integer]
-#       VERIFY_PEER = 1
-#       # @type [Integer]
-#       VERIFY_NONE = 0
-#     end
-#   end
-#   class Time
-#     class << self
-#       # @param time [String]
-#       # @return [Time]
-#       def parse(time); end
-#     end
-#     # https://ruby-doc.org/3.2.2/exts/date/Time.html#method-i-to_date#
-#     # @return [Date]
-#     def to_date; end
-#   end
-#   class Date
-#     class << self
-#       # @param date [String]
-#       # @return [Date]
-#       def parse(date); end
-#       # @return [Date]
-#       def today; end
-#     end
-#   end
 #   module Asana
 #     class Client
 #       # @return [Asana::ProxiedResourceClasses::Task]
@@ -48,7 +22,6 @@
 #       # @return [Asana::ProxiedResourceClasses::CustomField]
 #       def custom_fields; end
 #     end
-#     class Collection < Asana::Resources::Collection; end
 #     module Resources
 #       # https://developers.asana.com/reference/gettask
 #       class Task
@@ -69,6 +42,10 @@
 #         # @return [Array<Hash{String => Hash{String => String}}>]
 #         def memberships; end
 #         class << self
+#           # @param client [Asana::Client]
+#           # @param assignee [String]
+#           # @param workspace [String]
+#           # @param name [String]
 #           # @return [Asana::Resources::Task]
 #           def create(client, assignee:, workspace:, name:); end
 #         end
@@ -84,18 +61,22 @@
 #         def due_date; end
 #       end
 #       class Portfolio
+#         # @param options [Hash] the request I/O options
 #         # @return [Enumerable<Asana::Resources::Project>]
 #         def get_items(options = {}); end
 #       end
 #     end
 #     module Errors
-#       class NotFound < StandardError; end
+#       class NotFound < ::Asana::Errors::APIError; end
 #     end
 #     module Resources
 #       class Workspace
 #         # @return [String, nil]
 #         def html_notes; end
 #         class << self
+#           # @param client [Asana::Client]
+#           # @param id [String]
+#           # @param options [Hash]
 #           # @return [Asana::Resources::Workspace]
 #           def find_by_id(client, id, options: {}); end
 #         end
@@ -136,9 +117,9 @@
 #         # @param assignee [String] The assignee to filter tasks on.
 #         # @param workspace [String] The workspace or organization to filter tasks on.
 #         # @param project [String] The project to filter tasks on.
-#         # @param section [Gid] The section to filter tasks on.
-#         # @param tag [Gid] The tag to filter tasks on.
-#         # @param user_task_list [Gid] The user task list to filter tasks on.
+#         # @param section [String] The section to filter tasks on.
+#         # @param tag [String] The tag to filter tasks on.
+#         # @param user_task_list [String] The user task list to filter tasks on.
 #         # @param completed_since [String] Only return tasks that are either incomplete or that have been
 #         # completed since this time.
 #         #
@@ -164,7 +145,14 @@
 #         def find_all(assignee: nil, workspace: nil, project: nil, section: nil,
 #                      tag: nil, user_task_list: nil, completed_since: nil,
 #                      modified_since: nil, per_page: 20, options: {}); end
-#         # @param section [Asana::Resources::section]
+#         # @param assignee [String]
+#         # @param project [String]
+#         # @param section [String]
+#         # @param workspace [String]
+#         # @param completed_since [Time]
+#         # @param per_page [Integer]
+#         # @param modified_since [Time]
+#         # @param section [Asana::Resources::Section]
 #         # @param options [Hash] the request I/O options.
 #         # @return [Enumerable<Asana::Resources::Task>]
 #         def get_tasks(assignee: nil,
@@ -182,6 +170,7 @@
 #       end
 #       class Section
 #         # @param project_gid [String]
+#         # @param options [Hash]
 #         # @return [Enumerable<Asana::Resources::Section>]
 #         def get_sections_for_project(project_gid:, options: {}); end
 #         # Returns the complete record for a single section.
@@ -194,13 +183,14 @@
 #       class Project
 #         # Returns the compact project records for all projects in the workspace.
 #         #
-#         # @param workspace [Strin] The workspace or organization to find projects in.
+#         # @param workspace [String] The workspace or organization to find projects in.
 #         # @param is_template [Boolean] **Note: This parameter can only be included if a team is also defined, or the workspace is not an organization**
 #         # Filters results to include only template projects.
 #         #
 #         # @param archived [Boolean] Only return projects whose `archived` field takes on the value of
 #         # this parameter.
 #         #
+#         # @param client [Asana::Client]
 #         # @param per_page [Integer] the number of records to fetch per page.
 #         # @param options [Hash] the request I/O options.
 #         # @return [Enumerable<Asana::Resources::Project>]
@@ -217,14 +207,14 @@
 #         # @param workspace [String]  (required) The workspace in which to get the user task list.
 #         # @param options [Hash] the request I/O options
 #         # @return [Asana::Resources::UserTaskList]
-#         def get_user_task_list_for_user(client, user_gid:,
+#         def get_user_task_list_for_user(user_gid:,
 #             workspace: nil, options: {}); end
 #       end
 #       class Portfolio
 #         # Returns a list of the portfolios in compact representation that are owned
 #         # by the current API user.
 #         #
-#         # @param workspace [Gid] The workspace or organization to filter portfolios on.
+#         # @param workspace [String] The workspace or organization to filter portfolios on.
 #         # @param owner [String] The user who owns the portfolio. Currently, API users can only get a
 #         # list of portfolios that they themselves own.
 #         #
@@ -235,11 +225,11 @@
 #         def find_all(workspace: required("workspace"), owner: required("owner"), per_page: 20, options: {}); end
 #         # Returns the complete record for a single portfolio.
 #         #
-#         # @param id [Gid] The portfolio to get.
+#         # @param id [String] The portfolio to get.
 #         # @param options [Hash] the request I/O options.
 #
 #         # @return [Asana::Resources::Portfolio,nil]
-#         def find_by_id(client, id, options: {}); end
+#         def find_by_id(id, options: {}); end
 #         # Get portfolio items
 #         #
 #         # @param portfolio_gid [String]  (required) Globally unique identifier for the portfolio.
@@ -257,5 +247,8 @@
 #         def me(options: {}); end
 #       end
 #     end
+#   end
+#   module Asana
+#     include ::Asana::Resources
 #   end
 # rubocop:enable Layout/LineLength

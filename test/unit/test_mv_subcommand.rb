@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+# typed: ignore
 
 require 'checkoff/cli'
 require_relative 'class_test'
@@ -284,6 +285,6 @@ class TestMvSubcommand < ClassTest
   end
 
   def class_under_test
-    Checkoff::MvSubcommand
+    ::Checkoff::MvSubcommand
   end
 end

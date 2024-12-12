@@ -154,7 +154,7 @@ module Checkoff
         end
 
         # @param task [Asana::Resources::Task]
-        # @param period [Symbol<:now_or_before,:this_week>]
+        # @param period [Symbol] - :now_or_before or :this_week
         # @param ignore_dependencies [Boolean]
         # @return [Boolean]
         # rubocop:disable Style/OptionalBooleanParameter
