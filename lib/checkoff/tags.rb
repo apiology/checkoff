@@ -47,6 +47,7 @@ module Checkoff
                                        client: client)
     end
 
+    # @return [Asana::Resources::Tag]
     def tag_or_raise(workspace_name, tag_name)
       tag = tag(workspace_name, tag_name)
       raise "Could not find tag #{tag_name} under workspace #{workspace_name}." if tag.nil?
@@ -55,6 +56,7 @@ module Checkoff
     end
     cache_method :tag_or_raise, LONG_CACHE_TIME
 
+    # @return [Asana::Resources::Tag,nil]
     def tag(workspace_name, tag_name)
       workspace = workspaces.workspace_or_raise(workspace_name)
       tags = client.tags.get_tags_for_workspace(workspace_gid: workspace.gid)

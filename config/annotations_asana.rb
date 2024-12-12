@@ -42,6 +42,10 @@
 #         # @return [Array<Hash{String => Hash{String => String}}>]
 #         def memberships; end
 #         class << self
+#           # @param client [Asana::Client]
+#           # @param assignee [String]
+#           # @param workspace [String]
+#           # @param name [String]
 #           # @return [Asana::Resources::Task]
 #           def create(client, assignee:, workspace:, name:); end
 #         end
@@ -57,6 +61,7 @@
 #         def due_date; end
 #       end
 #       class Portfolio
+#         # @param options [Hash] the request I/O options
 #         # @return [Enumerable<Asana::Resources::Project>]
 #         def get_items(options = {}); end
 #       end
@@ -69,6 +74,9 @@
 #         # @return [String, nil]
 #         def html_notes; end
 #         class << self
+#           # @param client [Asana::Client]
+#           # @param id [String]
+#           # @param options [Hash]
 #           # @return [Asana::Resources::Workspace]
 #           def find_by_id(client, id, options: {}); end
 #         end
@@ -109,9 +117,9 @@
 #         # @param assignee [String] The assignee to filter tasks on.
 #         # @param workspace [String] The workspace or organization to filter tasks on.
 #         # @param project [String] The project to filter tasks on.
-#         # @param section [Gid] The section to filter tasks on.
-#         # @param tag [Gid] The tag to filter tasks on.
-#         # @param user_task_list [Gid] The user task list to filter tasks on.
+#         # @param section [String] The section to filter tasks on.
+#         # @param tag [String] The tag to filter tasks on.
+#         # @param user_task_list [String] The user task list to filter tasks on.
 #         # @param completed_since [String] Only return tasks that are either incomplete or that have been
 #         # completed since this time.
 #         #
@@ -137,6 +145,13 @@
 #         def find_all(assignee: nil, workspace: nil, project: nil, section: nil,
 #                      tag: nil, user_task_list: nil, completed_since: nil,
 #                      modified_since: nil, per_page: 20, options: {}); end
+#         # @param assignee [String]
+#         # @param project [String]
+#         # @param section [String]
+#         # @param workspace [String]
+#         # @param completed_since [Time]
+#         # @param per_page [Integer]
+#         # @param modified_since [Time]
 #         # @param section [Asana::Resources::Section]
 #         # @param options [Hash] the request I/O options.
 #         # @return [Enumerable<Asana::Resources::Task>]
@@ -155,6 +170,7 @@
 #       end
 #       class Section
 #         # @param project_gid [String]
+#         # @param options [Hash]
 #         # @return [Enumerable<Asana::Resources::Section>]
 #         def get_sections_for_project(project_gid:, options: {}); end
 #         # Returns the complete record for a single section.
@@ -174,6 +190,7 @@
 #         # @param archived [Boolean] Only return projects whose `archived` field takes on the value of
 #         # this parameter.
 #         #
+#         # @param client [Asana::Client]
 #         # @param per_page [Integer] the number of records to fetch per page.
 #         # @param options [Hash] the request I/O options.
 #         # @return [Enumerable<Asana::Resources::Project>]
