@@ -1,3 +1,4 @@
+# typed: false
 # frozen_string_literal: true
 
 module Checkoff
@@ -9,7 +10,7 @@ module Checkoff
       return true if selector.empty?
 
       function_evaluators.each do |evaluator_class|
-        # @type [SelectorClasses::FunctionEvaluator]
+        # @type [Checkoff::SelectorClasses::FunctionEvaluator]
         # @sg-ignore
         evaluator = evaluator_class.new(selector: selector,
                                         **initializer_kwargs)
@@ -29,14 +30,14 @@ module Checkoff
       {}
     end
 
-    # @return [Array<Class<FunctionEvaluator>>]
+    # @return [Array<Class<Checkoff::SelectorClasses::FunctionEvaluator>>]
     # @sg-ignore
     def function_evaluators
       raise 'Implement me!'
     end
 
     # @param selector [Array]
-    # @param evaluator [SelectorClasses::FunctionEvaluator]
+    # @param evaluator [Checkoff::SelectorClasses::FunctionEvaluator]
     # @return [Array]
     def evaluate_args(selector, evaluator)
       return [] unless selector.is_a?(Array)
@@ -51,7 +52,7 @@ module Checkoff
     end
 
     # @param selector [Array]
-    # @param evaluator [SelectorClasses::FunctionEvaluator]
+    # @param evaluator [Checkoff::SelectorClasses::FunctionEvaluator]
     # @return [Boolean, Object, nil]
     def try_this_evaluator(selector, evaluator)
       # if selector is an array

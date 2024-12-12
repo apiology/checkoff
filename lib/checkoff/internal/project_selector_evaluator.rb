@@ -1,3 +1,4 @@
+# typed: true
 # frozen_string_literal: true
 
 require_relative 'selector_classes/common'
@@ -37,7 +38,7 @@ module Checkoff
 
     FUNCTION_EVALUTORS = (COMMON_FUNCTION_EVALUATORS + PROJECT_FUNCTION_EVALUATORS).freeze
 
-    # @return [Array<Class<ProjectSelectorClasses::FunctionEvaluator>>]
+    # @return [Array<Class<Checkoff::SelectorClasses::Project::FunctionEvaluator>>]
     def function_evaluators
       FUNCTION_EVALUTORS
     end

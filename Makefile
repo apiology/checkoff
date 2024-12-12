@@ -17,20 +17,38 @@ help:
 
 default: clean-typecoverage typecheck typecoverage clean-coverage test coverage quality ## run default typechecking, tests and quality
 
-build-typecheck: Gemfile.lock.installed types.installed ## Fetch information that type checking depends on
+config/defs.rbi: .yardoc/complete ## Generate RBS files
+	rm -f config/defs.rbi
+	bundle exec sord --replace-errors-with-untyped --no-regenerate config/defs.rbi
 
-types.installed: Gemfile.lock Gemfile.lock.installed ## Install Ruby dependencies
+build-typecheck: Gemfile.lock.installed types.installed config/defs.rbi ## Fetch information that type checking depends on
+
+types.installed: tapioca.installed Gemfile.lock Gemfile.lock.installed ## Install Ruby dependencies
 	bundle exec yard gems 2>&1 || bundle exec yard gems --safe 2>&1 || bundle exec yard gems 2>&1
 	# bundle exec solargraph scan 2>&1
+	touch types.installed
+
+tapioca.installed: Gemfile.lock.installed ## Install Tapioca-generated type information
 	bin/tapioca gems
 	bin/tapioca annotations
 	bin/tapioca dsl
-	touch types.installed
+	bin/tapioca todo
+	touch tapioca.installed
 
-clean-typecheck: ## Refresh information that type checking depends on
-	bundle exec solargraph clear
-	rm -fr .yardoc/
+SOURCE_FILES = $(shell find lib -name '*.rb' -type f)
+
+.yardoc/complete: $(wildcard config/annotations_*.rb) $(SOURCE_FILES) ## Generate YARD documentation
+	bin/yard -c
+
+clean-typecheck: ## Refresh the easily-regenerated information that type checking depends on
+	bin/solargraph clear
+	rm -fr .yardoc/ config/defs.rbi types.installed
 	echo all clear
+
+realclean-typecheck: clean-typecheck ## Remove all type checking artifacts
+	rm tapioca.installed
+
+
 
 typecheck: build-typecheck ## validate types in code and configuration
 	bin/tapioca dsl --verify

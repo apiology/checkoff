@@ -1,3 +1,4 @@
+# typed: false
 # frozen_string_literal: true
 
 require_relative '../function_evaluator'

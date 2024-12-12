@@ -85,6 +85,7 @@ PreCommit:
       - ".markdownlint_style.rb"
   Sorbet:
     enabled: true
+    problem_on_unmodified_line: warn
   Punchlist:
     command: ['bundle', 'exec', 'punchlist']
     enabled: true

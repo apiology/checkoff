@@ -190,11 +190,10 @@
 #         # @param archived [Boolean] Only return projects whose `archived` field takes on the value of
 #         # this parameter.
 #         #
-#         # @param client [Asana::Client]
 #         # @param per_page [Integer] the number of records to fetch per page.
 #         # @param options [Hash] the request I/O options.
 #         # @return [Enumerable<Asana::Resources::Project>]
-#         def find_by_workspace(client, workspace: required("workspace"), is_template: nil, archived: nil, per_page: 20, options: {}); end
+#         def find_by_workspace(workspace: required("workspace"), is_template: nil, archived: nil, per_page: 20, options: {}); end
 #         # Returns the complete project record for a single project.
 #         #
 #         # @param id [String] The project to get.
