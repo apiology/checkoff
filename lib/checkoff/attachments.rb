@@ -56,7 +56,7 @@ module Checkoff
     # @param resource [Asana::Resources::Resource]
     # @param attachment_name [String,nil]
     # @param just_the_url [Boolean]
-    # @param verify_mode [Integer<OpenSSL::SSL::VERIFY_NONE,OpenSSL::SSL::VERIFY_PEER>]
+    # @param verify_mode [Integer] - e.g., OpenSSL::SSL::VERIFY_NONE or OpenSSL::SSL::VERIFY_PEER
     #
     # @return [Asana::Resources::Attachment]
     def create_attachment_from_url!(url,
@@ -79,7 +79,7 @@ module Checkoff
     # not succesful
     #
     # @param uri [URI]
-    # @param verify_mode [OpenSSL::SSL::VERIFY_NONE,OpenSSL::SSL::VERIFY_PEER]
+    # @param verify_mode [Integer] - e.g., OpenSSL::SSL::VERIFY_NONE,OpenSSL::SSL::VERIFY_PEER
     #
     # @return [Object]
     # @sg-ignore
@@ -121,7 +121,7 @@ module Checkoff
     # @param url [String]
     # @param resource [Asana::Resources::Resource]
     # @param attachment_name [String,nil]
-    # @param verify_mode [Integer<OpenSSL::SSL::VERIFY_NONE,OpenSSL::SSL::VERIFY_PEER>]
+    # @param verify_mode [Integer] - e.g., OpenSSL::SSL::VERIFY_NONE,OpenSSL::SSL::VERIFY_PEER
     #
     # @return [Asana::Resources::Attachment]
     def create_attachment_from_downloaded_url!(url, resource, attachment_name:,
@@ -141,7 +141,7 @@ module Checkoff
     # @param resource [Asana::Resources::Resource]
     # @param attachment_name [String,nil]
     #
-    # @return [Asana::Resources::Attachment,nil]
+    # @return [Asana::Resources::Attachment]
     def create_attachment_from_url_alone!(url, resource, attachment_name:)
       with_params = {
         'parent' => resource.gid,
