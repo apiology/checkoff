@@ -48,8 +48,8 @@ commands:
             done
       - restore_cache:
           keys:
-            - rbenv-v4-{{ checksum "Gemfile.lock" }}-
-            - rbenv-v4-
+            - rbenv-v5-{{ checksum "Gemfile.lock" }}-
+            - rbenv-v5-
             - rbenv-
       - restore_cache:
           keys:
@@ -213,7 +213,7 @@ jobs:
           label: Typecheck
           command: make citypecheck citypecoverage
       - save_cache:
-          key: rbenv-v4-{{ checksum "Gemfile.lock" }}-{{ checksum ".ruby-version" }}
+          key: rbenv-v5-{{ checksum "Gemfile.lock" }}-{{ checksum ".ruby-version" }}
           paths:
             - "Gemfile.lock.installed"
             - "types.installed"
@@ -230,7 +230,7 @@ jobs:
   publish_gem:
     working_directory: ~/checkoff
     docker:
-      - image: apiology/circleci-ruby:latest
+      - image: cimg/base:current
     steps:
       - set_up_environment
       - run_with_languages:

@@ -9,9 +9,13 @@ group :development, :test do
   gem 'bundler'
   gem 'mdl'
   gem 'rspec'
+  # ensure recent definitions
+  gem 'rbs'
+  gem 'sord'
   # ensure version with branch coverage
   gem 'simplecov', ['>=0.18.0']
   gem 'simplecov-lcov'
+  gem 'tapioca', require: false
   gem 'undercover'
   gem 'webmock'
 end
@@ -21,8 +25,6 @@ group :development do
   gem 'bump'
   gem 'overcommit', ['>=0.64.0', '<0.65.0']
   gem 'punchlist', ['>=1.3.1']
-  # ensure recent definitions
-  gem 'rbs'
   gem 'rubocop', ['~> 1.52']
   gem 'rubocop-performance'
   gem 'rubocop-rake'
@@ -33,9 +35,6 @@ group :development do
   gem 'solargraph',
       git: 'https://github.com/apiology/solargraph',
       branch: 'master'
-  gem 'solargraph-rails',
-      git: 'https://github.com/apiology/solargraph-rails',
-      branch: 'main'
   gem 'yard'
 end
 
