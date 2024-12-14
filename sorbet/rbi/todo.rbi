@@ -7,5 +7,6 @@
 module ::GLI::App; end
 module Asana::Collection; end
 module Asana::Resource; end
+module Checkoff::CheckoffGLIApp::GLI::App; end
 module Logging::Rails; end
 module Mocha::Mock; end

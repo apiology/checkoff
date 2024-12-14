@@ -50,6 +50,7 @@ commands:
           keys:
             - rbenv-v5-{{ checksum "Gemfile.lock" }}-
             - rbenv-v5-
+            - rbenv-
       - restore_cache:
           keys:
             - pyenv-v2-{{ checksum "requirements_dev.txt" }}-
