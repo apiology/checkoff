@@ -1,5 +1,7 @@
 #!/bin/bash -eu
 
+set -x
+
 if [ -n "${FIX_SH_TIMING_LOG+x}" ]; then
     rm -f "${FIX_SH_TIMING_LOG}"
     if ! type gdate >/dev/null 2>&1; then sudo ln -sf /bin/date /bin/gdate; fi
@@ -255,6 +257,7 @@ ensure_bundle() {
   #
   # This affects nokogiri, which will try to reinstall itself in
   # Docker builds where it's already installed if this is not run.
+  make Gemfile.lock
   PLATFORMS="ruby arm64-darwin-23 x86_64-darwin-23 x86_64-linux x86_64-linux-musl aarch64-linux arm64-linux"
   for platform in ${PLATFORMS}
   do

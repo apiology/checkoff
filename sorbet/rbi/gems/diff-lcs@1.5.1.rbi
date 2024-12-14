@@ -438,6 +438,39 @@ end
 # source://diff-lcs//lib/diff/lcs/callbacks.rb#50
 Diff::LCS::BalancedCallbacks = Diff::LCS::DefaultCallbacks
 
+# A block is an operation removing, adding, or changing a group of items.
+# Basically, this is just a list of changes, where each change adds or
+# deletes a single item. Used by bin/ldiff.
+#
+# source://diff-lcs//lib/diff/lcs/block.rb#6
+class Diff::LCS::Block
+  # @return [Block] a new instance of Block
+  #
+  # source://diff-lcs//lib/diff/lcs/block.rb#9
+  def initialize(chunk); end
+
+  # Returns the value of attribute changes.
+  #
+  # source://diff-lcs//lib/diff/lcs/block.rb#7
+  def changes; end
+
+  # source://diff-lcs//lib/diff/lcs/block.rb#21
+  def diff_size; end
+
+  # Returns the value of attribute insert.
+  #
+  # source://diff-lcs//lib/diff/lcs/block.rb#7
+  def insert; end
+
+  # source://diff-lcs//lib/diff/lcs/block.rb#25
+  def op; end
+
+  # Returns the value of attribute remove.
+  #
+  # source://diff-lcs//lib/diff/lcs/block.rb#7
+  def remove; end
+end
+
 # Represents a simplistic (non-contextual) change. Represents the removal or
 # addition of an element from either the old or the new sequenced
 # enumerable.
@@ -798,6 +831,135 @@ class Diff::LCS::DiffCallbacks
   # source://diff-lcs//lib/diff/lcs/callbacks.rb#143
   def finish_hunk; end
 end
+
+# A Hunk is a group of Blocks which overlap because of the context surrounding
+# each block. (So if we're not using context, every hunk will contain one
+# block.) Used in the diff program (bin/ldiff).
+#
+# source://diff-lcs//lib/diff/lcs/hunk.rb#8
+class Diff::LCS::Hunk
+  # Create a hunk using references to both the old and new data, as well as the
+  # piece of data.
+  #
+  # @return [Hunk] a new instance of Hunk
+  #
+  # source://diff-lcs//lib/diff/lcs/hunk.rb#16
+  def initialize(data_old, data_new, piece, flag_context, file_length_difference); end
+
+  # Returns the value of attribute blocks.
+  #
+  # source://diff-lcs//lib/diff/lcs/hunk.rb#62
+  def blocks; end
+
+  # Returns a diff string based on a format.
+  #
+  # source://diff-lcs//lib/diff/lcs/hunk.rb#115
+  def diff(format, last = T.unsafe(nil)); end
+
+  # Returns the value of attribute end_new.
+  #
+  # source://diff-lcs//lib/diff/lcs/hunk.rb#64
+  def end_new; end
+
+  # Returns the value of attribute end_old.
+  #
+  # source://diff-lcs//lib/diff/lcs/hunk.rb#64
+  def end_old; end
+
+  # Returns the value of attribute file_length_difference.
+  #
+  # source://diff-lcs//lib/diff/lcs/hunk.rb#65
+  def file_length_difference; end
+
+  # Change the "start" and "end" fields to note that context should be added
+  # to this hunk.
+  #
+  # source://diff-lcs//lib/diff/lcs/hunk.rb#69
+  def flag_context; end
+
+  # source://diff-lcs//lib/diff/lcs/hunk.rb#71
+  def flag_context=(context); end
+
+  # Merges this hunk and the provided hunk together if they overlap. Returns
+  # a truthy value so that if there is no overlap, you can know the merge
+  # was skipped.
+  #
+  # source://diff-lcs//lib/diff/lcs/hunk.rb#97
+  def merge(hunk); end
+
+  # @return [Boolean]
+  #
+  # source://diff-lcs//lib/diff/lcs/hunk.rb#331
+  def missing_last_newline?(data); end
+
+  # Determines whether there is an overlap between this hunk and the
+  # provided hunk. This will be true if the difference between the two hunks
+  # start or end positions is within one position of each other.
+  #
+  # @return [Boolean]
+  #
+  # source://diff-lcs//lib/diff/lcs/hunk.rb#109
+  def overlaps?(hunk); end
+
+  # Returns the value of attribute start_new.
+  #
+  # source://diff-lcs//lib/diff/lcs/hunk.rb#63
+  def start_new; end
+
+  # Returns the value of attribute start_old.
+  #
+  # source://diff-lcs//lib/diff/lcs/hunk.rb#63
+  def start_old; end
+
+  # Merges this hunk and the provided hunk together if they overlap. Returns
+  # a truthy value so that if there is no overlap, you can know the merge
+  # was skipped.
+  #
+  # source://diff-lcs//lib/diff/lcs/hunk.rb#97
+  def unshift(hunk); end
+
+  private
+
+  # source://diff-lcs//lib/diff/lcs/hunk.rb#214
+  def context_diff(last = T.unsafe(nil)); end
+
+  # Generate a range of item numbers to print. Only print 1 number if the
+  # range has only one item in it. Otherwise, it's 'start,end'
+  #
+  # source://diff-lcs//lib/diff/lcs/hunk.rb#298
+  def context_range(mode, op, last = T.unsafe(nil)); end
+
+  # source://diff-lcs//lib/diff/lcs/hunk.rb#276
+  def ed_diff(format, _last = T.unsafe(nil)); end
+
+  # source://diff-lcs//lib/diff/lcs/hunk.rb#344
+  def encode(literal, target_encoding = T.unsafe(nil)); end
+
+  # source://diff-lcs//lib/diff/lcs/hunk.rb#348
+  def encode_as(string, *args); end
+
+  # Note that an old diff can't have any context. Therefore, we know that
+  # there's only one block in the hunk.
+  #
+  # source://diff-lcs//lib/diff/lcs/hunk.rb#134
+  def old_diff(_last = T.unsafe(nil)); end
+
+  # source://diff-lcs//lib/diff/lcs/hunk.rb#159
+  def unified_diff(last = T.unsafe(nil)); end
+
+  # Generate a range of item numbers to print for unified diff. Print number
+  # where block starts, followed by number of lines in the block
+  # (don't print number of lines if it's 1)
+  #
+  # source://diff-lcs//lib/diff/lcs/hunk.rb#316
+  def unified_range(mode, last); end
+end
+
+# source://diff-lcs//lib/diff/lcs/hunk.rb#10
+Diff::LCS::Hunk::ED_DIFF_OP_ACTION = T.let(T.unsafe(nil), Hash)
+
+# source://diff-lcs//lib/diff/lcs/hunk.rb#9
+Diff::LCS::Hunk::OLD_DIFF_OP_ACTION = T.let(T.unsafe(nil), Hash)
 
 # source://diff-lcs//lib/diff/lcs/internals.rb#29
 module Diff::LCS::Internals

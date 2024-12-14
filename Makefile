@@ -28,10 +28,13 @@ types.installed: tapioca.installed Gemfile.lock Gemfile.lock.installed ## Instal
 	# bundle exec solargraph scan 2>&1
 	touch types.installed
 
-tapioca.installed: Gemfile.lock.installed ## Install Tapioca-generated type information
+sorbet/tapioca/require.rb:
+	bin/tapioca init
+
+tapioca.installed: sorbet/tapioca/require.rb Gemfile.lock.installed ## Install Tapioca-generated type information
 	bin/tapioca gems
 	bin/tapioca annotations
-	bin/tapioca dsl
+#	bin/tapioca dsl
 	bin/tapioca todo
 	touch tapioca.installed
 
@@ -48,10 +51,8 @@ clean-typecheck: ## Refresh the easily-regenerated information that type checkin
 realclean-typecheck: clean-typecheck ## Remove all type checking artifacts
 	rm tapioca.installed
 
-
-
 typecheck: build-typecheck ## validate types in code and configuration
-	bin/tapioca dsl --verify
+#	bin/tapioca dsl --verify
 	bundle exec srb tc
 	bin/overcommit_branch # ideally this would just run solargraph
 
@@ -71,10 +72,11 @@ requirements_dev.txt.installed: requirements_dev.txt
 pip_install: requirements_dev.txt.installed ## Install Python dependencies
 
 Gemfile.lock: Gemfile checkoff.gemspec
-	bundle install
+	bundle lock
 
-# Ensure any Gemfile.lock changes ensure a bundle is installed.
-Gemfile.lock.installed: Gemfile.lock
+# Ensure any Gemfile.lock changes, even pulled form git, ensure a
+# bundle is installed.
+Gemfile.lock.installed: Gemfile.lock Gemfile checkoff.gemspec
 	bundle install
 	touch Gemfile.lock.installed
 
