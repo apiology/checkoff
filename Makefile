@@ -100,7 +100,7 @@ test: ## Run lower-level tests
 localtest: ## run default local actions
 	@bundle exec rake localtest
 
-repl:  ## Load up checkoff in pry
+repl: bundle_install ## Load up plate-spinner in pry
 	@bundle exec rake repl
 
 clean-coverage:
