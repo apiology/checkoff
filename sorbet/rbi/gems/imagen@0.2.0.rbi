@@ -30,7 +30,7 @@ module Imagen
   end
 end
 
-# source://imagen//lib/imagen/ast/parser.rb#23
+# source://imagen//lib/imagen/ast/parser.rb#27
 module Imagen::AST; end
 
 # An AST Builder for ruby parser.
@@ -44,35 +44,35 @@ class Imagen::AST::Builder < ::Parser::Builders::Default
   def string_value(token); end
 end
 
-# source://imagen//lib/imagen/ast/parser.rb#24
+# source://imagen//lib/imagen/ast/parser.rb#28
 class Imagen::AST::Parser
   # @param parser_version [String] ruby syntax version
   # @return [Parser] a new instance of Parser
   #
-  # source://imagen//lib/imagen/ast/parser.rb#34
+  # source://imagen//lib/imagen/ast/parser.rb#38
   def initialize(parser_version = T.unsafe(nil)); end
 
-  # source://imagen//lib/imagen/ast/parser.rb#51
+  # source://imagen//lib/imagen/ast/parser.rb#55
   def parse(input, file = T.unsafe(nil)); end
 
-  # source://imagen//lib/imagen/ast/parser.rb#47
+  # source://imagen//lib/imagen/ast/parser.rb#51
   def parse_file(filename); end
 
-  # source://imagen//lib/imagen/ast/parser.rb#57
+  # source://imagen//lib/imagen/ast/parser.rb#61
   def parser; end
 
   private
 
   # @raise [ArgumentError]
   #
-  # source://imagen//lib/imagen/ast/parser.rb#67
+  # source://imagen//lib/imagen/ast/parser.rb#71
   def validate_version(parser_version); end
 
   class << self
-    # source://imagen//lib/imagen/ast/parser.rb#29
+    # source://imagen//lib/imagen/ast/parser.rb#33
     def parse(input, file = T.unsafe(nil)); end
 
-    # source://imagen//lib/imagen/ast/parser.rb#25
+    # source://imagen//lib/imagen/ast/parser.rb#29
     def parse_file(filename); end
   end
 end
@@ -84,6 +84,7 @@ Imagen::AVAILABLE_RUBY_VERSIONS = T.let(T.unsafe(nil), Array)
 #
 # source://imagen//lib/imagen/clone.rb#10
 class Imagen::Clone
+  # @raise [ArgumentError]
   # @return [Clone] a new instance of Clone
   #
   # source://imagen//lib/imagen/clone.rb#17
@@ -94,7 +95,7 @@ class Imagen::Clone
   # source://imagen//lib/imagen/clone.rb#15
   def dir; end
 
-  # source://imagen//lib/imagen/clone.rb#26
+  # source://imagen//lib/imagen/clone.rb#24
   def perform; end
 
   # Returns the value of attribute repo_url.
@@ -141,13 +142,18 @@ class Imagen::Node::Base
   # source://imagen//lib/imagen/node.rb#10
   def children; end
 
+  # @return [Boolean]
+  #
   # source://imagen//lib/imagen/node.rb#26
-  def file_path; end
-
-  # source://imagen//lib/imagen/node.rb#57
-  def find_all(matcher, ret = T.unsafe(nil)); end
+  def empty_def?; end
 
   # source://imagen//lib/imagen/node.rb#30
+  def file_path; end
+
+  # source://imagen//lib/imagen/node.rb#61
+  def find_all(matcher, ret = T.unsafe(nil)); end
+
+  # source://imagen//lib/imagen/node.rb#34
   def first_line; end
 
   # @raise [NotImplementedError]
@@ -155,10 +161,10 @@ class Imagen::Node::Base
   # source://imagen//lib/imagen/node.rb#18
   def human_name; end
 
-  # source://imagen//lib/imagen/node.rb#38
+  # source://imagen//lib/imagen/node.rb#42
   def last_line; end
 
-  # source://imagen//lib/imagen/node.rb#34
+  # source://imagen//lib/imagen/node.rb#38
   def line_numbers; end
 
   # Returns the value of attribute name.
@@ -166,111 +172,114 @@ class Imagen::Node::Base
   # source://imagen//lib/imagen/node.rb#10
   def name; end
 
-  # source://imagen//lib/imagen/node.rb#42
+  # source://imagen//lib/imagen/node.rb#46
   def source; end
 
-  # source://imagen//lib/imagen/node.rb#50
+  # source://imagen//lib/imagen/node.rb#54
   def source_lines; end
 
-  # source://imagen//lib/imagen/node.rb#46
+  # source://imagen//lib/imagen/node.rb#50
   def source_lines_with_numbers; end
 end
 
 # Represents a Ruby block
 #
-# source://imagen//lib/imagen/node.rb#167
+# source://imagen//lib/imagen/node.rb#174
 class Imagen::Node::Block < ::Imagen::Node::Base
-  # source://imagen//lib/imagen/node.rb#168
+  # source://imagen//lib/imagen/node.rb#175
   def build_from_ast(_ast_node); end
 
-  # source://imagen//lib/imagen/node.rb#173
+  # source://imagen//lib/imagen/node.rb#180
   def human_name; end
 
   private
 
-  # source://imagen//lib/imagen/node.rb#179
+  # source://imagen//lib/imagen/node.rb#186
   def args_list; end
 end
 
 # Represents a Ruby class method
 #
-# source://imagen//lib/imagen/node.rb#143
+# source://imagen//lib/imagen/node.rb#150
 class Imagen::Node::CMethod < ::Imagen::Node::Base
-  # source://imagen//lib/imagen/node.rb#144
+  # source://imagen//lib/imagen/node.rb#151
   def build_from_ast(ast_node); end
 
-  # source://imagen//lib/imagen/node.rb#149
+  # source://imagen//lib/imagen/node.rb#156
   def human_name; end
 end
 
 # Represents a Ruby class
 #
-# source://imagen//lib/imagen/node.rb#131
+# source://imagen//lib/imagen/node.rb#138
 class Imagen::Node::Class < ::Imagen::Node::Base
-  # source://imagen//lib/imagen/node.rb#132
+  # source://imagen//lib/imagen/node.rb#139
   def build_from_ast(ast_node); end
 
-  # source://imagen//lib/imagen/node.rb#137
+  # source://imagen//lib/imagen/node.rb#144
   def human_name; end
 end
 
 # Represents a Ruby instance method
 #
-# source://imagen//lib/imagen/node.rb#155
+# source://imagen//lib/imagen/node.rb#162
 class Imagen::Node::IMethod < ::Imagen::Node::Base
-  # source://imagen//lib/imagen/node.rb#156
+  # source://imagen//lib/imagen/node.rb#163
   def build_from_ast(ast_node); end
 
-  # source://imagen//lib/imagen/node.rb#161
+  # source://imagen//lib/imagen/node.rb#168
   def human_name; end
 end
 
 # Represents a Ruby module
 #
-# source://imagen//lib/imagen/node.rb#119
+# source://imagen//lib/imagen/node.rb#126
 class Imagen::Node::Module < ::Imagen::Node::Base
-  # source://imagen//lib/imagen/node.rb#120
+  # source://imagen//lib/imagen/node.rb#127
   def build_from_ast(ast_node); end
 
-  # source://imagen//lib/imagen/node.rb#125
+  # source://imagen//lib/imagen/node.rb#132
   def human_name; end
 end
 
 # Root node for a given directory
 #
-# source://imagen//lib/imagen/node.rb#66
+# source://imagen//lib/imagen/node.rb#70
 class Imagen::Node::Root < ::Imagen::Node::Base
-  # source://imagen//lib/imagen/node.rb#76
+  # source://imagen//lib/imagen/node.rb#90
+  def build_from_ast(ast_node); end
+
+  # source://imagen//lib/imagen/node.rb#80
   def build_from_dir(dir); end
 
-  # source://imagen//lib/imagen/node.rb#69
+  # source://imagen//lib/imagen/node.rb#73
   def build_from_file(path); end
 
   # Returns the value of attribute dir.
   #
-  # source://imagen//lib/imagen/node.rb#67
+  # source://imagen//lib/imagen/node.rb#71
   def dir; end
 
   # TODO: fix wrong inheritance
   #
-  # source://imagen//lib/imagen/node.rb#93
+  # source://imagen//lib/imagen/node.rb#100
   def file_path; end
 
-  # source://imagen//lib/imagen/node.rb#97
+  # source://imagen//lib/imagen/node.rb#104
   def first_line; end
 
-  # source://imagen//lib/imagen/node.rb#88
+  # source://imagen//lib/imagen/node.rb#95
   def human_name; end
 
-  # source://imagen//lib/imagen/node.rb#101
+  # source://imagen//lib/imagen/node.rb#108
   def last_line; end
 
-  # source://imagen//lib/imagen/node.rb#105
+  # source://imagen//lib/imagen/node.rb#112
   def source; end
 
   private
 
-  # source://imagen//lib/imagen/node.rb#111
+  # source://imagen//lib/imagen/node.rb#118
   def list_files; end
 end
 

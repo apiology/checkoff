@@ -31,6 +31,7 @@ require 'minitest/profile'
 require 'minitest/reporters'
 Minitest::Reporters.use! [Minitest::Reporters::DefaultReporter.new(location: true)]
 
+require 'ostruct'
 require_relative 'cachemethoddouble'
 ENV['LOG_LEVEL'] = 'WARN'
 ENV['TZ'] = 'US/Eastern'
