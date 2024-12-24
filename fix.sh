@@ -180,7 +180,7 @@ ensure_bundle() {
   # if bundler_version is still empty
   if [ -z "${bundler_version}" ]
   then
-      gem install bundler
+      gem install bundler:2.5.5
       bundler_version=$(bundle --version | cut -d ' ' -f 3)
   fi
   echo "Bundler version: ${bundler_version}"
