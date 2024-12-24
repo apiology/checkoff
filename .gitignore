@@ -43,19 +43,22 @@ Gemfile.lock.installed
 requirements_dev.txt.installed
 types.installed
 tapioca.installed
+yardoc.installed
+
+# Type checking config
+sorbet/machine_specific_config
 
 # generated from local source
 config/defs.rbi
 
 # Used by CircleCI as a place to store installed gems
-/vendor
+/vendor/bundle
 
 # Installed by fix.sh based on what latest versions are
 /.python-version
 /.ruby-version
 
 # Ruby-related
-/.bundle/
 /.yardoc
 /_yardoc/
 /doc/
@@ -63,3 +66,10 @@ config/defs.rbi
 /spec/reports/
 /tmp/
 /coverage/
+
+# Ignore bundler config.
+/.bundle/config
+
+# Ignore make target files
+/.make/*
+!/.make/.keep
