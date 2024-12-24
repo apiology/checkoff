@@ -67,8 +67,9 @@ typecheck: config/defs.rbi build-typecheck ## validate types in code and configu
 	bin/srb tc
 	bin/overcommit_branch # ideally this would just run solargraph
 
-citypecheck: typecheck ## Run type check from CircleCI
-	bundle exec solargraph typecheck --level strong
+citypecheck: ## Run type check from CircleCI
+	bin/srb tc
+	# overcommit_branch gets run in quality chain
 
 typecoverage: typecheck ## Run type checking and then ratchet coverage in metrics/
 
