@@ -1,5 +1,5 @@
-# typed: strict
 # frozen_string_literal: true
+# typed: strict
 
 #
 # https://gist.github.com/castwide/28b349566a223dfb439a337aea29713e

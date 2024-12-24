@@ -75,7 +75,7 @@ class Undercover::Changeset
 
   # Returns the value of attribute compare_base.
   #
-  # source://undercover//lib/undercover/changeset.rb#84
+  # source://undercover//lib/undercover/changeset.rb#86
   def compare_base; end
 
   # source://undercover//lib/undercover/changeset.rb#74
@@ -87,12 +87,12 @@ class Undercover::Changeset
   # source://undercover//lib/undercover/changeset.rb#69
   def full_diff; end
 
-  # source://undercover//lib/undercover/changeset.rb#80
+  # source://undercover//lib/undercover/changeset.rb#82
   def head; end
 
   # Returns the value of attribute repo.
   #
-  # source://undercover//lib/undercover/changeset.rb#84
+  # source://undercover//lib/undercover/changeset.rb#86
   def repo; end
 end
 
@@ -171,104 +171,137 @@ end
 class Undercover::Options
   # @return [Options] a new instance of Options
   #
-  # source://undercover//lib/undercover/options.rb#22
+  # source://undercover//lib/undercover/options.rb#31
   def initialize; end
 
   # Returns the value of attribute compare.
   #
-  # source://undercover//lib/undercover/options.rb#20
+  # source://undercover//lib/undercover/options.rb#23
   def compare; end
 
   # Sets the attribute compare
   #
   # @param value the value to set the attribute compare to.
   #
-  # source://undercover//lib/undercover/options.rb#20
+  # source://undercover//lib/undercover/options.rb#23
   def compare=(_arg0); end
 
   # Returns the value of attribute git_dir.
   #
-  # source://undercover//lib/undercover/options.rb#20
+  # source://undercover//lib/undercover/options.rb#23
   def git_dir; end
 
   # Sets the attribute git_dir
   #
   # @param value the value to set the attribute git_dir to.
   #
-  # source://undercover//lib/undercover/options.rb#20
+  # source://undercover//lib/undercover/options.rb#23
   def git_dir=(_arg0); end
+
+  # Returns the value of attribute glob_allow_filters.
+  #
+  # source://undercover//lib/undercover/options.rb#23
+  def glob_allow_filters; end
+
+  # Sets the attribute glob_allow_filters
+  #
+  # @param value the value to set the attribute glob_allow_filters to.
+  #
+  # source://undercover//lib/undercover/options.rb#23
+  def glob_allow_filters=(_arg0); end
+
+  # Returns the value of attribute glob_reject_filters.
+  #
+  # source://undercover//lib/undercover/options.rb#23
+  def glob_reject_filters; end
+
+  # Sets the attribute glob_reject_filters
+  #
+  # @param value the value to set the attribute glob_reject_filters to.
+  #
+  # source://undercover//lib/undercover/options.rb#23
+  def glob_reject_filters=(_arg0); end
 
   # Returns the value of attribute lcov.
   #
-  # source://undercover//lib/undercover/options.rb#20
+  # source://undercover//lib/undercover/options.rb#23
   def lcov; end
 
   # Sets the attribute lcov
   #
   # @param value the value to set the attribute lcov to.
   #
-  # source://undercover//lib/undercover/options.rb#20
+  # source://undercover//lib/undercover/options.rb#23
   def lcov=(_arg0); end
 
-  # source://undercover//lib/undercover/options.rb#33
+  # source://undercover//lib/undercover/options.rb#44
   def parse(args); end
 
   # Returns the value of attribute path.
   #
-  # source://undercover//lib/undercover/options.rb#20
+  # source://undercover//lib/undercover/options.rb#23
   def path; end
 
   # Sets the attribute path
   #
   # @param value the value to set the attribute path to.
   #
-  # source://undercover//lib/undercover/options.rb#20
+  # source://undercover//lib/undercover/options.rb#23
   def path=(_arg0); end
 
   # Returns the value of attribute syntax_version.
   #
-  # source://undercover//lib/undercover/options.rb#20
+  # source://undercover//lib/undercover/options.rb#23
   def syntax_version; end
 
   # Sets the attribute syntax_version
   #
   # @param value the value to set the attribute syntax_version to.
   #
-  # source://undercover//lib/undercover/options.rb#20
+  # source://undercover//lib/undercover/options.rb#23
   def syntax_version=(_arg0); end
 
   private
 
-  # source://undercover//lib/undercover/options.rb#74
+  # source://undercover//lib/undercover/options.rb#83
   def args_from_options_file(path); end
 
-  # source://undercover//lib/undercover/options.rb#66
+  # source://undercover//lib/undercover/options.rb#75
   def build_opts(args); end
 
-  # source://undercover//lib/undercover/options.rb#103
+  # source://undercover//lib/undercover/options.rb#112
   def compare_option(parser); end
 
-  # source://undercover//lib/undercover/options.rb#96
+  # source://undercover//lib/undercover/options.rb#132
+  def file_filters(parser); end
+
+  # source://undercover//lib/undercover/options.rb#105
   def git_dir_option(parser); end
 
-  # source://undercover//lib/undercover/options.rb#118
+  # source://undercover//lib/undercover/options.rb#127
   def guess_lcov_path; end
 
-  # source://undercover//lib/undercover/options.rb#84
+  # source://undercover//lib/undercover/options.rb#93
   def lcov_path_option(parser); end
 
-  # source://undercover//lib/undercover/options.rb#70
+  # source://undercover//lib/undercover/options.rb#79
   def project_options; end
 
-  # source://undercover//lib/undercover/options.rb#80
+  # source://undercover//lib/undercover/options.rb#89
   def project_options_file; end
 
-  # source://undercover//lib/undercover/options.rb#90
+  # source://undercover//lib/undercover/options.rb#99
   def project_path_option(parser); end
 
-  # source://undercover//lib/undercover/options.rb#110
+  # source://undercover//lib/undercover/options.rb#119
   def ruby_syntax_option(parser); end
 end
+
+# source://undercover//lib/undercover/options.rb#21
+Undercover::Options::DEFAULT_FILE_EXCLUDE_GLOBS = T.let(T.unsafe(nil), Array)
+
+# source://undercover//lib/undercover/options.rb#20
+Undercover::Options::DEFAULT_FILE_INCLUDE_GLOBS = T.let(T.unsafe(nil), Array)
 
 # source://undercover//lib/undercover/options.rb#15
 Undercover::Options::OUTPUT_FORMATTERS = T.let(T.unsafe(nil), Array)
@@ -292,16 +325,16 @@ class Undercover::Report
   # @param opts [Undercover::Options]
   # @return [Report] a new instance of Report
   #
-  # source://undercover//lib/undercover.rb#31
+  # source://undercover//lib/undercover.rb#32
   def initialize(changeset, opts); end
 
-  # source://undercover//lib/undercover.rb#72
+  # source://undercover//lib/undercover.rb#78
   def all_results; end
 
-  # source://undercover//lib/undercover.rb#40
+  # source://undercover//lib/undercover.rb#45
   def build; end
 
-  # source://undercover//lib/undercover.rb#66
+  # source://undercover//lib/undercover.rb#72
   def build_warnings; end
 
   # Returns the value of attribute changeset.
@@ -314,10 +347,15 @@ class Undercover::Report
   # source://undercover//lib/undercover.rb#22
   def code_dir; end
 
-  # source://undercover//lib/undercover.rb#76
+  # source://undercover//lib/undercover.rb#82
   def flagged_results; end
 
-  # source://undercover//lib/undercover.rb#80
+  # Returns the value of attribute glob_filters.
+  #
+  # source://undercover//lib/undercover.rb#22
+  def glob_filters; end
+
+  # source://undercover//lib/undercover.rb#86
   def inspect; end
 
   # Returns the value of attribute lcov.
@@ -330,7 +368,7 @@ class Undercover::Report
   # source://undercover//lib/undercover.rb#22
   def results; end
 
-  # source://undercover//lib/undercover.rb#80
+  # source://undercover//lib/undercover.rb#86
   def to_s; end
 
   # source://forwardable/1.3.2/forwardable.rb#229
@@ -338,12 +376,17 @@ class Undercover::Report
 
   private
 
-  # source://undercover//lib/undercover.rb#90
+  # @return [Boolean]
+  #
+  # source://undercover//lib/undercover.rb#117
+  def include_file?(filepath); end
+
+  # source://undercover//lib/undercover.rb#96
   def load_and_parse_file(filepath); end
 
   # Returns the value of attribute loaded_files.
   #
-  # source://undercover//lib/undercover.rb#87
+  # source://undercover//lib/undercover.rb#93
   def loaded_files; end
 end
 
@@ -373,7 +416,7 @@ class Undercover::Result
   # source://undercover//lib/undercover/result.rb#9
   def file_path; end
 
-  # source://undercover//lib/undercover/result.rb#105
+  # source://undercover//lib/undercover/result.rb#106
   def file_path_with_lines; end
 
   # source://forwardable/1.3.2/forwardable.rb#229
@@ -387,7 +430,7 @@ class Undercover::Result
   # source://undercover//lib/undercover/result.rb#26
   def flagged?; end
 
-  # source://undercover//lib/undercover/result.rb#109
+  # source://undercover//lib/undercover/result.rb#110
   def inspect; end
 
   # source://forwardable/1.3.2/forwardable.rb#229
@@ -403,7 +446,7 @@ class Undercover::Result
 
   # TODO: move to formatter interface instead!
   #
-  # source://undercover//lib/undercover/result.rb#83
+  # source://undercover//lib/undercover/result.rb#84
   def pretty_print; end
 
   # TODO: create a formatter interface instead and add some tests.
@@ -412,20 +455,20 @@ class Undercover::Result
   # Zips coverage data (that doesn't include any non-code lines) with
   # full source for given code fragment (this includes non-code lines!)
   #
-  # source://undercover//lib/undercover/result.rb#69
+  # source://undercover//lib/undercover/result.rb#70
   def pretty_print_lines; end
 
-  # source://undercover//lib/undercover/result.rb#109
+  # source://undercover//lib/undercover/result.rb#110
   def to_s; end
 
   # @return [Boolean]
   #
-  # source://undercover//lib/undercover/result.rb#31
+  # source://undercover//lib/undercover/result.rb#30
   def uncovered?(line_no); end
 
   private
 
-  # source://undercover//lib/undercover/result.rb#118
+  # source://undercover//lib/undercover/result.rb#119
   def count_covered_branches(line_number); end
 end
 

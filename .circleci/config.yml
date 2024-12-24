@@ -19,6 +19,7 @@ commands:
             export PATH="${HOME}/.pyenv/bin:${PATH}"
             export PATH="${HOME}/.rbenv/bin:${HOME}/.rbenv/shims:${PATH}"
             export PATH="${HOME}/project/node_modules/.bin:${PATH}"
+            export PATH="$(pwd)/bin:${PATH}"
             eval "$(pyenv init --path)"
             eval "$(pyenv virtualenv-init -)"
             eval "$(rbenv init -)"
@@ -26,7 +27,7 @@ commands:
             # keep this in a single place for both main and child builds for cachability
             BUNDLE_PATH="$(pwd)/vendor/bundle"
             export BUNDLE_PATH
-            GEM_HOME="${BUNDLE_PATH}/ruby/3.3.0"
+            GEM_HOME="${BUNDLE_PATH}/ruby/3.1.6"
             export GEM_HOME
 
             <<parameters.command>>
@@ -47,11 +48,21 @@ commands:
               touch -ht ${touchtime} "${filename}"
             done
       - restore_cache:
+          name: Restore rbenv cache
           keys:
-            - rbenv-v5-{{ checksum "Gemfile.lock" }}-
+            - rbenv-v5-{{ checksum "Gemfile" }}-{{ checksum "Gemfile.lock" }}-
+            - rbenv-v5-{{ checksum "Gemfile" }}-
             - rbenv-v5-
             - rbenv-
       - restore_cache:
+          name: Restore ruby-types cache
+          keys:
+            - ruby-types-v1-{{ checksum "Gemfile" }}-{{ checksum "Gemfile.lock" }}-
+            - ruby-types-v1-{{ checksum "Gemfile" }}-
+            - ruby-types-v1-
+            - ruby-types-
+      - restore_cache:
+          name: Restore pyenv cache
           keys:
             - pyenv-v2-{{ checksum "requirements_dev.txt" }}-
             - pyenv-v2-
@@ -66,18 +77,33 @@ commands:
 
             BUNDLE_PATH="$(pwd)/vendor/bundle"
             export BUNDLE_PATH
-            GEM_HOME="${BUNDLE_PATH}/ruby/3.3.0"
+            GEM_HOME="${BUNDLE_PATH}/ruby/3.1.6"
             export GEM_HOME
+            PATH="$(pwd)/bin:${PATH}"
+            export PATH
 
             './fix.sh'
       - store_artifacts:
           path: /tmp/fix_sh_timing.log
       - save_cache:
+          name: 'Save pyenv cache'
           key: pyenv-v2-{{ checksum "requirements_dev.txt" }}-{{ checksum ".python-version" }}
           paths:
             - "requirements_dev.txt.installed"
             - "/home/circleci/.cache/pip/wheels"
             - "/home/circleci/.pyenv"
+      - save_cache:
+          name: 'Save rbenv cache'
+          key: rbenv-v5-{{ checksum "Gemfile" }}-{{ checksum "Gemfile.lock" }}-{{ checksum ".ruby-version" }}-{{ checksum "Makefile" }}-{{ checksum ".circleci/config.yml" }} # yamllint disable-line rule:line-length
+          paths:
+            - "Gemfile.lock.installed"
+            - 'vendor/.keep'
+            - "vendor/bundle"
+            - "/home/circleci/.rbenv"
+            - ".bundle"
+            - "/home/circleci/.cache/rubocop_cache"
+            - "/home/circleci/.cache/gem"
+            - "/home/circleci/.bundle/cache"
       - run:
           name: Download new circleci tool
           command: |
@@ -200,18 +226,6 @@ jobs:
           steps:
             - update_dependencies:
                 gems: checkoff
-      # - run_with_languages:
-      #     label: Typecheck
-      #     command: make citypecheck citypecoverage
-      - save_cache:
-          key: rbenv-v5-{{ checksum "Gemfile.lock" }}-{{ checksum ".ruby-version" }}
-          paths:
-            - "Gemfile.lock.installed"
-            - "types.installed"
-            - "vendor/bundle"
-            - "/home/circleci/.rbenv"
-            - ".yardoc"
-            - "/home/circleci/.cache/solargraph"
       - run:
           name: Verify deltas
           command: |
@@ -220,6 +234,24 @@ jobs:
               >&2 echo "Please resolve changes to avoid caching difficulties"
               exit 1
             fi
+      - run_with_languages:
+          label: Typecheck
+          command: |
+            make citypecheck citypecoverage
+      - store_artifacts:
+          path: config/defs.rbi
+      - save_cache:
+          name: 'Save ruby-types cache'
+          key: ruby-types-v1-{{ checksum "Gemfile" }}-{{ checksum "Gemfile.lock" }}-{{ checksum ".ruby-version" }}-{{ checksum "config/defs.rbi" }}-{{ checksum "Makefile" }}-{{ checksum ".circleci/config.yml" }}  # yamllint disable-line rule:line-length
+          paths:
+            - ".yardoc"
+            - "/home/circleci/.cache/solargraph"
+            - "/home/circleci/.sorbet-cache"
+            - "/home/circleci/.cache/sorbet"
+            - "types.installed"
+            - "yardoc.installed"
+            - "tapioca.installed"
+            - "config/defs.rbi"
       - run_with_languages:
           label: Test
           command: |
