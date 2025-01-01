@@ -21,6 +21,10 @@ PreCommit:
   # https://github.com/sds/overcommit/blob/master/config/default.yml
   BrokenSymlinks:
     enabled: true
+  Fasterer:
+    enabled: true
+  BundleAudit:
+    enabled: true
   RuboCop:
     enabled: true
     command: ['bundle', 'exec', 'rubocop']
@@ -35,9 +39,10 @@ PreCommit:
       - 'exe/*'
       - 'script/*'
     problem_on_unmodified_line: warn
+  FixMe:
+    enabled: true
     exclude:
-      - db/migrate/*.rb
-      - db/schema.rb
+      - 'sorbet/rbi/gems/*.rbi'
   PythonFlake8:
     enabled: true
     on_warn: fail
@@ -85,13 +90,30 @@ PreCommit:
       - ".markdownlint_style.rb"
   Sorbet:
     enabled: true
-    problem_on_unmodified_line: warn
+    command: ['bin/srb-overcommit']
+    problem_on_unmodified_line: report
   Punchlist:
     command: ['bundle', 'exec', 'punchlist']
     enabled: true
     problem_on_unmodified_line: warn
     exclude:
       - 'sorbet/**/*'
+
+PostCheckout:
+  BundleInstall:
+    enabled: true
+
+PostCommit:
+  BundleInstall:
+    enabled: true
+
+PostMerge:
+  BundleInstall:
+    enabled: true
+
+PostRewrite:
+  BundleInstall:
+    enabled: true
 
 PrePush:
   Brakeman:

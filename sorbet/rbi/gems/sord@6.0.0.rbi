@@ -547,7 +547,7 @@ end
 # source://sord//lib/sord/resolver.rb#7
 module Sord::Resolver
   class << self
-    # source://sord//lib/sord/resolver.rb#60
+    # source://sord//lib/sord/resolver.rb#69
     # sord omit - no YARD type given for "nodes", using untyped
     # sord omit - no YARD type given for "names_to_paths", using untyped
     # sord omit - no YARD type given for "path", using untyped
@@ -556,22 +556,17 @@ module Sord::Resolver
     def add_rbi_objects_to_paths(nodes, names_to_paths, path = T.unsafe(nil)); end
 
     # source://sord//lib/sord/resolver.rb#44
-    # sord omit - no YARD type given for "all_decls", using untyped
-    # sord omit - no YARD type given for "names_to_paths", using untyped
-    # sord omit - no YARD type given for "path", using untyped
-    # sord omit - no YARD return type given, using untyped
-    sig { params(all_decls: T.untyped, names_to_paths: T.untyped, path: T.untyped).returns(T.untyped) }
-    def add_rbs_objects_to_paths(all_decls, names_to_paths, path = T.unsafe(nil)); end
+    def add_rbs_objects_to_paths(env, names_to_paths, path = T.unsafe(nil)); end
 
     # @return [Array<String>]
     #
-    # source://sord//lib/sord/resolver.rb#99
+    # source://sord//lib/sord/resolver.rb#108
     sig { returns(T::Array[String]) }
     def builtin_classes; end
 
     # @return [void]
     #
-    # source://sord//lib/sord/resolver.rb#76
+    # source://sord//lib/sord/resolver.rb#85
     sig { void }
     def clear; end
 
@@ -584,7 +579,7 @@ module Sord::Resolver
     # @param name [String]
     # @return [String, nil]
     #
-    # source://sord//lib/sord/resolver.rb#94
+    # source://sord//lib/sord/resolver.rb#103
     # _@param_ `name`
     sig { params(name: String).returns(T.nilable(String)) }
     def path_for(name); end
@@ -592,7 +587,7 @@ module Sord::Resolver
     # @param name [String]
     # @return [Array<String>]
     #
-    # source://sord//lib/sord/resolver.rb#82
+    # source://sord//lib/sord/resolver.rb#91
     # _@param_ `name`
     sig { params(name: String).returns(T::Array[String]) }
     def paths_for(name); end
@@ -607,7 +602,7 @@ module Sord::Resolver
     # @param item [Object]
     # @return [Boolean]
     #
-    # source://sord//lib/sord/resolver.rb#118
+    # source://sord//lib/sord/resolver.rb#127
     # _@param_ `name`
     # _@param_ `item`
     sig { params(name: String, item: Object).returns(T::Boolean) }
