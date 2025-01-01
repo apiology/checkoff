@@ -12,9 +12,11 @@ group :development, :test do
   gem 'minitest-profile'
   gem 'minitest-reporters'
   gem 'mocha', ['>= 2']
+  gem 'parlour', ['>=5.0.0']
   # ensure recent definitions
-  gem 'rbs'
-  gem 'sord'
+  gem 'rbs', ['>=3.8.1']
+  gem 'rspec'
+  gem 'sord', ['>=6.0.0']
   # ensure version with branch coverage
   gem 'simplecov', ['>=0.18.0']
   gem 'simplecov-lcov'
@@ -26,7 +28,9 @@ end
 group :development do
   gem 'brakeman'
   gem 'bump'
-  gem 'overcommit', ['>=0.64.1', '<0.65.0']
+  gem 'bundler-audit'
+  gem 'fasterer'
+  gem 'overcommit', ['>=0.64.0', '<0.65.0']
   gem 'punchlist', ['>=1.3.1']
   gem 'rubocop', ['~> 1.52']
   gem 'rubocop-minitest'
@@ -38,7 +42,7 @@ group :development do
   # gem "solargraph", [">=0.50.0"]
   gem 'solargraph',
       git: 'https://github.com/apiology/solargraph',
-      branch: 'master'
+      branch: 'rbs'
   gem 'yard'
 end
 

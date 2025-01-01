@@ -188,6 +188,7 @@ commands:
                 exit 1
               fi
             done
+            make build-typecheck
             if [ -z "$(git status --porcelain Gemfile.lock)" ]
             then
               echo "No updates needed"
@@ -207,6 +208,7 @@ commands:
             OVERCOMMIT_DEBUG=1 bundle exec git push --set-upstream origin "${CIRCLE_BRANCH:?}"
             echo "Avoiding double build after git push"
             exit 1
+
 jobs:
   quality:
     working_directory: ~/checkoff
@@ -239,10 +241,10 @@ jobs:
           command: |
             make citypecheck citypecoverage
       - store_artifacts:
-          path: config/defs.rbi
+          path: rbi/checkoff.rbi
       - save_cache:
           name: 'Save ruby-types cache'
-          key: ruby-types-v1-{{ checksum "Gemfile" }}-{{ checksum "Gemfile.lock" }}-{{ checksum ".ruby-version" }}-{{ checksum "config/defs.rbi" }}-{{ checksum "Makefile" }}-{{ checksum ".circleci/config.yml" }}  # yamllint disable-line rule:line-length
+          key: ruby-types-v1-{{ checksum "Gemfile" }}-{{ checksum "Gemfile.lock" }}-{{ checksum ".ruby-version" }}-{{ checksum "rbi/{{cookiecutter.project_slug}}.rbi" }}-{{ checksum "Makefile" }}-{{ checksum ".circleci/config.yml" }}  # yamllint disable-line rule:line-length
           paths:
             - ".yardoc"
             - "/home/circleci/.cache/solargraph"
@@ -251,7 +253,7 @@ jobs:
             - "types.installed"
             - "yardoc.installed"
             - "tapioca.installed"
-            - "config/defs.rbi"
+            - "rbi/checkoff.rbi"
       - run_with_languages:
           label: Test
           command: |
@@ -287,9 +289,10 @@ jobs:
             # if this step fails, check that
             # https://app.circleci.com/settings/project/github/apiology/checkoff/ssh
             # includes a read-write 'user key':
-            bundle exec git push --set-upstream origin "${CIRCLE_BRANCH:?}"
+            SKIP=RakeTarget bundle exec git push --set-upstream origin "${CIRCLE_BRANCH:?}"
             git status
-            bundle exec rake release trigger_next_builds
+            make release
+            bundle exec rake trigger_next_builds
 
 workflows:
   version: 2
