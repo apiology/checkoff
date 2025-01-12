@@ -103,7 +103,7 @@ requirements_dev.txt.installed: requirements_dev.txt
 
 pip_install: requirements_dev.txt.installed ## Install Python dependencies
 
-Gemfile.lock: Gemfile checkoff.gemspec
+Gemfile.lock: Gemfile checkoff.gemspec .bundle/config
 	bundle lock
 
 .bundle/config:
@@ -114,7 +114,6 @@ gem_dependencies: .bundle/config
 # Ensure any Gemfile.lock changes, even pulled from git, ensure a
 # bundle is installed.
 Gemfile.lock.installed: Gemfile checkoff.gemspec vendor/.keep
-	bundle install
 	touch Gemfile.lock.installed
 
 vendor/.keep: Gemfile.lock
