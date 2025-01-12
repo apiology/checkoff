@@ -11,10 +11,11 @@ module Checkoff
         # @param selector [Array<(Symbol, Array)>,String]
         # @param client [Asana::Client]
         # @param sections [Checkoff::Sections]
+        # @param kwargs [Hash]
         def initialize(selector:,
                        sections:,
                        client:,
-                       **)
+                       **kwargs)
           @selector = selector
           @sections = sections
           @client = client
