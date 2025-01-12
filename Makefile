@@ -47,7 +47,7 @@ build: bundle_install pip_install build-typecheck ## Update 3rd party packages a
 sorbet/machine_specific_config:
 	echo "--cache-dir=$$HOME/.sorbet-cache" > sorbet/machine_specific_config
 
-build-typecheck: Gemfile.lock.installed types.installed  ## Fetch information that type checking depends on
+build-typecheck: Gemfile.lock.installed types.installed sorbet/machine_specific_config  ## Fetch information that type checking depends on
 
 sorbet/tapioca/require.rb:
 	make sorbet/machine_specific_config vendor/.keep
@@ -84,7 +84,7 @@ typecheck: build-typecheck ## validate types in code and configuration
 	bin/srb tc
 	bin/overcommit_branch # ideally this would just run solargraph
 
-citypecheck: ## Run type check from CircleCI
+citypecheck: build-typecheck ## Run type check from CircleCI
 	bin/srb tc
 	# overcommit_branch gets run in quality chain
 
@@ -103,7 +103,7 @@ requirements_dev.txt.installed: requirements_dev.txt
 
 pip_install: requirements_dev.txt.installed ## Install Python dependencies
 
-Gemfile.lock: Gemfile checkoff.gemspec
+Gemfile.lock: Gemfile checkoff.gemspec .bundle/config
 	bundle lock
 
 .bundle/config:
@@ -114,7 +114,6 @@ gem_dependencies: .bundle/config
 # Ensure any Gemfile.lock changes, even pulled from git, ensure a
 # bundle is installed.
 Gemfile.lock.installed: Gemfile checkoff.gemspec vendor/.keep
-	bundle install
 	touch Gemfile.lock.installed
 
 vendor/.keep: Gemfile.lock
