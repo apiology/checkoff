@@ -44,7 +44,7 @@ sorbet/machine_specific_config:
 
 build-typecheck: Gemfile.lock.installed types.installed  ## Fetch information that type checking depends on
 
-sorbet/tapioca/require.rb: sorbet/machine_specific_config
+sorbet/tapioca/require.rb: sorbet/machine_specific_config vendor/.keep
 	bin/tapioca init
 
 tapioca.installed: sorbet/machine_specific_config sorbet/tapioca/require.rb Gemfile.lock.installed ## Install Tapioca-generated type information
