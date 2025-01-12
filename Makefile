@@ -34,6 +34,9 @@ sig/checkoff.rbs: yardoc.installed ## Generate RBS file
 
 types.installed: tapioca.installed Gemfile.lock Gemfile.lock.installed rbi/checkoff.rbi sorbet/tapioca/require.rb sorbet/config ## Ensure typechecking dependencies are in place
 	bundle exec yard gems 2>&1 || bundle exec yard gems --safe 2>&1 || bundle exec yard gems 2>&1
+	ls -l rbi
+	ls -l .yardoc
+	ls -l
 	bin/spoom srb bump || true
 	# bundle exec solargraph scan 2>&1
 	touch types.installed
@@ -186,8 +189,6 @@ update_from_cookiecutter: ## Bring in changes from template project used to crea
 	# update frequently security-flagged gems while we're here
 	bundle update --conservative json nokogiri rack rexml yard || true
 	( make build && git add Gemfile.lock ) || true
-	ls -l rbi
-	ls -l .yardoc
 	bin/spoom srb bump || true
 	bundle exec overcommit --install || true
 	@echo
