@@ -32,7 +32,8 @@ rbi/checkoff.rbi: yardoc.installed $(wildcard config/annotations_*.rb) $(SOURCE_
 sig/checkoff.rbs: yardoc.installed ## Generate RBS file
 	bundle exec sord --replace-errors-with-untyped --exclude-messages OMIT --no-regenerate sig/checkoff.rbs
 
-types.installed: tapioca.installed Gemfile.lock Gemfile.lock.installed rbi/checkoff.rbi sorbet/tapioca/require.rb sorbet/config ## Ensure typechecking dependencies are in place
+types.installed: tapioca.installed Gemfile.lock Gemfile.lock.installed sorbet/tapioca/require.rb sorbet/config ## Ensure typechecking dependencies are in place
+	make rbi/checkoff.rbi
 	bundle exec yard gems 2>&1 || bundle exec yard gems --safe 2>&1 || bundle exec yard gems 2>&1
 	bin/spoom srb bump || true
 	# spoom rudely updates timestamps on files, so let's keep up by
