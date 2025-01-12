@@ -25,7 +25,7 @@ start: ## run code continously and watch files for changes
 	echo "Teach me how to 'make start'"
 	exit 1
 
-rbi/checkoff.rbi: yardoc.installed ## Generate Sorbet types from Yard docs
+rbi/checkoff.rbi: yardoc.installed $(wildcard config/annotations_*.rb) $(SOURCE_FILES)  ## Generate Sorbet types from Yard docs
 	rm -f rbi/checkoff.rbi
 	bin/sord --replace-errors-with-untyped --exclude-messages OMIT --no-regenerate rbi/checkoff.rbi
 
