@@ -27,13 +27,14 @@ start: ## run code continously and watch files for changes
 
 rbi/checkoff.rbi: yardoc.installed ## Generate Sorbet types from Yard docs
 	rm -f rbi/checkoff.rbi
-	bundle exec sord --replace-errors-with-untyped --exclude-messages OMIT --no-regenerate rbi/checkoff.rbi
+	bin/sord --replace-errors-with-untyped --exclude-messages OMIT --no-regenerate rbi/checkoff.rbi
 
 sig/checkoff.rbs: yardoc.installed ## Generate RBS file
 	bundle exec sord --replace-errors-with-untyped --exclude-messages OMIT --no-regenerate sig/checkoff.rbs
 
 types.installed: tapioca.installed Gemfile.lock Gemfile.lock.installed rbi/checkoff.rbi sorbet/tapioca/require.rb sorbet/config ## Ensure typechecking dependencies are in place
 	bundle exec yard gems 2>&1 || bundle exec yard gems --safe 2>&1 || bundle exec yard gems 2>&1
+	bin/spoom srb bump || true
 	# bundle exec solargraph scan 2>&1
 	touch types.installed
 
@@ -52,7 +53,6 @@ tapioca.installed: sorbet/machine_specific_config sorbet/tapioca/require.rb Gemf
 	bin/tapioca annotations
 #	bin/tapioca dsl
 	bin/tapioca todo
-	bin/spoom srb bump || true
 	touch tapioca.installed
 
 yardoc.installed: $(wildcard config/annotations_*.rb) $(SOURCE_FILES) ## Generate YARD documentation
