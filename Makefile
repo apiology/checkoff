@@ -47,7 +47,7 @@ build: bundle_install pip_install build-typecheck ## Update 3rd party packages a
 sorbet/machine_specific_config:
 	echo "--cache-dir=$$HOME/.sorbet-cache" > sorbet/machine_specific_config
 
-build-typecheck: Gemfile.lock.installed types.installed  ## Fetch information that type checking depends on
+build-typecheck: Gemfile.lock.installed types.installed sorbet/machine_specific_config  ## Fetch information that type checking depends on
 
 sorbet/tapioca/require.rb:
 	make sorbet/machine_specific_config vendor/.keep
