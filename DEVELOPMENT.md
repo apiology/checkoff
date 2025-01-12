@@ -55,9 +55,7 @@ git checkout main && git pull
 git log "v$(bump current)..."
 # Set type_of_bump to patch, minor, or major
 bump --tag --tag-prefix=v ${type_of_bump:?}
-rake release
-git push --no-verify
-git push --tags
+rake release && git push --no-verify && git push --tags
 ```
 
 
