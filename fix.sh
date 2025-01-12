@@ -1,7 +1,6 @@
 #!/bin/bash -eu
 
 set -o pipefail
-set -x
 
 if [ -n "${FIX_SH_TIMING_LOG+x}" ]; then
     rm -f "${FIX_SH_TIMING_LOG}"
