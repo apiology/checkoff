@@ -34,10 +34,11 @@ sig/checkoff.rbs: yardoc.installed ## Generate RBS file
 
 types.installed: tapioca.installed Gemfile.lock Gemfile.lock.installed rbi/checkoff.rbi sorbet/tapioca/require.rb sorbet/config ## Ensure typechecking dependencies are in place
 	bundle exec yard gems 2>&1 || bundle exec yard gems --safe 2>&1 || bundle exec yard gems 2>&1
-	ls -l rbi
-	ls -l .yardoc
-	ls -l
 	bin/spoom srb bump || true
+	# spoom rudely updates timestamps on files, so let's keep up by
+	# touching yardoc.installed so we dont' end up in a vicious
+	# cycle
+	touch yardoc.installed rbi/checkoff.rbi
 	# bundle exec solargraph scan 2>&1
 	touch types.installed
 
@@ -48,7 +49,8 @@ sorbet/machine_specific_config:
 
 build-typecheck: Gemfile.lock.installed types.installed  ## Fetch information that type checking depends on
 
-sorbet/tapioca/require.rb: sorbet/machine_specific_config vendor/.keep
+sorbet/tapioca/require.rb:
+	make sorbet/machine_specific_config vendor/.keep
 	bin/tapioca init
 
 tapioca.installed: sorbet/machine_specific_config sorbet/tapioca/require.rb Gemfile.lock.installed ## Install Tapioca-generated type information
