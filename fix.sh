@@ -1,6 +1,7 @@
 #!/bin/bash -eu
 
 set -o pipefail
+set -x
 
 if [ -n "${FIX_SH_TIMING_LOG+x}" ]; then
     rm -f "${FIX_SH_TIMING_LOG}"
@@ -441,7 +442,7 @@ ensure_rugged_packages_installed() {
 ensure_rbenv
 
 ensure_types_built() {
-  make build-typecheck
+  make --debug build-typecheck
 }
 
 ensure_ruby_versions
