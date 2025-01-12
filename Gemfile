@@ -24,7 +24,7 @@ end
 group :development do
   gem 'brakeman'
   gem 'bump'
-  gem 'bundle-audit'
+  gem 'bundler-audit'
   gem 'fasterer'
   gem 'overcommit', ['>=0.64.0', '<0.65.0']
   gem 'punchlist', ['>=1.3.1']
@@ -43,5 +43,3 @@ end
 
 gem 'pry'
 gem 'rake'
-
-gem 'yard' # rubocop:todo Bundler/DuplicatedGem

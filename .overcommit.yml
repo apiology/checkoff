@@ -41,8 +41,15 @@ PreCommit:
     problem_on_unmodified_line: warn
   FixMe:
     enabled: true
+    on_warn: fail
     exclude:
-      - 'sorbet/rbi/gems/*.rbi'
+      # generated files:
+      - 'sorbet/rbi/gems/**/*.rbi'
+      # sorbet sure likes to crash
+      - 'core.*'
+      # don't freak out over line below
+      - '.overcommit.yml'
+    keywords: ['BROKEN', 'BUG', 'FIXME', 'HACK', 'OPTIMIZE', 'REVIEW', 'TODO', 'WTF', 'XXX']
   PythonFlake8:
     enabled: true
     on_warn: fail
@@ -97,7 +104,12 @@ PreCommit:
     enabled: true
     problem_on_unmodified_line: warn
     exclude:
-      - 'sorbet/**/*'
+      # generated files:
+      - 'sorbet/rbi/gems/**/*.rbi'
+      # sorbet sure likes to crash
+      - 'core.*'
+      # don't freak out over line below
+      - '.overcommit.yml'
 
 PostCheckout:
   BundleInstall:
@@ -128,6 +140,10 @@ PrePush:
       - 'clear_metrics'
       - 'spec'
       - 'undercover'
+  CustomScript:
+    enabled: true
+    requires_files: false
+    required_executable: 'bin/git-commit-validate'
 
 #PostCheckout:
 #  ALL: # Special hook name that customizes all hooks of this type
