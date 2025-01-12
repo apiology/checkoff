@@ -84,7 +84,7 @@ typecheck: build-typecheck ## validate types in code and configuration
 	bin/srb tc
 	bin/overcommit_branch # ideally this would just run solargraph
 
-citypecheck: ## Run type check from CircleCI
+citypecheck: build-typecheck ## Run type check from CircleCI
 	bin/srb tc
 	# overcommit_branch gets run in quality chain
 
