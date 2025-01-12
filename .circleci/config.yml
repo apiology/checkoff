@@ -220,9 +220,10 @@ jobs:
           steps:
             - update_dependencies:
                 gems: checkoff
-      - run:
-          name: Verify deltas
+      - run_with_languages:
+          label: Verify deltas
           command: |
+            bin/srb tc
             if ! git diff --exit-code .
             then
               >&2 echo "Please resolve changes to avoid caching difficulties"
