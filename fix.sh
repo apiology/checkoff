@@ -232,12 +232,16 @@ ensure_bundle() {
   #
   # This affects nokogiri, which will try to reinstall itself in
   # Docker builds where it's already installed if this is not run.
+  make Gemfile.lock
   make bundle_install
 }
 
 set_ruby_local_version() {
   latest_ruby_version="$(cut -d' ' -f1 <<< "${ruby_versions}")"
-  echo "${latest_ruby_version}" > .ruby-version
+  if [ "${latest_ruby_version}" != "$(cat .ruby-version 2>/dev/null)" ]
+  then
+    echo "${latest_ruby_version}" > .ruby-version
+  fi
 }
 
 latest_python_version() {
