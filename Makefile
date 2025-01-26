@@ -27,19 +27,20 @@ start: ## run code continously and watch files for changes
 
 rbi/checkoff.rbi: yardoc.installed $(wildcard config/annotations_*.rb) $(SOURCE_FILES)  ## Generate Sorbet types from Yard docs
 	rm -f rbi/checkoff.rbi
-	bin/sord --replace-errors-with-untyped --exclude-messages OMIT --no-regenerate rbi/checkoff.rbi
+	bin/sord gen --replace-errors-with-untyped --exclude-messages OMIT --no-regenerate rbi/checkoff.rbi
 
 sig/checkoff.rbs: yardoc.installed ## Generate RBS file
 	bundle exec sord --replace-errors-with-untyped --exclude-messages OMIT --no-regenerate sig/checkoff.rbs
 
-types.installed: tapioca.installed Gemfile.lock Gemfile.lock.installed sorbet/tapioca/require.rb sorbet/config rbi/checkoff.rbi ## Ensure typechecking dependencies are in place
-	bundle exec yard gems 2>&1 || bundle exec yard gems --safe 2>&1 || bundle exec yard gems 2>&1
+types.installed: tapioca.installed Gemfile.lock Gemfile.lock.installed rbi/checkoff.rbi sorbet/tapioca/require.rb sorbet/config ## Ensure typechecking dependencies are in place
+	bin/yard gems 2>&1 || bin/yard gems --safe 2>&1 || bin/yard gems 2>&1
+	# bin/solargraph scan 2>&1
 	bin/spoom srb bump || true
 	# spoom rudely updates timestamps on files, so let's keep up by
 	# touching yardoc.installed so we dont' end up in a vicious
 	# cycle
 	touch yardoc.installed rbi/checkoff.rbi
-	# bundle exec solargraph scan 2>&1
+	# bin/solargraph scan 2>&1
 	touch types.installed
 
 build: bundle_install pip_install build-typecheck ## Update 3rd party packages as well and produce any artifacts needed from code
@@ -47,8 +48,12 @@ build: bundle_install pip_install build-typecheck ## Update 3rd party packages a
 sorbet/machine_specific_config:
 	echo "--cache-dir=$$HOME/.sorbet-cache" > sorbet/machine_specific_config
 
-build-typecheck: Gemfile.lock.installed types.installed sorbet/machine_specific_config  ## Fetch information that type checking depends on
+sorbet/rbi/todo.rbi: rbi/checkoff.rbi tapioca.installed
+	bin/tapioca todo
 
+build-typecheck: Gemfile.lock.installed types.installed sorbet/machine_specific_config sorbet/rbi/todo.rbi ## Fetch information that type checking depends on
+
+# Only create this once, so no dependencies
 sorbet/tapioca/require.rb:
 	make sorbet/machine_specific_config vendor/.keep
 	bin/tapioca init
@@ -58,11 +63,10 @@ tapioca.installed: sorbet/tapioca/require.rb Gemfile.lock.installed ## Install T
 	bin/tapioca gems
 	bin/tapioca annotations
 #	bin/tapioca dsl
-	bin/tapioca todo
 	touch tapioca.installed
 
 yardoc.installed: $(wildcard config/annotations_*.rb) $(SOURCE_FILES) ## Generate YARD documentation
-	bin/yard doc $?
+	bin/yard doc -c .yardoc $^
 	touch yardoc.installed
 
 clean-typecheck: ## Refresh the easily-regenerated information that type checking depends on
@@ -78,7 +82,7 @@ realclean-typecheck: clean-typecheck ## Remove all type checking artifacts
 realclean: clean realclean-typecheck
 	rm -fr vendor/bundle .bundle
 	rm -f .make/*
-	rm -f *.installed
+	rm *.installed
 
 typecheck: build-typecheck ## validate types in code and configuration
 	bin/srb tc
@@ -116,7 +120,7 @@ gem_dependencies: .bundle/config
 Gemfile.lock.installed: Gemfile checkoff.gemspec vendor/.keep
 	touch Gemfile.lock.installed
 
-vendor/.keep: Gemfile.lock
+vendor/.keep: Gemfile.lock .ruby-version
 	make gem_dependencies
 	bundle install
 	touch vendor/.keep
@@ -124,7 +128,7 @@ vendor/.keep: Gemfile.lock
 bundle_install: Gemfile.lock.installed ## Install Ruby dependencies
 
 clear_metrics: ## remove or reset result artifacts created by tests and quality tools
-	bundle exec rake clear_metrics || true
+	bin/rake clear_metrics || true
 
 clean: clear_metrics clean-typecoverage clean-typecheck clean-coverage ## remove all built artifacts
 
@@ -134,7 +138,7 @@ overcommit: ## run precommit quality checks
 	bin/overcommit_branch
 
 overcommit_branch: ## run precommit quality checks only on changed files
-	@bundle exec overcommit_branch
+	@bin/overcommit_branch
 
 quality: overcommit ## run precommit quality checks
 
@@ -142,10 +146,10 @@ test: ## Run lower-level tests
 	@bundle exec rake test
 
 rubocop: ## Run rubocop
-	@bundle exec rubocop
+	@bin/rubocop
 
 rubocop-ratchet: rubocop ## Run rubocop and then ratchet numbers of errors in todo file
-	@bundle exec rubocop --regenerate-todo --no-exclude-limit --auto-gen-only-exclude --no-auto-gen-timestamp
+	@bin/rubocop --regenerate-todo --no-exclude-limit --auto-gen-only-exclude --no-auto-gen-timestamp
 	@if [ -f .rubocop_todo.yml ]; \
 	  then \
 	    git diff --exit-code .rubocop.yml; \
@@ -153,12 +157,12 @@ rubocop-ratchet: rubocop ## Run rubocop and then ratchet numbers of errors in to
 	fi
 
 repl: bundle_install ## Launch an interactive development shell
-	@bundle exec rake repl
+	@bin/rake repl
 
 clean-coverage: clear_metrics ## Clean out previous output of test coverage to avoid flaky results from previous runs
 
 coverage: test report-coverage ## check code coverage
-	@bundle exec rake undercover
+	@bin/rake undercover
 
 release: sig/checkoff.rbs rbi/checkoff.rbi ## Create a new release
 	bundle exec rake release
@@ -174,7 +178,7 @@ update_apt: .make/apt_updated
 cicoverage: citest coverage ## check code coverage
 
 update_from_cookiecutter: ## Bring in changes from template project used to create this repo
-	bundle exec overcommit --uninstall
+	bin/overcommit --uninstall
 	# cookiecutter_project_upgrader does its work in
 	# .git/cookiecutter/checkoff, but RuboCop wants to inherit
 	# config from all directories above it - avoid config
@@ -184,15 +188,15 @@ update_from_cookiecutter: ## Bring in changes from template project used to crea
 	IN_COOKIECUTTER_PROJECT_UPGRADER=1 cookiecutter_project_upgrader || true
 	mv .rubocop-renamed.yml .rubocop.yml
 	git checkout cookiecutter-template && git push --no-verify
-	git checkout main; overcommit --sign && overcommit --sign pre-commit && git checkout main && git pull && git checkout -b update-from-cookiecutter-$$(date +%Y-%m-%d-%H%M)
+	git checkout main; overcommit --sign && overcommit --sign pre-commit && overcommit --sign pre-push && git checkout main && git pull && git checkout -b update-from-cookiecutter-$$(date +%Y-%m-%d-%H%M)
 	git merge cookiecutter-template || true
 	git checkout --theirs sorbet/rbi/gems || true
 	git checkout --ours Gemfile.lock || true
 	# update frequently security-flagged gems while we're here
-	bundle update --conservative json nokogiri rack rexml yard || true
+	bundle update --conservative json nokogiri rack rexml yard brakeman || true
 	( make build && git add Gemfile.lock ) || true
 	bin/spoom srb bump || true
-	bundle exec overcommit --install || true
+	bin/overcommit --install || true
 	@echo
 	@echo "Please resolve any merge conflicts below and push up a PR with:"
 	@echo
