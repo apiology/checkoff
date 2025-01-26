@@ -233,22 +233,15 @@ ensure_bundle() {
   # This affects nokogiri, which will try to reinstall itself in
   # Docker builds where it's already installed if this is not run.
   make Gemfile.lock
-  PLATFORMS="arm64-darwin-24 x86_64-linux x86_64-linux-musl aarch64-linux aarch64-linux-musl"
-  for platform in ${PLATFORMS}
-  do
-    if ! grep -q "^  ${platform}$" Gemfile.lock
-    then
-      echo "Missing platform $platform in Gemfile.lock - adding all of ${PLATFORMS}"
-      bundle lock --add-platform "${PLATFORMS// /,}"
-      break
-    fi
-  done
   make bundle_install
 }
 
 set_ruby_local_version() {
   latest_ruby_version="$(cut -d' ' -f1 <<< "${ruby_versions}")"
-  echo "${latest_ruby_version}" > .ruby-version
+  if [ "${latest_ruby_version}" != "$(cat .ruby-version 2>/dev/null)" ]
+  then
+    echo "${latest_ruby_version}" > .ruby-version
+  fi
 }
 
 latest_python_version() {
