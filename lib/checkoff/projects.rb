@@ -33,7 +33,7 @@ module Checkoff
     # @!parse
     #   extend CacheMethod::ClassMethods
 
-    # @param config [Hash<Symbol, Object>]
+    # @param config [Checkoff::Internal::EnvFallbackConfigLoader]
     # @param client [Asana::Client]
     # @param workspaces [Checkoff::Workspaces]
     # @param project_hashes [Checkoff::Internal::ProjectHashes]

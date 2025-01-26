@@ -7,4 +7,3 @@
 module Asana::Collection; end
 module Asana::Resource; end
 module Logging::Rails; end
-module Mocha::Mock; end

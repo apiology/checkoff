@@ -157,6 +157,20 @@ class TestTags < ClassTest
     assert_equal(task_collection, result)
   end
 
+  def respond_like_instance_of
+    {
+      config: Checkoff::Internal::EnvFallbackConfigLoader,
+      workspaces: Checkoff::Workspaces,
+      clients: Checkoff::Clients,
+      client: Asana::Client,
+      projects: Checkoff::Projects,
+    }
+  end
+
+  def respond_like
+    {}
+  end
+
   def class_under_test
     Checkoff::Tags
   end

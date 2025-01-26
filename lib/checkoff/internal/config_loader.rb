@@ -1,4 +1,4 @@
-# typed: false
+# typed: true
 # frozen_string_literal: true
 
 require 'yaml'
@@ -50,8 +50,7 @@ module Checkoff
     # Load configuration file
     class ConfigLoader
       class << self
-        # @sg-ignore
-        # @return [Hash<Symbol, Object>]
+        # @return [EnvFallbackConfigLoader]
         def load(sym)
           yaml_result = load_yaml_file(sym)
           EnvFallbackConfigLoader.new(yaml_result, sym, yaml_filename(sym))

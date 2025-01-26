@@ -942,6 +942,22 @@ class TestTaskSelectors < ClassTest
                                                    [:last_task_milestone_does_not_depend_on_this_task?]))
   end
 
+  def respond_like_instance_of
+    {
+      config: Checkoff::Internal::EnvFallbackConfigLoader,
+      workspaces: Checkoff::Workspaces,
+      clients: Checkoff::Clients,
+      client: Asana::Client,
+      tasks: Checkoff::Tasks,
+      timelines: Checkoff::Timelines,
+      custom_fields: Checkoff::CustomFields,
+    }
+  end
+
+  def respond_like
+    {}
+  end
+
   # @return [Class<Checkoff::TaskSelectors>]
   def class_under_test
     Checkoff::TaskSelectors

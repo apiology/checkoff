@@ -16,7 +16,7 @@ module Checkoff
     # @return [Checkoff::Projects]
     attr_reader :projects
 
-    # @param config [Hash<Symbol, Object>]
+    # @param config [Checkoff::Internal::EnvFallbackConfigLoader]
     # @param client [Asana::Client]
     # @param projects [Checkoff::Projects]
     def initialize(config: Checkoff::Internal::ConfigLoader.load(:asana),

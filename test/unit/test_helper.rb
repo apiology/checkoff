@@ -109,3 +109,11 @@ def get_initializer_mocks(clazz,
   end
   mocks
 end
+
+module Mocha
+  class Mock
+    def is_a?(expected)
+      @responder.class <= expected || super
+    end
+  end
+end
