@@ -5,6 +5,8 @@
 # @!parse
 #   module Asana
 #     class Client
+#       # @return [Asana::ProxiedResourceClasses::Tag]
+#       def tags; end
 #       # @return [Asana::ProxiedResourceClasses::Task]
 #       def tasks; end
 #       # @return [Asana::ProxiedResourceClasses::Workspace]
@@ -21,6 +23,14 @@
 #       def users; end
 #       # @return [Asana::ProxiedResourceClasses::CustomField]
 #       def custom_fields; end
+#       # Public: Performs a GET request against an arbitrary Asana URL. Allows for
+#       # the user to interact with the API in ways that haven't been
+#       # reflected/foreseen in this library.
+#       #
+#       # @param url [String] the URL to GET
+#       # @param args [Object] the request I/O options
+#       # @return [Asana::HttpClient::Response]
+#       def get(url, **args); end
 #     end
 #     module Resources
 #       # https://developers.asana.com/reference/gettask
@@ -91,6 +101,18 @@
 #         #
 #         # @return [Enumerable<Asana::Resources::CustomField>]
 #         def get_custom_fields_for_workspace(workspace_gid: required("workspace_gid"), options: {}); end
+#       end
+#       class Tag
+#          # Get tags in a workspace
+#          #
+#          # @param workspace_gid [String]  (required) Globally unique identifier for the workspace or organization.
+#          # @param options [Hash] the request I/O options
+#          # > offset - [str]  Offset token. An offset to the next page returned by the API. A pagination request will return an offset token, which can be used as an input parameter to the next request. If an offset is not passed in, the API will return the first page of results. 'Note: You can only pass in an offset that was returned to you via a previously paginated request.'
+#          # > limit - [int]  Results per page. The number of objects to return per page. The value must be between 1 and 100.
+#          # > opt_fields - [list[str]]  Defines fields to return. Some requests return *compact* representations of objects in order to conserve resources and complete the request more efficiently. Other times requests return more information than you may need. This option allows you to list the exact set of fields that the API should be sure to return for the objects. The field names should be provided as paths, described below. The id of included objects will always be returned, regardless of the field options.
+#          # > opt_pretty - [bool]  Provides “pretty” output. Provides the response in a “pretty” format. In the case of JSON this means doing proper line breaking and indentation to make it readable. This will take extra time and increase the response size so it is advisable only to use this during debugging.
+#          # @return [Enumerable<Asana::Resources::Tag>]
+#          def get_tags_for_workspace(workspace_gid:, options: {}); end
 #       end
 #       class Task
 #         # Get subtasks from a task

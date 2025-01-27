@@ -34,7 +34,7 @@ module Checkoff
     # @return [Checkoff::MyTasks]
     attr_reader :my_tasks
 
-    # @param config [Hash<Symbol, Object>]
+    # @param config [Checkoff::Internal::EnvFallbackConfigLoader]
     # @param client [Asana::Client]
     # @param projects [Checkoff::Projects]
     # @param workspaces [Checkoff::Workspaces]
@@ -48,7 +48,8 @@ module Checkoff
                    time: Time)
       @projects = projects
       @workspaces = workspaces
-      @my_tasks = Checkoff::MyTasks.new(config: config, projects: projects, client: client)
+      @my_tasks = Checkoff::MyTasks
+        .new(config: config, projects: projects, client: client)
       @client = client
       @time = time
     end
@@ -112,8 +113,6 @@ module Checkoff
       client.tasks.get_tasks(section: section_gid, **options)
     end
 
-    # XXX: Rename to section_tasks
-    #
     # Pulls task objects from a specified section
     #
     # @param workspace_name [String]

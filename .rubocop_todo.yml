@@ -80,11 +80,10 @@ Performance/RedundantEqualityComparisonBlock:
   Exclude:
     - 'lib/checkoff/internal/selector_classes/task.rb'
 
-# Offense count: 10
+# Offense count: 9
 # Configuration parameters: RequireForNonPublicMethods.
 Style/DocumentationMethod:
   Exclude:
     - 'spec/**/*'
     - 'test/**/*'
     - 'lib/checkoff/cli.rb'
-    - 'lib/checkoff/tags.rb'
