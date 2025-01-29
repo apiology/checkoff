@@ -282,6 +282,8 @@ jobs:
             unset BUNDLE_PATH
             bundle install
             bundle exec bump --commit-message ' [skip ci]' --tag --tag-prefix=v minor
+            bundle exec overcommit --sign pre-commit
+            bundle exec overcommit --sign pre-push
             # bundle exec needed for overcommit hooks
             #
             # if this step fails, check that
