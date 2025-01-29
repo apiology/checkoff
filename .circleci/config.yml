@@ -224,12 +224,6 @@ jobs:
       - image: cimg/base:current
     steps:
       - set_up_environment
-      - when:
-          condition:
-            equal: [<< pipeline.git.branch >>, "main"]
-          steps:
-            - update_dependencies:
-                gems: checkoff
       - run_with_languages:
           label: Verify deltas
           command: |
