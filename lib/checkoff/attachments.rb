@@ -165,7 +165,7 @@ module Checkoff
     end
 
     # https://github.com/Asana/ruby-asana/blob/master/lib/asana/resource_includes/response_helper.rb#L7
-    # @param response [Faraday::Response]
+    # @param response [Asana::HttpClient::Response]
     #
     # @return [Array<Hash, Hash>]
     def parse(response)
