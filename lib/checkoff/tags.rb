@@ -30,10 +30,10 @@ module Checkoff
     # @param projects [Checkoff::Projects]
     # @param workspaces [Checkoff::Workspaces]
     def initialize(config: Checkoff::Internal::ConfigLoader.load(:asana),
-                   clients: Checkoff::Clients.new(config: config),
+                   clients: Checkoff::Clients.new(config:),
                    client: clients.client,
-                   projects: Checkoff::Projects.new(config: config, client: client),
-                   workspaces: Checkoff::Workspaces.new(config: config, client: client))
+                   projects: Checkoff::Projects.new(config:, client:),
+                   workspaces: Checkoff::Workspaces.new(config:, client:))
       @workspaces = T.let(workspaces, Checkoff::Workspaces)
       @projects = T.let(projects, Checkoff::Projects)
       @client = T.let(client, Asana::Client)
@@ -52,7 +52,7 @@ module Checkoff
       tag_gid = tag.gid
 
       tasks_by_tag_gid(workspace_name, tag_gid,
-                       only_uncompleted: only_uncompleted, extra_fields: extra_fields)
+                       only_uncompleted:, extra_fields:)
     end
 
     # @param workspace_name [String]
@@ -62,13 +62,13 @@ module Checkoff
     #
     # @return [Enumerable<Asana::Resources::Task>]
     def tasks_by_tag_gid(workspace_name, tag_gid, only_uncompleted: true, extra_fields: [])
-      options = projects.task_options(extra_fields: extra_fields,
-                                      only_uncompleted: only_uncompleted)
+      options = projects.task_options(extra_fields:,
+                                      only_uncompleted:)
       params = build_params(options)
       Asana::Resources::Collection.new(parse(client.get("/tags/#{tag_gid}/tasks",
-                                                        params: params, options: options[:options])),
+                                                        params:, options: options[:options])),
                                        type: Asana::Resources::Task,
-                                       client: client)
+                                       client:)
     end
 
     # @param workspace_name [String]

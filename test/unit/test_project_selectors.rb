@@ -26,7 +26,7 @@ class TestProjectSelectors < ClassTest
       'display_value' => 'something else',
     }
     project_selectors = get_test_object do
-      @mocks[:custom_fields] = Checkoff::CustomFields.new(client: client)
+      @mocks[:custom_fields] = Checkoff::CustomFields.new(client:)
       custom_fields = [custom_field]
       # @sg-ignore
       project.expects(:custom_fields).returns(custom_fields)
@@ -46,7 +46,7 @@ class TestProjectSelectors < ClassTest
       'display_value' => 'timeline',
     }
     project_selectors = get_test_object do
-      @mocks[:custom_fields] = Checkoff::CustomFields.new(client: client)
+      @mocks[:custom_fields] = Checkoff::CustomFields.new(client:)
       custom_fields = [custom_field]
       # @sg-ignore
       project.expects(:custom_fields).returns(custom_fields)
@@ -67,7 +67,7 @@ class TestProjectSelectors < ClassTest
       'display_value' => 'timeline',
     }
     project_selectors = get_test_object do
-      @mocks[:custom_fields] = Checkoff::CustomFields.new(client: client)
+      @mocks[:custom_fields] = Checkoff::CustomFields.new(client:)
       custom_fields = [custom_field]
       # @sg-ignore
       project.expects(:custom_fields).returns(custom_fields)
@@ -90,7 +90,7 @@ class TestProjectSelectors < ClassTest
       'display_value' => 'timeline,something else',
     }
     project_selectors = get_test_object do
-      @mocks[:custom_fields] = Checkoff::CustomFields.new(client: client)
+      @mocks[:custom_fields] = Checkoff::CustomFields.new(client:)
       custom_fields = [custom_field]
       # @sg-ignore
       project.expects(:custom_fields).returns(custom_fields)
@@ -110,7 +110,7 @@ class TestProjectSelectors < ClassTest
       'display_value' => 'timeline,something else',
     }
     project_selectors = get_test_object do
-      @mocks[:custom_fields] = Checkoff::CustomFields.new(client: client)
+      @mocks[:custom_fields] = Checkoff::CustomFields.new(client:)
       custom_fields = [custom_field]
       # @sg-ignore
       project.expects(:custom_fields).returns(custom_fields)
@@ -124,7 +124,7 @@ class TestProjectSelectors < ClassTest
   # @return [void]
   def test_filter_via_custom_field_value_contains_any_value_no_custom_field_false
     project_selectors = get_test_object do
-      @mocks[:custom_fields] = Checkoff::CustomFields.new(client: client)
+      @mocks[:custom_fields] = Checkoff::CustomFields.new(client:)
       custom_fields = []
       # @sg-ignore
       project.expects(:custom_fields).returns(custom_fields).at_least(1)

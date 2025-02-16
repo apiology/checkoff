@@ -132,9 +132,9 @@ module Checkoff
 
         task_gid = resource.fetch('gid')
         options = {
-          fields: fields,
+          fields:,
         }
-        @client.tasks.find_by_id(task_gid, options: options)
+        @client.tasks.find_by_id(task_gid, options:)
       rescue Asana::Errors::NotFound
         nil
       end

@@ -21,18 +21,18 @@ module Checkoff
     SHORT_CACHE_TIME = MINUTE
 
     # @sg-ignore
-    # @param [Hash] config
+    # @param [Hash,Checkoff::Internal::EnvFallbackConfigLoader] config
     # @param [Asana::Client] client
     # @param [Checkoff::Tasks] tasks
     # @param [Checkoff::Timelines] timelines
     def initialize(config: Checkoff::Internal::ConfigLoader.load(:asana),
-                   client: Checkoff::Clients.new(config: config).client,
-                   tasks: Checkoff::Tasks.new(config: config,
-                                              client: client),
-                   timelines: Checkoff::Timelines.new(config: config,
-                                                      client: client),
-                   custom_fields: Checkoff::CustomFields.new(config: config,
-                                                             client: client))
+                   client: Checkoff::Clients.new(config:).client,
+                   tasks: Checkoff::Tasks.new(config:,
+                                              client:),
+                   timelines: Checkoff::Timelines.new(config:,
+                                                      client:),
+                   custom_fields: Checkoff::CustomFields.new(config:,
+                                                             client:))
       @config = config
       @tasks = tasks
       @timelines = timelines
@@ -44,8 +44,8 @@ module Checkoff
     #        task details.  Examples: [:tag, 'foo'] [:not, [:tag, 'foo']] [:tag, 'foo']
     # @return [Boolean]
     def filter_via_task_selector(task, task_selector)
-      evaluator = TaskSelectorEvaluator.new(task: task, tasks: tasks, timelines: timelines,
-                                            custom_fields: custom_fields)
+      evaluator = TaskSelectorEvaluator.new(task:, tasks:, timelines:,
+                                            custom_fields:)
       evaluator.evaluate(task_selector)
     end
 
@@ -89,7 +89,7 @@ module Checkoff
         extra_fields = ['custom_fields']
         projects = Checkoff::Projects.new
         project = projects.project_or_raise(workspace_name, project_name)
-        raw_tasks = projects.tasks_from_project(project, extra_fields: extra_fields)
+        raw_tasks = projects.tasks_from_project(project, extra_fields:)
         tasks = raw_tasks.filter { |task| task_selectors.filter_via_task_selector(task, task_selector) }
         # avoid n+1 queries generating the full task formatting
         puts JSON.pretty_generate(tasks.map(&:to_h))

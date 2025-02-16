@@ -26,7 +26,7 @@ module Checkoff
         # copy of task_data without the 'unwrapped' key
         clean_task_data = task_data.dup
         clean_task_data.delete('unwrapped')
-        Asana::Resources::Task.new(clean_task_data, client: client)
+        Asana::Resources::Task.new(clean_task_data, client:)
       end
 
       private

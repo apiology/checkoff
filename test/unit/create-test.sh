@@ -21,7 +21,8 @@ class Test${class_name} < ClassTest
   def_delegators(:@mocks, :workspaces, :client)
 
   let_mock :workspace_name, :${underscored_singular_name}_name, :${underscored_singular_name}, :workspace, :workspace_gid,
-           :${underscored_plural_name}_api, :wrong_${underscored_singular_name}, :wrong_${underscored_singular_name}_name
+           :${underscored_plural_name}_api, :wrong_${underscored_singular_name}, :wrong_${underscored_singular_name}_name,
+           :${underscored_singular_name}
 
   def test_${underscored_singular_name}_or_raise_raises
     ${underscored_plural_name} = get_test_object do

@@ -30,7 +30,7 @@ module Checkoff
     SHORT_CACHE_TIME = MINUTE
     private_constant :SHORT_CACHE_TIME
 
-    # @param config [Hash]
+    # @param config [Hash,Checkoff::Internal::EnvFallbackConfigLoader]
     # @param workspaces [Checkoff::Workspaces]
     # @param tasks [Checkoff::Tasks]
     # @param sections [Checkoff::Sections]
@@ -38,11 +38,11 @@ module Checkoff
     # @param clients [Checkoff::Clients]
     # @param client [Asana::Client]
     def initialize(config: Checkoff::Internal::ConfigLoader.load(:asana),
-                   workspaces: Checkoff::Workspaces.new(config: config),
-                   tasks: Checkoff::Tasks.new(config: config),
-                   sections: Checkoff::Sections.new(config: config),
-                   projects: Checkoff::Projects.new(config: config),
-                   clients: Checkoff::Clients.new(config: config),
+                   workspaces: Checkoff::Workspaces.new(config:),
+                   tasks: Checkoff::Tasks.new(config:),
+                   sections: Checkoff::Sections.new(config:),
+                   projects: Checkoff::Projects.new(config:),
+                   clients: Checkoff::Clients.new(config:),
                    client: clients.client)
       @workspaces = workspaces
       @tasks = tasks

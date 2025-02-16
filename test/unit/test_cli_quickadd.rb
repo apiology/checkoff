@@ -31,10 +31,10 @@ class TestCLIQuickadd < Minitest::Test
 
   def set_mocks
     @mocks = {
-      config: config,
-      workspaces: workspaces,
-      sections: sections,
-      tasks: tasks,
+      config:,
+      workspaces:,
+      sections:,
+      tasks:,
       stderr: $stderr,
       stdout: $stdout,
     }
@@ -56,7 +56,7 @@ class TestCLIQuickadd < Minitest::Test
 
     workspace.expects(:gid).returns(workspace_gid)
     @mocks[:tasks].expects(:add_task).with('my task name',
-                                           workspace_gid: workspace_gid)
+                                           workspace_gid:)
   end
 
   def test_quickadd

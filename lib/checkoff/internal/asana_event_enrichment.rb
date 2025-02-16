@@ -14,7 +14,7 @@ module Checkoff
     # Add useful info (like resource task names) into an Asana
     # event/event filters/webhook subscription for human consumption
     class AsanaEventEnrichment
-      # @param config [Hash]
+      # @param config [Hash,Checkoff::Internal::EnvFallbackConfigLoader]
       # @param workspaces [Checkoff::Workspaces]
       # @param tasks [Checkoff::Tasks]
       # @param sections [Checkoff::Sections]
@@ -24,12 +24,12 @@ module Checkoff
       # @param client [Asana::Client]
       # @param asana_event_enrichment [Checkoff::Internal::AsanaEventEnrichment]
       def initialize(config: Checkoff::Internal::ConfigLoader.load(:asana),
-                     workspaces: Checkoff::Workspaces.new(config: config),
-                     tasks: Checkoff::Tasks.new(config: config),
-                     sections: Checkoff::Sections.new(config: config),
-                     projects: Checkoff::Projects.new(config: config),
-                     resources: Checkoff::Resources.new(config: config),
-                     clients: Checkoff::Clients.new(config: config),
+                     workspaces: Checkoff::Workspaces.new(config:),
+                     tasks: Checkoff::Tasks.new(config:),
+                     sections: Checkoff::Sections.new(config:),
+                     projects: Checkoff::Projects.new(config:),
+                     resources: Checkoff::Resources.new(config:),
+                     clients: Checkoff::Clients.new(config:),
                      client: clients.client)
         @workspaces = workspaces
         @tasks = tasks
@@ -91,7 +91,7 @@ module Checkoff
       # @return [Array<([String, nil], [String,nil])>]
       def enrich_gid(gid, resource_type: nil)
         # @sg-ignore
-        resource, resource_type = resources.resource_by_gid(gid, resource_type: resource_type)
+        resource, resource_type = resources.resource_by_gid(gid, resource_type:)
         [resource&.name, resource_type]
       end
 
@@ -146,7 +146,7 @@ module Checkoff
         # @type [String]
         gid = parent.fetch('gid')
         # @sg-ignore
-        name, _resource_type = enrich_gid(gid, resource_type: resource_type)
+        name, _resource_type = enrich_gid(gid, resource_type:)
         parent['checkoff:enriched:name'] = name if name
 
         nil
@@ -165,7 +165,7 @@ module Checkoff
         gid = resource.fetch('gid')
 
         # @sg-ignore
-        name, _resource_type = enrich_gid(gid, resource_type: resource_type)
+        name, _resource_type = enrich_gid(gid, resource_type:)
         resource['checkoff:enriched:name'] = name if name
 
         nil

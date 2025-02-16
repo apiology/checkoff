@@ -20,9 +20,9 @@ module Checkoff
     # @param client [Asana::Client]
     # @param projects [Checkoff::Projects]
     def initialize(config: Checkoff::Internal::ConfigLoader.load(:asana),
-                   client: Checkoff::Clients.new(config: config).client,
-                   projects: Checkoff::Projects.new(config: config,
-                                                    client: client))
+                   client: Checkoff::Clients.new(config:).client,
+                   projects: Checkoff::Projects.new(config:,
+                                                    client:))
       @config = config
       @client = client
       @projects = projects
@@ -40,7 +40,7 @@ module Checkoff
                                       only_uncompleted: true,
                                       extra_fields: [])
       raw_tasks = projects.tasks_from_project(project,
-                                              only_uncompleted: only_uncompleted,
+                                              only_uncompleted:,
                                               extra_fields: extra_fields + ['assignee_section.name'])
       active_tasks = projects.active_tasks(raw_tasks)
       by_my_tasks_section(active_tasks, project.gid)
@@ -62,7 +62,7 @@ module Checkoff
     # @return [Hash<String, Enumerable<Asana::Resources::Task>>]
     def by_my_tasks_section(tasks, project_gid)
       by_section = {}
-      sections = client.sections.get_sections_for_project(project_gid: project_gid,
+      sections = client.sections.get_sections_for_project(project_gid:,
                                                           options: { fields: ['name'] })
       sections.each_entry { |section| by_section[section_key(section.name)] = [] }
       tasks.each do |task|

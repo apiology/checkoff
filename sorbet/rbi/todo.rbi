@@ -4,6 +4,6 @@
 
 # typed: false
 
-module Asana::Collection; end
-module Asana::Resource; end
 module Logging::Rails; end
+module Parlour::RbiGenerator::Namespace::Mixin::Searchable; end
+module Parlour::RbsGenerator::Namespace::Mixin::Searchable; end

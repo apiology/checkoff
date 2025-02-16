@@ -14,8 +14,8 @@ class ClassTest < Minitest::Test
   # end
   def get_test_object(clazz = class_under_test, &twiddle_mocks)
     @mocks = get_initializer_mocks(clazz,
-                                   respond_like_instance_of: respond_like_instance_of,
-                                   respond_like: respond_like)
+                                   respond_like_instance_of:,
+                                   respond_like:)
     yield @mocks if twiddle_mocks
     create_object(clazz)
   rescue StandardError

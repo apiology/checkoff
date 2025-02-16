@@ -13,7 +13,7 @@ module Checkoff
       # @param custom_fields [Checkoff::CustomFields]
       def initialize(time_class: Time, date_class: Date,
                      client: Checkoff::Clients.new.client,
-                     custom_fields: Checkoff::CustomFields.new(client: client))
+                     custom_fields: Checkoff::CustomFields.new(client:))
         @time_class = time_class
         @date_class = date_class
         @custom_fields = custom_fields

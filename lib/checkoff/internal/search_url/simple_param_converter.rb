@@ -229,7 +229,7 @@ module Checkoff
           clazz = ARGS.fetch(key)
           # @sg-ignore
           # @type [SimpleParam::SimpleParam]
-          obj = clazz.new(key: key, values: values)
+          obj = clazz.new(key:, values:)
           # @sg-ignore
           obj.convert
         end

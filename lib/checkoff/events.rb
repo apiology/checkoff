@@ -43,11 +43,11 @@ module Checkoff
     # @param asana_event_filter_class [Class<Checkoff::Internal::AsanaEventFilter>]
     # @param asana_event_enrichment [Checkoff::Internal::AsanaEventEnrichment]
     def initialize(config: Checkoff::Internal::ConfigLoader.load(:asana),
-                   workspaces: Checkoff::Workspaces.new(config: config),
-                   tasks: Checkoff::Tasks.new(config: config),
-                   sections: Checkoff::Sections.new(config: config),
-                   projects: Checkoff::Projects.new(config: config),
-                   clients: Checkoff::Clients.new(config: config),
+                   workspaces: Checkoff::Workspaces.new(config:),
+                   tasks: Checkoff::Tasks.new(config:),
+                   sections: Checkoff::Sections.new(config:),
+                   projects: Checkoff::Projects.new(config:),
+                   clients: Checkoff::Clients.new(config:),
                    client: clients.client,
                    asana_event_filter_class: Checkoff::Internal::AsanaEventFilter,
                    asana_event_enrichment: Checkoff::Internal::AsanaEventEnrichment.new)
@@ -65,7 +65,7 @@ module Checkoff
     #
     # @return [Array<Hash>] The events that should be acted on
     def filter_asana_events(filters, asana_events)
-      asana_event_filter = @asana_event_filter_class.new(filters: filters)
+      asana_event_filter = @asana_event_filter_class.new(filters:)
       asana_events.select { |event| asana_event_filter.matches?(event) }
     end
 

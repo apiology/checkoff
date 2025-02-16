@@ -33,7 +33,7 @@ module Checkoff
     # @!parse
     #   extend CacheMethod::ClassMethods
 
-    # @param config [Hash<Symbol, Object>]
+    # @param config [Hash<Symbol, Object>,Checkoff::Internal::EnvFallbackConfigLoader]
     # @param workspaces [Checkoff::Workspaces]
     # @param task_selectors [Checkoff::TaskSelectors]
     # @param projects [Checkoff::Projects]
@@ -42,10 +42,10 @@ module Checkoff
     # @param search_url_parser [Checkoff::Internal::SearchUrl::Parser]
     # @param asana_resources_collection_class [Class<Asana::Resources::Collection>]
     def initialize(config: Checkoff::Internal::ConfigLoader.load(:asana),
-                   workspaces: Checkoff::Workspaces.new(config: config),
-                   task_selectors: Checkoff::TaskSelectors.new(config: config),
-                   projects: Checkoff::Projects.new(config: config),
-                   clients: Checkoff::Clients.new(config: config),
+                   workspaces: Checkoff::Workspaces.new(config:),
+                   task_selectors: Checkoff::TaskSelectors.new(config:),
+                   projects: Checkoff::Projects.new(config:),
+                   clients: Checkoff::Clients.new(config:),
                    client: clients.client,
                    search_url_parser: Checkoff::Internal::SearchUrl::Parser.new,
                    asana_resources_collection_class: Asana::Resources::Collection)
@@ -74,8 +74,8 @@ module Checkoff
       # @sg-ignore
       api_params, task_selector = @search_url_parser.convert_params(url)
       debug { "Task search params: api_params=#{api_params}, task_selector=#{task_selector}" }
-      raw_task_search(api_params, workspace_gid: workspace.gid, task_selector: task_selector,
-                                  extra_fields: extra_fields)
+      raw_task_search(api_params, workspace_gid: workspace.gid, task_selector:,
+                                  extra_fields:)
     end
     cache_method :task_search, SHORT_CACHE_TIME
 
@@ -94,11 +94,11 @@ module Checkoff
                         workspace_gid:, extra_fields: [], task_selector: [],
                         fetch_all: true)
       # @sg-ignore
-      tasks = api_task_search_request(api_params, workspace_gid: workspace_gid, extra_fields: extra_fields)
+      tasks = api_task_search_request(api_params, workspace_gid:, extra_fields:)
 
       if fetch_all && tasks.count == 100
         # @sg-ignore
-        tasks = iterated_raw_task_search(api_params, workspace_gid: workspace_gid, extra_fields: extra_fields)
+        tasks = iterated_raw_task_search(api_params, workspace_gid:, extra_fields:)
       end
 
       debug { "#{tasks.count} raw tasks returned" }
@@ -131,9 +131,9 @@ module Checkoff
       options = calculate_api_options(extra_fields)
       @asana_resources_collection_class.new(parse(client.get(path,
                                                              params: api_params,
-                                                             options: options)),
+                                                             options:)),
                                             type: Asana::Resources::Task,
-                                            client: client)
+                                            client:)
     end
 
     # Perform a search using the Asana Task Search API and use manual pagination to
@@ -171,7 +171,7 @@ module Checkoff
 
         # @type [Array<Asana::Resources::Task>]
         task_batch = raw_task_search(new_api_params,
-                                     workspace_gid: workspace_gid, extra_fields: extra_fields + ['created_at'],
+                                     workspace_gid:, extra_fields: extra_fields + ['created_at'],
                                      fetch_all: false).to_a
         oldest = task_batch.to_a.last
 

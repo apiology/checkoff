@@ -50,7 +50,7 @@ module Checkoff
     # Load configuration file
     class ConfigLoader
       class << self
-        # @return [EnvFallbackConfigLoader]
+        # @return [EnvFallbackConfigLoader,Hash]
         def load(sym)
           yaml_result = load_yaml_file(sym)
           EnvFallbackConfigLoader.new(yaml_result, sym, yaml_filename(sym))

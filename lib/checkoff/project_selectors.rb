@@ -20,7 +20,7 @@ module Checkoff
     LONG_CACHE_TIME = MINUTE * 15
     SHORT_CACHE_TIME = MINUTE
 
-    # @param config [Hash<Symbol, Object>]
+    # @param config [Hash<Symbol, Object>,Checkoff::Internal::EnvFallbackConfigLoader]
     # @param workspaces [Checkoff::Workspaces]
     # @param projects [Checkoff::Projects]
     # @param custom_fields [Checkoff::CustomFields]
@@ -28,11 +28,11 @@ module Checkoff
     # @param clients [Checkoff::Clients]
     # @param client [Asana::Client]
     def initialize(config: Checkoff::Internal::ConfigLoader.load(:asana),
-                   workspaces: Checkoff::Workspaces.new(config: config),
-                   projects: Checkoff::Projects.new(config: config),
-                   custom_fields: Checkoff::CustomFields.new(config: config),
-                   portfolios: Checkoff::Portfolios.new(config: config),
-                   clients: Checkoff::Clients.new(config: config),
+                   workspaces: Checkoff::Workspaces.new(config:),
+                   projects: Checkoff::Projects.new(config:),
+                   custom_fields: Checkoff::CustomFields.new(config:),
+                   portfolios: Checkoff::Portfolios.new(config:),
+                   clients: Checkoff::Clients.new(config:),
                    client: clients.client)
       @workspaces = workspaces
       @projects = projects
@@ -46,8 +46,8 @@ module Checkoff
     #        project details.  Examples: [:tag, 'foo'] [:not, [:tag, 'foo']] [:tag, 'foo']
     # @return [Boolean]
     def filter_via_project_selector(project, project_selector)
-      evaluator = ProjectSelectorEvaluator.new(project: project, projects: projects, custom_fields: custom_fields,
-                                               workspaces: workspaces, portfolios: portfolios)
+      evaluator = ProjectSelectorEvaluator.new(project:, projects:, custom_fields:,
+                                               workspaces:, portfolios:)
       evaluator.evaluate(project_selector)
     end
 

@@ -1,7 +1,6 @@
 # typed: false
 # frozen_string_literal: true
 
-require_relative '../test_helper'
 require_relative '../class_test'
 require 'checkoff/internal/asana_event_filter'
 
@@ -190,7 +189,7 @@ class TestAsanaEventFilter < ClassTest
     asana_tasks
       .expects(:find_by_id)
       .with(gid,
-            options: { fields: fields })
+            options: { fields: })
       .returns(task_obj)
   end
 

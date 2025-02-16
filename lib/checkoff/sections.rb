@@ -40,16 +40,16 @@ module Checkoff
     # @param workspaces [Checkoff::Workspaces]
     # @param time [Class<Time>]
     def initialize(config: Checkoff::Internal::ConfigLoader.load(:asana),
-                   client: Checkoff::Clients.new(config: config).client,
-                   projects: Checkoff::Projects.new(config: config,
-                                                    client: client),
-                   workspaces: Checkoff::Workspaces.new(config: config,
-                                                        client: client),
+                   client: Checkoff::Clients.new(config:).client,
+                   projects: Checkoff::Projects.new(config:,
+                                                    client:),
+                   workspaces: Checkoff::Workspaces.new(config:,
+                                                        client:),
                    time: Time)
       @projects = projects
       @workspaces = workspaces
       @my_tasks = Checkoff::MyTasks
-        .new(config: config, projects: projects, client: client)
+        .new(config:, projects:, client:)
       @client = client
       @time = time
     end
@@ -62,7 +62,7 @@ module Checkoff
     # @return [Enumerable<Asana::Resources::Section>]
     def sections_or_raise(workspace_name, project_name, extra_fields: [])
       project = project_or_raise(workspace_name, project_name)
-      sections_by_project_gid(project.gid, extra_fields: extra_fields)
+      sections_by_project_gid(project.gid, extra_fields:)
     end
     cache_method :sections_or_raise, SHORT_CACHE_TIME
 
@@ -73,8 +73,8 @@ module Checkoff
     # @return [Enumerable<Asana::Resources::Section>]
     def sections_by_project_gid(project_gid, extra_fields: [])
       fields = (%w[name] + extra_fields).sort.uniq
-      client.sections.get_sections_for_project(project_gid: project_gid,
-                                               options: { fields: fields })
+      client.sections.get_sections_for_project(project_gid:,
+                                               options: { fields: })
     end
     cache_method :sections_by_project_gid, SHORT_CACHE_TIME
 
@@ -94,9 +94,9 @@ module Checkoff
 
       project = project_or_raise(workspace_name, project_name)
       if project_name == :my_tasks
-        my_tasks.tasks_by_section_for_my_tasks(project, only_uncompleted: only_uncompleted, extra_fields: extra_fields)
+        my_tasks.tasks_by_section_for_my_tasks(project, only_uncompleted:, extra_fields:)
       else
-        tasks_by_section_for_project(project, only_uncompleted: only_uncompleted, extra_fields: extra_fields)
+        tasks_by_section_for_project(project, only_uncompleted:, extra_fields:)
       end
     end
 
@@ -108,8 +108,8 @@ module Checkoff
     def tasks_by_section_gid(section_gid,
                              only_uncompleted: true,
                              extra_fields: [])
-      options = projects.task_options(extra_fields: extra_fields,
-                                      only_uncompleted: only_uncompleted)
+      options = projects.task_options(extra_fields:,
+                                      only_uncompleted:)
       client.tasks.get_tasks(section: section_gid, **options)
     end
 
@@ -126,8 +126,8 @@ module Checkoff
               only_uncompleted: true,
               extra_fields: [])
       section = section_or_raise(workspace_name, project_name, section_name)
-      options = projects.task_options(extra_fields: extra_fields,
-                                      only_uncompleted: only_uncompleted)
+      options = projects.task_options(extra_fields:,
+                                      only_uncompleted:)
       # Note: 30 minute cache time on a raw Enumerable from SDK gives
       # 'Your pagination token has expired' errors.  So we go ahead
       # and eagerly evaluate here so we can enjoy the cache.
@@ -157,7 +157,7 @@ module Checkoff
     # @return [Asana::Resources::Section]
     def section_or_raise(workspace_name, project_name, section_name, extra_section_fields: [])
       s = section(workspace_name, project_name, section_name,
-                  extra_section_fields: extra_section_fields)
+                  extra_section_fields:)
       if s.nil?
         valid_sections = sections_or_raise(workspace_name, project_name,
                                            extra_fields: extra_section_fields).map(&:name)
@@ -199,8 +199,8 @@ module Checkoff
     # @return [Asana::Resources::Section, nil]
     def section_by_gid(gid)
       options = {}
-      Asana::Resources::Section.new(parse(client.get("/sections/#{gid}", options: options)).first,
-                                    client: client)
+      Asana::Resources::Section.new(parse(client.get("/sections/#{gid}", options:)).first,
+                                    client:)
     rescue Asana::Errors::NotFound => e
       debug e
       nil
@@ -254,8 +254,8 @@ module Checkoff
                                      only_uncompleted: true,
                                      extra_fields: [])
       raw_tasks = projects.tasks_from_project(project,
-                                              only_uncompleted: only_uncompleted,
-                                              extra_fields: extra_fields)
+                                              only_uncompleted:,
+                                              extra_fields:)
       active_tasks = projects.active_tasks(raw_tasks)
       by_section(active_tasks, project.gid)
     end
@@ -267,7 +267,7 @@ module Checkoff
     def by_section(tasks, project_gid)
       by_section = {}
       # @sg-ignore
-      sections = client.sections.get_sections_for_project(project_gid: project_gid,
+      sections = client.sections.get_sections_for_project(project_gid:,
                                                           options: { fields: ['name'] })
       sections.each_entry { |section| by_section[section_key(section.name)] = [] }
       tasks.each { |task| file_task_by_section(by_section, task, project_gid) }

@@ -49,19 +49,19 @@ module Checkoff
         # @param date_url_params [Hash<String, Array<String>>]
         # @return [Array(Hash<String, String>, Array<[Symbol, Array]>)]
         def convert_date_params(date_url_params)
-          DateParamConverter.new(date_url_params: date_url_params).convert
+          DateParamConverter.new(date_url_params:).convert
         end
 
         # @param simple_url_params [Hash<String, Array<String>>]
         # @return [Hash<String, String>]
         def convert_simple_params(simple_url_params)
-          SimpleParamConverter.new(simple_url_params: simple_url_params).convert
+          SimpleParamConverter.new(simple_url_params:).convert
         end
 
         # @param custom_field_params [Hash<String, Array<String>>]
         # @return [Array(Hash<String, String>, Array<[Symbol, Array]>)]
         def convert_custom_field_params(custom_field_params)
-          CustomFieldParamConverter.new(custom_field_params: custom_field_params).convert
+          CustomFieldParamConverter.new(custom_field_params:).convert
         end
 
         # @param url_params [Hash<String, String>]

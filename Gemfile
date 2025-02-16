@@ -12,16 +12,23 @@ group :development, :test do
   gem 'minitest-profile'
   gem 'minitest-reporters'
   gem 'mocha', ['>= 2']
-  gem 'parlour', ['>=5.0.0']
+  gem 'parlour',
+      git: 'https://github.com/apiology/parlour',
+      branch: 'heredoc_constant_handling'
+  gem 'rbi',
+      git: 'https://github.com/apiology/rbi',
+      branch: 'basic_heredoc_support'
   # ensure recent definitions
   gem 'rbs', ['>=3.8.1']
-  gem 'rspec'
-  gem 'sord', ['>=6.0.0']
+  gem 'sord',
+      git: 'https://github.com/apiology/sord',
+      branch: 'generate_heredocs_in_constants'
   # ensure version with branch coverage
   gem 'simplecov', ['>=0.18.0']
   gem 'simplecov-lcov'
-  gem 'tapioca', require: false
-  gem 'undercover'
+  gem 'tapioca', ['>= 0.16.0'], require: false
+  # need --exclude-files
+  gem 'undercover', ['>=0.6.3']
   gem 'webmock'
 end
 
@@ -38,8 +45,11 @@ group :development do
   gem 'rubocop-rake'
   # ensure version with RSpec/VerifiedDoubleReference
   gem 'rubocop-rspec', ['>=3.4.0']
-  gem 'solargraph', ['>=0.51.0']
-  gem 'yard'
+  gem 'solargraph', ['>=0.51.2']
+  gem 'yard',
+      git: 'https://github.com/apiology/yard',
+      branch: 'fix_word_array_in_array_parsing'
+  gem 'yard-sorbet'
 end
 
 # not a direct dependency - but updates a lot and confuses
