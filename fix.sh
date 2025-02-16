@@ -147,7 +147,7 @@ ensure_ruby_versions() {
 
   # You can find out which feature versions are still supported / have
   # been release here: https://www.ruby-lang.org/en/downloads/
-  ruby_versions="$(latest_ruby_version 3.1)"
+  ruby_versions="$(latest_ruby_version 3.2)"
 
   installed_ruby_versions="$(rbenv versions --bare --skip-aliases)"
 
