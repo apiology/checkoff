@@ -13,7 +13,7 @@ Gem::Specification.new do |spec|
   spec.summary       = 'Command-line and gem client for Asana (unofficial)'
   spec.homepage      = 'https://github.com/apiology/checkoff'
   spec.license       = 'MIT license'
-  spec.required_ruby_version = '>= 3.0'
+  spec.required_ruby_version = '>= 3.2'
 
   spec.files         = Dir['README.md',
                            'Rakefile',
