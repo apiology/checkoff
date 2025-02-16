@@ -1,3 +1,43 @@
+GIT
+  remote: https://github.com/apiology/parlour
+  revision: 6158464d85dedfe0e000d8490ce36c01093612ec
+  branch: heredoc_constant_handling
+  specs:
+    parlour (9.0.0)
+      commander (~> 5.0)
+      parser
+      rainbow (~> 3.0)
+      sorbet-runtime (>= 0.5)
+
+GIT
+  remote: https://github.com/apiology/rbi
+  revision: 84947f783f590def1de7cc1ae9e4a0003946ff51
+  branch: basic_heredoc_support
+  specs:
+    rbi (0.2.4)
+      prism (~> 1.0)
+      sorbet-runtime (>= 0.5.9204)
+
+GIT
+  remote: https://github.com/apiology/sord
+  revision: c64e90eb751f8627eeed59633fcbb3cdfacda633
+  branch: generate_heredocs_in_constants
+  specs:
+    sord (6.0.0)
+      commander (~> 5.0)
+      parlour (~> 9.0)
+      parser
+      rbs (~> 3.0)
+      sorbet-runtime
+      yard
+
+GIT
+  remote: https://github.com/apiology/yard
+  revision: a5dcc5549be7ed7bd39a896dc2238854f717cfda
+  branch: fix_word_array_in_array_parsing
+  specs:
+    yard (0.9.37)
+
 PATH
   remote: .
   specs:
@@ -23,30 +63,31 @@ GEM
     childprocess (5.1.0)
       logger (~> 1.5)
     coderay (1.1.3)
-    commander (4.6.0)
-      highline (~> 2.0.0)
+    commander (5.0.0)
+      highline (~> 3.0.0)
     concurrent-ruby (1.3.5)
     crack (1.0.0)
       bigdecimal
       rexml
-    diff-lcs (1.5.1)
+    diff-lcs (1.6.0)
     docile (1.4.1)
     erubi (1.13.1)
     fasterer (0.11.0)
       ruby_parser (>= 3.19.1)
     hashdiff (1.1.2)
-    highline (2.0.3)
+    highline (3.0.1)
     imagen (0.2.0)
       parser (>= 2.5, != 2.5.1.1)
     iniparse (1.5.0)
     jaro_winkler (1.6.0)
-    json (2.9.1)
+    json (2.10.1)
     kramdown (2.5.1)
       rexml (>= 3.3.9)
     kramdown-parser-gfm (1.1.0)
       kramdown (~> 2.0)
     language_server-protocol (3.17.0.4)
-    logger (1.6.5)
+    lint_roller (1.1.0)
+    logger (1.6.6)
     mdl (0.13.0)
       kramdown (~> 2.3)
       kramdown-parser-gfm (~> 1.1)
@@ -79,12 +120,7 @@ GEM
       iniparse (~> 1.4)
       rexml (>= 3.3.9)
     parallel (1.26.3)
-    parlour (5.0.0)
-      commander (~> 4.5)
-      parser
-      rainbow (~> 3.0)
-      sorbet-runtime (>= 0.5)
-    parser (3.3.7.0)
+    parser (3.3.7.1)
       ast (~> 2.4.1)
       racc
     prism (1.3.0)
@@ -97,20 +133,17 @@ GEM
     racc (1.8.1)
     rainbow (3.1.1)
     rake (13.2.1)
-    rbi (0.2.4)
-      prism (~> 1.0)
-      sorbet-runtime (>= 0.5.9204)
     rbs (3.8.1)
       logger
     regexp_parser (2.10.0)
     reverse_markdown (3.0.0)
       nokogiri
-    rexml (3.4.0)
+    rexml (3.4.1)
     rspec (3.13.0)
       rspec-core (~> 3.13.0)
       rspec-expectations (~> 3.13.0)
       rspec-mocks (~> 3.13.0)
-    rspec-core (3.13.2)
+    rspec-core (3.13.3)
       rspec-support (~> 3.13.0)
     rspec-expectations (3.13.3)
       diff-lcs (>= 1.2.0, < 2.0)
@@ -119,25 +152,29 @@ GEM
       diff-lcs (>= 1.2.0, < 2.0)
       rspec-support (~> 3.13.0)
     rspec-support (3.13.2)
-    rubocop (1.71.0)
+    rubocop (1.72.1)
       json (~> 2.3)
-      language_server-protocol (>= 3.17.0)
+      language_server-protocol (~> 3.17.0.2)
+      lint_roller (~> 1.1.0)
       parallel (~> 1.10)
       parser (>= 3.3.0.2)
       rainbow (>= 2.2.2, < 4.0)
       regexp_parser (>= 2.9.3, < 3.0)
-      rubocop-ast (>= 1.36.2, < 2.0)
+      rubocop-ast (>= 1.38.0, < 2.0)
       ruby-progressbar (~> 1.7)
       unicode-display_width (>= 2.4.0, < 4.0)
     rubocop-ast (1.38.0)
       parser (>= 3.3.1.0)
-    rubocop-performance (1.23.1)
-      rubocop (>= 1.48.1, < 2.0)
-      rubocop-ast (>= 1.31.1, < 2.0)
-    rubocop-rake (0.6.0)
-      rubocop (~> 1.0)
-    rubocop-rspec (3.4.0)
-      rubocop (~> 1.61)
+    rubocop-performance (1.24.0)
+      lint_roller (~> 1.1)
+      rubocop (>= 1.72.1, < 2.0)
+      rubocop-ast (>= 1.38.0, < 2.0)
+    rubocop-rake (0.7.1)
+      lint_roller (~> 1.1)
+      rubocop (>= 1.72.1)
+    rubocop-rspec (3.5.0)
+      lint_roller (~> 1.1)
+      rubocop (~> 1.72, >= 1.72.1)
     ruby-progressbar (1.13.0)
     ruby_parser (3.21.1)
       racc (~> 1.5)
@@ -151,7 +188,7 @@ GEM
     simplecov-html (0.13.1)
     simplecov-lcov (0.8.0)
     simplecov_json_formatter (0.1.4)
-    solargraph (0.51.1)
+    solargraph (0.51.2)
       backport (~> 1.2)
       benchmark
       bundler (~> 2.0)
@@ -169,29 +206,23 @@ GEM
       thor (~> 1.0)
       tilt (~> 2.0)
       yard (~> 0.9, >= 0.9.24)
-    sorbet (0.5.11787)
-      sorbet-static (= 0.5.11787)
-    sorbet-runtime (0.5.11787)
-    sorbet-static (0.5.11787-aarch64-linux)
-    sorbet-static (0.5.11787-universal-darwin)
-    sorbet-static (0.5.11787-x86_64-linux)
-    sorbet-static-and-runtime (0.5.11787)
-      sorbet (= 0.5.11787)
-      sorbet-runtime (= 0.5.11787)
-    sord (6.0.0)
-      commander (~> 4.5)
-      parlour (~> 5.0)
-      rbs (~> 3.0)
-      sorbet-runtime
-      yard
+    sorbet (0.5.11834)
+      sorbet-static (= 0.5.11834)
+    sorbet-runtime (0.5.11834)
+    sorbet-static (0.5.11834-aarch64-linux)
+    sorbet-static (0.5.11834-universal-darwin)
+    sorbet-static (0.5.11834-x86_64-linux)
+    sorbet-static-and-runtime (0.5.11834)
+      sorbet (= 0.5.11834)
+      sorbet-runtime (= 0.5.11834)
     source_finder (3.2.1)
-    spoom (1.5.2)
+    spoom (1.5.3)
       erubi (>= 1.10.0)
       prism (>= 0.28.0)
       rbi (>= 0.2.3)
       sorbet-static-and-runtime (>= 0.5.10187)
       thor (>= 0.19.2)
-    tapioca (0.16.8)
+    tapioca (0.16.10)
       benchmark
       bundler (>= 2.2.25)
       netrc (>= 0.11.0)
@@ -212,11 +243,10 @@ GEM
     unicode-display_width (3.1.4)
       unicode-emoji (~> 4.0, >= 4.0.4)
     unicode-emoji (4.0.4)
-    webmock (3.24.0)
+    webmock (3.25.0)
       addressable (>= 2.8.0)
       crack (>= 0.3.2)
       hashdiff (>= 0.4.0, < 2.0.0)
-    yard (0.9.37)
     yard-sorbet (0.9.0)
       sorbet-runtime
       yard
@@ -241,10 +271,11 @@ DEPENDENCIES
   fasterer
   mdl
   overcommit (>= 0.64.0, < 0.65.0)
-  parlour (>= 5.0.0)
+  parlour!
   pry
   punchlist (>= 1.3.1)
   rake
+  rbi!
   rbs (>= 3.8.1)
   rspec
   rubocop (~> 1.52)
@@ -253,12 +284,13 @@ DEPENDENCIES
   rubocop-rspec (>= 3.4.0)
   simplecov (>= 0.18.0)
   simplecov-lcov
-  solargraph (>= 0.51.0)
-  sord (>= 6.0.0)
-  tapioca
-  undercover
+  solargraph (>= 0.51.2)
+  sord!
+  tapioca (>= 0.16.0)
+  undercover (>= 0.6.3)
   webmock
-  yard
+  yard!
+  yard-sorbet
 
 BUNDLED WITH
    2.5.23

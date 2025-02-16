@@ -1,4 +1,5 @@
-.PHONY: build build-typecheck bundle_install cicoverage citypecheck citest citypecoverage clean clean-coverage clean-typecheck clean-typecoverage coverage default feature gem_dependencies help overcommit quality repl report-coverage rubocop rubocop-ratchet spec test typecheck typecoverage update_from_cookiecutter
+.PHONY: build build-typecheck bundle_install cicoverage citypecheck citest citypecoverage clean clean-coverage clean-typecheck clean-typecoverage coverage default docs feature gem_dependencies help overcommit quality repl report-coverage rubocop rubocop-ratchet spec test typecheck typecoverage update_from_cookiecutter yard
+
 .DEFAULT_GOAL := default
 
 define PRINT_HELP_PYSCRIPT
@@ -17,7 +18,7 @@ help:
 
 default: clean-typecoverage build typecheck typecoverage clean-coverage test coverage overcommit_branch quality rubocop-ratchet ## run default typechecking, tests and quality
 
-SOURCE_FILE_GLOBS = ['{config,lib,app,script}/**/*.rb', 'ext/**/*.{c,rb}']
+SOURCE_FILE_GLOBS = ['{config,lib,app,script,spec,feature}/**/*.rb', 'ext/**/*.{c,rb}']
 
 SOURCE_FILES := $(shell ruby -e "puts Dir.glob($(SOURCE_FILE_GLOBS))")
 
@@ -25,15 +26,26 @@ start: ## run code continously and watch files for changes
 	echo "Teach me how to 'make start'"
 	exit 1
 
-rbi/checkoff.rbi: yardoc.installed ## Generate Sorbet types from Yard docs
-	rm -f rbi/checkoff.rbi
-	bin/sord gen --replace-errors-with-untyped --exclude-messages OMIT --no-regenerate rbi/checkoff.rbi
+SORD_GEN_OPTIONS = --replace-errors-with-untyped --exclude-messages OMIT --no-regenerate #  --hide-private
+
+rbi/checkoff.rbi: tapioca.installed yardoc.installed sorbet/config ## Generate Sorbet types from Yard docs
+	bin/parlour run --trace
+	bin/sord gen $(SORD_GEN_OPTIONS) rbi/checkoff-sord.rbi
+	cat rbi/checkoff-parlour.rbi rbi/checkoff-sord.rbi > rbi/checkoff.rbi
+	rm -f rbi/checkoff-sord.rbi rbi/checkoff-parlour.rbi
+	sed -i.bak -e 's/^# typed: strong/# typed: true/' rbi/checkoff.rbi
+	rm -f rbi/checkoff.rbi.bak
 
 sig/checkoff.rbs: yardoc.installed ## Generate RBS file
-	bundle exec sord --replace-errors-with-untyped --exclude-messages OMIT --no-regenerate sig/checkoff.rbs
+	rm -f rbi/checkoff.rbs
+	bin/sord gen $(SORD_GEN_OPTIONS) sig/checkoff.rbs
+
+YARD_PLUGIN_OPTS = --plugin yard-sorbet
+
+YARD_OPTS = $(YARD_PLUGIN_OPTS) -c .yardoc --output-dir yardoc --backtrace
 
 types.installed: tapioca.installed Gemfile.lock Gemfile.lock.installed rbi/checkoff.rbi sorbet/tapioca/require.rb sorbet/config ## Ensure typechecking dependencies are in place
-	bin/yard gems 2>&1 || bin/yard gems --safe 2>&1 || bin/yard gems 2>&1
+	bin/yard gems $(YARD_PLUGIN_OPTS) 2>&1 || bin/yard gems --safe $(YARD_PLUGIN_OPTS) 2>&1 || bin/yard gems $(YARD_PLUGIN_OPTS) 2>&1
 	# bin/solargraph scan 2>&1
 	bin/spoom srb bump || true
 	# spoom rudely updates timestamps on files, so let's keep up by
@@ -48,7 +60,7 @@ build: bundle_install pip_install build-typecheck ## Update 3rd party packages a
 sorbet/machine_specific_config:
 	echo "--cache-dir=$$HOME/.sorbet-cache" > sorbet/machine_specific_config
 
-sorbet/rbi/todo.rbi: rbi/checkoff.rbi tapioca.installed
+sorbet/rbi/todo.rbi: sorbet/tapioca/require.rb rbi/checkoff.rbi tapioca.installed
 	bin/tapioca todo
 
 build-typecheck: Gemfile.lock.installed types.installed sorbet/machine_specific_config sorbet/rbi/todo.rbi ## Fetch information that type checking depends on
@@ -66,8 +78,13 @@ tapioca.installed: sorbet/tapioca/require.rb Gemfile.lock.installed ## Install T
 	touch tapioca.installed
 
 yardoc.installed: $(wildcard config/annotations_*.rb) $(SOURCE_FILES) ## Generate YARD documentation
-	bin/yard doc -c .yardoc $^
+	bin/yard doc $(YARD_OPTS)
 	touch yardoc.installed
+
+yard: yardoc.installed ## Generate YARD documentation
+
+docs: ## Generate YARD documentation
+	@rake doc
 
 clean-typecheck: ## Refresh the easily-regenerated information that type checking depends on
 	bin/solargraph clear || true
@@ -77,20 +94,24 @@ clean-typecheck: ## Refresh the easily-regenerated information that type checkin
 
 realclean-typecheck: clean-typecheck ## Remove all type checking artifacts
 	rm -fr ~/.cache/solargraph
-	rm tapioca.installed
+	rm -f tapioca.installed
 
 realclean: clean realclean-typecheck
-	rm -fr vendor/bundle .bundle
+	rm -fr vendor/bundle .bundle/config
 	rm -f .make/*
-	rm *.installed
+	rm -f *.installed
 
-typecheck: build-typecheck ## validate types in code and configuration
-	bin/srb tc
+SORBET_TC_OPTIONS = --suppress-error-code 4010 # --suppress-error-code 4002
+
+srb: build-typecheck ## Run Sorbet typechecker
+	bin/srb tc $(SORBET_TC_OPTIONS)
+
+solargraph: build-typecheck ## Run Solargraph typechecker
 	bin/solargraph typecheck --level strong
 
-citypecheck: build-typecheck ## Run type check from CircleCI
-	bin/srb tc
-	bin/solargraph typecheck --level strong
+typecheck: build-typecheck srb solargraph ## validate types in code and configuration
+
+citypecheck: build-typecheck srb solargraph ## Run type check from CircleCI
 
 typecoverage: typecheck ## Run type checking and then ratchet coverage in metrics/
 
@@ -196,8 +217,8 @@ update_from_cookiecutter: ## Bring in changes from template project used to crea
 	git checkout cookiecutter-template && git push --no-verify
 	git checkout main; overcommit --sign && overcommit --sign pre-commit && overcommit --sign pre-push && git checkout main && git pull && git checkout -b update-from-cookiecutter-$$(date +%Y-%m-%d-%H%M)
 	git merge cookiecutter-template || true
-	git checkout --theirs sorbet/rbi/gems || true
 	git checkout --ours Gemfile.lock || true
+	git checkout --theirs sorbet/rbi/gems || true
 	# update frequently security-flagged gems while we're here
 	bundle update --conservative json rexml yard brakeman || true
 	( make build && git add Gemfile.lock ) || true

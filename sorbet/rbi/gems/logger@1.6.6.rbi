@@ -857,34 +857,34 @@ class Logger::LogDevice
 
   private
 
-  # source://logger//lib/logger/log_device.rb#148
+  # source://logger//lib/logger/log_device.rb#149
   def add_log_header(file); end
 
-  # source://logger//lib/logger/log_device.rb#154
+  # source://logger//lib/logger/log_device.rb#155
   def check_shift_log; end
 
-  # source://logger//lib/logger/log_device.rb#124
+  # source://logger//lib/logger/log_device.rb#125
   def create_logfile(filename); end
 
   # source://logger//lib/logger/log_device.rb#96
   def fixup_mode(dev, filename); end
 
-  # source://logger//lib/logger/log_device.rb#140
+  # source://logger//lib/logger/log_device.rb#141
   def handle_write_errors(mesg); end
 
-  # source://logger//lib/logger/log_device.rb#169
+  # source://logger//lib/logger/log_device.rb#170
   def lock_shift_log; end
 
-  # source://logger//lib/logger/log_device.rb#111
+  # source://logger//lib/logger/log_device.rb#112
   def open_logfile(filename); end
 
   # source://logger//lib/logger/log_device.rb#81
   def set_dev(log); end
 
-  # source://logger//lib/logger/log_device.rb#198
+  # source://logger//lib/logger/log_device.rb#199
   def shift_log_age; end
 
-  # source://logger//lib/logger/log_device.rb#210
+  # source://logger//lib/logger/log_device.rb#211
   def shift_log_period(period_end); end
 end
 
@@ -939,13 +939,13 @@ end
 # source://logger//lib/logger/severity.rb#19
 Logger::Severity::LEVELS = T.let(T.unsafe(nil), Hash)
 
-# source://logger//lib/logger/log_device.rb#234
+# source://logger//lib/logger/log_device.rb#235
 module PathAttr
-  # source://logger//lib/logger/log_device.rb#235
+  # source://logger//lib/logger/log_device.rb#236
   def path; end
 
   class << self
-    # source://logger//lib/logger/log_device.rb#237
+    # source://logger//lib/logger/log_device.rb#238
     def set_path(file, path); end
   end
 end
