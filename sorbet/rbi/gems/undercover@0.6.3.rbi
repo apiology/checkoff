@@ -43,10 +43,10 @@ class Undercover::Changeset
   # source://undercover//lib/undercover/changeset.rb#18
   def initialize(dir, compare_base = T.unsafe(nil)); end
 
-  # source://forwardable/1.3.2/forwardable.rb#229
+  # source://forwardable/1.3.3/forwardable.rb#231
   def <=>(*args, **_arg1, &block); end
 
-  # source://forwardable/1.3.2/forwardable.rb#229
+  # source://forwardable/1.3.3/forwardable.rb#231
   def each(*args, **_arg1, &block); end
 
   # source://undercover//lib/undercover/changeset.rb#52
@@ -371,7 +371,7 @@ class Undercover::Report
   # source://undercover//lib/undercover.rb#86
   def to_s; end
 
-  # source://forwardable/1.3.2/forwardable.rb#229
+  # source://forwardable/1.3.3/forwardable.rb#231
   def validate(*args, **_arg1, &block); end
 
   private
@@ -408,7 +408,7 @@ class Undercover::Result
   # as a % value, taking into account missing branches. Line coverage will be counted
   # as 0 if any branch is untested.
   #
-  # source://undercover//lib/undercover/result.rb#47
+  # source://undercover//lib/undercover/result.rb#53
   def coverage_f; end
 
   # Returns the value of attribute file_path.
@@ -416,27 +416,27 @@ class Undercover::Result
   # source://undercover//lib/undercover/result.rb#9
   def file_path; end
 
-  # source://undercover//lib/undercover/result.rb#106
+  # source://undercover//lib/undercover/result.rb#112
   def file_path_with_lines; end
 
-  # source://forwardable/1.3.2/forwardable.rb#229
+  # source://forwardable/1.3.3/forwardable.rb#231
   def first_line(*args, **_arg1, &block); end
 
-  # source://undercover//lib/undercover/result.rb#22
+  # source://undercover//lib/undercover/result.rb#28
   def flag; end
 
   # @return [Boolean]
   #
-  # source://undercover//lib/undercover/result.rb#26
+  # source://undercover//lib/undercover/result.rb#32
   def flagged?; end
 
-  # source://undercover//lib/undercover/result.rb#110
+  # source://undercover//lib/undercover/result.rb#116
   def inspect; end
 
-  # source://forwardable/1.3.2/forwardable.rb#229
+  # source://forwardable/1.3.3/forwardable.rb#231
   def last_line(*args, **_arg1, &block); end
 
-  # source://forwardable/1.3.2/forwardable.rb#229
+  # source://forwardable/1.3.3/forwardable.rb#231
   def name(*args, **_arg1, &block); end
 
   # Returns the value of attribute node.
@@ -446,7 +446,7 @@ class Undercover::Result
 
   # TODO: move to formatter interface instead!
   #
-  # source://undercover//lib/undercover/result.rb#84
+  # source://undercover//lib/undercover/result.rb#90
   def pretty_print; end
 
   # TODO: create a formatter interface instead and add some tests.
@@ -455,20 +455,20 @@ class Undercover::Result
   # Zips coverage data (that doesn't include any non-code lines) with
   # full source for given code fragment (this includes non-code lines!)
   #
-  # source://undercover//lib/undercover/result.rb#70
+  # source://undercover//lib/undercover/result.rb#76
   def pretty_print_lines; end
 
-  # source://undercover//lib/undercover/result.rb#110
+  # source://undercover//lib/undercover/result.rb#116
   def to_s; end
 
   # @return [Boolean]
   #
-  # source://undercover//lib/undercover/result.rb#30
+  # source://undercover//lib/undercover/result.rb#36
   def uncovered?(line_no); end
 
   private
 
-  # source://undercover//lib/undercover/result.rb#119
+  # source://undercover//lib/undercover/result.rb#125
   def count_covered_branches(line_number); end
 end
 

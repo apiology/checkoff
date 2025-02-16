@@ -33,10 +33,10 @@ module Checkoff
     # @param client [Asana::Client]
     # @param projects [Checkoff::Projects]
     def initialize(config: Checkoff::Internal::ConfigLoader.load(:asana),
-                   clients: Checkoff::Clients.new(config: config),
+                   clients: Checkoff::Clients.new(config:),
                    client: clients.client,
-                   projects: Checkoff::Projects.new(config: config, client: client),
-                   workspaces: Checkoff::Workspaces.new(config: config, client: client))
+                   projects: Checkoff::Projects.new(config:, client:),
+                   workspaces: Checkoff::Workspaces.new(config:, client:))
       @workspaces = T.let(workspaces, Checkoff::Workspaces)
       @client = T.let(client, Asana::Client)
       @projects = T.let(projects, Checkoff::Projects)
@@ -81,7 +81,7 @@ module Checkoff
         fields: ['name'],
       }
       options[:fields] += extra_fields
-      client.portfolios.find_by_id(portfolio_gid, options: options)
+      client.portfolios.find_by_id(portfolio_gid, options:)
     end
     cache_method :portfolio_by_gid, SHORT_CACHE_TIME
 
@@ -102,8 +102,8 @@ module Checkoff
     #
     # @return [Enumerable<Asana::Resources::Project>]
     def projects_in_portfolio_obj(portfolio, extra_project_fields: [])
-      options = projects.project_options(extra_project_fields: extra_project_fields)
-      client.portfolios.get_items_for_portfolio(portfolio_gid: portfolio.gid, options: options)
+      options = projects.project_options(extra_project_fields:)
+      client.portfolios.get_items_for_portfolio(portfolio_gid: portfolio.gid, options:)
     end
 
     private

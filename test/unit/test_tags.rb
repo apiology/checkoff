@@ -90,9 +90,9 @@ class TestTags < ClassTest
   end
 
   def setup_collection_expects
-    Asana::Collection.expects(:new).with([response_body_data, {}],
-                                         type: Asana::Resources::Task,
-                                         client: client)
+    Asana::Resources::Collection.expects(:new).with([response_body_data, {}],
+                                                    type: Asana::Resources::Task,
+                                                    client:)
       .returns(task_collection)
   end
 
@@ -122,7 +122,7 @@ class TestTags < ClassTest
   end
 
   def projects
-    Checkoff::Projects.new(client: client)
+    Checkoff::Projects.new(client:)
   end
 
   def test_tasks

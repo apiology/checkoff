@@ -27,10 +27,10 @@ class TestCLIHelp < Minitest::Test
 
   def set_mocks
     @mocks = {
-      config: config,
-      workspaces: workspaces,
-      sections: sections,
-      tasks: tasks,
+      config:,
+      workspaces:,
+      sections:,
+      tasks:,
       stderr: $stderr,
       stdout: $stdout,
     }

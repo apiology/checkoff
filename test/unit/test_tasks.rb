@@ -234,7 +234,7 @@ class TestTasks < BaseAsana
     tasks = get_test_object do
       mock_add_task
     end
-    tasks.send(:add_task, task_name, workspace_gid: workspace_gid)
+    tasks.send(:add_task, task_name, workspace_gid:)
   end
 
   let_mock :workspace_name, :project_name, :section_name, :task_name, :task, :project
@@ -274,8 +274,8 @@ class TestTasks < BaseAsana
   end
 
   def projects
-    @projects ||= Checkoff::Projects.new(client: client,
-                                         workspaces: workspaces)
+    @projects ||= Checkoff::Projects.new(client:,
+                                         workspaces:)
   end
 
   def expect_task_options_pulled
@@ -290,7 +290,7 @@ class TestTasks < BaseAsana
   def test_task_with_section
     tasks = get_test_object { mock_task_with_section }
     returned_task = tasks.task(workspace_name, project_name, task_name,
-                               only_uncompleted: true, section_name: section_name)
+                               only_uncompleted: true, section_name:)
 
     assert_equal(task, returned_task)
   end

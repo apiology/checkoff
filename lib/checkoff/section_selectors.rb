@@ -20,17 +20,17 @@ module Checkoff
     LONG_CACHE_TIME = MINUTE * 15
     SHORT_CACHE_TIME = MINUTE
 
-    # @param config [Hash<Symbol, Object>]
+    # @param config [Hash<Symbol, Object>,Checkoff::Internal::EnvFallbackConfigLoader]
     # @param workspaces [Checkoff::Workspaces]
     # @param sections [Checkoff::Sections]
     # @param custom_fields [Checkoff::CustomFields]
     # @param clients [Checkoff::Clients]
     # @param client [Asana::Client]
     def initialize(config: Checkoff::Internal::ConfigLoader.load(:asana),
-                   workspaces: Checkoff::Workspaces.new(config: config),
-                   sections: Checkoff::Sections.new(config: config),
-                   custom_fields: Checkoff::CustomFields.new(config: config),
-                   clients: Checkoff::Clients.new(config: config),
+                   workspaces: Checkoff::Workspaces.new(config:),
+                   sections: Checkoff::Sections.new(config:),
+                   custom_fields: Checkoff::CustomFields.new(config:),
+                   clients: Checkoff::Clients.new(config:),
                    client: clients.client)
       @workspaces = workspaces
       @sections = sections
@@ -44,8 +44,8 @@ module Checkoff
     # @return [Boolean]
     def filter_via_section_selector(section, section_selector)
       # @sg-ignore
-      evaluator = SectionSelectorEvaluator.new(section: section, sections: sections, custom_fields: custom_fields,
-                                               client: client)
+      evaluator = SectionSelectorEvaluator.new(section:, sections:, custom_fields:,
+                                               client:)
       evaluator.evaluate(section_selector)
     end
 

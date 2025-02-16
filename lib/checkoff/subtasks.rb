@@ -17,12 +17,12 @@ module Checkoff
 
     extend Forwardable
 
-    # @param config [Hash]
+    # @param config [Hash,Checkoff::Internal::EnvFallbackConfigLoader]
     # @param projects [Checkoff::Projects]
     # @param clients [Checkoff::Clients]
     def initialize(config: Checkoff::Internal::ConfigLoader.load(:asana),
-                   projects: Checkoff::Projects.new(config: config),
-                   clients: Checkoff::Clients.new(config: config))
+                   projects: Checkoff::Projects.new(config:),
+                   clients: Checkoff::Clients.new(config:))
       @projects = projects
       @client = clients.client
     end
@@ -75,11 +75,11 @@ module Checkoff
                         only_uncompleted: true)
       # @type [Hash]
       all_options = projects.task_options(extra_fields: extra_fields + %w[is_rendered_as_separator],
-                                          only_uncompleted: only_uncompleted)
+                                          only_uncompleted:)
       options = all_options.fetch(:options, {})
-      client.tasks.get_subtasks_for_task(task_gid: task_gid,
+      client.tasks.get_subtasks_for_task(task_gid:,
                                          # per_page: 100, # stub doesn't have this arg available
-                                         options: options)
+                                         options:)
     end
     cache_method :subtasks_by_gid, LONG_CACHE_TIME
 

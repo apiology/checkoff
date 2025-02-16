@@ -83,12 +83,12 @@ class TestPortfolios < ClassTest
 
   def test_projects_in_portfolios
     portfolios = get_test_object do
-      @mocks[:projects] = Checkoff::Projects.new(client: client)
+      @mocks[:projects] = Checkoff::Projects.new(client:)
       portfolio_arr = [portfolio]
       expect_portfolios_pulled(portfolio_arr)
       client.expects(:portfolios).returns(portfolios_api)
       portfolio.expects(:gid).returns(portfolio_gid)
-      portfolios_api.expects(:get_items_for_portfolio).with(portfolio_gid: portfolio_gid,
+      portfolios_api.expects(:get_items_for_portfolio).with(portfolio_gid:,
                                                             options: { fields: %w[custom_fields
                                                                                   name] }).returns([project_a])
     end

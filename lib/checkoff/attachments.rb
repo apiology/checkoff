@@ -41,13 +41,13 @@ module Checkoff
     SHORT_CACHE_TIME = MINUTE
     private_constant :SHORT_CACHE_TIME
 
-    # @param config [Hash]
+    # @param config [Hash,Checkoff::Internal::EnvFallbackConfigLoader]
     # @param workspaces [Checkoff::Workspaces]
     # @param clients [Checkoff::Clients]
     # @param client [Asana::Client]
     def initialize(config: Checkoff::Internal::ConfigLoader.load(:asana),
-                   workspaces: Checkoff::Workspaces.new(config: config),
-                   clients: Checkoff::Clients.new(config: config),
+                   workspaces: Checkoff::Workspaces.new(config:),
+                   clients: Checkoff::Clients.new(config:),
                    client: clients.client)
       @workspaces = workspaces
       @client = client
@@ -66,10 +66,10 @@ module Checkoff
                                     verify_mode: OpenSSL::SSL::VERIFY_PEER,
                                     just_the_url: false)
       if just_the_url
-        create_attachment_from_url_alone!(url, resource, attachment_name: attachment_name)
+        create_attachment_from_url_alone!(url, resource, attachment_name:)
       else
-        create_attachment_from_downloaded_url!(url, resource, attachment_name: attachment_name,
-                                                              verify_mode: verify_mode)
+        create_attachment_from_downloaded_url!(url, resource, attachment_name:,
+                                                              verify_mode:)
       end
     end
 
@@ -86,7 +86,7 @@ module Checkoff
     # @sg-ignore
     def download_uri(uri, verify_mode: OpenSSL::SSL::VERIFY_PEER, &block)
       out = nil
-      Net::HTTP.start(uri.host, uri.port, use_ssl: uri.scheme == 'https', verify_mode: verify_mode) do |http|
+      Net::HTTP.start(uri.host, uri.port, use_ssl: uri.scheme == 'https', verify_mode:) do |http|
         # @sg-ignore
         http.request(Net::HTTP::Get.new(uri)) do |response|
           raise("Unexpected response code: #{response.code}") unless response.code == '200'
@@ -129,7 +129,7 @@ module Checkoff
                                                verify_mode: OpenSSL::SSL::VERIFY_PEER)
       uri = URI(url)
       attachment_name ||= File.basename(uri.path)
-      download_uri(uri, verify_mode: verify_mode) do |tempfile|
+      download_uri(uri, verify_mode:) do |tempfile|
         content_type ||= content_type_from_filename(attachment_name)
         content_type ||= content_type_from_filename(uri.path)
 
@@ -151,8 +151,8 @@ module Checkoff
         'name' => attachment_name,
       }
       options = {}
-      Asana::Resource.new(parse(client.post('/attachments', body: with_params, options: options)).first,
-                          client: client)
+      Asana::Resources::Resource.new(parse(client.post('/attachments', body: with_params, options:)).first,
+                                     client:)
     end
 
     # @param filename [String]

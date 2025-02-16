@@ -42,15 +42,15 @@ module Checkoff
     # @param date_class [Class<Date>]
     # @param asana_task [Class<Asana::Resources::Task>]
     def initialize(config: Checkoff::Internal::ConfigLoader.load(:asana),
-                   client: Checkoff::Clients.new(config: config).client,
-                   workspaces: Checkoff::Workspaces.new(config: config,
-                                                        client: client),
-                   sections: Checkoff::Sections.new(config: config,
-                                                    client: client),
-                   portfolios: Checkoff::Portfolios.new(config: config,
-                                                        client: client),
-                   custom_fields: Checkoff::CustomFields.new(config: config,
-                                                             client: client),
+                   client: Checkoff::Clients.new(config:).client,
+                   workspaces: Checkoff::Workspaces.new(config:,
+                                                        client:),
+                   sections: Checkoff::Sections.new(config:,
+                                                    client:),
+                   portfolios: Checkoff::Portfolios.new(config:,
+                                                        client:),
+                   custom_fields: Checkoff::CustomFields.new(config:,
+                                                             client:),
                    time_class: Time,
                    date_class: Date,
                    asana_task: Asana::Resources::Task)
@@ -130,7 +130,7 @@ module Checkoff
       end
       return nil if task_gid.nil?
 
-      task_by_gid(task_gid, only_uncompleted: only_uncompleted, extra_fields: extra_fields)
+      task_by_gid(task_gid, only_uncompleted:, extra_fields:)
     end
     cache_method :task, LONG_CACHE_TIME
 
@@ -145,7 +145,7 @@ module Checkoff
       # @sg-ignore
       t = tasks(workspace_name,
                 project_name,
-                section_name: section_name,
+                section_name:,
                 only_uncompleted: false)
       task_for_gid = t.find { |task| task.name == task_name }
       task_for_gid&.gid
@@ -162,12 +162,12 @@ module Checkoff
     def task_by_gid(task_gid,
                     extra_fields: [],
                     only_uncompleted: true)
-      all_options = projects.task_options(extra_fields: extra_fields,
-                                          only_uncompleted: only_uncompleted)
+      all_options = projects.task_options(extra_fields:,
+                                          only_uncompleted:)
       # @type [Hash]
       options = all_options.fetch(:options, {})
       options[:completed_since] = all_options[:completed_since] unless all_options[:completed_since].nil?
-      client.tasks.find_by_id(task_gid, options: options)
+      client.tasks.find_by_id(task_gid, options:)
     rescue Asana::Errors::NotFound => e
       debug e
       nil
@@ -186,7 +186,7 @@ module Checkoff
                  assignee_gid: default_assignee_gid)
       @asana_task.create(client,
                          assignee: assignee_gid,
-                         workspace: workspace_gid, name: name)
+                         workspace: workspace_gid, name:)
     end
 
     # Return user-accessible URL for a task
@@ -254,7 +254,7 @@ module Checkoff
 
         dependent_tasks << dependent_task
         dependent_tasks += all_dependent_tasks(dependent_task,
-                                               extra_task_fields: extra_task_fields)
+                                               extra_task_fields:)
       end
       dependent_tasks
     end
@@ -281,7 +281,7 @@ module Checkoff
     #
     # @return [Asana::Resources::Task]
     def h_to_task(task_data)
-      task_hashes.h_to_task(task_data, client: client)
+      task_hashes.h_to_task(task_data, client:)
     end
 
     # True if the task is in a project which is in the given portfolio
@@ -332,8 +332,8 @@ module Checkoff
     # @return [Checkoff::Internal::TaskTiming]
     def task_timing
       @task_timing ||= Checkoff::Internal::TaskTiming.new(time_class: @time_class, date_class: @date_class,
-                                                          client: client,
-                                                          custom_fields: custom_fields)
+                                                          client:,
+                                                          custom_fields:)
     end
 
     # @return [Checkoff::Internal::TaskHashes]
@@ -353,12 +353,12 @@ module Checkoff
       if section_name == :unspecified
         project = projects.project_or_raise(workspace_name, project_name)
         projects.tasks_from_project(project,
-                                    only_uncompleted: only_uncompleted,
-                                    extra_fields: extra_fields)
+                                    only_uncompleted:,
+                                    extra_fields:)
       else
         @sections.tasks(workspace_name, project_name, section_name,
-                        only_uncompleted: only_uncompleted,
-                        extra_fields: extra_fields)
+                        only_uncompleted:,
+                        extra_fields:)
       end
     end
     cache_method :tasks, SHORT_CACHE_TIME

@@ -160,7 +160,7 @@ module Checkoff
         # @return [Boolean]
         # rubocop:disable Style/OptionalBooleanParameter
         def evaluate(task, period = :now_or_before, ignore_dependencies = false)
-          @tasks.task_ready?(task, period: period, ignore_dependencies: ignore_dependencies)
+          @tasks.task_ready?(task, period:, ignore_dependencies:)
         end
         # rubocop:enable Style/OptionalBooleanParameter
       end
@@ -305,7 +305,7 @@ module Checkoff
         # @return [Boolean]
         def evaluate(task, limit_to_portfolio_gid: nil)
           @timelines.task_dependent_on_previous_section_last_milestone?(task,
-                                                                        limit_to_portfolio_gid: limit_to_portfolio_gid)
+                                                                        limit_to_portfolio_gid:)
         end
       end
 
@@ -344,7 +344,7 @@ module Checkoff
         # @return [Boolean]
         def evaluate(task, limit_to_portfolio_name = nil)
           !@timelines.last_task_milestone_depends_on_this_task?(task,
-                                                                limit_to_portfolio_name: limit_to_portfolio_name)
+                                                                limit_to_portfolio_name:)
         end
       end
 
@@ -388,7 +388,7 @@ module Checkoff
         # @return [Boolean]
         def evaluate(task, limit_to_portfolio_name = nil)
           !@timelines.any_milestone_depends_on_this_task?(task,
-                                                          limit_to_portfolio_name: limit_to_portfolio_name)
+                                                          limit_to_portfolio_name:)
         end
       end
     end

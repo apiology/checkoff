@@ -11,7 +11,7 @@ class TestProjects < BaseAsana
   def_delegators(:@mocks, :client, :project_hashes, :project_timing, :timing)
 
   def setup_config
-    @mocks[:config] = { personal_access_token: personal_access_token }
+    @mocks[:config] = { personal_access_token: }
   end
 
   def setup_projects_pulled
@@ -50,7 +50,7 @@ class TestProjects < BaseAsana
     setup_config
     project_a.expects(:gid).returns(a_gid)
     client.expects(:tasks).returns(tasks)
-    expect_tasks_found(options: options)
+    expect_tasks_found(options:)
   end
 
   def test_tasks_from_project_not_only_uncompleted
@@ -181,7 +181,7 @@ class TestProjects < BaseAsana
       mock_project_ready
     end
 
-    assert(projects.project_ready?(project, period: period))
+    assert(projects.project_ready?(project, period:))
   end
 
   let_mock :my_tasks_config

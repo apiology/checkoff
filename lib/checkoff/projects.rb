@@ -40,11 +40,11 @@ module Checkoff
     # @param project_timing [Checkoff::Internal::ProjectTiming]
     # @param timing [Checkoff::Timing]
     def initialize(config: Checkoff::Internal::ConfigLoader.load(:asana),
-                   client: Checkoff::Clients.new(config: config).client,
-                   workspaces: Checkoff::Workspaces.new(config: config,
-                                                        client: client),
+                   client: Checkoff::Clients.new(config:).client,
+                   workspaces: Checkoff::Workspaces.new(config:,
+                                                        client:),
                    project_hashes: Checkoff::Internal::ProjectHashes.new,
-                   project_timing: Checkoff::Internal::ProjectTiming.new(client: client),
+                   project_timing: Checkoff::Internal::ProjectTiming.new(client:),
                    timing: Checkoff::Timing.new)
       @config = config
       @workspaces = workspaces
@@ -73,7 +73,7 @@ module Checkoff
       options = {
         per_page: 100,
         options: {
-          fields: task_fields(extra_fields: extra_fields),
+          fields: task_fields(extra_fields:),
         },
       }
       options[:completed_since] = '9999-12-01' if only_uncompleted
@@ -93,7 +93,7 @@ module Checkoff
     #
     # @return [Hash<Symbol, Object>]
     def project_options(extra_project_fields: [])
-      { fields: project_fields(extra_project_fields: extra_project_fields) }
+      { fields: project_fields(extra_project_fields:) }
     end
 
     # pulls an Asana API project class given a name
@@ -107,11 +107,11 @@ module Checkoff
         my_tasks(workspace_name)
       else
         # @type [Enumerable<Asana::Resources::Project>]
-        ps = projects_by_workspace_name(workspace_name, extra_fields: extra_fields)
+        ps = projects_by_workspace_name(workspace_name, extra_fields:)
         # @type <Asana::Resources::Project,nil>
         # @sg-ignore
         project = ps.find { _1.name == project_name }
-        project_by_gid(project.gid, extra_fields: extra_fields) unless project.nil?
+        project_by_gid(project.gid, extra_fields:) unless project.nil?
       end
     end
     cache_method :project, REALLY_LONG_CACHE_TIME
@@ -122,7 +122,7 @@ module Checkoff
     #
     # @return [Asana::Resources::Project]
     def project_or_raise(workspace_name, project_name, extra_fields: [])
-      p = project(workspace_name, project_name, extra_fields: extra_fields)
+      p = project(workspace_name, project_name, extra_fields:)
       raise "Could not find project #{project_name.inspect} under workspace #{workspace_name}." if p.nil?
 
       p
@@ -159,8 +159,8 @@ module Checkoff
                            only_uncompleted: true,
                            extra_fields: [])
       tasks_from_project_gid(project.gid,
-                             only_uncompleted: only_uncompleted,
-                             extra_fields: extra_fields)
+                             only_uncompleted:,
+                             extra_fields:)
     end
 
     # Pull task objects from a project identified by a gid
@@ -173,7 +173,7 @@ module Checkoff
     def tasks_from_project_gid(project_gid,
                                only_uncompleted: true,
                                extra_fields: [])
-      options = task_options(extra_fields: extra_fields, only_uncompleted: only_uncompleted)
+      options = task_options(extra_fields:, only_uncompleted:)
       options[:project] = project_gid
       # Note: 30 minute cache time on a raw Enumerable from SDK gives
       # 'Your pagination token has expired' errors.  So we go ahead
@@ -201,7 +201,7 @@ module Checkoff
     #
     # @return [Hash]
     def project_to_h(project_obj, project: :not_specified)
-      project_hashes.project_to_h(project_obj, project: project)
+      project_hashes.project_to_h(project_obj, project:)
     end
 
     # Indicates a project is ready for a person to work on it.  This

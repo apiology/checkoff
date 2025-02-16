@@ -62,8 +62,8 @@ module Checkoff
                    to_project_arg:,
                    to_section_arg:,
                    config: Checkoff::Internal::ConfigLoader.load(:asana),
-                   projects: Checkoff::Projects.new(config: config),
-                   sections: Checkoff::Sections.new(config: config),
+                   projects: Checkoff::Projects.new(config:),
+                   sections: Checkoff::Sections.new(config:),
                    logger: $stderr)
       validate_and_assign_from_location(from_workspace_arg, from_project_arg, from_section_arg)
       validate_and_assign_to_location(to_workspace_arg, to_project_arg, to_section_arg)
@@ -123,11 +123,11 @@ module Checkoff
     def initialize(workspace_name, project_name, section_name,
                    task_name,
                    config: Checkoff::Internal::ConfigLoader.load(:asana),
-                   projects: Checkoff::Projects.new(config: config),
-                   sections: Checkoff::Sections.new(config: config,
-                                                    projects: projects),
-                   tasks: Checkoff::Tasks.new(config: config,
-                                              sections: sections),
+                   projects: Checkoff::Projects.new(config:),
+                   sections: Checkoff::Sections.new(config:,
+                                                    projects:),
+                   tasks: Checkoff::Tasks.new(config:,
+                                              sections:),
                    stderr: $stderr)
       @workspace_name = workspace_name
       @stderr = stderr
@@ -202,8 +202,8 @@ module Checkoff
   class QuickaddSubcommand
     def initialize(workspace_name, task_name,
                    config: Checkoff::Internal::ConfigLoader.load(:asana),
-                   workspaces: Checkoff::Workspaces.new(config: config),
-                   tasks: Checkoff::Tasks.new(config: config))
+                   workspaces: Checkoff::Workspaces.new(config:),
+                   tasks: Checkoff::Tasks.new(config:))
       @workspace_name = workspace_name
       @task_name = task_name
       @workspaces = workspaces

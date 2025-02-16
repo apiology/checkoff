@@ -17,7 +17,7 @@ module Sord; end
 # Converts the current working directory's YARD registry into an type
 # signature file.
 #
-# source://sord//lib/sord/generator.rb#11
+# source://sord//lib/sord/generator.rb#12
 # Converts the current working directory's YARD registry into an type
 class Sord::Generator
   # Create a new generator.
@@ -33,7 +33,7 @@ class Sord::Generator
   # @param options [Hash]
   # @return [void]
   #
-  # source://sord//lib/sord/generator.rb#36
+  # source://sord//lib/sord/generator.rb#37
   # _@param_ `options`
   sig { params(options: T::Hash[T.untyped, T.untyped]).void }
   def initialize(options); end
@@ -44,7 +44,7 @@ class Sord::Generator
   # @param item [YARD::CodeObjects::NamespaceObject]
   # @return [void]
   #
-  # source://sord//lib/sord/generator.rb#473
+  # source://sord//lib/sord/generator.rb#492
   # sord warn - YARD::CodeObjects::NamespaceObject wasn't able to be resolved to a constant in this project
   # Given a YARD NamespaceObject, add lines defining either its class
   # _@param_ `item`
@@ -57,7 +57,7 @@ class Sord::Generator
   # @param typed_object [Parlour::TypedObject]
   # @return [void]
   #
-  # source://sord//lib/sord/generator.rb#170
+  # source://sord//lib/sord/generator.rb#189
   # sord warn - YARD::CodeObjects::NamespaceObject wasn't able to be resolved to a constant in this project
   # _@param_ `item`
   # _@param_ `typed_object`
@@ -69,7 +69,7 @@ class Sord::Generator
   # @param item [YARD::CodeObjects::NamespaceObject]
   # @return [void]
   #
-  # source://sord//lib/sord/generator.rb#127
+  # source://sord//lib/sord/generator.rb#128
   # sord warn - YARD::CodeObjects::NamespaceObject wasn't able to be resolved to a constant in this project
   # _@param_ `item`
   sig { params(item: YARD::CodeObjects::NamespaceObject).void }
@@ -81,7 +81,7 @@ class Sord::Generator
   # @param item [YARD::CodeObjects::NamespaceObject]
   # @return [void]
   #
-  # source://sord//lib/sord/generator.rb#281
+  # source://sord//lib/sord/generator.rb#300
   # sord warn - YARD::CodeObjects::NamespaceObject wasn't able to be resolved to a constant in this project
   # Given a YARD NamespaceObject, add lines defining its methods and their
   # _@param_ `item`
@@ -94,7 +94,7 @@ class Sord::Generator
   # @param item [YARD::CodeObjects::Base]
   # @return [Integer]
   #
-  # source://sord//lib/sord/generator.rb#104
+  # source://sord//lib/sord/generator.rb#105
   # sord warn - YARD::CodeObjects::Base wasn't able to be resolved to a constant in this project
   # Given a YARD CodeObject, add lines defining its mixins (that is, extends
   # _@param_ `item`
@@ -107,7 +107,7 @@ class Sord::Generator
   # @param item [YARD::CodeObjects::NamespaceObject]
   # @return [void]
   #
-  # source://sord//lib/sord/generator.rb#581
+  # source://sord//lib/sord/generator.rb#600
   # sord warn - YARD::CodeObjects::NamespaceObject wasn't able to be resolved to a constant in this project
   # Given a YARD NamespaceObject, add lines defining its mixins, methods
   # _@param_ `item`
@@ -118,7 +118,7 @@ class Sord::Generator
   #
   # @return [void]
   #
-  # source://sord//lib/sord/generator.rb#96
+  # source://sord//lib/sord/generator.rb#97
   sig { void }
   def count_method; end
 
@@ -126,7 +126,7 @@ class Sord::Generator
   #
   # @return [void]
   #
-  # source://sord//lib/sord/generator.rb#90
+  # source://sord//lib/sord/generator.rb#91
   sig { void }
   def count_namespace; end
 
@@ -136,7 +136,7 @@ class Sord::Generator
   # @param default [String]
   # @return [String, nil]
   #
-  # source://sord//lib/sord/generator.rb#709
+  # source://sord//lib/sord/generator.rb#728
   # Removes the last character of a default parameter value if it begins with
   # _@param_ `default`
   sig { params(default: String).returns(T.nilable(String)) }
@@ -148,7 +148,7 @@ class Sord::Generator
   #
   # @return [void]
   #
-  # source://sord//lib/sord/generator.rb#619
+  # source://sord//lib/sord/generator.rb#638
   # Populates the generator with the contents of the YARD registry, then
   # uses the loaded Parlour::Generator to generate the file. You must
   sig { void }
@@ -158,7 +158,7 @@ class Sord::Generator
   # @param tag_name [String]
   # @return [YARD::Tags::Tag, nil]
   #
-  # source://sord//lib/sord/generator.rb#270
+  # source://sord//lib/sord/generator.rb#289
   # sord warn - YARD::CodeObjects::MethodObject wasn't able to be resolved to a constant in this project
   # sord warn - YARD::Tags::Tag wasn't able to be resolved to a constant in this project
   # _@param_ `method`
@@ -170,7 +170,7 @@ class Sord::Generator
   # @param tag_name [String]
   # @return [Array<YARD::Tags::Tag>]
   #
-  # source://sord//lib/sord/generator.rb#260
+  # source://sord//lib/sord/generator.rb#279
   # sord warn - YARD::CodeObjects::MethodObject wasn't able to be resolved to a constant in this project
   # sord warn - YARD::Tags::Tag wasn't able to be resolved to a constant in this project
   # _@param_ `method`
@@ -181,7 +181,7 @@ class Sord::Generator
   # @return [Integer] The number of objects this generator has processed so
   #   far.
   #
-  # source://sord//lib/sord/generator.rb#16
+  # source://sord//lib/sord/generator.rb#17
   # _@return_ — The number of objects this generator has processed so
   # far.
   sig { returns(Integer) }
@@ -192,7 +192,7 @@ class Sord::Generator
   #
   # @return [void]
   #
-  # source://sord//lib/sord/generator.rb#608
+  # source://sord//lib/sord/generator.rb#627
   # Populates the generator with the contents of the YARD registry. You
   sig { void }
   def populate; end
@@ -202,7 +202,7 @@ class Sord::Generator
   #
   # @return [void]
   #
-  # source://sord//lib/sord/generator.rb#627
+  # source://sord//lib/sord/generator.rb#646
   # Loads the YARD registry, populates the file, and prints any relevant
   sig { void }
   def run; end
@@ -216,7 +216,7 @@ class Sord::Generator
   # @param pair2 [Array]
   # @return Integer
   #
-  # source://sord//lib/sord/generator.rb#672
+  # source://sord//lib/sord/generator.rb#691
   # Given two pairs of arrays representing method parameters, in the form
   # of ["variable_name", "default_value"], sort the parameters so they're
   # valid for Sorbet. Sorbet requires that, e.g. required kwargs go before
@@ -230,11 +230,11 @@ class Sord::Generator
   #   errors encountered by by the generator. Each element is of the form
   #   [message, item, line].
   #
-  # source://sord//lib/sord/generator.rb#23
+  # source://sord//lib/sord/generator.rb#24
   def warnings; end
 end
 
-# source://sord//lib/sord/generator.rb#12
+# source://sord//lib/sord/generator.rb#13
 Sord::Generator::VALID_MODES = T.let(T.unsafe(nil), Array)
 
 # Handles writing logs to stdout and any other classes which request them.
@@ -537,7 +537,7 @@ class Sord::ParlourPlugin < ::Parlour::Plugin
   def parlour=(_arg0); end
 
   class << self
-    # source://sord//lib/sord/parlour_plugin.rb#91
+    # source://sord//lib/sord/parlour_plugin.rb#92
     # sord omit - no YARD return type given, using untyped
     sig { params(block: T.untyped).returns(T.untyped) }
     def with_clean_env(&block); end

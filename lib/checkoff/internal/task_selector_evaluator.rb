@@ -42,7 +42,7 @@ module Checkoff
 
     # @return [Hash]
     def initializer_kwargs
-      { tasks: tasks, timelines: timelines, custom_fields: custom_fields }
+      { tasks:, timelines:, custom_fields: }
     end
 
     # @return [Asana::Resources::Task]

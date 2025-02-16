@@ -12,7 +12,7 @@ module Checkoff
       function_evaluators.each do |evaluator_class|
         # @type [Checkoff::SelectorClasses::FunctionEvaluator]
         # @sg-ignore
-        evaluator = evaluator_class.new(selector: selector,
+        evaluator = evaluator_class.new(selector:,
                                         **initializer_kwargs)
 
         next unless evaluator.matches?

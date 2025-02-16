@@ -41,7 +41,7 @@ class TestCLIView < Minitest::Test
   def mock_run_with_no_section_specified_normal_project(due_on:, due_at:)
     expect_client_pulled
     expect_tasks_by_section_pulled
-    expect_three_tasks_queried(due_on: due_on, due_at: due_at)
+    expect_three_tasks_queried(due_on:, due_at:)
   end
 
   def expect_task_named(task, task_name)
@@ -98,10 +98,10 @@ class TestCLIView < Minitest::Test
 
   def set_mocks
     @mocks = {
-      config: config,
-      workspaces: workspaces,
-      sections: sections,
-      tasks: tasks,
+      config:,
+      workspaces:,
+      sections:,
+      tasks:,
       stderr: $stderr,
       stdout: $stdout,
     }
@@ -139,21 +139,21 @@ class TestCLIView < Minitest::Test
     @mocks[:sections].expects(:tasks).with(workspace_name, project_name,
                                            section_name)
       .returns(three_tasks.keys)
-    expect_three_tasks_queried(due_on: due_on, due_at: due_at)
+    expect_three_tasks_queried(due_on:, due_at:)
   end
 
   def mock_view(project_name:, section_name:,
                 due_at:, due_on:)
-    expect_three_tasks_pulled_and_queried(project_name: project_name,
-                                          section_name: section_name,
-                                          due_at: due_at,
-                                          due_on: due_on)
+    expect_three_tasks_pulled_and_queried(project_name:,
+                                          section_name:,
+                                          due_at:,
+                                          due_on:)
   end
 
   def mock_view_specific_task(section_name:)
     expect_client_pulled
     tasks.expects(:task).with(workspace_name, project_name, task_name,
-                              section_name: section_name).returns(task_a)
+                              section_name:).returns(task_a)
     expect_task_queried(task_a, task_name, nil, nil)
     @mocks[:stdout].expects(:puts).with('{"name":"my_task"}')
   end
@@ -191,7 +191,7 @@ class TestCLIView < Minitest::Test
   end
 
   def mock_view_run_with_section_specified_empty_section
-    mock_view(project_name: project_name,
+    mock_view(project_name:,
               section_name: nil,
               due_on: 'fake_date',
               due_at: nil)
@@ -231,7 +231,7 @@ class TestCLIView < Minitest::Test
   end
 
   def mock_view_run_with_section_specified_normal_project
-    mock_view(project_name: project_name,
+    mock_view(project_name:,
               section_name: section_name_str,
               due_on: 'fake_date',
               due_at: nil)

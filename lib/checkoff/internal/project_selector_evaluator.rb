@@ -46,8 +46,8 @@ module Checkoff
     # @return [Hash]
     def initializer_kwargs
       {
-        projects: projects, custom_fields: custom_fields,
-        workspaces: workspaces, portfolios: portfolios
+        projects:, custom_fields:,
+        workspaces:, portfolios:
       }
     end
 

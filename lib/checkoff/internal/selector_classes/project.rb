@@ -34,7 +34,7 @@ module Checkoff
         # @param period [Symbol] - :now_or_before or :this_week
         # @return [Boolean]
         def evaluate(project, period = :now_or_before)
-          @projects.project_ready?(project, period: period)
+          @projects.project_ready?(project, period:)
         end
       end
 
@@ -56,7 +56,7 @@ module Checkoff
           workspace_name ||= project.workspace&.name
           workspace_name ||= @workspaces.default_workspace.name
           projects = @portfolios.projects_in_portfolio(workspace_name, portfolio_name,
-                                                       extra_project_fields: extra_project_fields)
+                                                       extra_project_fields:)
           projects.any? { |p| p.name == project.name }
         end
       end

@@ -56,7 +56,7 @@ class TestTaskSearches < ClassTest
       .with([data,
              { 'something_else' => something_else }],
             type: Asana::Resources::Task,
-            client: client)
+            client:)
       .returns(response_array)
   end
 
@@ -86,7 +86,7 @@ class TestTaskSearches < ClassTest
   end
 
   def projects
-    Checkoff::Projects.new(client: client)
+    Checkoff::Projects.new(client:)
   end
 
   def test_task_search
