@@ -98,7 +98,10 @@ def get_initializer_mocks(clazz,
                           respond_like:,
                           skip_these_keys: [])
   method = clazz.instance_method(:initialize)
+
+  # rubocop:disable Style/HashSlice
   named_parameters = method.parameters.select { |name, _value| %i[key keyreq].include? name }
+  # rubocop:enable Style/HashSlice
 
   mock_syms = named_parameters.map { |_name, value| value } - skip_these_keys
 
