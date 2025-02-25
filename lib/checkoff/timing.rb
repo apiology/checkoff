@@ -150,6 +150,7 @@ module Checkoff
       saturday: 6,
       sunday: 0,
     }.freeze
+    private_constant :WDAY_FROM_DAY_OF_WEEK
 
     # @param date_or_time [Date,Time,nil]
     # @param day_of_week [Symbol]

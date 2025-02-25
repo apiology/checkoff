@@ -57,6 +57,7 @@ module Checkoff
           'contains_any' => CustomFieldVariant::ContainsAny,
           'contains_all' => CustomFieldVariant::ContainsAll,
         }.freeze
+        private_constant :VARIANTS
 
         # @param gid [String]
         # @param single_custom_field_params [Hash<String, Array<String>>]

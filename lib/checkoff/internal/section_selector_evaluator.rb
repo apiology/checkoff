@@ -32,16 +32,19 @@ module Checkoff
     COMMON_FUNCTION_EVALUATORS = (Checkoff::SelectorClasses::Common.constants.map do |const|
       Checkoff::SelectorClasses::Common.const_get(const)
     end - [Checkoff::SelectorClasses::Common::FunctionEvaluator]).freeze
+    private_constant :COMMON_FUNCTION_EVALUATORS
 
     SECTION_FUNCTION_EVALUATORS = (Checkoff::SelectorClasses::Section.constants.map do |const|
       Checkoff::SelectorClasses::Section.const_get(const)
     end - [Checkoff::SelectorClasses::Section::FunctionEvaluator]).freeze
+    private_constant :SECTION_FUNCTION_EVALUATORS
 
-    FUNCTION_EVALUTORS = (COMMON_FUNCTION_EVALUATORS + SECTION_FUNCTION_EVALUATORS).freeze
+    FUNCTION_EVALUATORS = (COMMON_FUNCTION_EVALUATORS + SECTION_FUNCTION_EVALUATORS).freeze
+    private_constant :FUNCTION_EVALUATORS
 
     # @return [Array<Class<Checkoff::SelectorClasses::Project::FunctionEvaluator>>]
     def function_evaluators
-      FUNCTION_EVALUTORS
+      FUNCTION_EVALUATORS
     end
 
     # @return [Hash]

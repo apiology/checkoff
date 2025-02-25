@@ -26,17 +26,20 @@ module Checkoff
       super()
     end
 
-    private
-
     COMMON_FUNCTION_EVALUATORS = (Checkoff::SelectorClasses::Common.constants.map do |const|
       Checkoff::SelectorClasses::Common.const_get(const)
     end - [Checkoff::SelectorClasses::Common::FunctionEvaluator]).freeze
+    private_constant :COMMON_FUNCTION_EVALUATORS
 
     PROJECT_FUNCTION_EVALUATORS = (Checkoff::SelectorClasses::Project.constants.map do |const|
       Checkoff::SelectorClasses::Project.const_get(const)
     end - [Checkoff::SelectorClasses::Project::FunctionEvaluator]).freeze
+    private_constant :PROJECT_FUNCTION_EVALUATORS
 
     FUNCTION_EVALUTORS = (COMMON_FUNCTION_EVALUATORS + PROJECT_FUNCTION_EVALUATORS).freeze
+    private_constant :FUNCTION_EVALUTORS
+
+    private
 
     # @return [Array<Class<Checkoff::SelectorClasses::Project::FunctionEvaluator>>]
     def function_evaluators
