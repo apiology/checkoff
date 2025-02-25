@@ -70,6 +70,7 @@ module Checkoff
           'start_date' => 'start_on',
           'completion_date' => 'completed_on',
         }.freeze
+        private_constant :API_PREFIX
 
         # @param prefix [String]
         # @return [Array(Hash<String, String>, Array<[Symbol, Array]>)] See https://developers.asana.com/docs/search-tasks-in-a-workspace

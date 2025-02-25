@@ -14,6 +14,10 @@ require_relative 'sections'
 module Checkoff
   # Move tasks from one place to another
   class MvSubcommand
+    # @param from_workspace_arg [Symbol,String]
+    # @param from_project_arg [Symbol,String]
+    # @param from_section_arg [nil,String]
+    # @return [void]
     def validate_and_assign_from_location(from_workspace_arg, from_project_arg, from_section_arg)
       if from_workspace_arg == :default_workspace
         # Figure out what to do here - we accept a default
@@ -28,6 +32,9 @@ module Checkoff
       @from_section_name = from_section_arg
     end
 
+    # @param to_project_arg [Symbol,String]
+    #
+    # @return [String,Symbol]
     def create_to_project_name(to_project_arg)
       if to_project_arg == :source_project
         from_project_name
@@ -36,6 +43,9 @@ module Checkoff
       end
     end
 
+    # @param to_section_arg [Symbol,String,nil]
+    #
+    # @return [nil,String]
     def create_to_section_name(to_section_arg)
       if to_section_arg == :source_section
         from_section_name
@@ -75,7 +85,7 @@ module Checkoff
 
     def move_tasks(tasks, to_project, to_section)
       tasks.each do |task|
-        # a. check if already in correct project and section (TODO)
+        # a. check if already in correct project and section (future)
         # b. if not, put it there
         @logger.puts "Moving #{task.name} to #{to_section.name}..."
         task.add_project(project: to_project.gid, section: to_section.gid)

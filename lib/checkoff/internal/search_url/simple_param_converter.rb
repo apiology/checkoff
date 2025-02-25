@@ -97,7 +97,7 @@ module Checkoff
 
         # Handle 'completion' search url param
         class Completion < SimpleParam
-          # @return [Array<String>]
+          # @return [Array<String,Boolean>]
           def convert
             case single_value
             when 'incomplete'
@@ -218,6 +218,7 @@ module Checkoff
           'milestone' => SimpleParam::Milestone,
           'searched_type' => SimpleParam::SearchedType,
         }.freeze
+        private_constant :ARGS
 
         # https://developers.asana.com/docs/search-tasks-in-a-workspace
         # @sg-ignore

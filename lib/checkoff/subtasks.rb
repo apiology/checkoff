@@ -41,7 +41,7 @@ module Checkoff
     #
     # @param tasks [Enumerable<Asana::Resources::Task>]
     #
-    # @return [Hash<[nil,String], Enumerable<Asana::Resources::Task>>]
+    # @return [Hash{[nil,String] => Enumerable<Asana::Resources::Task>}]
     def by_section(tasks)
       current_section = nil
       by_section = { nil => [] }
