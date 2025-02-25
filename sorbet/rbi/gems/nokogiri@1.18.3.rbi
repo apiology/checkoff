@@ -930,7 +930,7 @@ class Nokogiri::HTML4::Builder < ::Nokogiri::XML::Builder
   def to_html; end
 end
 
-# source://nokogiri//lib/nokogiri/html4/document.rb#11
+# source://nokogiri//lib/nokogiri/html4/document.rb#8
 class Nokogiri::HTML4::Document < ::Nokogiri::XML::Document
   # Create a Nokogiri::XML::DocumentFragment from +tags+
   #
@@ -1056,7 +1056,7 @@ class Nokogiri::HTML4::Document < ::Nokogiri::XML::Document
   end
 end
 
-# source://nokogiri//lib/nokogiri/html4/document_fragment.rb#51
+# source://nokogiri//lib/nokogiri/html4/document_fragment.rb#5
 class Nokogiri::HTML4::DocumentFragment < ::Nokogiri::XML::DocumentFragment
   # :call-seq:
   #   new(document) { |options| ... } → HTML4::DocumentFragment
@@ -1656,7 +1656,7 @@ module Nokogiri::HTML4::SAX; end
 #
 # Also see Nokogiri::XML::SAX::Document for the available events.
 #
-# source://nokogiri//lib/nokogiri/html4/sax/parser.rb#44
+# source://nokogiri//lib/nokogiri/html4/sax/parser.rb#41
 class Nokogiri::HTML4::SAX::Parser < ::Nokogiri::XML::SAX::Parser
   private
 
@@ -2018,7 +2018,7 @@ end
 # The HTML5 builder inherits from the XML builder, so make sure to read the
 # Nokogiri::XML::Builder documentation.
 #
-# source://nokogiri//lib/nokogiri/html5/builder.rb#34
+# source://nokogiri//lib/nokogiri/html5/builder.rb#32
 class Nokogiri::HTML5::Builder < ::Nokogiri::XML::Builder
   # Convert the builder to HTML
   #
@@ -2030,7 +2030,7 @@ end
 #
 # 💡 HTML5 functionality is not available when running JRuby.
 #
-# source://nokogiri//lib/nokogiri/html5/document.rb#41
+# source://nokogiri//lib/nokogiri/html5/document.rb#39
 class Nokogiri::HTML5::Document < ::Nokogiri::HTML4::Document
   # @return [Document] a new instance of Document
   #
@@ -2972,7 +2972,7 @@ class Nokogiri::XML::Builder::NodeBuilder
   def method_missing(method, *args, &block); end
 end
 
-# source://nokogiri//lib/nokogiri/xml/cdata.rb#7
+# source://nokogiri//lib/nokogiri/xml/cdata.rb#5
 class Nokogiri::XML::CDATA < ::Nokogiri::XML::Text
   # Get the name of this CDATA node
   #
@@ -3031,7 +3031,7 @@ end
 # Document inherits a great deal of functionality from its superclass Nokogiri::XML::Node, so
 # please read that class's documentation as well.
 #
-# source://nokogiri//lib/nokogiri/xml/document.rb#17
+# source://nokogiri//lib/nokogiri/xml/document.rb#14
 class Nokogiri::XML::Document < ::Nokogiri::XML::Node
   # @return [Document] a new instance of Document
   #
@@ -3494,7 +3494,7 @@ Nokogiri::XML::Document::OBJECT_DUP_METHOD = T.let(T.unsafe(nil), UnboundMethod)
 # DocumentFragment represents a fragment of an \XML document. It provides the same functionality
 # exposed by XML::Node and can be used to contain one or more \XML subtrees.
 #
-# source://nokogiri//lib/nokogiri/xml/document_fragment.rb#11
+# source://nokogiri//lib/nokogiri/xml/document_fragment.rb#8
 class Nokogiri::XML::DocumentFragment < ::Nokogiri::XML::Node
   # :call-seq:
   #   new(document, input=nil) { |options| ... } → DocumentFragment
@@ -6061,7 +6061,7 @@ Nokogiri::XML::NodeSet::IMPLIED_XPATH_CONTEXTS = T.let(T.unsafe(nil), Array)
 
 # Struct representing an {XML Schema Notation}[https://www.w3.org/TR/xml/#Notations]
 #
-# source://nokogiri//lib/nokogiri/xml/notation.rb#7
+# source://nokogiri//lib/nokogiri/xml/notation.rb#6
 class Nokogiri::XML::Notation < ::Struct; end
 
 # source://nokogiri//lib/nokogiri/xml/pp/node.rb#6
@@ -6812,7 +6812,7 @@ Nokogiri::XML::Reader::TYPE_XML_DECLARATION = T.let(T.unsafe(nil), Integer)
 #   doc = Nokogiri::XML::Document.parse(File.open(XML_FILE))
 #   schema.valid?(doc) # Boolean
 #
-# source://nokogiri//lib/nokogiri/xml/relax_ng.rb#59
+# source://nokogiri//lib/nokogiri/xml/relax_ng.rb#42
 class Nokogiri::XML::RelaxNG < ::Nokogiri::XML::Schema
   private
 
