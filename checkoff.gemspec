@@ -29,12 +29,12 @@ Gem::Specification.new do |spec|
   spec.executables   = spec.files.grep(%r{^exe/}) { |f| File.basename(f) }
   spec.require_paths = ['lib']
 
-  spec.add_runtime_dependency 'activesupport'
-  spec.add_runtime_dependency 'asana', '>0.10.0'
-  spec.add_runtime_dependency 'cache_method'
-  spec.add_runtime_dependency 'gli'
-  spec.add_runtime_dependency 'mime-types'
-  spec.add_runtime_dependency 'sorbet-runtime'
+  spec.add_dependency 'activesupport'
+  spec.add_dependency 'asana', '>0.10.0'
+  spec.add_dependency 'cache_method'
+  spec.add_dependency 'gli'
+  spec.add_dependency 'mime-types'
+  spec.add_dependency 'sorbet-runtime'
 
   spec.metadata = {
     'rubygems_mfa_required' => 'false',
