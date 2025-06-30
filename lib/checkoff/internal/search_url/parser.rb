@@ -22,7 +22,7 @@ module Checkoff
         end
 
         # @param url [String]
-        # @return [Array(Hash<String, String>, Hash<String, String>)]
+        # @return [Array(Hash<String, String>, Array)]
         def convert_params(url)
           url_params = CGI.parse(URI.parse(url).query)
           # @type custom_field_params [Hash<String, Array<String>>]

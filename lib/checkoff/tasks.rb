@@ -32,7 +32,7 @@ module Checkoff
     LONG_CACHE_TIME = MINUTE * 15
     SHORT_CACHE_TIME = MINUTE * 5
 
-    # @param config [Checkoff::Internal::EnvFallbackConfigLoader]
+    # @param config [Hash, Checkoff::Internal::EnvFallbackConfigLoader]
     # @param client [Asana::Client]
     # @param workspaces [Checkoff::Workspaces]
     # @param sections [Checkoff::Sections]

@@ -22,7 +22,7 @@ module Checkoff
     # @!parse
     #   extend CacheMethod::ClassMethods
 
-    # @param config [Checkoff::Internal::EnvFallbackConfigLoader]
+    # @param config [Hash, Checkoff::Internal::EnvFallbackConfigLoader]
     # @param client [Asana::Client]
     # @param asana_workspace [Class<Asana::Resources::Workspace>]
     def initialize(config: Checkoff::Internal::ConfigLoader.load(:asana),

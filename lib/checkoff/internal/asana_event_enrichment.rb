@@ -55,7 +55,7 @@ module Checkoff
 
       # @param filter [Hash<String,[String,Array<String>]>]
       #
-      # @return [Hash<String,[String,Array<String>]>]
+      # @return [Hash{String => String,Array<String>}]
       def enrich_filter(filter)
         filter = filter.dup
         enrich_filter_section!(filter)

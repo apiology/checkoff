@@ -19,7 +19,7 @@ module Checkoff
         end
 
         # @param task_selectors [Array<Array<[Symbol, Array]>>]
-        # @return [Array<[Symbol, Array]>]
+        # @return [Array(Symbol, Array, Array)]
         def self.merge_task_selectors(*task_selectors)
           return [] if task_selectors.empty?
 

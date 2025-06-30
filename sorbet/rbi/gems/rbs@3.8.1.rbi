@@ -2983,7 +2983,7 @@ class RBS::DefinitionBuilder::MethodBuilder::Methods
   def validate!; end
 end
 
-# source://rbs//lib/rbs/definition_builder/method_builder.rb#8
+# source://rbs//lib/rbs/definition_builder/method_builder.rb#7
 class RBS::DefinitionBuilder::MethodBuilder::Methods::Definition < ::Struct
   # source://rbs//lib/rbs/definition_builder/method_builder.rb#14
   def accessibility; end
@@ -4570,7 +4570,7 @@ class RBS::Prototype::RB
   def types_to_union_type(types); end
 end
 
-# source://rbs//lib/rbs/prototype/rb.rb#9
+# source://rbs//lib/rbs/prototype/rb.rb#8
 class RBS::Prototype::RB::Context < ::Struct
   # source://rbs//lib/rbs/prototype/rb.rb#25
   def attribute_kind; end

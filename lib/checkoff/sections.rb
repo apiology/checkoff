@@ -280,8 +280,6 @@ module Checkoff
     # @param project_gid [String]
     # @return [void]
     def file_task_by_section(by_section, task, project_gid)
-      # @sg-ignore
-      # @type [Array<Hash>]
       membership = task.memberships.find { |m| m['project']['gid'] == project_gid }
       raise "Could not find task in project_gid #{project_gid}: #{task}" if membership.nil?
 

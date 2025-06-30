@@ -5,7 +5,7 @@
 # Please instead update this file by running `bin/tapioca gem bigdecimal`.
 
 
-# source://bigdecimal//lib/bigdecimal/util.rb#89
+# source://bigdecimal//lib/bigdecimal/util.rb#78
 class BigDecimal < ::Numeric
   # call-seq:
   #     a.to_d -> bigdecimal
@@ -37,7 +37,7 @@ end
 
 BigDecimal::VERSION = T.let(T.unsafe(nil), String)
 
-# source://bigdecimal//lib/bigdecimal/util.rb#156
+# source://bigdecimal//lib/bigdecimal/util.rb#138
 class Complex < ::Numeric
   # call-seq:
   #     cmp.to_d             -> bigdecimal

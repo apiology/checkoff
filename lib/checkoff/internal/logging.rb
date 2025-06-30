@@ -5,11 +5,14 @@ require 'logger'
 
 # include this to add ability to log at different levels
 module Logging
+  # @sg-ignore
   # @return [::Logger]
   def logger
+    # @type [::Logger]
     # @sg-ignore
     @logger ||= if defined?(Rails) && Rails.respond_to?(:logger) && Rails.logger
                   # @sg-ignore
+                  # @type [::Logger]
                   Rails.logger
                 else
                   ::Logger.new($stdout, level: log_level)

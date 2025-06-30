@@ -43,9 +43,9 @@ module Checkoff
       end
     end
 
-    # @param to_section_arg [Symbol,String,nil]
+    # @param to_section_arg [:source_section,String,nil]
     #
-    # @return [nil,String]
+    # @return [nil, String, Symbol]
     def create_to_section_name(to_section_arg)
       if to_section_arg == :source_section
         from_section_name

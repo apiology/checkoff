@@ -120,7 +120,7 @@ module Checkoff
 
       date = date_or_time.to_date
 
-      date >= beginning_of_week && date <= end_of_week
+      date.between?(beginning_of_week, end_of_week)
     end
 
     # @param date_or_time [Date,Time,nil]
@@ -137,7 +137,7 @@ module Checkoff
 
       date = date_or_time.to_date
 
-      date >= beginning_of_week && date <= end_of_week
+      date.between?(beginning_of_week, end_of_week)
     end
 
     # @type [Hash<Symbol,Integer>]

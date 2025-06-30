@@ -1,5 +1,9 @@
 #!/usr/bin/env ruby
+# frozen_string_literal: true
 # typed: true
+
+require 'asana'
+require 'asana/resources/tag'
 
 # frozen_string_literal: true
 

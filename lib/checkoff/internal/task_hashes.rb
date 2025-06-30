@@ -46,7 +46,7 @@ module Checkoff
         task_hash['unwrapped']['custom_fields'] = unwrapped_custom_fields
       end
 
-      # @param [Hash<String, Hash, Array>] task_hash
+      # @param [Hash{String => String, Hash, Array}] task_hash
       # @param [Array<Hash>] memberships
       #
       # @return [void]
@@ -54,7 +54,7 @@ module Checkoff
         return unless task_hash.key? 'assignee_section'
 
         assignee_section = task_hash.fetch('assignee_section')
-        # @type [Hash]
+        # @type [Hash{String => String}]
         assignee = task_hash.fetch('assignee')
         memberships << {
           'section' => assignee_section.dup,

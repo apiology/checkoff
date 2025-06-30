@@ -1,5 +1,5 @@
 #!/usr/bin/env ruby
-# typed: false
+# typed: true
 
 # frozen_string_literal: true
 
@@ -46,7 +46,7 @@ module Checkoff
     def filter_via_task_selector(task, task_selector)
       evaluator = TaskSelectorEvaluator.new(task:, tasks:, timelines:,
                                             custom_fields:)
-      evaluator.evaluate(task_selector)
+      !!evaluator.evaluate(task_selector)
     end
 
     private
@@ -78,7 +78,10 @@ module Checkoff
       # @return [Array]
       def task_selector
         task_selector_json = ARGV[2] || raise('Please pass task_selector in JSON form as third argument')
-        JSON.parse(task_selector_json)
+        task_selector = JSON.parse(task_selector_json)
+        raise "task_selector must be an array, got #{task_selector.class}" unless task_selector.is_a?(Array)
+
+        task_selector
       end
 
       # @return [void]

@@ -81,7 +81,7 @@ module Checkoff
 
     # @param filter [Hash<String,[String,Array<String>]>]
     #
-    # @return [Hash<String,[String,Array<String>]>]
+    # @return Hash{String => String, Array<String>}]
     def enrich_filter(filter)
       asana_event_enrichment.enrich_filter(filter)
     end

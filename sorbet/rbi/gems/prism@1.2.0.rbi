@@ -144,7 +144,7 @@ end
 # eagerly converted to UTF-8, this class will be used as well. This is because
 # at that point we will treat everything as single-byte characters.
 #
-# source://prism//lib/prism/parse_result.rb#237
+# source://prism//lib/prism/parse_result.rb#236
 class Prism::ASCIISource < ::Prism::Source
   # Return the column number in characters for the given byte offset.
   #
@@ -195,7 +195,7 @@ end
 #     alias $foo $bar
 #     ^^^^^^^^^^^^^^^
 #
-# source://prism//lib/prism/node.rb#228
+# source://prism//lib/prism/node.rb#227
 class Prism::AliasGlobalVariableNode < ::Prism::Node
   # Initialize a new AliasGlobalVariableNode node.
   #
@@ -336,7 +336,7 @@ end
 #     alias foo bar
 #     ^^^^^^^^^^^^^
 #
-# source://prism//lib/prism/node.rb#329
+# source://prism//lib/prism/node.rb#328
 class Prism::AliasMethodNode < ::Prism::Node
   # Initialize a new AliasMethodNode node.
   #
@@ -486,7 +486,7 @@ end
 #     foo => bar | baz
 #            ^^^^^^^^^
 #
-# source://prism//lib/prism/node.rb#439
+# source://prism//lib/prism/node.rb#438
 class Prism::AlternationPatternNode < ::Prism::Node
   # Initialize a new AlternationPatternNode node.
   #
@@ -625,7 +625,7 @@ end
 #     left and right
 #     ^^^^^^^^^^^^^^
 #
-# source://prism//lib/prism/node.rb#540
+# source://prism//lib/prism/node.rb#539
 class Prism::AndNode < ::Prism::Node
   # Initialize a new AndNode node.
   #
@@ -770,7 +770,7 @@ end
 #     return foo, bar, baz
 #            ^^^^^^^^^^^^^
 #
-# source://prism//lib/prism/node.rb#647
+# source://prism//lib/prism/node.rb#646
 class Prism::ArgumentsNode < ::Prism::Node
   # Initialize a new ArgumentsNode node.
   #
@@ -948,7 +948,7 @@ Prism::ArgumentsNodeFlags::CONTAINS_SPLAT = T.let(T.unsafe(nil), Integer)
 #     [1, 2, 3]
 #     ^^^^^^^^^
 #
-# source://prism//lib/prism/node.rb#747
+# source://prism//lib/prism/node.rb#746
 class Prism::ArrayNode < ::Prism::Node
   # Initialize a new ArrayNode node.
   #
@@ -1124,7 +1124,7 @@ Prism::ArrayNodeFlags::CONTAINS_SPLAT = T.let(T.unsafe(nil), Integer)
 #     foo in Bar[1, 2, 3]
 #     ^^^^^^^^^^^^^^^^^^^
 #
-# source://prism//lib/prism/node.rb#889
+# source://prism//lib/prism/node.rb#888
 class Prism::ArrayPatternNode < ::Prism::Node
   # Initialize a new ArrayPatternNode node.
   #
@@ -1284,7 +1284,7 @@ end
 #     { a => b }
 #       ^^^^^^
 #
-# source://prism//lib/prism/node.rb#1024
+# source://prism//lib/prism/node.rb#1023
 class Prism::AssocNode < ::Prism::Node
   # Initialize a new AssocNode node.
   #
@@ -1432,7 +1432,7 @@ end
 #     { **foo }
 #       ^^^^^
 #
-# source://prism//lib/prism/node.rb#1140
+# source://prism//lib/prism/node.rb#1139
 class Prism::AssocSplatNode < ::Prism::Node
   # Initialize a new AssocSplatNode node.
   #
@@ -1565,7 +1565,7 @@ Prism::BACKEND = T.let(T.unsafe(nil), Symbol)
 #     $'
 #     ^^
 #
-# source://prism//lib/prism/node.rb#1235
+# source://prism//lib/prism/node.rb#1234
 class Prism::BackReferenceReadNode < ::Prism::Node
   # Initialize a new BackReferenceReadNode node.
   #
@@ -1698,7 +1698,7 @@ end
 #     end
 #     ^^^^^
 #
-# source://prism//lib/prism/node.rb#1314
+# source://prism//lib/prism/node.rb#1313
 class Prism::BeginNode < ::Prism::Node
   # Initialize a new BeginNode node.
   #
@@ -1861,7 +1861,7 @@ end
 #     bar(&args)
 #     ^^^^^^^^^^
 #
-# source://prism//lib/prism/node.rb#1447
+# source://prism//lib/prism/node.rb#1446
 class Prism::BlockArgumentNode < ::Prism::Node
   # Initialize a new BlockArgumentNode node.
   #
@@ -1983,7 +1983,7 @@ end
 #     a { |; b| }
 #            ^
 #
-# source://prism//lib/prism/node.rb#1536
+# source://prism//lib/prism/node.rb#1535
 class Prism::BlockLocalVariableNode < ::Prism::Node
   # Initialize a new BlockLocalVariableNode node.
   #
@@ -2091,7 +2091,7 @@ end
 #     [1, 2, 3].each { |i| puts x }
 #                    ^^^^^^^^^^^^^^
 #
-# source://prism//lib/prism/node.rb#1615
+# source://prism//lib/prism/node.rb#1614
 class Prism::BlockNode < ::Prism::Node
   # Initialize a new BlockNode node.
   #
@@ -2244,7 +2244,7 @@ end
 #           ^^
 #     end
 #
-# source://prism//lib/prism/node.rb#1731
+# source://prism//lib/prism/node.rb#1730
 class Prism::BlockParameterNode < ::Prism::Node
   # Initialize a new BlockParameterNode node.
   #
@@ -2386,7 +2386,7 @@ end
 #            ^^^^^^^^^^^^^^^^^
 #     end
 #
-# source://prism//lib/prism/node.rb#1843
+# source://prism//lib/prism/node.rb#1842
 class Prism::BlockParametersNode < ::Prism::Node
   # Initialize a new BlockParametersNode node.
   #
@@ -2530,7 +2530,7 @@ end
 #     break foo
 #     ^^^^^^^^^
 #
-# source://prism//lib/prism/node.rb#1965
+# source://prism//lib/prism/node.rb#1964
 class Prism::BreakNode < ::Prism::Node
   # Initialize a new BreakNode node.
   #
@@ -2658,7 +2658,7 @@ end
 #     foo.bar &&= value
 #     ^^^^^^^^^^^^^^^^^
 #
-# source://prism//lib/prism/node.rb#2060
+# source://prism//lib/prism/node.rb#2059
 class Prism::CallAndWriteNode < ::Prism::Node
   # Initialize a new CallAndWriteNode node.
   #
@@ -2879,7 +2879,7 @@ end
 #     foo&.bar
 #     ^^^^^^^^
 #
-# source://prism//lib/prism/node.rb#2241
+# source://prism//lib/prism/node.rb#2240
 class Prism::CallNode < ::Prism::Node
   # Initialize a new CallNode node.
   #
@@ -3147,7 +3147,7 @@ Prism::CallNodeFlags::VARIABLE_CALL = T.let(T.unsafe(nil), Integer)
 #     foo.bar += baz
 #     ^^^^^^^^^^^^^^
 #
-# source://prism//lib/prism/node.rb#2443
+# source://prism//lib/prism/node.rb#2442
 class Prism::CallOperatorWriteNode < ::Prism::Node
   # Initialize a new CallOperatorWriteNode node.
   #
@@ -3367,7 +3367,7 @@ end
 #     foo.bar ||= value
 #     ^^^^^^^^^^^^^^^^^
 #
-# source://prism//lib/prism/node.rb#2609
+# source://prism//lib/prism/node.rb#2608
 class Prism::CallOrWriteNode < ::Prism::Node
   # Initialize a new CallOrWriteNode node.
   #
@@ -3581,7 +3581,7 @@ end
 #     for foo.bar in baz do end
 #         ^^^^^^^
 #
-# source://prism//lib/prism/node.rb#2783
+# source://prism//lib/prism/node.rb#2782
 class Prism::CallTargetNode < ::Prism::Node
   # Initialize a new CallTargetNode node.
   #
@@ -3757,7 +3757,7 @@ end
 #     foo => [bar => baz]
 #            ^^^^^^^^^^^^
 #
-# source://prism//lib/prism/node.rb#2910
+# source://prism//lib/prism/node.rb#2909
 class Prism::CapturePatternNode < ::Prism::Node
   # Initialize a new CapturePatternNode node.
   #
@@ -3889,7 +3889,7 @@ end
 #     end
 #     ^^^^^^^^^
 #
-# source://prism//lib/prism/node.rb#3004
+# source://prism//lib/prism/node.rb#3003
 class Prism::CaseMatchNode < ::Prism::Node
   # Initialize a new CaseMatchNode node.
   #
@@ -4049,7 +4049,7 @@ end
 #     end
 #     ^^^^^^^^^^
 #
-# source://prism//lib/prism/node.rb#3122
+# source://prism//lib/prism/node.rb#3121
 class Prism::CaseNode < ::Prism::Node
   # Initialize a new CaseNode node.
   #
@@ -4207,7 +4207,7 @@ end
 #     class Foo end
 #     ^^^^^^^^^^^^^
 #
-# source://prism//lib/prism/node.rb#3238
+# source://prism//lib/prism/node.rb#3237
 class Prism::ClassNode < ::Prism::Node
   # Initialize a new ClassNode node.
   #
@@ -4389,7 +4389,7 @@ end
 #     @@target &&= value
 #     ^^^^^^^^^^^^^^^^^^
 #
-# source://prism//lib/prism/node.rb#3384
+# source://prism//lib/prism/node.rb#3383
 class Prism::ClassVariableAndWriteNode < ::Prism::Node
   # Initialize a new ClassVariableAndWriteNode node.
   #
@@ -4530,7 +4530,7 @@ end
 #     @@target += value
 #     ^^^^^^^^^^^^^^^^^
 #
-# source://prism//lib/prism/node.rb#3485
+# source://prism//lib/prism/node.rb#3484
 class Prism::ClassVariableOperatorWriteNode < ::Prism::Node
   # Initialize a new ClassVariableOperatorWriteNode node.
   #
@@ -4685,7 +4685,7 @@ end
 #     @@target ||= value
 #     ^^^^^^^^^^^^^^^^^^
 #
-# source://prism//lib/prism/node.rb#3586
+# source://prism//lib/prism/node.rb#3585
 class Prism::ClassVariableOrWriteNode < ::Prism::Node
   # Initialize a new ClassVariableOrWriteNode node.
   #
@@ -4826,7 +4826,7 @@ end
 #     @@foo
 #     ^^^^^
 #
-# source://prism//lib/prism/node.rb#3687
+# source://prism//lib/prism/node.rb#3686
 class Prism::ClassVariableReadNode < ::Prism::Node
   # Initialize a new ClassVariableReadNode node.
   #
@@ -4930,7 +4930,7 @@ end
 #     @@foo, @@bar = baz
 #     ^^^^^  ^^^^^
 #
-# source://prism//lib/prism/node.rb#3764
+# source://prism//lib/prism/node.rb#3763
 class Prism::ClassVariableTargetNode < ::Prism::Node
   # Initialize a new ClassVariableTargetNode node.
   #
@@ -5030,7 +5030,7 @@ end
 #     @@foo = 1
 #     ^^^^^^^^^
 #
-# source://prism//lib/prism/node.rb#3837
+# source://prism//lib/prism/node.rb#3836
 class Prism::ClassVariableWriteNode < ::Prism::Node
   # Initialize a new ClassVariableWriteNode node.
   #
@@ -5286,7 +5286,7 @@ end
 #     Prism.parse("1 + 2").value.accept(SExpressions.new)
 #     # => [:program, [[[:call, [[:integer], [:arguments, [[:integer]]]]]]]]
 #
-# source://prism//lib/prism/compiler.rb#28
+# source://prism//lib/prism/compiler.rb#27
 class Prism::Compiler < ::Prism::Visitor
   # Visit an individual node.
   #
@@ -6218,7 +6218,7 @@ end
 #     Target &&= value
 #     ^^^^^^^^^^^^^^^^
 #
-# source://prism//lib/prism/node.rb#3954
+# source://prism//lib/prism/node.rb#3953
 class Prism::ConstantAndWriteNode < ::Prism::Node
   # Initialize a new ConstantAndWriteNode node.
   #
@@ -6359,7 +6359,7 @@ end
 #     Target += value
 #     ^^^^^^^^^^^^^^^
 #
-# source://prism//lib/prism/node.rb#4055
+# source://prism//lib/prism/node.rb#4054
 class Prism::ConstantOperatorWriteNode < ::Prism::Node
   # Initialize a new ConstantOperatorWriteNode node.
   #
@@ -6514,7 +6514,7 @@ end
 #     Target ||= value
 #     ^^^^^^^^^^^^^^^^
 #
-# source://prism//lib/prism/node.rb#4156
+# source://prism//lib/prism/node.rb#4155
 class Prism::ConstantOrWriteNode < ::Prism::Node
   # Initialize a new ConstantOrWriteNode node.
   #
@@ -6655,7 +6655,7 @@ end
 #     Parent::Child &&= value
 #     ^^^^^^^^^^^^^^^^^^^^^^^
 #
-# source://prism//lib/prism/node.rb#4257
+# source://prism//lib/prism/node.rb#4256
 class Prism::ConstantPathAndWriteNode < ::Prism::Node
   # Initialize a new ConstantPathAndWriteNode node.
   #
@@ -6785,7 +6785,7 @@ end
 #     Foo::Bar
 #     ^^^^^^^^
 #
-# source://prism//lib/prism/node.rb#4349
+# source://prism//lib/prism/node.rb#4348
 class Prism::ConstantPathNode < ::Prism::Node
   # Initialize a new ConstantPathNode node.
   #
@@ -6981,7 +6981,7 @@ class Prism::ConstantPathNode::MissingNodesInConstantPathError < ::StandardError
 #     Parent::Child += value
 #     ^^^^^^^^^^^^^^^^^^^^^^
 #
-# source://prism//lib/prism/node.rb#4473
+# source://prism//lib/prism/node.rb#4472
 class Prism::ConstantPathOperatorWriteNode < ::Prism::Node
   # Initialize a new ConstantPathOperatorWriteNode node.
   #
@@ -7125,7 +7125,7 @@ end
 #     Parent::Child ||= value
 #     ^^^^^^^^^^^^^^^^^^^^^^^
 #
-# source://prism//lib/prism/node.rb#4565
+# source://prism//lib/prism/node.rb#4564
 class Prism::ConstantPathOrWriteNode < ::Prism::Node
   # Initialize a new ConstantPathOrWriteNode node.
   #
@@ -7255,7 +7255,7 @@ end
 #     Foo::Foo, Bar::Bar = baz
 #     ^^^^^^^^  ^^^^^^^^
 #
-# source://prism//lib/prism/node.rb#4657
+# source://prism//lib/prism/node.rb#4656
 class Prism::ConstantPathTargetNode < ::Prism::Node
   # Initialize a new ConstantPathTargetNode node.
   #
@@ -7419,7 +7419,7 @@ end
 #     ::Foo::Bar = 1
 #     ^^^^^^^^^^^^^^
 #
-# source://prism//lib/prism/node.rb#4766
+# source://prism//lib/prism/node.rb#4765
 class Prism::ConstantPathWriteNode < ::Prism::Node
   # Initialize a new ConstantPathWriteNode node.
   #
@@ -7561,7 +7561,7 @@ end
 #     Foo
 #     ^^^
 #
-# source://prism//lib/prism/node.rb#4870
+# source://prism//lib/prism/node.rb#4869
 class Prism::ConstantReadNode < ::Prism::Node
   # Initialize a new ConstantReadNode node.
   #
@@ -7678,7 +7678,7 @@ end
 #     Foo, Bar = baz
 #     ^^^  ^^^
 #
-# source://prism//lib/prism/node.rb#4947
+# source://prism//lib/prism/node.rb#4946
 class Prism::ConstantTargetNode < ::Prism::Node
   # Initialize a new ConstantTargetNode node.
   #
@@ -7791,7 +7791,7 @@ end
 #     Foo = 1
 #     ^^^^^^^
 #
-# source://prism//lib/prism/node.rb#5020
+# source://prism//lib/prism/node.rb#5019
 class Prism::ConstantWriteNode < ::Prism::Node
   # Initialize a new ConstantWriteNode node.
   #
@@ -10597,7 +10597,7 @@ end
 #     end
 #     ^^^^^^^^^^
 #
-# source://prism//lib/prism/node.rb#5138
+# source://prism//lib/prism/node.rb#5137
 class Prism::DefNode < ::Prism::Node
   # Initialize a new DefNode node.
   #
@@ -10829,7 +10829,7 @@ end
 #     defined?(a)
 #     ^^^^^^^^^^^
 #
-# source://prism//lib/prism/node.rb#5359
+# source://prism//lib/prism/node.rb#5358
 class Prism::DefinedNode < ::Prism::Node
   # Initialize a new DefinedNode node.
   #
@@ -11017,7 +11017,7 @@ end
 # DesugarCompiler is a compiler that desugars Ruby code into a more primitive
 # form. This is useful for consumers that want to deal with fewer node types.
 #
-# source://prism//lib/prism/desugar_compiler.rb#260
+# source://prism//lib/prism/desugar_compiler.rb#255
 class Prism::DesugarCompiler < ::Prism::MutationCompiler
   # @@foo &&= bar
   #
@@ -11295,7 +11295,7 @@ end
 #     integer = result.value.statements.body.first.receiver.receiver
 #     dispatcher.dispatch_once(integer)
 #
-# source://prism//lib/prism/dispatcher.rb#43
+# source://prism//lib/prism/dispatcher.rb#42
 class Prism::Dispatcher < ::Prism::Visitor
   # Initialize a new dispatcher.
   #
@@ -13969,7 +13969,7 @@ end
 #     if a then b else c end
 #                 ^^^^^^^^^^
 #
-# source://prism//lib/prism/node.rb#5486
+# source://prism//lib/prism/node.rb#5485
 class Prism::ElseNode < ::Prism::Node
   # Initialize a new ElseNode node.
   #
@@ -14103,7 +14103,7 @@ end
 # EmbDocComment objects correspond to comments that are surrounded by =begin
 # and =end.
 #
-# source://prism//lib/prism/parse_result.rb#545
+# source://prism//lib/prism/parse_result.rb#544
 class Prism::EmbDocComment < ::Prism::Comment
   # Returns a string representation of this comment.
   #
@@ -14125,7 +14125,7 @@ end
 #     "foo #{bar}"
 #          ^^^^^^
 #
-# source://prism//lib/prism/node.rb#5595
+# source://prism//lib/prism/node.rb#5594
 class Prism::EmbeddedStatementsNode < ::Prism::Node
   # Initialize a new EmbeddedStatementsNode node.
   #
@@ -14261,7 +14261,7 @@ end
 #     "foo #@bar"
 #          ^^^^^
 #
-# source://prism//lib/prism/node.rb#5698
+# source://prism//lib/prism/node.rb#5697
 class Prism::EmbeddedVariableNode < ::Prism::Node
   # Initialize a new EmbeddedVariableNode node.
   #
@@ -14404,7 +14404,7 @@ Prism::EncodingFlags::FORCED_UTF8_ENCODING = T.let(T.unsafe(nil), Integer)
 #       bar
 #     end
 #
-# source://prism//lib/prism/node.rb#5789
+# source://prism//lib/prism/node.rb#5788
 class Prism::EnsureNode < ::Prism::Node
   # Initialize a new EnsureNode node.
   #
@@ -14540,7 +14540,7 @@ end
 #     false
 #     ^^^^^
 #
-# source://prism//lib/prism/node.rb#5892
+# source://prism//lib/prism/node.rb#5891
 class Prism::FalseNode < ::Prism::Node
   # Initialize a new FalseNode node.
   #
@@ -14633,7 +14633,7 @@ end
 #     foo in Foo(*bar, baz, *qux)
 #            ^^^^^^^^^^^^^^^^^^^^
 #
-# source://prism//lib/prism/node.rb#5966
+# source://prism//lib/prism/node.rb#5965
 class Prism::FindPatternNode < ::Prism::Node
   # Initialize a new FindPatternNode node.
   #
@@ -14793,7 +14793,7 @@ end
 #     baz if foo .. bar
 #            ^^^^^^^^^^
 #
-# source://prism//lib/prism/node.rb#6100
+# source://prism//lib/prism/node.rb#6099
 class Prism::FlipFlopNode < ::Prism::Node
   # Initialize a new FlipFlopNode node.
   #
@@ -14931,7 +14931,7 @@ end
 #     1.0
 #     ^^^
 #
-# source://prism//lib/prism/node.rb#6201
+# source://prism//lib/prism/node.rb#6200
 class Prism::FloatNode < ::Prism::Node
   # Initialize a new FloatNode node.
   #
@@ -15024,7 +15024,7 @@ end
 #     for i in a end
 #     ^^^^^^^^^^^^^^
 #
-# source://prism//lib/prism/node.rb#6274
+# source://prism//lib/prism/node.rb#6273
 class Prism::ForNode < ::Prism::Node
   # Initialize a new ForNode node.
   #
@@ -15231,7 +15231,7 @@ end
 #           ^^^
 #     end
 #
-# source://prism//lib/prism/node.rb#6448
+# source://prism//lib/prism/node.rb#6447
 class Prism::ForwardingArgumentsNode < ::Prism::Node
   # Initialize a new ForwardingArgumentsNode node.
   #
@@ -15319,7 +15319,7 @@ end
 #             ^^^
 #     end
 #
-# source://prism//lib/prism/node.rb#6517
+# source://prism//lib/prism/node.rb#6516
 class Prism::ForwardingParameterNode < ::Prism::Node
   # Initialize a new ForwardingParameterNode node.
   #
@@ -15406,7 +15406,7 @@ end
 #     super
 #     ^^^^^
 #
-# source://prism//lib/prism/node.rb#6585
+# source://prism//lib/prism/node.rb#6584
 class Prism::ForwardingSuperNode < ::Prism::Node
   # Initialize a new ForwardingSuperNode node.
   #
@@ -15514,7 +15514,7 @@ end
 #     $target &&= value
 #     ^^^^^^^^^^^^^^^^^
 #
-# source://prism//lib/prism/node.rb#6660
+# source://prism//lib/prism/node.rb#6659
 class Prism::GlobalVariableAndWriteNode < ::Prism::Node
   # Initialize a new GlobalVariableAndWriteNode node.
   #
@@ -15655,7 +15655,7 @@ end
 #     $target += value
 #     ^^^^^^^^^^^^^^^^
 #
-# source://prism//lib/prism/node.rb#6761
+# source://prism//lib/prism/node.rb#6760
 class Prism::GlobalVariableOperatorWriteNode < ::Prism::Node
   # Initialize a new GlobalVariableOperatorWriteNode node.
   #
@@ -15810,7 +15810,7 @@ end
 #     $target ||= value
 #     ^^^^^^^^^^^^^^^^^
 #
-# source://prism//lib/prism/node.rb#6862
+# source://prism//lib/prism/node.rb#6861
 class Prism::GlobalVariableOrWriteNode < ::Prism::Node
   # Initialize a new GlobalVariableOrWriteNode node.
   #
@@ -15951,7 +15951,7 @@ end
 #     $foo
 #     ^^^^
 #
-# source://prism//lib/prism/node.rb#6963
+# source://prism//lib/prism/node.rb#6962
 class Prism::GlobalVariableReadNode < ::Prism::Node
   # Initialize a new GlobalVariableReadNode node.
   #
@@ -16055,7 +16055,7 @@ end
 #     $foo, $bar = baz
 #     ^^^^  ^^^^
 #
-# source://prism//lib/prism/node.rb#7040
+# source://prism//lib/prism/node.rb#7039
 class Prism::GlobalVariableTargetNode < ::Prism::Node
   # Initialize a new GlobalVariableTargetNode node.
   #
@@ -16155,7 +16155,7 @@ end
 #     $foo = 1
 #     ^^^^^^^^
 #
-# source://prism//lib/prism/node.rb#7113
+# source://prism//lib/prism/node.rb#7112
 class Prism::GlobalVariableWriteNode < ::Prism::Node
   # Initialize a new GlobalVariableWriteNode node.
   #
@@ -16309,7 +16309,7 @@ end
 #     { a => b }
 #     ^^^^^^^^^^
 #
-# source://prism//lib/prism/node.rb#7230
+# source://prism//lib/prism/node.rb#7229
 class Prism::HashNode < ::Prism::Node
   # Initialize a new HashNode node.
   #
@@ -16460,7 +16460,7 @@ end
 #     foo => { a: 1, b: 2, **c }
 #            ^^^^^^^^^^^^^^^^^^^
 #
-# source://prism//lib/prism/node.rb#7347
+# source://prism//lib/prism/node.rb#7346
 class Prism::HashPatternNode < ::Prism::Node
   # Initialize a new HashPatternNode node.
   #
@@ -16628,7 +16628,7 @@ end
 #     foo ? bar : baz
 #     ^^^^^^^^^^^^^^^
 #
-# source://prism//lib/prism/node.rb#7481
+# source://prism//lib/prism/node.rb#7480
 class Prism::IfNode < ::Prism::Node
   # Initialize a new IfNode node.
   #
@@ -16849,7 +16849,7 @@ end
 #     1.0i
 #     ^^^^
 #
-# source://prism//lib/prism/node.rb#7674
+# source://prism//lib/prism/node.rb#7673
 class Prism::ImaginaryNode < ::Prism::Node
   # Initialize a new ImaginaryNode node.
   #
@@ -16969,7 +16969,7 @@ end
 #     foo in { bar: }
 #              ^^^^
 #
-# source://prism//lib/prism/node.rb#7753
+# source://prism//lib/prism/node.rb#7752
 class Prism::ImplicitNode < ::Prism::Node
   # Initialize a new ImplicitNode node.
   #
@@ -17088,7 +17088,7 @@ end
 #     foo, = bar
 #        ^
 #
-# source://prism//lib/prism/node.rb#7835
+# source://prism//lib/prism/node.rb#7834
 class Prism::ImplicitRestNode < ::Prism::Node
   # Initialize a new ImplicitRestNode node.
   #
@@ -17175,7 +17175,7 @@ end
 #     case a; in b then c end
 #             ^^^^^^^^^^^
 #
-# source://prism//lib/prism/node.rb#7903
+# source://prism//lib/prism/node.rb#7902
 class Prism::InNode < ::Prism::Node
   # Initialize a new InNode node.
   #
@@ -17319,7 +17319,7 @@ end
 #     foo.bar[baz] &&= value
 #     ^^^^^^^^^^^^^^^^^^^^^^
 #
-# source://prism//lib/prism/node.rb#8018
+# source://prism//lib/prism/node.rb#8017
 class Prism::IndexAndWriteNode < ::Prism::Node
   # Initialize a new IndexAndWriteNode node.
   #
@@ -17539,7 +17539,7 @@ end
 #     foo.bar[baz] += value
 #     ^^^^^^^^^^^^^^^^^^^^^
 #
-# source://prism//lib/prism/node.rb#8194
+# source://prism//lib/prism/node.rb#8193
 class Prism::IndexOperatorWriteNode < ::Prism::Node
   # Initialize a new IndexOperatorWriteNode node.
   #
@@ -17773,7 +17773,7 @@ end
 #     foo.bar[baz] ||= value
 #     ^^^^^^^^^^^^^^^^^^^^^^
 #
-# source://prism//lib/prism/node.rb#8370
+# source://prism//lib/prism/node.rb#8369
 class Prism::IndexOrWriteNode < ::Prism::Node
   # Initialize a new IndexOrWriteNode node.
   #
@@ -18001,7 +18001,7 @@ end
 #     for foo[bar] in baz do end
 #         ^^^^^^^^
 #
-# source://prism//lib/prism/node.rb#8554
+# source://prism//lib/prism/node.rb#8553
 class Prism::IndexTargetNode < ::Prism::Node
   # Initialize a new IndexTargetNode node.
   #
@@ -18183,7 +18183,7 @@ end
 # InlineComment objects are the most common. They correspond to comments in
 # the source file like this one that start with #.
 #
-# source://prism//lib/prism/parse_result.rb#531
+# source://prism//lib/prism/parse_result.rb#529
 class Prism::InlineComment < ::Prism::Comment
   # Returns a string representation of this comment.
   #
@@ -18204,7 +18204,7 @@ end
 # This visitor is responsible for composing the strings that get returned by
 # the various #inspect methods defined on each of the nodes.
 #
-# source://prism//lib/prism/inspect_visitor.rb#16
+# source://prism//lib/prism/inspect_visitor.rb#12
 class Prism::InspectVisitor < ::Prism::Visitor
   # Initializes a new instance of the InspectVisitor.
   #
@@ -19028,7 +19028,7 @@ end
 #     @target &&= value
 #     ^^^^^^^^^^^^^^^^^
 #
-# source://prism//lib/prism/node.rb#8690
+# source://prism//lib/prism/node.rb#8689
 class Prism::InstanceVariableAndWriteNode < ::Prism::Node
   # Initialize a new InstanceVariableAndWriteNode node.
   #
@@ -19169,7 +19169,7 @@ end
 #     @target += value
 #     ^^^^^^^^^^^^^^^^
 #
-# source://prism//lib/prism/node.rb#8791
+# source://prism//lib/prism/node.rb#8790
 class Prism::InstanceVariableOperatorWriteNode < ::Prism::Node
   # Initialize a new InstanceVariableOperatorWriteNode node.
   #
@@ -19324,7 +19324,7 @@ end
 #     @target ||= value
 #     ^^^^^^^^^^^^^^^^^
 #
-# source://prism//lib/prism/node.rb#8892
+# source://prism//lib/prism/node.rb#8891
 class Prism::InstanceVariableOrWriteNode < ::Prism::Node
   # Initialize a new InstanceVariableOrWriteNode node.
   #
@@ -19465,7 +19465,7 @@ end
 #     @foo
 #     ^^^^
 #
-# source://prism//lib/prism/node.rb#8993
+# source://prism//lib/prism/node.rb#8992
 class Prism::InstanceVariableReadNode < ::Prism::Node
   # Initialize a new InstanceVariableReadNode node.
   #
@@ -19569,7 +19569,7 @@ end
 #     @foo, @bar = baz
 #     ^^^^  ^^^^
 #
-# source://prism//lib/prism/node.rb#9070
+# source://prism//lib/prism/node.rb#9069
 class Prism::InstanceVariableTargetNode < ::Prism::Node
   # Initialize a new InstanceVariableTargetNode node.
   #
@@ -19669,7 +19669,7 @@ end
 #     @foo = 1
 #     ^^^^^^^^
 #
-# source://prism//lib/prism/node.rb#9143
+# source://prism//lib/prism/node.rb#9142
 class Prism::InstanceVariableWriteNode < ::Prism::Node
   # Initialize a new InstanceVariableWriteNode node.
   #
@@ -19848,7 +19848,7 @@ Prism::IntegerBaseFlags::OCTAL = T.let(T.unsafe(nil), Integer)
 #     1
 #     ^
 #
-# source://prism//lib/prism/node.rb#9260
+# source://prism//lib/prism/node.rb#9259
 class Prism::IntegerNode < ::Prism::Node
   # Initialize a new IntegerNode node.
   #
@@ -19988,7 +19988,7 @@ end
 #     if /foo #{bar} baz/ then end
 #        ^^^^^^^^^^^^^^^^
 #
-# source://prism//lib/prism/node.rb#9354
+# source://prism//lib/prism/node.rb#9353
 class Prism::InterpolatedMatchLastLineNode < ::Prism::Node
   include ::Prism::RegularExpressionOptions
 
@@ -20220,7 +20220,7 @@ end
 #     /foo #{bar} baz/
 #     ^^^^^^^^^^^^^^^^
 #
-# source://prism//lib/prism/node.rb#9512
+# source://prism//lib/prism/node.rb#9511
 class Prism::InterpolatedRegularExpressionNode < ::Prism::Node
   include ::Prism::RegularExpressionOptions
 
@@ -20452,7 +20452,7 @@ end
 #     "foo #{bar} baz"
 #     ^^^^^^^^^^^^^^^^
 #
-# source://prism//lib/prism/node.rb#9670
+# source://prism//lib/prism/node.rb#9669
 class Prism::InterpolatedStringNode < ::Prism::Node
   include ::Prism::HeredocQuery
 
@@ -20625,7 +20625,7 @@ Prism::InterpolatedStringNodeFlags::MUTABLE = T.let(T.unsafe(nil), Integer)
 #     :"foo #{bar} baz"
 #     ^^^^^^^^^^^^^^^^^
 #
-# source://prism//lib/prism/node.rb#9795
+# source://prism//lib/prism/node.rb#9794
 class Prism::InterpolatedSymbolNode < ::Prism::Node
   # Initialize a new InterpolatedSymbolNode node.
   #
@@ -20764,7 +20764,7 @@ end
 #     `foo #{bar} baz`
 #     ^^^^^^^^^^^^^^^^
 #
-# source://prism//lib/prism/node.rb#9909
+# source://prism//lib/prism/node.rb#9908
 class Prism::InterpolatedXStringNode < ::Prism::Node
   include ::Prism::HeredocQuery
 
@@ -20908,7 +20908,7 @@ end
 #     -> { it }
 #          ^^
 #
-# source://prism//lib/prism/node.rb#10011
+# source://prism//lib/prism/node.rb#10010
 class Prism::ItLocalVariableReadNode < ::Prism::Node
   # Initialize a new ItLocalVariableReadNode node.
   #
@@ -20995,7 +20995,7 @@ end
 #     -> { it + it }
 #     ^^^^^^^^^^^^^^
 #
-# source://prism//lib/prism/node.rb#10079
+# source://prism//lib/prism/node.rb#10078
 class Prism::ItParametersNode < ::Prism::Node
   # Initialize a new ItParametersNode node.
   #
@@ -21082,7 +21082,7 @@ end
 #     foo(a: b)
 #         ^^^^
 #
-# source://prism//lib/prism/node.rb#10147
+# source://prism//lib/prism/node.rb#10146
 class Prism::KeywordHashNode < ::Prism::Node
   # Initialize a new KeywordHashNode node.
   #
@@ -21209,7 +21209,7 @@ Prism::KeywordHashNodeFlags::SYMBOL_KEYS = T.let(T.unsafe(nil), Integer)
 #           ^^^
 #     end
 #
-# source://prism//lib/prism/node.rb#10228
+# source://prism//lib/prism/node.rb#10227
 class Prism::KeywordRestParameterNode < ::Prism::Node
   # Initialize a new KeywordRestParameterNode node.
   #
@@ -21347,7 +21347,7 @@ end
 #     ->(value) { value * 2 }
 #     ^^^^^^^^^^^^^^^^^^^^^^^
 #
-# source://prism//lib/prism/node.rb#10336
+# source://prism//lib/prism/node.rb#10335
 class Prism::LambdaNode < ::Prism::Node
   # Initialize a new LambdaNode node.
   #
@@ -21710,7 +21710,7 @@ Prism::LexCompat::RIPPER = T.let(T.unsafe(nil), Hash)
 
 # A result class specialized for holding tokens produced by the lexer.
 #
-# source://prism//lib/prism/lex_compat.rb#15
+# source://prism//lib/prism/lex_compat.rb#14
 class Prism::LexCompat::Result < ::Prism::Result
   # Create a new lex compat result object with the given values.
   #
@@ -21734,7 +21734,7 @@ end
 # However, we add a couple of convenience methods onto them to make them a
 # little easier to work with. We delegate all other methods to the array.
 #
-# source://prism//lib/prism/lex_compat.rb#205
+# source://prism//lib/prism/lex_compat.rb#204
 class Prism::LexCompat::Token < ::SimpleDelegator
   # The type of the token.
   #
@@ -21759,7 +21759,7 @@ end
 
 # This is a result specific to the `lex` and `lex_file` methods.
 #
-# source://prism//lib/prism/parse_result.rb#765
+# source://prism//lib/prism/parse_result.rb#764
 class Prism::LexResult < ::Prism::Result
   # Create a new lex result object with the given values.
   #
@@ -21819,7 +21819,7 @@ end
 #     target &&= value
 #     ^^^^^^^^^^^^^^^^
 #
-# source://prism//lib/prism/node.rb#10465
+# source://prism//lib/prism/node.rb#10464
 class Prism::LocalVariableAndWriteNode < ::Prism::Node
   # Initialize a new LocalVariableAndWriteNode node.
   #
@@ -21968,7 +21968,7 @@ end
 #     target += value
 #     ^^^^^^^^^^^^^^^
 #
-# source://prism//lib/prism/node.rb#10571
+# source://prism//lib/prism/node.rb#10570
 class Prism::LocalVariableOperatorWriteNode < ::Prism::Node
   # Initialize a new LocalVariableOperatorWriteNode node.
   #
@@ -22131,7 +22131,7 @@ end
 #     target ||= value
 #     ^^^^^^^^^^^^^^^^
 #
-# source://prism//lib/prism/node.rb#10677
+# source://prism//lib/prism/node.rb#10676
 class Prism::LocalVariableOrWriteNode < ::Prism::Node
   # Initialize a new LocalVariableOrWriteNode node.
   #
@@ -22280,7 +22280,7 @@ end
 #     foo
 #     ^^^
 #
-# source://prism//lib/prism/node.rb#10783
+# source://prism//lib/prism/node.rb#10782
 class Prism::LocalVariableReadNode < ::Prism::Node
   # Initialize a new LocalVariableReadNode node.
   #
@@ -22410,7 +22410,7 @@ end
 #     foo, bar = baz
 #     ^^^  ^^^
 #
-# source://prism//lib/prism/node.rb#10875
+# source://prism//lib/prism/node.rb#10874
 class Prism::LocalVariableTargetNode < ::Prism::Node
   # Initialize a new LocalVariableTargetNode node.
   #
@@ -22526,7 +22526,7 @@ end
 #     foo = 1
 #     ^^^^^^^
 #
-# source://prism//lib/prism/node.rb#10953
+# source://prism//lib/prism/node.rb#10952
 class Prism::LocalVariableWriteNode < ::Prism::Node
   # Initialize a new LocalVariableWriteNode node.
   #
@@ -23033,7 +23033,7 @@ end
 #     if /foo/i then end
 #        ^^^^^^
 #
-# source://prism//lib/prism/node.rb#11085
+# source://prism//lib/prism/node.rb#11084
 class Prism::MatchLastLineNode < ::Prism::Node
   include ::Prism::RegularExpressionOptions
 
@@ -23276,7 +23276,7 @@ end
 #     foo in bar
 #     ^^^^^^^^^^
 #
-# source://prism//lib/prism/node.rb#11256
+# source://prism//lib/prism/node.rb#11255
 class Prism::MatchPredicateNode < ::Prism::Node
   # Initialize a new MatchPredicateNode node.
   #
@@ -23406,7 +23406,7 @@ end
 #     foo => bar
 #     ^^^^^^^^^^
 #
-# source://prism//lib/prism/node.rb#11348
+# source://prism//lib/prism/node.rb#11347
 class Prism::MatchRequiredNode < ::Prism::Node
   # Initialize a new MatchRequiredNode node.
   #
@@ -23536,7 +23536,7 @@ end
 #     /(?<foo>bar)/ =~ baz
 #     ^^^^^^^^^^^^^^^^^^^^
 #
-# source://prism//lib/prism/node.rb#11440
+# source://prism//lib/prism/node.rb#11439
 class Prism::MatchWriteNode < ::Prism::Node
   # Initialize a new MatchWriteNode node.
   #
@@ -23649,7 +23649,7 @@ end
 
 # Represents a node that is missing from the source and results in a syntax error.
 #
-# source://prism//lib/prism/node.rb#11516
+# source://prism//lib/prism/node.rb#11515
 class Prism::MissingNode < ::Prism::Node
   # Initialize a new MissingNode node.
   #
@@ -23736,7 +23736,7 @@ end
 #     module Foo end
 #     ^^^^^^^^^^^^^^
 #
-# source://prism//lib/prism/node.rb#11584
+# source://prism//lib/prism/node.rb#11583
 class Prism::ModuleNode < ::Prism::Node
   # Initialize a new ModuleNode node.
   #
@@ -23901,7 +23901,7 @@ end
 #     for a, b in [[1, 2], [3, 4]]
 #         ^^^^
 #
-# source://prism//lib/prism/node.rb#11709
+# source://prism//lib/prism/node.rb#11708
 class Prism::MultiTargetNode < ::Prism::Node
   # Initialize a new MultiTargetNode node.
   #
@@ -24087,7 +24087,7 @@ end
 #     a, b, c = 1, 2, 3
 #     ^^^^^^^^^^^^^^^^^
 #
-# source://prism//lib/prism/node.rb#11868
+# source://prism//lib/prism/node.rb#11867
 class Prism::MultiWriteNode < ::Prism::Node
   # Initialize a new MultiWriteNode node.
   #
@@ -24300,7 +24300,7 @@ end
 # visited. This is useful for consumers that want to mutate the tree, as you
 # can change subtrees in place without effecting the rest of the tree.
 #
-# source://prism//lib/prism/mutation_compiler.rb#14
+# source://prism//lib/prism/mutation_compiler.rb#13
 class Prism::MutationCompiler < ::Prism::Compiler
   # Copy a AliasGlobalVariableNode node
   #
@@ -25063,7 +25063,7 @@ end
 #     next 1
 #     ^^^^^^
 #
-# source://prism//lib/prism/node.rb#12053
+# source://prism//lib/prism/node.rb#12052
 class Prism::NextNode < ::Prism::Node
   # Initialize a new NextNode node.
   #
@@ -25185,7 +25185,7 @@ end
 #     nil
 #     ^^^
 #
-# source://prism//lib/prism/node.rb#12142
+# source://prism//lib/prism/node.rb#12141
 class Prism::NilNode < ::Prism::Node
   # Initialize a new NilNode node.
   #
@@ -25273,7 +25273,7 @@ end
 #           ^^^^^
 #     end
 #
-# source://prism//lib/prism/node.rb#12211
+# source://prism//lib/prism/node.rb#12210
 class Prism::NoKeywordsParameterNode < ::Prism::Node
   # Initialize a new NoKeywordsParameterNode node.
   #
@@ -25657,7 +25657,7 @@ Prism::NodeFlags::STATIC_LITERAL = T.let(T.unsafe(nil), Integer)
 #     -> { _1 + _2 }
 #     ^^^^^^^^^^^^^^
 #
-# source://prism//lib/prism/node.rb#12307
+# source://prism//lib/prism/node.rb#12306
 class Prism::NumberedParametersNode < ::Prism::Node
   # Initialize a new NumberedParametersNode node.
   #
@@ -25765,7 +25765,7 @@ end
 #     $1
 #     ^^
 #
-# source://prism//lib/prism/node.rb#12380
+# source://prism//lib/prism/node.rb#12379
 class Prism::NumberedReferenceReadNode < ::Prism::Node
   # Initialize a new NumberedReferenceReadNode node.
   #
@@ -25880,7 +25880,7 @@ end
 #           ^^^^
 #     end
 #
-# source://prism//lib/prism/node.rb#12460
+# source://prism//lib/prism/node.rb#12459
 class Prism::OptionalKeywordParameterNode < ::Prism::Node
   # Initialize a new OptionalKeywordParameterNode node.
   #
@@ -26013,7 +26013,7 @@ end
 #           ^^^^^
 #     end
 #
-# source://prism//lib/prism/node.rb#12554
+# source://prism//lib/prism/node.rb#12553
 class Prism::OptionalParameterNode < ::Prism::Node
   # Initialize a new OptionalParameterNode node.
   #
@@ -26159,7 +26159,7 @@ end
 #     left or right
 #     ^^^^^^^^^^^^^
 #
-# source://prism//lib/prism/node.rb#12661
+# source://prism//lib/prism/node.rb#12660
 class Prism::OrNode < ::Prism::Node
   # Initialize a new OrNode node.
   #
@@ -26557,7 +26557,7 @@ Prism::ParameterFlags::REPEATED_PARAMETER = T.let(T.unsafe(nil), Integer)
 #           ^^^^^^^
 #     end
 #
-# source://prism//lib/prism/node.rb#12769
+# source://prism//lib/prism/node.rb#12768
 class Prism::ParametersNode < ::Prism::Node
   # Initialize a new ParametersNode node.
   #
@@ -26723,7 +26723,7 @@ end
 #     (10 + 34)
 #     ^^^^^^^^^
 #
-# source://prism//lib/prism/node.rb#12884
+# source://prism//lib/prism/node.rb#12883
 class Prism::ParenthesesNode < ::Prism::Node
   # Initialize a new ParenthesesNode node.
   #
@@ -26909,7 +26909,7 @@ end
 
 # This is a result specific to the `parse_lex` and `parse_lex_file` methods.
 #
-# source://prism//lib/prism/parse_result.rb#783
+# source://prism//lib/prism/parse_result.rb#781
 class Prism::ParseLexResult < ::Prism::Result
   # Create a new parse lex result object with the given values.
   #
@@ -27146,7 +27146,7 @@ end
 # that case. We do that to avoid storing the extra `@newline` instance
 # variable on every node if we don't need it.
 #
-# source://prism//lib/prism/parse_result/newlines.rb#26
+# source://prism//lib/prism/parse_result/newlines.rb#25
 class Prism::ParseResult::Newlines < ::Prism::Visitor
   # Create a new Newlines visitor with the given newline offsets.
   #
@@ -27381,7 +27381,7 @@ end
 # Raised when the query given to a pattern is either invalid Ruby syntax or
 # is using syntax that we don't yet support.
 #
-# source://prism//lib/prism/pattern.rb#42
+# source://prism//lib/prism/pattern.rb#40
 class Prism::Pattern::CompilationError < ::StandardError
   # Create a new CompilationError with the given representation of the node
   # that caused the error.
@@ -27397,7 +27397,7 @@ end
 #     foo in ^(bar)
 #            ^^^^^^
 #
-# source://prism//lib/prism/node.rb#12987
+# source://prism//lib/prism/node.rb#12986
 class Prism::PinnedExpressionNode < ::Prism::Node
   # Initialize a new PinnedExpressionNode node.
   #
@@ -27547,7 +27547,7 @@ end
 #     foo in ^bar
 #            ^^^^
 #
-# source://prism//lib/prism/node.rb#13102
+# source://prism//lib/prism/node.rb#13101
 class Prism::PinnedVariableNode < ::Prism::Node
   # Initialize a new PinnedVariableNode node.
   #
@@ -27671,7 +27671,7 @@ end
 #     END { foo }
 #     ^^^^^^^^^^^
 #
-# source://prism//lib/prism/node.rb#13189
+# source://prism//lib/prism/node.rb#13188
 class Prism::PostExecutionNode < ::Prism::Node
   # Initialize a new PostExecutionNode node.
   #
@@ -27821,7 +27821,7 @@ end
 #     BEGIN { foo }
 #     ^^^^^^^^^^^^^
 #
-# source://prism//lib/prism/node.rb#13306
+# source://prism//lib/prism/node.rb#13305
 class Prism::PreExecutionNode < ::Prism::Node
   # Initialize a new PreExecutionNode node.
   #
@@ -27968,7 +27968,7 @@ end
 
 # The top level node of any parse tree.
 #
-# source://prism//lib/prism/node.rb#13420
+# source://prism//lib/prism/node.rb#13419
 class Prism::ProgramNode < ::Prism::Node
   # Initialize a new ProgramNode node.
   #
@@ -28097,7 +28097,7 @@ Prism::RangeFlags::EXCLUDE_END = T.let(T.unsafe(nil), Integer)
 #     c if a =~ /left/ ... b =~ /right/
 #          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 #
-# source://prism//lib/prism/node.rb#13502
+# source://prism//lib/prism/node.rb#13501
 class Prism::RangeNode < ::Prism::Node
   # Initialize a new RangeNode node.
   #
@@ -28248,7 +28248,7 @@ end
 #     1.0r
 #     ^^^^
 #
-# source://prism//lib/prism/node.rb#13616
+# source://prism//lib/prism/node.rb#13615
 class Prism::RationalNode < ::Prism::Node
   # Initialize a new RationalNode node.
   #
@@ -28412,7 +28412,7 @@ end
 #     redo
 #     ^^^^
 #
-# source://prism//lib/prism/node.rb#13719
+# source://prism//lib/prism/node.rb#13718
 class Prism::RedoNode < ::Prism::Node
   # Initialize a new RedoNode node.
   #
@@ -28547,7 +28547,7 @@ end
 # node because the integer is kept private. Instead, the various flags in
 # the bitset should be accessed through their query methods.
 #
-# source://prism//lib/prism/reflection.rb#93
+# source://prism//lib/prism/reflection.rb#92
 class Prism::Reflection::FlagsField < ::Prism::Reflection::Field
   # Initializes the flags field with the given name and flags.
   #
@@ -28689,7 +28689,7 @@ Prism::RegularExpressionFlags::WINDOWS_31J = T.let(T.unsafe(nil), Integer)
 #     /foo/i
 #     ^^^^^^
 #
-# source://prism//lib/prism/node.rb#13787
+# source://prism//lib/prism/node.rb#13786
 class Prism::RegularExpressionNode < ::Prism::Node
   include ::Prism::RegularExpressionOptions
 
@@ -28942,7 +28942,7 @@ end
 #           ^^
 #     end
 #
-# source://prism//lib/prism/node.rb#13959
+# source://prism//lib/prism/node.rb#13958
 class Prism::RequiredKeywordParameterNode < ::Prism::Node
   # Initialize a new RequiredKeywordParameterNode node.
   #
@@ -29067,7 +29067,7 @@ end
 #           ^
 #     end
 #
-# source://prism//lib/prism/node.rb#14048
+# source://prism//lib/prism/node.rb#14047
 class Prism::RequiredParameterNode < ::Prism::Node
   # Initialize a new RequiredParameterNode node.
   #
@@ -29175,7 +29175,7 @@ end
 #     foo rescue nil
 #     ^^^^^^^^^^^^^^
 #
-# source://prism//lib/prism/node.rb#14127
+# source://prism//lib/prism/node.rb#14126
 class Prism::RescueModifierNode < ::Prism::Node
   # Initialize a new RescueModifierNode node.
   #
@@ -29313,7 +29313,7 @@ end
 #
 # `Foo, *splat, Bar` are in the `exceptions` field. `ex` is in the `reference` field.
 #
-# source://prism//lib/prism/node.rb#14224
+# source://prism//lib/prism/node.rb#14223
 class Prism::RescueNode < ::Prism::Node
   # Initialize a new RescueNode node.
   #
@@ -29482,7 +29482,7 @@ end
 #           ^^
 #     end
 #
-# source://prism//lib/prism/node.rb#14353
+# source://prism//lib/prism/node.rb#14352
 class Prism::RestParameterNode < ::Prism::Node
   # Initialize a new RestParameterNode node.
   #
@@ -29722,7 +29722,7 @@ end
 #     retry
 #     ^^^^^
 #
-# source://prism//lib/prism/node.rb#14461
+# source://prism//lib/prism/node.rb#14460
 class Prism::RetryNode < ::Prism::Node
   # Initialize a new RetryNode node.
   #
@@ -29809,7 +29809,7 @@ end
 #     return 1
 #     ^^^^^^^^
 #
-# source://prism//lib/prism/node.rb#14529
+# source://prism//lib/prism/node.rb#14528
 class Prism::ReturnNode < ::Prism::Node
   # Initialize a new ReturnNode node.
   #
@@ -29931,7 +29931,7 @@ end
 #     self
 #     ^^^^
 #
-# source://prism//lib/prism/node.rb#14618
+# source://prism//lib/prism/node.rb#14617
 class Prism::SelfNode < ::Prism::Node
   # Initialize a new SelfNode node.
   #
@@ -30204,7 +30204,7 @@ Prism::Serialize::TOKEN_TYPES = T.let(T.unsafe(nil), Array)
 #     C = { a: 1 }
 #     ^^^^^^^^^^^^
 #
-# source://prism//lib/prism/node.rb#14687
+# source://prism//lib/prism/node.rb#14686
 class Prism::ShareableConstantNode < ::Prism::Node
   # Initialize a new ShareableConstantNode node.
   #
@@ -30358,7 +30358,7 @@ Prism::ShareableConstantNodeFlags::LITERAL = T.let(T.unsafe(nil), Integer)
 #     class << self end
 #     ^^^^^^^^^^^^^^^^^
 #
-# source://prism//lib/prism/node.rb#14776
+# source://prism//lib/prism/node.rb#14775
 class Prism::SingletonClassNode < ::Prism::Node
   # Initialize a new SingletonClassNode node.
   #
@@ -30668,7 +30668,7 @@ end
 #     __ENCODING__
 #     ^^^^^^^^^^^^
 #
-# source://prism//lib/prism/node.rb#14905
+# source://prism//lib/prism/node.rb#14904
 class Prism::SourceEncodingNode < ::Prism::Node
   # Initialize a new SourceEncodingNode node.
   #
@@ -30755,7 +30755,7 @@ end
 #     __FILE__
 #     ^^^^^^^^
 #
-# source://prism//lib/prism/node.rb#14973
+# source://prism//lib/prism/node.rb#14972
 class Prism::SourceFileNode < ::Prism::Node
   # Initialize a new SourceFileNode node.
   #
@@ -30895,7 +30895,7 @@ end
 #     __LINE__
 #     ^^^^^^^^
 #
-# source://prism//lib/prism/node.rb#15067
+# source://prism//lib/prism/node.rb#15066
 class Prism::SourceLineNode < ::Prism::Node
   # Initialize a new SourceLineNode node.
   #
@@ -30982,7 +30982,7 @@ end
 #     [*a]
 #      ^^
 #
-# source://prism//lib/prism/node.rb#15135
+# source://prism//lib/prism/node.rb#15134
 class Prism::SplatNode < ::Prism::Node
   # Initialize a new SplatNode node.
   #
@@ -31104,7 +31104,7 @@ end
 #     foo; bar; baz
 #     ^^^^^^^^^^^^^
 #
-# source://prism//lib/prism/node.rb#15224
+# source://prism//lib/prism/node.rb#15223
 class Prism::StatementsNode < ::Prism::Node
   # Initialize a new StatementsNode node.
   #
@@ -31239,7 +31239,7 @@ Prism::StringFlags::MUTABLE = T.let(T.unsafe(nil), Integer)
 #     "foo #{bar} baz"
 #      ^^^^      ^^^^
 #
-# source://prism//lib/prism/node.rb#15304
+# source://prism//lib/prism/node.rb#15303
 class Prism::StringNode < ::Prism::Node
   include ::Prism::HeredocQuery
 
@@ -31436,7 +31436,7 @@ end
 #     super foo, bar
 #     ^^^^^^^^^^^^^^
 #
-# source://prism//lib/prism/node.rb#15455
+# source://prism//lib/prism/node.rb#15454
 class Prism::SuperNode < ::Prism::Node
   # Initialize a new SuperNode node.
   #
@@ -31617,7 +31617,7 @@ Prism::SymbolFlags::FORCED_UTF8_ENCODING = T.let(T.unsafe(nil), Integer)
 #     %i[foo]
 #        ^^^
 #
-# source://prism//lib/prism/node.rb#15593
+# source://prism//lib/prism/node.rb#15592
 class Prism::SymbolNode < ::Prism::Node
   # Initialize a new SymbolNode node.
   #
@@ -31987,7 +31987,7 @@ end
 # A visitor that knows how to convert a prism syntax tree into the
 # whitequark/parser gem's syntax tree.
 #
-# source://prism//lib/prism/translation/parser/compiler.rb#9
+# source://prism//lib/prism/translation/parser/compiler.rb#8
 class Prism::Translation::Parser::Compiler < ::Prism::Compiler
   # Initialize a new compiler with the given parser, offset cache, and
   # options.
@@ -33214,7 +33214,7 @@ Prism::Translation::Parser::Lexer::TYPES = T.let(T.unsafe(nil), Hash)
 # messages. We create our own diagnostic class in order to set our own
 # error messages.
 #
-# source://prism//lib/prism/translation/parser.rb#24
+# source://prism//lib/prism/translation/parser.rb#23
 class Prism::Translation::Parser::PrismDiagnostic < ::Parser::Diagnostic
   # Initialize a new diagnostic with the given message and location.
   #
@@ -33268,7 +33268,7 @@ Prism::Translation::Parser::Racc_debug_parser = T.let(T.unsafe(nil), FalseClass)
 # - on_tstring_beg
 # - on_tstring_end
 #
-# source://prism//lib/prism/translation/ripper.rb#45
+# source://prism//lib/prism/translation/ripper.rb#43
 class Prism::Translation::Ripper < ::Prism::Compiler
   # Create a new Translation::Ripper object with the given source.
   #
@@ -35162,7 +35162,7 @@ Prism::Translation::Ripper::SCANNER_EVENT_TABLE = T.let(T.unsafe(nil), Hash)
 # This class mirrors the ::Ripper::SexpBuilder subclass of ::Ripper that
 # returns the arrays of [type, *children].
 #
-# source://prism//lib/prism/translation/ripper/sexp.rb#11
+# source://prism//lib/prism/translation/ripper/sexp.rb#10
 class Prism::Translation::Ripper::SexpBuilder < ::Prism::Translation::Ripper
   # :stopdoc:
   #
@@ -35755,7 +35755,7 @@ end
 # returns the same values as ::Ripper::SexpBuilder except with a couple of
 # niceties that flatten linked lists into arrays.
 #
-# source://prism//lib/prism/translation/ripper/sexp.rb#75
+# source://prism//lib/prism/translation/ripper/sexp.rb#74
 class Prism::Translation::Ripper::SexpBuilderPP < ::Prism::Translation::Ripper::SexpBuilder
   private
 
@@ -35889,7 +35889,7 @@ end
 
 # A prism visitor that builds Sexp objects.
 #
-# source://prism//lib/prism/translation/ruby_parser.rb#19
+# source://prism//lib/prism/translation/ruby_parser.rb#16
 class Prism::Translation::RubyParser::Compiler < ::Prism::Compiler
   # Initialize a new compiler with the given file name.
   #
@@ -36956,7 +36956,7 @@ end
 #     true
 #     ^^^^
 #
-# source://prism//lib/prism/node.rb#15742
+# source://prism//lib/prism/node.rb#15741
 class Prism::TrueNode < ::Prism::Node
   # Initialize a new TrueNode node.
   #
@@ -37043,7 +37043,7 @@ end
 #     undef :foo, :bar, :baz
 #     ^^^^^^^^^^^^^^^^^^^^^^
 #
-# source://prism//lib/prism/node.rb#15810
+# source://prism//lib/prism/node.rb#15809
 class Prism::UndefNode < ::Prism::Node
   # Initialize a new UndefNode node.
   #
@@ -37168,7 +37168,7 @@ end
 #     unless foo then bar end
 #     ^^^^^^^^^^^^^^^^^^^^^^^
 #
-# source://prism//lib/prism/node.rb#15901
+# source://prism//lib/prism/node.rb#15900
 class Prism::UnlessNode < ::Prism::Node
   # Initialize a new UnlessNode node.
   #
@@ -37371,7 +37371,7 @@ end
 #     until foo do bar end
 #     ^^^^^^^^^^^^^^^^^^^^
 #
-# source://prism//lib/prism/node.rb#16070
+# source://prism//lib/prism/node.rb#16069
 class Prism::UntilNode < ::Prism::Node
   # Initialize a new UntilNode node.
   #
@@ -37543,7 +37543,7 @@ Prism::VERSION = T.let(T.unsafe(nil), String)
 #       end
 #     end
 #
-# source://prism//lib/prism/visitor.rb#55
+# source://prism//lib/prism/visitor.rb#54
 class Prism::Visitor < ::Prism::BasicVisitor
   # Visit a AliasGlobalVariableNode node
   #
@@ -38459,7 +38459,7 @@ end
 #     ^^^^^^^^^
 #     end
 #
-# source://prism//lib/prism/node.rb#16193
+# source://prism//lib/prism/node.rb#16192
 class Prism::WhenNode < ::Prism::Node
   # Initialize a new WhenNode node.
   #
@@ -38606,7 +38606,7 @@ end
 #     while foo do bar end
 #     ^^^^^^^^^^^^^^^^^^^^
 #
-# source://prism//lib/prism/node.rb#16312
+# source://prism//lib/prism/node.rb#16311
 class Prism::WhileNode < ::Prism::Node
   # Initialize a new WhileNode node.
   #
@@ -38761,7 +38761,7 @@ end
 #     `foo`
 #     ^^^^^
 #
-# source://prism//lib/prism/node.rb#16433
+# source://prism//lib/prism/node.rb#16432
 class Prism::XStringNode < ::Prism::Node
   include ::Prism::HeredocQuery
 
@@ -38939,7 +38939,7 @@ end
 #     yield 1
 #     ^^^^^^^
 #
-# source://prism//lib/prism/node.rb#16559
+# source://prism//lib/prism/node.rb#16558
 class Prism::YieldNode < ::Prism::Node
   # Initialize a new YieldNode node.
   #

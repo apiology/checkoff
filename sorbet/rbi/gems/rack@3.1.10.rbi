@@ -830,7 +830,7 @@ Rack::Directory::DIR_PAGE_HEADER = T.let(T.unsafe(nil), String)
 # Body class for directory entries, showing an index page with links
 # to each file.
 #
-# source://rack//lib/rack/directory.rb#52
+# source://rack//lib/rack/directory.rb#51
 class Rack::Directory::DirectoryBody < ::Struct
   # Yield strings for each part of the directory entry
   #
@@ -1640,28 +1640,28 @@ class Rack::Lint::Wrapper::StreamWrapper
   # source://rack//lib/rack/lint.rb#974
   def initialize(stream); end
 
-  # source://forwardable/1.3.2/forwardable.rb#229
+  # source://forwardable/1.3.3/forwardable.rb#231
   def <<(*args, **_arg1, &block); end
 
-  # source://forwardable/1.3.2/forwardable.rb#229
+  # source://forwardable/1.3.3/forwardable.rb#231
   def close(*args, **_arg1, &block); end
 
-  # source://forwardable/1.3.2/forwardable.rb#229
+  # source://forwardable/1.3.3/forwardable.rb#231
   def close_read(*args, **_arg1, &block); end
 
-  # source://forwardable/1.3.2/forwardable.rb#229
+  # source://forwardable/1.3.3/forwardable.rb#231
   def close_write(*args, **_arg1, &block); end
 
-  # source://forwardable/1.3.2/forwardable.rb#229
+  # source://forwardable/1.3.3/forwardable.rb#231
   def closed?(*args, **_arg1, &block); end
 
-  # source://forwardable/1.3.2/forwardable.rb#229
+  # source://forwardable/1.3.3/forwardable.rb#231
   def flush(*args, **_arg1, &block); end
 
-  # source://forwardable/1.3.2/forwardable.rb#229
+  # source://forwardable/1.3.3/forwardable.rb#231
   def read(*args, **_arg1, &block); end
 
-  # source://forwardable/1.3.2/forwardable.rb#229
+  # source://forwardable/1.3.3/forwardable.rb#231
   def write(*args, **_arg1, &block); end
 end
 
@@ -4442,9 +4442,7 @@ module Rack::Utils
   def escape_cookie_key(key); end
 
   # Escape ampersands, brackets and quotes to their HTML/XML entities.
-  #
-  # source://rack//lib/rack/utils.rb#187
-  def escape_html(string); end
+  def escape_html(_arg0); end
 
   # Like URI escaping, but with %20 instead of +. Strictly speaking this is
   # true URI escaping.
@@ -4648,8 +4646,7 @@ module Rack::Utils
     # source://rack//lib/rack/utils.rb#262
     def escape_cookie_key(key); end
 
-    # source://rack//lib/rack/utils.rb#187
-    def escape_html(string); end
+    def escape_html(_arg0); end
 
     # Like URI escaping, but with %20 instead of +. Strictly speaking this is
     # true URI escaping.

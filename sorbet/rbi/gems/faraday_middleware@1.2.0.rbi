@@ -124,7 +124,7 @@ class Faraday::Response
   # source://faraday/1.10.3/lib/faraday/response.rb#28
   def initialize(env = T.unsafe(nil)); end
 
-  # source://forwardable/1.3.2/forwardable.rb#229
+  # source://forwardable/1.3.3/forwardable.rb#231
   def [](*args, **_arg1, &block); end
 
   # source://faraday/1.10.3/lib/faraday/response.rb#96
@@ -231,7 +231,7 @@ class FaradayMiddleware::Caching < ::Faraday::Middleware
   # source://faraday_middleware//lib/faraday_middleware/response/caching.rb#42
   def initialize(app, cache = T.unsafe(nil), options = T.unsafe(nil)); end
 
-  # source://forwardable/1.3.2/forwardable.rb#229
+  # source://forwardable/1.3.3/forwardable.rb#231
   def build_query(*args, **_arg1, &block); end
 
   # Returns the value of attribute cache.
@@ -262,7 +262,7 @@ class FaradayMiddleware::Caching < ::Faraday::Middleware
   # source://faraday_middleware//lib/faraday_middleware/response/caching.rb#83
   def params_to_ignore; end
 
-  # source://forwardable/1.3.2/forwardable.rb#229
+  # source://forwardable/1.3.3/forwardable.rb#231
   def parse_query(*args, **_arg1, &block); end
 
   # source://faraday_middleware//lib/faraday_middleware/response/caching.rb#112
@@ -362,7 +362,7 @@ FaradayMiddleware::EncodeJson::MIME_TYPE_REGEX = T.let(T.unsafe(nil), Regexp)
 #     faraday.adapter Faraday.default_adapter
 #   end
 #
-# source://faraday_middleware//lib/faraday_middleware/response/follow_redirects.rb#26
+# source://faraday_middleware//lib/faraday_middleware/response/follow_redirects.rb#25
 class FaradayMiddleware::FollowRedirects < ::Faraday::Middleware
   # Public: Initialize the middleware.
   #
@@ -672,7 +672,7 @@ class FaradayMiddleware::OAuth < ::Faraday::Middleware
   # source://faraday_middleware//lib/faraday_middleware/request/oauth.rb#56
   def oauth_options(env); end
 
-  # source://forwardable/1.3.2/forwardable.rb#229
+  # source://forwardable/1.3.3/forwardable.rb#231
   def parse_nested_query(*args, **_arg1, &block); end
 
   # @return [Boolean]
@@ -717,7 +717,7 @@ class FaradayMiddleware::OAuth2 < ::Faraday::Middleware
   # source://faraday_middleware//lib/faraday_middleware/request/oauth2.rb#56
   def initialize(app, token = T.unsafe(nil), options = T.unsafe(nil)); end
 
-  # source://forwardable/1.3.2/forwardable.rb#229
+  # source://forwardable/1.3.3/forwardable.rb#231
   def build_query(*args, **_arg1, &block); end
 
   # source://faraday_middleware//lib/faraday_middleware/request/oauth2.rb#39
@@ -728,7 +728,7 @@ class FaradayMiddleware::OAuth2 < ::Faraday::Middleware
   # source://faraday_middleware//lib/faraday_middleware/request/oauth2.rb#34
   def param_name; end
 
-  # source://forwardable/1.3.2/forwardable.rb#229
+  # source://forwardable/1.3.3/forwardable.rb#231
   def parse_query(*args, **_arg1, &block); end
 
   # source://faraday_middleware//lib/faraday_middleware/request/oauth2.rb#77
