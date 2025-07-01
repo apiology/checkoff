@@ -33,7 +33,7 @@ module Checkoff
     SHORT_CACHE_TIME = MINUTE
     private_constant :SHORT_CACHE_TIME
 
-    # @param config [Checkoff::Internal::EnvFallbackConfigLoader]
+    # @param config [Checkoff::Internal::EnvFallbackConfigLoader,Hash]
     # @param workspaces [Checkoff::Workspaces]
     # @param tasks [Checkoff::Tasks]
     # @param sections [Checkoff::Sections]
@@ -79,9 +79,9 @@ module Checkoff
       asana_event_enrichment.enrich_event(asana_event)
     end
 
-    # @param filter [Hash<String,[String,Array<String>]>]
+    # @param filter [Hash{String => String, Array<String>}]
     #
-    # @return [Hash<String,[String,Array<String>]>]
+    # @return Hash{String => String => Array<String>}]
     def enrich_filter(filter)
       asana_event_enrichment.enrich_filter(filter)
     end

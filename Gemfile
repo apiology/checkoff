@@ -13,16 +13,16 @@ group :development, :test do
   gem 'minitest-reporters'
   gem 'mocha', ['>= 2']
   gem 'parlour',
-      git: 'https://github.com/apiology/parlour',
-      branch: 'heredoc_constant_handling'
-  gem 'rbi',
-      git: 'https://github.com/apiology/rbi',
-      branch: 'basic_heredoc_support'
+      github: 'apiology/parlour',
+      branch: 'fix_io_deadlock'
+  gem 'rbi'
   # ensure recent definitions
   gem 'rbs', ['>=3.8.1']
-  gem 'sord',
-      git: 'https://github.com/apiology/sord',
-      branch: 'generate_heredocs_in_constants'
+  gem 'rspec'
+  gem 'sord', # ['>= 6.0.0'] # ,
+      github: 'apiology/sord',
+      branch: 'type_variable_support'
+  #   path: '../sord'
   # ensure version with branch coverage
   gem 'simplecov', ['>=0.18.0']
   gem 'simplecov-lcov'
@@ -37,7 +37,7 @@ group :development do
   gem 'bump'
   gem 'bundler-audit'
   gem 'fasterer'
-  gem 'overcommit', ['>=0.64.0', '<0.65.0']
+  gem 'overcommit', '~>0.68.0'
   gem 'punchlist', ['>=1.3.1']
   gem 'rubocop', ['~> 1.52']
   gem 'rubocop-minitest'

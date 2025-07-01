@@ -8,7 +8,7 @@ module Checkoff
     module Project
       # Base class to evaluate a project selector function given fully evaluated arguments
       class FunctionEvaluator < ::Checkoff::SelectorClasses::FunctionEvaluator
-        # @param selector [Array<(Symbol, Array)>,String]
+        # @param selector [Array(Symbol, Array), String]
         # @param projects [Checkoff::Projects]
         # @param portfolios [Checkoff::Portfolios]
         # @param workspaces [Checkoff::Workspaces]
@@ -26,7 +26,7 @@ module Checkoff
 
         private
 
-        # @return [Array<(Symbol, Array)>]
+        # @return [Array(Symbol, Array)]
         attr_reader :selector
       end
     end

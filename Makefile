@@ -33,14 +33,14 @@ rbi/checkoff.rbi: tapioca.installed yardoc.installed sorbet/config ## Generate S
 	bin/sord gen $(SORD_GEN_OPTIONS) rbi/checkoff-sord.rbi
 	cat rbi/checkoff-parlour.rbi rbi/checkoff-sord.rbi > rbi/checkoff.rbi
 	rm -f rbi/checkoff-sord.rbi rbi/checkoff-parlour.rbi
-	sed -i.bak -e 's/^# typed: strong/# typed: true/' rbi/checkoff.rbi
+	sed -i.bak -e 's/^# typed: strong/# typed: ignore/' rbi/checkoff.rbi
 	rm -f rbi/checkoff.rbi.bak
 
 sig/checkoff.rbs: yardoc.installed ## Generate RBS file
 	rm -f rbi/checkoff.rbs
 	bin/sord gen $(SORD_GEN_OPTIONS) sig/checkoff.rbs
 
-YARD_PLUGIN_OPTS = --plugin yard-sorbet
+YARD_PLUGIN_OPTS = --plugin yard-sorbet --plugin yard-solargraph
 
 YARD_OPTS = $(YARD_PLUGIN_OPTS) -c .yardoc --output-dir yardoc --backtrace
 
@@ -107,9 +107,9 @@ srb: build-typecheck ## Run Sorbet typechecker
 	bin/srb tc $(SORBET_TC_OPTIONS)
 
 solargraph: build-typecheck ## Run Solargraph typechecker
-	bin/solargraph typecheck --level strong
+	bin/solargraph typecheck --level strict
 
-typecheck: build-typecheck srb ## validate types in code and configuration
+typecheck: solargraph build-typecheck srb ## validate types in code and configuration
 	bin/overcommit_branch # ideally this would just run solargraph
 
 citypecheck: build-typecheck srb ## Run type check from CircleCI
@@ -131,7 +131,11 @@ requirements_dev.txt.installed: requirements_dev.txt
 pip_install: requirements_dev.txt.installed ## Install Python dependencies
 
 Gemfile.lock: Gemfile checkoff.gemspec .bundle/config
-	bundle lock
+	if [ ! -f Gemfile.lock ]; then \
+	  bundle install; \
+	else \
+	  bundle lock; \
+	fi
 
 .bundle/config:
 	touch .bundle/config

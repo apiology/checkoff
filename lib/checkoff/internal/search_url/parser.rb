@@ -1,5 +1,5 @@
 #!/usr/bin/env ruby
-# typed: false
+# typed: true
 
 # frozen_string_literal: true
 
@@ -22,21 +22,11 @@ module Checkoff
         end
 
         # @param url [String]
-        # @return [Array(Hash<String, String>, Hash<String, String>)]
+        # @return [Array(Hash{String => String}, Array)]
         def convert_params(url)
           url_params = CGI.parse(URI.parse(url).query)
-          # @type custom_field_params [Hash<String, Array<String>>]
-          # @type date_url_params [Hash<String, Array<String>>]
-          # @type simple_url_params [Hash<String, Array<String>>]
-          # @sg-ignore
           custom_field_params, date_url_params, simple_url_params = partition_url_params(url_params)
-          # @type custom_field_args [Hash<String, String>]
-          # @type custom_field_task_selector [Hash<String, String>]
-          # @sg-ignore
           custom_field_args, custom_field_task_selector = convert_custom_field_params(custom_field_params)
-          # @type date_args [Hash<String, String>]
-          # @type date_task_selector [Hash<String, String>]
-          # @sg-ignore
           date_url_args, date_task_selector = convert_date_params(date_url_params)
           simple_url_args = convert_simple_params(simple_url_params)
           # raise 'merge these things'
@@ -46,37 +36,37 @@ module Checkoff
 
         private
 
-        # @param date_url_params [Hash<String, Array<String>>]
-        # @return [Array(Hash<String, String>, Array<[Symbol, Array]>)]
+        # @param date_url_params [Hash{String => Array<String>}]
+        # @return [Array(Hash{String => String}, Array<Symbol, Array>)]
         def convert_date_params(date_url_params)
           DateParamConverter.new(date_url_params:).convert
         end
 
-        # @param simple_url_params [Hash<String, Array<String>>]
-        # @return [Hash<String, String>]
+        # @param simple_url_params [Hash{String => Array<String>}]
+        # @return [Hash{String => String}]
         def convert_simple_params(simple_url_params)
           SimpleParamConverter.new(simple_url_params:).convert
         end
 
-        # @param custom_field_params [Hash<String, Array<String>>]
-        # @return [Array(Hash<String, String>, Array<[Symbol, Array]>)]
+        # @param custom_field_params [Hash{String => Array<String>}]
+        # @return [Array(Hash{String => String}, Array<Symbol, Array>)]
         def convert_custom_field_params(custom_field_params)
           CustomFieldParamConverter.new(custom_field_params:).convert
         end
 
-        # @param url_params [Hash<String, String>]
-        # @return [Array(Hash<String, String>, Hash<String, String>, Hash<String, String>)]
+        # @param url_params [Hash{String => String}]
+        # @return [Array(Hash{String => Array<String>}, Hash{String => Array<String>}, Hash{String => Array<String>})]
         def partition_url_params(url_params)
-          groups = url_params.to_a.group_by do |key, _values|
-            if key.start_with? 'custom_field_'
-              :custom_field
-            elsif key.include? '_date'
-              :date
-            else
-              :simple
-            end
-          end.transform_values(&:to_h)
-          # @sg-ignore
+          groups = T.let(url_params.to_a.group_by do |key, _values|
+                           if key.start_with? 'custom_field_'
+                             :custom_field
+                           elsif key.include? '_date'
+                             :date
+                           else
+                             :simple
+                           end
+                         end.transform_values(&:to_h),
+                         T::Hash[Symbol, T::Hash[String, T::Array[String]]])
           [groups.fetch(:custom_field, {}), groups.fetch(:date, {}), groups.fetch(:simple, {})]
         end
       end

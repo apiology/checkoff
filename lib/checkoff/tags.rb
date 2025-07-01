@@ -1,5 +1,9 @@
 #!/usr/bin/env ruby
+# frozen_string_literal: true
 # typed: true
+
+require 'asana'
+require 'asana/resources/tag'
 
 # frozen_string_literal: true
 
@@ -24,7 +28,7 @@ module Checkoff
     LONG_CACHE_TIME = T.let(MINUTE * 15, Numeric)
     SHORT_CACHE_TIME = T.let(MINUTE, Numeric)
 
-    # @param config [Checkoff::Internal::EnvFallbackConfigLoader]
+    # @param config [Checkoff::Internal::EnvFallbackConfigLoader,Hash]
     # @param clients [Checkoff::Clients]
     # @param client [Asana::Client]
     # @param projects [Checkoff::Projects]
@@ -105,10 +109,10 @@ module Checkoff
     # @return [Asana::Client]
     attr_reader :client
 
-    # @param options [Hash<Symbol, Object>]
+    # @param options [Hash{Symbol => Object}]
     #
     # @sg-ignore
-    # @return [Hash<Symbol, Object>]
+    # @return [Hash{Symbol => Object}]
     def build_params(options)
       { limit: options[:per_page], completed_since: options[:completed_since] }.reject do |_, v|
         v.nil? || Array(v).empty?

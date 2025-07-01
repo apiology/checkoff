@@ -19,7 +19,7 @@ module Checkoff
     LONG_CACHE_TIME = MINUTE * 15
     SHORT_CACHE_TIME = MINUTE
 
-    # @param config [Checkoff::Internal::EnvFallbackConfigLoader]
+    # @param config [Hash, Checkoff::Internal::EnvFallbackConfigLoader]
     # @param asana_client_class [Class<Asana::Client>]
     def initialize(config: Checkoff::Internal::ConfigLoader.load(:asana),
                    asana_client_class: Asana::Client)

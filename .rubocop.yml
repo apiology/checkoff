@@ -156,7 +156,7 @@ AllCops:
     - 'vendor/**/*'
     - 'sorbet/**/*'
 
-require:
+plugins:
   - rubocop-minitest
   - rubocop-performance
   - rubocop-rake

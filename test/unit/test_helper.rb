@@ -49,6 +49,23 @@ def let_single_mock(mock_sym)
   end
 end
 
+# @param mock_sym [Symbol]
+# @param type [Class]
+#
+# @return [void]
+def typed_mock(mock_sym, type)
+  define_method(mock_sym.to_s) do
+    var = "@#{mock_sym}"
+    mock = instance_variable_get(var)
+    unless mock
+      mock = mock(mock_sym.to_s)
+      instance_variable_set var, mock
+      mock.responds_like_instance_of(type)
+    end
+    mock
+  end
+end
+
 def let_mock(*mocks)
   mocks.each do |mock_sym|
     let_single_mock(mock_sym)

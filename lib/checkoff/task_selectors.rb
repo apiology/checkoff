@@ -1,5 +1,5 @@
 #!/usr/bin/env ruby
-# typed: false
+# typed: true
 
 # frozen_string_literal: true
 
@@ -40,13 +40,13 @@ module Checkoff
     end
 
     # @param [Asana::Resources::Task] task
-    # @param [Array<(Symbol, Array)>] task_selector Filter based on
-    #        task details.  Examples: [:tag, 'foo'] [:not, [:tag, 'foo']] [:tag, 'foo']
+    # @param [Symbol, Array<Symbol, Integer, Array>] task_selector Filter based on
+    #   task details.  Examples: [:tag, 'foo'] [:not, [:tag, 'foo']] [:tag, 'foo']
     # @return [Boolean]
     def filter_via_task_selector(task, task_selector)
       evaluator = TaskSelectorEvaluator.new(task:, tasks:, timelines:,
                                             custom_fields:)
-      evaluator.evaluate(task_selector)
+      !!evaluator.evaluate(task_selector)
     end
 
     private
@@ -75,10 +75,12 @@ module Checkoff
         ARGV[0] || raise('Please pass workspace name as first argument')
       end
 
-      # @return [Array]
+      # @sg-ignore
+      # @return [Array(Symbol, Array)]
       def task_selector
         task_selector_json = ARGV[2] || raise('Please pass task_selector in JSON form as third argument')
-        JSON.parse(task_selector_json)
+        # @return [Symbol, Array]
+        T.cast(JSON.parse(task_selector_json), [Symbol, Array])
       end
 
       # @return [void]

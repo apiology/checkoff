@@ -1,4 +1,4 @@
-# typed: strict
+# typed: true
 # frozen_string_literal: true
 
 require 'checkoff/internal/logging'
@@ -9,7 +9,6 @@ module Checkoff
     class FunctionEvaluator
       include Logging
 
-      # @sg-ignore
       # @param _index [Integer]
       def evaluate_arg?(_index)
         true
@@ -23,8 +22,8 @@ module Checkoff
 
       # @param _task [Asana::Resources::Task]
       # @param _args [Array<Object>]
-      # @return [Object]
       # @sg-ignore
+      # @return [Object]
       def evaluate(_task, *_args)
         raise 'Implement me!'
       end

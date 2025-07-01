@@ -1,4 +1,4 @@
-# typed: false
+# typed: true
 # frozen_string_literal: true
 
 require 'forwardable'
@@ -34,7 +34,7 @@ module Checkoff
     # @return [Checkoff::MyTasks]
     attr_reader :my_tasks
 
-    # @param config [Checkoff::Internal::EnvFallbackConfigLoader]
+    # @param config [Checkoff::Internal::EnvFallbackConfigLoader,Hash]
     # @param client [Asana::Client]
     # @param projects [Checkoff::Projects]
     # @param workspaces [Checkoff::Workspaces]
@@ -84,13 +84,13 @@ module Checkoff
     # @param project_name [String, Symbol]
     # @param only_uncompleted [Boolean]
     # @param extra_fields [Array<String>]
-    # @return [Hash{[String, nil] => Enumerable<Asana::Resources::Task>}]
+    # @return [Hash{String, nil => Enumerable<Asana::Resources::Task>}]
     def tasks_by_section(workspace_name,
                          project_name,
                          only_uncompleted: true,
                          extra_fields: [])
-      raise ArgumentError, 'Provided nil workspace name' if workspace_name.nil?
-      raise ArgumentError, 'Provided nil project name' if project_name.nil?
+      raise ArgumentError, 'Provided nil workspace name' if T.unsafe(workspace_name).nil?
+      raise ArgumentError, 'Provided nil project name' if T.unsafe(project_name).nil?
 
       project = project_or_raise(workspace_name, project_name)
       if project_name == :my_tasks
@@ -141,10 +141,12 @@ module Checkoff
     # @param project_name [String, Symbol]
     # @param section_name [String, nil]
     #
+    # @sg-ignore
     # @return [Array<String>]
     def section_task_names(workspace_name, project_name, section_name)
       task_array = tasks(workspace_name, project_name, section_name)
-      task_array.map(&:name)
+      # @type [Array<String>]
+      T.cast(task_array.map(&:name), T::Array[String])
     end
     cache_method :section_task_names, SHORT_CACHE_TIME
 
@@ -222,7 +224,7 @@ module Checkoff
     def section(workspace_name, project_name, section_name, extra_section_fields: [])
       sections = sections_or_raise(workspace_name, project_name,
                                    extra_fields: extra_section_fields)
-      sections.find { |section| section_key(section.name)&.chomp(':') == section_name&.chomp(':') }
+      sections.find { |section| section_key(T.cast(section.name, String))&.chomp(':') == section_name&.chomp(':') }
     end
 
     private
@@ -249,7 +251,7 @@ module Checkoff
     # @param project [Asana::Resources::Project]
     # @param only_uncompleted [Boolean]
     # @param extra_fields [Array<String>]
-    # @return [Hash<[String,nil], Enumerable<Asana::Resources::Task>>]
+    # @return [Hash{String,nil => Enumerable<Asana::Resources::Task>}]
     def tasks_by_section_for_project(project,
                                      only_uncompleted: true,
                                      extra_fields: [])
@@ -263,7 +265,7 @@ module Checkoff
     # Given a list of tasks, pull a Hash of tasks with section name -> task list
     # @param tasks [Enumerable<Asana::Resources::Task>]
     # @param project_gid [String]
-    # @return [Hash<[String,nil], Enumerable<Asana::Resources::Task>>]
+    # @return [Hash{String,nil => Enumerable<Asana::Resources::Task}>]
     def by_section(tasks, project_gid)
       by_section = {}
       # @sg-ignore
@@ -275,18 +277,19 @@ module Checkoff
     end
     cache_method :by_section, LONG_CACHE_TIME
 
-    # @param by_section [Hash{[String, nil] => Enumerable<Asana::Resources::Task>}]
+    # @param by_section [Hash{String, nil => Array<Asana::Resources::Task>}]
     # @param task [Asana::Resources::Task]
     # @param project_gid [String]
     # @return [void]
     def file_task_by_section(by_section, task, project_gid)
-      # @sg-ignore
-      # @type [Array<Hash>]
-      membership = task.memberships.find { |m| m['project']['gid'] == project_gid }
+      membership = task.memberships.find { |m| T.cast(m['project'], T::Hash[String, T.untyped])['gid'] == project_gid }
       raise "Could not find task in project_gid #{project_gid}: #{task}" if membership.nil?
 
+      section = T.cast(membership['section'], T::Hash[String, T.untyped])
+      section_name = T.cast(section['name'], String)
+
       # @type [String, nil]
-      current_section = section_key(membership['section']['name'])
+      current_section = section_key(section_name)
 
       # @sg-ignore
       by_section.fetch(current_section) << task
@@ -296,7 +299,7 @@ module Checkoff
     # @param project_name [String, Symbol]
     # @return [Asana::Resources::Project]
     def project_or_raise(workspace_name, project_name)
-      raise ArgumentError, 'Provide nil project_name' if project_name.nil?
+      raise ArgumentError, 'Provide nil project_name' if T.unsafe(project_name).nil?
 
       project = projects.project(workspace_name, project_name)
       if project.nil?

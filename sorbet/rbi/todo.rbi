@@ -4,7 +4,8 @@
 
 # typed: false
 
-module JSON::Ext::ParserConfig; end
+module Bundler::FetchMetadata; end
+module Bundler::MatchMetadata; end
 module Logging::Rails; end
 module Parlour::RbiGenerator::Namespace::Mixin::Searchable; end
 module Parlour::RbsGenerator::Namespace::Mixin::Searchable; end

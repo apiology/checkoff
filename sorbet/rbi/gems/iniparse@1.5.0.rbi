@@ -379,8 +379,8 @@ class IniParse::IniParseError < ::StandardError; end
 #
 # source://iniparse//lib/iniparse/line_collection.rb#12
 module IniParse::LineCollection
-  include ::Enumerable
   include ::ActiveSupport::ToJsonWithActiveSupportEncoder
+  include ::Enumerable
 
   # source://iniparse//lib/iniparse/line_collection.rb#15
   def initialize; end
@@ -511,7 +511,7 @@ end
 #   ; this is a comment
 #   # also a comment
 #
-# source://iniparse//lib/iniparse/lines.rb#337
+# source://iniparse//lib/iniparse/lines.rb#330
 class IniParse::Lines::Comment < ::IniParse::Lines::Blank
   # Returns the inline comment for this line. Includes the comment
   # separator at the beginning of the string.

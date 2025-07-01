@@ -9,13 +9,13 @@ module Checkoff
       # Convert date parameters - ones where the param name itself
       # doesn't encode any parameters'
       class DateParamConverter
-        # @param date_url_params [Hash<String, Array<String>>] the simple params
+        # @param date_url_params [Hash{String => Array<String>}] the simple params
         def initialize(date_url_params:)
           @date_url_params = date_url_params
         end
 
         # @sg-ignore
-        # @return [Array(Hash<String, String>, Array<[Symbol, Array]>)]
+        # @return [Array(Hash{String => String}, Array<Symbol, Array>)]
         def convert
           return [{}, []] if date_url_params.empty?
 
@@ -35,9 +35,8 @@ module Checkoff
 
         private
 
-        # @sg-ignore
         # @param prefix [String]
-        # @return [Array(Hash<String, String>, Array<[Symbol, Array]>)]
+        # @return [Array(Hash{String => String}, Array<Symbol, Array>)]
         def convert_for_prefix(prefix)
           # example params:
           #   due_date.operator=through_next
@@ -73,7 +72,7 @@ module Checkoff
         private_constant :API_PREFIX
 
         # @param prefix [String]
-        # @return [Array(Hash<String, String>, Array<[Symbol, Array]>)] See https://developers.asana.com/docs/search-tasks-in-a-workspace
+        # @return [Array(Hash{String => String}, Array<Symbol, Array>)] See https://developers.asana.com/docs/search-tasks-in-a-workspace
         def handle_through_next(prefix)
           value = get_single_param("#{prefix}.value").to_i
 
@@ -90,7 +89,7 @@ module Checkoff
         end
 
         # @param prefix [String]
-        # @return [Array(Hash<String, String>, Array<[Symbol, Array]>)] See https://developers.asana.com/docs/search-tasks-in-a-workspace
+        # @return [Array(Hash{String => String}, Array<Symbol, Array>)] See https://developers.asana.com/docs/search-tasks-in-a-workspace
         def handle_between(prefix)
           after = get_single_param("#{prefix}.after")
           raise "Teach me how to handle #{prefix}.before" if date_url_params.key? "#{prefix}.before"
@@ -106,7 +105,7 @@ module Checkoff
         end
 
         # @param prefix [String]
-        # @return [Array(Hash<String, String>, Array<[Symbol, Array]>)] See https://developers.asana.com/docs/search-tasks-in-a-workspace
+        # @return [Array(Hash{String => String}, Array<Symbol, Array>)] See https://developers.asana.com/docs/search-tasks-in-a-workspace
         def handle_within_last(prefix)
           value = get_single_param("#{prefix}.value").to_i
 
@@ -120,7 +119,7 @@ module Checkoff
         end
 
         # @param prefix [String]
-        # @return [Array(Hash<String, String>, Array<[Symbol, Array]>)] See https://developers.asana.com/docs/search-tasks-in-a-workspace
+        # @return [Array(Hash{String => String}, Array<Symbol, Array>)] See https://developers.asana.com/docs/search-tasks-in-a-workspace
         def handle_within_next(prefix)
           value = get_single_param("#{prefix}.value").to_i
 
@@ -161,7 +160,7 @@ module Checkoff
           raise "Teach me how to handle other time units: #{unit}" unless unit == 'day'
         end
 
-        # @return [Hash<String, Array<String>>]
+        # @return [Hash{String => Array<String>}]
         attr_reader :date_url_params
       end
     end
