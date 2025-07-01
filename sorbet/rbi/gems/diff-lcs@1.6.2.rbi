@@ -573,7 +573,7 @@ Diff::LCS::Change::VALID_ACTIONS = T.let(T.unsafe(nil), Array)
 # elements in the old and the new sequenced enumerables as well as the action
 # taken.
 #
-# source://diff-lcs//lib/diff/lcs/change.rb#101
+# source://diff-lcs//lib/diff/lcs/change.rb#100
 class Diff::LCS::ContextChange < ::Diff::LCS::Change
   # @return [ContextChange] a new instance of ContextChange
   #
@@ -1130,5 +1130,5 @@ end
 # source://diff-lcs//lib/diff/lcs/callbacks.rb#44
 Diff::LCS::SequenceCallbacks = Diff::LCS::DefaultCallbacks
 
-# source://diff-lcs//lib/diff/lcs.rb#52
+# source://diff-lcs//lib/diff/lcs/version.rb#5
 Diff::LCS::VERSION = T.let(T.unsafe(nil), String)

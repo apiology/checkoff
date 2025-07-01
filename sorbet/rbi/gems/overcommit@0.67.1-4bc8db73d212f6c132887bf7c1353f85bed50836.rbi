@@ -1066,7 +1066,7 @@ class Overcommit::Hook::Base
   # source://overcommit//lib/overcommit/hook/base.rb#27
   def initialize(config, context); end
 
-  # source://forwardable/1.3.2/forwardable.rb#229
+  # source://forwardable/1.3.3/forwardable.rb#231
   def all_files(*args, **_arg1, &block); end
 
   # Gets a list of staged files that apply to this hook based on its
@@ -1155,7 +1155,7 @@ class Overcommit::Hook::Base
   # source://overcommit//lib/overcommit/hook/base.rb#171
   def included_files; end
 
-  # source://forwardable/1.3.2/forwardable.rb#229
+  # source://forwardable/1.3.3/forwardable.rb#231
   def modified_files(*args, **_arg1, &block); end
 
   # source://overcommit//lib/overcommit/hook/base.rb#54
@@ -1345,7 +1345,7 @@ end
 module Overcommit::HookContext
   class << self
     # source://overcommit//lib/overcommit/hook_context.rb#5
-    def create(hook_type, config, args, input); end
+    def create(hook_type, config, args, input, **cli_options); end
   end
 end
 
@@ -1368,16 +1368,17 @@ class Overcommit::HookContext::Base
   # @param config [Overcommit::Configuration]
   # @param args [Array<String>]
   # @param input [IO] standard input stream
+  # @param options [Hash] cli options
   # @return [Base] a new instance of Base
   #
-  # source://overcommit//lib/overcommit/hook_context/base.rb#21
-  def initialize(config, args, input); end
+  # source://overcommit//lib/overcommit/hook_context/base.rb#22
+  def initialize(config, args, input, **options); end
 
   # Returns the full list of files tracked by git
   #
   # @return [Array<String>]
   #
-  # source://overcommit//lib/overcommit/hook_context/base.rb#87
+  # source://overcommit//lib/overcommit/hook_context/base.rb#89
   def all_files; end
 
   # Resets the environment to an appropriate state.
@@ -1386,7 +1387,7 @@ class Overcommit::HookContext::Base
   # Different hook types can perform different cleanup operations, which are
   # intended to "undo" the results of the call to {#setup_environment}.
   #
-  # source://overcommit//lib/overcommit/hook_context/base.rb#70
+  # source://overcommit//lib/overcommit/hook_context/base.rb#72
   def cleanup_environment; end
 
   # Executes a command as if it were a regular git hook, passing all
@@ -1395,28 +1396,28 @@ class Overcommit::HookContext::Base
   # This is intended to be used by ad hoc hooks so developers can link up
   # their existing git hooks with Overcommit.
   #
-  # source://overcommit//lib/overcommit/hook_context/base.rb#32
+  # source://overcommit//lib/overcommit/hook_context/base.rb#34
   def execute_hook(command); end
 
   # Returns the camel-cased type of this hook (e.g. PreCommit)
   #
   # @return [String]
   #
-  # source://overcommit//lib/overcommit/hook_context/base.rb#39
+  # source://overcommit//lib/overcommit/hook_context/base.rb#41
   def hook_class_name; end
 
   # Returns the actual name of the hook script being run (e.g. pre-commit).
   #
   # @return [String]
   #
-  # source://overcommit//lib/overcommit/hook_context/base.rb#53
+  # source://overcommit//lib/overcommit/hook_context/base.rb#55
   def hook_script_name; end
 
   # Returns the snake-cased type of this hook (e.g. pre_commit)
   #
   # @return [String]
   #
-  # source://overcommit//lib/overcommit/hook_context/base.rb#46
+  # source://overcommit//lib/overcommit/hook_context/base.rb#48
   def hook_type_name; end
 
   # Returns an array of lines passed to the hook via the standard input
@@ -1424,7 +1425,7 @@ class Overcommit::HookContext::Base
   #
   # @return [Array<String>]
   #
-  # source://overcommit//lib/overcommit/hook_context/base.rb#103
+  # source://overcommit//lib/overcommit/hook_context/base.rb#105
   def input_lines; end
 
   # Returns the contents of the entire standard input stream that were passed
@@ -1432,7 +1433,7 @@ class Overcommit::HookContext::Base
   #
   # @return [String]
   #
-  # source://overcommit//lib/overcommit/hook_context/base.rb#95
+  # source://overcommit//lib/overcommit/hook_context/base.rb#97
   def input_string; end
 
   # Returns a list of files that have been modified.
@@ -1442,14 +1443,14 @@ class Overcommit::HookContext::Base
   #
   # @return [Array<String>]
   #
-  # source://overcommit//lib/overcommit/hook_context/base.rb#80
+  # source://overcommit//lib/overcommit/hook_context/base.rb#82
   def modified_files; end
 
   # Returns a message to display on failure.
   #
   # @return [String]
   #
-  # source://overcommit//lib/overcommit/hook_context/base.rb#110
+  # source://overcommit//lib/overcommit/hook_context/base.rb#112
   def post_fail_message; end
 
   # Initializes anything related to the environment.
@@ -1457,7 +1458,7 @@ class Overcommit::HookContext::Base
   # This is called before the hooks are run by the [HookRunner]. Different
   # hook types can perform different setup.
   #
-  # source://overcommit//lib/overcommit/hook_context/base.rb#61
+  # source://overcommit//lib/overcommit/hook_context/base.rb#63
   def setup_environment; end
 
   private
@@ -1466,10 +1467,10 @@ class Overcommit::HookContext::Base
   # directory as part of an amendment, since the symlink will still appear as
   # a file, but the actual working tree will have a directory.
   #
-  # source://overcommit//lib/overcommit/hook_context/base.rb#133
+  # source://overcommit//lib/overcommit/hook_context/base.rb#135
   def filter_directories(modified_files); end
 
-  # source://overcommit//lib/overcommit/hook_context/base.rb#116
+  # source://overcommit//lib/overcommit/hook_context/base.rb#118
   def filter_modified_files(modified_files); end
 
   # Filter out non-existent files (unless it's a broken symlink, in which case
@@ -1477,7 +1478,7 @@ class Overcommit::HookContext::Base
   # file was renamed as part of an amendment, leading to the old file no
   # longer existing.
   #
-  # source://overcommit//lib/overcommit/hook_context/base.rb#124
+  # source://overcommit//lib/overcommit/hook_context/base.rb#126
   def filter_nonexistent(modified_files); end
 end
 
@@ -2375,7 +2376,7 @@ end
 #
 # This allows us to execute code based on the git version.
 #
-# source://overcommit//lib/overcommit/utils.rb#17
+# source://overcommit//lib/overcommit/utils.rb#15
 class Overcommit::Utils::Version < ::Gem::Version
   # source://overcommit//lib/overcommit/utils.rb#19
   def !=(version); end

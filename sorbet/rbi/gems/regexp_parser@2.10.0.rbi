@@ -728,7 +728,7 @@ class Regexp::Expression::Conditional::Branch < ::Regexp::Expression::Sequence
   def human_name; end
 end
 
-# source://regexp_parser//lib/regexp_parser/expression/classes/conditional.rb#11
+# source://regexp_parser//lib/regexp_parser/expression/classes/conditional.rb#9
 class Regexp::Expression::Conditional::Condition < ::Regexp::Expression::Base
   # source://regexp_parser//lib/regexp_parser/expression/methods/human_name.rb#35
   def human_name; end
@@ -2912,7 +2912,7 @@ end
 
 # Base for all scanner validation errors
 #
-# source://regexp_parser//lib/regexp_parser/scanner/errors/validation_error.rb#4
+# source://regexp_parser//lib/regexp_parser/scanner/errors/validation_error.rb#3
 class Regexp::Scanner::ValidationError < ::Regexp::Scanner::ScannerError
   class << self
     # Centralizes and unifies the handling of validation related errors.
@@ -3093,7 +3093,7 @@ class Regexp::Syntax::Base
 end
 
 # source://regexp_parser//lib/regexp_parser/syntax/versions.rb#8
-Regexp::Syntax::CURRENT = Regexp::Syntax::V3_1_0
+Regexp::Syntax::CURRENT = Regexp::Syntax::V3_2_0
 
 # source://regexp_parser//lib/regexp_parser/syntax/version_lookup.rb#6
 class Regexp::Syntax::InvalidVersionNameError < ::Regexp::Syntax::SyntaxError

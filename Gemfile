@@ -8,18 +8,12 @@ gemspec
 group :development, :test do
   gem 'bundler'
   gem 'mdl'
-  gem 'parlour',
-      git: 'https://github.com/apiology/parlour',
-      branch: 'heredoc_constant_handling'
-  gem 'rbi',
-      git: 'https://github.com/apiology/rbi',
-      branch: 'basic_heredoc_support'
+  gem 'parlour'
+  gem 'rbi'
   # ensure recent definitions
   gem 'rbs', ['>=3.8.1']
   gem 'rspec'
-  gem 'sord',
-      git: 'https://github.com/apiology/sord',
-      branch: 'generate_heredocs_in_constants'
+  gem 'sord', ['>= 6.0.0']
   # ensure version with branch coverage
   gem 'simplecov', ['>=0.18.0']
   gem 'simplecov-lcov'
@@ -34,7 +28,9 @@ group :development do
   gem 'bump'
   gem 'bundler-audit'
   gem 'fasterer'
-  gem 'overcommit', ['>=0.64.0', '<0.65.0']
+  gem 'overcommit', # [">=0.64.0", "<0.65.0"]
+      git: 'https://github.com/apiology/overcommit.git',
+      branch: 'add_solargraph'
   gem 'punchlist', ['>=1.3.1']
   gem 'rubocop', ['~> 1.52']
   gem 'rubocop-performance'

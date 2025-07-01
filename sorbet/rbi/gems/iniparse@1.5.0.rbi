@@ -510,7 +510,7 @@ end
 #   ; this is a comment
 #   # also a comment
 #
-# source://iniparse//lib/iniparse/lines.rb#337
+# source://iniparse//lib/iniparse/lines.rb#330
 class IniParse::Lines::Comment < ::IniParse::Lines::Blank
   # Returns the inline comment for this line. Includes the comment
   # separator at the beginning of the string.

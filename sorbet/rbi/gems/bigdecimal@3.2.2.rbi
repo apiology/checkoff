@@ -5,5 +5,4 @@
 # Please instead update this file by running `bin/tapioca gem bigdecimal`.
 
 
-# THIS IS AN EMPTY RBI FILE.
-# see https://github.com/Shopify/tapioca#manually-requiring-parts-of-a-gem
+BigDecimal::VERSION = T.let(T.unsafe(nil), String)
