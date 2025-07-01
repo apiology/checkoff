@@ -10,7 +10,7 @@
 # Generic - these will be put in a `Types::Raw`, so writing RBS syntax is a little devious,
 # but by their nature we know they'll only be used in an RBS file, so it's probably fine
 
-# source://sord//lib/sord/logging.rb#4
+# source://sord//lib/sord/version.rb#2
 # typed: strong
 module Sord; end
 

@@ -1,15 +1,16 @@
-# typed: strict
+# typed: true
 # frozen_string_literal: true
 
 module Checkoff
   module Internal
     # Manage thread lock variables in a block
     class ThreadLocal
-      # @sg-ignore
+      # @generic T
       # @param name [Symbol]
       # @param value [Object,Boolean]
-      #
-      # @return [Object,Boolean]
+      # @yieldreturn [generic<T>]
+      # @sg-ignore
+      # @return [generic<T>]
       def with_thread_local_variable(name, value, &block)
         old_value = Thread.current[name]
         Thread.current[name] = value

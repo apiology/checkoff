@@ -31,22 +31,24 @@ GIT
       oauth2 (~> 1.4)
 
 GIT
-  remote: https://github.com/apiology/yard
-  revision: a5dcc5549be7ed7bd39a896dc2238854f717cfda
-  branch: fix_word_array_in_array_parsing
-  specs:
-    yard (0.9.37)
-
-PATH
-  remote: ../sord
+  remote: https://github.com/apiology/sord.git
+  revision: 7ed98b78f03d265fed705a58f328e24198891f4a
+  branch: type_variable_support
   specs:
     sord (7.0.0)
       commander (~> 5.0)
       parlour (~> 9.1)
       parser
-      rbs (>= 3.0, <= 4.0.0.dev.4)
+      rbs (~> 3.0)
       sorbet-runtime
       yard
+
+GIT
+  remote: https://github.com/apiology/yard
+  revision: a5dcc5549be7ed7bd39a896dc2238854f717cfda
+  branch: fix_word_array_in_array_parsing
+  specs:
+    yard (0.9.37)
 
 PATH
   remote: .

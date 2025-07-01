@@ -22,7 +22,7 @@ group :development, :test do
   gem 'sord', # ['>= 6.0.0'] # ,
       github: 'apiology/sord',
       branch: 'type_variable_support'
-      # path: '../sord'
+  #   path: '../sord'
   # ensure version with branch coverage
   gem 'simplecov', ['>=0.18.0']
   gem 'simplecov-lcov'
