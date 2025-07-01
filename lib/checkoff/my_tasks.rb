@@ -1,4 +1,4 @@
-# typed: false
+# typed: true
 # frozen_string_literal: true
 
 require 'forwardable'
@@ -16,7 +16,7 @@ module Checkoff
     # @return [Checkoff::Projects]
     attr_reader :projects
 
-    # @param config [Checkoff::Internal::EnvFallbackConfigLoader]
+    # @param config [Checkoff::Internal::EnvFallbackConfigLoader,Hash]
     # @param client [Asana::Client]
     # @param projects [Checkoff::Projects]
     def initialize(config: Checkoff::Internal::ConfigLoader.load(:asana),

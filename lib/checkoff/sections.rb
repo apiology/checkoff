@@ -1,4 +1,4 @@
-# typed: false
+# typed: true
 # frozen_string_literal: true
 
 require 'forwardable'
@@ -34,7 +34,7 @@ module Checkoff
     # @return [Checkoff::MyTasks]
     attr_reader :my_tasks
 
-    # @param config [Checkoff::Internal::EnvFallbackConfigLoader]
+    # @param config [Checkoff::Internal::EnvFallbackConfigLoader,Hash]
     # @param client [Asana::Client]
     # @param projects [Checkoff::Projects]
     # @param workspaces [Checkoff::Workspaces]

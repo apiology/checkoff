@@ -33,7 +33,7 @@ module Checkoff
     SHORT_CACHE_TIME = MINUTE
     private_constant :SHORT_CACHE_TIME
 
-    # @param config [Checkoff::Internal::EnvFallbackConfigLoader]
+    # @param config [Checkoff::Internal::EnvFallbackConfigLoader,Hash]
     # @param workspaces [Checkoff::Workspaces]
     # @param tasks [Checkoff::Tasks]
     # @param sections [Checkoff::Sections]

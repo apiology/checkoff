@@ -1,4 +1,4 @@
-# typed: false
+# typed: true
 
 # frozen_string_literal: true
 
@@ -33,7 +33,7 @@ module Checkoff
     # @!parse
     #   extend CacheMethod::ClassMethods
 
-    # @param config [Checkoff::Internal::EnvFallbackConfigLoader]
+    # @param config [Checkoff::Internal::EnvFallbackConfigLoader,Hash]
     # @param client [Asana::Client]
     # @param workspaces [Checkoff::Workspaces]
     # @param project_hashes [Checkoff::Internal::ProjectHashes]

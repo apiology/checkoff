@@ -1,6 +1,6 @@
 #!/usr/bin/env ruby
 
-# typed: false
+# typed: true
 
 # frozen_string_literal: true
 
@@ -32,7 +32,7 @@ module Checkoff
     LONG_CACHE_TIME = MINUTE * 15
     SHORT_CACHE_TIME = MINUTE * 5
 
-    # @param config [Checkoff::Internal::EnvFallbackConfigLoader]
+    # @param config [Checkoff::Internal::EnvFallbackConfigLoader,Hash]
     # @param client [Asana::Client]
     # @param workspaces [Checkoff::Workspaces]
     # @param sections [Checkoff::Sections]

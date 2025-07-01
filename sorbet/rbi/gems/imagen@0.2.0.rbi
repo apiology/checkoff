@@ -35,7 +35,7 @@ module Imagen::AST; end
 
 # An AST Builder for ruby parser.
 #
-# source://imagen//lib/imagen/ast/builder.rb#11
+# source://imagen//lib/imagen/ast/builder.rb#9
 class Imagen::AST::Builder < ::Parser::Builders::Default
   # This is a work around for parsing ruby code that with invlalid UTF-8
   # https://github.com/whitequark/parser/issues/283
