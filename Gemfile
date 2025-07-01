@@ -20,9 +20,9 @@ group :development, :test do
   gem 'rbs', ['>=3.8.1']
   gem 'rspec'
   gem 'sord', # ['>= 6.0.0'] # ,
-      # github: 'apiology/sord',
-      # branch: 'type_variable_support'
-      path: '../sord'
+      github: 'apiology/sord',
+      branch: 'type_variable_support'
+      # path: '../sord'
   # ensure version with branch coverage
   gem 'simplecov', ['>=0.18.0']
   gem 'simplecov-lcov'
