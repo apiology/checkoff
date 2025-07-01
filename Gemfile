@@ -37,9 +37,7 @@ group :development do
   gem 'bump'
   gem 'bundler-audit'
   gem 'fasterer'
-  gem 'overcommit', # [">=0.64.0", "<0.65.0"]
-      git: 'https://github.com/apiology/overcommit.git',
-      branch: 'add_solargraph'
+  gem 'overcommit', '~>0.68.0'
   gem 'punchlist', ['>=1.3.1']
   gem 'rubocop', ['~> 1.52']
   gem 'rubocop-minitest'
