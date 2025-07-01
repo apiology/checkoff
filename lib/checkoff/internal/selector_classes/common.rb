@@ -224,12 +224,11 @@ module Checkoff
           false
         end
 
-        # @param resource [Asana::Resources::Task,Asana::Resources::Project]
+        # @param resource [Asana::Resources::Task, Asana::Resources::Project]
         # @param prefix [String]
-        # @return [Boolean]
-        # @sg-ignore
+        # @return [boolish]
         def evaluate(resource, prefix)
-          resource.name.start_with?(prefix)
+          resource.name&.start_with?(prefix)
         end
       end
 
@@ -243,7 +242,7 @@ module Checkoff
         # @param _resource [Asana::Resources::Task,Asana::Resources::Project]
         # @return [String]
         def evaluate(_resource)
-          selector
+          T.cast(selector, String)
         end
       end
     end

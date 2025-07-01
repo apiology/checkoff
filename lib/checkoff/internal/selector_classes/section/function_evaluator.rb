@@ -8,7 +8,7 @@ module Checkoff
     module Section
       # Base class to evaluate a project selector function given fully evaluated arguments
       class FunctionEvaluator < ::Checkoff::SelectorClasses::FunctionEvaluator
-        # @param selector [Array<(Symbol, Array)>,String]
+        # @param selector [Array(Symbol, Array), String]
         # @param client [Asana::Client]
         # @param sections [Checkoff::Sections]
         # @param kwargs [Hash]
@@ -24,7 +24,7 @@ module Checkoff
 
         private
 
-        # @return [Array<(Symbol, Array)>]
+        # @return [Array(Symbol, Array)]
         attr_reader :selector
 
         # @return [Asana::Client]

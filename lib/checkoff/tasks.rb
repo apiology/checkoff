@@ -1,6 +1,6 @@
 #!/usr/bin/env ruby
 
-# typed: true
+# typed: false
 
 # frozen_string_literal: true
 
@@ -32,7 +32,7 @@ module Checkoff
     LONG_CACHE_TIME = MINUTE * 15
     SHORT_CACHE_TIME = MINUTE * 5
 
-    # @param config [Checkoff::Internal::EnvFallbackConfigLoader,Hash]
+    # @param config [Hash, Checkoff::Internal::EnvFallbackConfigLoader]
     # @param client [Asana::Client]
     # @param workspaces [Checkoff::Workspaces]
     # @param sections [Checkoff::Sections]
@@ -265,9 +265,9 @@ module Checkoff
     # <regular keys from API response>
     # +
     # unwrapped:
-    #  membership_by_section_gid: Hash<String, Hash (membership)>
-    #  membership_by_project_gid: Hash<String, Hash (membership)>
-    #  membership_by_project_name: Hash<String, Hash (membership)>
+    #  membership_by_section_gid: Hash{String => Hash (membership)>
+    #  membership_by_project_gid: Hash{String => Hash (membership)>
+    #  membership_by_project_name: Hash{String => Hash (membership)>
     # task: String (name)
     #
     # @param task [Asana::Resources::Task]

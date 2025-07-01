@@ -68,7 +68,7 @@ module Checkoff
     # @param extra_fields [Array<String>]
     # @param [Boolean] only_uncompleted
     #
-    # @return [Hash{Symbol => Object}]
+    # @return [Hash{Symbol => undefined}]
     def task_options(extra_fields: [], only_uncompleted: false)
       options = {
         per_page: 100,
@@ -91,7 +91,7 @@ module Checkoff
     #
     # @param extra_project_fields [Array<String>]
     #
-    # @return [Hash<Symbol, Object>]
+    # @return [Hash{Symbol => Object}]
     def project_options(extra_project_fields: [])
       { fields: project_fields(extra_project_fields:) }
     end
@@ -212,14 +212,14 @@ module Checkoff
     # date is today or in the past.
     #
     # @param project [Asana::Resources::Project]
-    # @param period [Symbol,Array] See Checkoff::Timing#in_period? - :now_or_before,:this_week
+    # @param period [Symbol, Array(Symbol, Integer)] See Checkoff::Timing#in_period? - :now_or_before,:this_week
     def project_ready?(project, period: :now_or_before)
       in_period?(project, :ready, period)
     end
 
     # @param project [Asana::Resources::Project]
     # @param field_name [Symbol,Array]
-    # @param period [Symbol,Array] See Checkoff::Timing#in_period? - :now_or_before,:this_week
+    # @param period [Symbol, Array(Symbol,Integer)] See Checkoff::Timing#in_period? - :now_or_before,:this_week
     def in_period?(project, field_name, period)
       # @type [Date,Time,nil]
       project_date = project_timing.date_or_time_field_by_name(project, field_name)

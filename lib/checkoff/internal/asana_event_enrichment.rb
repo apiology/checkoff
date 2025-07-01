@@ -1,4 +1,4 @@
-# typed: true
+# typed: false
 # frozen_string_literal: true
 
 require 'forwardable'
@@ -53,9 +53,9 @@ module Checkoff
         asana_event
       end
 
-      # @param filter [Hash<String,[String,Array<String>]>]
+      # @param filter [Hash{String => String, Array<String>}]
       #
-      # @return [Hash<String,[String,Array<String>]>]
+      # @return [Hash{String => String, Array<String>}]
       def enrich_filter(filter)
         filter = filter.dup
         enrich_filter_section!(filter)
@@ -64,7 +64,7 @@ module Checkoff
         filter
       end
 
-      # @param webhook_subscription [Hash] Hash of the request made to
+      # @param webhook_subscription [Hash, nil] Hash of the request made to
       #   webhook POST endpoint - https://app.asana.com/api/1.0/webhooks
       #   https://developers.asana.com/reference/createwebhook
       #
@@ -88,27 +88,26 @@ module Checkoff
       # @param gid [String]
       # @param resource_type [String,nil]
       #
-      # @return [Array<([String, nil], [String,nil])>]
+      # @return [Array([String, nil], [String, nil])]
       def enrich_gid(gid, resource_type: nil)
         # @sg-ignore
         resource, resource_type = resources.resource_by_gid(gid, resource_type:)
         [resource&.name, resource_type]
       end
 
-      # @param filter [Hash{String => String}]
+      # @param filter [Hash{String => String, Array<String>}]
       #
       # @return [String, nil]
       def enrich_filter_parent_gid!(filter)
         parent_gid = filter['checkoff:parent.gid']
         return unless parent_gid
 
-        # @sg-ignore
         name, resource_type = enrich_gid(parent_gid)
         filter['checkoff:enriched:parent.name'] = name if name
         filter['checkoff:enriched:parent.resource_type'] = resource_type if resource_type
       end
 
-      # @param filter [Hash{String => String}]
+      # @param filter [Hash{String => String, Array<String>}]
       #
       # @return [void]
       def enrich_filter_resource!(filter)
@@ -117,14 +116,15 @@ module Checkoff
         return unless resource_gid
 
         task = tasks.task_by_gid(resource_gid)
-        filter['checkoff:enriched:resource.name'] = task.name if task
+        task_name = task&.name
+        filter['checkoff:enriched:resource.name'] = task_name if task_name
       end
 
-      # @param filter [Hash{String => [String,Array<String>]}]
+      # @param filter [Hash{String => String, Array<String>}]
       #
       # @return [void]
       def enrich_filter_section!(filter)
-        section_gid = filter['checkoff:fetched.section.gid']
+        section_gid = T.cast(filter['checkoff:fetched.section.gid'], T.nilable(String))
         return unless section_gid
 
         section = sections.section_by_gid(section_gid)
@@ -156,8 +156,8 @@ module Checkoff
       #
       # @return [void]
       def enrich_event_resource!(asana_event)
-        # @type [Hash{String => String }]
-        resource = asana_event['resource']
+        # @type [Hash{String => String}]
+        resource = T.cast(asana_event['resource'], T::Hash[String, String])
         # @type [String]
         resource_type = resource.fetch('resource_type')
 

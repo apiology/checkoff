@@ -8,7 +8,7 @@ module Checkoff
     module Task
       # Base class to evaluate a task selector function given fully evaluated arguments
       class FunctionEvaluator < ::Checkoff::SelectorClasses::FunctionEvaluator
-        # @param selector [Array<(Symbol, Array)>,String]
+        # @param selector [Array(Symbol, Array), String]
         # @param tasks [Checkoff::Tasks]
         # @param timelines [Checkoff::Timelines]
         # @param custom_fields [Checkoff::CustomFields]
@@ -26,7 +26,7 @@ module Checkoff
 
         private
 
-        # @return [Array<(Symbol, Array)>]
+        # @return [Array(Symbol, Array)]
         attr_reader :selector
       end
     end

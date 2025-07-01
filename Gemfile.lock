@@ -9,6 +9,17 @@ GIT
       rexml (>= 3.3.9)
 
 GIT
+  remote: https://github.com/apiology/parlour.git
+  revision: 6a7d3a6ce34b784b44489cb96a0928708091c9cd
+  branch: fix_io_deadlock
+  specs:
+    parlour (9.1.0)
+      commander (~> 5.0)
+      parser
+      rainbow (~> 3.0)
+      sorbet-runtime (>= 0.5)
+
+GIT
   remote: https://github.com/apiology/ruby-asana
   revision: ab9393136d9ca59b75e42a661fdddc1c65c8f7c3
   branch: checkoff_fixes
@@ -25,6 +36,17 @@ GIT
   branch: fix_word_array_in_array_parsing
   specs:
     yard (0.9.37)
+
+PATH
+  remote: ../sord
+  specs:
+    sord (7.0.0)
+      commander (~> 5.0)
+      parlour (~> 9.1)
+      parser
+      rbs (>= 3.0, <= 4.0.0.dev.4)
+      sorbet-runtime
+      yard
 
 PATH
   remote: .
@@ -185,11 +207,6 @@ GEM
     observer (0.1.2)
     ostruct (0.6.2)
     parallel (1.27.0)
-    parlour (9.1.1)
-      commander (~> 5.0)
-      parser
-      rainbow (~> 3.0)
-      sorbet-runtime (>= 0.5)
     parser (3.3.8.0)
       ast (~> 2.4.1)
       racc
@@ -269,7 +286,7 @@ GEM
     simplecov-html (0.13.1)
     simplecov-lcov (0.8.0)
     simplecov_json_formatter (0.1.4)
-    solargraph (0.55.5)
+    solargraph (0.56.0)
       backport (~> 1.2)
       benchmark (~> 0.4)
       bundler (~> 2.0)
@@ -298,13 +315,6 @@ GEM
     sorbet-static-and-runtime (0.5.12214)
       sorbet (= 0.5.12214)
       sorbet-runtime (= 0.5.12214)
-    sord (7.0.0)
-      commander (~> 5.0)
-      parlour (~> 9.1)
-      parser
-      rbs (~> 3.0)
-      sorbet-runtime
-      yard
     source_finder (3.2.1)
     spoom (1.6.3)
       erubi (>= 1.10.0)
@@ -372,7 +382,7 @@ DEPENDENCIES
   minitest-reporters
   mocha (>= 2)
   overcommit!
-  parlour
+  parlour!
   pry
   punchlist (>= 1.3.1)
   rake
@@ -387,7 +397,7 @@ DEPENDENCIES
   simplecov (>= 0.18.0)
   simplecov-lcov
   solargraph (>= 0.51.2)
-  sord (>= 6.0.0)
+  sord!
   tapioca (>= 0.16.0)
   undercover (>= 0.6.3)
   webmock

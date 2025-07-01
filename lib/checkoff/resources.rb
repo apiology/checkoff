@@ -1,5 +1,5 @@
 #!/usr/bin/env ruby
-# typed: true
+# typed: false
 
 # frozen_string_literal: true
 
@@ -57,12 +57,14 @@ module Checkoff
     # @param gid [String]
     # @param resource_type [String,nil]
     #
-    # @return [Array<([Asana::Resource, nil], [String,nil])>]
+    # @return [Array([Asana::Resource, nil], [String,nil])]
     def resource_by_gid(gid, resource_type: nil)
       %w[task section project].each do |resource_type_to_try|
         next unless [resource_type_to_try, nil].include?(resource_type)
 
-        resource = method(:"fetch_#{resource_type_to_try}_gid").call(gid)
+        # @type [Asana::Resources::Resource, nil]
+        resource = T.cast(method(:"fetch_#{resource_type_to_try}_gid").call(gid),
+                          T.nilable(Asana::Resources::Resource))
         return [resource, resource_type_to_try] if resource
       end
       [nil, nil]

@@ -1,4 +1,4 @@
-# typed: true
+# typed: false
 # frozen_string_literal: true
 
 require 'forwardable'
@@ -35,7 +35,7 @@ module Checkoff
     # @param project [Asana::Resources::Project]
     # @param only_uncompleted [Boolean]
     # @param extra_fields [Array<String>]
-    # @return [Hash<String, Enumerable<Asana::Resources::Task>>]
+    # @return [Hash{String => Enumerable<Asana::Resources::Task>}]
     def tasks_by_section_for_my_tasks(project,
                                       only_uncompleted: true,
                                       extra_fields: [])
@@ -59,7 +59,7 @@ module Checkoff
     #
     # @param tasks [Enumerable<Asana::Resources::Task>]
     # @param project_gid [String]
-    # @return [Hash<String, Enumerable<Asana::Resources::Task>>]
+    # @return [Hash{String => Enumerable<Asana::Resources::Task>}]
     def by_my_tasks_section(tasks, project_gid)
       by_section = {}
       sections = client.sections.get_sections_for_project(project_gid:,

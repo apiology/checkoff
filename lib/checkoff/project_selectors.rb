@@ -20,7 +20,7 @@ module Checkoff
     LONG_CACHE_TIME = MINUTE * 15
     SHORT_CACHE_TIME = MINUTE
 
-    # @param config [Hash<Symbol, Object>,Checkoff::Internal::EnvFallbackConfigLoader]
+    # @param config [Hash{Symbol => Object}, Checkoff::Internal::EnvFallbackConfigLoader]
     # @param workspaces [Checkoff::Workspaces]
     # @param projects [Checkoff::Projects]
     # @param custom_fields [Checkoff::CustomFields]
@@ -42,13 +42,13 @@ module Checkoff
     end
 
     # @param [Asana::Resources::Project] project
-    # @param [Array<(Symbol, Array)>] project_selector Filter based on
+    # @param [Array(Symbol, Array)] project_selector Filter based on
     #        project details.  Examples: [:tag, 'foo'] [:not, [:tag, 'foo']] [:tag, 'foo']
     # @return [Boolean]
     def filter_via_project_selector(project, project_selector)
       evaluator = ProjectSelectorEvaluator.new(project:, projects:, custom_fields:,
                                                workspaces:, portfolios:)
-      evaluator.evaluate(project_selector)
+      !!evaluator.evaluate(project_selector)
     end
 
     private

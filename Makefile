@@ -40,7 +40,7 @@ sig/checkoff.rbs: yardoc.installed ## Generate RBS file
 	rm -f rbi/checkoff.rbs
 	bin/sord gen $(SORD_GEN_OPTIONS) sig/checkoff.rbs
 
-YARD_PLUGIN_OPTS = --plugin yard-sorbet
+YARD_PLUGIN_OPTS = --plugin yard-sorbet --plugin yard-solargraph
 
 YARD_OPTS = $(YARD_PLUGIN_OPTS) -c .yardoc --output-dir yardoc --backtrace
 
@@ -107,9 +107,9 @@ srb: build-typecheck ## Run Sorbet typechecker
 	bin/srb tc $(SORBET_TC_OPTIONS)
 
 solargraph: build-typecheck ## Run Solargraph typechecker
-	bin/solargraph typecheck --level strong
+	bin/solargraph typecheck --level strict
 
-typecheck: build-typecheck srb ## validate types in code and configuration
+typecheck: solargraph build-typecheck srb ## validate types in code and configuration
 	bin/overcommit_branch # ideally this would just run solargraph
 
 citypecheck: build-typecheck srb ## Run type check from CircleCI

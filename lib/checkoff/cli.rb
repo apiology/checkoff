@@ -32,9 +32,9 @@ module Checkoff
       @from_section_name = from_section_arg
     end
 
-    # @param to_project_arg [Symbol,String]
+    # @param to_project_arg [Symbol, String]
     #
-    # @return [String,Symbol]
+    # @return [String, Symbol]
     def create_to_project_name(to_project_arg)
       if to_project_arg == :source_project
         from_project_name
@@ -43,9 +43,9 @@ module Checkoff
       end
     end
 
-    # @param to_section_arg [Symbol,String,nil]
+    # @param to_section_arg [:source_section,String,nil]
     #
-    # @return [nil,String]
+    # @return [nil, String, Symbol]
     def create_to_section_name(to_section_arg)
       if to_section_arg == :source_section
         from_section_name
@@ -83,6 +83,7 @@ module Checkoff
       @logger = logger
     end
 
+    # @return [void]
     def move_tasks(tasks, to_project, to_section)
       tasks.each do |task|
         # a. check if already in correct project and section (future)
@@ -119,6 +120,8 @@ module Checkoff
                 :to_workspace_name, :to_project_name, :to_section_name,
                 :projects, :sections
 
+    # @param project_arg [String]
+    # @return [Symbol, String]
     def project_arg_to_name(project_arg)
       if project_arg.start_with? ':'
         project_arg[1..].to_sym
@@ -130,6 +133,10 @@ module Checkoff
 
   # CLI subcommand that shows tasks in JSON form
   class ViewSubcommand
+    # @param workspace_name [String]
+    # @param project_name [String, Symbol]
+    # @param section_name [String, Symbol, nil]
+    # @param task_name [String, Symbol, nil]
     def initialize(workspace_name, project_name, section_name,
                    task_name,
                    config: Checkoff::Internal::ConfigLoader.load(:asana),
@@ -160,6 +167,7 @@ module Checkoff
 
     private
 
+    # @param project_name [String]
     def validate_and_assign_project_name(project_name)
       @project_name = if project_name.start_with? ':'
                         project_name[1..].to_sym
@@ -177,6 +185,7 @@ module Checkoff
       tasks_by_section.to_json
     end
 
+    # @return [String]
     def run_on_section(workspace, project, section)
       section = nil if section == ''
       tasks = sections.tasks(workspace, project, section) || []
@@ -189,6 +198,7 @@ module Checkoff
       task_to_hash(task).to_json
     end
 
+    # @param task [Asana::Resources::Task]
     def task_to_hash(task)
       task_out = {
         name: task.name,
@@ -201,6 +211,8 @@ module Checkoff
       task_out
     end
 
+    # @param tasks [Enumerable<Asana::Resources::Task>]
+    # @return [Array<Hash>]
     def tasks_to_hash(tasks)
       tasks.map { |task| task_to_hash(task) }
     end
@@ -210,6 +222,8 @@ module Checkoff
 
   # CLI subcommand that creates a task
   class QuickaddSubcommand
+    # @param workspace_name [String]
+    # @param task_name [String]
     def initialize(workspace_name, task_name,
                    config: Checkoff::Internal::ConfigLoader.load(:asana),
                    workspaces: Checkoff::Workspaces.new(config:),

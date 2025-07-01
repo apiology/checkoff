@@ -37,6 +37,8 @@
 #       class Task
 #         # @return [String]
 #         def resource_subtype; end
+#         # @return [Asana::Resources::Section, nil]
+#         def assignee_section; end
 #         # @return [Boolean,nil]
 #         def is_rendered_as_separator; end
 #         # @return [String,nil]

@@ -3,6 +3,8 @@
 require 'sorbet-runtime'
 
 # @!parse
+#   require 'sorbet-runtime'
+#
 #   module T
 #     class Struct
 #       extend T::Props::ClassMethods

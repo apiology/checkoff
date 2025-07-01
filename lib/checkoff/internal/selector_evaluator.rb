@@ -4,8 +4,8 @@
 module Checkoff
   # Base class to evaluate Asana resource selectors against an Asana resource
   class SelectorEvaluator
-    # @param selector [Array]
-    # @return [Boolean, Object, nil]
+    # @param selector [Symbol, Array<Symbol, Integer, Array>]
+    # @return [Boolean, Object, Array, nil]
     def evaluate(selector)
       return true if selector.empty?
 

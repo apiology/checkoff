@@ -20,7 +20,7 @@ module Checkoff
     LONG_CACHE_TIME = MINUTE * 15
     SHORT_CACHE_TIME = MINUTE
 
-    # @param config [Hash<Symbol, Object>,Checkoff::Internal::EnvFallbackConfigLoader]
+    # @param config [Hash{Symbol => Object}, Checkoff::Internal::EnvFallbackConfigLoader]
     # @param workspaces [Checkoff::Workspaces]
     # @param sections [Checkoff::Sections]
     # @param custom_fields [Checkoff::CustomFields]
@@ -39,14 +39,14 @@ module Checkoff
     end
 
     # @param [Asana::Resources::Section] section
-    # @param [Array<(Symbol, Array)>] section_selector Filter based on
+    # @param [Array(Symbol, Array)] section_selector Filter based on
     #        section details.  Examples: [:tag, 'foo'] [:not, [:tag, 'foo']] [:tag, 'foo']
     # @return [Boolean]
     def filter_via_section_selector(section, section_selector)
       # @sg-ignore
       evaluator = SectionSelectorEvaluator.new(section:, sections:, custom_fields:,
                                                client:)
-      evaluator.evaluate(section_selector)
+      !!evaluator.evaluate(section_selector)
     end
 
     private

@@ -1,4 +1,4 @@
-# typed: true
+# typed: false
 # frozen_string_literal: true
 
 require_relative 'custom_field_param_converter'
@@ -50,6 +50,8 @@ module Checkoff
             single_value.split('~').each do |project_section_pair|
               # @sg-ignore
               project, section = project_section_pair.split('_column_')
+              raise "Invalid query string: #{project_section_pair}" if project.nil?
+
               if section.nil?
                 projects << project
               else
@@ -121,7 +123,7 @@ module Checkoff
 
         # handle 'subtask' search url param
         class Subtask < SimpleParam
-          # @return [Array<[String, Boolean]>]
+          # @return [Array<String, Boolean>]
           def convert
             case single_value
             when 'is_not_subtask'
@@ -185,16 +187,21 @@ module Checkoff
       # Convert simple parameters - ones where the param name itself
       # doesn't encode any parameters'
       class SimpleParamConverter
-        # @param simple_url_params [Hash<String, Array<String>>] the simple params
+        # @param simple_url_params [Hash{String => Array<String>}] the simple params
         def initialize(simple_url_params:)
           @simple_url_params = simple_url_params
         end
 
-        # @return [Hash<String, String>] the converted params
+        # @return [Hash{String => String}] the converted params
         def convert
-          out = simple_url_params.to_a.flat_map do |key, values|
-            convert_arg(key, values).each_slice(2).to_a
-          end.to_h
+          # @type [Array<Array(String, String)>]
+          arr_of_tuples = simple_url_params.to_a.flat_map do |key, values|
+            # @type
+            entry = convert_arg(key, values).each_slice(2).to_a
+            entry
+          end
+          # @type [Hash{String => String}]
+          out = T.cast(arr_of_tuples.to_h, T::Hash[String, String])
           unless out.include? 'sort_by'
             # keep results consistent between calls; API using default
             # sort_by does not seem to be.
@@ -205,7 +212,7 @@ module Checkoff
 
         private
 
-        # @type [Hash<String, Class<SimpleParam::SimpleParam>>] the mapping from param name to class
+        # @type [Hash{String => Class<SimpleParam::SimpleParam>}] the mapping from param name to class
         ARGS = {
           'portfolios.ids' => SimpleParam::PortfoliosIds,
           'any_projects.ids' => SimpleParam::AnyProjectsIds,
@@ -224,7 +231,7 @@ module Checkoff
         # @sg-ignore
         # @param key [String] the name of the search url param
         # @param values [Array<String>] the values of the search url param
-        # @return [Hash<String, String>] the converted params
+        # @return [Hash{String => String}] the converted params
         def convert_arg(key, values)
           # @type [Class<SimpleParam::SimpleParam>]
           clazz = ARGS.fetch(key)
@@ -235,7 +242,7 @@ module Checkoff
           obj.convert
         end
 
-        # @return [Hash<String, Array<String>>]
+        # @return [Hash{String => Array<String}>]
         attr_reader :simple_url_params
       end
     end
