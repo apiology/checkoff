@@ -34,7 +34,7 @@ Minitest::Reporters.use! [Minitest::Reporters::DefaultReporter.new(location: tru
 require 'ostruct'
 require_relative 'cachemethoddouble'
 ENV['LOG_LEVEL'] = 'WARN'
-ENV['TZ'] = 'US/Eastern'
+ENV['TZ'] = 'America/New_York'
 require_relative '../../lib/checkoff'
 
 def let_single_mock(mock_sym)

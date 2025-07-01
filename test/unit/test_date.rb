@@ -55,7 +55,7 @@ module TestDate
 
   def mock_now
     zone = Time.now.zone
-    zone = 'US/Eastern' if %w[EST EDT].include? zone
+    zone = 'America/New_York' if %w[EST EDT].include? zone
     mock_now_with_zone(zone)
   end
 end
