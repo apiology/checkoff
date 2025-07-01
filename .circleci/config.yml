@@ -78,7 +78,6 @@ commands:
             PATH="$(pwd)/bin:${PATH}"
             export PATH
 
-            rm yardoc.installed
             './fix.sh'
       - store_artifacts:
           path: /tmp/fix_sh_timing.log
@@ -258,6 +257,14 @@ jobs:
       - run_with_languages:
           label: Test
           command: |
+            # Some unit tests depend on America/New_York timezone.
+
+            # https://stackoverflow.com/questions/44331836/apt-get-install-tzdata-noninteractive
+            sudo ln -fs /usr/share/zoneinfo/America/New_York /etc/localtime
+            sudo DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends tzdata
+            export TZ=America/New_York
+            date
+
             make citest cicoverage
     # This seemed to shave 5ish% of the build time off when added
     resource_class: large
