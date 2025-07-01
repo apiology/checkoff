@@ -78,7 +78,6 @@ commands:
             PATH="$(pwd)/bin:${PATH}"
             export PATH
 
-            rm yardoc.installed
             './fix.sh'
       - store_artifacts:
           path: /tmp/fix_sh_timing.log
