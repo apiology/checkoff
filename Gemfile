@@ -44,7 +44,7 @@ group :development do
   gem 'rubocop-performance'
   gem 'rubocop-rake'
   gem 'rubocop-yard'
-  gem 'solargraph', ['>=0.51.2']
+  gem 'solargraph', ['>=0.56']
   gem 'yard',
       git: 'https://github.com/apiology/yard',
       branch: 'fix_word_array_in_array_parsing'
