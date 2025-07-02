@@ -54,6 +54,7 @@ PreCommit:
       # don't freak out over line below
       - '.overcommit.yml'
     keywords: ['BROKEN', 'BUG', 'FIXME', 'HACK', 'OPTIMIZE', 'REVIEW', 'TODO', 'WTF', 'XXX']
+    problem_on_unmodified_line: warn
   PythonFlake8:
     enabled: true
     on_warn: fail

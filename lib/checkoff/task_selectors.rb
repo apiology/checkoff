@@ -79,6 +79,7 @@ module Checkoff
       # @return [Array(Symbol, Array)]
       def task_selector
         task_selector_json = ARGV[2] || raise('Please pass task_selector in JSON form as third argument')
+
         # @return [Symbol, Array]
         T.cast(JSON.parse(task_selector_json), [Symbol, Array])
       end
