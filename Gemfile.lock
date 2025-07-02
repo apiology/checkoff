@@ -267,6 +267,10 @@ GEM
     rubocop-rspec (3.6.0)
       lint_roller (~> 1.1)
       rubocop (~> 1.72, >= 1.72.1)
+    rubocop-yard (1.0.0)
+      lint_roller
+      rubocop (~> 1.72)
+      yard
     ruby-progressbar (1.13.0)
     ruby2_keywords (0.0.5)
     ruby_parser (3.21.1)
@@ -390,6 +394,7 @@ DEPENDENCIES
   rubocop-performance
   rubocop-rake
   rubocop-rspec (>= 3.4.0)
+  rubocop-yard
   simplecov (>= 0.18.0)
   simplecov-lcov
   solargraph (>= 0.51.2)

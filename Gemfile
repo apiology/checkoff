@@ -45,6 +45,7 @@ group :development do
   gem 'rubocop-rake'
   # ensure version with RSpec/VerifiedDoubleReference
   gem 'rubocop-rspec', ['>=3.4.0']
+  gem 'rubocop-yard'
   gem 'solargraph', ['>=0.51.2']
   gem 'yard',
       git: 'https://github.com/apiology/yard',

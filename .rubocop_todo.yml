@@ -94,3 +94,9 @@ Performance/InefficientHashSearch:
 Performance/RedundantEqualityComparisonBlock:
   Exclude:
     - 'lib/checkoff/internal/selector_classes/task.rb'
+
+# Offense count: 4
+YARD/TagTypeSyntax:
+  Exclude:
+    - 'lib/checkoff/internal/asana_event_enrichment.rb'
+    - 'lib/checkoff/resources.rb'
