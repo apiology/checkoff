@@ -42,7 +42,7 @@ sig/checkoff.rbs: yardoc.installed ## Generate RBS file
 
 YARD_PLUGIN_OPTS = --plugin yard-sorbet --plugin yard-solargraph
 
-YARD_OPTS = $(YARD_PLUGIN_OPTS) -c .yardoc --output-dir yardoc --backtrace
+YARD_OPTS = $(YARD_PLUGIN_OPTS) -c .yardoc --output-dir yardoc --backtrace  --exclude '^config/'
 
 types.installed: tapioca.installed Gemfile.lock Gemfile.lock.installed rbi/checkoff.rbi sorbet/tapioca/require.rb sorbet/config ## Ensure typechecking dependencies are in place
 	bin/yard gems $(YARD_PLUGIN_OPTS) 2>&1 || bin/yard gems --safe $(YARD_PLUGIN_OPTS) 2>&1 || bin/yard gems $(YARD_PLUGIN_OPTS) 2>&1
@@ -88,7 +88,7 @@ docs: ## Generate YARD documentation
 
 clean-typecheck: ## Refresh the easily-regenerated information that type checking depends on
 	bin/solargraph clear || true
-	rm -fr .yardoc/ rbi/checkoff.rbi types.installed yardoc.installed || true
+	rm -fr .yardoc/ rbi/checkoff.rbi types.installed yardoc.installed sig/checkoff.rbs || true
 	rm -fr ../checkoff/.yardoc || true
 	echo all clear
 
@@ -106,13 +106,20 @@ SORBET_TC_OPTIONS = --suppress-error-code 4010 # --suppress-error-code 4002
 srb: build-typecheck ## Run Sorbet typechecker
 	bin/srb tc $(SORBET_TC_OPTIONS)
 
-solargraph: build-typecheck ## Run Solargraph typechecker
+solargraph: solargraph-strict ## Run Solargraph typechecker
+
+solargraph-normal: build-typecheck ## Run Solargraph typechecker
+	bin/solargraph typecheck --level normal
+
+solargraph-typed: build-typecheck ## Run Solargraph typechecker
+	bin/solargraph typecheck --level typed
+
+solargraph-strict: build-typecheck ## Run Solargraph typechecker
 	bin/solargraph typecheck --level strict
 
 typecheck: build-typecheck srb solargraph  ## validate types in code and configuration
 
-citypecheck: build-typecheck srb ## Run type check from CircleCI
-	# overcommit_branch gets run in quality chain for solargraph
+citypecheck: build-typecheck srb solargraph  ## Run type check from CircleCI
 
 typecoverage: typecheck ## Run type checking and then ratchet coverage in metrics/
 

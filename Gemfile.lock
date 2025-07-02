@@ -393,7 +393,7 @@ DEPENDENCIES
   rubocop-yard
   simplecov (>= 0.18.0)
   simplecov-lcov
-  solargraph (>= 0.51.2)
+  solargraph (>= 0.56)
   sord!
   tapioca (>= 0.16.0)
   undercover (>= 0.6.3)
