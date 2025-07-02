@@ -242,7 +242,7 @@ module Checkoff
           obj.convert
         end
 
-        # @return [Hash{String => Array<String}>]
+        # @return [Hash{String => Array<String>}]
         attr_reader :simple_url_params
       end
     end

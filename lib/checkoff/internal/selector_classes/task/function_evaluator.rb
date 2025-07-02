@@ -12,6 +12,7 @@ module Checkoff
         # @param tasks [Checkoff::Tasks]
         # @param timelines [Checkoff::Timelines]
         # @param custom_fields [Checkoff::CustomFields]
+        # @param _kwargs [Hash]
         def initialize(selector:,
                        tasks:,
                        timelines:,

@@ -9,14 +9,17 @@ module Overcommit
     module PreCommit
       # CircleCI plugin for Overcommit to validate config file (.circleci/config.yml)
       class CircleCi < Base
-        # @return [Symbol, Array<[Symbol, String]>]
+        # @return [Symbol, Array<Symbol, String>]
         def run
           result = execute(command)
+          # @sg-ignore
           return :pass if result.success?
 
+          # @sg-ignore
           if result.success?
             :pass
           else
+            # @sg-ignore
             [:fail, result.stderr]
           end
         end

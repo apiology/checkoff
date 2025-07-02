@@ -23,12 +23,13 @@
 #       def users; end
 #       # @return [Asana::ProxiedResourceClasses::CustomField]
 #       def custom_fields; end
-#       # Public: Performs a GET request against an arbitrary Asana URL. Allows for
+#
+#       # Performs a GET request against an arbitrary Asana URL. Allows for
 #       # the user to interact with the API in ways that haven't been
 #       # reflected/foreseen in this library.
 #       #
-#       # @param url [String] the URL to GET
 #       # @param args [Object] the request I/O options
+#       # @param url [String]
 #       # @return [Asana::HttpClient::Response]
 #       def get(url, **args); end
 #     end
@@ -49,6 +50,8 @@
 #         def name; end
 #         # @return [Hash<String, String>, nil]
 #         def assignee; end
+#         # @return [Hash, Asana::Resources::Section]
+#         def assignee_section; end
 #         # @return [String, nil]
 #         def html_notes; end
 #         # @return [Array<Hash{String => Hash{String => String}}>]

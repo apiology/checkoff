@@ -13,6 +13,7 @@ module Checkoff
     # @param projects [Checkoff::Projects]
     # @param sections [Checkoff::Sections]
     # @param custom_fields [Checkoff::CustomFields]
+    # @param _kwargs [Hash]
     def initialize(section:,
                    client:,
                    projects: Checkoff::Projects.new(client:),

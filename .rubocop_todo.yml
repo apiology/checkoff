@@ -94,11 +94,3 @@ Performance/InefficientHashSearch:
 Performance/RedundantEqualityComparisonBlock:
   Exclude:
     - 'lib/checkoff/internal/selector_classes/task.rb'
-
-# Offense count: 5
-# Configuration parameters: AllowedMethods, RequireForNonPublicMethods.
-Style/DocumentationMethod:
-  Exclude:
-    - 'spec/**/*'
-    - 'test/**/*'
-    - 'lib/checkoff/cli.rb'

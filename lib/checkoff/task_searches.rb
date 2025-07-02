@@ -151,7 +151,6 @@ module Checkoff
     # @param [String] workspace_gid
     # @param [String] url
     # @param [Array<String>] extra_fields
-    # @param [Boolean] fetch_all Ensure all results are provided by manually paginating
     #
     # @return [Enumerable<Asana::Resources::Task>]
     def iterated_raw_task_search(api_params, workspace_gid:, extra_fields:)

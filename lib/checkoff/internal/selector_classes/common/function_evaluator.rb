@@ -10,6 +10,7 @@ module Checkoff
       class FunctionEvaluator < ::Checkoff::SelectorClasses::FunctionEvaluator
         # @param selector [Array(Symbol, Array), String]
         # @param custom_fields [Checkoff::CustomFields]
+        # @param _kwargs [Hash]
         def initialize(selector:, custom_fields:, **_kwargs)
           @selector = selector
           @custom_fields = custom_fields

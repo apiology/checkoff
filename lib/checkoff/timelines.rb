@@ -47,7 +47,6 @@ module Checkoff
 
     # @param task [Asana::Resources::Task]
     # @param limit_to_portfolio_gid [String, nil]
-    # @param project_name [String]
     def task_dependent_on_previous_section_last_milestone?(task, limit_to_portfolio_gid: nil)
       task_data = @tasks.task_to_h(task)
       # @sg-ignore

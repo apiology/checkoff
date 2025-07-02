@@ -93,7 +93,7 @@ module Checkoff
     end
 
     # @sg-ignore
-    # @param project [Asana::Resources::Task,Asana::Resources::Project]
+    # @param resource [Asana::Resources::Task,Asana::Resources::Project]
     # @param custom_field_name [String]
     # @return [Hash, nil]
     def resource_custom_field_by_name(resource, custom_field_name)

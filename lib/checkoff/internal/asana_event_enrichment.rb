@@ -22,7 +22,6 @@ module Checkoff
       # @param resources [Checkoff::Resources]
       # @param clients [Checkoff::Clients]
       # @param client [Asana::Client]
-      # @param asana_event_enrichment [Checkoff::Internal::AsanaEventEnrichment]
       def initialize(config: Checkoff::Internal::ConfigLoader.load(:asana),
                      workspaces: Checkoff::Workspaces.new(config:),
                      tasks: Checkoff::Tasks.new(config:),

@@ -12,6 +12,7 @@ module Checkoff
         # @param projects [Checkoff::Projects]
         # @param portfolios [Checkoff::Portfolios]
         # @param workspaces [Checkoff::Workspaces]
+        # @param _kwargs [Hash]
         def initialize(selector:,
                        projects:,
                        portfolios:,
