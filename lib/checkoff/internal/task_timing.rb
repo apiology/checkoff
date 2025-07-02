@@ -30,7 +30,6 @@ module Checkoff
       end
 
       # @param task [Asana::Resources::Task]
-      # @param field_name [Symbol]
       #
       # @sg-ignore
       # @return [Date, Time, nil]
@@ -43,7 +42,6 @@ module Checkoff
       end
 
       # @param task [Asana::Resources::Task]
-      # @param field_name [Symbol]
       #
       # @sg-ignore
       # @return [Date, Time, nil]

@@ -25,6 +25,7 @@ module Checkoff
     # @param [Asana::Client] client
     # @param [Checkoff::Tasks] tasks
     # @param [Checkoff::Timelines] timelines
+    # @param [Checkoff::CustomFields] custom_fields
     def initialize(config: Checkoff::Internal::ConfigLoader.load(:asana),
                    client: Checkoff::Clients.new(config:).client,
                    tasks: Checkoff::Tasks.new(config:,

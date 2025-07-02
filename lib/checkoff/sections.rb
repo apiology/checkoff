@@ -265,7 +265,7 @@ module Checkoff
     # Given a list of tasks, pull a Hash of tasks with section name -> task list
     # @param tasks [Enumerable<Asana::Resources::Task>]
     # @param project_gid [String]
-    # @return [Hash{String,nil => Enumerable<Asana::Resources::Task}>]
+    # @return [Hash{String, nil => Enumerable<Asana::Resources::Task>}]
     def by_section(tasks, project_gid)
       by_section = {}
       # @sg-ignore

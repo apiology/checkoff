@@ -20,7 +20,6 @@ module Checkoff
       end
 
       # @param project [Asana::Resources::Project]
-      # @param field_name [Symbol]
       #
       # @sg-ignore
       # @return [Date, nil]
@@ -31,7 +30,6 @@ module Checkoff
       end
 
       # @param project [Asana::Resources::Project]
-      # @param field_name [Symbol]
       #
       # @sg-ignore
       # @return [Date, nil]

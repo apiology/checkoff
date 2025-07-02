@@ -43,7 +43,7 @@ module Checkoff
       end
     end
 
-    # @param to_section_arg [:source_section,String,nil]
+    # @param to_section_arg [Symbol, String, nil] :source_section
     #
     # @return [nil, String, Symbol]
     def create_to_section_name(to_section_arg)
@@ -54,6 +54,10 @@ module Checkoff
       end
     end
 
+    # @param to_workspace_arg [Symbol, String]
+    # @param to_project_arg [Symbol, String]
+    # @param to_section_arg [Symbol, String, nil] :source_section
+    # @return [void]
     def validate_and_assign_to_location(to_workspace_arg, to_project_arg, to_section_arg)
       @to_workspace_name = to_workspace_arg
       @to_workspace_name = from_workspace_name if to_workspace_arg == :source_workspace
@@ -65,6 +69,17 @@ module Checkoff
       raise NotImplementedError, 'Not implemented: Teach me how to move tasks between workspaces'
     end
 
+    # @param from_workspace_arg [Symbol, String]
+    # @param from_project_arg [Symbol, String]
+    # @param from_section_arg [nil, String]
+    # @param to_workspace_arg [Symbol, String]
+    # @param to_project_arg [Symbol, String]
+    # @param to_section_arg [Symbol, String, nil] :source_section
+    # @param config [Checkoff::Internal::EnvFallbackConfigLoader, Hash]
+    # @param projects [Checkoff::Projects]
+    # @param sections [Checkoff::Sections]
+    # @param logger [IO]
+    # @return [void]
     def initialize(from_workspace_arg:,
                    from_project_arg:,
                    from_section_arg:,
@@ -83,6 +98,9 @@ module Checkoff
       @logger = logger
     end
 
+    # @param tasks [Enumerable<Asana::Resources::Task>]
+    # @param to_project [Asana::Resources::Project]
+    # @param to_section [Asana::Resources::Section]
     # @return [void]
     def move_tasks(tasks, to_project, to_section)
       tasks.each do |task|
@@ -93,6 +111,10 @@ module Checkoff
       end
     end
 
+    # @param from_workspace_name [String]
+    # @param from_project_name [String, Symbol]
+    # @param from_section_name [String, Symbol]
+    # @return [Enumerable<Asana::Resources::Task>]
     def fetch_tasks(from_workspace_name, from_project_name, from_section_name)
       if from_section_name == :all_sections
         raise NotImplementedError, 'Not implemented: Teach me how to move all sections of a project'
@@ -101,6 +123,7 @@ module Checkoff
       sections.tasks(from_workspace_name, from_project_name, from_section_name)
     end
 
+    # @return [void]
     def run
       # 0. Look up project and section gids
       to_project = projects.project_or_raise(to_workspace_name, to_project_name)
@@ -137,6 +160,11 @@ module Checkoff
     # @param project_name [String, Symbol]
     # @param section_name [String, Symbol, nil]
     # @param task_name [String, Symbol, nil]
+    # @param config [Checkoff::Internal::EnvFallbackConfigLoader, Hash]
+    # @param projects [Checkoff::Projects]
+    # @param sections [Checkoff::Sections]
+    # @param tasks [Checkoff::Tasks]
+    # @param stderr [IO]
     def initialize(workspace_name, project_name, section_name,
                    task_name,
                    config: Checkoff::Internal::ConfigLoader.load(:asana),
@@ -155,6 +183,7 @@ module Checkoff
       @tasks = tasks
     end
 
+    # @return [void]
     def run
       if section_name.nil?
         run_on_project(workspace_name, project_name)
@@ -168,6 +197,7 @@ module Checkoff
     private
 
     # @param project_name [String]
+    # @return [String, Symbol]
     def validate_and_assign_project_name(project_name)
       @project_name = if project_name.start_with? ':'
                         project_name[1..].to_sym
@@ -176,6 +206,9 @@ module Checkoff
                       end
     end
 
+    # @param workspace [String, Symbol]
+    # @param project [String, Symbol]
+    # @return [String]
     def run_on_project(workspace, project)
       tasks_by_section =
         sections.tasks_by_section(workspace, project)
@@ -185,6 +218,9 @@ module Checkoff
       tasks_by_section.to_json
     end
 
+    # @param workspace [String, Symbol]
+    # @param project [String, Symbol]
+    # @param section [String, Symbol, nil]
     # @return [String]
     def run_on_section(workspace, project, section)
       section = nil if section == ''
@@ -192,6 +228,11 @@ module Checkoff
       tasks_to_hash(tasks).to_json
     end
 
+    # @param workspace [String, Symbol]
+    # @param project [String, Symbol]
+    # @param section [String, Symbol, nil]
+    # @param task_name [String]
+    # @return [String]
     def run_on_task(workspace, project, section, task_name)
       section = nil if section == ''
       task = tasks.task(workspace, project, task_name, section_name: section)
@@ -199,6 +240,7 @@ module Checkoff
     end
 
     # @param task [Asana::Resources::Task]
+    # @return [Hash{Symbol => undefined}]
     def task_to_hash(task)
       task_out = {
         name: task.name,
@@ -224,6 +266,9 @@ module Checkoff
   class QuickaddSubcommand
     # @param workspace_name [String]
     # @param task_name [String]
+    # @param config [Internal::EnvFallbackConfigLoader, Hash]
+    # @param workspaces [Checkoff::Workspaces]
+    # @param tasks [Checkoff::Tasks]
     def initialize(workspace_name, task_name,
                    config: Checkoff::Internal::ConfigLoader.load(:asana),
                    workspaces: Checkoff::Workspaces.new(config:),
@@ -234,6 +279,7 @@ module Checkoff
       @tasks = tasks
     end
 
+    # @return [void]
     def run
       workspace = @workspaces.workspace_or_raise(workspace_name)
       @tasks.add_task(task_name,

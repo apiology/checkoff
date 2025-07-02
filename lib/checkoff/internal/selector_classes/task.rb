@@ -298,9 +298,8 @@ module Checkoff
         end
 
         # @param task [Asana::Resources::Task]
-        # @param project_name [String]
         # @param limit_to_portfolio_gid [String, nil] If specified,
-        # only projects in this portfolio will be evaluated.
+        #   only projects in this portfolio will be evaluated.
         #
         # @return [Boolean]
         def evaluate(task, limit_to_portfolio_gid: nil)
