@@ -264,9 +264,6 @@ GEM
     rubocop-rake (0.7.1)
       lint_roller (~> 1.1)
       rubocop (>= 1.72.1)
-    rubocop-rspec (3.6.0)
-      lint_roller (~> 1.1)
-      rubocop (~> 1.72, >= 1.72.1)
     rubocop-yard (1.0.0)
       lint_roller
       rubocop (~> 1.72)
@@ -393,7 +390,6 @@ DEPENDENCIES
   rubocop-minitest
   rubocop-performance
   rubocop-rake
-  rubocop-rspec (>= 3.4.0)
   rubocop-yard
   simplecov (>= 0.18.0)
   simplecov-lcov
