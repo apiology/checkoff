@@ -126,7 +126,7 @@ commands:
             then
               bundle exec overcommit --run
             else
-              bundle exec bin/overcommit_branch
+              bundle exec overcommit --run --diff origin/main
             fi
       - run_with_languages:
           label: Run brakeman
