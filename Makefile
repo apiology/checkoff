@@ -109,8 +109,7 @@ srb: build-typecheck ## Run Sorbet typechecker
 solargraph: build-typecheck ## Run Solargraph typechecker
 	bin/solargraph typecheck --level strict
 
-typecheck: solargraph build-typecheck srb ## validate types in code and configuration
-	bin/overcommit_branch # ideally this would just run solargraph
+typecheck: build-typecheck srb solargraph  ## validate types in code and configuration
 
 citypecheck: build-typecheck srb ## Run type check from CircleCI
 	# overcommit_branch gets run in quality chain for solargraph
@@ -162,10 +161,10 @@ clean: clear_metrics clean-typecoverage clean-typecheck clean-coverage ## remove
 citest: test ## Run unit tests from CircleCI
 
 overcommit: ## run precommit quality checks
-	bin/overcommit_branch
+	bundle exec overcommit --run
 
 overcommit_branch: ## run precommit quality checks only on changed files
-	@bin/overcommit_branch
+	bundle exec overcommit --run --diff origin/main
 
 quality: overcommit ## run precommit quality checks
 
