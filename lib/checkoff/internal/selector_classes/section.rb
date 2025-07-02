@@ -1,4 +1,4 @@
-# typed: false
+# typed: true
 # frozen_string_literal: true
 
 require_relative 'section/function_evaluator'
@@ -24,7 +24,7 @@ module Checkoff
                                          per_page: 100,
                                          options: { fields: ['resource_subtype'] })
           # @sg-ignore
-          tasks.last&.resource_subtype == 'milestone'
+          T.unsafe(tasks).last&.resource_subtype == 'milestone'
         end
       end
 

@@ -615,7 +615,7 @@ MIME::Type::I18N_RE = T.let(T.unsafe(nil), Regexp)
 # Reflects a MIME content-type specification that is not correctly
 # formatted (it isn't +type+/+subtype+).
 #
-# source://mime-types//lib/mime/type.rb#71
+# source://mime-types//lib/mime/type.rb#70
 class MIME::Type::InvalidContentType < ::ArgumentError
   # :stopdoc:
   #
@@ -630,7 +630,7 @@ end
 
 # Reflects an unsupported MIME encoding.
 #
-# source://mime-types//lib/mime/type.rb#84
+# source://mime-types//lib/mime/type.rb#83
 class MIME::Type::InvalidEncoding < ::ArgumentError
   # :stopdoc:
   #
@@ -1024,7 +1024,7 @@ class MIME::Types::Container
   # source://mime-types//lib/mime/types/container.rb#15
   def initialize(hash = T.unsafe(nil)); end
 
-  # source://forwardable/1.3.2/forwardable.rb#229
+  # source://forwardable/1.3.3/forwardable.rb#231
   def ==(*args, **_arg1, &block); end
 
   # source://mime-types//lib/mime/types/container.rb#20
@@ -1036,28 +1036,28 @@ class MIME::Types::Container
   # source://mime-types//lib/mime/types/container.rb#61
   def add(key, value); end
 
-  # source://forwardable/1.3.2/forwardable.rb#229
+  # source://forwardable/1.3.3/forwardable.rb#231
   def count(*args, **_arg1, &block); end
 
-  # source://forwardable/1.3.2/forwardable.rb#229
+  # source://forwardable/1.3.3/forwardable.rb#231
   def each(*args, **_arg1, &block); end
 
-  # source://forwardable/1.3.2/forwardable.rb#229
+  # source://forwardable/1.3.3/forwardable.rb#231
   def each_value(*args, **_arg1, &block); end
 
-  # source://forwardable/1.3.2/forwardable.rb#229
+  # source://forwardable/1.3.3/forwardable.rb#231
   def empty?(*args, **_arg1, &block); end
 
   # source://mime-types//lib/mime/types/container.rb#73
   def encode_with(coder); end
 
-  # source://forwardable/1.3.2/forwardable.rb#229
+  # source://forwardable/1.3.3/forwardable.rb#231
   def flat_map(*args, **_arg1, &block); end
 
   # source://mime-types//lib/mime/types/container.rb#77
   def init_with(coder); end
 
-  # source://forwardable/1.3.2/forwardable.rb#229
+  # source://forwardable/1.3.3/forwardable.rb#231
   def keys(*args, **_arg1, &block); end
 
   # source://mime-types//lib/mime/types/container.rb#65
@@ -1072,13 +1072,13 @@ class MIME::Types::Container
   # source://mime-types//lib/mime/types/container.rb#38
   def merge!(other); end
 
-  # source://forwardable/1.3.2/forwardable.rb#229
+  # source://forwardable/1.3.3/forwardable.rb#231
   def select(*args, **_arg1, &block); end
 
   # source://mime-types//lib/mime/types/container.rb#46
   def to_hash; end
 
-  # source://forwardable/1.3.2/forwardable.rb#229
+  # source://forwardable/1.3.3/forwardable.rb#231
   def values(*args, **_arg1, &block); end
 
   protected

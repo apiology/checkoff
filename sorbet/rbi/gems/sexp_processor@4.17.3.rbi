@@ -410,7 +410,7 @@ end
 #   s(:a)     / s{ all(s(:a), s(:b)) }    #=> []
 #   s(:a, :b) / s{ t(:a) & include(:b)) } #=> [s(:a, :b)]
 #
-# source://sexp_processor//lib/sexp_matcher.rb#649
+# source://sexp_processor//lib/sexp_matcher.rb#647
 class Sexp::All < ::Sexp::Matcher
   # Create an All matcher which will match all of the +options+.
   #
@@ -451,7 +451,7 @@ end
 #   s(:a) / s{     s(:a) | s(:b) } #=> [s(:a)] # same thing via |
 #   s(:a) / s{ any(s(:b), s(:c)) } #=> []
 #
-# source://sexp_processor//lib/sexp_matcher.rb#600
+# source://sexp_processor//lib/sexp_matcher.rb#598
 class Sexp::Any < ::Sexp::Matcher
   # Create an Any matcher which will match any of the +options+.
   #
@@ -489,7 +489,7 @@ end
 #   s(:a)        / s{ s(atom) } #=> [s(:a)]
 #   s(:a, s(:b)) / s{ s(atom) } #=> [s(:b)]
 #
-# source://sexp_processor//lib/sexp_matcher.rb#792
+# source://sexp_processor//lib/sexp_matcher.rb#790
 class Sexp::Atom < ::Sexp::Matcher
   # source://sexp_processor//lib/sexp_matcher.rb#798
   def inspect; end
@@ -515,7 +515,7 @@ end
 #                                              s(s(:a)),
 #                                              s(:a)]
 #
-# source://sexp_processor//lib/sexp_matcher.rb#746
+# source://sexp_processor//lib/sexp_matcher.rb#744
 class Sexp::Child < ::Sexp::Matcher
   # Create a Child matcher which will match anything having a
   # descendant matching +child+.
@@ -555,7 +555,7 @@ end
 #   s(:a, :b)   / s{ include(:b) } #=> [s(:a, :b)]
 #   s(s(s(:a))) / s{ include(:a) } #=> [s(:a)]
 #
-# source://sexp_processor//lib/sexp_matcher.rb#940
+# source://sexp_processor//lib/sexp_matcher.rb#938
 class Sexp::Include < ::Sexp::Matcher
   # Creates a Matcher which will match any Sexp that contains the
   # +value+.
@@ -614,7 +614,7 @@ end
 # For instance:
 #   res = s(:a, s(:b)) / s{ s(:a,_) } / s{ s(:b) }
 #
-# source://sexp_processor//lib/sexp_matcher.rb#1080
+# source://sexp_processor//lib/sexp_matcher.rb#1078
 class Sexp::MatchCollection < ::Array
   # See Traverse#search
   #
@@ -666,7 +666,7 @@ end
 #
 # If rdoc didn't suck, these would all be links.
 #
-# source://sexp_processor//lib/sexp_matcher.rb#250
+# source://sexp_processor//lib/sexp_matcher.rb#248
 class Sexp::Matcher < ::Sexp
   # Combines the Matcher with another Matcher, the resulting one will
   # be satisfied only if both Matchers would be satisfied.
@@ -973,7 +973,7 @@ end
 #   s(:a)         / s{ s(:a, ___ ) } #=> [s(:a)]
 #   s(:a, :b, :c) / s{ s(:a, ___ ) } #=> [s(:a, :b, :c)]
 #
-# source://sexp_processor//lib/sexp_matcher.rb#568
+# source://sexp_processor//lib/sexp_matcher.rb#566
 class Sexp::Remaining < ::Sexp::Matcher
   # @return [Boolean]
   #
@@ -1094,7 +1094,7 @@ Sexp::UNASSIGNED = T.let(T.unsafe(nil), Object)
 #   s(:a)           / s{ _ }    #=> [s(:a)]
 #   s(:a, s(s(:b))) / s{ s(_) } #=> [s(s(:b))]
 #
-# source://sexp_processor//lib/sexp_matcher.rb#542
+# source://sexp_processor//lib/sexp_matcher.rb#540
 class Sexp::Wild < ::Sexp::Matcher
   # source://sexp_processor//lib/sexp_matcher.rb#548
   def inspect; end

@@ -308,3 +308,8 @@ class Bundler::Audit::Database::UpdateFailed < ::RuntimeError; end
 #
 # source://bundler-audit//lib/bundler/audit/version.rb#21
 Bundler::Audit::VERSION = T.let(T.unsafe(nil), String)
+
+module Bundler::MatchRemoteMetadata
+  include ::Bundler::FetchMetadata
+  include ::Bundler::MatchMetadata
+end

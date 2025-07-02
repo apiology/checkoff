@@ -144,7 +144,7 @@ module Checkoff
 
     private
 
-    # @param custom_field [Hash{String => [Hash,Array<Hash>]}]
+    # @param custom_field [Hash{String => Hash,Array<Hash>}]
     #
     # @sg-ignore
     # @return [Array<Hash>]

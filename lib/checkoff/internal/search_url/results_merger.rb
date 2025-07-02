@@ -6,19 +6,17 @@ module Checkoff
     module SearchUrl
       # Merge task selectors and search API arguments
       class ResultsMerger
-        # @param args [Array<[Hash<String, String>]>]
-        # @return [Hash<String, String>
+        # @param args [Array<Hash{String => String}>]
+        # @return [Hash{String => String}]
         def self.merge_args(*args)
           # first element of args
-          # @sg-ignore
-          # @type [Hash<String, String>]
           f = args.fetch(0)
           # rest of args
           r = args.drop(0)
           f.merge(*r)
         end
 
-        # @param task_selectors [Array<Array<[Symbol, Array]>>]
+        # @param task_selectors [Array<Symbol, Array>]
         # @return [Array(Symbol, Array, Array)]
         def self.merge_task_selectors(*task_selectors)
           return [] if task_selectors.empty?

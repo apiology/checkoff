@@ -55,7 +55,7 @@ module Checkoff
 
         assignee_section = task_hash.fetch('assignee_section')
         # @type [Hash{String => String}]
-        assignee = task_hash.fetch('assignee')
+        assignee = T.cast(task_hash.fetch('assignee'), T::Hash[String, String])
         memberships << {
           'section' => assignee_section.dup,
           'project' => {

@@ -35,7 +35,7 @@ module Checkoff
     end
 
     # @param date_or_time [Date,Time,nil]
-    # @param period [Symbol,Array<(Symbol,Integer)>]
+    # @param period [Symbol, Array(Symbol,Integer)]
     #
     #        Valid values: :this_week, :now_or_before, :indefinite, [:less_than_n_days_ago, Integer]
     def in_period?(date_or_time, period)
@@ -140,7 +140,7 @@ module Checkoff
       date.between?(beginning_of_week, end_of_week)
     end
 
-    # @type [Hash<Symbol,Integer>]
+    # @type [Hash{Symbol => Integer}]
     WDAY_FROM_DAY_OF_WEEK = {
       monday: 1,
       tuesday: 2,

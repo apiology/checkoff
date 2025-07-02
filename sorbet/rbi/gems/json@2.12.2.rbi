@@ -5,6 +5,28 @@
 # Please instead update this file by running `bin/tapioca gem json`.
 
 
+class Array
+  include ::Enumerable
+  include ::JSON::Ext::Generator::GeneratorMethods::Array
+end
+
+class FalseClass
+  include ::JSON::Ext::Generator::GeneratorMethods::FalseClass
+end
+
+class Float < ::Numeric
+  include ::JSON::Ext::Generator::GeneratorMethods::Float
+end
+
+class Hash
+  include ::Enumerable
+  include ::JSON::Ext::Generator::GeneratorMethods::Hash
+end
+
+class Integer < ::Numeric
+  include ::JSON::Ext::Generator::GeneratorMethods::Integer
+end
+
 # = JavaScript \Object Notation (\JSON)
 #
 # \JSON is a lightweight data-interchange format.
@@ -1736,6 +1758,10 @@ class JSON::Coder
   def parse(source); end
 end
 
+module JSON::Ext::Generator::GeneratorMethods::String
+  mixes_in_class_methods ::JSON::Ext::Generator::GeneratorMethods::String::Extend
+end
+
 # source://json//lib/json/ext/generator/state.rb#6
 class JSON::Ext::Generator::State
   # call-seq: new(opts = {})
@@ -2002,4 +2028,24 @@ module Kernel
   #
   # source://json//lib/json/common.rb#1082
   def jj(*objs); end
+end
+
+class NilClass
+  include ::JSON::Ext::Generator::GeneratorMethods::NilClass
+end
+
+class Object < ::BasicObject
+  include ::Kernel
+  include ::PP::ObjectMixin
+  include ::JSON::Ext::Generator::GeneratorMethods::Object
+end
+
+class String
+  include ::Comparable
+  include ::JSON::Ext::Generator::GeneratorMethods::String
+  extend ::JSON::Ext::Generator::GeneratorMethods::String::Extend
+end
+
+class TrueClass
+  include ::JSON::Ext::Generator::GeneratorMethods::TrueClass
 end

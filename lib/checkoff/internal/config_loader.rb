@@ -9,7 +9,7 @@ module Checkoff
     # Use the provided config from a YAML file, and fall back to env
     # variable if it's not populated for a key'
     class EnvFallbackConfigLoader
-      # @param config [Hash<Symbol, Object>]
+      # @param config [Hash{Symbol => undefined}]
       # @param sym [Symbol]
       # @param yaml_filename [String]
       def initialize(config, sym, yaml_filename)
@@ -61,7 +61,7 @@ module Checkoff
         private
 
         # @param sym [Symbol]
-        # @return [Hash<[String, Symbol], Object>]
+        # @return [Hash{Symbol => undefined}]
         def load_yaml_file(sym)
           filename = yaml_filename(sym)
           return {} unless File.exist?(filename)

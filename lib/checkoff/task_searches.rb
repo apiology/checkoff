@@ -1,5 +1,5 @@
 #!/usr/bin/env ruby
-# typed: false
+# typed: true
 
 # frozen_string_literal: true
 
@@ -33,7 +33,7 @@ module Checkoff
     # @!parse
     #   extend CacheMethod::ClassMethods
 
-    # @param config [Hash<Symbol, Object>,Checkoff::Internal::EnvFallbackConfigLoader]
+    # @param config [Hash{Symbol => Object}, Checkoff::Internal::EnvFallbackConfigLoader]
     # @param workspaces [Checkoff::Workspaces]
     # @param task_selectors [Checkoff::TaskSelectors]
     # @param projects [Checkoff::Projects]
@@ -83,10 +83,10 @@ module Checkoff
     #
     #   https://developers.asana.com/reference/searchtasksforworkspace
     #
-    # @param [Hash<String, Object>] api_params
+    # @param [Hash{String => Object}] api_params
     # @param [String] workspace_gid
     # @param [Array<String>] extra_fields
-    # @param [Array] task_selector
+    # @param [Symbol, Array<Symbol, Integer, Array>] task_selector
     # @param [Boolean] fetch_all Ensure all results are provided by manually paginating
     #
     # @return [Enumerable<Asana::Resources::Task>]
@@ -121,7 +121,7 @@ module Checkoff
     #
     #   https://developers.asana.com/reference/searchtasksforworkspace
     #
-    # @param [Hash<String, Object>] api_params
+    # @param [Hash{String => Object}] api_params
     # @param [String] workspace_gid
     # @param [Array<String>] extra_fields
     #
@@ -147,7 +147,7 @@ module Checkoff
     #     see sort_by field at
     #     https://developers.asana.com/reference/searchtasksforworkspace
     #
-    # @param [Hash<String, Object>] api_params
+    # @param [Hash{String => Object}] api_params
     # @param [String] workspace_gid
     # @param [String] url
     # @param [Array<String>] extra_fields
@@ -191,9 +191,10 @@ module Checkoff
     end
 
     # @param [Array<String>] extra_fields
-    # @return [Hash<String, Object>]
+    # @sg-ignore
+    # @return [Hash{Symbol => undefined}]
     def calculate_api_options(extra_fields)
-      # @type [Hash<Symbol, Object>]
+      # @type [Hash{Symbol => undefined}]
       all_options = projects.task_options(extra_fields: ['custom_fields'] + extra_fields)
       all_options[:options]
     end

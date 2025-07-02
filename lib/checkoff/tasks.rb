@@ -1,6 +1,6 @@
 #!/usr/bin/env ruby
 
-# typed: false
+# typed: true
 
 # frozen_string_literal: true
 
@@ -265,9 +265,9 @@ module Checkoff
     # <regular keys from API response>
     # +
     # unwrapped:
-    #  membership_by_section_gid: Hash<String, Hash (membership)>
-    #  membership_by_project_gid: Hash<String, Hash (membership)>
-    #  membership_by_project_name: Hash<String, Hash (membership)>
+    #  membership_by_section_gid: Hash{String => Hash (membership)>
+    #  membership_by_project_gid: Hash{String => Hash (membership)>
+    #  membership_by_project_name: Hash{String => Hash (membership)>
     # task: String (name)
     #
     # @param task [Asana::Resources::Task]

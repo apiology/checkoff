@@ -8,7 +8,7 @@ require_relative 'selector_evaluator'
 module Checkoff
   # Evaluates section selectors against a section
   class SectionSelectorEvaluator < SelectorEvaluator
-    # @param section [Asana::Resources::Project]
+    # @param section [Asana::Resources::Section]
     # @param client [Asana::Client]
     # @param projects [Checkoff::Projects]
     # @param sections [Checkoff::Sections]

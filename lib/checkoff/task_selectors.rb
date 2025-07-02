@@ -40,8 +40,8 @@ module Checkoff
     end
 
     # @param [Asana::Resources::Task] task
-    # @param [Array<(Symbol, Array)>] task_selector Filter based on
-    #        task details.  Examples: [:tag, 'foo'] [:not, [:tag, 'foo']] [:tag, 'foo']
+    # @param [Symbol, Array<Symbol, Integer, Array>] task_selector Filter based on
+    #   task details.  Examples: [:tag, 'foo'] [:not, [:tag, 'foo']] [:tag, 'foo']
     # @return [Boolean]
     def filter_via_task_selector(task, task_selector)
       evaluator = TaskSelectorEvaluator.new(task:, tasks:, timelines:,
@@ -75,13 +75,13 @@ module Checkoff
         ARGV[0] || raise('Please pass workspace name as first argument')
       end
 
-      # @return [Array]
+      # @sg-ignore
+      # @return [Array(Symbol, Array)]
       def task_selector
         task_selector_json = ARGV[2] || raise('Please pass task_selector in JSON form as third argument')
-        task_selector = JSON.parse(task_selector_json)
-        raise "task_selector must be an array, got #{task_selector.class}" unless task_selector.is_a?(Array)
 
-        task_selector
+        # @return [Symbol, Array]
+        T.cast(JSON.parse(task_selector_json), [Symbol, Array])
       end
 
       # @return [void]

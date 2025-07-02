@@ -41,7 +41,7 @@ module Checkoff
     #
     # @param tasks [Enumerable<Asana::Resources::Task>]
     #
-    # @return [Hash{[nil,String] => Enumerable<Asana::Resources::Task>}]
+    # @return [Hash{nil,String => Enumerable<Asana::Resources::Task>}]
     def by_section(tasks)
       current_section = nil
       by_section = { nil => [] }
@@ -106,7 +106,7 @@ module Checkoff
     # @param by_section [Hash]
     # @param task [Asana::Resources::Task]
     #
-    # @return [Array<(String, Hash)>]
+    # @return [Array(String, Hash)]
     def file_task_by_section(current_section, by_section, task)
       if subtask_section?(task)
         current_section = task.name

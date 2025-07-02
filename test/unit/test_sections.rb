@@ -13,14 +13,16 @@ class TestSections < BaseAsana
 
   def_delegators(:@mocks, :workspaces, :client)
 
+  typed_mock :a_membership_project, Hash
+  typed_mock :a_membership_section, Hash
+
   let_mock :project, :inactive_task_b, :a_membership,
-           :a_membership_project, :a_membership_section,
            :user_task_list_project, :workspace_one, :user_task_lists,
            :workspace_one_gid, :user_task_list, :sections, :section_1,
            :section_2, :tasks, :section_1_gid, :section_2_gid,
            :recently_assigned, :assignee_section,
-           :assignee_section_name, :empty_section, :empty_section_gid, :project_gid,
-           :get_results
+           :assignee_section_name, :empty_section, :empty_section_gid,
+           :project_gid, :get_results
 
   def test_section_task_names_no_tasks
     sections = get_test_object do
@@ -417,6 +419,21 @@ class TestSections < BaseAsana
   end
 
   let_mock :subtasks
+
+  def respond_like_instance_of
+    {
+      config: Hash,
+      client: Asana::Client,
+      projects: Checkoff::Projects,
+      workspaces: Checkoff::Workspaces,
+    }
+  end
+
+  def respond_like
+    {
+      time: Time,
+    }
+  end
 
   def class_under_test
     Checkoff::Sections
