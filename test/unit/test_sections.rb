@@ -369,7 +369,7 @@ class TestSections < BaseAsana
         .returns(nil)
     end
     assert_raises(RuntimeError) do
-      # XXX: Deal with colon at end...
+      # @todo Deal with colon at end...
       sections.tasks('Workspace 1', 'not found', 'Section 1:')
     end
   end
