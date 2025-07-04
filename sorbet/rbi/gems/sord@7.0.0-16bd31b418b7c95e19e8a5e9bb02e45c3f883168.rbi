@@ -631,7 +631,7 @@ module Sord::TypeConverter
     # @param type [String]
     # @return [Parlour::Types::Type, nil]
     #
-    # source://sord//lib/sord/type_converter.rb#323
+    # source://sord//lib/sord/type_converter.rb#325
     # sord warn - Parlour::Types::Type wasn't able to be resolved to a constant in this project
     # Given a YARD duck type string, attempts to convert it to one of a list of pre-defined RBS
     # built-in interfaces.
@@ -648,7 +648,7 @@ module Sord::TypeConverter
     # @param replace_errors_with_untyped [Boolean]
     # @return [Parlour::Types::Type]
     #
-    # source://sord//lib/sord/type_converter.rb#279
+    # source://sord//lib/sord/type_converter.rb#281
     # sord warn - Parlour::Types::Type wasn't able to be resolved to a constant in this project
     # sord warn - YARD::CodeObjects::Base wasn't able to be resolved to a constant in this project
     # _@param_ `name`
@@ -766,7 +766,7 @@ end
 # Interfaces which use generic arguments have those arguments as `untyped`, since I'm not aware
 # of any standard way that these are specified.
 #
-# source://sord//lib/sord/type_converter.rb#292
+# source://sord//lib/sord/type_converter.rb#294
 Sord::TypeConverter::DUCK_TYPES_TO_RBS_TYPE_NAMES = T.let(T.unsafe(nil), Hash)
 
 # Match duck types which require the object implement one or more methods,

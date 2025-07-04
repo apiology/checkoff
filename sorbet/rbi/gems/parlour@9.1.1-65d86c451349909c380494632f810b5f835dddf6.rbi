@@ -352,44 +352,46 @@ end
 
 # The base class for user-defined RBI generation plugins.
 #
-# @abstract
+# This class is *abstract*.
 #
-# source://parlour//lib/parlour/plugin.rb#5
+# @abstract It cannot be directly instantiated. Subclasses must implement the `abstract` methods below.
+#
+# source://parlour//lib/parlour/plugin.rb#6
 class Parlour::Plugin
   extend T::Sig
   extend T::Helpers
 
   abstract!
 
-  # source://parlour//lib/parlour/plugin.rb#54
+  # source://parlour//lib/parlour/plugin.rb#55
   sig { params(options: T::Hash[T.untyped, T.untyped]).void }
   def initialize(options); end
 
   # @abstract
   #
-  # source://parlour//lib/parlour/plugin.rb#63
+  # source://parlour//lib/parlour/plugin.rb#65
   sig { abstract.params(root: Parlour::RbiGenerator::Namespace).void }
   def generate(root); end
 
-  # source://parlour//lib/parlour/plugin.rb#70
+  # source://parlour//lib/parlour/plugin.rb#72
   sig { returns(T.nilable(::String)) }
   def strictness; end
 
   # @return [String, nil]
   #
-  # source://parlour//lib/parlour/plugin.rb#70
+  # source://parlour//lib/parlour/plugin.rb#72
   def strictness=(_arg0); end
 
   class << self
-    # source://parlour//lib/parlour/plugin.rb#27
+    # source://parlour//lib/parlour/plugin.rb#28
     sig { params(new_plugin: T.class_of(Parlour::Plugin)).void }
     def inherited(new_plugin); end
 
-    # source://parlour//lib/parlour/plugin.rb#17
+    # source://parlour//lib/parlour/plugin.rb#18
     sig { returns(T::Hash[::String, T.class_of(Parlour::Plugin)]) }
     def registered_plugins; end
 
-    # source://parlour//lib/parlour/plugin.rb#40
+    # source://parlour//lib/parlour/plugin.rb#41
     sig do
       params(
         plugins: T::Array[::Parlour::Plugin],
@@ -1253,41 +1255,43 @@ Parlour::RbiGenerator::Parameter::PREFIXES = T.let(T.unsafe(nil), Hash)
 # {Parameter} is _not_ a subclass because it does not generate lines, only
 # segments of definition and signature lines.)
 #
-# @abstract
+# This class is *abstract*.
 #
-# source://parlour//lib/parlour/rbi_generator/rbi_object.rb#9
+# @abstract It cannot be directly instantiated. Subclasses must implement the `abstract` methods below.
+#
+# source://parlour//lib/parlour/rbi_generator/rbi_object.rb#10
 class Parlour::RbiGenerator::RbiObject < ::Parlour::TypedObject
   abstract!
 
-  # source://parlour//lib/parlour/rbi_generator/rbi_object.rb#19
+  # source://parlour//lib/parlour/rbi_generator/rbi_object.rb#20
   sig { params(generator: ::Parlour::Generator, name: ::String).void }
   def initialize(generator, name); end
 
   # @abstract
   #
-  # source://parlour//lib/parlour/rbi_generator/rbi_object.rb#79
+  # source://parlour//lib/parlour/rbi_generator/rbi_object.rb#84
   sig { abstract.void }
   def generalize_from_rbi!; end
 
   # @abstract
   #
-  # source://parlour//lib/parlour/rbi_generator/rbi_object.rb#42
+  # source://parlour//lib/parlour/rbi_generator/rbi_object.rb#44
   sig { abstract.params(indent_level: ::Integer, options: ::Parlour::Options).returns(T::Array[::String]) }
   def generate_rbi(indent_level, options); end
 
-  # source://parlour//lib/parlour/rbi_generator/rbi_object.rb#28
+  # source://parlour//lib/parlour/rbi_generator/rbi_object.rb#29
   sig { returns(::Parlour::Generator) }
   def generator; end
 
   # @abstract
   #
-  # source://parlour//lib/parlour/rbi_generator/rbi_object.rb#70
+  # source://parlour//lib/parlour/rbi_generator/rbi_object.rb#74
   sig { abstract.params(others: T::Array[::Parlour::RbiGenerator::RbiObject]).void }
   def merge_into_self(others); end
 
   # @abstract
   #
-  # source://parlour//lib/parlour/rbi_generator/rbi_object.rb#56
+  # source://parlour//lib/parlour/rbi_generator/rbi_object.rb#59
   sig { abstract.params(others: T::Array[::Parlour::RbiGenerator::RbiObject]).returns(T::Boolean) }
   def mergeable?(others); end
 end
@@ -2187,35 +2191,37 @@ Parlour::RbsGenerator::Parameter::RBS_KEYWORDS = T.let(T.unsafe(nil), Array)
 # {Parameter} is _not_ a subclass because it does not generate lines, only
 # segments of definition lines.)
 #
-# @abstract
+# This class is *abstract*.
 #
-# source://parlour//lib/parlour/rbs_generator/rbs_object.rb#9
+# @abstract It cannot be directly instantiated. Subclasses must implement the `abstract` methods below.
+#
+# source://parlour//lib/parlour/rbs_generator/rbs_object.rb#10
 class Parlour::RbsGenerator::RbsObject < ::Parlour::TypedObject
   abstract!
 
-  # source://parlour//lib/parlour/rbs_generator/rbs_object.rb#19
+  # source://parlour//lib/parlour/rbs_generator/rbs_object.rb#20
   sig { params(generator: ::Parlour::Generator, name: ::String).void }
   def initialize(generator, name); end
 
   # @abstract
   #
-  # source://parlour//lib/parlour/rbs_generator/rbs_object.rb#42
+  # source://parlour//lib/parlour/rbs_generator/rbs_object.rb#44
   sig { abstract.params(indent_level: ::Integer, options: ::Parlour::Options).returns(T::Array[::String]) }
   def generate_rbs(indent_level, options); end
 
-  # source://parlour//lib/parlour/rbs_generator/rbs_object.rb#28
+  # source://parlour//lib/parlour/rbs_generator/rbs_object.rb#29
   sig { returns(::Parlour::Generator) }
   def generator; end
 
   # @abstract
   #
-  # source://parlour//lib/parlour/rbs_generator/rbs_object.rb#70
+  # source://parlour//lib/parlour/rbs_generator/rbs_object.rb#74
   sig { abstract.params(others: T::Array[::Parlour::RbsGenerator::RbsObject]).void }
   def merge_into_self(others); end
 
   # @abstract
   #
-  # source://parlour//lib/parlour/rbs_generator/rbs_object.rb#56
+  # source://parlour//lib/parlour/rbs_generator/rbs_object.rb#59
   sig { abstract.params(others: T::Array[::Parlour::RbsGenerator::RbsObject]).returns(T::Boolean) }
   def mergeable?(others); end
 end
@@ -2567,11 +2573,11 @@ class Parlour::TypedObject
 
   # @abstract
   #
-  # source://parlour//lib/parlour/typed_object.rb#153
+  # source://parlour//lib/parlour/typed_object.rb#154
   sig { abstract.returns(T::Array[T.any(::Symbol, T::Hash[::Symbol, ::String])]) }
   def describe_attrs; end
 
-  # source://parlour//lib/parlour/typed_object.rb#166
+  # source://parlour//lib/parlour/typed_object.rb#167
   sig { params(indent_level: ::Integer, options: ::Parlour::Options).returns(T::Array[::String]) }
   def generate_comments(indent_level, options); end
 end
