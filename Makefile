@@ -78,7 +78,7 @@ tapioca.installed: sorbet/tapioca/require.rb Gemfile.lock.installed ## Install T
 #	bin/tapioca dsl
 	touch tapioca.installed
 
-yardoc.installed: $(wildcard config/annotations_*.rb) $(SOURCE_FILES) ## Generate YARD documentation
+yardoc.installed: Makefile $(SOURCE_FILES) ## Generate YARD documentation
 	bin/yard doc $(YARD_OPTS)
 	touch yardoc.installed
 
