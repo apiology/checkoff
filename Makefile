@@ -88,12 +88,11 @@ docs: ## Generate YARD documentation
 	@rake doc
 
 clean-typecheck: ## Refresh the easily-regenerated information that type checking depends on
-	bin/solargraph clear || true
 	rm -fr .yardoc/ rbi/checkoff.rbi types.installed yardoc.installed sig/checkoff.rbs || true
-	rm -fr ../checkoff/.yardoc || true
 	echo all clear
 
 realclean-typecheck: clean-typecheck ## Remove all type checking artifacts
+	bin/solargraph clear || true
 	rm -fr ~/.cache/solargraph
 	rm -f tapioca.installed
 
