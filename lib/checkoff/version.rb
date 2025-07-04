@@ -4,5 +4,7 @@
 # Command-line and gem client for Asana (unofficial)
 module Checkoff
   # Version of library
-  VERSION = '0.228.0' # :nocov:
+  # :nocov:
+  VERSION = '0.228.0'
+  # :nocov:
 end
