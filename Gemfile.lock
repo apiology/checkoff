@@ -1,9 +1,9 @@
 GIT
   remote: https://github.com/apiology/parlour.git
-  revision: 6a7d3a6ce34b784b44489cb96a0928708091c9cd
+  revision: 65d86c451349909c380494632f810b5f835dddf6
   branch: fix_io_deadlock
   specs:
-    parlour (9.1.0)
+    parlour (9.1.1)
       commander (~> 5.0)
       parser
       rainbow (~> 3.0)
@@ -22,8 +22,8 @@ GIT
 
 GIT
   remote: https://github.com/apiology/sord.git
-  revision: 7ed98b78f03d265fed705a58f328e24198891f4a
-  branch: type_variable_support
+  revision: 16bd31b418b7c95e19e8a5e9bb02e45c3f883168
+  branch: 2025-07-04
   specs:
     sord (7.0.0)
       commander (~> 5.0)
