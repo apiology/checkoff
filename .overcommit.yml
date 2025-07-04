@@ -157,6 +157,8 @@ PrePush:
     enabled: true
     requires_files: false
     required_executable: 'bin/git-push-validate'
+  BundleInstall:
+    enabled: true
 
 #PostCheckout:
 #  ALL: # Special hook name that customizes all hooks of this type

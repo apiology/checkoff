@@ -33,13 +33,6 @@ GIT
       sorbet-runtime
       yard
 
-GIT
-  remote: https://github.com/apiology/yard
-  revision: a5dcc5549be7ed7bd39a896dc2238854f717cfda
-  branch: fix_word_array_in_array_parsing
-  specs:
-    yard (0.9.37)
-
 PATH
   remote: .
   specs:
@@ -264,6 +257,9 @@ GEM
     rubocop-rake (0.7.1)
       lint_roller (~> 1.1)
       rubocop (>= 1.72.1)
+    rubocop-rspec (3.6.0)
+      lint_roller (~> 1.1)
+      rubocop (~> 1.72, >= 1.72.1)
     rubocop-yard (1.0.0)
       lint_roller
       rubocop (~> 1.72)
@@ -349,6 +345,7 @@ GEM
       addressable (>= 2.8.0)
       crack (>= 0.3.2)
       hashdiff (>= 0.4.0, < 2.0.0)
+    yard (0.9.37)
     yard-solargraph (0.1.0)
       yard (~> 0.9)
     yard-sorbet (0.9.0)
@@ -390,6 +387,7 @@ DEPENDENCIES
   rubocop-minitest
   rubocop-performance
   rubocop-rake
+  rubocop-rspec (>= 3.4.0)
   rubocop-yard
   simplecov (>= 0.18.0)
   simplecov-lcov
@@ -398,7 +396,7 @@ DEPENDENCIES
   tapioca (>= 0.16.0)
   undercover (>= 0.6.3)
   webmock
-  yard!
+  yard
   yard-sorbet
 
 BUNDLED WITH
