@@ -22,7 +22,7 @@ GIT
 
 GIT
   remote: https://github.com/apiology/sord.git
-  revision: 16bd31b418b7c95e19e8a5e9bb02e45c3f883168
+  revision: ed0bc04fd7d4a7dd0a01fd1640c444e9a25baa5f
   branch: 2025-07-04
   specs:
     sord (7.0.0)
@@ -299,15 +299,15 @@ GEM
       tilt (~> 2.0)
       yard (~> 0.9, >= 0.9.24)
       yard-solargraph (~> 0.1)
-    sorbet (0.5.12214)
-      sorbet-static (= 0.5.12214)
-    sorbet-runtime (0.5.12214)
-    sorbet-static (0.5.12214-aarch64-linux)
-    sorbet-static (0.5.12214-universal-darwin)
-    sorbet-static (0.5.12214-x86_64-linux)
-    sorbet-static-and-runtime (0.5.12214)
-      sorbet (= 0.5.12214)
-      sorbet-runtime (= 0.5.12214)
+    sorbet (0.5.12219)
+      sorbet-static (= 0.5.12219)
+    sorbet-runtime (0.5.12219)
+    sorbet-static (0.5.12219-aarch64-linux)
+    sorbet-static (0.5.12219-universal-darwin)
+    sorbet-static (0.5.12219-x86_64-linux)
+    sorbet-static-and-runtime (0.5.12219)
+      sorbet (= 0.5.12219)
+      sorbet-runtime (= 0.5.12219)
     source_finder (3.2.1)
     spoom (1.6.3)
       erubi (>= 1.10.0)
