@@ -33,7 +33,7 @@ rbi/checkoff.rbi: tapioca.installed yardoc.installed sorbet/config ## Generate S
 	bin/sord gen $(SORD_GEN_OPTIONS) rbi/checkoff-sord.rbi
 	cat rbi/checkoff-parlour.rbi rbi/checkoff-sord.rbi > rbi/checkoff.rbi
 	rm -f rbi/checkoff-sord.rbi rbi/checkoff-parlour.rbi
-#	sed -i.bak -e 's/^# typed: strong/# typed: ignore/' rbi/checkoff.rbi
+	sed -i.bak -e 's/^# typed: strong/# typed: ignore/' rbi/checkoff.rbi
 	rm -f rbi/checkoff.rbi.bak
 
 sig/checkoff.rbs: yardoc.installed ## Generate RBS file
