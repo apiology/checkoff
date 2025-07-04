@@ -8,12 +8,17 @@ gemspec
 group :development, :test do
   gem 'bundler'
   gem 'mdl'
-  gem 'parlour'
+  gem 'parlour',
+      github: 'apiology/parlour',
+      branch: 'fix_io_deadlock'
   gem 'rbi'
   # ensure recent definitions
   gem 'rbs', ['>=3.8.1']
   gem 'rspec'
-  gem 'sord', ['>= 6.0.0']
+  gem 'sord', # ['>= 6.0.0'] # ,
+      github: 'apiology/sord',
+      branch: 'type_variable_support'
+  #   path: '../sord'
   # ensure version with branch coverage
   gem 'simplecov', ['>=0.18.0']
   gem 'simplecov-lcov'
@@ -28,21 +33,17 @@ group :development do
   gem 'bump'
   gem 'bundler-audit'
   gem 'fasterer'
-  gem 'overcommit', # [">=0.64.0", "<0.65.0"]
-      git: 'https://github.com/apiology/overcommit.git',
-      branch: 'add_solargraph'
+  gem 'overcommit', '~>0.68.0'
   gem 'punchlist', ['>=1.3.1']
   gem 'rubocop', ['~> 1.52']
   gem 'rubocop-performance'
   gem 'rubocop-rake'
+  gem 'rubocop-yard'
   # ensure version with RSpec/VerifiedDoubleReference
   gem 'rubocop-rspec', ['>=3.4.0']
-  gem 'solargraph', ['>=0.51.2']
-  gem 'yard',
-      git: 'https://github.com/apiology/yard',
-      branch: 'fix_word_array_in_array_parsing'
+  gem 'solargraph', ['>=0.56']
+  gem 'yard'
   gem 'yard-sorbet'
 end
 
-gem 'pry'
 gem 'rake'

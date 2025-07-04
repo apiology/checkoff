@@ -44,7 +44,7 @@ class Sord::Generator
   # @param item [YARD::CodeObjects::NamespaceObject]
   # @return [void]
   #
-  # source://sord//lib/sord/generator.rb#491
+  # source://sord//lib/sord/generator.rb#498
   # sord warn - YARD::CodeObjects::NamespaceObject wasn't able to be resolved to a constant in this project
   # Given a YARD NamespaceObject, add lines defining either its class
   # _@param_ `item`
@@ -57,7 +57,7 @@ class Sord::Generator
   # @param typed_object [Parlour::TypedObject]
   # @return [void]
   #
-  # source://sord//lib/sord/generator.rb#188
+  # source://sord//lib/sord/generator.rb#195
   # sord warn - YARD::CodeObjects::NamespaceObject wasn't able to be resolved to a constant in this project
   # sord warn - Parlour::TypedObject wasn't able to be resolved to a constant in this project
   # _@param_ `item`
@@ -82,7 +82,7 @@ class Sord::Generator
   # @param item [YARD::CodeObjects::NamespaceObject]
   # @return [void]
   #
-  # source://sord//lib/sord/generator.rb#299
+  # source://sord//lib/sord/generator.rb#306
   # sord warn - YARD::CodeObjects::NamespaceObject wasn't able to be resolved to a constant in this project
   # Given a YARD NamespaceObject, add lines defining its methods and their
   # _@param_ `item`
@@ -108,7 +108,7 @@ class Sord::Generator
   # @param item [YARD::CodeObjects::NamespaceObject]
   # @return [void]
   #
-  # source://sord//lib/sord/generator.rb#599
+  # source://sord//lib/sord/generator.rb#606
   # sord warn - YARD::CodeObjects::NamespaceObject wasn't able to be resolved to a constant in this project
   # Given a YARD NamespaceObject, add lines defining its mixins, methods
   # _@param_ `item`
@@ -137,7 +137,7 @@ class Sord::Generator
   # @param default [String]
   # @return [String, nil]
   #
-  # source://sord//lib/sord/generator.rb#735
+  # source://sord//lib/sord/generator.rb#740
   # Removes the last character of a default parameter value if it begins with
   # _@param_ `default`
   sig { params(default: String).returns(T.nilable(String)) }
@@ -149,7 +149,7 @@ class Sord::Generator
   #
   # @return [void]
   #
-  # source://sord//lib/sord/generator.rb#639
+  # source://sord//lib/sord/generator.rb#646
   # Populates the generator with the contents of the YARD registry, then
   # uses the loaded Parlour::Generator to generate the file. You must
   sig { void }
@@ -159,7 +159,7 @@ class Sord::Generator
   # @param tag_name [String]
   # @return [YARD::Tags::Tag, nil]
   #
-  # source://sord//lib/sord/generator.rb#288
+  # source://sord//lib/sord/generator.rb#295
   # sord warn - YARD::CodeObjects::MethodObject wasn't able to be resolved to a constant in this project
   # sord warn - YARD::Tags::Tag wasn't able to be resolved to a constant in this project
   # _@param_ `method`
@@ -171,7 +171,7 @@ class Sord::Generator
   # @param tag_name [String]
   # @return [Array<YARD::Tags::Tag>]
   #
-  # source://sord//lib/sord/generator.rb#278
+  # source://sord//lib/sord/generator.rb#285
   # sord warn - YARD::CodeObjects::MethodObject wasn't able to be resolved to a constant in this project
   # sord warn - YARD::Tags::Tag wasn't able to be resolved to a constant in this project
   # _@param_ `method`
@@ -193,7 +193,7 @@ class Sord::Generator
   #
   # @return [void]
   #
-  # source://sord//lib/sord/generator.rb#628
+  # source://sord//lib/sord/generator.rb#635
   # Populates the generator with the contents of the YARD registry. You
   sig { void }
   def populate; end
@@ -203,7 +203,7 @@ class Sord::Generator
   #
   # @return [void]
   #
-  # source://sord//lib/sord/generator.rb#647
+  # source://sord//lib/sord/generator.rb#654
   # Loads the YARD registry, populates the file, and prints any relevant
   sig { void }
   def run; end
@@ -217,7 +217,7 @@ class Sord::Generator
   # @param pair2 [Array]
   # @return Integer
   #
-  # source://sord//lib/sord/generator.rb#698
+  # source://sord//lib/sord/generator.rb#703
   # Given two pairs of arrays representing method parameters, in the form
   # of ["variable_name", "default_value"], sort the parameters so they're
   # valid for Sorbet. Sorbet requires that, e.g. required kwargs go before
@@ -566,13 +566,13 @@ module Sord::Resolver
 
     # @return [Array<String>]
     #
-    # source://sord//lib/sord/resolver.rb#108
+    # source://sord//lib/sord/resolver.rb#115
     sig { returns(T::Array[String]) }
     def builtin_classes; end
 
     # @return [void]
     #
-    # source://sord//lib/sord/resolver.rb#85
+    # source://sord//lib/sord/resolver.rb#92
     sig { void }
     def clear; end
 
@@ -585,7 +585,7 @@ module Sord::Resolver
     # @param name [String]
     # @return [String, nil]
     #
-    # source://sord//lib/sord/resolver.rb#103
+    # source://sord//lib/sord/resolver.rb#110
     # _@param_ `name`
     sig { params(name: String).returns(T.nilable(String)) }
     def path_for(name); end
@@ -593,7 +593,7 @@ module Sord::Resolver
     # @param name [String]
     # @return [Array<String>]
     #
-    # source://sord//lib/sord/resolver.rb#91
+    # source://sord//lib/sord/resolver.rb#98
     # _@param_ `name`
     sig { params(name: String).returns(T::Array[String]) }
     def paths_for(name); end
@@ -608,7 +608,7 @@ module Sord::Resolver
     # @param item [Object]
     # @return [Boolean]
     #
-    # source://sord//lib/sord/resolver.rb#127
+    # source://sord//lib/sord/resolver.rb#134
     # _@param_ `name`
     # _@param_ `item`
     sig { params(name: String, item: Object).returns(T::Boolean) }
@@ -631,7 +631,7 @@ module Sord::TypeConverter
     # @param type [String]
     # @return [Parlour::Types::Type, nil]
     #
-    # source://sord//lib/sord/type_converter.rb#312
+    # source://sord//lib/sord/type_converter.rb#323
     # sord warn - Parlour::Types::Type wasn't able to be resolved to a constant in this project
     # Given a YARD duck type string, attempts to convert it to one of a list of pre-defined RBS
     # built-in interfaces.
@@ -648,7 +648,7 @@ module Sord::TypeConverter
     # @param replace_errors_with_untyped [Boolean]
     # @return [Parlour::Types::Type]
     #
-    # source://sord//lib/sord/type_converter.rb#268
+    # source://sord//lib/sord/type_converter.rb#279
     # sord warn - Parlour::Types::Type wasn't able to be resolved to a constant in this project
     # sord warn - YARD::CodeObjects::Base wasn't able to be resolved to a constant in this project
     # _@param_ `name`
@@ -766,7 +766,7 @@ end
 # Interfaces which use generic arguments have those arguments as `untyped`, since I'm not aware
 # of any standard way that these are specified.
 #
-# source://sord//lib/sord/type_converter.rb#281
+# source://sord//lib/sord/type_converter.rb#292
 Sord::TypeConverter::DUCK_TYPES_TO_RBS_TYPE_NAMES = T.let(T.unsafe(nil), Hash)
 
 # Match duck types which require the object implement one or more methods,

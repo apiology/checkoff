@@ -6,6 +6,7 @@
 
 
 # source://parlour//lib/parlour/version.rb#2
+# typed: strong
 module Parlour; end
 
 # Responsible for resolving conflicts (that is, multiple definitions with the
@@ -13,9 +14,12 @@ module Parlour; end
 #
 # source://parlour//lib/parlour/conflict_resolver.rb#7
 class Parlour::ConflictResolver
+  extend T::Sig
+
   # @return [ConflictResolver] a new instance of ConflictResolver
   #
   # source://parlour//lib/parlour/conflict_resolver.rb#10
+  sig { void }
   def initialize; end
 
   # source://parlour//lib/parlour/conflict_resolver.rb#47
@@ -52,11 +56,15 @@ module Parlour::Conversion; end
 #
 # source://parlour//lib/parlour/conversion/converter.rb#8
 class Parlour::Conversion::Converter
+  extend T::Sig
+  extend T::Helpers
+
   abstract!
 
   # @return [Converter] a new instance of Converter
   #
   # source://parlour//lib/parlour/conversion/converter.rb#13
+  sig { void }
   def initialize; end
 
   # source://parlour//lib/parlour/conversion/converter.rb#21
@@ -72,6 +80,8 @@ end
 #
 # source://parlour//lib/parlour/conversion/rbi_to_rbs.rb#5
 class Parlour::Conversion::RbiToRbs < ::Parlour::Conversion::Converter
+  extend T::Sig
+
   # source://parlour//lib/parlour/conversion/rbi_to_rbs.rb#9
   sig { params(rbs_gen: ::Parlour::RbsGenerator).void }
   def initialize(rbs_gen); end
@@ -93,6 +103,8 @@ end
 #
 # source://parlour//lib/parlour/debugging.rb#6
 module Parlour::Debugging
+  extend T::Sig
+
   class << self
     # Set whether debug messages should be printed.
     #
@@ -130,6 +142,8 @@ end
 #
 # source://parlour//lib/parlour/debugging.rb#66
 class Parlour::Debugging::Tree
+  extend T::Sig
+
   # source://parlour//lib/parlour/debugging.rb#78
   sig { params(colour: T::Boolean).void }
   def initialize(colour: T.unsafe(nil)); end
@@ -163,6 +177,7 @@ class Parlour::Debugging::Tree
   # Modifies the current indent level by the given offset.
   #
   # source://parlour//lib/parlour/debugging.rb#130
+  sig { params(offset: T.untyped).returns(T.untyped) }
   def indent!(offset); end
 
   # The prefix which should be printed before anything else on this line of
@@ -171,6 +186,7 @@ class Parlour::Debugging::Tree
   # @return [String]
   #
   # source://parlour//lib/parlour/debugging.rb#117
+  sig { returns(T.untyped) }
   def line_prefix; end
 
   # The horizontal lines which should be printed between the beginning of
@@ -180,6 +196,7 @@ class Parlour::Debugging::Tree
   # @return [String]
   #
   # source://parlour//lib/parlour/debugging.rb#125
+  sig { returns(T.untyped) }
   def text_prefix; end
 end
 
@@ -229,6 +246,8 @@ end
 
 # source://parlour//lib/parlour/generator.rb#3
 class Parlour::Generator
+  extend T::Sig
+
   # source://parlour//lib/parlour/generator.rb#15
   sig { params(break_params: ::Integer, tab_size: ::Integer, sort_namespaces: T::Boolean).void }
   def initialize(break_params: T.unsafe(nil), tab_size: T.unsafe(nil), sort_namespaces: T.unsafe(nil)); end
@@ -258,6 +277,7 @@ module Parlour::Mixin; end
 # source://parlour//lib/parlour/mixin/searchable.rb#7
 module Parlour::Mixin::Searchable
   extend T::Generic
+  extend T::Sig
 
   abstract!
 
@@ -288,6 +308,8 @@ end
 #
 # source://parlour//lib/parlour/options.rb#4
 class Parlour::Options
+  extend T::Sig
+
   # source://parlour//lib/parlour/options.rb#19
   sig { params(break_params: ::Integer, tab_size: ::Integer, sort_namespaces: T::Boolean).void }
   def initialize(break_params:, tab_size:, sort_namespaces:); end
@@ -311,9 +333,12 @@ end
 
 # source://parlour//lib/parlour/parse_error.rb#4
 class Parlour::ParseError < ::StandardError
+  extend T::Sig
+
   # @return [ParseError] a new instance of ParseError
   #
   # source://parlour//lib/parlour/parse_error.rb#13
+  sig { params(buffer: T.untyped, range: T.untyped).void }
   def initialize(buffer, range); end
 
   # source://parlour//lib/parlour/parse_error.rb#8
@@ -333,6 +358,9 @@ end
 #
 # source://parlour//lib/parlour/plugin.rb#6
 class Parlour::Plugin
+  extend T::Sig
+  extend T::Helpers
+
   abstract!
 
   # source://parlour//lib/parlour/plugin.rb#55
@@ -382,6 +410,7 @@ class Parlour::RbiGenerator < ::Parlour::Generator
   # @return [RbiGenerator] a new instance of RbiGenerator
   #
   # source://parlour//lib/parlour/rbi_generator.rb#9
+  sig { params(hash: T.untyped).void }
   def initialize(**hash); end
 
   # source://parlour//lib/parlour/rbi_generator.rb#23
@@ -494,6 +523,7 @@ end
 # source://parlour//lib/parlour/rbi_generator/class_namespace.rb#5
 class Parlour::RbiGenerator::ClassNamespace < ::Parlour::RbiGenerator::Namespace
   extend T::Generic
+  extend T::Sig
 
   Child = type_member { { fixed: Parlour::RbiGenerator::RbiObject } }
 
@@ -602,6 +632,7 @@ end
 # source://parlour//lib/parlour/rbi_generator/enum_class_namespace.rb#5
 class Parlour::RbiGenerator::EnumClassNamespace < ::Parlour::RbiGenerator::ClassNamespace
   extend T::Generic
+  extend T::Sig
 
   Child = type_member { { fixed: Parlour::RbiGenerator::RbiObject } }
 
@@ -726,6 +757,8 @@ end
 #
 # source://parlour//lib/parlour/rbi_generator/method.rb#5
 class Parlour::RbiGenerator::Method < ::Parlour::RbiGenerator::RbiObject
+  extend T::Sig
+
   # source://parlour//lib/parlour/rbi_generator/method.rb#45
   sig do
     params(
@@ -821,6 +854,7 @@ end
 # source://parlour//lib/parlour/rbi_generator/module_namespace.rb#5
 class Parlour::RbiGenerator::ModuleNamespace < ::Parlour::RbiGenerator::Namespace
   extend T::Generic
+  extend T::Sig
 
   Child = type_member { { fixed: Parlour::RbiGenerator::RbiObject } }
 
@@ -874,6 +908,8 @@ end
 class Parlour::RbiGenerator::Namespace < ::Parlour::RbiGenerator::RbiObject
   extend T::Generic
   include ::Parlour::Mixin::Searchable
+  include Mixin::Searchable
+  extend T::Sig
 
   Child = type_member { { fixed: Parlour::RbiGenerator::RbiObject } }
 
@@ -913,6 +949,7 @@ class Parlour::RbiGenerator::Namespace < ::Parlour::RbiGenerator::RbiObject
   # @return [RbiGenerator::Arbitrary]
   #
   # source://parlour//lib/parlour/rbi_generator/namespace.rb#482
+  sig { params(code: T.untyped, block: T.untyped).returns(T.untyped) }
   def create_arbitrary(code:, &block); end
 
   # @param name [String]
@@ -922,7 +959,7 @@ class Parlour::RbiGenerator::Namespace < ::Parlour::RbiGenerator::RbiObject
   # @param block [T.proc.params(x: Attribute).void, nil]
   # @return [Attribute]
   #
-  # source://sorbet-runtime/0.5.12214/lib/types/private/methods/_methods.rb#257
+  # source://sorbet-runtime/0.5.12219/lib/types/private/methods/_methods.rb#257
   def create_attr(*args, **_arg1, &blk); end
 
   # source://parlour//lib/parlour/rbi_generator/namespace.rb#472
@@ -1131,7 +1168,7 @@ class Parlour::RbiGenerator::Namespace < ::Parlour::RbiGenerator::RbiObject
 
   # @return [Array<RbiGenerator::TypeAlias>]
   #
-  # source://sorbet-runtime/0.5.12214/lib/types/private/methods/_methods.rb#257
+  # source://sorbet-runtime/0.5.12219/lib/types/private/methods/_methods.rb#257
   def type_aliases(*args, **_arg1, &blk); end
 
   private
@@ -1155,6 +1192,8 @@ Parlour::RbiGenerator::Options = Parlour::Options
 #
 # source://parlour//lib/parlour/rbi_generator/parameter.rb#6
 class Parlour::RbiGenerator::Parameter
+  extend T::Sig
+
   # source://parlour//lib/parlour/rbi_generator/parameter.rb#37
   sig do
     params(
@@ -1263,6 +1302,7 @@ end
 # source://parlour//lib/parlour/rbi_generator/struct_class_namespace.rb#6
 class Parlour::RbiGenerator::StructClassNamespace < ::Parlour::RbiGenerator::ClassNamespace
   extend T::Generic
+  extend T::Sig
 
   Child = type_member { { fixed: Parlour::RbiGenerator::RbiObject } }
 
@@ -1309,6 +1349,8 @@ end
 #
 # source://parlour//lib/parlour/rbi_generator/struct_prop.rb#5
 class Parlour::RbiGenerator::StructProp
+  extend T::Sig
+
   # source://parlour//lib/parlour/rbi_generator/struct_prop.rb#33
   sig do
     params(
@@ -1445,6 +1487,7 @@ class Parlour::RbsGenerator < ::Parlour::Generator
   # @return [RbsGenerator] a new instance of RbsGenerator
   #
   # source://parlour//lib/parlour/rbs_generator.rb#5
+  sig { params(hash: T.untyped).void }
   def initialize(**hash); end
 
   # source://parlour//lib/parlour/rbs_generator.rb#19
@@ -1504,6 +1547,8 @@ end
 #
 # source://parlour//lib/parlour/rbs_generator/attribute.rb#5
 class Parlour::RbsGenerator::Attribute < ::Parlour::RbsGenerator::Method
+  extend T::Sig
+
   # source://parlour//lib/parlour/rbs_generator/attribute.rb#27
   sig do
     params(
@@ -1542,6 +1587,8 @@ end
 #
 # source://parlour//lib/parlour/rbs_generator/block.rb#6
 class Parlour::RbsGenerator::Block
+  extend T::Sig
+
   # source://parlour//lib/parlour/rbs_generator/block.rb#14
   sig { params(type: ::Parlour::Types::Proc, required: T::Boolean).void }
   def initialize(type, required); end
@@ -1568,6 +1615,7 @@ end
 # source://parlour//lib/parlour/rbs_generator/class_namespace.rb#5
 class Parlour::RbsGenerator::ClassNamespace < ::Parlour::RbsGenerator::Namespace
   extend T::Generic
+  extend T::Sig
 
   Child = type_member { { fixed: Parlour::RbsGenerator::RbsObject } }
 
@@ -1726,6 +1774,7 @@ end
 # source://parlour//lib/parlour/rbs_generator/interface_namespace.rb#5
 class Parlour::RbsGenerator::InterfaceNamespace < ::Parlour::RbsGenerator::Namespace
   extend T::Generic
+  extend T::Sig
 
   Child = type_member { { fixed: Parlour::RbsGenerator::RbsObject } }
 
@@ -1742,6 +1791,8 @@ end
 #
 # source://parlour//lib/parlour/rbs_generator/method.rb#5
 class Parlour::RbsGenerator::Method < ::Parlour::RbsGenerator::RbsObject
+  extend T::Sig
+
   # source://parlour//lib/parlour/rbs_generator/method.rb#29
   sig do
     params(
@@ -1788,6 +1839,8 @@ end
 #
 # source://parlour//lib/parlour/rbs_generator/method_signature.rb#6
 class Parlour::RbsGenerator::MethodSignature
+  extend T::Sig
+
   # source://parlour//lib/parlour/rbs_generator/method_signature.rb#25
   sig do
     params(
@@ -1833,6 +1886,7 @@ end
 # source://parlour//lib/parlour/rbs_generator/module_namespace.rb#5
 class Parlour::RbsGenerator::ModuleNamespace < ::Parlour::RbsGenerator::Namespace
   extend T::Generic
+  extend T::Sig
 
   Child = type_member { { fixed: Parlour::RbsGenerator::RbsObject } }
 
@@ -1852,6 +1906,8 @@ end
 class Parlour::RbsGenerator::Namespace < ::Parlour::RbsGenerator::RbsObject
   extend T::Generic
   include ::Parlour::Mixin::Searchable
+  include Mixin::Searchable
+  extend T::Sig
 
   Child = type_member { { fixed: Parlour::RbsGenerator::RbsObject } }
 
@@ -1889,6 +1945,7 @@ class Parlour::RbsGenerator::Namespace < ::Parlour::RbsGenerator::RbsObject
   # @return [RbsGenerator::Arbitrary]
   #
   # source://parlour//lib/parlour/rbs_generator/namespace.rb#357
+  sig { params(code: T.untyped, block: T.untyped).returns(T.untyped) }
   def create_arbitrary(code:, &block); end
 
   # @param name [String]
@@ -1897,7 +1954,7 @@ class Parlour::RbsGenerator::Namespace < ::Parlour::RbsGenerator::RbsObject
   # @param block [T.proc.params(x: Attribute).void, nil]
   # @return [Attribute]
   #
-  # source://sorbet-runtime/0.5.12214/lib/types/private/methods/_methods.rb#257
+  # source://sorbet-runtime/0.5.12219/lib/types/private/methods/_methods.rb#257
   def create_attr(*args, **_arg1, &blk); end
 
   # source://parlour//lib/parlour/rbs_generator/namespace.rb#347
@@ -2064,7 +2121,7 @@ class Parlour::RbsGenerator::Namespace < ::Parlour::RbsGenerator::RbsObject
 
   # @return [Array<RbsGenerator::TypeAlias>]
   #
-  # source://sorbet-runtime/0.5.12214/lib/types/private/methods/_methods.rb#257
+  # source://sorbet-runtime/0.5.12219/lib/types/private/methods/_methods.rb#257
   def type_aliases(*args, **_arg1, &blk); end
 
   private
@@ -2082,6 +2139,8 @@ end
 #
 # source://parlour//lib/parlour/rbs_generator/parameter.rb#5
 class Parlour::RbsGenerator::Parameter
+  extend T::Sig
+
   # source://parlour//lib/parlour/rbs_generator/parameter.rb#37
   sig { params(name: ::String, type: T.nilable(T.any(::Parlour::Types::Type, ::String)), required: T::Boolean).void }
   def initialize(name, type: T.unsafe(nil), required: T.unsafe(nil)); end
@@ -2209,6 +2268,8 @@ end
 
 # source://parlour//lib/parlour/type_loader.rb#7
 module Parlour::TypeLoader
+  extend T::Sig
+
   class << self
     # source://parlour//lib/parlour/type_loader.rb#29
     sig do
@@ -2249,6 +2310,8 @@ end
 #
 # source://parlour//lib/parlour/type_parser.rb#17
 class Parlour::TypeParser
+  extend T::Sig
+
   # source://parlour//lib/parlour/type_parser.rb#95
   sig do
     params(
@@ -2413,7 +2476,7 @@ class Parlour::TypeParser::IntermediateSig < ::T::Struct
   prop :params, T.nilable(T::Array[::Parser::AST::Node])
 
   class << self
-    # source://sorbet-runtime/0.5.12214/lib/types/struct.rb#13
+    # source://sorbet-runtime/0.5.12219/lib/types/struct.rb#13
     def inherited(s); end
   end
 end
@@ -2423,6 +2486,8 @@ end
 #
 # source://parlour//lib/parlour/type_parser.rb#20
 class Parlour::TypeParser::NodePath
+  extend T::Sig
+
   # source://parlour//lib/parlour/type_parser.rb#31
   sig { params(indices: T::Array[::Integer]).void }
   def initialize(indices); end
@@ -2455,6 +2520,9 @@ end
 #
 # source://parlour//lib/parlour/typed_object.rb#5
 class Parlour::TypedObject
+  extend T::Sig
+  extend T::Helpers
+
   abstract!
 
   # source://parlour//lib/parlour/typed_object.rb#12
@@ -2468,7 +2536,7 @@ class Parlour::TypedObject
   # @param comment [String, Array<String>]
   # @return [void]
   #
-  # source://sorbet-runtime/0.5.12214/lib/types/private/methods/_methods.rb#257
+  # source://sorbet-runtime/0.5.12219/lib/types/private/methods/_methods.rb#257
   def add_comments(*args, **_arg1, &blk); end
 
   # source://parlour//lib/parlour/typed_object.rb#32
@@ -2489,7 +2557,7 @@ class Parlour::TypedObject
 
   # @return [String]
   #
-  # source://sorbet-runtime/0.5.12214/lib/types/private/methods/_methods.rb#257
+  # source://sorbet-runtime/0.5.12219/lib/types/private/methods/_methods.rb#257
   def inspect(*args, **_arg1, &blk); end
 
   # source://parlour//lib/parlour/typed_object.rb#26
@@ -2498,7 +2566,7 @@ class Parlour::TypedObject
 
   # @return [String]
   #
-  # source://sorbet-runtime/0.5.12214/lib/types/private/methods/_methods.rb#257
+  # source://sorbet-runtime/0.5.12219/lib/types/private/methods/_methods.rb#257
   def to_s(*args, **_arg1, &blk); end
 
   protected
@@ -2783,6 +2851,8 @@ end
 #
 # source://parlour//lib/parlour/types.rb#506
 class Parlour::Types::Proc::Parameter
+  extend T::Sig
+
   # source://parlour//lib/parlour/types.rb#510
   sig { params(name: ::String, type: T.any(::Parlour::Types::Type, ::String), default: T.nilable(::String)).void }
   def initialize(name, type, default = T.unsafe(nil)); end
@@ -2978,6 +3048,9 @@ end
 #
 # source://parlour//lib/parlour/types.rb#10
 class Parlour::Types::Type
+  extend T::Sig
+  extend T::Helpers
+
   abstract!
 
   # @abstract
@@ -2999,6 +3072,7 @@ class Parlour::Types::Type
   def generate_rbs; end
 
   # source://parlour//lib/parlour/types.rb#36
+  sig { returns(T.untyped) }
   def hash; end
 
   # source://parlour//lib/parlour/types.rb#32
