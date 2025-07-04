@@ -33,7 +33,7 @@ rbi/checkoff.rbi: tapioca.installed yardoc.installed sorbet/config ## Generate S
 	bin/sord gen $(SORD_GEN_OPTIONS) rbi/checkoff-sord.rbi
 	cat rbi/checkoff-parlour.rbi rbi/checkoff-sord.rbi > rbi/checkoff.rbi
 	rm -f rbi/checkoff-sord.rbi rbi/checkoff-parlour.rbi
-	sed -i.bak -e 's/^# typed: strong/# typed: ignore/' rbi/checkoff.rbi
+#	sed -i.bak -e 's/^# typed: strong/# typed: ignore/' rbi/checkoff.rbi
 	rm -f rbi/checkoff.rbi.bak
 
 sig/checkoff.rbs: yardoc.installed ## Generate RBS file
@@ -45,6 +45,7 @@ YARD_PLUGIN_OPTS = --plugin yard-sorbet --plugin yard-solargraph
 YARD_OPTS = $(YARD_PLUGIN_OPTS) -c .yardoc --output-dir yardoc --backtrace  --exclude '^config/'
 
 types.installed: tapioca.installed Gemfile.lock Gemfile.lock.installed rbi/checkoff.rbi sorbet/tapioca/require.rb sorbet/config ## Ensure typechecking dependencies are in place
+	bin/solargraph gems
 	bin/yard gems $(YARD_PLUGIN_OPTS) 2>&1 || bin/yard gems --safe $(YARD_PLUGIN_OPTS) 2>&1 || bin/yard gems $(YARD_PLUGIN_OPTS) 2>&1
 	# bin/solargraph scan 2>&1
 	bin/spoom srb bump || true
@@ -106,7 +107,7 @@ SORBET_TC_OPTIONS = --suppress-error-code 4010 # --suppress-error-code 4002
 srb: build-typecheck ## Run Sorbet typechecker
 	bin/srb tc $(SORBET_TC_OPTIONS)
 
-solargraph: solargraph-strict ## Run Solargraph typechecker
+solargraph: solargraph-strong ## Run Solargraph typechecker
 
 solargraph-normal: build-typecheck ## Run Solargraph typechecker
 	bin/solargraph typecheck --level normal
@@ -116,6 +117,9 @@ solargraph-typed: build-typecheck ## Run Solargraph typechecker
 
 solargraph-strict: build-typecheck ## Run Solargraph typechecker
 	bin/solargraph typecheck --level strict
+
+solargraph-strong: build-typecheck ## Run Solargraph typechecker
+	bin/solargraph typecheck --level strong
 
 typecheck: build-typecheck srb solargraph  ## validate types in code and configuration
 
@@ -171,7 +175,7 @@ overcommit: ## run precommit quality checks
 	bundle exec overcommit --run
 
 overcommit_branch: ## run precommit quality checks only on changed files
-	bundle exec overcommit --run --diff origin/main
+	bin/overcommit --run --diff origin/main
 
 quality: overcommit ## run precommit quality checks
 
