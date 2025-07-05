@@ -3,6 +3,7 @@
 
 # frozen_string_literal: true
 
+require 'json'
 require 'ostruct'
 require 'gli'
 require 'cache_method'
@@ -208,6 +209,7 @@ module Checkoff
 
     # @param workspace [String, Symbol]
     # @param project [String, Symbol]
+    #
     # @return [String]
     def run_on_project(workspace, project)
       tasks_by_section =
