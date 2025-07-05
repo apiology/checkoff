@@ -2464,7 +2464,7 @@ class YARD::CodeObjects::Base
   # @example Create class Z inside namespace X::Y
   #   CodeObjects::Base.new(P("X::Y"), :Z) # or
   #   CodeObjects::Base.new(Registry.root, "X::Y")
-  # @param namespace [NamespaceObject] the namespace the object belongs in,
+  # @param namespace [NamespaceObject, :root, nil] the namespace the object belongs in,
   #   {Registry.root} or :root should be provided if it is associated with
   #   the top level namespace.
   # @param name [Symbol, String] the name (or complex path) of the object.
@@ -6346,19 +6346,22 @@ class YARD::Handlers::Ruby::ConstantHandler < ::YARD::Handlers::Ruby::Base
 
   private
 
-  # Extract the parameters from the Struct.new AST node, returning them as a list
+  # Extract the parameters from the Struct.new or Data.define AST node, returning them as a list
   # of strings
   #
-  # @param superclass [MethodCallNode] the AST node for the Struct.new call
+  # @param superclass [MethodCallNode] the AST node for the Struct.new or Data.define call
   # @return [Array<String>] the member names to generate methods for
   #
-  # source://yard//lib/yard/handlers/ruby/constant_handler.rb#49
+  # source://yard//lib/yard/handlers/ruby/constant_handler.rb#66
   def extract_parameters(superclass); end
 
-  # source://yard//lib/yard/handlers/ruby/constant_handler.rb#21
+  # source://yard//lib/yard/handlers/ruby/constant_handler.rb#24
   def process_constant(statement); end
 
-  # source://yard//lib/yard/handlers/ruby/constant_handler.rb#33
+  # source://yard//lib/yard/handlers/ruby/constant_handler.rb#47
+  def process_dataclass(statement); end
+
+  # source://yard//lib/yard/handlers/ruby/constant_handler.rb#36
   def process_structclass(statement); end
 end
 
@@ -10772,7 +10775,7 @@ class YARD::Parser::Ruby::RipperParser < ::Ripper
 
   # @since 0.5.6
   #
-  # source://yard//lib/yard/parser/ruby/ruby_parser.rb#667
+  # source://yard//lib/yard/parser/ruby/ruby_parser.rb#669
   def add_comment(line, node = T.unsafe(nil), before_node = T.unsafe(nil), into = T.unsafe(nil)); end
 
   # @since 0.5.6
@@ -10794,7 +10797,7 @@ class YARD::Parser::Ruby::RipperParser < ::Ripper
 
   # @since 0.5.6
   #
-  # source://yard//lib/yard/parser/ruby/ruby_parser.rb#693
+  # source://yard//lib/yard/parser/ruby/ruby_parser.rb#695
   def freeze_tree(node = T.unsafe(nil)); end
 
   # @since 0.5.6
@@ -16228,7 +16231,7 @@ class YARD::Tags::Tag
   # +raise+, etc.
   #
   # @param tag_name [#to_s] the tag name to create the tag for
-  # @param text [String] the descriptive text for this tag
+  # @param text [String, nil] the descriptive text for this tag, or nil if none provided
   # @param types [Array<String>] optional type list of formally declared types
   #   for the tag
   # @param name [String] optional key name which the tag refers to
@@ -16847,7 +16850,7 @@ end
 
 # The helper module for HTML templates.
 #
-# source://yard//lib/yard/templates/helpers/html_helper.rb#7
+# source://yard//lib/yard/templates/helpers/html_helper.rb#11
 module YARD::Templates::Helpers::HtmlHelper
   include ::YARD::Templates::Helpers::MarkupHelper
   include ::YARD::Templates::Helpers::ModuleHelper
@@ -16856,7 +16859,7 @@ module YARD::Templates::Helpers::HtmlHelper
   # @param object [CodeObjects::Base] the object to get an anchor for
   # @return [String] the anchor for a specific object
   #
-  # source://yard//lib/yard/templates/helpers/html_helper.rb#347
+  # source://yard//lib/yard/templates/helpers/html_helper.rb#351
   def anchor_for(object); end
 
   # Returns the current character set. The default value can be overridden
@@ -16867,14 +16870,14 @@ module YARD::Templates::Helpers::HtmlHelper
   # @return [String] the current character set
   # @since 0.5.4
   #
-  # source://yard//lib/yard/templates/helpers/html_helper.rb#574
+  # source://yard//lib/yard/templates/helpers/html_helper.rb#578
   def charset; end
 
   # Formats a list of objects and links them
   #
   # @return [String] a formatted list of objects
   #
-  # source://yard//lib/yard/templates/helpers/html_helper.rb#458
+  # source://yard//lib/yard/templates/helpers/html_helper.rb#462
   def format_object_name_list(objects); end
 
   # Formats a list of types from a tag.
@@ -16886,7 +16889,7 @@ module YARD::Templates::Helpers::HtmlHelper
   #   as [Type1, Type2, ...] with the types linked
   #   to their respective descriptions.
   #
-  # source://yard//lib/yard/templates/helpers/html_helper.rb#476
+  # source://yard//lib/yard/templates/helpers/html_helper.rb#480
   def format_types(typelist, brackets = T.unsafe(nil)); end
 
   # Escapes HTML entities
@@ -16894,7 +16897,7 @@ module YARD::Templates::Helpers::HtmlHelper
   # @param text [String] the text to escape
   # @return [String] the HTML with escaped entities
   #
-  # source://yard//lib/yard/templates/helpers/html_helper.rb#23
+  # source://yard//lib/yard/templates/helpers/html_helper.rb#27
   def h(text); end
 
   # Converts Asciidoc to HTML
@@ -16902,7 +16905,7 @@ module YARD::Templates::Helpers::HtmlHelper
   # @param text [String] input Asciidoc text
   # @return [String] output HTML
   #
-  # source://yard//lib/yard/templates/helpers/html_helper.rb#109
+  # source://yard//lib/yard/templates/helpers/html_helper.rb#113
   def html_markup_asciidoc(text); end
 
   # Converts HTML to HTML
@@ -16911,7 +16914,7 @@ module YARD::Templates::Helpers::HtmlHelper
   # @return [String] output HTML
   # @since 0.6.0
   #
-  # source://yard//lib/yard/templates/helpers/html_helper.rb#168
+  # source://yard//lib/yard/templates/helpers/html_helper.rb#172
   def html_markup_html(text); end
 
   # Converts Markdown to HTML
@@ -16920,13 +16923,13 @@ module YARD::Templates::Helpers::HtmlHelper
   # @return [String] output HTML
   # @since 0.6.0
   #
-  # source://yard//lib/yard/templates/helpers/html_helper.rb#78
+  # source://yard//lib/yard/templates/helpers/html_helper.rb#82
   def html_markup_markdown(text); end
 
   # @return [String] the same text with no markup
   # @since 0.6.6
   #
-  # source://yard//lib/yard/templates/helpers/html_helper.rb#160
+  # source://yard//lib/yard/templates/helpers/html_helper.rb#164
   def html_markup_none(text); end
 
   # Converts org-mode to HTML
@@ -16934,7 +16937,7 @@ module YARD::Templates::Helpers::HtmlHelper
   # @param text [String] input org-mode text
   # @return [String] output HTML
   #
-  # source://yard//lib/yard/templates/helpers/html_helper.rb#102
+  # source://yard//lib/yard/templates/helpers/html_helper.rb#106
   def html_markup_org(text); end
 
   # Converts plaintext to pre-formatted HTML
@@ -16943,7 +16946,7 @@ module YARD::Templates::Helpers::HtmlHelper
   # @return [String] the output HTML
   # @since 0.6.0
   #
-  # source://yard//lib/yard/templates/helpers/html_helper.rb#146
+  # source://yard//lib/yard/templates/helpers/html_helper.rb#150
   def html_markup_pre(text); end
 
   # Converts RDoc formatting (SimpleMarkup) to HTML
@@ -16952,7 +16955,7 @@ module YARD::Templates::Helpers::HtmlHelper
   # @return [String] output HTML
   # @since 0.6.0
   #
-  # source://yard//lib/yard/templates/helpers/html_helper.rb#136
+  # source://yard//lib/yard/templates/helpers/html_helper.rb#140
   def html_markup_rdoc(text); end
 
   # Highlights Ruby source. Similar to {#html_syntax_highlight}, but
@@ -16963,7 +16966,7 @@ module YARD::Templates::Helpers::HtmlHelper
   # @return [String] the highlighted HTML
   # @since 0.7.0
   #
-  # source://yard//lib/yard/templates/helpers/html_helper.rb#179
+  # source://yard//lib/yard/templates/helpers/html_helper.rb#183
   def html_markup_ruby(source); end
 
   # Converts plaintext to regular HTML
@@ -16972,7 +16975,7 @@ module YARD::Templates::Helpers::HtmlHelper
   # @return [String] the output HTML
   # @since 0.6.0
   #
-  # source://yard//lib/yard/templates/helpers/html_helper.rb#154
+  # source://yard//lib/yard/templates/helpers/html_helper.rb#158
   def html_markup_text(text); end
 
   # Converts Textile to HTML
@@ -16981,7 +16984,7 @@ module YARD::Templates::Helpers::HtmlHelper
   # @return [String] output HTML
   # @since 0.6.0
   #
-  # source://yard//lib/yard/templates/helpers/html_helper.rb#118
+  # source://yard//lib/yard/templates/helpers/html_helper.rb#122
   def html_markup_textile(text); end
 
   # Converts plaintext to strict Textile (hard breaks)
@@ -16990,7 +16993,7 @@ module YARD::Templates::Helpers::HtmlHelper
   # @return [String] the output HTML
   # @since 0.6.0
   #
-  # source://yard//lib/yard/templates/helpers/html_helper.rb#128
+  # source://yard//lib/yard/templates/helpers/html_helper.rb#132
   def html_markup_textile_strict(text); end
 
   # Syntax highlights +source+ in language +type+.
@@ -17002,12 +17005,12 @@ module YARD::Templates::Helpers::HtmlHelper
   #   :plain for no syntax highlighting.
   # @return [String] the highlighted source
   #
-  # source://yard//lib/yard/templates/helpers/html_helper.rb#199
+  # source://yard//lib/yard/templates/helpers/html_helper.rb#203
   def html_syntax_highlight(source, type = T.unsafe(nil)); end
 
   # @return [String] unhighlighted source
   #
-  # source://yard//lib/yard/templates/helpers/html_helper.rb#210
+  # source://yard//lib/yard/templates/helpers/html_helper.rb#214
   def html_syntax_highlight_plain(source); end
 
   # Turns text into HTML using +markup+ style formatting.
@@ -17017,17 +17020,17 @@ module YARD::Templates::Helpers::HtmlHelper
   #   To add a custom markup type, see {MarkupHelper}
   # @return [String] the HTML
   #
-  # source://yard//lib/yard/templates/helpers/html_helper.rb#57
+  # source://yard//lib/yard/templates/helpers/html_helper.rb#61
   def htmlify(text, markup = T.unsafe(nil)); end
 
   # @return [String] HTMLified text as a single line (paragraphs removed)
   #
-  # source://yard//lib/yard/templates/helpers/html_helper.rb#184
+  # source://yard//lib/yard/templates/helpers/html_helper.rb#188
   def htmlify_line(*args); end
 
   # Inserts an include link while respecting inlining
   #
-  # source://yard//lib/yard/templates/helpers/html_helper.rb#296
+  # source://yard//lib/yard/templates/helpers/html_helper.rb#300
   def insert_include(text, markup = T.unsafe(nil)); end
 
   # Links to an extra file
@@ -17038,7 +17041,7 @@ module YARD::Templates::Helpers::HtmlHelper
   # @return [String] the link to the file
   # @since 0.5.5
   #
-  # source://yard//lib/yard/templates/helpers/html_helper.rb#270
+  # source://yard//lib/yard/templates/helpers/html_helper.rb#274
   def link_file(filename, title = T.unsafe(nil), anchor = T.unsafe(nil)); end
 
   # Include a file as a docstring in output
@@ -17047,7 +17050,7 @@ module YARD::Templates::Helpers::HtmlHelper
   # @return [String] the file's contents
   # @since 0.7.0
   #
-  # source://yard//lib/yard/templates/helpers/html_helper.rb#282
+  # source://yard//lib/yard/templates/helpers/html_helper.rb#286
   def link_include_file(file); end
 
   # Includes an object's docstring into output.
@@ -17056,7 +17059,7 @@ module YARD::Templates::Helpers::HtmlHelper
   # @return [String] the object's docstring (no tags)
   # @since 0.6.0
   #
-  # source://yard//lib/yard/templates/helpers/html_helper.rb#291
+  # source://yard//lib/yard/templates/helpers/html_helper.rb#295
   def link_include_object(obj); end
 
   # Links to an object with an optional title
@@ -17065,7 +17068,7 @@ module YARD::Templates::Helpers::HtmlHelper
   # @param title [String] the title to use for the link
   # @return [String] the linked object
   #
-  # source://yard//lib/yard/templates/helpers/html_helper.rb#301
+  # source://yard//lib/yard/templates/helpers/html_helper.rb#305
   def link_object(obj, title = T.unsafe(nil), anchor = T.unsafe(nil), relative = T.unsafe(nil)); end
 
   # Links to a URL
@@ -17075,10 +17078,10 @@ module YARD::Templates::Helpers::HtmlHelper
   # @param params [Hash] optional parameters for the link
   # @return [String] the linked URL
   #
-  # source://yard//lib/yard/templates/helpers/html_helper.rb#332
+  # source://yard//lib/yard/templates/helpers/html_helper.rb#336
   def link_url(url, title = T.unsafe(nil), params = T.unsafe(nil)); end
 
-  # source://yard//lib/yard/templates/helpers/html_helper.rb#400
+  # source://yard//lib/yard/templates/helpers/html_helper.rb#404
   def mtime(_file); end
 
   # Returns the URL for an object.
@@ -17088,7 +17091,7 @@ module YARD::Templates::Helpers::HtmlHelper
   # @param relative [Boolean] use a relative or absolute link
   # @return [String] the URL location of the object
   #
-  # source://yard//lib/yard/templates/helpers/html_helper.rb#368
+  # source://yard//lib/yard/templates/helpers/html_helper.rb#372
   def mtime_url(obj, anchor = T.unsafe(nil), relative = T.unsafe(nil)); end
 
   # Resolves any text in the form of +{Name}+ to the object specified by
@@ -17101,7 +17104,7 @@ module YARD::Templates::Helpers::HtmlHelper
   # @param text [String] the text to resolve links in
   # @return [String] HTML with linkified references
   #
-  # source://yard//lib/yard/templates/helpers/html_helper.rb#225
+  # source://yard//lib/yard/templates/helpers/html_helper.rb#229
   def resolve_links(text); end
 
   # Formats the signature of method +meth+.
@@ -17114,7 +17117,7 @@ module YARD::Templates::Helpers::HtmlHelper
   #   ("name=" instead of "name")
   # @return [String] the formatted method signature
   #
-  # source://yard//lib/yard/templates/helpers/html_helper.rb#529
+  # source://yard//lib/yard/templates/helpers/html_helper.rb#533
   def signature(meth, link = T.unsafe(nil), show_extras = T.unsafe(nil), full_attr_name = T.unsafe(nil)); end
 
   # Get the return types for a method signature.
@@ -17124,7 +17127,7 @@ module YARD::Templates::Helpers::HtmlHelper
   # @return [String] the signature types
   # @since 0.5.3
   #
-  # source://yard//lib/yard/templates/helpers/html_helper.rb#492
+  # source://yard//lib/yard/templates/helpers/html_helper.rb#496
   def signature_types(meth, link = T.unsafe(nil)); end
 
   # Returns the URL for an object.
@@ -17134,7 +17137,7 @@ module YARD::Templates::Helpers::HtmlHelper
   # @param relative [Boolean] use a relative or absolute link
   # @return [String] the URL location of the object
   #
-  # source://yard//lib/yard/templates/helpers/html_helper.rb#368
+  # source://yard//lib/yard/templates/helpers/html_helper.rb#372
   def url_for(obj, anchor = T.unsafe(nil), relative = T.unsafe(nil)); end
 
   # Returns the URL for a specific file
@@ -17143,7 +17146,7 @@ module YARD::Templates::Helpers::HtmlHelper
   # @param anchor [String] optional anchor
   # @return [String] the URL pointing to the file
   #
-  # source://yard//lib/yard/templates/helpers/html_helper.rb#407
+  # source://yard//lib/yard/templates/helpers/html_helper.rb#411
   def url_for_file(filename, anchor = T.unsafe(nil)); end
 
   # Returns the URL for the frameset page
@@ -17151,7 +17154,7 @@ module YARD::Templates::Helpers::HtmlHelper
   # @return [String] the URL pointing to the frames page
   # @since 0.8.0
   #
-  # source://yard//lib/yard/templates/helpers/html_helper.rb#434
+  # source://yard//lib/yard/templates/helpers/html_helper.rb#438
   def url_for_frameset; end
 
   # Returns the URL for the alphabetic index page
@@ -17159,7 +17162,7 @@ module YARD::Templates::Helpers::HtmlHelper
   # @return [String] the URL pointing to the first main page the
   #   user should see.
   #
-  # source://yard//lib/yard/templates/helpers/html_helper.rb#450
+  # source://yard//lib/yard/templates/helpers/html_helper.rb#454
   def url_for_index; end
 
   # Returns the URL for a list type
@@ -17168,7 +17171,7 @@ module YARD::Templates::Helpers::HtmlHelper
   # @return [String] the URL pointing to the list
   # @since 0.8.0
   #
-  # source://yard//lib/yard/templates/helpers/html_helper.rb#426
+  # source://yard//lib/yard/templates/helpers/html_helper.rb#430
   def url_for_list(type); end
 
   # Returns the URL for the main page (README or alphabetic index)
@@ -17176,7 +17179,7 @@ module YARD::Templates::Helpers::HtmlHelper
   # @return [String] the URL pointing to the first main page the
   #   user should see.
   #
-  # source://yard//lib/yard/templates/helpers/html_helper.rb#442
+  # source://yard//lib/yard/templates/helpers/html_helper.rb#446
   def url_for_main; end
 
   private
@@ -17185,7 +17188,7 @@ module YARD::Templates::Helpers::HtmlHelper
   #
   # @since 0.5.3
   #
-  # source://yard//lib/yard/templates/helpers/html_helper.rb#609
+  # source://yard//lib/yard/templates/helpers/html_helper.rb#613
   def convert_method_to_overload(meth); end
 
   # Parses code block's HTML attributes in order to detect the programming
@@ -17196,7 +17199,7 @@ module YARD::Templates::Helpers::HtmlHelper
   #   element
   # @return [String, nil] detected programming language
   #
-  # source://yard//lib/yard/templates/helpers/html_helper.rb#664
+  # source://yard//lib/yard/templates/helpers/html_helper.rb#668
   def detect_lang_in_codeblock_attributes(pre_html_attrs, code_html_attrs); end
 
   # Parses code blocks out of html and performs syntax highlighting
@@ -17206,7 +17209,7 @@ module YARD::Templates::Helpers::HtmlHelper
   # @return [String] highlighted html
   # @see #html_syntax_highlight
   #
-  # source://yard//lib/yard/templates/helpers/html_helper.rb#640
+  # source://yard//lib/yard/templates/helpers/html_helper.rb#644
   def parse_codeblocks(html); end
 
   # Parses !!!lang out of codeblock, returning the codeblock language
@@ -17217,7 +17220,7 @@ module YARD::Templates::Helpers::HtmlHelper
   #   remaining source
   # @since 0.7.5
   #
-  # source://yard//lib/yard/templates/helpers/html_helper.rb#624
+  # source://yard//lib/yard/templates/helpers/html_helper.rb#628
   def parse_lang_for_codeblock(source); end
 
   # Converts a set of hash options into HTML attributes for a tag
@@ -17225,7 +17228,7 @@ module YARD::Templates::Helpers::HtmlHelper
   # @param opts [Hash{String => String}] the tag options
   # @return [String] the tag attributes of an HTML tag
   #
-  # source://yard//lib/yard/templates/helpers/html_helper.rb#603
+  # source://yard//lib/yard/templates/helpers/html_helper.rb#607
   def tag_attrs(opts = T.unsafe(nil)); end
 
   # Escapes a URL
@@ -17233,7 +17236,7 @@ module YARD::Templates::Helpers::HtmlHelper
   # @param text [String] the URL
   # @return [String] the escaped URL
   #
-  # source://yard//lib/yard/templates/helpers/html_helper.rb#31
+  # source://yard//lib/yard/templates/helpers/html_helper.rb#35
   def urlencode(text); end
 
   class << self
@@ -17242,19 +17245,19 @@ module YARD::Templates::Helpers::HtmlHelper
     # @param text [String] the URL
     # @return [String] the escaped URL
     #
-    # source://yard//lib/yard/templates/helpers/html_helper.rb#31
+    # source://yard//lib/yard/templates/helpers/html_helper.rb#35
     def urlencode(text); end
   end
 end
 
 # @private
 #
-# source://yard//lib/yard/templates/helpers/html_helper.rb#15
+# source://yard//lib/yard/templates/helpers/html_helper.rb#19
 YARD::Templates::Helpers::HtmlHelper::ASCIIDOC_ATTRIBUTES = T.let(T.unsafe(nil), Hash)
 
 # @private
 #
-# source://yard//lib/yard/templates/helpers/html_helper.rb#12
+# source://yard//lib/yard/templates/helpers/html_helper.rb#16
 YARD::Templates::Helpers::HtmlHelper::URLMATCH = T.let(T.unsafe(nil), Regexp)
 
 # Helper methods for syntax highlighting.
@@ -17301,9 +17304,10 @@ end
 
 # source://yard//lib/yard/templates/helpers/markup/rdoc_markup.rb#12
 class YARD::Templates::Helpers::Markup::RDocMarkup
+  # @param text [String]
   # @return [RDocMarkup] a new instance of RDocMarkup
   #
-  # source://yard//lib/yard/templates/helpers/markup/rdoc_markup.rb#41
+  # source://yard//lib/yard/templates/helpers/markup/rdoc_markup.rb#42
   def initialize(text); end
 
   # Returns the value of attribute from_path.
@@ -17318,7 +17322,9 @@ class YARD::Templates::Helpers::Markup::RDocMarkup
   # source://yard//lib/yard/templates/helpers/markup/rdoc_markup.rb#35
   def from_path=(_arg0); end
 
-  # source://yard//lib/yard/templates/helpers/markup/rdoc_markup.rb#50
+  # @return [String]
+  #
+  # source://yard//lib/yard/templates/helpers/markup/rdoc_markup.rb#52
   def to_html; end
 
   private
@@ -17328,14 +17334,14 @@ class YARD::Templates::Helpers::Markup::RDocMarkup
   #
   # @todo Refactor into own SimpleMarkup subclass
   #
-  # source://yard//lib/yard/templates/helpers/markup/rdoc_markup.rb#87
+  # source://yard//lib/yard/templates/helpers/markup/rdoc_markup.rb#89
   def fix_dash_dash(text); end
 
   # Fixes RDoc behaviour with ++ only supporting alphanumeric text.
   #
   # @todo Refactor into own SimpleMarkup subclass
   #
-  # source://yard//lib/yard/templates/helpers/markup/rdoc_markup.rb#66
+  # source://yard//lib/yard/templates/helpers/markup/rdoc_markup.rb#68
   def fix_typewriter(text); end
 end
 
@@ -17347,24 +17353,24 @@ class YARD::Templates::Helpers::Markup::RDocMarkupToHtml < ::RDoc::Markup::ToHtm
   # source://yard//lib/yard/templates/helpers/markup/rdoc_markup.rb#16
   def initialize; end
 
-  # source://yard//lib/yard/templates/helpers/markup/rdoc_markup.rb#100
+  # source://yard//lib/yard/templates/helpers/markup/rdoc_markup.rb#102
   def accept_paragraph(*args); end
 
   # Returns the value of attribute from_path.
   #
-  # source://yard//lib/yard/templates/helpers/markup/rdoc_markup.rb#93
+  # source://yard//lib/yard/templates/helpers/markup/rdoc_markup.rb#95
   def from_path; end
 
   # Sets the attribute from_path
   #
   # @param value the value to set the attribute from_path to.
   #
-  # source://yard//lib/yard/templates/helpers/markup/rdoc_markup.rb#93
+  # source://yard//lib/yard/templates/helpers/markup/rdoc_markup.rb#95
   def from_path=(_arg0); end
 
   # Disable auto-link of URLs
   #
-  # source://yard//lib/yard/templates/helpers/markup/rdoc_markup.rb#96
+  # source://yard//lib/yard/templates/helpers/markup/rdoc_markup.rb#98
   def handle_special_HYPERLINK(special); end
 end
 

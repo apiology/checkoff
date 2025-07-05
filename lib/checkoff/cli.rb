@@ -3,6 +3,7 @@
 
 # frozen_string_literal: true
 
+require 'json'
 require 'ostruct'
 require 'gli'
 require 'cache_method'
@@ -208,13 +209,16 @@ module Checkoff
 
     # @param workspace [String, Symbol]
     # @param project [String, Symbol]
+    #
     # @return [String]
+    # @sg-ignore
     def run_on_project(workspace, project)
       tasks_by_section =
         sections.tasks_by_section(workspace, project)
       tasks_by_section.update(tasks_by_section) do |_key, tasks|
         tasks_to_hash(tasks)
       end
+      # @sg-ignore
       tasks_by_section.to_json
     end
 
@@ -222,9 +226,11 @@ module Checkoff
     # @param project [String, Symbol]
     # @param section [String, Symbol, nil]
     # @return [String]
+    # @sg-ignore
     def run_on_section(workspace, project, section)
       section = nil if section == ''
       tasks = sections.tasks(workspace, project, section) || []
+      # @sg-ignore
       tasks_to_hash(tasks).to_json
     end
 
@@ -233,9 +239,11 @@ module Checkoff
     # @param section [String, Symbol, nil]
     # @param task_name [String]
     # @return [String]
+    # @sg-ignore
     def run_on_task(workspace, project, section, task_name)
       section = nil if section == ''
       task = tasks.task(workspace, project, task_name, section_name: section)
+      # @sg-ignore
       task_to_hash(task).to_json
     end
 

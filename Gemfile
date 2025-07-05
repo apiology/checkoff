@@ -47,7 +47,10 @@ group :development do
   # ensure version with RSpec/VerifiedDoubleReference
   gem 'rubocop-rspec', ['>=3.4.0']
   gem 'solargraph', ['>=0.56']
-  gem 'yard'
+  # need https://github.com/lsegal/yard/pull/1604
+  gem 'yard',
+      github: 'lsegal/yard',
+      branch: 'main'
   gem 'yard-sorbet'
 end
 
