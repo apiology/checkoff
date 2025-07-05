@@ -22,6 +22,13 @@ GIT
       sorbet-runtime
       yard
 
+GIT
+  remote: https://github.com/lsegal/yard.git
+  revision: 5b93b3a4f15a52f3165edef112e718149d294c38
+  branch: main
+  specs:
+    yard (0.9.37)
+
 PATH
   remote: .
   specs:
@@ -241,7 +248,6 @@ GEM
       addressable (>= 2.8.0)
       crack (>= 0.3.2)
       hashdiff (>= 0.4.0, < 2.0.0)
-    yard (0.9.37)
     yard-solargraph (0.1.0)
       yard (~> 0.9)
     yard-sorbet (0.9.0)
@@ -286,7 +292,7 @@ DEPENDENCIES
   tapioca (>= 0.16.0)
   undercover (>= 0.6.3)
   webmock
-  yard
+  yard!
   yard-sorbet
 
 BUNDLED WITH

@@ -28,21 +28,22 @@ start: ## run code continously and watch files for changes
 
 SORD_GEN_OPTIONS = --replace-errors-with-untyped --exclude-messages OMIT --no-regenerate #  --hide-private
 
-rbi/checkoff.rbi: tapioca.installed yardoc.installed sorbet/config ## Generate Sorbet types from Yard docs
-	bin/parlour run --trace
-	bin/sord gen $(SORD_GEN_OPTIONS) rbi/checkoff-sord.rbi
+rbi/checkoff.rbi: tapioca.installed yardoc.installed sorbet/config .gem_rbs_collection/.keepme ## Generate Sorbet types from Yard docs
+	bin/parlour run --trace # creates RBI file from from RBI inline annotations in code
+	bin/sord gen $(SORD_GEN_OPTIONS) rbi/checkoff-sord.rbi # YARD to RBI
 	cat rbi/checkoff-parlour.rbi rbi/checkoff-sord.rbi > rbi/checkoff.rbi
 	rm -f rbi/checkoff-sord.rbi rbi/checkoff-parlour.rbi
 #	sed -i.bak -e 's/^# typed: strong/# typed: ignore/' rbi/checkoff.rbi
 	rm -f rbi/checkoff.rbi.bak
+	touch rbi/checkoff.rbi
 
-sig/checkoff.rbs: yardoc.installed ## Generate RBS file
+sig/checkoff.rbs: yardoc.installed gem_rbs_collection/.keepme ## Generate RBS file
 	rm -f rbi/checkoff.rbs
-	bin/sord gen $(SORD_GEN_OPTIONS) sig/checkoff.rbs
+	bin/sord gen $(SORD_GEN_OPTIONS) sig/checkoff.rbs # YARD to RBS
 
 YARD_PLUGIN_OPTS = --plugin yard-sorbet --plugin yard-solargraph
 
-YARD_OPTS = $(YARD_PLUGIN_OPTS) -c .yardoc --output-dir yardoc --backtrace  --exclude '^config/'
+YARD_OPTS = $(YARD_PLUGIN_OPTS) -c .yardoc --output-dir yardoc --backtrace --exclude '^config/' '{lib,app,test}/**/*.rb' 'ext/**/*.{c,rb}'
 
 types.installed: tapioca.installed Gemfile.lock Gemfile.lock.installed rbi/checkoff.rbi sorbet/tapioca/require.rb sorbet/config ## Ensure typechecking dependencies are in place
 	bin/solargraph gems
@@ -64,7 +65,23 @@ sorbet/machine_specific_config:
 sorbet/rbi/todo.rbi: sorbet/tapioca/require.rb rbi/checkoff.rbi tapioca.installed
 	bin/tapioca todo
 
-build-typecheck: Gemfile.lock.installed types.installed sorbet/machine_specific_config sorbet/rbi/todo.rbi ## Fetch information that type checking depends on
+build-typecheck: Gemfile.lock.installed rbs_collection.lock.yaml types.installed sorbet/machine_specific_config sorbet/rbi/todo.rbi ## Fetch information that type checking depends on
+
+rbs_collection.lock.yaml: Gemfile.lock rbs_collection.yaml
+	bin/rbs collection update
+	touch rbs_collection.lock.yaml
+
+rbs_collection.yaml:
+	bin/rbs collection init
+
+.gem_rbs_collection/.keepme: rbs_collection.lock.yaml
+	# Ensure that the gem rbs collection is installed
+	bin/rbs collection install
+	touch .gem_rbs_collection/.keepme
+
+
+ci-build-typecheck: build-typecheck  ## Ensure cache is filled for CI to save regardless of actions run
+	bundle exec solargraph gems
 
 # Only create this once, so no dependencies
 sorbet/tapioca/require.rb:
@@ -88,13 +105,14 @@ docs: ## Generate YARD documentation
 	@rake doc
 
 clean-typecheck: ## Refresh the easily-regenerated information that type checking depends on
-	bin/solargraph clear || true
 	rm -fr .yardoc/ rbi/checkoff.rbi types.installed yardoc.installed sig/checkoff.rbs || true
 	rm -fr .yardoc/ rbi/checkoff.rbi types.installed yardoc.installed sig/checkoff.rbs || true
 	rm -fr ../checkoff/.yardoc || true
 	echo all clear
 
 realclean-typecheck: clean-typecheck ## Remove all type checking artifacts
+	bin/solargraph clear || true
+	rm -fr rbi/*.rbi
 	rm -fr ~/.cache/solargraph
 	rm -f tapioca.installed
 
@@ -133,7 +151,7 @@ solargraph-strict: build-typecheck ## Run Solargraph typechecker
 
 typecheck: build-typecheck srb solargraph  ## validate types in code and configuration
 
-citypecheck: build-typecheck srb solargraph  ## Run type check from CircleCI
+citypecheck: ci-build-typecheck srb solargraph ## Run type check from CircleCI
 
 typecoverage: typecheck ## Run type checking and then ratchet coverage in metrics/
 
