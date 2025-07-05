@@ -24,6 +24,8 @@ PreCommit:
     exclude:
       # used for development
       - 'config/env.1p'
+      # generated
+      - '.gem_rbs_collection/**/*'
   Fasterer:
     enabled: true
   BundleAudit:
@@ -45,7 +47,6 @@ PreCommit:
     problem_on_unmodified_line: warn
   FixMe:
     enabled: true
-    on_warn: fail
     exclude:
       # generated files:
       - 'sorbet/rbi/gems/**/*.rbi'
@@ -69,6 +70,8 @@ PreCommit:
     flags: ['-c', '.yamllint.yml', '--format=parsable', '--strict']
     on_warn: fail
     exclude:
+      - 'rbs_collection.yaml' # generated
+      - 'rbs_collection.lock.yaml' # generated
       - '.rubocop_todo.yml' # generated
       - 'sorbet/**/*' # generated
   CircleCi:
