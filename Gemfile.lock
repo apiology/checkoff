@@ -338,12 +338,14 @@ GEM
     tomlrb (2.0.3)
     tzinfo (2.0.6)
       concurrent-ruby (~> 1.0)
-    undercover (0.6.6)
+    undercover (0.7.1)
       base64
       bigdecimal
       imagen (>= 0.2.0)
       rainbow (>= 2.1, < 4.0)
       rugged (>= 0.27, < 1.10)
+      simplecov
+      simplecov_json_formatter
     unicode-display_width (3.1.4)
       unicode-emoji (~> 4.0, >= 4.0.4)
     unicode-emoji (4.0.4)
@@ -397,6 +399,7 @@ DEPENDENCIES
   rubocop-yard
   simplecov (>= 0.18.0)
   simplecov-lcov
+  simplecov_json_formatter
   solargraph (>= 0.56)
   sord!
   tapioca (>= 0.16.0)

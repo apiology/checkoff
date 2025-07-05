@@ -5,7 +5,7 @@
 # Please instead update this file by running `bin/tapioca gem undercover`.
 
 
-# source://undercover//lib/undercover/lcov_parser.rb#3
+# source://undercover//lib/undercover/root_to_relative_paths.rb#3
 module Undercover; end
 
 # source://undercover//lib/undercover/cli.rb#7
@@ -49,38 +49,36 @@ class Undercover::Changeset
   # source://undercover//lib/undercover/changeset.rb#19
   def last_modified; end
 
-  # TODO: refactor to a standalone validator (depending on changeset AND lcov)
-  #
-  # source://undercover//lib/undercover/changeset.rb#47
+  # source://undercover//lib/undercover/changeset.rb#46
   def validate(lcov_report_path); end
 
   private
 
   # Returns the value of attribute compare_base.
   #
-  # source://undercover//lib/undercover/changeset.rb#74
+  # source://undercover//lib/undercover/changeset.rb#73
   def compare_base; end
 
-  # source://undercover//lib/undercover/changeset.rb#62
+  # source://undercover//lib/undercover/changeset.rb#61
   def compare_base_obj; end
 
   # Returns the value of attribute filter_set.
   #
-  # source://undercover//lib/undercover/changeset.rb#74
+  # source://undercover//lib/undercover/changeset.rb#73
   def filter_set; end
 
   # Diffs `head` or `head` + `compare_base` (if exists),
   # as it makes sense to run Undercover with the most recent file versions
   #
-  # source://undercover//lib/undercover/changeset.rb#57
+  # source://undercover//lib/undercover/changeset.rb#56
   def full_diff; end
 
-  # source://undercover//lib/undercover/changeset.rb#70
+  # source://undercover//lib/undercover/changeset.rb#69
   def head; end
 
   # Returns the value of attribute repo.
   #
-  # source://undercover//lib/undercover/changeset.rb#74
+  # source://undercover//lib/undercover/changeset.rb#73
   def repo; end
 end
 
@@ -135,46 +133,53 @@ class Undercover::Formatter
   def warnings_header; end
 end
 
-# source://undercover//lib/undercover/lcov_parser.rb#4
+# source://undercover//lib/undercover/lcov_parser.rb#6
 class Undercover::LcovParseError < ::StandardError; end
 
-# source://undercover//lib/undercover/lcov_parser.rb#6
+# source://undercover//lib/undercover/lcov_parser.rb#8
 class Undercover::LcovParser
+  include ::Undercover::RootToRelativePaths
+
   # @return [LcovParser] a new instance of LcovParser
   #
-  # source://undercover//lib/undercover/lcov_parser.rb#9
-  def initialize(lcov_io); end
+  # source://undercover//lib/undercover/lcov_parser.rb#13
+  def initialize(lcov_io, opts); end
 
-  # source://undercover//lib/undercover/lcov_parser.rb#25
+  # source://undercover//lib/undercover/lcov_parser.rb#30
   def coverage(filepath); end
 
   # Returns the value of attribute io.
   #
-  # source://undercover//lib/undercover/lcov_parser.rb#7
+  # source://undercover//lib/undercover/lcov_parser.rb#11
   def io; end
 
-  # source://undercover//lib/undercover/lcov_parser.rb#19
+  # source://undercover//lib/undercover/lcov_parser.rb#24
   def parse; end
+
+  # @return [Boolean]
+  #
+  # source://undercover//lib/undercover/lcov_parser.rb#55
+  def skipped?(_filepath, _line_no); end
 
   # Returns the value of attribute source_files.
   #
-  # source://undercover//lib/undercover/lcov_parser.rb#7
+  # source://undercover//lib/undercover/lcov_parser.rb#11
   def source_files; end
 
-  # source://undercover//lib/undercover/lcov_parser.rb#41
+  # source://undercover//lib/undercover/lcov_parser.rb#46
   def total_branch_coverage; end
 
-  # source://undercover//lib/undercover/lcov_parser.rb#32
+  # source://undercover//lib/undercover/lcov_parser.rb#37
   def total_coverage; end
 
   private
 
-  # source://undercover//lib/undercover/lcov_parser.rb#53
+  # source://undercover//lib/undercover/lcov_parser.rb#63
   def parse_line(line); end
 
   class << self
-    # source://undercover//lib/undercover/lcov_parser.rb#14
-    def parse(lcov_report_path); end
+    # source://undercover//lib/undercover/lcov_parser.rb#19
+    def parse(lcov_report_path, opts = T.unsafe(nil)); end
   end
 end
 
@@ -182,7 +187,7 @@ end
 class Undercover::Options
   # @return [Options] a new instance of Options
   #
-  # source://undercover//lib/undercover/options.rb#47
+  # source://undercover//lib/undercover/options.rb#48
   def initialize; end
 
   # Returns the value of attribute compare.
@@ -269,7 +274,7 @@ class Undercover::Options
   # source://undercover//lib/undercover/options.rb#36
   def max_warnings_limit=(_arg0); end
 
-  # source://undercover//lib/undercover/options.rb#59
+  # source://undercover//lib/undercover/options.rb#60
   def parse(args); end
 
   # Returns the value of attribute path.
@@ -296,6 +301,18 @@ class Undercover::Options
   # source://undercover//lib/undercover/options.rb#36
   def run_mode=(_arg0); end
 
+  # Returns the value of attribute simplecov_resultset.
+  #
+  # source://undercover//lib/undercover/options.rb#36
+  def simplecov_resultset; end
+
+  # Sets the attribute simplecov_resultset
+  #
+  # @param value the value to set the attribute simplecov_resultset to.
+  #
+  # source://undercover//lib/undercover/options.rb#36
+  def simplecov_resultset=(_arg0); end
+
   # Returns the value of attribute syntax_version.
   #
   # source://undercover//lib/undercover/options.rb#36
@@ -310,40 +327,46 @@ class Undercover::Options
 
   private
 
-  # source://undercover//lib/undercover/options.rb#99
+  # source://undercover//lib/undercover/options.rb#104
   def args_from_options_file(path); end
 
-  # source://undercover//lib/undercover/options.rb#91
+  # source://undercover//lib/undercover/options.rb#96
   def build_opts(args); end
 
-  # source://undercover//lib/undercover/options.rb#128
+  # source://undercover//lib/undercover/options.rb#140
   def compare_option(parser); end
 
-  # source://undercover//lib/undercover/options.rb#155
+  # source://undercover//lib/undercover/options.rb#173
   def file_filters(parser); end
 
-  # source://undercover//lib/undercover/options.rb#121
+  # source://undercover//lib/undercover/options.rb#133
   def git_dir_option(parser); end
 
-  # source://undercover//lib/undercover/options.rb#150
+  # source://undercover//lib/undercover/options.rb#168
   def guess_lcov_path; end
 
-  # source://undercover//lib/undercover/options.rb#109
+  # source://undercover//lib/undercover/options.rb#162
+  def guess_resultset_path; end
+
+  # source://undercover//lib/undercover/options.rb#114
   def lcov_path_option(parser); end
 
-  # source://undercover//lib/undercover/options.rb#143
+  # source://undercover//lib/undercover/options.rb#155
   def max_warnings_limit_option(parser); end
 
-  # source://undercover//lib/undercover/options.rb#95
+  # source://undercover//lib/undercover/options.rb#100
   def project_options; end
 
-  # source://undercover//lib/undercover/options.rb#105
+  # source://undercover//lib/undercover/options.rb#110
   def project_options_file; end
 
-  # source://undercover//lib/undercover/options.rb#115
+  # source://undercover//lib/undercover/options.rb#127
   def project_path_option(parser); end
 
-  # source://undercover//lib/undercover/options.rb#135
+  # source://undercover//lib/undercover/options.rb#120
+  def resultset_path_option(parser); end
+
+  # source://undercover//lib/undercover/options.rb#147
   def ruby_syntax_option(parser); end
 end
 
@@ -365,7 +388,7 @@ Undercover::Options::FILE_SCOPE = T.let(T.unsafe(nil), Array)
 # source://undercover//lib/undercover/options.rb#26
 Undercover::Options::FILE_SCOPE_EXTENDED = T.let(T.unsafe(nil), Symbol)
 
-# source://undercover//lib/undercover.rb#19
+# source://undercover//lib/undercover.rb#22
 class Undercover::Report
   extend ::Forwardable
 
@@ -375,55 +398,60 @@ class Undercover::Report
   # @param opts [Undercover::Options]
   # @return [Report] a new instance of Report
   #
-  # source://undercover//lib/undercover.rb#34
+  # source://undercover//lib/undercover.rb#38
   def initialize(changeset, opts); end
 
-  # source://undercover//lib/undercover.rb#84
+  # source://undercover//lib/undercover.rb#92
   def all_results; end
 
-  # source://undercover//lib/undercover.rb#45
+  # source://undercover//lib/undercover.rb#53
   def build; end
 
-  # source://undercover//lib/undercover.rb#78
+  # source://undercover//lib/undercover.rb#86
   def build_warnings; end
 
   # Returns the value of attribute changeset.
   #
-  # source://undercover//lib/undercover.rb#23
+  # source://undercover//lib/undercover.rb#26
   def changeset; end
 
   # Returns the value of attribute code_dir.
   #
-  # source://undercover//lib/undercover.rb#23
+  # source://undercover//lib/undercover.rb#26
   def code_dir; end
 
   # Returns the value of attribute filter_set.
   #
-  # source://undercover//lib/undercover.rb#23
+  # source://undercover//lib/undercover.rb#26
   def filter_set; end
 
-  # source://undercover//lib/undercover.rb#88
+  # source://undercover//lib/undercover.rb#96
   def flagged_results; end
 
-  # source://undercover//lib/undercover.rb#92
+  # source://undercover//lib/undercover.rb#100
   def inspect; end
 
   # Returns the value of attribute lcov.
   #
-  # source://undercover//lib/undercover.rb#23
+  # source://undercover//lib/undercover.rb#26
   def lcov; end
 
   # Returns the value of attribute max_warnings_limit.
   #
-  # source://undercover//lib/undercover.rb#23
+  # source://undercover//lib/undercover.rb#26
   def max_warnings_limit; end
 
   # Returns the value of attribute results.
   #
-  # source://undercover//lib/undercover.rb#23
+  # source://undercover//lib/undercover.rb#26
   def results; end
 
-  # source://undercover//lib/undercover.rb#92
+  # Returns the value of attribute simplecov_resultset.
+  #
+  # source://undercover//lib/undercover.rb#26
+  def simplecov_resultset; end
+
+  # source://undercover//lib/undercover.rb#100
   def to_s; end
 
   # source://forwardable/1.3.3/forwardable.rb#231
@@ -433,15 +461,15 @@ class Undercover::Report
 
   # @return [Boolean]
   #
-  # source://undercover//lib/undercover.rb#122
+  # source://undercover//lib/undercover.rb#130
   def include_file?(filepath); end
 
-  # source://undercover//lib/undercover.rb#102
+  # source://undercover//lib/undercover.rb#110
   def load_and_parse_file(filepath); end
 
   # Returns the value of attribute loaded_files.
   #
-  # source://undercover//lib/undercover.rb#99
+  # source://undercover//lib/undercover.rb#107
   def loaded_files; end
 end
 
@@ -451,19 +479,24 @@ class Undercover::Result
 
   # @return [Result] a new instance of Result
   #
-  # source://undercover//lib/undercover/result.rb#13
-  def initialize(node, file_cov, file_path); end
+  # source://undercover//lib/undercover/result.rb#14
+  def initialize(node, coverage_adapter, file_path); end
 
   # Returns the value of attribute coverage.
   #
   # source://undercover//lib/undercover/result.rb#9
   def coverage; end
 
+  # Returns the value of attribute coverage_adapter.
+  #
+  # source://undercover//lib/undercover/result.rb#9
+  def coverage_adapter; end
+
   # Method `coverage_f` returns the total coverage of this Undercover::Result
   # as a % value, taking into account missing branches. Line coverage will be counted
   # as 0 if any branch is untested.
   #
-  # source://undercover//lib/undercover/result.rb#53
+  # source://undercover//lib/undercover/result.rb#58
   def coverage_f; end
 
   # Returns the value of attribute file_path.
@@ -471,21 +504,21 @@ class Undercover::Result
   # source://undercover//lib/undercover/result.rb#9
   def file_path; end
 
-  # source://undercover//lib/undercover/result.rb#112
+  # source://undercover//lib/undercover/result.rb#125
   def file_path_with_lines; end
 
   # source://forwardable/1.3.3/forwardable.rb#231
   def first_line(*args, **_arg1, &block); end
 
-  # source://undercover//lib/undercover/result.rb#28
+  # source://undercover//lib/undercover/result.rb#32
   def flag; end
 
   # @return [Boolean]
   #
-  # source://undercover//lib/undercover/result.rb#32
+  # source://undercover//lib/undercover/result.rb#36
   def flagged?; end
 
-  # source://undercover//lib/undercover/result.rb#116
+  # source://undercover//lib/undercover/result.rb#129
   def inspect; end
 
   # source://forwardable/1.3.3/forwardable.rb#231
@@ -501,7 +534,7 @@ class Undercover::Result
 
   # TODO: move to formatter interface instead!
   #
-  # source://undercover//lib/undercover/result.rb#90
+  # source://undercover//lib/undercover/result.rb#100
   def pretty_print; end
 
   # TODO: create a formatter interface instead and add some tests.
@@ -510,21 +543,87 @@ class Undercover::Result
   # Zips coverage data (that doesn't include any non-code lines) with
   # full source for given code fragment (this includes non-code lines!)
   #
-  # source://undercover//lib/undercover/result.rb#76
+  # source://undercover//lib/undercover/result.rb#86
   def pretty_print_lines; end
 
-  # source://undercover//lib/undercover/result.rb#116
+  # source://forwardable/1.3.3/forwardable.rb#231
+  def skipped?(*args, **_arg1, &block); end
+
+  # source://undercover//lib/undercover/result.rb#129
   def to_s; end
 
   # @return [Boolean]
   #
-  # source://undercover//lib/undercover/result.rb#36
+  # source://undercover//lib/undercover/result.rb#40
   def uncovered?(line_no); end
 
   private
 
-  # source://undercover//lib/undercover/result.rb#125
+  # source://undercover//lib/undercover/result.rb#138
   def count_covered_branches(line_number); end
+end
+
+# source://undercover//lib/undercover/root_to_relative_paths.rb#4
+module Undercover::RootToRelativePaths
+  # Needed if undercover is running inside nested subdirectories (e.g. in a monorepo app), where
+  # the git paths are rooted deeper than the paths in the coverage report.
+  # If that is the case, trim the git filepath to match the local relative path, assumming undercover is
+  # running in the correct directory (has to be equal to SimpleCov.root for paths to match)
+  #
+  # @param filepath [String]
+  # @return String
+  #
+  # source://undercover//lib/undercover/root_to_relative_paths.rb#11
+  def fix_relative_filepath(filepath); end
+end
+
+# source://undercover//lib/undercover/simplecov_result_adapter.rb#6
+class Undercover::SimplecovResultAdapter
+  include ::Undercover::RootToRelativePaths
+
+  # @param simplecov_result [SimpleCov::Result]
+  # @return [SimplecovResultAdapter] a new instance of SimplecovResultAdapter
+  #
+  # source://undercover//lib/undercover/simplecov_result_adapter.rb#23
+  def initialize(simplecov_result, opts); end
+
+  # @param filepath [String]
+  # @return Array tuples (lines) and quadruples (branches) compatible with LcovParser
+  #
+  # source://undercover//lib/undercover/simplecov_result_adapter.rb#30
+  def coverage(filepath); end
+
+  # Returns the value of attribute simplecov_result.
+  #
+  # source://undercover//lib/undercover/simplecov_result_adapter.rb#9
+  def simplecov_result; end
+
+  # @return [Boolean]
+  #
+  # source://undercover//lib/undercover/simplecov_result_adapter.rb#46
+  def skipped?(filepath, line_no); end
+
+  # source://undercover//lib/undercover/simplecov_result_adapter.rb#55
+  def total_branch_coverage; end
+
+  # unused for now
+  #
+  # source://undercover//lib/undercover/simplecov_result_adapter.rb#54
+  def total_coverage; end
+
+  private
+
+  # source://undercover//lib/undercover/simplecov_result_adapter.rb#59
+  def find_file(filepath); end
+
+  class << self
+    # @param file [File] JSON file supplied by SimpleCov::Formatter::Undercover
+    # @raise [ArgumentError]
+    # @return SimplecovResultAdapter
+    #
+    # source://undercover//lib/undercover/simplecov_result_adapter.rb#13
+    def parse(file, opts = T.unsafe(nil)); end
+  end
 end
 
 # source://undercover//lib/undercover/version.rb#4
