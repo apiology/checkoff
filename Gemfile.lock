@@ -11,8 +11,8 @@ GIT
 
 GIT
   remote: https://github.com/apiology/sord.git
-  revision: 7ed98b78f03d265fed705a58f328e24198891f4a
-  branch: type_variable_support
+  revision: ed0bc04fd7d4a7dd0a01fd1640c444e9a25baa5f
+  branch: 2025-07-04
   specs:
     sord (7.0.0)
       commander (~> 5.0)
@@ -287,6 +287,7 @@ DEPENDENCIES
   rubocop-yard
   simplecov (>= 0.18.0)
   simplecov-lcov
+  simplecov_json_formatter
   solargraph (>= 0.56)
   sord!
   tapioca (>= 0.16.0)

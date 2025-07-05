@@ -17,10 +17,11 @@ group :development, :test do
   gem 'rspec'
   gem 'sord', # ['>= 6.0.0'] # ,
       github: 'apiology/sord',
-      branch: 'type_variable_support'
+      branch: '2025-07-04'
   #   path: '../sord'
   # ensure version with branch coverage
   gem 'simplecov', ['>=0.18.0']
+  gem 'simplecov_json_formatter'
   gem 'simplecov-lcov'
   gem 'tapioca', ['>= 0.16.0'], require: false
   # need --exclude-files
