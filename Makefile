@@ -81,7 +81,7 @@ rbs_collection.yaml:
 
 
 ci-build-typecheck: build-typecheck  ## Ensure cache is filled for CI to save regardless of actions run
-	bundle exec solargraph gems
+	bin/solargraph gems
 
 # Only create this once, so no dependencies
 sorbet/tapioca/require.rb:
@@ -140,7 +140,15 @@ solargraph-strong: build-typecheck ## Run Solargraph typechecker
 
 typecheck: build-typecheck srb solargraph  ## validate types in code and configuration
 
-citypecheck: ci-build-typecheck srb solargraph ## Run type check from CircleCI
+citypecheck: ci-build-typecheck srb ci-solargraph ## Run type check from CircleCI
+
+ci-solargraph: ## Run Solargraph typechecker in CI
+	# if on main branch, run strong typecheck
+	if [ "$$(git rev-parse --abbrev-ref HEAD)" = "main" ]; then \
+	  bin/solargraph typecheck --level strong; \
+	else \
+	  bin/solargraph typecheck --level normal; \
+	fi
 
 typecoverage: typecheck ## Run type checking and then ratchet coverage in metrics/
 
@@ -189,7 +197,7 @@ clean: clear_metrics clean-typecoverage clean-typecheck clean-coverage ## remove
 citest: test ## Run unit tests from CircleCI
 
 overcommit: ## run precommit quality checks
-	bundle exec overcommit --run
+	bin/overcommit --run
 
 overcommit_branch: ## run precommit quality checks only on changed files
 	bin/overcommit --run --diff origin/main
@@ -197,7 +205,7 @@ overcommit_branch: ## run precommit quality checks only on changed files
 quality: overcommit ## run precommit quality checks
 
 test: ## Run lower-level tests
-	@bundle exec rake test
+	@bin/rake test
 
 rubocop: ## Run rubocop
 	@bin/rubocop
@@ -219,7 +227,7 @@ coverage: test report-coverage ## check code coverage
 	@bin/rake undercover
 
 release: sig/checkoff.rbs rbi/checkoff.rbi ## Create a new release
-	bundle exec rake release
+	bin/rake release
 
 report-coverage: test ## Report summary of coverage to stdout, and generate HTML, XML coverage report
 
