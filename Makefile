@@ -79,7 +79,6 @@ rbs_collection.yaml:
 	bin/rbs collection install
 	touch .gem_rbs_collection/.keepme
 
-
 ci-build-typecheck: build-typecheck  ## Ensure cache is filled for CI to save regardless of actions run
 	bundle exec solargraph gems
 
