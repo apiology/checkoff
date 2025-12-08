@@ -145,6 +145,15 @@ module Checkoff
           end
         end
 
+        # Handle 'all_tags.ids' search url param
+        class AllTagsIds < SimpleParam
+          # @return [Array<String>]
+          def convert
+            tag_ids = single_value.split('~')
+            ['tags.all', tag_ids.join(',')]
+          end
+        end
+
         # Handle 'sort' search url param
         class Sort < SimpleParam
           # @return [Array<String>]
@@ -178,6 +187,16 @@ module Checkoff
           # @return [Array<String>]
           def convert
             return [] if single_value == 'task'
+
+            raise "Teach me how to handle #{key} = #{values}"
+          end
+        end
+
+        # Handle 'locatedIn' search url param
+        class LocatedIn < SimpleParam
+          # @return [Array<String>]
+          def convert
+            return [] if single_value == 'anywhere'
 
             raise "Teach me how to handle #{key} = #{values}"
           end
@@ -220,10 +239,12 @@ module Checkoff
           'completion' => SimpleParam::Completion,
           'not_tags.ids' => SimpleParam::NotTagsIds,
           'any_tags.ids' => SimpleParam::AnyTagsIds,
+          'all_tags.ids' => SimpleParam::AllTagsIds,
           'subtask' => SimpleParam::Subtask,
           'sort' => SimpleParam::Sort,
           'milestone' => SimpleParam::Milestone,
           'searched_type' => SimpleParam::SearchedType,
+          'locatedIn' => SimpleParam::LocatedIn,
         }.freeze
         private_constant :ARGS
 

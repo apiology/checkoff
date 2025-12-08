@@ -22,14 +22,14 @@ GIT
 
 GIT
   remote: https://github.com/apiology/sord.git
-  revision: ed0bc04fd7d4a7dd0a01fd1640c444e9a25baa5f
+  revision: 3f110552a33652d95c237a74897ef4a9bedfddbf
   branch: 2025-07-04
   specs:
     sord (7.0.0)
       commander (~> 5.0)
       parlour (~> 9.1)
       parser
-      rbs (~> 3.0)
+      rbs (>= 3.0, < 5)
       sorbet-runtime
       yard
 
