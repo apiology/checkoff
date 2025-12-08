@@ -682,6 +682,34 @@ class TestSearchUrlParser < ClassTest
                  e.message)
   end
 
+  # @return [void]
+  def test_convert_params_44
+    search_url_parser = get_test_object
+    url = 'https://app.asana.com/0/search?searched_type=task&locatedIn=anywhere&all_tags.ids=123~456&not_tags.ids=789~012~345~678~901'
+    asana_api_params = {
+      'tags.all' => '123,456',
+      'tags.not' => '789,012,345,678,901',
+      'sort_by' => 'created_at',
+    }
+
+    task_selector = []
+
+    assert_equal([asana_api_params, task_selector],
+                 search_url_parser.convert_params(url))
+  end
+
+  # @return [void]
+  def test_convert_params_45
+    search_url_parser = get_test_object
+    url = 'https://app.asana.com/0/search?searched_type=task&locatedIn=new-value&all_tags.ids=123~456&not_tags.ids=789~012~345~678~901'
+
+    e = assert_raises(RuntimeError) do
+      search_url_parser.convert_params(url)
+    end
+    assert_equal('Teach me how to handle locatedIn = ["new-value"]',
+                 e.message)
+  end
+
   # @return [Class<Checkoff::Internal::SearchUrl::Parser>]
   def class_under_test
     Checkoff::Internal::SearchUrl::Parser
