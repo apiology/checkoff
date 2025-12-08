@@ -68,13 +68,13 @@ commands:
             git config --global url."ssh://git@github.com".insteadOf "https://github.com" || true
             git config --global gc.auto 0 || true
 
-            if [ -e /home/circleci/plate-spinner/.git ]
+            if [ -e /home/circleci/checkoff/.git ]
             then
-              cd /home/circleci/plate-spinner
+              cd /home/circleci/checkoff
               git remote set-url origin "$CIRCLE_REPOSITORY_URL" || true
             else
-              mkdir -p /home/circleci/plate-spinner
-              cd /home/circleci/plate-spinner
+              mkdir -p /home/circleci/checkoff
+              cd /home/circleci/checkoff
               git clone "$CIRCLE_REPOSITORY_URL" .
             fi
 
