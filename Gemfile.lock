@@ -35,10 +35,10 @@ GIT
 
 GIT
   remote: https://github.com/lsegal/yard.git
-  revision: 5b93b3a4f15a52f3165edef112e718149d294c38
+  revision: 34796c5bfc0ce69a5fea1b38d96435fc4f5b7a75
   branch: main
   specs:
-    yard (0.9.37)
+    yard (0.9.38)
 
 PATH
   remote: .
@@ -73,7 +73,7 @@ GEM
     ast (2.4.3)
     backport (1.2.0)
     base64 (0.3.0)
-    benchmark (0.4.1)
+    benchmark (0.5.0)
     bigdecimal (3.2.2)
     brakeman (7.0.2)
       racc
@@ -141,7 +141,7 @@ GEM
       parser (>= 2.5, != 2.5.1.1)
     iniparse (1.5.0)
     jaro_winkler (1.6.1)
-    json (2.12.2)
+    json (2.18.0)
     jwt (2.10.2)
       base64
     kramdown (2.5.1)
@@ -197,16 +197,16 @@ GEM
       multi_xml (~> 0.5)
       rack (>= 1.2, < 4)
     observer (0.1.2)
-    ostruct (0.6.2)
+    ostruct (0.6.3)
     overcommit (0.68.0)
       childprocess (>= 0.6.3, < 6)
       iniparse (~> 1.4)
       rexml (>= 3.3.9)
     parallel (1.27.0)
-    parser (3.3.8.0)
+    parser (3.3.10.0)
       ast (~> 2.4.1)
       racc
-    prism (1.4.0)
+    prism (1.6.0)
     pry (0.15.2)
       coderay (~> 1.1)
       method_source (~> 1.0)
@@ -220,10 +220,10 @@ GEM
     rbi (0.3.6)
       prism (~> 1.0)
       rbs (>= 3.4.4)
-    rbs (3.9.4)
+    rbs (3.9.5)
       logger
-    regexp_parser (2.10.0)
-    reverse_markdown (3.0.0)
+    regexp_parser (2.11.3)
+    reverse_markdown (3.0.1)
       nokogiri
     rexml (3.4.4)
     rspec (3.13.1)
@@ -239,7 +239,7 @@ GEM
       diff-lcs (>= 1.2.0, < 2.0)
       rspec-support (~> 3.13.0)
     rspec-support (3.13.4)
-    rubocop (1.77.0)
+    rubocop (1.81.7)
       json (~> 2.3)
       language_server-protocol (~> 3.17.0.2)
       lint_roller (~> 1.1.0)
@@ -247,10 +247,10 @@ GEM
       parser (>= 3.3.0.2)
       rainbow (>= 2.2.2, < 4.0)
       regexp_parser (>= 2.9.3, < 3.0)
-      rubocop-ast (>= 1.45.1, < 2.0)
+      rubocop-ast (>= 1.47.1, < 2.0)
       ruby-progressbar (~> 1.7)
       unicode-display_width (>= 2.4.0, < 4.0)
-    rubocop-ast (1.45.1)
+    rubocop-ast (1.48.0)
       parser (>= 3.3.7.2)
       prism (~> 1.4)
     rubocop-minitest (0.38.1)
@@ -286,7 +286,7 @@ GEM
     simplecov-html (0.13.1)
     simplecov-lcov (0.8.0)
     simplecov_json_formatter (0.1.4)
-    solargraph (0.56.0)
+    solargraph (0.57.0)
       backport (~> 1.2)
       benchmark (~> 0.4)
       bundler (~> 2.0)
@@ -299,12 +299,13 @@ GEM
       ostruct (~> 0.6)
       parser (~> 3.0)
       prism (~> 1.4)
-      rbs (~> 3.3)
+      rbs (>= 3.6.1, <= 4.0.0.dev.4)
       reverse_markdown (~> 3.0)
-      rubocop (~> 1.38)
+      rubocop (~> 1.76)
       thor (~> 1.0)
       tilt (~> 2.0)
       yard (~> 0.9, >= 0.9.24)
+      yard-activesupport-concern (~> 0.0)
       yard-solargraph (~> 0.1)
     sorbet (0.5.12219)
       sorbet-static (= 0.5.12219)
@@ -334,7 +335,7 @@ GEM
       thor (>= 1.2.0)
       yard-sorbet
     thor (1.4.0)
-    tilt (2.6.0)
+    tilt (2.6.1)
     tomlrb (2.0.3)
     tzinfo (2.0.6)
       concurrent-ruby (~> 1.0)
@@ -346,14 +347,16 @@ GEM
       rugged (>= 0.27, < 1.10)
       simplecov
       simplecov_json_formatter
-    unicode-display_width (3.1.4)
-      unicode-emoji (~> 4.0, >= 4.0.4)
-    unicode-emoji (4.0.4)
+    unicode-display_width (3.2.0)
+      unicode-emoji (~> 4.1)
+    unicode-emoji (4.1.0)
     uri (1.1.1)
     webmock (3.25.1)
       addressable (>= 2.8.0)
       crack (>= 0.3.2)
       hashdiff (>= 0.4.0, < 2.0.0)
+    yard-activesupport-concern (0.0.1)
+      yard (>= 0.8)
     yard-solargraph (0.1.0)
       yard (~> 0.9)
     yard-sorbet (0.9.0)

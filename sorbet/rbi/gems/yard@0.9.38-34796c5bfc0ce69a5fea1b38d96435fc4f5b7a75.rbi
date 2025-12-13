@@ -5234,7 +5234,7 @@ class YARD::Handlers::Base
   # @raise [NotImplementedError]
   # @return [Array<String>] a list of argument names
   #
-  # source://yard//lib/yard/handlers/base.rb#581
+  # source://yard//lib/yard/handlers/base.rb#603
   def call_params; end
 
   # @abstract Implement this method to return the method being called in
@@ -5244,7 +5244,7 @@ class YARD::Handlers::Base
   # @return [String] the method name being called
   # @return [nil] if the statement is not a method call
   #
-  # source://yard//lib/yard/handlers/base.rb#590
+  # source://yard//lib/yard/handlers/base.rb#612
   def caller_method; end
 
   # Ensures that a specific +object+ has been parsed and loaded into the
@@ -5267,7 +5267,7 @@ class YARD::Handlers::Base
   #   +max_retries+ attempts, this exception is raised and the handler
   #   finishes processing.
   #
-  # source://yard//lib/yard/handlers/base.rb#561
+  # source://yard//lib/yard/handlers/base.rb#583
   def ensure_loaded!(object, max_retries = T.unsafe(nil)); end
 
   # Returns the value of attribute extra_state.
@@ -5376,7 +5376,7 @@ class YARD::Handlers::Base
   # @return [void]
   # @since 0.8.0
   #
-  # source://yard//lib/yard/handlers/base.rb#537
+  # source://yard//lib/yard/handlers/base.rb#559
   def register_dynamic(object); end
 
   # Ensures that the object's namespace is loaded before attaching it
@@ -5404,7 +5404,7 @@ class YARD::Handlers::Base
   # @return [void]
   # @since 0.8.0
   #
-  # source://yard//lib/yard/handlers/base.rb#473
+  # source://yard//lib/yard/handlers/base.rb#485
   def register_group(object, group = T.unsafe(nil)); end
 
   # Registers the same method information on the module function, if
@@ -5414,14 +5414,14 @@ class YARD::Handlers::Base
   #   to copy data for
   # @since 0.8.0
   #
-  # source://yard//lib/yard/handlers/base.rb#523
+  # source://yard//lib/yard/handlers/base.rb#545
   def register_module_function(object); end
 
   # @param object [CodeObjects::Base] the object to register
   # @return [void]
   # @since 0.8.0
   #
-  # source://yard//lib/yard/handlers/base.rb#499
+  # source://yard//lib/yard/handlers/base.rb#511
   def register_source(object, source = T.unsafe(nil), type = T.unsafe(nil)); end
 
   # Registers any transitive tags from the namespace on the object
@@ -5430,7 +5430,7 @@ class YARD::Handlers::Base
   # @return [void]
   # @since 0.8.0
   #
-  # source://yard//lib/yard/handlers/base.rb#487
+  # source://yard//lib/yard/handlers/base.rb#499
   def register_transitive_tags(object); end
 
   # Registers visibility on a method object. If the object does not
@@ -5440,7 +5440,7 @@ class YARD::Handlers::Base
   # @param visibility [Symbol] the visibility to set on the object
   # @since 0.8.0
   #
-  # source://yard//lib/yard/handlers/base.rb#511
+  # source://yard//lib/yard/handlers/base.rb#523
   def register_visibility(object, visibility = T.unsafe(nil)); end
 
   # Returns the value of attribute scope.
@@ -7005,7 +7005,7 @@ class YARD::Handlers::Ruby::VisibilityHandler < ::YARD::Handlers::Ruby::Base
 
   # @return [Boolean]
   #
-  # source://yard//lib/yard/handlers/ruby/visibility_handler.rb#31
+  # source://yard//lib/yard/handlers/ruby/visibility_handler.rb#32
   def is_attribute_method?(node); end
 end
 
@@ -8754,59 +8754,59 @@ end
 # source://yard//lib/yard/parser/ruby/ast_node.rb#96
 YARD::Parser::Ruby::AstNode::KEYWORDS = T.let(T.unsafe(nil), Hash)
 
-# source://yard//lib/yard/parser/ruby/ast_node.rb#530
+# source://yard//lib/yard/parser/ruby/ast_node.rb#531
 class YARD::Parser::Ruby::ClassNode < ::YARD::Parser::Ruby::KeywordNode
-  # source://yard//lib/yard/parser/ruby/ast_node.rb#533
+  # source://yard//lib/yard/parser/ruby/ast_node.rb#534
   def block; end
 
-  # source://yard//lib/yard/parser/ruby/ast_node.rb#531
+  # source://yard//lib/yard/parser/ruby/ast_node.rb#532
   def class_name; end
 
-  # source://yard//lib/yard/parser/ruby/ast_node.rb#532
+  # source://yard//lib/yard/parser/ruby/ast_node.rb#533
   def superclass; end
 end
 
 # Represents a lone comment block in source
 #
-# source://yard//lib/yard/parser/ruby/ast_node.rb#548
+# source://yard//lib/yard/parser/ruby/ast_node.rb#549
 class YARD::Parser::Ruby::CommentNode < ::YARD::Parser::Ruby::AstNode
-  # source://yard//lib/yard/parser/ruby/ast_node.rb#549
+  # source://yard//lib/yard/parser/ruby/ast_node.rb#550
   def comments; end
 
-  # source://yard//lib/yard/parser/ruby/ast_node.rb#549
+  # source://yard//lib/yard/parser/ruby/ast_node.rb#550
   def docstring; end
 
-  # source://yard//lib/yard/parser/ruby/ast_node.rb#550
+  # source://yard//lib/yard/parser/ruby/ast_node.rb#551
   def docstring=(value); end
 
-  # source://yard//lib/yard/parser/ruby/ast_node.rb#554
+  # source://yard//lib/yard/parser/ruby/ast_node.rb#555
   def first_line; end
 
-  # source://yard//lib/yard/parser/ruby/ast_node.rb#553
+  # source://yard//lib/yard/parser/ruby/ast_node.rb#554
   def source; end
 end
 
-# source://yard//lib/yard/parser/ruby/ast_node.rb#515
+# source://yard//lib/yard/parser/ruby/ast_node.rb#516
 class YARD::Parser::Ruby::ConditionalNode < ::YARD::Parser::Ruby::KeywordNode
-  # source://yard//lib/yard/parser/ruby/ast_node.rb#517
+  # source://yard//lib/yard/parser/ruby/ast_node.rb#518
   def condition; end
 
   # @return [Boolean]
   #
-  # source://yard//lib/yard/parser/ruby/ast_node.rb#516
+  # source://yard//lib/yard/parser/ruby/ast_node.rb#517
   def condition?; end
 
-  # source://yard//lib/yard/parser/ruby/ast_node.rb#520
+  # source://yard//lib/yard/parser/ruby/ast_node.rb#521
   def else_block; end
 
-  # source://yard//lib/yard/parser/ruby/ast_node.rb#518
+  # source://yard//lib/yard/parser/ruby/ast_node.rb#519
   def then_block; end
 
   private
 
   # @return [Boolean]
   #
-  # source://yard//lib/yard/parser/ruby/ast_node.rb#527
+  # source://yard//lib/yard/parser/ruby/ast_node.rb#528
   def cmod?; end
 end
 
@@ -10084,91 +10084,91 @@ class YARD::Parser::Ruby::LiteralNode < ::YARD::Parser::Ruby::AstNode
   def literal?; end
 end
 
-# source://yard//lib/yard/parser/ruby/ast_node.rb#541
+# source://yard//lib/yard/parser/ruby/ast_node.rb#542
 class YARD::Parser::Ruby::LoopNode < ::YARD::Parser::Ruby::KeywordNode
-  # source://yard//lib/yard/parser/ruby/ast_node.rb#544
+  # source://yard//lib/yard/parser/ruby/ast_node.rb#545
   def block; end
 
-  # source://yard//lib/yard/parser/ruby/ast_node.rb#543
+  # source://yard//lib/yard/parser/ruby/ast_node.rb#544
   def condition; end
 
   # @return [Boolean]
   #
-  # source://yard//lib/yard/parser/ruby/ast_node.rb#542
+  # source://yard//lib/yard/parser/ruby/ast_node.rb#543
   def loop?; end
 end
 
-# source://yard//lib/yard/parser/ruby/ast_node.rb#438
+# source://yard//lib/yard/parser/ruby/ast_node.rb#439
 class YARD::Parser::Ruby::MethodCallNode < ::YARD::Parser::Ruby::AstNode
-  # source://yard//lib/yard/parser/ruby/ast_node.rb#464
+  # source://yard//lib/yard/parser/ruby/ast_node.rb#465
   def block; end
 
-  # source://yard//lib/yard/parser/ruby/ast_node.rb#462
+  # source://yard//lib/yard/parser/ruby/ast_node.rb#463
   def block_param; end
 
   # @return [Boolean]
   #
-  # source://yard//lib/yard/parser/ruby/ast_node.rb#439
+  # source://yard//lib/yard/parser/ruby/ast_node.rb#440
   def call?; end
 
-  # source://yard//lib/yard/parser/ruby/ast_node.rb#442
+  # source://yard//lib/yard/parser/ruby/ast_node.rb#443
   def method_name(name_only = T.unsafe(nil)); end
 
-  # source://yard//lib/yard/parser/ruby/ast_node.rb#440
+  # source://yard//lib/yard/parser/ruby/ast_node.rb#441
   def namespace; end
 
-  # source://yard//lib/yard/parser/ruby/ast_node.rb#453
+  # source://yard//lib/yard/parser/ruby/ast_node.rb#454
   def parameters(include_block_param = T.unsafe(nil)); end
 
   private
 
   # @return [Boolean]
   #
-  # source://yard//lib/yard/parser/ruby/ast_node.rb#474
+  # source://yard//lib/yard/parser/ruby/ast_node.rb#475
   def call_has_paren?; end
 
-  # source://yard//lib/yard/parser/ruby/ast_node.rb#470
+  # source://yard//lib/yard/parser/ruby/ast_node.rb#471
   def index_adjust; end
 end
 
-# source://yard//lib/yard/parser/ruby/ast_node.rb#479
+# source://yard//lib/yard/parser/ruby/ast_node.rb#480
 class YARD::Parser::Ruby::MethodDefinitionNode < ::YARD::Parser::Ruby::AstNode
   def block(*_arg0); end
 
   # @return [Boolean]
   #
-  # source://yard//lib/yard/parser/ruby/ast_node.rb#481
+  # source://yard//lib/yard/parser/ruby/ast_node.rb#482
   def def?; end
 
   # @return [Boolean]
   #
-  # source://yard//lib/yard/parser/ruby/ast_node.rb#480
+  # source://yard//lib/yard/parser/ruby/ast_node.rb#481
   def kw?; end
 
-  # source://yard//lib/yard/parser/ruby/ast_node.rb#484
+  # source://yard//lib/yard/parser/ruby/ast_node.rb#485
   def method_name(name_only = T.unsafe(nil)); end
 
-  # source://yard//lib/yard/parser/ruby/ast_node.rb#482
+  # source://yard//lib/yard/parser/ruby/ast_node.rb#483
   def namespace; end
 
-  # source://yard//lib/yard/parser/ruby/ast_node.rb#489
+  # source://yard//lib/yard/parser/ruby/ast_node.rb#490
   def parameters(include_block_param = T.unsafe(nil)); end
 
-  # source://yard//lib/yard/parser/ruby/ast_node.rb#495
+  # source://yard//lib/yard/parser/ruby/ast_node.rb#496
   def signature; end
 
   private
 
-  # source://yard//lib/yard/parser/ruby/ast_node.rb#510
+  # source://yard//lib/yard/parser/ruby/ast_node.rb#511
   def index_adjust; end
 end
 
-# source://yard//lib/yard/parser/ruby/ast_node.rb#536
+# source://yard//lib/yard/parser/ruby/ast_node.rb#537
 class YARD::Parser::Ruby::ModuleNode < ::YARD::Parser::Ruby::KeywordNode
-  # source://yard//lib/yard/parser/ruby/ast_node.rb#538
+  # source://yard//lib/yard/parser/ruby/ast_node.rb#539
   def block; end
 
-  # source://yard//lib/yard/parser/ruby/ast_node.rb#537
+  # source://yard//lib/yard/parser/ruby/ast_node.rb#538
   def module_name; end
 end
 
@@ -10448,7 +10448,7 @@ class YARD::Parser::Ruby::RipperParser < ::Ripper
   # source://yard//lib/yard/parser/ruby/ruby_parser.rb#170
   def on_if(*args); end
 
-  # source://yard//lib/yard/parser/ruby/ruby_parser.rb#449
+  # source://yard//lib/yard/parser/ruby/ruby_parser.rb#463
   def on_if_mod(*args); end
 
   # source://yard//lib/yard/parser/ruby/ruby_parser.rb#177
@@ -10556,22 +10556,22 @@ class YARD::Parser::Ruby::RipperParser < ::Ripper
   # source://yard//lib/yard/parser/ruby/ruby_parser.rb#188
   def on_period(tok); end
 
-  # source://yard//lib/yard/parser/ruby/ruby_parser.rb#474
+  # source://yard//lib/yard/parser/ruby/ruby_parser.rb#488
   def on_qsymbols_add(list, item); end
 
   # source://yard//lib/yard/parser/ruby/ruby_parser.rb#199
   def on_qsymbols_beg(tok); end
 
-  # source://yard//lib/yard/parser/ruby/ruby_parser.rb#462
+  # source://yard//lib/yard/parser/ruby/ruby_parser.rb#476
   def on_qsymbols_new(*args); end
 
-  # source://yard//lib/yard/parser/ruby/ruby_parser.rb#474
+  # source://yard//lib/yard/parser/ruby/ruby_parser.rb#488
   def on_qwords_add(list, item); end
 
   # source://yard//lib/yard/parser/ruby/ruby_parser.rb#199
   def on_qwords_beg(tok); end
 
-  # source://yard//lib/yard/parser/ruby/ruby_parser.rb#462
+  # source://yard//lib/yard/parser/ruby/ruby_parser.rb#476
   def on_qwords_new(*args); end
 
   # source://yard//lib/yard/parser/ruby/ruby_parser.rb#188
@@ -10652,13 +10652,13 @@ class YARD::Parser::Ruby::RipperParser < ::Ripper
   # source://yard//lib/yard/parser/ruby/ruby_parser.rb#177
   def on_symbol_literal(*args); end
 
-  # source://yard//lib/yard/parser/ruby/ruby_parser.rb#474
+  # source://yard//lib/yard/parser/ruby/ruby_parser.rb#488
   def on_symbols_add(list, item); end
 
   # source://yard//lib/yard/parser/ruby/ruby_parser.rb#199
   def on_symbols_beg(tok); end
 
-  # source://yard//lib/yard/parser/ruby/ruby_parser.rb#462
+  # source://yard//lib/yard/parser/ruby/ruby_parser.rb#476
   def on_symbols_new(*args); end
 
   # source://yard//lib/yard/parser/ruby/ruby_parser.rb#199
@@ -10685,13 +10685,13 @@ class YARD::Parser::Ruby::RipperParser < ::Ripper
   # source://yard//lib/yard/parser/ruby/ruby_parser.rb#170
   def on_unless(*args); end
 
-  # source://yard//lib/yard/parser/ruby/ruby_parser.rb#449
+  # source://yard//lib/yard/parser/ruby/ruby_parser.rb#463
   def on_unless_mod(*args); end
 
   # source://yard//lib/yard/parser/ruby/ruby_parser.rb#170
   def on_until(*args); end
 
-  # source://yard//lib/yard/parser/ruby/ruby_parser.rb#449
+  # source://yard//lib/yard/parser/ruby/ruby_parser.rb#463
   def on_until_mod(*args); end
 
   # source://yard//lib/yard/parser/ruby/ruby_parser.rb#177
@@ -10712,7 +10712,7 @@ class YARD::Parser::Ruby::RipperParser < ::Ripper
   # source://yard//lib/yard/parser/ruby/ruby_parser.rb#170
   def on_while(*args); end
 
-  # source://yard//lib/yard/parser/ruby/ruby_parser.rb#449
+  # source://yard//lib/yard/parser/ruby/ruby_parser.rb#463
   def on_while_mod(*args); end
 
   # source://yard//lib/yard/parser/ruby/ruby_parser.rb#162
@@ -10721,13 +10721,13 @@ class YARD::Parser::Ruby::RipperParser < ::Ripper
   # source://yard//lib/yard/parser/ruby/ruby_parser.rb#155
   def on_word_new(*args); end
 
-  # source://yard//lib/yard/parser/ruby/ruby_parser.rb#474
+  # source://yard//lib/yard/parser/ruby/ruby_parser.rb#488
   def on_words_add(list, item); end
 
   # source://yard//lib/yard/parser/ruby/ruby_parser.rb#199
   def on_words_beg(tok); end
 
-  # source://yard//lib/yard/parser/ruby/ruby_parser.rb#462
+  # source://yard//lib/yard/parser/ruby/ruby_parser.rb#476
   def on_words_new(*args); end
 
   # source://yard//lib/yard/parser/ruby/ruby_parser.rb#188
@@ -10775,150 +10775,150 @@ class YARD::Parser::Ruby::RipperParser < ::Ripper
 
   # @since 0.5.6
   #
-  # source://yard//lib/yard/parser/ruby/ruby_parser.rb#669
+  # source://yard//lib/yard/parser/ruby/ruby_parser.rb#700
   def add_comment(line, node = T.unsafe(nil), before_node = T.unsafe(nil), into = T.unsafe(nil)); end
 
   # @since 0.5.6
   #
-  # source://yard//lib/yard/parser/ruby/ruby_parser.rb#271
+  # source://yard//lib/yard/parser/ruby/ruby_parser.rb#285
   def add_token(token, data); end
 
   # @return [Boolean]
   # @since 0.5.6
   #
-  # source://yard//lib/yard/parser/ruby/ruby_parser.rb#611
+  # source://yard//lib/yard/parser/ruby/ruby_parser.rb#625
   def comment_starts_line?(charno); end
 
   # @raise [ParserSyntaxError]
   # @since 0.5.6
   #
-  # source://yard//lib/yard/parser/ruby/ruby_parser.rb#606
+  # source://yard//lib/yard/parser/ruby/ruby_parser.rb#620
   def compile_error(msg); end
 
   # @since 0.5.6
   #
-  # source://yard//lib/yard/parser/ruby/ruby_parser.rb#695
+  # source://yard//lib/yard/parser/ruby/ruby_parser.rb#726
   def freeze_tree(node = T.unsafe(nil)); end
 
   # @since 0.5.6
   #
-  # source://yard//lib/yard/parser/ruby/ruby_parser.rb#620
+  # source://yard//lib/yard/parser/ruby/ruby_parser.rb#634
   def insert_comments; end
 
   # @since 0.5.6
   #
-  # source://yard//lib/yard/parser/ruby/ruby_parser.rb#377
+  # source://yard//lib/yard/parser/ruby/ruby_parser.rb#391
   def on_aref(*args); end
 
   # @since 0.5.6
   #
-  # source://yard//lib/yard/parser/ruby/ruby_parser.rb#385
+  # source://yard//lib/yard/parser/ruby/ruby_parser.rb#399
   def on_aref_field(*args); end
 
   # @since 0.5.6
   #
-  # source://yard//lib/yard/parser/ruby/ruby_parser.rb#391
+  # source://yard//lib/yard/parser/ruby/ruby_parser.rb#405
   def on_array(other); end
 
   # @since 0.5.6
   #
-  # source://yard//lib/yard/parser/ruby/ruby_parser.rb#352
+  # source://yard//lib/yard/parser/ruby/ruby_parser.rb#366
   def on_assoc_new(*args); end
 
   # @since 0.5.6
   #
-  # source://yard//lib/yard/parser/ruby/ruby_parser.rb#364
+  # source://yard//lib/yard/parser/ruby/ruby_parser.rb#378
   def on_assoclist_from_args(*args); end
 
   # @since 0.5.6
   #
-  # source://yard//lib/yard/parser/ruby/ruby_parser.rb#360
+  # source://yard//lib/yard/parser/ruby/ruby_parser.rb#374
   def on_bare_assoc_hash(*args); end
 
   # @since 0.5.6
   #
-  # source://yard//lib/yard/parser/ruby/ruby_parser.rb#347
+  # source://yard//lib/yard/parser/ruby/ruby_parser.rb#361
   def on_body_stmt(*args); end
 
   # @since 0.5.6
   #
-  # source://yard//lib/yard/parser/ruby/ruby_parser.rb#347
+  # source://yard//lib/yard/parser/ruby/ruby_parser.rb#361
   def on_bodystmt(*args); end
 
   # @since 0.5.6
   #
-  # source://yard//lib/yard/parser/ruby/ruby_parser.rb#542
+  # source://yard//lib/yard/parser/ruby/ruby_parser.rb#556
   def on_comment(comment); end
 
   # @since 0.5.6
   #
-  # source://yard//lib/yard/parser/ruby/ruby_parser.rb#441
+  # source://yard//lib/yard/parser/ruby/ruby_parser.rb#455
   def on_const_path_ref(*args); end
 
   # @since 0.5.6
   #
-  # source://yard//lib/yard/parser/ruby/ruby_parser.rb#419
+  # source://yard//lib/yard/parser/ruby/ruby_parser.rb#433
   def on_dyna_symbol(sym); end
 
   # @since 0.5.6
   #
-  # source://yard//lib/yard/parser/ruby/ruby_parser.rb#592
+  # source://yard//lib/yard/parser/ruby/ruby_parser.rb#606
   def on_embdoc(text); end
 
   # @since 0.5.6
   #
-  # source://yard//lib/yard/parser/ruby/ruby_parser.rb#586
+  # source://yard//lib/yard/parser/ruby/ruby_parser.rb#600
   def on_embdoc_beg(text); end
 
   # @since 0.5.6
   #
-  # source://yard//lib/yard/parser/ruby/ruby_parser.rb#597
+  # source://yard//lib/yard/parser/ruby/ruby_parser.rb#611
   def on_embdoc_end(text); end
 
   # @since 0.5.6
   #
-  # source://yard//lib/yard/parser/ruby/ruby_parser.rb#356
+  # source://yard//lib/yard/parser/ruby/ruby_parser.rb#370
   def on_hash(*args); end
 
   # @since 0.5.6
   #
-  # source://yard//lib/yard/parser/ruby/ruby_parser.rb#534
+  # source://yard//lib/yard/parser/ruby/ruby_parser.rb#548
   def on_label(data); end
 
   # @since 0.5.6
   #
-  # source://yard//lib/yard/parser/ruby/ruby_parser.rb#497
+  # source://yard//lib/yard/parser/ruby/ruby_parser.rb#511
   def on_lambda(*args); end
 
   # @since 0.5.6
   #
-  # source://yard//lib/yard/parser/ruby/ruby_parser.rb#409
+  # source://yard//lib/yard/parser/ruby/ruby_parser.rb#423
   def on_lbracket(tok); end
 
   # @since 0.5.6
   #
-  # source://yard//lib/yard/parser/ruby/ruby_parser.rb#515
+  # source://yard//lib/yard/parser/ruby/ruby_parser.rb#529
   def on_params(*args); end
 
   # @raise [ParserSyntaxError]
   # @since 0.5.6
   #
-  # source://yard//lib/yard/parser/ruby/ruby_parser.rb#606
+  # source://yard//lib/yard/parser/ruby/ruby_parser.rb#620
   def on_parse_error(msg); end
 
   # @since 0.5.6
   #
-  # source://yard//lib/yard/parser/ruby/ruby_parser.rb#343
+  # source://yard//lib/yard/parser/ruby/ruby_parser.rb#357
   def on_program(*args); end
 
   # @since 0.5.6
   #
-  # source://yard//lib/yard/parser/ruby/ruby_parser.rb#414
+  # source://yard//lib/yard/parser/ruby/ruby_parser.rb#428
   def on_rbracket(tok); end
 
   # @since 0.5.6
   #
-  # source://yard//lib/yard/parser/ruby/ruby_parser.rb#506
+  # source://yard//lib/yard/parser/ruby/ruby_parser.rb#520
   def on_rescue(exc, *args); end
 
   # @since 0.5.6
@@ -10928,27 +10928,27 @@ class YARD::Parser::Ruby::RipperParser < ::Ripper
 
   # @since 0.5.6
   #
-  # source://yard//lib/yard/parser/ruby/ruby_parser.rb#501
+  # source://yard//lib/yard/parser/ruby/ruby_parser.rb#515
   def on_string_content(*args); end
 
   # @since 0.5.6
   #
-  # source://yard//lib/yard/parser/ruby/ruby_parser.rb#484
+  # source://yard//lib/yard/parser/ruby/ruby_parser.rb#498
   def on_string_literal(*args); end
 
   # @since 0.5.6
   #
-  # source://yard//lib/yard/parser/ruby/ruby_parser.rb#429
+  # source://yard//lib/yard/parser/ruby/ruby_parser.rb#443
   def on_top_const_ref(*args); end
 
   # @since 0.5.6
   #
-  # source://yard//lib/yard/parser/ruby/ruby_parser.rb#368
+  # source://yard//lib/yard/parser/ruby/ruby_parser.rb#382
   def on_unary(op, val); end
 
   # @since 0.5.6
   #
-  # source://yard//lib/yard/parser/ruby/ruby_parser.rb#511
+  # source://yard//lib/yard/parser/ruby/ruby_parser.rb#525
   def on_void_stmt; end
 
   # @since 0.5.6
@@ -10958,12 +10958,12 @@ class YARD::Parser::Ruby::RipperParser < ::Ripper
 
   # @since 0.5.6
   #
-  # source://yard//lib/yard/parser/ruby/ruby_parser.rb#251
+  # source://yard//lib/yard/parser/ruby/ruby_parser.rb#262
   def visit_event_arr(node); end
 
   # @since 0.5.6
   #
-  # source://yard//lib/yard/parser/ruby/ruby_parser.rb#259
+  # source://yard//lib/yard/parser/ruby/ruby_parser.rb#270
   def visit_ns_token(token, data, ast_token = T.unsafe(nil)); end
 end
 
@@ -16468,7 +16468,7 @@ class YARD::Tags::TypesExplainer::Type
   private
 
   # source://yard//lib/yard/tags/types_explainer.rb#45
-  def list_join(list); end
+  def list_join(list, with: T.unsafe(nil)); end
 end
 
 # Modifies the current parsing visibility (public, protected, or private).
