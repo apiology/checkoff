@@ -17,6 +17,7 @@ module Checkoff
   # Pull portfolios from Asana
   class Portfolios
     extend T::Sig
+
     # @!parse
     #   extend CacheMethod::ClassMethods
 
@@ -57,7 +58,6 @@ module Checkoff
     # @param workspace_name [String]
     # @param portfolio_name [String]
     #
-    # @sg-ignore
     # @return [Asana::Resources::Portfolio,nil]
     def portfolio(workspace_name, portfolio_name)
       workspace = workspaces.workspace_or_raise(workspace_name)
@@ -122,10 +122,8 @@ module Checkoff
     class << self
       # @return [void]
       def run
-        # @sg-ignore
         # @type [String]
         workspace_name = ARGV[0] || raise('Please pass workspace name as first argument')
-        # @sg-ignore
         # @type [String]
         portfolio_name = ARGV[1] || raise('Please pass portfolio name as second argument')
         portfolios = Checkoff::Portfolios.new
