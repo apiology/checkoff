@@ -37,7 +37,7 @@ rbi/checkoff.rbi: tapioca.installed yardoc.installed sorbet/config .gem_rbs_coll
 	rm -f rbi/checkoff.rbi.bak
 	touch rbi/checkoff.rbi
 
-sig/checkoff.rbs: yardoc.installed gem_rbs_collection/.keepme ## Generate RBS file
+sig/checkoff.rbs: yardoc.installed .gem_rbs_collection/.keepme ## Generate RBS file
 	rm -f rbi/checkoff.rbs
 	bin/sord gen $(SORD_GEN_OPTIONS) sig/checkoff.rbs # YARD to RBS
 
