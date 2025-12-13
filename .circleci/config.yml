@@ -359,7 +359,7 @@ jobs:
             # includes a read-write 'user key':
             SKIP=RakeTarget bundle exec git push --set-upstream origin "${CIRCLE_BRANCH:?}"
             git status
-            make release
+            make --debug release
             bundle exec rake trigger_next_builds
 
 workflows:
