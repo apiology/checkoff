@@ -186,7 +186,7 @@ commands:
             bin/overcommit --sign pre-commit
             bin/overcommit --sign pre-push
 
-            bundle exec overcommit --run
+            bundle exec overcommit --diff
       - run_with_languages:
           label: Run brakeman
           command: |
