@@ -182,6 +182,18 @@ module Checkoff
           end
         end
 
+        # Handle 'approval' search url param
+        class Approval < SimpleParam
+          # @return [Array<String>]
+          def convert
+            return %w[resource_subtype approval] if single_value == 'is_approval'
+
+            return %w[resource_subtype default_task] if single_value == 'is_not_approval'
+
+            raise "Teach me how to handle #{key} = #{values}"
+          end
+        end
+
         # Handle 'searched_type' search url param
         class SearchedType < SimpleParam
           # @return [Array<String>]
@@ -197,6 +209,8 @@ module Checkoff
           # @return [Array<String>]
           def convert
             return [] if single_value == 'anywhere'
+
+            return [] if single_value == 'inAnyOfTheseProjects'
 
             raise "Teach me how to handle #{key} = #{values}"
           end
@@ -243,6 +257,7 @@ module Checkoff
           'subtask' => SimpleParam::Subtask,
           'sort' => SimpleParam::Sort,
           'milestone' => SimpleParam::Milestone,
+          'approval' => SimpleParam::Approval,
           'searched_type' => SimpleParam::SearchedType,
           'locatedIn' => SimpleParam::LocatedIn,
         }.freeze

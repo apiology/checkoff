@@ -710,6 +710,54 @@ class TestSearchUrlParser < ClassTest
                  e.message)
   end
 
+  # @return [void]
+  def test_convert_params_46
+    search_url_parser = get_test_object
+    url = 'https://app.asana.com/0/search?searched_type=task&approval=is_not_approval&milestone=is_not_milestone&subtask=is_not_subtask&locatedIn=inAnyOfTheseProjects&not_tags.ids=abc&any_projects.ids=def_column_ghi'
+    asana_api_params = {
+      'resource_subtype' => 'default_task',
+      'is_subtask' => false,
+      'tags.not' => 'abc',
+      'sections.any' => 'ghi',
+      'sort_by' => 'created_at',
+    }
+
+    task_selector = []
+
+    assert_equal([asana_api_params, task_selector],
+                 search_url_parser.convert_params(url))
+  end
+
+  # @return [void]
+  def test_convert_params_47
+    search_url_parser = get_test_object
+    url = 'https://app.asana.com/0/search?searched_type=task&approval=is_approval&milestone=is_not_milestone&subtask=is_not_subtask&locatedIn=inAnyOfTheseProjects&not_tags.ids=abc&any_projects.ids=def_column_ghi'
+    asana_api_params = {
+      'resource_subtype' => 'default_task',
+      'is_subtask' => false,
+      'tags.not' => 'abc',
+      'sections.any' => 'ghi',
+      'sort_by' => 'created_at',
+    }
+
+    task_selector = []
+
+    assert_equal([asana_api_params, task_selector],
+                 search_url_parser.convert_params(url))
+  end
+
+  # @return [void]
+  def test_convert_params_48
+    search_url_parser = get_test_object
+    url = 'https://app.asana.com/0/search?searched_type=task&approval=garbage&milestone=is_not_milestone&subtask=is_not_subtask&locatedIn=inAnyOfTheseProjects&not_tags.ids=abc&any_projects.ids=def_column_ghi'
+
+    e = assert_raises(RuntimeError) do
+      search_url_parser.convert_params(url)
+    end
+    assert_equal('Teach me how to handle approval = ["garbage"]',
+                 e.message)
+  end
+
   # @return [Class<Checkoff::Internal::SearchUrl::Parser>]
   def class_under_test
     Checkoff::Internal::SearchUrl::Parser
