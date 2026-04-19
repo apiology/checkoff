@@ -1,19 +1,17 @@
-# typed: false
+# typed: true
 # frozen_string_literal: true
 
 require 'logger'
 
 # include this to add ability to log at different levels
 module Logging
-  # @sg-ignore
   # @return [::Logger]
   def logger
     # @type [::Logger]
-    # @sg-ignore
-    @logger ||= if defined?(Rails) && Rails.respond_to?(:logger) && Rails.logger
-                  # @sg-ignore
-                  # @type [::Logger]
-                  Rails.logger
+    @logger ||= if Object.const_defined?(:Rails)
+                  rails = Object.const_get(:Rails)
+                  rails_logger = rails.respond_to?(:logger) ? rails.logger : nil
+                  rails_logger || ::Logger.new($stdout, level: log_level)
                 else
                   ::Logger.new($stdout, level: log_level)
                 end
@@ -58,10 +56,10 @@ module Logging
 
   private
 
-  # @sg-ignore
   # @return [Symbol]
   def log_level
-    # @sg-ignore
-    ENV.fetch('LOG_LEVEL', 'INFO').downcase.to_sym
+    # rubocop:disable Style/RedundantFetchBlock
+    ENV.fetch('LOG_LEVEL') { 'INFO' }.downcase.to_sym
+    # rubocop:enable Style/RedundantFetchBlock
   end
 end

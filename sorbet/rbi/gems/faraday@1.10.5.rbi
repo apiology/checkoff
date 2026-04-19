@@ -90,12 +90,12 @@ module Faraday
     # @example With an URL argument
     #   Faraday.new 'http://faraday.com'
     #   # => Faraday::Connection to http://faraday.com
+    # @example With an URL argument and an options hash
+    #   Faraday.new 'http://faraday.com', params: { page: 1 }
+    #   # => Faraday::Connection to http://faraday.com?page=1
     # @example With everything in an options hash
     #   Faraday.new url: 'http://faraday.com',
     #   params: { page: 1 }
-    #   # => Faraday::Connection to http://faraday.com?page=1
-    # @example With an URL argument and an options hash
-    #   Faraday.new 'http://faraday.com', params: { page: 1 }
     #   # => Faraday::Connection to http://faraday.com?page=1
     # @option options
     # @option options
@@ -671,10 +671,10 @@ class Faraday::Connection
   # @api private
   # @return [Faraday::Connection]
   #
-  # source://faraday//lib/faraday/connection.rb#564
+  # source://faraday//lib/faraday/connection.rb#566
   def dup; end
 
-  # source://faraday//lib/faraday/connection.rb#620
+  # source://faraday//lib/faraday/connection.rb#622
   def find_default_proxy; end
 
   # source://faraday//lib/faraday/connection.rb#201
@@ -784,10 +784,10 @@ class Faraday::Connection
   # source://faraday//lib/faraday/connection.rb#405
   def proxy=(new_value); end
 
-  # source://faraday//lib/faraday/connection.rb#628
+  # source://faraday//lib/faraday/connection.rb#630
   def proxy_for_request(url); end
 
-  # source://faraday//lib/faraday/connection.rb#595
+  # source://faraday//lib/faraday/connection.rb#597
   def proxy_from_env(url); end
 
   # source://faraday//lib/faraday/connection.rb#282
@@ -817,7 +817,7 @@ class Faraday::Connection
   # source://forwardable/1.3.3/forwardable.rb#231
   def scheme=(*args, **_arg1, &block); end
 
-  # source://faraday//lib/faraday/connection.rb#587
+  # source://faraday//lib/faraday/connection.rb#589
   def set_authorization_header(header_type, *args); end
 
   # source://faraday//lib/faraday/connection.rb#443
@@ -830,7 +830,7 @@ class Faraday::Connection
 
   # @return [Boolean]
   #
-  # source://faraday//lib/faraday/connection.rb#638
+  # source://faraday//lib/faraday/connection.rb#640
   def support_parallel?(adapter); end
 
   # Sets up the Authorization header with the given token.
@@ -887,7 +887,7 @@ class Faraday::Connection
   # @yieldparam username [String] any username from URI
   # @yieldparam password [String] any password from URI
   #
-  # source://faraday//lib/faraday/connection.rb#581
+  # source://faraday//lib/faraday/connection.rb#583
   def with_uri_credentials(uri); end
 end
 
