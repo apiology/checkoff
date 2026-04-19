@@ -1,4 +1,4 @@
-# typed: false
+# typed: true
 # frozen_string_literal: true
 
 require 'logger'
@@ -9,14 +9,7 @@ module Logging
   # @return [::Logger]
   def logger
     # @type [::Logger]
-    # @sg-ignore
-    @logger ||= if defined?(Rails) && Rails.respond_to?(:logger) && Rails.logger
-                  # @sg-ignore
-                  # @type [::Logger]
-                  Rails.logger
-                else
-                  ::Logger.new($stdout, level: log_level)
-                end
+    @logger ||= rails_logger || ::Logger.new($stdout, level: log_level)
   end
 
   # @param message [Object,nil]
@@ -57,6 +50,19 @@ module Logging
   end
 
   private
+
+  # @return [::Logger, nil]
+  def rails_logger
+    return nil unless Object.const_defined?(:Rails)
+
+    rails = Object.const_get(:Rails)
+    return nil unless rails.respond_to?(:logger)
+
+    logger = rails.logger
+    return nil unless logger.is_a?(::Logger)
+
+    logger
+  end
 
   # @sg-ignore
   # @return [Symbol]
