@@ -5,11 +5,16 @@ require 'logger'
 
 # include this to add ability to log at different levels
 module Logging
-  # @sg-ignore
   # @return [::Logger]
   def logger
     # @type [::Logger]
-    @logger ||= rails_logger || ::Logger.new($stdout, level: log_level)
+    @logger ||= if defined?(Rails)
+                  rails = Object.const_get(:Rails)
+                  rails_logger = rails.respond_to?(:logger) ? rails.logger : nil
+                  rails_logger || ::Logger.new($stdout, level: log_level)
+                else
+                  ::Logger.new($stdout, level: log_level)
+                end
   end
 
   # @param message [Object,nil]
@@ -51,23 +56,8 @@ module Logging
 
   private
 
-  # @return [::Logger, nil]
-  def rails_logger
-    return nil unless Object.const_defined?(:Rails)
-
-    rails = Object.const_get(:Rails)
-    return nil unless rails.respond_to?(:logger)
-
-    logger = rails.logger
-    return nil unless logger.is_a?(::Logger)
-
-    logger
-  end
-
-  # @sg-ignore
   # @return [Symbol]
   def log_level
-    # @sg-ignore
     ENV.fetch('LOG_LEVEL', 'INFO').downcase.to_sym
   end
 end
