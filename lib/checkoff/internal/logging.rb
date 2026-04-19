@@ -8,7 +8,7 @@ module Logging
   # @return [::Logger]
   def logger
     # @type [::Logger]
-    @logger ||= if defined?(Rails)
+    @logger ||= if Object.const_defined?(:Rails)
                   rails = Object.const_get(:Rails)
                   rails_logger = rails.respond_to?(:logger) ? rails.logger : nil
                   rails_logger || ::Logger.new($stdout, level: log_level)
@@ -58,6 +58,8 @@ module Logging
 
   # @return [Symbol]
   def log_level
-    ENV.fetch('LOG_LEVEL', 'INFO').downcase.to_sym
+    # rubocop:disable Style/RedundantFetchBlock
+    ENV.fetch('LOG_LEVEL') { 'INFO' }.downcase.to_sym
+    # rubocop:enable Style/RedundantFetchBlock
   end
 end

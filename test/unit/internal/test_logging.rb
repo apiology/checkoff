@@ -1,4 +1,4 @@
-# typed: false
+# typed: true
 # frozen_string_literal: true
 
 require 'stringio'
@@ -10,6 +10,7 @@ class TestLogging < Minitest::Test
       logger_owner = build_logger_owner
 
       logger = logger_owner.logger
+
       assert_instance_of(Logger, logger)
       assert_equal(Logger::WARN, logger.level)
     end
