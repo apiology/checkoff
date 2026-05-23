@@ -90,7 +90,7 @@ latest_ruby_version() {
   # https://github.com/rbenv/rbenv/issues/1441
   set +e
   # ruby-build 202605+ dropped EOL Rubies from `--list`; use `--list-all`.
-  rbenv install --list-all 2>/dev/null | grep "^${major_minor}."
+  rbenv install --list-all 2>/dev/null | grep "^${major_minor}\\." | grep -v -- -preview | grep -v -- -rc | grep -v -- -dev | tail -1
   set -e
 }
 
@@ -242,10 +242,9 @@ ensure_bundle() {
 }
 
 set_ruby_local_version() {
-  latest_ruby_version="$(echo "${ruby_versions}" | tail -1)"
-  if [ "${latest_ruby_version}" != "$(cat .ruby-version 2>/dev/null)" ]
+  if [ "${ruby_versions}" != "$(cat .ruby-version 2>/dev/null)" ]
   then
-    echo "${latest_ruby_version}" > .ruby-version
+    echo "${ruby_versions}" > .ruby-version
   fi
   set_rbenv_env_variables
 }
