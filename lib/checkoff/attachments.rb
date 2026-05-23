@@ -163,6 +163,7 @@ module Checkoff
     # @param filename [String]
     #
     # @return [String,nil]
+    # @sg-ignore
     def content_type_from_filename(filename)
       MIME::Types.type_for(filename)&.first&.content_type
     end

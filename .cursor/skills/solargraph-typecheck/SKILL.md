@@ -92,7 +92,7 @@ Date.parse('2029-01-04')
 
 - Net::HTTP response bodies: `@param response [#read_body]`
 - `$LOAD_PATH`: one `# @sg-ignore` on the bootstrap line (special RBS typing)
-- Bundler binstub `ENV['BUNDLE_GEMFILE'] ||= ...`: see `config/annotations_misc.rb` ENV stubs
+- Bundler binstub `ENV['BUNDLE_GEMFILE'] ||= ...`: YARD stubs in `config/annotations_misc.rb` do not override RBS `ENVClass` at strong level — keep `# @sg-ignore` on each binstub line
 
 ### GLI command blocks
 

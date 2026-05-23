@@ -291,6 +291,8 @@ module Checkoff
     # @param task [Asana::Resources::Task]
     # @param portfolio_name [String]
     # @param workspace_name [String]
+    # @param workspace_name [String]
+    # @return [Boolean]
     def in_portfolio_named?(task,
                             portfolio_name,
                             workspace_name: @workspaces.default_workspace.name)
@@ -308,6 +310,8 @@ module Checkoff
     # @param task [Asana::Resources::Task]
     # @param portfolio_name [String]
     # @param workspace_name [String]
+    # @param workspace_name [String]
+    # @return [Boolean]
     def in_portfolio_more_than_once?(task,
                                      portfolio_name,
                                      workspace_name: @workspaces.default_workspace.name)

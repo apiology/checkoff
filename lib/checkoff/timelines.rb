@@ -47,6 +47,7 @@ module Checkoff
 
     # @param task [Asana::Resources::Task]
     # @param limit_to_portfolio_gid [String, nil]
+    # @return [Boolean]
     def task_dependent_on_previous_section_last_milestone?(task, limit_to_portfolio_gid: nil)
       task_data = @tasks.task_to_h(task)
       # @type [Array<Hash{String => Hash{String => String}}>]
@@ -63,6 +64,7 @@ module Checkoff
 
     # @param task [Asana::Resources::Task]
     # @param limit_to_portfolio_name [String, nil]
+    # @return [Boolean]
     def last_task_milestone_depends_on_this_task?(task, limit_to_portfolio_name: nil)
       unless limit_to_portfolio_name.nil?
         limit_to_projects = @portfolios.projects_in_portfolio(@workspaces.default_workspace.name,
@@ -95,6 +97,7 @@ module Checkoff
 
     # @param task [Asana::Resources::Task]
     # @param limit_to_portfolio_name [String, nil]
+    # @return [Boolean]
     def any_milestone_depends_on_this_task?(task, limit_to_portfolio_name: nil)
       unless limit_to_portfolio_name.nil?
         limit_to_projects = @portfolios.projects_in_portfolio(@workspaces.default_workspace.name,

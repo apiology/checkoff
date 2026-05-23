@@ -171,7 +171,7 @@ module Checkoff
     end
     cache_method :section_or_raise, LONG_CACHE_TIME
 
-    # @param name [String]
+    # @param name [String, nil]
     # @return [String, nil]
     def section_key(name)
       inbox_section_names = ['(no section)', 'Untitled section', 'Inbox', 'Recently assigned']
@@ -271,7 +271,6 @@ module Checkoff
       by_section = {}
       sections = client.sections.get_sections_for_project(project_gid:,
                                                           options: { fields: ['name'] })
-      # @sg-ignore
       sections.each_entry { |section| by_section[section_key(section.name)] = [] }
       tasks.each { |task| file_task_by_section(by_section, task, project_gid) }
       by_section

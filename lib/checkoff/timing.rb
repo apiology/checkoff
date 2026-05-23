@@ -175,7 +175,6 @@ module Checkoff
       (@now_getter.now + (num_days * 24 * 60 * 60))
     end
 
-    # @sg-ignore
     # @param num_days [Integer]
     #
     # @return [Date]
