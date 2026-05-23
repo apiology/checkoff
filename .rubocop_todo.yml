@@ -67,7 +67,7 @@ Metrics/PerceivedComplexity:
   Exclude:
     - 'lib/checkoff/timelines.rb'
 
-# Offense count: 25
+# Offense count: 26
 # Configuration parameters: Mode, AllowedMethods, AllowedPatterns, AllowBangMethods, WaywardPredicates.
 # AllowedMethods: call
 # WaywardPredicates: infinite?, nonzero?
