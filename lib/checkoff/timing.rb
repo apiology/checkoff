@@ -170,7 +170,6 @@ module Checkoff
     # @param num_days [Integer]
     #
     # @return [Time]
-    # @sg-ignore
     def n_days_from_now(num_days)
       Time.at(@now_getter.now.to_i + (num_days * 86_400))
     end
@@ -178,6 +177,7 @@ module Checkoff
     # @param num_days [Integer]
     #
     # @return [Date]
+    # @sg-ignore
     def n_days_from_today(num_days)
       @today_getter.today + num_days
     end
