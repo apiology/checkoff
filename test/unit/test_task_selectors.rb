@@ -934,6 +934,91 @@ class TestTaskSelectors < ClassTest
                                                    [:last_task_milestone_does_not_depend_on_this_task?]))
   end
 
+  # @return [void]
+  def test_in_a_real_project_true
+    task_selectors = get_test_object do
+      tasks.expects(:task_to_h).with(task).returns(
+        'unwrapped' => { 'membership_by_project_name' => { 'Real Project' => {} } }
+      )
+    end
+
+    assert(task_selectors.filter_via_task_selector(task, [:in_a_real_project?]))
+  end
+
+  # @return [void]
+  def test_in_a_real_project_false_only_my_tasks
+    task_selectors = get_test_object do
+      tasks.expects(:task_to_h).with(task).returns(
+        'unwrapped' => { 'membership_by_project_name' => { my_tasks: {} } }
+      )
+    end
+
+    refute(task_selectors.filter_via_task_selector(task, [:in_a_real_project?]))
+  end
+
+  # @return [void]
+  def test_section_name_starts_with_true
+    task_selectors = get_test_object do
+      tasks.expects(:task_to_h).with(task).returns(
+        'unwrapped' => { 'membership_by_section_name' => { 'Done items' => {} } }
+      )
+    end
+
+    assert(task_selectors.filter_via_task_selector(task, [:section_name_starts_with?, 'Done']))
+  end
+
+  # @return [void]
+  def test_section_name_starts_with_false
+    task_selectors = get_test_object do
+      tasks.expects(:task_to_h).with(task).returns(
+        'unwrapped' => { 'membership_by_section_name' => { 'Inbox' => {} } }
+      )
+    end
+
+    refute(task_selectors.filter_via_task_selector(task, [:section_name_starts_with?, 'Done']))
+  end
+
+  # @return [void]
+  def test_in_section_named_true
+    task_selectors = get_test_object do
+      tasks.expects(:task_to_h).with(task).returns(
+        'unwrapped' => { 'membership_by_section_name' => { 'Today' => {} } }
+      )
+    end
+
+    assert(task_selectors.filter_via_task_selector(task, [:in_section_named?, 'Today']))
+  end
+
+  # @return [void]
+  def test_in_section_named_false
+    task_selectors = get_test_object do
+      tasks.expects(:task_to_h).with(task).returns(
+        'unwrapped' => { 'membership_by_section_name' => { 'Today' => {} } }
+      )
+    end
+
+    refute(task_selectors.filter_via_task_selector(task, [:in_section_named?, 'Tomorrow']))
+  end
+
+  # @return [void]
+  def test_in_portfolio_more_than_once_true
+    task_selectors = get_test_object do
+      tasks.expects(:in_portfolio_more_than_once?).with(task, 'portfolio').returns(true)
+    end
+
+    assert(task_selectors.filter_via_task_selector(task, [:in_portfolio_more_than_once?, 'portfolio']))
+  end
+
+  # @return [void]
+  def test_no_milestone_depends_on_this_task_true
+    task_selectors = get_test_object do
+      timelines.expects(:any_milestone_depends_on_this_task?)
+        .with(task, limit_to_portfolio_name: nil).returns(false)
+    end
+
+    assert(task_selectors.filter_via_task_selector(task, [:no_milestone_depends_on_this_task?]))
+  end
+
   def respond_like_instance_of
     {
       config: Checkoff::Internal::EnvFallbackConfigLoader,

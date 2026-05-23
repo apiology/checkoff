@@ -326,6 +326,38 @@ class TestTimelines < ClassTest
   end
 
   # @return [void]
+  def test_any_milestone_depends_on_this_task_false
+    timelines = get_test_object do
+      memberships = [{ 'project' => { 'gid' => project_a_gid } }]
+      expect_memberships_pulled(task, memberships)
+      tasks.expects(:all_dependent_tasks)
+        .with(task, extra_task_fields: ['resource_subtype', 'memberships.project.gid'])
+        .returns([])
+    end
+
+    refute(timelines.any_milestone_depends_on_this_task?(task))
+  end
+
+  # @return [void]
+  def test_any_milestone_depends_on_this_task_true
+    timelines = get_test_object do
+      memberships = [{ 'project' => { 'gid' => project_a_gid } }]
+      expect_memberships_pulled(task, memberships)
+      export_portfolio_projects_pulled([project_a])
+      project_a.expects(:gid).returns(project_a_gid)
+      dependent_milestone = mock('dependent_milestone')
+      dependent_milestone.expects(:resource_subtype).returns('milestone')
+      dependent_milestone.expects(:memberships)
+        .returns([{ 'project' => { 'gid' => project_a_gid } }])
+      tasks.expects(:all_dependent_tasks)
+        .with(task, extra_task_fields: ['resource_subtype', 'memberships.project.gid'])
+        .returns([dependent_milestone])
+    end
+
+    assert(timelines.any_milestone_depends_on_this_task?(task, limit_to_portfolio_name: portfolio_name))
+  end
+
+  # @return [void]
   def class_under_test
     Checkoff::Timelines
   end

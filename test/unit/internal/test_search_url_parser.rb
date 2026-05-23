@@ -11,6 +11,14 @@ class TestSearchUrlParser < ClassTest
   #  # @return [Checkoff::Internal::SearchUrl::Parser]
   #  def get_test_object; end
 
+  # Ruby 3.4+ Hash#inspect inserts spaces around =>; normalize for assertions.
+  #
+  # @param message [String]
+  # @return [String]
+  def normalize_error_message(message)
+    message.gsub(' => ', '=>')
+  end
+
   # @return [void]
   def test_convert_params_1
     search_url_parser = get_test_object
@@ -218,7 +226,7 @@ class TestSearchUrlParser < ClassTest
     end
 
     assert_equal 'Teach me how to handle {"custom_field_456.min"=>["99999"], "custom_field_456.blah"=>["123"]}',
-                 e.message
+                 normalize_error_message(e.message)
   end
 
   # @return [void]
@@ -231,7 +239,7 @@ class TestSearchUrlParser < ClassTest
 
     assert_equal 'Teach me how to handle these remaining keys for custom_field_456.min: ' \
                  '{"custom_field_456.min"=>["99999", "123"]}',
-                 e.message
+                 normalize_error_message(e.message)
   end
 
   # @return [void]
@@ -310,7 +318,7 @@ class TestSearchUrlParser < ClassTest
     end
 
     assert_equal 'Teach me how to handle these remaining keys: {"custom_field_12.bogus"=>["bogus"]}',
-                 e.message
+                 normalize_error_message(e.message)
   end
 
   # @return [void]
@@ -544,7 +552,7 @@ class TestSearchUrlParser < ClassTest
 
     assert_equal('Teach me how to handle other due_date.unit for these params: ' \
                  '{"due_date.operator"=>["between"], "due_date.after"=>["1702857600000"], "due_date.unit"=>["date"]}',
-                 e.message)
+                 normalize_error_message(e.message))
   end
 
   # @return [void]
@@ -558,7 +566,7 @@ class TestSearchUrlParser < ClassTest
 
     assert_equal('Teach me to handle these parameters: {"birth_date.operator"=>["through_next"], ' \
                  '"birth_date.value"=>["0"], "birth_date.unit"=>["day"]}',
-                 e.message)
+                 normalize_error_message(e.message))
   end
 
   # @return [void]

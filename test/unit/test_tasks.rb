@@ -349,6 +349,55 @@ class TestTasks < BaseAsana
                                               workspace_name: 'workspace_name'))
   end
 
+  # @return [void]
+  def test_in_portfolio_more_than_once_true
+    tasks = get_test_object do
+      portfolio_project = mock('portfolio_project')
+      portfolio_project.expects(:gid).returns(project_gid)
+      portfolios.expects(:projects_in_portfolio).with('workspace_name', 'portfolio name')
+        .returns([portfolio_project])
+      memberships = [
+        { 'project' => { 'gid' => project_gid } },
+        { 'project' => { 'gid' => project_gid } },
+      ]
+      task.expects(:memberships).returns(memberships)
+    end
+
+    assert(tasks.in_portfolio_more_than_once?(task, 'portfolio name',
+                                              workspace_name: 'workspace_name'))
+  end
+
+  # @return [void]
+  def test_gid_for_task
+    tasks = get_test_object do
+      projects_instance = Checkoff::Projects.new(client:)
+      sections.expects(:projects).returns(projects_instance).at_least_once
+      projects_instance.expects(:project_or_raise).with(workspace_name, project_name).returns(project)
+      projects_instance.expects(:tasks_from_project)
+        .with(project, only_uncompleted: false, extra_fields: [])
+        .returns([task])
+      task.expects(:name).returns(task_name)
+      task.expects(:gid).returns(task_gid)
+    end
+
+    assert_equal(task_gid,
+                 tasks.gid_for_task(workspace_name, project_name, :unspecified, task_name))
+  end
+
+  # @return [void]
+  def test_gid_for_task_not_found
+    tasks = get_test_object do
+      projects_instance = Checkoff::Projects.new(client:)
+      sections.expects(:projects).returns(projects_instance).at_least_once
+      projects_instance.expects(:project_or_raise).with(workspace_name, project_name).returns(project)
+      projects_instance.expects(:tasks_from_project)
+        .with(project, only_uncompleted: false, extra_fields: [])
+        .returns([])
+    end
+
+    assert_nil(tasks.gid_for_task(workspace_name, project_name, :unspecified, task_name))
+  end
+
   def test_task_to_h_delegates
     tasks = get_test_object do
       Checkoff::Internal::TaskHashes.expects(:new).returns(task_hashes)

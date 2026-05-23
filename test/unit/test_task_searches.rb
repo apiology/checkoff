@@ -125,6 +125,42 @@ class TestTaskSearches < ClassTest
   end
 
   # @return [void]
+  def test_raw_task_search_without_selector
+    task_searches = get_test_object do
+      @mocks[:projects] = projects
+    end
+    collection = mock('collection')
+    collection.expects(:count).returns(1)
+    task_searches.expects(:api_task_search_request)
+      .with(api_params, workspace_gid: 'abc', extra_fields: [])
+      .returns(collection)
+
+    result = task_searches.send(:raw_task_search, api_params, workspace_gid: 'abc', task_selector: [])
+
+    assert_same(collection, result)
+  end
+
+  # @return [void]
+  def test_raw_task_search_paginates_when_full_page
+    task_searches = get_test_object do
+      @mocks[:projects] = projects
+    end
+    first_page = mock('first_page')
+    first_page.expects(:count).returns(100)
+    paginated = [good_task]
+    task_searches.expects(:api_task_search_request)
+      .with(api_params, workspace_gid: 'abc', extra_fields: [])
+      .returns(first_page)
+    task_searches.expects(:iterated_raw_task_search)
+      .with(api_params, workspace_gid: 'abc', extra_fields: [])
+      .returns(paginated)
+
+    result = task_searches.send(:raw_task_search, api_params, workspace_gid: 'abc', task_selector: [])
+
+    assert_equal(paginated, result.to_a)
+  end
+
+  # @return [void]
   def class_under_test
     Checkoff::TaskSearches
   end
