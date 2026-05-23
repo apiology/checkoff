@@ -89,7 +89,9 @@ latest_ruby_version() {
   #
   # https://github.com/rbenv/rbenv/issues/1441
   set +e
-  rbenv install --list 2>/dev/null | cat | grep "^${major_minor}."
+  # ruby-build 202605+ dropped EOL Rubies from `--list`; use `--list-all`.
+  # Match only patch releases, not prereleases (preview/rc/dev).
+  rbenv install --list-all 2>/dev/null | grep "^${major_minor}\\." | grep -v -- -preview | grep -v -- -rc | grep -v -- -dev | tail -1
   set -e
 }
 
@@ -147,7 +149,7 @@ ensure_ruby_versions() {
 
   # You can find out which feature versions are still supported / have
   # been release here: https://www.ruby-lang.org/en/downloads/
-  ruby_versions="$(latest_ruby_version 3.2)"
+  ruby_versions="$(latest_ruby_version 3.3)"
 
   installed_ruby_versions="$(rbenv versions --bare --skip-aliases)"
 
@@ -241,11 +243,12 @@ ensure_bundle() {
 }
 
 set_ruby_local_version() {
-  latest_ruby_version="$(cut -d' ' -f1 <<< "${ruby_versions}")"
+  latest_ruby_version="$(echo "${ruby_versions}" | tail -1)"
   if [ "${latest_ruby_version}" != "$(cat .ruby-version 2>/dev/null)" ]
   then
     echo "${latest_ruby_version}" > .ruby-version
   fi
+  set_rbenv_env_variables
 }
 
 latest_python_version() {

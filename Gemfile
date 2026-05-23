@@ -5,10 +5,14 @@ source 'https://rubygems.org'
 # Specify your gem's dependencies in checkoff.gemspec
 gemspec
 
+# Security patches (bundler-audit)
+gem 'activesupport', '~> 8.0.4', '>= 8.0.4.1'
+
 group :development, :test do
   gem 'bundler'
   gem 'mdl'
-  gem 'minitest'
+  # minitest 6 removed Class#stub; keep 5.x until tests migrate to mocha
+  gem 'minitest', '~> 5.25'
   gem 'minitest-profile'
   gem 'minitest-reporters'
   gem 'mocha', ['>= 2']
