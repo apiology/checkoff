@@ -77,7 +77,6 @@ module Checkoff
           project_gid = membership_data.fetch('project').fetch('gid')
           next true unless limit_to_projects.map(&:gid).include? project_gid
         end
-        # @type [Hash{String => String}]
         section_data = membership_data.fetch('section')
         # @type [String]
         section_gid = section_data.fetch('gid')

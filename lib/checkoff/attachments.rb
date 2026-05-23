@@ -163,10 +163,11 @@ module Checkoff
     # @param filename [String]
     #
     # @return [String,nil]
-    # @sg-ignore
     def content_type_from_filename(filename)
       type = MIME::Types.type_for(filename).first
-      type&.content_type
+      return nil if type.nil?
+
+      type.content_type
     end
 
     # https://github.com/Asana/ruby-asana/blob/master/lib/asana/resource_includes/response_helper.rb#L7

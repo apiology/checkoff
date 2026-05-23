@@ -168,11 +168,11 @@ module Checkoff
     end
 
     # @param num_days [Integer]
-    # @sg-ignore
     #
     # @return [Time]
+    # @sg-ignore
     def n_days_from_now(num_days)
-      (@now_getter.now + (num_days * 24 * 60 * 60))
+      Time.at(@now_getter.now.to_i + (num_days * 86_400))
     end
 
     # @param num_days [Integer]

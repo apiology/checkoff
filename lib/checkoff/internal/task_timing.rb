@@ -47,8 +47,7 @@ module Checkoff
       #
       # @return [Date, Time, nil]
       def due_date_or_time(task)
-        # @sg-ignore
-        return @time_class.parse(task.due_at).localtime unless task.due_at.nil?
+        return @time_class.parse(T.must(task.due_at)).localtime unless task.due_at.nil?
 
         return @date_class.parse(task.due_on) unless task.due_on.nil?
 
