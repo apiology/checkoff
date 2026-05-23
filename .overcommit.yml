@@ -106,7 +106,7 @@ PreCommit:
       - ".markdownlint_style.rb"
   RegenerateTypecheck:
     enabled: true
-    description: 'Regenerate Sorbet RBIs when Gemfile.lock changes'
+    description: 'Run make build-typecheck when Gemfile.lock changes'
     requires_files: true
     include:
       - 'Gemfile.lock'
