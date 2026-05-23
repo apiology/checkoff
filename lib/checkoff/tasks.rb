@@ -291,14 +291,14 @@ module Checkoff
     # @param task [Asana::Resources::Task]
     # @param portfolio_name [String]
     # @param workspace_name [String]
-    # @param workspace_name [String]
     # @return [Boolean]
     def in_portfolio_named?(task,
                             portfolio_name,
                             workspace_name: @workspaces.default_workspace.name)
       portfolio_projects = @portfolios.projects_in_portfolio(workspace_name, portfolio_name)
       task.memberships.any? do |membership|
-        project_gid = membership.fetch('project').fetch('gid')
+        m = T.cast(membership, T::Hash[String, T.untyped])
+        project_gid = T.cast(m.fetch('project'), T::Hash[String, T.untyped]).fetch('gid')
         portfolio_projects.any? do |portfolio_project|
           portfolio_project.gid == project_gid
         end
@@ -310,7 +310,6 @@ module Checkoff
     # @param task [Asana::Resources::Task]
     # @param portfolio_name [String]
     # @param workspace_name [String]
-    # @param workspace_name [String]
     # @return [Boolean]
     def in_portfolio_more_than_once?(task,
                                      portfolio_name,
@@ -319,7 +318,8 @@ module Checkoff
       portfolio_project_gids = portfolio_projects.map(&:gid)
       seen = T.let(false, T::Boolean)
       task.memberships.each do |membership|
-        project_gid = membership.fetch('project').fetch('gid')
+        m = T.cast(membership, T::Hash[String, T.untyped])
+        project_gid = T.cast(m.fetch('project'), T::Hash[String, T.untyped]).fetch('gid')
         next unless portfolio_project_gids.include?(project_gid)
         return true if seen
 

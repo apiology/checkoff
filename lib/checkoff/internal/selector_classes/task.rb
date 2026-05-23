@@ -91,11 +91,13 @@ module Checkoff
         # @param task [Asana::Resources::Task]
         # @param project_name [String]
         # @return [Boolean]
+        # @sg-ignore
         def evaluate(task, project_name)
           project_names = task.memberships.map do |membership|
-            membership.fetch('project').fetch('name')
+            m = T.cast(membership, T::Hash[String, T.untyped])
+            T.cast(m.fetch('project'), T::Hash[String, T.untyped]).fetch('name')
           end
-          project_names.include? project_name
+          T.cast(project_names.include?(project_name), T::Boolean)
         end
       end
 

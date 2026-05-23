@@ -285,8 +285,8 @@ module Checkoff
       membership = task.memberships.find { |m| T.cast(m['project'], T::Hash[String, T.untyped])['gid'] == project_gid }
       raise "Could not find task in project_gid #{project_gid}: #{task}" if membership.nil?
 
-      # @sg-ignore
-      section = T.cast(membership['section'], T::Hash[String, T.untyped])
+      m = T.cast(membership, T::Hash[String, T.untyped])
+      section = T.cast(m['section'], T::Hash[String, T.untyped])
       section_name = T.cast(section['name'], String)
 
       # @type [String, nil]
