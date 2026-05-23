@@ -164,7 +164,6 @@ module Checkoff
     #
     # @return [String,nil]
     def content_type_from_filename(filename)
-      # @sg-ignore
       MIME::Types.type_for(filename)&.first&.content_type
     end
 
