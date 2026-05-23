@@ -1,4 +1,4 @@
-.PHONY: build build-typecheck bundle_install cicoverage citypecheck citest citypecoverage clean clean-coverage clean-typecheck clean-typecoverage coverage default docs gem_dependencies help overcommit quality repl report-coverage rubocop rubocop-ratchet test typecheck typecoverage update_from_cookiecutter yard
+.PHONY: build build-typecheck bundle_install cicoverage citypecheck citest citypecoverage clean clean-coverage clean-typecheck clean-typecoverage coverage default docs gem_dependencies help overcommit quality repl report-coverage rubocop rubocop-ratchet test typecheck typecoverage update-typecheck-from-lock update_from_cookiecutter yard
 
 .DEFAULT_GOAL := default
 
@@ -93,6 +93,11 @@ tapioca.installed: sorbet/tapioca/require.rb Gemfile.lock.installed ## Install T
 	bin/tapioca annotations
 #	bin/tapioca dsl
 	touch tapioca.installed
+
+update-typecheck-from-lock: Gemfile.lock ## Regenerate Sorbet gem RBIs when lockfile changes
+	rm -f tapioca.installed Gemfile.lock.installed
+	$(MAKE) bundle_install
+	$(MAKE) tapioca.installed rbs_collection.lock.yaml sorbet/rbi/todo.rbi
 
 yardoc.installed: Makefile $(SOURCE_FILES) ## Generate YARD documentation
 	bin/yard doc $(YARD_OPTS)
