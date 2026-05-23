@@ -242,9 +242,10 @@ ensure_bundle() {
 }
 
 set_ruby_local_version() {
-  if [ "${ruby_versions}" != "$(cat .ruby-version 2>/dev/null)" ]
+  latest_ruby_version="$(echo "${ruby_versions}" | tail -1)"
+  if [ "${latest_ruby_version}" != "$(cat .ruby-version 2>/dev/null)" ]
   then
-    echo "${ruby_versions}" > .ruby-version
+    echo "${latest_ruby_version}" > .ruby-version
   fi
   set_rbenv_env_variables
 }
