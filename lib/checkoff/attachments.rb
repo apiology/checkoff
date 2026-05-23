@@ -137,7 +137,6 @@ module Checkoff
         content_type ||= content_type_from_filename(uri.path)
 
         # @sg-ignore
-
         resource.attach(filename: attachment_name, mime: content_type,
                         io: tempfile)
       end

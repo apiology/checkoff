@@ -26,7 +26,6 @@ module Checkoff
         return config_value unless config_value.nil?
 
         # @sg-ignore
-
         ENV.fetch(envvar_name(key), nil)
       end
 

@@ -111,7 +111,6 @@ module Checkoff
           return nil if custom_field.nil?
 
           # @sg-ignore
-
           custom_field['display_value']
         end
       end
@@ -164,7 +163,6 @@ module Checkoff
                                                                                                       custom_field_gid)
 
           # @sg-ignore
-
           actual_custom_field_values_gids.any? do |custom_field_value|
             custom_field_values_gids.include?(custom_field_value)
           end
@@ -196,7 +194,6 @@ module Checkoff
                                                                       custom_field_name)
 
           # @sg-ignore
-
           actual_custom_field_values_names.any? do |custom_field_value|
             custom_field_value_names.include?(custom_field_value)
           end

@@ -239,7 +239,7 @@ module Checkoff
           last_story = stories.last
           # @sg-ignore
           last_story_created_at = Time.parse(last_story.created_at)
-          n_days_ago = Time.now - (num_days * 24 * 60 * 60)
+          n_days_ago = Time.at(Time.now.to_i - (num_days * 86_400))
           last_story_created_at < n_days_ago
         end
       end

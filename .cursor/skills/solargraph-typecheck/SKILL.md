@@ -10,7 +10,7 @@ Resolve Solargraph problems in this repo without re-learning project conventions
 
 ## Environment
 
-Always run type tooling through **direnv** so `.envrc` loads secrets and `bin/` is on `PATH`:
+Always run project tooling through **direnv** so `.envrc` loads secrets and `bin/` is on `PATH`:
 
 ```bash
 direnv allow
@@ -20,29 +20,23 @@ direnv exec . make solargraph-strong
 ```
 
 - `./fix.sh` needs `bin/install_package` and friends; do not run bare `./fix.sh` without direnv.
-- `make build-typecheck` depends on `.ruby-version`, yard/tapioca artifacts, and `rbi/checkoff.rbi`.
+- `make build-typecheck` depends on `.ruby-version`, yard/tapioca artifacts, `rbi/checkoff.rbi`, and updates the RBS gem collection via `bin/rbs collection update`.
 
 ## Which level to use
 
 | Target | Command | Notes |
 |--------|---------|-------|
 | Local default | `make solargraph-strong` | Same as `make solargraph`; must be clean |
-| CI | `bin/solargraph typecheck --level typed` | See `Makefile` `ci-solargraph` |
+| CI | `make ci-solargraph` | Strong level; see `Makefile` |
 | Full gate | `make typecheck` | Sorbet + Solargraph strong |
 
-Fix **strong** for developer workflow; verify **typed** if CI is the concern.
+## Scope
 
-## Scope (`.solargraph.yml`)
-
-- **Included:** `lib/`, `script/`, `checkoff.gemspec`, `.git-hooks/`, `bin/*`, etc.
-- **Excluded:** `test/**/*` only — Minitest/Mocha mocks are not strong-typecheckable; do not re-add thousands of per-line ignores in tests.
-- Do **not** exclude `script/` or `checkoff.gemspec` unless the user explicitly asks.
-
-Reporter: `typecheck:strong` in `.solargraph.yml`.
+See `.solargraph.yml` for include/exclude paths and reporter settings. Tests are excluded from strong typecheck; do not re-add thousands of per-line ignores in `test/`.
 
 ## Workflow
 
-1. Run `direnv exec . make build-typecheck` if pins/RBI may be stale.
+1. Run `direnv exec . make build-typecheck` if pins/RBI/RBS collection may be stale.
 2. Run `direnv exec . make solargraph-strong 2>&1 | tee /tmp/sg-typecheck.txt`.
 3. Triage by message type (see below): fix easy issues first, then targeted `@sg-ignore`.
 4. Re-run until zero problems.
@@ -67,7 +61,7 @@ ruby script/strip_sg_ignore.rb path/to/file_or_dir.rb
 
 ### YARD `@param` widening
 
-CLI and Asana helpers accept symbols from GLI defaults. When strong reports `expected String, received String, Symbol`, widen the callee's `@param`:
+CLI and Asana helpers accept symbols from [GLI](https://github.com/davydovanton/gli) (Gem Library Interface, the CLI framework) defaults. When strong reports `expected String, received String, Symbol`, widen the callee's `@param`:
 
 ```ruby
 # @param workspace_name [String, Symbol]
@@ -98,6 +92,7 @@ Date.parse('2029-01-04')
 
 - Net::HTTP response bodies: `@param response [#read_body]`
 - `$LOAD_PATH`: one `# @sg-ignore` on the bootstrap line (special RBS typing)
+- Bundler binstub `ENV['BUNDLE_GEMFILE'] ||= ...`: see `config/annotations_misc.rb` ENV stubs
 
 ### GLI command blocks
 

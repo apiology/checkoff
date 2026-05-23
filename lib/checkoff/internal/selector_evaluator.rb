@@ -18,7 +18,6 @@ module Checkoff
         next unless evaluator.matches?
 
         # @sg-ignore
-
         return try_this_evaluator(selector, evaluator)
       end
 

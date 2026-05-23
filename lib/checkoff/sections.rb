@@ -287,7 +287,6 @@ module Checkoff
       raise "Could not find task in project_gid #{project_gid}: #{task}" if membership.nil?
 
       # @sg-ignore
-
       section = T.cast(membership['section'], T::Hash[String, T.untyped])
       section_name = T.cast(section['name'], String)
 

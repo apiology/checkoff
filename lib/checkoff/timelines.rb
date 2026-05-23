@@ -89,7 +89,6 @@ module Checkoff
         all_dependent_task_gids ||= @tasks.all_dependent_tasks(task).map(&:gid)
 
         # @sg-ignore
-
         all_dependent_task_gids.include? last_milestone.gid
       end
     end

@@ -21,7 +21,7 @@ exclude:
   - vendor/**/*
   - ".bundle/**/*"
   - ".markdownlint_style.rb"
-  # Minitest/Mocha mocks are not strong-typecheckable; CI uses typed level
+  # Minitest/Mocha mocks are not strong-typecheckable; CI uses strong level
   - test/**/*
 require: []
 domains: []
