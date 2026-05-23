@@ -90,8 +90,8 @@ latest_ruby_version() {
   # https://github.com/rbenv/rbenv/issues/1441
   set +e
   # ruby-build 202605+ dropped EOL Rubies from `--list`; use `--list-all`.
-  # Match only patch releases (3.3.11), not prereleases (3.3-dev).
-  rbenv install --list-all 2>/dev/null | grep "^${major_minor}\\." | grep -v -- -dev
+  # Match only patch releases, not prereleases (preview/rc/dev).
+  rbenv install --list-all 2>/dev/null | grep "^${major_minor}\\." | grep -v -- -preview | grep -v -- -rc | grep -v -- -dev | tail -1
   set -e
 }
 
