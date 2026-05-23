@@ -1686,8 +1686,8 @@ end
 # @see https://ruby.github.io/prism/rb/docs/ruby_api_md.html prism gem documentation
 # @see https://github.com/whitequark/parser/blob/master/doc/PRISM_TRANSLATION.md Guide to using prism and parser together.
 #
-# source://parser//lib/parser/current.rb#111
-Parser::CurrentRuby = Parser::Ruby32
+# source://parser//lib/parser/current.rb#129
+Parser::CurrentRuby = Parser::Ruby34
 
 # @api private
 #
@@ -3346,1797 +3346,1792 @@ end
 # source://parser//lib/parser/rewriter.rb#91
 Parser::Rewriter::DEPRECATION_WARNING = T.let(T.unsafe(nil), String)
 
-# source://parser//lib/parser/ruby32.rb#14
-class Parser::Ruby32 < ::Parser::Base
+# source://parser//lib/parser/ruby34.rb#14
+class Parser::Ruby34 < ::Parser::Base
   # reduce 0 omitted
   #
-  # source://parser//lib/parser/ruby32.rb#8421
+  # source://parser//lib/parser/ruby34.rb#8371
   def _reduce_1(val, _values, result); end
 
-  # source://parser//lib/parser/ruby32.rb#8475
+  # source://parser//lib/parser/ruby34.rb#8425
   def _reduce_10(val, _values, result); end
 
-  # source://parser//lib/parser/ruby32.rb#9110
+  # source://parser//lib/parser/ruby34.rb#9025
   def _reduce_100(val, _values, result); end
 
   # reduce 101 omitted
   #
-  # source://parser//lib/parser/ruby32.rb#9119
+  # source://parser//lib/parser/ruby34.rb#9034
   def _reduce_102(val, _values, result); end
 
-  # source://parser//lib/parser/ruby32.rb#9125
+  # source://parser//lib/parser/ruby34.rb#9040
   def _reduce_103(val, _values, result); end
 
-  # source://parser//lib/parser/ruby32.rb#9131
+  # source://parser//lib/parser/ruby34.rb#9046
   def _reduce_104(val, _values, result); end
 
-  # source://parser//lib/parser/ruby32.rb#9137
+  # source://parser//lib/parser/ruby34.rb#9052
   def _reduce_105(val, _values, result); end
 
-  # source://parser//lib/parser/ruby32.rb#9143
+  # source://parser//lib/parser/ruby34.rb#9058
   def _reduce_106(val, _values, result); end
 
-  # source://parser//lib/parser/ruby32.rb#9149
+  # source://parser//lib/parser/ruby34.rb#9064
   def _reduce_107(val, _values, result); end
 
-  # source://parser//lib/parser/ruby32.rb#9155
+  # source://parser//lib/parser/ruby34.rb#9070
   def _reduce_108(val, _values, result); end
 
-  # source://parser//lib/parser/ruby32.rb#9161
+  # source://parser//lib/parser/ruby34.rb#9076
   def _reduce_109(val, _values, result); end
 
-  # source://parser//lib/parser/ruby32.rb#8481
+  # source://parser//lib/parser/ruby34.rb#8431
   def _reduce_11(val, _values, result); end
 
-  # source://parser//lib/parser/ruby32.rb#9167
+  # source://parser//lib/parser/ruby34.rb#9082
   def _reduce_110(val, _values, result); end
 
-  # source://parser//lib/parser/ruby32.rb#9177
+  # source://parser//lib/parser/ruby34.rb#9092
   def _reduce_111(val, _values, result); end
 
-  # source://parser//lib/parser/ruby32.rb#9183
+  # source://parser//lib/parser/ruby34.rb#9098
   def _reduce_112(val, _values, result); end
 
-  # source://parser//lib/parser/ruby32.rb#9193
+  # source://parser//lib/parser/ruby34.rb#9108
   def _reduce_113(val, _values, result); end
 
-  # source://parser//lib/parser/ruby32.rb#9200
+  # source://parser//lib/parser/ruby34.rb#9115
   def _reduce_114(val, _values, result); end
 
-  # source://parser//lib/parser/ruby32.rb#9207
+  # source://parser//lib/parser/ruby34.rb#9122
   def _reduce_115(val, _values, result); end
 
-  # source://parser//lib/parser/ruby32.rb#9213
+  # source://parser//lib/parser/ruby34.rb#9128
   def _reduce_116(val, _values, result); end
 
-  # source://parser//lib/parser/ruby32.rb#9219
+  # source://parser//lib/parser/ruby34.rb#9134
   def _reduce_117(val, _values, result); end
 
-  # source://parser//lib/parser/ruby32.rb#9225
+  # source://parser//lib/parser/ruby34.rb#9140
   def _reduce_118(val, _values, result); end
 
-  # source://parser//lib/parser/ruby32.rb#9231
+  # source://parser//lib/parser/ruby34.rb#9146
   def _reduce_119(val, _values, result); end
 
-  # source://parser//lib/parser/ruby32.rb#8498
+  # source://parser//lib/parser/ruby34.rb#8448
   def _reduce_12(val, _values, result); end
 
-  # source://parser//lib/parser/ruby32.rb#9237
+  # source://parser//lib/parser/ruby34.rb#9152
   def _reduce_120(val, _values, result); end
 
-  # source://parser//lib/parser/ruby32.rb#9243
+  # source://parser//lib/parser/ruby34.rb#9158
   def _reduce_121(val, _values, result); end
 
-  # source://parser//lib/parser/ruby32.rb#9249
+  # source://parser//lib/parser/ruby34.rb#9164
   def _reduce_122(val, _values, result); end
 
-  # source://parser//lib/parser/ruby32.rb#9256
+  # source://parser//lib/parser/ruby34.rb#9171
   def _reduce_123(val, _values, result); end
 
-  # source://parser//lib/parser/ruby32.rb#9263
+  # source://parser//lib/parser/ruby34.rb#9178
   def _reduce_124(val, _values, result); end
 
-  # source://parser//lib/parser/ruby32.rb#9269
+  # source://parser//lib/parser/ruby34.rb#9184
   def _reduce_125(val, _values, result); end
 
   # reduce 126 omitted
   #
-  # source://parser//lib/parser/ruby32.rb#9277
+  # source://parser//lib/parser/ruby34.rb#9192
   def _reduce_127(val, _values, result); end
 
-  # source://parser//lib/parser/ruby32.rb#9283
+  # source://parser//lib/parser/ruby34.rb#9198
   def _reduce_128(val, _values, result); end
 
-  # source://parser//lib/parser/ruby32.rb#9289
+  # source://parser//lib/parser/ruby34.rb#9204
   def _reduce_129(val, _values, result); end
 
-  # source://parser//lib/parser/ruby32.rb#8504
+  # source://parser//lib/parser/ruby34.rb#8454
   def _reduce_13(val, _values, result); end
 
   # reduce 134 omitted
   #
-  # source://parser//lib/parser/ruby32.rb#9305
+  # source://parser//lib/parser/ruby34.rb#9220
   def _reduce_135(val, _values, result); end
 
   # reduce 136 omitted
   #
-  # source://parser//lib/parser/ruby32.rb#9313
+  # source://parser//lib/parser/ruby34.rb#9228
   def _reduce_137(val, _values, result); end
 
-  # source://parser//lib/parser/ruby32.rb#9319
+  # source://parser//lib/parser/ruby34.rb#9234
   def _reduce_138(val, _values, result); end
 
-  # source://parser//lib/parser/ruby32.rb#9325
+  # source://parser//lib/parser/ruby34.rb#9240
   def _reduce_139(val, _values, result); end
 
-  # source://parser//lib/parser/ruby32.rb#8510
+  # source://parser//lib/parser/ruby34.rb#8460
   def _reduce_14(val, _values, result); end
 
-  # source://parser//lib/parser/ruby32.rb#8516
+  # source://parser//lib/parser/ruby34.rb#8466
   def _reduce_15(val, _values, result); end
 
-  # source://parser//lib/parser/ruby32.rb#8522
+  # source://parser//lib/parser/ruby34.rb#8472
   def _reduce_16(val, _values, result); end
 
   # reduce 17 omitted
   #
-  # source://parser//lib/parser/ruby32.rb#8530
+  # source://parser//lib/parser/ruby34.rb#8480
   def _reduce_18(val, _values, result); end
 
-  # source://parser//lib/parser/ruby32.rb#8536
+  # source://parser//lib/parser/ruby34.rb#8486
   def _reduce_19(val, _values, result); end
 
-  # source://parser//lib/parser/ruby32.rb#8428
+  # source://parser//lib/parser/ruby34.rb#8378
   def _reduce_2(val, _values, result); end
 
-  # source://parser//lib/parser/ruby32.rb#8542
+  # source://parser//lib/parser/ruby34.rb#8492
   def _reduce_20(val, _values, result); end
 
-  # source://parser//lib/parser/ruby32.rb#8548
+  # source://parser//lib/parser/ruby34.rb#8498
   def _reduce_21(val, _values, result); end
 
   # reduce 210 omitted
   #
-  # source://parser//lib/parser/ruby32.rb#9473
+  # source://parser//lib/parser/ruby34.rb#9388
   def _reduce_211(val, _values, result); end
 
-  # source://parser//lib/parser/ruby32.rb#9479
+  # source://parser//lib/parser/ruby34.rb#9394
   def _reduce_212(val, _values, result); end
 
-  # source://parser//lib/parser/ruby32.rb#9485
+  # source://parser//lib/parser/ruby34.rb#9400
   def _reduce_213(val, _values, result); end
 
-  # source://parser//lib/parser/ruby32.rb#9494
+  # source://parser//lib/parser/ruby34.rb#9409
   def _reduce_214(val, _values, result); end
 
-  # source://parser//lib/parser/ruby32.rb#9503
+  # source://parser//lib/parser/ruby34.rb#9418
   def _reduce_215(val, _values, result); end
 
-  # source://parser//lib/parser/ruby32.rb#9512
+  # source://parser//lib/parser/ruby34.rb#9427
   def _reduce_216(val, _values, result); end
 
-  # source://parser//lib/parser/ruby32.rb#9521
+  # source://parser//lib/parser/ruby34.rb#9436
   def _reduce_217(val, _values, result); end
 
-  # source://parser//lib/parser/ruby32.rb#9529
+  # source://parser//lib/parser/ruby34.rb#9444
   def _reduce_218(val, _values, result); end
 
-  # source://parser//lib/parser/ruby32.rb#9537
+  # source://parser//lib/parser/ruby34.rb#9452
   def _reduce_219(val, _values, result); end
 
-  # source://parser//lib/parser/ruby32.rb#8556
+  # source://parser//lib/parser/ruby34.rb#8506
   def _reduce_22(val, _values, result); end
 
-  # source://parser//lib/parser/ruby32.rb#9543
+  # source://parser//lib/parser/ruby34.rb#9458
   def _reduce_220(val, _values, result); end
 
-  # source://parser//lib/parser/ruby32.rb#9549
+  # source://parser//lib/parser/ruby34.rb#9464
   def _reduce_221(val, _values, result); end
 
-  # source://parser//lib/parser/ruby32.rb#9555
+  # source://parser//lib/parser/ruby34.rb#9470
   def _reduce_222(val, _values, result); end
 
-  # source://parser//lib/parser/ruby32.rb#9561
+  # source://parser//lib/parser/ruby34.rb#9476
   def _reduce_223(val, _values, result); end
 
-  # source://parser//lib/parser/ruby32.rb#9567
+  # source://parser//lib/parser/ruby34.rb#9482
   def _reduce_224(val, _values, result); end
 
-  # source://parser//lib/parser/ruby32.rb#9573
+  # source://parser//lib/parser/ruby34.rb#9488
   def _reduce_225(val, _values, result); end
 
-  # source://parser//lib/parser/ruby32.rb#9579
+  # source://parser//lib/parser/ruby34.rb#9494
   def _reduce_226(val, _values, result); end
 
-  # source://parser//lib/parser/ruby32.rb#9585
+  # source://parser//lib/parser/ruby34.rb#9500
   def _reduce_227(val, _values, result); end
 
-  # source://parser//lib/parser/ruby32.rb#9591
+  # source://parser//lib/parser/ruby34.rb#9506
   def _reduce_228(val, _values, result); end
 
-  # source://parser//lib/parser/ruby32.rb#9597
+  # source://parser//lib/parser/ruby34.rb#9512
   def _reduce_229(val, _values, result); end
 
-  # source://parser//lib/parser/ruby32.rb#8564
+  # source://parser//lib/parser/ruby34.rb#8514
   def _reduce_23(val, _values, result); end
 
-  # source://parser//lib/parser/ruby32.rb#9603
+  # source://parser//lib/parser/ruby34.rb#9518
   def _reduce_230(val, _values, result); end
 
-  # source://parser//lib/parser/ruby32.rb#9609
+  # source://parser//lib/parser/ruby34.rb#9524
   def _reduce_231(val, _values, result); end
 
-  # source://parser//lib/parser/ruby32.rb#9615
+  # source://parser//lib/parser/ruby34.rb#9530
   def _reduce_232(val, _values, result); end
 
-  # source://parser//lib/parser/ruby32.rb#9623
+  # source://parser//lib/parser/ruby34.rb#9538
   def _reduce_233(val, _values, result); end
 
-  # source://parser//lib/parser/ruby32.rb#9629
+  # source://parser//lib/parser/ruby34.rb#9544
   def _reduce_234(val, _values, result); end
 
-  # source://parser//lib/parser/ruby32.rb#9635
+  # source://parser//lib/parser/ruby34.rb#9550
   def _reduce_235(val, _values, result); end
 
-  # source://parser//lib/parser/ruby32.rb#9641
+  # source://parser//lib/parser/ruby34.rb#9556
   def _reduce_236(val, _values, result); end
 
-  # source://parser//lib/parser/ruby32.rb#9647
+  # source://parser//lib/parser/ruby34.rb#9562
   def _reduce_237(val, _values, result); end
 
-  # source://parser//lib/parser/ruby32.rb#9653
+  # source://parser//lib/parser/ruby34.rb#9568
   def _reduce_238(val, _values, result); end
 
-  # source://parser//lib/parser/ruby32.rb#8570
+  # source://parser//lib/parser/ruby34.rb#8520
   def _reduce_24(val, _values, result); end
 
   # reduce 239 omitted
   #
-  # source://parser//lib/parser/ruby32.rb#9661
+  # source://parser//lib/parser/ruby34.rb#9576
   def _reduce_240(val, _values, result); end
 
-  # source://parser//lib/parser/ruby32.rb#9667
+  # source://parser//lib/parser/ruby34.rb#9582
   def _reduce_241(val, _values, result); end
 
-  # source://parser//lib/parser/ruby32.rb#9673
+  # source://parser//lib/parser/ruby34.rb#9588
   def _reduce_242(val, _values, result); end
 
-  # source://parser//lib/parser/ruby32.rb#9679
+  # source://parser//lib/parser/ruby34.rb#9594
   def _reduce_243(val, _values, result); end
 
-  # source://parser//lib/parser/ruby32.rb#9685
+  # source://parser//lib/parser/ruby34.rb#9600
   def _reduce_244(val, _values, result); end
 
-  # source://parser//lib/parser/ruby32.rb#9691
+  # source://parser//lib/parser/ruby34.rb#9606
   def _reduce_245(val, _values, result); end
 
-  # source://parser//lib/parser/ruby32.rb#9697
+  # source://parser//lib/parser/ruby34.rb#9612
   def _reduce_246(val, _values, result); end
 
-  # source://parser//lib/parser/ruby32.rb#9703
+  # source://parser//lib/parser/ruby34.rb#9618
   def _reduce_247(val, _values, result); end
 
-  # source://parser//lib/parser/ruby32.rb#9709
+  # source://parser//lib/parser/ruby34.rb#9624
   def _reduce_248(val, _values, result); end
 
-  # source://parser//lib/parser/ruby32.rb#9715
+  # source://parser//lib/parser/ruby34.rb#9630
   def _reduce_249(val, _values, result); end
 
-  # source://parser//lib/parser/ruby32.rb#8576
+  # source://parser//lib/parser/ruby34.rb#8526
   def _reduce_25(val, _values, result); end
 
-  # source://parser//lib/parser/ruby32.rb#9721
+  # source://parser//lib/parser/ruby34.rb#9636
   def _reduce_250(val, _values, result); end
 
-  # source://parser//lib/parser/ruby32.rb#9727
+  # source://parser//lib/parser/ruby34.rb#9642
   def _reduce_251(val, _values, result); end
 
-  # source://parser//lib/parser/ruby32.rb#9733
+  # source://parser//lib/parser/ruby34.rb#9649
   def _reduce_252(val, _values, result); end
 
-  # source://parser//lib/parser/ruby32.rb#9740
+  # source://parser//lib/parser/ruby34.rb#9656
   def _reduce_253(val, _values, result); end
 
-  # source://parser//lib/parser/ruby32.rb#9747
+  # source://parser//lib/parser/ruby34.rb#9670
   def _reduce_254(val, _values, result); end
 
-  # source://parser//lib/parser/ruby32.rb#9761
-  def _reduce_255(val, _values, result); end
-
-  # source://parser//lib/parser/ruby32.rb#9781
-  def _reduce_256(val, _values, result); end
-
-  # source://parser//lib/parser/ruby32.rb#9795
+  # reduce 256 omitted
+  #
+  # source://parser//lib/parser/ruby34.rb#9688
   def _reduce_257(val, _values, result); end
 
-  # source://parser//lib/parser/ruby32.rb#8583
+  # source://parser//lib/parser/ruby34.rb#9698
+  def _reduce_258(val, _values, result); end
+
+  # source://parser//lib/parser/ruby34.rb#8533
   def _reduce_26(val, _values, result); end
 
   # reduce 262 omitted
   #
-  # source://parser//lib/parser/ruby32.rb#9825
+  # source://parser//lib/parser/ruby34.rb#9712
   def _reduce_263(val, _values, result); end
 
-  # source://parser//lib/parser/ruby32.rb#9831
+  # source://parser//lib/parser/ruby34.rb#9718
   def _reduce_264(val, _values, result); end
 
-  # reduce 267 omitted
-  #
-  # source://parser//lib/parser/ruby32.rb#9843
-  def _reduce_268(val, _values, result); end
+  # source://parser//lib/parser/ruby34.rb#9724
+  def _reduce_265(val, _values, result); end
 
-  # source://parser//lib/parser/ruby32.rb#9849
+  # reduce 268 omitted
+  #
+  # source://parser//lib/parser/ruby34.rb#9736
   def _reduce_269(val, _values, result); end
 
-  # source://parser//lib/parser/ruby32.rb#8590
+  # source://parser//lib/parser/ruby34.rb#8540
   def _reduce_27(val, _values, result); end
 
-  # reduce 270 omitted
-  #
-  # source://parser//lib/parser/ruby32.rb#9857
-  def _reduce_271(val, _values, result); end
+  # source://parser//lib/parser/ruby34.rb#9742
+  def _reduce_270(val, _values, result); end
 
-  # source://parser//lib/parser/ruby32.rb#9867
+  # reduce 271 omitted
+  #
+  # source://parser//lib/parser/ruby34.rb#9750
   def _reduce_272(val, _values, result); end
 
-  # source://parser//lib/parser/ruby32.rb#9873
+  # source://parser//lib/parser/ruby34.rb#9760
   def _reduce_273(val, _values, result); end
 
-  # source://parser//lib/parser/ruby32.rb#9883
+  # source://parser//lib/parser/ruby34.rb#9766
   def _reduce_274(val, _values, result); end
 
-  # source://parser//lib/parser/ruby32.rb#9893
+  # source://parser//lib/parser/ruby34.rb#9776
   def _reduce_275(val, _values, result); end
 
-  # reduce 276 omitted
-  #
-  # source://parser//lib/parser/ruby32.rb#9901
-  def _reduce_277(val, _values, result); end
+  # source://parser//lib/parser/ruby34.rb#9786
+  def _reduce_276(val, _values, result); end
 
-  # source://parser//lib/parser/ruby32.rb#8596
+  # reduce 277 omitted
+  #
+  # source://parser//lib/parser/ruby34.rb#9794
+  def _reduce_278(val, _values, result); end
+
+  # source://parser//lib/parser/ruby34.rb#8546
   def _reduce_28(val, _values, result); end
 
-  # reduce 279 omitted
+  # reduce 280 omitted
   #
-  # source://parser//lib/parser/ruby32.rb#9911
-  def _reduce_280(val, _values, result); end
-
-  # source://parser//lib/parser/ruby32.rb#9917
+  # source://parser//lib/parser/ruby34.rb#9804
   def _reduce_281(val, _values, result); end
 
-  # source://parser//lib/parser/ruby32.rb#9923
+  # source://parser//lib/parser/ruby34.rb#9810
   def _reduce_282(val, _values, result); end
 
-  # source://parser//lib/parser/ruby32.rb#9929
+  # source://parser//lib/parser/ruby34.rb#9816
   def _reduce_283(val, _values, result); end
 
-  # source://parser//lib/parser/ruby32.rb#9935
+  # source://parser//lib/parser/ruby34.rb#9822
   def _reduce_284(val, _values, result); end
 
-  # source://parser//lib/parser/ruby32.rb#9942
+  # source://parser//lib/parser/ruby34.rb#9828
   def _reduce_285(val, _values, result); end
 
-  # source://parser//lib/parser/ruby32.rb#9950
+  # source://parser//lib/parser/ruby34.rb#9835
   def _reduce_286(val, _values, result); end
 
-  # source://parser//lib/parser/ruby32.rb#9956
+  # source://parser//lib/parser/ruby34.rb#9843
   def _reduce_287(val, _values, result); end
 
-  # source://parser//lib/parser/ruby32.rb#9983
+  # source://parser//lib/parser/ruby34.rb#9849
   def _reduce_288(val, _values, result); end
 
-  # source://parser//lib/parser/ruby32.rb#10004
+  # source://parser//lib/parser/ruby34.rb#9876
   def _reduce_289(val, _values, result); end
 
-  # source://parser//lib/parser/ruby32.rb#8602
+  # source://parser//lib/parser/ruby34.rb#8552
   def _reduce_29(val, _values, result); end
 
-  # source://parser//lib/parser/ruby32.rb#10010
+  # source://parser//lib/parser/ruby34.rb#9897
   def _reduce_290(val, _values, result); end
 
-  # source://parser//lib/parser/ruby32.rb#10020
+  # source://parser//lib/parser/ruby34.rb#9903
   def _reduce_291(val, _values, result); end
 
-  # source://parser//lib/parser/ruby32.rb#10026
+  # source://parser//lib/parser/ruby34.rb#9918
   def _reduce_292(val, _values, result); end
 
-  # source://parser//lib/parser/ruby32.rb#10032
+  # source://parser//lib/parser/ruby34.rb#9924
   def _reduce_293(val, _values, result); end
 
-  # source://parser//lib/parser/ruby32.rb#10038
+  # source://parser//lib/parser/ruby34.rb#9930
   def _reduce_294(val, _values, result); end
 
-  # source://parser//lib/parser/ruby32.rb#10044
-  def _reduce_295(val, _values, result); end
-
-  # source://parser//lib/parser/ruby32.rb#10054
+  # reduce 295 omitted
+  #
+  # source://parser//lib/parser/ruby34.rb#9938
   def _reduce_296(val, _values, result); end
 
-  # source://parser//lib/parser/ruby32.rb#10060
+  # source://parser//lib/parser/ruby34.rb#9944
   def _reduce_297(val, _values, result); end
 
-  # source://parser//lib/parser/ruby32.rb#10066
+  # source://parser//lib/parser/ruby34.rb#9950
   def _reduce_298(val, _values, result); end
 
-  # source://parser//lib/parser/ruby32.rb#10076
+  # source://parser//lib/parser/ruby34.rb#9956
   def _reduce_299(val, _values, result); end
 
-  # source://parser//lib/parser/ruby32.rb#8437
+  # source://parser//lib/parser/ruby34.rb#8387
   def _reduce_3(val, _values, result); end
 
-  # source://parser//lib/parser/ruby32.rb#8612
+  # source://parser//lib/parser/ruby34.rb#8562
   def _reduce_30(val, _values, result); end
 
-  # reduce 300 omitted
-  #
-  # source://parser//lib/parser/ruby32.rb#10084
-  def _reduce_301(val, _values, result); end
+  # source://parser//lib/parser/ruby34.rb#9971
+  def _reduce_300(val, _values, result); end
 
-  # source://parser//lib/parser/ruby32.rb#10090
+  # reduce 301 omitted
+  #
+  # source://parser//lib/parser/ruby34.rb#9979
   def _reduce_302(val, _values, result); end
 
-  # source://parser//lib/parser/ruby32.rb#10096
+  # source://parser//lib/parser/ruby34.rb#9985
   def _reduce_303(val, _values, result); end
 
-  # reduce 313 omitted
-  #
-  # source://parser//lib/parser/ruby32.rb#10122
-  def _reduce_314(val, _values, result); end
+  # source://parser//lib/parser/ruby34.rb#9991
+  def _reduce_304(val, _values, result); end
 
-  # source://parser//lib/parser/ruby32.rb#10128
+  # reduce 314 omitted
+  #
+  # source://parser//lib/parser/ruby34.rb#10017
   def _reduce_315(val, _values, result); end
 
-  # source://parser//lib/parser/ruby32.rb#10134
+  # source://parser//lib/parser/ruby34.rb#10023
   def _reduce_316(val, _values, result); end
 
-  # source://parser//lib/parser/ruby32.rb#10142
+  # source://parser//lib/parser/ruby34.rb#10029
   def _reduce_317(val, _values, result); end
 
-  # source://parser//lib/parser/ruby32.rb#10148
+  # source://parser//lib/parser/ruby34.rb#10037
   def _reduce_318(val, _values, result); end
 
-  # source://parser//lib/parser/ruby32.rb#10154
+  # source://parser//lib/parser/ruby34.rb#10043
   def _reduce_319(val, _values, result); end
 
   # reduce 31 omitted
   #
-  # source://parser//lib/parser/ruby32.rb#8620
+  # source://parser//lib/parser/ruby34.rb#8570
   def _reduce_32(val, _values, result); end
 
-  # source://parser//lib/parser/ruby32.rb#10160
+  # source://parser//lib/parser/ruby34.rb#10049
   def _reduce_320(val, _values, result); end
 
-  # source://parser//lib/parser/ruby32.rb#10166
+  # source://parser//lib/parser/ruby34.rb#10055
   def _reduce_321(val, _values, result); end
 
-  # source://parser//lib/parser/ruby32.rb#10172
+  # source://parser//lib/parser/ruby34.rb#10061
   def _reduce_322(val, _values, result); end
 
-  # source://parser//lib/parser/ruby32.rb#10178
+  # source://parser//lib/parser/ruby34.rb#10067
   def _reduce_323(val, _values, result); end
 
-  # source://parser//lib/parser/ruby32.rb#10184
+  # source://parser//lib/parser/ruby34.rb#10073
   def _reduce_324(val, _values, result); end
 
-  # source://parser//lib/parser/ruby32.rb#10190
+  # source://parser//lib/parser/ruby34.rb#10079
   def _reduce_325(val, _values, result); end
 
-  # source://parser//lib/parser/ruby32.rb#10196
+  # source://parser//lib/parser/ruby34.rb#10085
   def _reduce_326(val, _values, result); end
 
-  # source://parser//lib/parser/ruby32.rb#10202
+  # source://parser//lib/parser/ruby34.rb#10091
   def _reduce_327(val, _values, result); end
 
-  # source://parser//lib/parser/ruby32.rb#10208
+  # source://parser//lib/parser/ruby34.rb#10097
   def _reduce_328(val, _values, result); end
 
-  # source://parser//lib/parser/ruby32.rb#10214
+  # source://parser//lib/parser/ruby34.rb#10103
   def _reduce_329(val, _values, result); end
 
-  # source://parser//lib/parser/ruby32.rb#8626
+  # source://parser//lib/parser/ruby34.rb#8576
   def _reduce_33(val, _values, result); end
 
-  # source://parser//lib/parser/ruby32.rb#10220
+  # source://parser//lib/parser/ruby34.rb#10111
   def _reduce_330(val, _values, result); end
 
-  # source://parser//lib/parser/ruby32.rb#10226
+  # source://parser//lib/parser/ruby34.rb#10117
   def _reduce_331(val, _values, result); end
 
-  # source://parser//lib/parser/ruby32.rb#10234
+  # source://parser//lib/parser/ruby34.rb#10123
   def _reduce_332(val, _values, result); end
 
-  # source://parser//lib/parser/ruby32.rb#10240
-  def _reduce_333(val, _values, result); end
-
-  # source://parser//lib/parser/ruby32.rb#10246
+  # reduce 333 omitted
+  #
+  # source://parser//lib/parser/ruby34.rb#10135
   def _reduce_334(val, _values, result); end
 
   # reduce 335 omitted
   #
-  # source://parser//lib/parser/ruby32.rb#10258
+  # source://parser//lib/parser/ruby34.rb#10145
   def _reduce_336(val, _values, result); end
 
-  # reduce 337 omitted
-  #
-  # source://parser//lib/parser/ruby32.rb#10268
+  # source://parser//lib/parser/ruby34.rb#10154
+  def _reduce_337(val, _values, result); end
+
+  # source://parser//lib/parser/ruby34.rb#10163
   def _reduce_338(val, _values, result); end
 
-  # source://parser//lib/parser/ruby32.rb#10277
+  # source://parser//lib/parser/ruby34.rb#10169
   def _reduce_339(val, _values, result); end
 
-  # source://parser//lib/parser/ruby32.rb#8633
+  # source://parser//lib/parser/ruby34.rb#8583
   def _reduce_34(val, _values, result); end
 
-  # source://parser//lib/parser/ruby32.rb#10286
+  # source://parser//lib/parser/ruby34.rb#10175
   def _reduce_340(val, _values, result); end
 
-  # source://parser//lib/parser/ruby32.rb#10292
+  # source://parser//lib/parser/ruby34.rb#10185
   def _reduce_341(val, _values, result); end
 
-  # source://parser//lib/parser/ruby32.rb#10298
+  # source://parser//lib/parser/ruby34.rb#10195
   def _reduce_342(val, _values, result); end
 
-  # source://parser//lib/parser/ruby32.rb#10308
+  # source://parser//lib/parser/ruby34.rb#10205
   def _reduce_343(val, _values, result); end
 
-  # source://parser//lib/parser/ruby32.rb#10318
+  # source://parser//lib/parser/ruby34.rb#10211
   def _reduce_344(val, _values, result); end
 
-  # source://parser//lib/parser/ruby32.rb#10328
+  # source://parser//lib/parser/ruby34.rb#10219
   def _reduce_345(val, _values, result); end
 
-  # source://parser//lib/parser/ruby32.rb#10334
+  # source://parser//lib/parser/ruby34.rb#10236
   def _reduce_346(val, _values, result); end
 
-  # source://parser//lib/parser/ruby32.rb#10341
+  # source://parser//lib/parser/ruby34.rb#10245
   def _reduce_347(val, _values, result); end
 
-  # source://parser//lib/parser/ruby32.rb#10357
+  # source://parser//lib/parser/ruby34.rb#10258
   def _reduce_348(val, _values, result); end
 
-  # source://parser//lib/parser/ruby32.rb#10365
+  # source://parser//lib/parser/ruby34.rb#10266
   def _reduce_349(val, _values, result); end
 
-  # source://parser//lib/parser/ruby32.rb#8644
+  # source://parser//lib/parser/ruby34.rb#8594
   def _reduce_35(val, _values, result); end
 
-  # source://parser//lib/parser/ruby32.rb#10377
+  # source://parser//lib/parser/ruby34.rb#10281
   def _reduce_350(val, _values, result); end
 
-  # source://parser//lib/parser/ruby32.rb#10384
+  # source://parser//lib/parser/ruby34.rb#10293
   def _reduce_351(val, _values, result); end
 
-  # source://parser//lib/parser/ruby32.rb#10398
+  # source://parser//lib/parser/ruby34.rb#10305
   def _reduce_352(val, _values, result); end
 
-  # source://parser//lib/parser/ruby32.rb#10410
+  # source://parser//lib/parser/ruby34.rb#10311
   def _reduce_353(val, _values, result); end
 
-  # source://parser//lib/parser/ruby32.rb#10422
+  # source://parser//lib/parser/ruby34.rb#10317
   def _reduce_354(val, _values, result); end
 
-  # source://parser//lib/parser/ruby32.rb#10428
+  # source://parser//lib/parser/ruby34.rb#10323
   def _reduce_355(val, _values, result); end
 
-  # source://parser//lib/parser/ruby32.rb#10434
-  def _reduce_356(val, _values, result); end
-
-  # source://parser//lib/parser/ruby32.rb#10440
+  # reduce 356 omitted
+  #
+  # source://parser//lib/parser/ruby34.rb#10331
   def _reduce_357(val, _values, result); end
 
-  # reduce 358 omitted
-  #
-  # source://parser//lib/parser/ruby32.rb#10448
+  # source://parser//lib/parser/ruby34.rb#10337
+  def _reduce_358(val, _values, result); end
+
+  # source://parser//lib/parser/ruby34.rb#10343
   def _reduce_359(val, _values, result); end
 
-  # source://parser//lib/parser/ruby32.rb#10454
+  # source://parser//lib/parser/ruby34.rb#10350
   def _reduce_360(val, _values, result); end
 
-  # source://parser//lib/parser/ruby32.rb#10460
-  def _reduce_361(val, _values, result); end
-
-  # source://parser//lib/parser/ruby32.rb#10467
-  def _reduce_362(val, _values, result); end
-
-  # reduce 364 omitted
+  # reduce 362 omitted
   #
-  # source://parser//lib/parser/ruby32.rb#10479
-  def _reduce_365(val, _values, result); end
+  # source://parser//lib/parser/ruby34.rb#10362
+  def _reduce_363(val, _values, result); end
+
+  # reduce 366 omitted
+  #
+  # source://parser//lib/parser/ruby34.rb#10374
+  def _reduce_367(val, _values, result); end
 
   # reduce 368 omitted
   #
-  # source://parser//lib/parser/ruby32.rb#10491
+  # source://parser//lib/parser/ruby34.rb#10387
   def _reduce_369(val, _values, result); end
 
   # reduce 36 omitted
   #
-  # source://parser//lib/parser/ruby32.rb#8652
+  # source://parser//lib/parser/ruby34.rb#8602
   def _reduce_37(val, _values, result); end
 
-  # reduce 370 omitted
+  # reduce 371 omitted
   #
-  # source://parser//lib/parser/ruby32.rb#10504
-  def _reduce_371(val, _values, result); end
+  # source://parser//lib/parser/ruby34.rb#10397
+  def _reduce_372(val, _values, result); end
 
-  # reduce 373 omitted
-  #
-  # source://parser//lib/parser/ruby32.rb#10514
+  # source://parser//lib/parser/ruby34.rb#10403
+  def _reduce_373(val, _values, result); end
+
+  # source://parser//lib/parser/ruby34.rb#10409
   def _reduce_374(val, _values, result); end
 
-  # source://parser//lib/parser/ruby32.rb#10520
+  # source://parser//lib/parser/ruby34.rb#10415
   def _reduce_375(val, _values, result); end
 
-  # source://parser//lib/parser/ruby32.rb#10526
-  def _reduce_376(val, _values, result); end
-
-  # source://parser//lib/parser/ruby32.rb#10532
+  # reduce 376 omitted
+  #
+  # source://parser//lib/parser/ruby34.rb#10423
   def _reduce_377(val, _values, result); end
 
-  # reduce 378 omitted
-  #
-  # source://parser//lib/parser/ruby32.rb#10540
+  # source://parser//lib/parser/ruby34.rb#10430
+  def _reduce_378(val, _values, result); end
+
+  # source://parser//lib/parser/ruby34.rb#10438
   def _reduce_379(val, _values, result); end
 
-  # source://parser//lib/parser/ruby32.rb#8658
+  # source://parser//lib/parser/ruby34.rb#8608
   def _reduce_38(val, _values, result); end
 
-  # source://parser//lib/parser/ruby32.rb#10547
+  # source://parser//lib/parser/ruby34.rb#10444
   def _reduce_380(val, _values, result); end
 
-  # source://parser//lib/parser/ruby32.rb#10555
+  # source://parser//lib/parser/ruby34.rb#10450
   def _reduce_381(val, _values, result); end
 
-  # source://parser//lib/parser/ruby32.rb#10561
+  # source://parser//lib/parser/ruby34.rb#10456
   def _reduce_382(val, _values, result); end
 
-  # source://parser//lib/parser/ruby32.rb#10567
-  def _reduce_383(val, _values, result); end
-
-  # source://parser//lib/parser/ruby32.rb#10573
-  def _reduce_384(val, _values, result); end
-
-  # reduce 386 omitted
+  # reduce 384 omitted
   #
-  # source://parser//lib/parser/ruby32.rb#10583
+  # source://parser//lib/parser/ruby34.rb#10466
+  def _reduce_385(val, _values, result); end
+
+  # source://parser//lib/parser/ruby34.rb#10472
+  def _reduce_386(val, _values, result); end
+
+  # source://parser//lib/parser/ruby34.rb#10478
   def _reduce_387(val, _values, result); end
 
-  # source://parser//lib/parser/ruby32.rb#10589
+  # source://parser//lib/parser/ruby34.rb#10484
   def _reduce_388(val, _values, result); end
 
-  # source://parser//lib/parser/ruby32.rb#10595
+  # source://parser//lib/parser/ruby34.rb#10490
   def _reduce_389(val, _values, result); end
 
-  # source://parser//lib/parser/ruby32.rb#8664
+  # source://parser//lib/parser/ruby34.rb#8614
   def _reduce_39(val, _values, result); end
 
-  # source://parser//lib/parser/ruby32.rb#10601
+  # source://parser//lib/parser/ruby34.rb#10496
   def _reduce_390(val, _values, result); end
 
-  # source://parser//lib/parser/ruby32.rb#10607
+  # source://parser//lib/parser/ruby34.rb#10502
   def _reduce_391(val, _values, result); end
 
-  # source://parser//lib/parser/ruby32.rb#10613
+  # source://parser//lib/parser/ruby34.rb#10508
   def _reduce_392(val, _values, result); end
 
-  # source://parser//lib/parser/ruby32.rb#10619
-  def _reduce_393(val, _values, result); end
-
-  # source://parser//lib/parser/ruby32.rb#10625
+  # reduce 393 omitted
+  #
+  # source://parser//lib/parser/ruby34.rb#10516
   def _reduce_394(val, _values, result); end
 
-  # reduce 395 omitted
-  #
-  # source://parser//lib/parser/ruby32.rb#10633
+  # source://parser//lib/parser/ruby34.rb#10525
+  def _reduce_395(val, _values, result); end
+
+  # source://parser//lib/parser/ruby34.rb#10535
   def _reduce_396(val, _values, result); end
 
-  # source://parser//lib/parser/ruby32.rb#10642
+  # source://parser//lib/parser/ruby34.rb#10543
   def _reduce_397(val, _values, result); end
 
-  # source://parser//lib/parser/ruby32.rb#10652
+  # source://parser//lib/parser/ruby34.rb#10552
   def _reduce_398(val, _values, result); end
 
-  # source://parser//lib/parser/ruby32.rb#10660
-  def _reduce_399(val, _values, result); end
-
-  # source://parser//lib/parser/ruby32.rb#8443
+  # source://parser//lib/parser/ruby34.rb#8393
   def _reduce_4(val, _values, result); end
 
-  # source://parser//lib/parser/ruby32.rb#8673
+  # source://parser//lib/parser/ruby34.rb#8623
   def _reduce_40(val, _values, result); end
 
-  # source://parser//lib/parser/ruby32.rb#10669
+  # reduce 399 omitted
+  #
+  # source://parser//lib/parser/ruby34.rb#10562
   def _reduce_400(val, _values, result); end
 
-  # reduce 401 omitted
-  #
-  # source://parser//lib/parser/ruby32.rb#10679
+  # source://parser//lib/parser/ruby34.rb#10571
+  def _reduce_401(val, _values, result); end
+
+  # source://parser//lib/parser/ruby34.rb#10581
   def _reduce_402(val, _values, result); end
 
-  # source://parser//lib/parser/ruby32.rb#10688
+  # source://parser//lib/parser/ruby34.rb#10589
   def _reduce_403(val, _values, result); end
 
-  # source://parser//lib/parser/ruby32.rb#10698
+  # source://parser//lib/parser/ruby34.rb#10598
   def _reduce_404(val, _values, result); end
 
-  # source://parser//lib/parser/ruby32.rb#10706
+  # source://parser//lib/parser/ruby34.rb#10605
   def _reduce_405(val, _values, result); end
 
-  # source://parser//lib/parser/ruby32.rb#10715
+  # source://parser//lib/parser/ruby34.rb#10613
   def _reduce_406(val, _values, result); end
 
-  # source://parser//lib/parser/ruby32.rb#10722
+  # source://parser//lib/parser/ruby34.rb#10620
   def _reduce_407(val, _values, result); end
 
-  # source://parser//lib/parser/ruby32.rb#10730
-  def _reduce_408(val, _values, result); end
-
-  # source://parser//lib/parser/ruby32.rb#10737
+  # reduce 408 omitted
+  #
+  # source://parser//lib/parser/ruby34.rb#10630
   def _reduce_409(val, _values, result); end
 
-  # source://parser//lib/parser/ruby32.rb#8682
+  # source://parser//lib/parser/ruby34.rb#8632
   def _reduce_41(val, _values, result); end
 
-  # reduce 410 omitted
-  #
-  # source://parser//lib/parser/ruby32.rb#10747
+  # source://parser//lib/parser/ruby34.rb#10636
+  def _reduce_410(val, _values, result); end
+
+  # source://parser//lib/parser/ruby34.rb#10642
   def _reduce_411(val, _values, result); end
 
-  # source://parser//lib/parser/ruby32.rb#10753
+  # source://parser//lib/parser/ruby34.rb#10651
   def _reduce_412(val, _values, result); end
 
-  # source://parser//lib/parser/ruby32.rb#10759
+  # source://parser//lib/parser/ruby34.rb#10660
   def _reduce_413(val, _values, result); end
 
-  # source://parser//lib/parser/ruby32.rb#10768
+  # source://parser//lib/parser/ruby34.rb#10666
   def _reduce_414(val, _values, result); end
 
-  # source://parser//lib/parser/ruby32.rb#10777
+  # source://parser//lib/parser/ruby34.rb#10672
   def _reduce_415(val, _values, result); end
 
-  # source://parser//lib/parser/ruby32.rb#10783
+  # source://parser//lib/parser/ruby34.rb#10678
   def _reduce_416(val, _values, result); end
 
-  # source://parser//lib/parser/ruby32.rb#10789
+  # source://parser//lib/parser/ruby34.rb#10684
   def _reduce_417(val, _values, result); end
 
-  # source://parser//lib/parser/ruby32.rb#10795
-  def _reduce_418(val, _values, result); end
-
-  # source://parser//lib/parser/ruby32.rb#10801
+  # reduce 418 omitted
+  #
+  # source://parser//lib/parser/ruby34.rb#10693
   def _reduce_419(val, _values, result); end
 
-  # source://parser//lib/parser/ruby32.rb#8691
+  # source://parser//lib/parser/ruby34.rb#8641
   def _reduce_42(val, _values, result); end
 
-  # reduce 420 omitted
-  #
-  # source://parser//lib/parser/ruby32.rb#10810
+  # source://parser//lib/parser/ruby34.rb#10702
+  def _reduce_420(val, _values, result); end
+
+  # source://parser//lib/parser/ruby34.rb#10708
   def _reduce_421(val, _values, result); end
 
-  # source://parser//lib/parser/ruby32.rb#10819
+  # source://parser//lib/parser/ruby34.rb#10724
   def _reduce_422(val, _values, result); end
 
-  # source://parser//lib/parser/ruby32.rb#10825
+  # source://parser//lib/parser/ruby34.rb#10732
   def _reduce_423(val, _values, result); end
 
-  # source://parser//lib/parser/ruby32.rb#10841
+  # source://parser//lib/parser/ruby34.rb#10742
   def _reduce_424(val, _values, result); end
 
-  # source://parser//lib/parser/ruby32.rb#10849
+  # source://parser//lib/parser/ruby34.rb#10749
   def _reduce_425(val, _values, result); end
 
-  # source://parser//lib/parser/ruby32.rb#10859
+  # source://parser//lib/parser/ruby34.rb#10756
   def _reduce_426(val, _values, result); end
 
-  # source://parser//lib/parser/ruby32.rb#10866
+  # source://parser//lib/parser/ruby34.rb#10763
   def _reduce_427(val, _values, result); end
 
-  # source://parser//lib/parser/ruby32.rb#10873
+  # source://parser//lib/parser/ruby34.rb#10770
   def _reduce_428(val, _values, result); end
 
-  # source://parser//lib/parser/ruby32.rb#10880
+  # source://parser//lib/parser/ruby34.rb#10777
   def _reduce_429(val, _values, result); end
 
-  # source://parser//lib/parser/ruby32.rb#8699
+  # source://parser//lib/parser/ruby34.rb#8649
   def _reduce_43(val, _values, result); end
 
-  # source://parser//lib/parser/ruby32.rb#10887
+  # source://parser//lib/parser/ruby34.rb#10784
   def _reduce_430(val, _values, result); end
 
-  # source://parser//lib/parser/ruby32.rb#10894
+  # source://parser//lib/parser/ruby34.rb#10792
   def _reduce_431(val, _values, result); end
 
-  # source://parser//lib/parser/ruby32.rb#10901
+  # source://parser//lib/parser/ruby34.rb#10800
   def _reduce_432(val, _values, result); end
 
-  # source://parser//lib/parser/ruby32.rb#10909
+  # source://parser//lib/parser/ruby34.rb#10812
   def _reduce_433(val, _values, result); end
 
-  # source://parser//lib/parser/ruby32.rb#10917
+  # source://parser//lib/parser/ruby34.rb#10823
   def _reduce_434(val, _values, result); end
 
-  # source://parser//lib/parser/ruby32.rb#10929
+  # source://parser//lib/parser/ruby34.rb#10831
   def _reduce_435(val, _values, result); end
 
-  # source://parser//lib/parser/ruby32.rb#10940
+  # source://parser//lib/parser/ruby34.rb#10839
   def _reduce_436(val, _values, result); end
 
-  # source://parser//lib/parser/ruby32.rb#10948
+  # source://parser//lib/parser/ruby34.rb#10847
   def _reduce_437(val, _values, result); end
 
-  # source://parser//lib/parser/ruby32.rb#10956
+  # source://parser//lib/parser/ruby34.rb#10853
   def _reduce_438(val, _values, result); end
 
-  # source://parser//lib/parser/ruby32.rb#10964
+  # source://parser//lib/parser/ruby34.rb#10861
   def _reduce_439(val, _values, result); end
 
-  # source://parser//lib/parser/ruby32.rb#8708
+  # source://parser//lib/parser/ruby34.rb#8658
   def _reduce_44(val, _values, result); end
 
-  # source://parser//lib/parser/ruby32.rb#10970
+  # source://parser//lib/parser/ruby34.rb#10869
   def _reduce_440(val, _values, result); end
 
-  # source://parser//lib/parser/ruby32.rb#10978
+  # source://parser//lib/parser/ruby34.rb#10877
   def _reduce_441(val, _values, result); end
 
-  # source://parser//lib/parser/ruby32.rb#10986
+  # source://parser//lib/parser/ruby34.rb#10883
   def _reduce_442(val, _values, result); end
 
-  # source://parser//lib/parser/ruby32.rb#10994
+  # source://parser//lib/parser/ruby34.rb#10889
   def _reduce_443(val, _values, result); end
 
-  # source://parser//lib/parser/ruby32.rb#11000
+  # source://parser//lib/parser/ruby34.rb#10896
   def _reduce_444(val, _values, result); end
 
-  # source://parser//lib/parser/ruby32.rb#11006
+  # source://parser//lib/parser/ruby34.rb#10903
   def _reduce_445(val, _values, result); end
 
-  # source://parser//lib/parser/ruby32.rb#11013
+  # source://parser//lib/parser/ruby34.rb#10910
   def _reduce_446(val, _values, result); end
 
-  # source://parser//lib/parser/ruby32.rb#11020
+  # source://parser//lib/parser/ruby34.rb#10917
   def _reduce_447(val, _values, result); end
 
-  # source://parser//lib/parser/ruby32.rb#11027
+  # source://parser//lib/parser/ruby34.rb#10924
   def _reduce_448(val, _values, result); end
 
-  # source://parser//lib/parser/ruby32.rb#11034
+  # source://parser//lib/parser/ruby34.rb#10934
   def _reduce_449(val, _values, result); end
 
-  # source://parser//lib/parser/ruby32.rb#8722
+  # source://parser//lib/parser/ruby34.rb#8672
   def _reduce_45(val, _values, result); end
 
-  # source://parser//lib/parser/ruby32.rb#11041
+  # source://parser//lib/parser/ruby34.rb#10941
   def _reduce_450(val, _values, result); end
 
-  # source://parser//lib/parser/ruby32.rb#11051
+  # source://parser//lib/parser/ruby34.rb#10947
   def _reduce_451(val, _values, result); end
 
-  # source://parser//lib/parser/ruby32.rb#11058
+  # source://parser//lib/parser/ruby34.rb#10958
   def _reduce_452(val, _values, result); end
 
-  # source://parser//lib/parser/ruby32.rb#11064
+  # source://parser//lib/parser/ruby34.rb#10965
   def _reduce_453(val, _values, result); end
 
-  # source://parser//lib/parser/ruby32.rb#11075
-  def _reduce_454(val, _values, result); end
-
-  # source://parser//lib/parser/ruby32.rb#11082
+  # reduce 454 omitted
+  #
+  # source://parser//lib/parser/ruby34.rb#10973
   def _reduce_455(val, _values, result); end
 
-  # reduce 456 omitted
-  #
-  # source://parser//lib/parser/ruby32.rb#11090
+  # source://parser//lib/parser/ruby34.rb#10979
+  def _reduce_456(val, _values, result); end
+
+  # source://parser//lib/parser/ruby34.rb#10985
   def _reduce_457(val, _values, result); end
 
-  # source://parser//lib/parser/ruby32.rb#11102
+  # source://parser//lib/parser/ruby34.rb#10995
   def _reduce_458(val, _values, result); end
 
-  # source://parser//lib/parser/ruby32.rb#11110
+  # source://parser//lib/parser/ruby34.rb#11003
   def _reduce_459(val, _values, result); end
 
-  # source://parser//lib/parser/ruby32.rb#8742
+  # source://parser//lib/parser/ruby34.rb#8686
   def _reduce_46(val, _values, result); end
 
-  # source://parser//lib/parser/ruby32.rb#11117
+  # source://parser//lib/parser/ruby34.rb#11010
   def _reduce_460(val, _values, result); end
 
   # reduce 461 omitted
   #
-  # source://parser//lib/parser/ruby32.rb#11125
+  # source://parser//lib/parser/ruby34.rb#11018
   def _reduce_462(val, _values, result); end
 
-  # source://parser//lib/parser/ruby32.rb#11131
+  # source://parser//lib/parser/ruby34.rb#11024
   def _reduce_463(val, _values, result); end
 
-  # source://parser//lib/parser/ruby32.rb#11137
+  # source://parser//lib/parser/ruby34.rb#11030
   def _reduce_464(val, _values, result); end
 
   # reduce 465 omitted
   #
-  # source://parser//lib/parser/ruby32.rb#11145
+  # source://parser//lib/parser/ruby34.rb#11038
   def _reduce_466(val, _values, result); end
 
-  # source://parser//lib/parser/ruby32.rb#11155
+  # source://parser//lib/parser/ruby34.rb#11048
   def _reduce_467(val, _values, result); end
 
-  # source://parser//lib/parser/ruby32.rb#11161
+  # source://parser//lib/parser/ruby34.rb#11054
   def _reduce_468(val, _values, result); end
 
-  # source://parser//lib/parser/ruby32.rb#11167
+  # source://parser//lib/parser/ruby34.rb#11060
   def _reduce_469(val, _values, result); end
 
-  # source://parser//lib/parser/ruby32.rb#8756
-  def _reduce_47(val, _values, result); end
-
-  # source://parser//lib/parser/ruby32.rb#11173
+  # source://parser//lib/parser/ruby34.rb#11066
   def _reduce_470(val, _values, result); end
 
   # reduce 471 omitted
   #
-  # source://parser//lib/parser/ruby32.rb#11181
+  # source://parser//lib/parser/ruby34.rb#11074
   def _reduce_472(val, _values, result); end
 
   # reduce 473 omitted
   #
-  # source://parser//lib/parser/ruby32.rb#11189
+  # source://parser//lib/parser/ruby34.rb#11082
   def _reduce_474(val, _values, result); end
 
   # reduce 475 omitted
   #
-  # source://parser//lib/parser/ruby32.rb#11197
+  # source://parser//lib/parser/ruby34.rb#11090
   def _reduce_476(val, _values, result); end
 
-  # source://parser//lib/parser/ruby32.rb#11204
+  # source://parser//lib/parser/ruby34.rb#11097
   def _reduce_477(val, _values, result); end
 
-  # source://parser//lib/parser/ruby32.rb#8776
+  # reduce 47 omitted
+  #
+  # source://parser//lib/parser/ruby34.rb#8694
   def _reduce_48(val, _values, result); end
 
   # reduce 479 omitted
   #
-  # source://parser//lib/parser/ruby32.rb#11215
+  # source://parser//lib/parser/ruby34.rb#11108
   def _reduce_480(val, _values, result); end
 
-  # source://parser//lib/parser/ruby32.rb#11223
+  # source://parser//lib/parser/ruby34.rb#11116
   def _reduce_481(val, _values, result); end
 
-  # source://parser//lib/parser/ruby32.rb#11231
+  # source://parser//lib/parser/ruby34.rb#11124
   def _reduce_482(val, _values, result); end
 
-  # source://parser//lib/parser/ruby32.rb#11239
+  # source://parser//lib/parser/ruby34.rb#11132
   def _reduce_483(val, _values, result); end
 
-  # source://parser//lib/parser/ruby32.rb#11246
+  # source://parser//lib/parser/ruby34.rb#11139
   def _reduce_484(val, _values, result); end
 
-  # source://parser//lib/parser/ruby32.rb#11254
+  # source://parser//lib/parser/ruby34.rb#11147
   def _reduce_485(val, _values, result); end
 
-  # source://parser//lib/parser/ruby32.rb#11262
+  # source://parser//lib/parser/ruby34.rb#11155
   def _reduce_486(val, _values, result); end
 
-  # source://parser//lib/parser/ruby32.rb#11270
+  # source://parser//lib/parser/ruby34.rb#11163
   def _reduce_487(val, _values, result); end
 
-  # source://parser//lib/parser/ruby32.rb#11277
+  # source://parser//lib/parser/ruby34.rb#11170
   def _reduce_488(val, _values, result); end
 
-  # source://parser//lib/parser/ruby32.rb#11283
+  # source://parser//lib/parser/ruby34.rb#11176
   def _reduce_489(val, _values, result); end
 
-  # source://parser//lib/parser/ruby32.rb#11289
+  # source://parser//lib/parser/ruby34.rb#8704
+  def _reduce_49(val, _values, result); end
+
+  # source://parser//lib/parser/ruby34.rb#11182
   def _reduce_490(val, _values, result); end
 
-  # source://parser//lib/parser/ruby32.rb#11295
+  # source://parser//lib/parser/ruby34.rb#11188
   def _reduce_491(val, _values, result); end
 
-  # source://parser//lib/parser/ruby32.rb#11303
+  # source://parser//lib/parser/ruby34.rb#11196
   def _reduce_492(val, _values, result); end
 
-  # source://parser//lib/parser/ruby32.rb#11311
+  # source://parser//lib/parser/ruby34.rb#11204
   def _reduce_493(val, _values, result); end
 
-  # source://parser//lib/parser/ruby32.rb#11317
+  # source://parser//lib/parser/ruby34.rb#11210
   def _reduce_494(val, _values, result); end
 
-  # source://parser//lib/parser/ruby32.rb#11323
+  # source://parser//lib/parser/ruby34.rb#11216
   def _reduce_495(val, _values, result); end
 
-  # source://parser//lib/parser/ruby32.rb#11330
+  # source://parser//lib/parser/ruby34.rb#11223
   def _reduce_496(val, _values, result); end
 
-  # source://parser//lib/parser/ruby32.rb#11336
+  # source://parser//lib/parser/ruby34.rb#11229
   def _reduce_497(val, _values, result); end
 
-  # source://parser//lib/parser/ruby32.rb#11342
+  # source://parser//lib/parser/ruby34.rb#11235
   def _reduce_498(val, _values, result); end
 
-  # source://parser//lib/parser/ruby32.rb#11348
+  # source://parser//lib/parser/ruby34.rb#11241
   def _reduce_499(val, _values, result); end
 
-  # source://parser//lib/parser/ruby32.rb#8449
+  # source://parser//lib/parser/ruby34.rb#8399
   def _reduce_5(val, _values, result); end
 
-  # reduce 49 omitted
-  #
-  # source://parser//lib/parser/ruby32.rb#8784
-  def _reduce_50(val, _values, result); end
-
-  # source://parser//lib/parser/ruby32.rb#11354
+  # source://parser//lib/parser/ruby34.rb#11247
   def _reduce_500(val, _values, result); end
 
   # reduce 501 omitted
   #
-  # source://parser//lib/parser/ruby32.rb#11362
+  # source://parser//lib/parser/ruby34.rb#11255
   def _reduce_502(val, _values, result); end
 
-  # source://parser//lib/parser/ruby32.rb#11372
+  # source://parser//lib/parser/ruby34.rb#11265
   def _reduce_503(val, _values, result); end
 
-  # source://parser//lib/parser/ruby32.rb#11382
+  # source://parser//lib/parser/ruby34.rb#11275
   def _reduce_504(val, _values, result); end
 
-  # source://parser//lib/parser/ruby32.rb#11388
+  # source://parser//lib/parser/ruby34.rb#11281
   def _reduce_505(val, _values, result); end
 
-  # source://parser//lib/parser/ruby32.rb#11394
+  # source://parser//lib/parser/ruby34.rb#11287
   def _reduce_506(val, _values, result); end
 
-  # source://parser//lib/parser/ruby32.rb#11400
+  # source://parser//lib/parser/ruby34.rb#11293
   def _reduce_507(val, _values, result); end
 
-  # source://parser//lib/parser/ruby32.rb#11406
+  # source://parser//lib/parser/ruby34.rb#11299
   def _reduce_508(val, _values, result); end
 
-  # source://parser//lib/parser/ruby32.rb#11412
+  # source://parser//lib/parser/ruby34.rb#11305
   def _reduce_509(val, _values, result); end
 
-  # source://parser//lib/parser/ruby32.rb#11418
+  # reduce 50 omitted
+  #
+  # source://parser//lib/parser/ruby34.rb#8712
+  def _reduce_51(val, _values, result); end
+
+  # source://parser//lib/parser/ruby34.rb#11311
   def _reduce_510(val, _values, result); end
 
   # reduce 511 omitted
   #
-  # source://parser//lib/parser/ruby32.rb#11426
+  # source://parser//lib/parser/ruby34.rb#11319
   def _reduce_512(val, _values, result); end
 
-  # source://parser//lib/parser/ruby32.rb#11432
+  # source://parser//lib/parser/ruby34.rb#11325
   def _reduce_513(val, _values, result); end
 
-  # source://parser//lib/parser/ruby32.rb#11438
+  # source://parser//lib/parser/ruby34.rb#11331
   def _reduce_514(val, _values, result); end
 
-  # source://parser//lib/parser/ruby32.rb#11444
+  # source://parser//lib/parser/ruby34.rb#11337
   def _reduce_515(val, _values, result); end
 
-  # source://parser//lib/parser/ruby32.rb#11450
+  # source://parser//lib/parser/ruby34.rb#11343
   def _reduce_516(val, _values, result); end
 
-  # source://parser//lib/parser/ruby32.rb#11456
+  # source://parser//lib/parser/ruby34.rb#11349
   def _reduce_517(val, _values, result); end
 
-  # source://parser//lib/parser/ruby32.rb#11462
+  # source://parser//lib/parser/ruby34.rb#11355
   def _reduce_518(val, _values, result); end
 
-  # source://parser//lib/parser/ruby32.rb#11468
+  # source://parser//lib/parser/ruby34.rb#11361
   def _reduce_519(val, _values, result); end
 
-  # source://parser//lib/parser/ruby32.rb#11474
+  # source://parser//lib/parser/ruby34.rb#11367
   def _reduce_520(val, _values, result); end
 
-  # source://parser//lib/parser/ruby32.rb#11480
+  # source://parser//lib/parser/ruby34.rb#11373
   def _reduce_521(val, _values, result); end
 
-  # source://parser//lib/parser/ruby32.rb#11486
+  # source://parser//lib/parser/ruby34.rb#11379
   def _reduce_522(val, _values, result); end
 
-  # source://parser//lib/parser/ruby32.rb#11492
+  # source://parser//lib/parser/ruby34.rb#11385
   def _reduce_523(val, _values, result); end
 
-  # source://parser//lib/parser/ruby32.rb#11498
+  # source://parser//lib/parser/ruby34.rb#11391
   def _reduce_524(val, _values, result); end
 
   # reduce 525 omitted
   #
-  # source://parser//lib/parser/ruby32.rb#11506
+  # source://parser//lib/parser/ruby34.rb#11399
   def _reduce_526(val, _values, result); end
 
   # reduce 527 omitted
   #
-  # source://parser//lib/parser/ruby32.rb#11514
+  # source://parser//lib/parser/ruby34.rb#11407
   def _reduce_528(val, _values, result); end
 
-  # source://parser//lib/parser/ruby32.rb#11520
+  # source://parser//lib/parser/ruby34.rb#11413
   def _reduce_529(val, _values, result); end
 
-  # reduce 52 omitted
-  #
-  # source://parser//lib/parser/ruby32.rb#8798
-  def _reduce_53(val, _values, result); end
-
-  # source://parser//lib/parser/ruby32.rb#11526
+  # source://parser//lib/parser/ruby34.rb#11419
   def _reduce_530(val, _values, result); end
 
-  # source://parser//lib/parser/ruby32.rb#11532
+  # source://parser//lib/parser/ruby34.rb#11425
   def _reduce_531(val, _values, result); end
 
   # reduce 534 omitted
   #
-  # source://parser//lib/parser/ruby32.rb#11544
+  # source://parser//lib/parser/ruby34.rb#11437
   def _reduce_535(val, _values, result); end
 
-  # source://parser//lib/parser/ruby32.rb#11550
+  # source://parser//lib/parser/ruby34.rb#11443
   def _reduce_536(val, _values, result); end
 
-  # source://parser//lib/parser/ruby32.rb#8804
+  # reduce 53 omitted
+  #
+  # source://parser//lib/parser/ruby34.rb#8726
   def _reduce_54(val, _values, result); end
 
   # reduce 544 omitted
   #
-  # source://parser//lib/parser/ruby32.rb#11572
+  # source://parser//lib/parser/ruby34.rb#11465
   def _reduce_545(val, _values, result); end
 
   # reduce 546 omitted
   #
-  # source://parser//lib/parser/ruby32.rb#11580
+  # source://parser//lib/parser/ruby34.rb#11473
   def _reduce_547(val, _values, result); end
 
-  # source://parser//lib/parser/ruby32.rb#11586
+  # source://parser//lib/parser/ruby34.rb#11479
   def _reduce_548(val, _values, result); end
 
-  # source://parser//lib/parser/ruby32.rb#11599
+  # source://parser//lib/parser/ruby34.rb#11492
   def _reduce_549(val, _values, result); end
 
-  # source://parser//lib/parser/ruby32.rb#8810
+  # source://parser//lib/parser/ruby34.rb#8732
   def _reduce_55(val, _values, result); end
 
-  # source://parser//lib/parser/ruby32.rb#11606
+  # source://parser//lib/parser/ruby34.rb#11499
   def _reduce_550(val, _values, result); end
 
-  # source://parser//lib/parser/ruby32.rb#11613
+  # source://parser//lib/parser/ruby34.rb#11506
   def _reduce_551(val, _values, result); end
 
-  # source://parser//lib/parser/ruby32.rb#11619
+  # source://parser//lib/parser/ruby34.rb#11512
   def _reduce_552(val, _values, result); end
 
-  # source://parser//lib/parser/ruby32.rb#11625
+  # source://parser//lib/parser/ruby34.rb#11518
   def _reduce_553(val, _values, result); end
 
-  # source://parser//lib/parser/ruby32.rb#11631
+  # source://parser//lib/parser/ruby34.rb#11524
   def _reduce_554(val, _values, result); end
 
-  # source://parser//lib/parser/ruby32.rb#11646
+  # source://parser//lib/parser/ruby34.rb#11539
   def _reduce_555(val, _values, result); end
 
-  # source://parser//lib/parser/ruby32.rb#11652
+  # source://parser//lib/parser/ruby34.rb#11545
   def _reduce_556(val, _values, result); end
 
   # reduce 558 omitted
   #
-  # source://parser//lib/parser/ruby32.rb#11662
+  # source://parser//lib/parser/ruby34.rb#11555
   def _reduce_559(val, _values, result); end
 
-  # source://parser//lib/parser/ruby32.rb#8816
+  # source://parser//lib/parser/ruby34.rb#8738
   def _reduce_56(val, _values, result); end
 
   # reduce 560 omitted
   #
-  # source://parser//lib/parser/ruby32.rb#11670
+  # source://parser//lib/parser/ruby34.rb#11563
   def _reduce_561(val, _values, result); end
 
   # reduce 564 omitted
   #
-  # source://parser//lib/parser/ruby32.rb#11682
+  # source://parser//lib/parser/ruby34.rb#11575
   def _reduce_565(val, _values, result); end
 
-  # source://parser//lib/parser/ruby32.rb#11688
+  # source://parser//lib/parser/ruby34.rb#11581
   def _reduce_566(val, _values, result); end
 
-  # source://parser//lib/parser/ruby32.rb#11694
+  # source://parser//lib/parser/ruby34.rb#11587
   def _reduce_567(val, _values, result); end
 
-  # source://parser//lib/parser/ruby32.rb#11700
+  # source://parser//lib/parser/ruby34.rb#11593
   def _reduce_568(val, _values, result); end
 
-  # source://parser//lib/parser/ruby32.rb#11707
+  # source://parser//lib/parser/ruby34.rb#11600
   def _reduce_569(val, _values, result); end
 
-  # source://parser//lib/parser/ruby32.rb#8822
+  # source://parser//lib/parser/ruby34.rb#8744
   def _reduce_57(val, _values, result); end
 
-  # source://parser//lib/parser/ruby32.rb#11714
+  # source://parser//lib/parser/ruby34.rb#11607
   def _reduce_570(val, _values, result); end
 
-  # source://parser//lib/parser/ruby32.rb#11720
+  # source://parser//lib/parser/ruby34.rb#11613
   def _reduce_571(val, _values, result); end
 
-  # source://parser//lib/parser/ruby32.rb#11727
+  # source://parser//lib/parser/ruby34.rb#11620
   def _reduce_572(val, _values, result); end
 
-  # source://parser//lib/parser/ruby32.rb#11734
-  def _reduce_573(val, _values, result); end
-
-  # source://parser//lib/parser/ruby32.rb#11740
-  def _reduce_574(val, _values, result); end
-
-  # source://parser//lib/parser/ruby32.rb#11746
+  # reduce 574 omitted
+  #
+  # source://parser//lib/parser/ruby34.rb#11631
   def _reduce_575(val, _values, result); end
 
-  # source://parser//lib/parser/ruby32.rb#11752
+  # source://parser//lib/parser/ruby34.rb#11637
   def _reduce_576(val, _values, result); end
 
-  # source://parser//lib/parser/ruby32.rb#11758
+  # source://parser//lib/parser/ruby34.rb#11643
   def _reduce_577(val, _values, result); end
 
-  # source://parser//lib/parser/ruby32.rb#11764
+  # source://parser//lib/parser/ruby34.rb#11649
   def _reduce_578(val, _values, result); end
 
-  # source://parser//lib/parser/ruby32.rb#11770
+  # source://parser//lib/parser/ruby34.rb#11655
   def _reduce_579(val, _values, result); end
 
-  # source://parser//lib/parser/ruby32.rb#8834
+  # source://parser//lib/parser/ruby34.rb#8750
   def _reduce_58(val, _values, result); end
 
-  # source://parser//lib/parser/ruby32.rb#11776
+  # source://parser//lib/parser/ruby34.rb#11661
   def _reduce_580(val, _values, result); end
 
-  # source://parser//lib/parser/ruby32.rb#11782
+  # source://parser//lib/parser/ruby34.rb#11667
   def _reduce_581(val, _values, result); end
 
-  # source://parser//lib/parser/ruby32.rb#11788
+  # source://parser//lib/parser/ruby34.rb#11673
   def _reduce_582(val, _values, result); end
 
-  # source://parser//lib/parser/ruby32.rb#11794
+  # source://parser//lib/parser/ruby34.rb#11679
   def _reduce_583(val, _values, result); end
 
-  # source://parser//lib/parser/ruby32.rb#11800
+  # source://parser//lib/parser/ruby34.rb#11685
   def _reduce_584(val, _values, result); end
 
-  # source://parser//lib/parser/ruby32.rb#11806
+  # source://parser//lib/parser/ruby34.rb#11691
   def _reduce_585(val, _values, result); end
 
-  # source://parser//lib/parser/ruby32.rb#11812
+  # source://parser//lib/parser/ruby34.rb#11697
   def _reduce_586(val, _values, result); end
 
-  # source://parser//lib/parser/ruby32.rb#11818
+  # source://parser//lib/parser/ruby34.rb#11703
   def _reduce_587(val, _values, result); end
 
-  # source://parser//lib/parser/ruby32.rb#11824
+  # source://parser//lib/parser/ruby34.rb#11709
   def _reduce_588(val, _values, result); end
 
-  # source://parser//lib/parser/ruby32.rb#11830
+  # source://parser//lib/parser/ruby34.rb#11715
   def _reduce_589(val, _values, result); end
 
-  # source://parser//lib/parser/ruby32.rb#8843
+  # source://parser//lib/parser/ruby34.rb#8759
   def _reduce_59(val, _values, result); end
 
-  # source://parser//lib/parser/ruby32.rb#11836
+  # source://parser//lib/parser/ruby34.rb#11721
   def _reduce_590(val, _values, result); end
 
-  # source://parser//lib/parser/ruby32.rb#11842
+  # source://parser//lib/parser/ruby34.rb#11727
   def _reduce_591(val, _values, result); end
 
-  # source://parser//lib/parser/ruby32.rb#11848
+  # source://parser//lib/parser/ruby34.rb#11733
   def _reduce_592(val, _values, result); end
 
-  # source://parser//lib/parser/ruby32.rb#11854
+  # source://parser//lib/parser/ruby34.rb#11739
   def _reduce_593(val, _values, result); end
 
-  # source://parser//lib/parser/ruby32.rb#11860
+  # source://parser//lib/parser/ruby34.rb#11745
   def _reduce_594(val, _values, result); end
 
-  # source://parser//lib/parser/ruby32.rb#11866
+  # source://parser//lib/parser/ruby34.rb#11751
   def _reduce_595(val, _values, result); end
 
-  # source://parser//lib/parser/ruby32.rb#11873
+  # source://parser//lib/parser/ruby34.rb#11757
   def _reduce_596(val, _values, result); end
 
-  # source://parser//lib/parser/ruby32.rb#11882
+  # source://parser//lib/parser/ruby34.rb#11763
   def _reduce_597(val, _values, result); end
 
-  # source://parser//lib/parser/ruby32.rb#11888
+  # source://parser//lib/parser/ruby34.rb#11770
   def _reduce_598(val, _values, result); end
 
-  # source://parser//lib/parser/ruby32.rb#11894
-  def _reduce_599(val, _values, result); end
-
-  # source://parser//lib/parser/ruby32.rb#8455
+  # source://parser//lib/parser/ruby34.rb#8405
   def _reduce_6(val, _values, result); end
 
-  # source://parser//lib/parser/ruby32.rb#8855
-  def _reduce_60(val, _values, result); end
-
-  # reduce 602 omitted
+  # reduce 599 omitted
   #
-  # source://parser//lib/parser/ruby32.rb#11906
-  def _reduce_603(val, _values, result); end
+  # source://parser//lib/parser/ruby34.rb#11781
+  def _reduce_600(val, _values, result); end
 
-  # source://parser//lib/parser/ruby32.rb#11913
+  # reduce 603 omitted
+  #
+  # source://parser//lib/parser/ruby34.rb#11793
   def _reduce_604(val, _values, result); end
 
-  # source://parser//lib/parser/ruby32.rb#11920
+  # source://parser//lib/parser/ruby34.rb#11800
   def _reduce_605(val, _values, result); end
 
-  # source://parser//lib/parser/ruby32.rb#11926
+  # source://parser//lib/parser/ruby34.rb#11807
   def _reduce_606(val, _values, result); end
 
-  # source://parser//lib/parser/ruby32.rb#11937
+  # source://parser//lib/parser/ruby34.rb#11813
   def _reduce_607(val, _values, result); end
 
-  # source://parser//lib/parser/ruby32.rb#11944
+  # source://parser//lib/parser/ruby34.rb#11824
   def _reduce_608(val, _values, result); end
 
-  # source://parser//lib/parser/ruby32.rb#11951
+  # source://parser//lib/parser/ruby34.rb#11831
   def _reduce_609(val, _values, result); end
 
-  # source://parser//lib/parser/ruby32.rb#11958
+  # source://parser//lib/parser/ruby34.rb#11838
   def _reduce_610(val, _values, result); end
 
-  # source://parser//lib/parser/ruby32.rb#11965
+  # source://parser//lib/parser/ruby34.rb#11845
   def _reduce_611(val, _values, result); end
 
-  # source://parser//lib/parser/ruby32.rb#11971
+  # source://parser//lib/parser/ruby34.rb#11852
   def _reduce_612(val, _values, result); end
 
-  # source://parser//lib/parser/ruby32.rb#11977
+  # source://parser//lib/parser/ruby34.rb#11858
   def _reduce_613(val, _values, result); end
 
-  # source://parser//lib/parser/ruby32.rb#11983
+  # source://parser//lib/parser/ruby34.rb#11864
   def _reduce_614(val, _values, result); end
 
-  # source://parser//lib/parser/ruby32.rb#11989
+  # source://parser//lib/parser/ruby34.rb#11870
   def _reduce_615(val, _values, result); end
 
-  # reduce 616 omitted
-  #
-  # source://parser//lib/parser/ruby32.rb#11997
-  def _reduce_617(val, _values, result); end
+  # source://parser//lib/parser/ruby34.rb#11876
+  def _reduce_616(val, _values, result); end
 
-  # source://parser//lib/parser/ruby32.rb#12003
+  # reduce 617 omitted
+  #
+  # source://parser//lib/parser/ruby34.rb#11884
   def _reduce_618(val, _values, result); end
 
-  # source://parser//lib/parser/ruby32.rb#12009
+  # source://parser//lib/parser/ruby34.rb#11890
   def _reduce_619(val, _values, result); end
 
-  # source://parser//lib/parser/ruby32.rb#12015
+  # reduce 61 omitted
+  #
+  # source://parser//lib/parser/ruby34.rb#8772
+  def _reduce_62(val, _values, result); end
+
+  # source://parser//lib/parser/ruby34.rb#11896
   def _reduce_620(val, _values, result); end
 
-  # source://parser//lib/parser/ruby32.rb#12021
+  # source://parser//lib/parser/ruby34.rb#11902
   def _reduce_621(val, _values, result); end
 
-  # source://parser//lib/parser/ruby32.rb#12027
+  # source://parser//lib/parser/ruby34.rb#11908
   def _reduce_622(val, _values, result); end
 
-  # source://parser//lib/parser/ruby32.rb#12033
+  # source://parser//lib/parser/ruby34.rb#11914
   def _reduce_623(val, _values, result); end
 
-  # source://parser//lib/parser/ruby32.rb#12039
+  # source://parser//lib/parser/ruby34.rb#11920
   def _reduce_624(val, _values, result); end
 
-  # source://parser//lib/parser/ruby32.rb#12045
+  # source://parser//lib/parser/ruby34.rb#11926
   def _reduce_625(val, _values, result); end
 
-  # source://parser//lib/parser/ruby32.rb#12051
+  # source://parser//lib/parser/ruby34.rb#11932
   def _reduce_626(val, _values, result); end
 
-  # source://parser//lib/parser/ruby32.rb#12057
+  # source://parser//lib/parser/ruby34.rb#11938
   def _reduce_627(val, _values, result); end
 
-  # source://parser//lib/parser/ruby32.rb#12063
+  # source://parser//lib/parser/ruby34.rb#11944
   def _reduce_628(val, _values, result); end
 
-  # source://parser//lib/parser/ruby32.rb#12069
+  # source://parser//lib/parser/ruby34.rb#11950
   def _reduce_629(val, _values, result); end
 
-  # reduce 62 omitted
-  #
-  # source://parser//lib/parser/ruby32.rb#8868
+  # source://parser//lib/parser/ruby34.rb#8778
   def _reduce_63(val, _values, result); end
 
-  # source://parser//lib/parser/ruby32.rb#12075
+  # source://parser//lib/parser/ruby34.rb#11956
   def _reduce_630(val, _values, result); end
 
-  # source://parser//lib/parser/ruby32.rb#12081
+  # source://parser//lib/parser/ruby34.rb#11962
   def _reduce_631(val, _values, result); end
 
-  # source://parser//lib/parser/ruby32.rb#12087
+  # source://parser//lib/parser/ruby34.rb#11968
   def _reduce_632(val, _values, result); end
 
-  # reduce 633 omitted
-  #
-  # source://parser//lib/parser/ruby32.rb#12095
-  def _reduce_634(val, _values, result); end
+  # source://parser//lib/parser/ruby34.rb#11974
+  def _reduce_633(val, _values, result); end
 
-  # source://parser//lib/parser/ruby32.rb#12102
+  # reduce 634 omitted
+  #
+  # source://parser//lib/parser/ruby34.rb#11982
   def _reduce_635(val, _values, result); end
 
-  # reduce 636 omitted
-  #
-  # source://parser//lib/parser/ruby32.rb#12113
-  def _reduce_637(val, _values, result); end
+  # source://parser//lib/parser/ruby34.rb#11989
+  def _reduce_636(val, _values, result); end
 
-  # source://parser//lib/parser/ruby32.rb#12121
+  # reduce 637 omitted
+  #
+  # source://parser//lib/parser/ruby34.rb#12000
   def _reduce_638(val, _values, result); end
 
-  # source://parser//lib/parser/ruby32.rb#12129
+  # source://parser//lib/parser/ruby34.rb#12008
   def _reduce_639(val, _values, result); end
 
-  # source://parser//lib/parser/ruby32.rb#8874
+  # source://parser//lib/parser/ruby34.rb#8785
   def _reduce_64(val, _values, result); end
 
-  # source://parser//lib/parser/ruby32.rb#12135
+  # source://parser//lib/parser/ruby34.rb#12016
   def _reduce_640(val, _values, result); end
 
-  # source://parser//lib/parser/ruby32.rb#12141
+  # source://parser//lib/parser/ruby34.rb#12022
   def _reduce_641(val, _values, result); end
 
-  # source://parser//lib/parser/ruby32.rb#12147
+  # source://parser//lib/parser/ruby34.rb#12028
   def _reduce_642(val, _values, result); end
 
-  # source://parser//lib/parser/ruby32.rb#12153
+  # source://parser//lib/parser/ruby34.rb#12034
   def _reduce_643(val, _values, result); end
 
-  # source://parser//lib/parser/ruby32.rb#12160
+  # source://parser//lib/parser/ruby34.rb#12040
   def _reduce_644(val, _values, result); end
 
-  # source://parser//lib/parser/ruby32.rb#12166
+  # source://parser//lib/parser/ruby34.rb#12047
   def _reduce_645(val, _values, result); end
 
-  # source://parser//lib/parser/ruby32.rb#12172
+  # source://parser//lib/parser/ruby34.rb#12053
   def _reduce_646(val, _values, result); end
 
-  # source://parser//lib/parser/ruby32.rb#12181
+  # source://parser//lib/parser/ruby34.rb#12059
   def _reduce_647(val, _values, result); end
 
-  # source://parser//lib/parser/ruby32.rb#12191
+  # source://parser//lib/parser/ruby34.rb#12068
   def _reduce_648(val, _values, result); end
 
-  # source://parser//lib/parser/ruby32.rb#12199
+  # source://parser//lib/parser/ruby34.rb#12078
   def _reduce_649(val, _values, result); end
 
-  # source://parser//lib/parser/ruby32.rb#8881
+  # source://parser//lib/parser/ruby34.rb#8796
   def _reduce_65(val, _values, result); end
 
-  # source://parser//lib/parser/ruby32.rb#12208
+  # source://parser//lib/parser/ruby34.rb#12086
   def _reduce_650(val, _values, result); end
 
-  # source://parser//lib/parser/ruby32.rb#12216
+  # source://parser//lib/parser/ruby34.rb#12095
   def _reduce_651(val, _values, result); end
 
-  # source://parser//lib/parser/ruby32.rb#12225
+  # source://parser//lib/parser/ruby34.rb#12103
   def _reduce_652(val, _values, result); end
 
-  # source://parser//lib/parser/ruby32.rb#12232
+  # source://parser//lib/parser/ruby34.rb#12112
   def _reduce_653(val, _values, result); end
 
-  # source://parser//lib/parser/ruby32.rb#12240
+  # source://parser//lib/parser/ruby34.rb#12119
   def _reduce_654(val, _values, result); end
 
-  # source://parser//lib/parser/ruby32.rb#12249
+  # source://parser//lib/parser/ruby34.rb#12127
   def _reduce_655(val, _values, result); end
 
-  # source://parser//lib/parser/ruby32.rb#12256
+  # source://parser//lib/parser/ruby34.rb#12136
   def _reduce_656(val, _values, result); end
 
-  # source://parser//lib/parser/ruby32.rb#12264
+  # source://parser//lib/parser/ruby34.rb#12143
   def _reduce_657(val, _values, result); end
 
-  # source://parser//lib/parser/ruby32.rb#12271
+  # source://parser//lib/parser/ruby34.rb#12151
   def _reduce_658(val, _values, result); end
 
-  # source://parser//lib/parser/ruby32.rb#12279
+  # source://parser//lib/parser/ruby34.rb#12158
   def _reduce_659(val, _values, result); end
 
-  # source://parser//lib/parser/ruby32.rb#8891
+  # source://parser//lib/parser/ruby34.rb#8802
   def _reduce_66(val, _values, result); end
 
-  # source://parser//lib/parser/ruby32.rb#12285
+  # source://parser//lib/parser/ruby34.rb#12166
   def _reduce_660(val, _values, result); end
 
-  # source://parser//lib/parser/ruby32.rb#12291
+  # source://parser//lib/parser/ruby34.rb#12172
   def _reduce_661(val, _values, result); end
 
-  # source://parser//lib/parser/ruby32.rb#12297
+  # source://parser//lib/parser/ruby34.rb#12178
   def _reduce_662(val, _values, result); end
 
-  # source://parser//lib/parser/ruby32.rb#12303
+  # source://parser//lib/parser/ruby34.rb#12184
   def _reduce_663(val, _values, result); end
 
-  # source://parser//lib/parser/ruby32.rb#12309
+  # source://parser//lib/parser/ruby34.rb#12190
   def _reduce_664(val, _values, result); end
 
-  # source://parser//lib/parser/ruby32.rb#12315
+  # source://parser//lib/parser/ruby34.rb#12196
   def _reduce_665(val, _values, result); end
 
-  # reduce 666 omitted
-  #
-  # source://parser//lib/parser/ruby32.rb#12323
-  def _reduce_667(val, _values, result); end
+  # source://parser//lib/parser/ruby34.rb#12202
+  def _reduce_666(val, _values, result); end
 
-  # source://parser//lib/parser/ruby32.rb#12333
+  # reduce 667 omitted
+  #
+  # source://parser//lib/parser/ruby34.rb#12210
   def _reduce_668(val, _values, result); end
 
-  # source://parser//lib/parser/ruby32.rb#12340
+  # source://parser//lib/parser/ruby34.rb#12220
   def _reduce_669(val, _values, result); end
 
-  # source://parser//lib/parser/ruby32.rb#8897
+  # source://parser//lib/parser/ruby34.rb#8809
   def _reduce_67(val, _values, result); end
 
-  # source://parser//lib/parser/ruby32.rb#12347
+  # source://parser//lib/parser/ruby34.rb#12227
   def _reduce_670(val, _values, result); end
 
-  # source://parser//lib/parser/ruby32.rb#12353
+  # source://parser//lib/parser/ruby34.rb#12234
   def _reduce_671(val, _values, result); end
 
-  # source://parser//lib/parser/ruby32.rb#12359
+  # source://parser//lib/parser/ruby34.rb#12240
   def _reduce_672(val, _values, result); end
 
-  # source://parser//lib/parser/ruby32.rb#12365
+  # source://parser//lib/parser/ruby34.rb#12246
   def _reduce_673(val, _values, result); end
 
-  # source://parser//lib/parser/ruby32.rb#12380
+  # source://parser//lib/parser/ruby34.rb#12252
   def _reduce_674(val, _values, result); end
 
-  # source://parser//lib/parser/ruby32.rb#12388
+  # source://parser//lib/parser/ruby34.rb#12267
   def _reduce_675(val, _values, result); end
 
-  # source://parser//lib/parser/ruby32.rb#12396
+  # source://parser//lib/parser/ruby34.rb#12275
   def _reduce_676(val, _values, result); end
 
-  # source://parser//lib/parser/ruby32.rb#12403
+  # source://parser//lib/parser/ruby34.rb#12283
   def _reduce_677(val, _values, result); end
 
-  # source://parser//lib/parser/ruby32.rb#12410
+  # source://parser//lib/parser/ruby34.rb#12290
   def _reduce_678(val, _values, result); end
 
-  # source://parser//lib/parser/ruby32.rb#12416
+  # source://parser//lib/parser/ruby34.rb#12297
   def _reduce_679(val, _values, result); end
 
-  # source://parser//lib/parser/ruby32.rb#8904
-  def _reduce_68(val, _values, result); end
-
-  # source://parser//lib/parser/ruby32.rb#12422
+  # source://parser//lib/parser/ruby34.rb#12303
   def _reduce_680(val, _values, result); end
 
-  # source://parser//lib/parser/ruby32.rb#12428
+  # source://parser//lib/parser/ruby34.rb#12309
   def _reduce_681(val, _values, result); end
 
-  # reduce 683 omitted
-  #
-  # source://parser//lib/parser/ruby32.rb#12438
-  def _reduce_684(val, _values, result); end
+  # source://parser//lib/parser/ruby34.rb#12315
+  def _reduce_682(val, _values, result); end
 
-  # source://parser//lib/parser/ruby32.rb#12444
+  # reduce 684 omitted
+  #
+  # source://parser//lib/parser/ruby34.rb#12325
   def _reduce_685(val, _values, result); end
 
-  # source://parser//lib/parser/ruby32.rb#12452
+  # source://parser//lib/parser/ruby34.rb#12331
   def _reduce_686(val, _values, result); end
 
-  # source://parser//lib/parser/ruby32.rb#12460
+  # source://parser//lib/parser/ruby34.rb#12339
   def _reduce_687(val, _values, result); end
 
-  # source://parser//lib/parser/ruby32.rb#12468
+  # source://parser//lib/parser/ruby34.rb#12347
   def _reduce_688(val, _values, result); end
 
-  # source://parser//lib/parser/ruby32.rb#12476
+  # source://parser//lib/parser/ruby34.rb#12355
   def _reduce_689(val, _values, result); end
 
-  # source://parser//lib/parser/ruby32.rb#12482
+  # source://parser//lib/parser/ruby34.rb#12363
   def _reduce_690(val, _values, result); end
 
-  # source://parser//lib/parser/ruby32.rb#12488
+  # source://parser//lib/parser/ruby34.rb#12369
   def _reduce_691(val, _values, result); end
 
-  # source://parser//lib/parser/ruby32.rb#12494
+  # source://parser//lib/parser/ruby34.rb#12375
   def _reduce_692(val, _values, result); end
 
-  # reduce 694 omitted
-  #
-  # source://parser//lib/parser/ruby32.rb#12504
-  def _reduce_695(val, _values, result); end
+  # source://parser//lib/parser/ruby34.rb#12381
+  def _reduce_693(val, _values, result); end
 
-  # source://parser//lib/parser/ruby32.rb#12512
+  # reduce 695 omitted
+  #
+  # source://parser//lib/parser/ruby34.rb#12391
   def _reduce_696(val, _values, result); end
 
-  # reduce 698 omitted
-  #
-  # source://parser//lib/parser/ruby32.rb#12524
-  def _reduce_699(val, _values, result); end
+  # source://parser//lib/parser/ruby34.rb#12399
+  def _reduce_697(val, _values, result); end
 
-  # source://parser//lib/parser/ruby32.rb#8461
+  # source://parser//lib/parser/ruby34.rb#8411
   def _reduce_7(val, _values, result); end
 
-  # source://parser//lib/parser/ruby32.rb#12532
+  # reduce 699 omitted
+  #
+  # source://parser//lib/parser/ruby34.rb#12411
   def _reduce_700(val, _values, result); end
 
-  # source://parser//lib/parser/ruby32.rb#12540
+  # source://parser//lib/parser/ruby34.rb#12419
   def _reduce_701(val, _values, result); end
 
-  # source://parser//lib/parser/ruby32.rb#12546
+  # source://parser//lib/parser/ruby34.rb#12427
   def _reduce_702(val, _values, result); end
 
-  # reduce 703 omitted
-  #
-  # source://parser//lib/parser/ruby32.rb#12554
-  def _reduce_704(val, _values, result); end
+  # source://parser//lib/parser/ruby34.rb#12433
+  def _reduce_703(val, _values, result); end
 
-  # source://parser//lib/parser/ruby32.rb#12560
+  # reduce 704 omitted
+  #
+  # source://parser//lib/parser/ruby34.rb#12441
   def _reduce_705(val, _values, result); end
 
-  # reduce 706 omitted
-  #
-  # source://parser//lib/parser/ruby32.rb#12568
-  def _reduce_707(val, _values, result); end
+  # source://parser//lib/parser/ruby34.rb#12447
+  def _reduce_706(val, _values, result); end
 
-  # source://parser//lib/parser/ruby32.rb#12574
+  # reduce 707 omitted
+  #
+  # source://parser//lib/parser/ruby34.rb#12455
   def _reduce_708(val, _values, result); end
 
-  # source://parser//lib/parser/ruby32.rb#12580
+  # source://parser//lib/parser/ruby34.rb#12461
   def _reduce_709(val, _values, result); end
 
-  # source://parser//lib/parser/ruby32.rb#12586
+  # reduce 70 omitted
+  #
+  # source://parser//lib/parser/ruby34.rb#8821
+  def _reduce_71(val, _values, result); end
+
+  # source://parser//lib/parser/ruby34.rb#12467
   def _reduce_710(val, _values, result); end
 
-  # source://parser//lib/parser/ruby32.rb#12592
+  # source://parser//lib/parser/ruby34.rb#12473
   def _reduce_711(val, _values, result); end
 
-  # source://parser//lib/parser/ruby32.rb#12598
+  # source://parser//lib/parser/ruby34.rb#12479
   def _reduce_712(val, _values, result); end
 
-  # source://parser//lib/parser/ruby32.rb#12604
+  # source://parser//lib/parser/ruby34.rb#12485
   def _reduce_713(val, _values, result); end
 
-  # source://parser//lib/parser/ruby32.rb#12610
+  # source://parser//lib/parser/ruby34.rb#12491
   def _reduce_714(val, _values, result); end
 
-  # reduce 71 omitted
-  #
-  # source://parser//lib/parser/ruby32.rb#8916
+  # source://parser//lib/parser/ruby34.rb#12497
+  def _reduce_715(val, _values, result); end
+
+  # source://parser//lib/parser/ruby34.rb#8828
   def _reduce_72(val, _values, result); end
 
-  # reduce 724 omitted
+  # reduce 725 omitted
   #
-  # source://parser//lib/parser/ruby32.rb#12640
-  def _reduce_725(val, _values, result); end
-
-  # source://parser//lib/parser/ruby32.rb#12646
+  # source://parser//lib/parser/ruby34.rb#12532
   def _reduce_726(val, _values, result); end
 
-  # source://parser//lib/parser/ruby32.rb#8923
+  # source://parser//lib/parser/ruby34.rb#12538
+  def _reduce_727(val, _values, result); end
+
+  # source://parser//lib/parser/ruby34.rb#8835
   def _reduce_73(val, _values, result); end
 
-  # reduce 730 omitted
+  # reduce 731 omitted
   #
-  # source://parser//lib/parser/ruby32.rb#12660
-  def _reduce_731(val, _values, result); end
-
-  # source://parser//lib/parser/ruby32.rb#12666
+  # source://parser//lib/parser/ruby34.rb#12552
   def _reduce_732(val, _values, result); end
 
-  # source://parser//lib/parser/ruby32.rb#12672
+  # source://parser//lib/parser/ruby34.rb#12558
   def _reduce_733(val, _values, result); end
 
-  # reduce 735 omitted
-  #
-  # source://parser//lib/parser/ruby32.rb#12682
-  def _reduce_736(val, _values, result); end
+  # source://parser//lib/parser/ruby34.rb#12564
+  def _reduce_734(val, _values, result); end
 
-  # source://parser//lib/parser/ruby32.rb#8930
-  def _reduce_74(val, _values, result); end
-
-  # reduce 739 omitted
+  # reduce 736 omitted
   #
-  # source://parser//lib/parser/ruby32.rb#12694
-  def _reduce_740(val, _values, result); end
+  # source://parser//lib/parser/ruby34.rb#12574
+  def _reduce_737(val, _values, result); end
 
-  # reduce 75 omitted
+  # reduce 740 omitted
   #
-  # source://parser//lib/parser/ruby32.rb#8939
+  # source://parser//lib/parser/ruby34.rb#12586
+  def _reduce_741(val, _values, result); end
+
+  # reduce 74 omitted
+  #
+  # source://parser//lib/parser/ruby34.rb#8844
+  def _reduce_75(val, _values, result); end
+
+  # source://parser//lib/parser/ruby34.rb#8851
   def _reduce_76(val, _values, result); end
 
-  # source://parser//lib/parser/ruby32.rb#8946
+  # source://parser//lib/parser/ruby34.rb#8862
   def _reduce_77(val, _values, result); end
 
-  # source://parser//lib/parser/ruby32.rb#8957
+  # source://parser//lib/parser/ruby34.rb#8869
   def _reduce_78(val, _values, result); end
 
-  # source://parser//lib/parser/ruby32.rb#8964
+  # source://parser//lib/parser/ruby34.rb#8880
   def _reduce_79(val, _values, result); end
 
-  # source://parser//lib/parser/ruby32.rb#8975
+  # source://parser//lib/parser/ruby34.rb#8887
   def _reduce_80(val, _values, result); end
 
-  # source://parser//lib/parser/ruby32.rb#8982
+  # source://parser//lib/parser/ruby34.rb#8898
   def _reduce_81(val, _values, result); end
 
-  # source://parser//lib/parser/ruby32.rb#8993
+  # source://parser//lib/parser/ruby34.rb#8908
   def _reduce_82(val, _values, result); end
 
-  # source://parser//lib/parser/ruby32.rb#9000
+  # source://parser//lib/parser/ruby34.rb#8915
   def _reduce_83(val, _values, result); end
 
-  # source://parser//lib/parser/ruby32.rb#9007
+  # source://parser//lib/parser/ruby34.rb#8922
   def _reduce_84(val, _values, result); end
 
-  # source://parser//lib/parser/ruby32.rb#9014
+  # source://parser//lib/parser/ruby34.rb#8929
   def _reduce_85(val, _values, result); end
 
-  # source://parser//lib/parser/ruby32.rb#9021
+  # source://parser//lib/parser/ruby34.rb#8936
   def _reduce_86(val, _values, result); end
 
-  # source://parser//lib/parser/ruby32.rb#9028
+  # source://parser//lib/parser/ruby34.rb#8943
   def _reduce_87(val, _values, result); end
 
-  # source://parser//lib/parser/ruby32.rb#9034
+  # source://parser//lib/parser/ruby34.rb#8949
   def _reduce_88(val, _values, result); end
 
-  # source://parser//lib/parser/ruby32.rb#9040
+  # source://parser//lib/parser/ruby34.rb#8955
   def _reduce_89(val, _values, result); end
 
   # reduce 8 omitted
   #
-  # source://parser//lib/parser/ruby32.rb#8469
+  # source://parser//lib/parser/ruby34.rb#8419
   def _reduce_9(val, _values, result); end
 
-  # source://parser//lib/parser/ruby32.rb#9046
+  # source://parser//lib/parser/ruby34.rb#8961
   def _reduce_90(val, _values, result); end
 
   # reduce 91 omitted
   #
-  # source://parser//lib/parser/ruby32.rb#9054
+  # source://parser//lib/parser/ruby34.rb#8969
   def _reduce_92(val, _values, result); end
 
-  # source://parser//lib/parser/ruby32.rb#9061
+  # source://parser//lib/parser/ruby34.rb#8976
   def _reduce_93(val, _values, result); end
 
-  # source://parser//lib/parser/ruby32.rb#9068
+  # source://parser//lib/parser/ruby34.rb#8983
   def _reduce_94(val, _values, result); end
 
-  # source://parser//lib/parser/ruby32.rb#9076
+  # source://parser//lib/parser/ruby34.rb#8991
   def _reduce_95(val, _values, result); end
 
-  # source://parser//lib/parser/ruby32.rb#9083
+  # source://parser//lib/parser/ruby34.rb#8998
   def _reduce_96(val, _values, result); end
 
-  # source://parser//lib/parser/ruby32.rb#9091
+  # source://parser//lib/parser/ruby34.rb#9006
   def _reduce_97(val, _values, result); end
 
-  # source://parser//lib/parser/ruby32.rb#9097
+  # source://parser//lib/parser/ruby34.rb#9012
   def _reduce_98(val, _values, result); end
 
-  # source://parser//lib/parser/ruby32.rb#9104
+  # source://parser//lib/parser/ruby34.rb#9019
   def _reduce_99(val, _values, result); end
 
-  # source://parser//lib/parser/ruby32.rb#12700
+  # source://parser//lib/parser/ruby34.rb#12592
   def _reduce_none(val, _values, result); end
 
-  # source://parser//lib/parser/ruby32.rb#21
+  # source://parser//lib/parser/ruby34.rb#21
   def default_encoding; end
 
-  # source://parser//lib/parser/ruby32.rb#25
+  # source://parser//lib/parser/ruby34.rb#25
   def endless_method_name(name_t); end
 
-  # source://parser//lib/parser/ruby32.rb#38
+  # source://parser//lib/parser/ruby34.rb#38
   def local_pop; end
 
-  # source://parser//lib/parser/ruby32.rb#31
+  # source://parser//lib/parser/ruby34.rb#31
   def local_push; end
 
-  # source://parser//lib/parser/ruby32.rb#45
+  # source://parser//lib/parser/ruby34.rb#45
   def try_declare_numparam(node); end
 
-  # source://parser//lib/parser/ruby32.rb#17
+  # source://parser//lib/parser/ruby34.rb#17
   def version; end
 end
 
-# source://parser//lib/parser/ruby32.rb#8008
-Parser::Ruby32::Racc_arg = T.let(T.unsafe(nil), Array)
+# source://parser//lib/parser/ruby34.rb#7955
+Parser::Ruby34::Racc_arg = T.let(T.unsafe(nil), Array)
 
-# source://parser//lib/parser/ruby32.rb#8415
-Parser::Ruby32::Racc_debug_parser = T.let(T.unsafe(nil), FalseClass)
+# source://parser//lib/parser/ruby34.rb#8365
+Parser::Ruby34::Racc_debug_parser = T.let(T.unsafe(nil), FalseClass)
 
-# source://parser//lib/parser/ruby32.rb#8025
-Parser::Ruby32::Racc_token_to_s_table = T.let(T.unsafe(nil), Array)
+# source://parser//lib/parser/ruby34.rb#7972
+Parser::Ruby34::Racc_token_to_s_table = T.let(T.unsafe(nil), Array)
 
 # @api public
 #
