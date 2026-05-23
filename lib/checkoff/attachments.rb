@@ -83,9 +83,9 @@ module Checkoff
     # @param verify_mode [Integer] - e.g., OpenSSL::SSL::VERIFY_NONE,OpenSSL::SSL::VERIFY_PEER
     #
     # @return [Object]
-    # @sg-ignore
     def download_uri(uri, verify_mode: OpenSSL::SSL::VERIFY_PEER, &block)
       out = nil
+      # @sg-ignore
       Net::HTTP.start(uri.host, uri.port, use_ssl: uri.scheme == 'https', verify_mode:) do |http|
         # @sg-ignore
         http.request(Net::HTTP::Get.new(uri)) do |response|
@@ -100,19 +100,20 @@ module Checkoff
       raise "Error downloading #{uri}: #{e}"
     end
 
-    # @sg-ignore
-    # @param response [Net::HTTPResponse]
+    # @param response [#read_body]
     #
     # @yields [IO]
     #
     # @return [Object]
     def write_tempfile_from_response(response)
       Tempfile.create('checkoff') do |tempfile|
+        # @sg-ignore
         tempfile.binmode
         # @sg-ignore
         response.read_body do |chunk|
           tempfile.write(chunk)
         end
+        # @sg-ignore
         tempfile.rewind
 
         yield tempfile
@@ -130,8 +131,12 @@ module Checkoff
       uri = URI(url)
       attachment_name ||= File.basename(uri.path)
       download_uri(uri, verify_mode:) do |tempfile|
+        # @sg-ignore
         content_type ||= content_type_from_filename(attachment_name)
+        # @sg-ignore
         content_type ||= content_type_from_filename(uri.path)
+
+        # @sg-ignore
 
         resource.attach(filename: attachment_name, mime: content_type,
                         io: tempfile)
@@ -145,6 +150,7 @@ module Checkoff
     # @return [Asana::Resources::Attachment]
     def create_attachment_from_url_alone!(url, resource, attachment_name:)
       with_params = {
+        # @sg-ignore
         'parent' => resource.gid,
         'url' => url,
         'resource_subtype' => 'external',
@@ -158,9 +164,7 @@ module Checkoff
     # @param filename [String]
     #
     # @return [String,nil]
-    # @sg-ignore
     def content_type_from_filename(filename)
-      # @sg-ignore
       MIME::Types.type_for(filename)&.first&.content_type
     end
 
@@ -187,16 +191,15 @@ module Checkoff
     class << self
       # @return [void]
       def run
-        # @sg-ignore
         # @type [String]
         gid = ARGV[0] || raise('Please pass task gid as first argument')
-        # @sg-ignore
         # @type [String]
         url = ARGV[1] || raise('Please pass attachment URL as second argument')
 
         tasks = Checkoff::Tasks.new
         attachments = Checkoff::Attachments.new
         task = tasks.task_by_gid(gid)
+        # @sg-ignore
         attachment = attachments.create_attachment_from_url!(url, task)
         puts "Results: #{attachment.inspect}"
       end

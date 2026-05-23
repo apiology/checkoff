@@ -14,6 +14,7 @@ class TestPortfolios < ClassTest
            :portfolios_api, :wrong_portfolio, :wrong_portfolio_name, :users_api, :me, :me_gid,
            :portfolio_gid, :project_a
 
+  # @return [void]
   def test_portfolio_or_raise_raises
     portfolios = get_test_object do
       portfolio_arr = [wrong_portfolio]
@@ -24,6 +25,7 @@ class TestPortfolios < ClassTest
     end
   end
 
+  # @return [void]
   def test_portfolio_or_raise
     portfolios = get_test_object do
       portfolio_arr = [wrong_portfolio, portfolio]
@@ -38,15 +40,18 @@ class TestPortfolios < ClassTest
     workspace.expects(:gid).returns(workspace_gid)
   end
 
+  # @return [void]
   def allow_portfolios_named
     wrong_portfolio.expects(:name).returns(wrong_portfolio_name).at_least(0)
     portfolio.expects(:name).returns(portfolio_name).at_least(0)
   end
 
+  # @return [void]
   def expect_portfolios_api_pulled
     client.expects(:portfolios).returns(portfolios_api)
   end
 
+  # @return [void]
   def expect_me_gid_pulled
     client.expects(:users).returns(users_api)
     users_api.expects(:me).returns(me)
@@ -62,6 +67,7 @@ class TestPortfolios < ClassTest
     allow_portfolios_named
   end
 
+  # @return [void]
   def test_portfolio
     portfolios = get_test_object do
       portfolio_arr = [wrong_portfolio, portfolio]
@@ -71,6 +77,7 @@ class TestPortfolios < ClassTest
     assert_equal(portfolio, portfolios.portfolio(workspace_name, portfolio_name))
   end
 
+  # @return [void]
   def test_portfolio_by_gid
     portfolios = get_test_object do
       expect_portfolios_api_pulled
@@ -81,6 +88,7 @@ class TestPortfolios < ClassTest
     assert_equal(portfolio, portfolios.portfolio_by_gid(portfolio_gid))
   end
 
+  # @return [void]
   def test_projects_in_portfolios
     portfolios = get_test_object do
       @mocks[:projects] = Checkoff::Projects.new(client:)
@@ -96,6 +104,7 @@ class TestPortfolios < ClassTest
     assert_equal([project_a], portfolios.projects_in_portfolio(workspace_name, portfolio_name))
   end
 
+  # @return [void]
   def class_under_test
     Checkoff::Portfolios
   end

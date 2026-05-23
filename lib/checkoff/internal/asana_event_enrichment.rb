@@ -73,9 +73,10 @@ module Checkoff
           enrich_filter(filter)
         end
         resource = webhook_subscription&.fetch('resource', nil)
-        # @sg-ignore
         name, resource_type = enrich_gid(resource) if resource
+        # @sg-ignore
         webhook_subscription['checkoff:enriched:name'] = name if name
+        # @sg-ignore
         webhook_subscription['checkoff:enriched:resource_type'] = resource_type if resource_type
       end
 
@@ -89,18 +90,19 @@ module Checkoff
       #
       # @return [Array([String, nil], [String, nil])]
       def enrich_gid(gid, resource_type: nil)
-        # @sg-ignore
         resource, resource_type = resources.resource_by_gid(gid, resource_type:)
         [resource&.name, resource_type]
       end
 
       # @param filter [Hash{String => String, Array<String>}]
       #
+      # @sg-ignore
       # @return [String, nil]
       def enrich_filter_parent_gid!(filter)
         parent_gid = filter['checkoff:parent.gid']
         return unless parent_gid
 
+        # @sg-ignore
         name, resource_type = enrich_gid(parent_gid)
         filter['checkoff:enriched:parent.name'] = name if name
         filter['checkoff:enriched:parent.resource_type'] = resource_type if resource_type
@@ -114,6 +116,7 @@ module Checkoff
 
         return unless resource_gid
 
+        # @sg-ignore
         task = tasks.task_by_gid(resource_gid)
         task_name = task&.name
         filter['checkoff:enriched:resource.name'] = task_name if task_name
@@ -136,6 +139,7 @@ module Checkoff
       # @return [void]
       def enrich_event_parent!(asana_event)
         # @type [Hash{String => String }]
+        # @sg-ignore
         parent = asana_event['parent']
 
         return unless parent
@@ -144,7 +148,6 @@ module Checkoff
         resource_type = parent.fetch('resource_type')
         # @type [String]
         gid = parent.fetch('gid')
-        # @sg-ignore
         name, _resource_type = enrich_gid(gid, resource_type:)
         parent['checkoff:enriched:name'] = name if name
 
@@ -163,7 +166,6 @@ module Checkoff
         # @type [String]
         gid = resource.fetch('gid')
 
-        # @sg-ignore
         name, _resource_type = enrich_gid(gid, resource_type:)
         resource['checkoff:enriched:name'] = name if name
 

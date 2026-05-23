@@ -21,7 +21,6 @@ module Checkoff
 
       # @param project [Asana::Resources::Project]
       #
-      # @sg-ignore
       # @return [Date, nil]
       def start_date(project)
         return @date_class.parse(project.start_on) unless project.start_on.nil?
@@ -31,7 +30,6 @@ module Checkoff
 
       # @param project [Asana::Resources::Project]
       #
-      # @sg-ignore
       # @return [Date, nil]
       def due_date(project)
         return @date_class.parse(project.due_on) unless project.due_on.nil?
@@ -45,7 +43,6 @@ module Checkoff
       # @return [Time, Date, nil]
       def custom_field(project, custom_field_name)
         custom_field = @custom_fields.resource_custom_field_by_name_or_raise(project, custom_field_name)
-        # @sg-ignore
         # @type [String, nil]
         time_str = custom_field.fetch('display_value')
         return nil if time_str.nil?
@@ -56,7 +53,6 @@ module Checkoff
       # @param project [Asana::Resources::Project]
       # @param field_name [Symbol,Array]
       #
-      # @sg-ignore
       # @return [Date, Time, nil]
       def date_or_time_field_by_name(project, field_name)
         return due_date(project) if field_name == :due
@@ -66,7 +62,6 @@ module Checkoff
         return start_date(project) if field_name == :ready
 
         if field_name.is_a?(Array)
-          # @sg-ignore
           # @type [Symbol]
           actual_field_name = field_name.first
           args = field_name[1..]

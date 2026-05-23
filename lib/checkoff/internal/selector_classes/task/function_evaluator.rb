@@ -25,6 +25,15 @@ module Checkoff
           super()
         end
 
+        # @return [Checkoff::Tasks]
+        attr_reader :tasks
+
+        # @return [Checkoff::Timelines]
+        attr_reader :timelines
+
+        # @return [Checkoff::CustomFields]
+        attr_reader :custom_fields
+
         private
 
         # @return [Array(Symbol, Array)]

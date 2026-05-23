@@ -416,7 +416,7 @@ class TestSearchUrlParser < ClassTest
 
   # @return [void]
   def test_convert_params_27
-    Date.stub(:today, Date.new(2023, 1, 1)) do
+    Date.stub(:today, Date.parse('2023-01-01')) do
       search_url_parser = get_test_object
       url = 'https://app.asana.com/0/search?completion=incomplete&subtask=is_not_subtask&due_date.operator=through_next&due_date.value=0&due_date.unit=day&any_projects.ids=123'
       asana_api_params = {
@@ -435,7 +435,7 @@ class TestSearchUrlParser < ClassTest
 
   # @return [void]
   def test_convert_params_28
-    Date.stub(:today, Date.new(2023, 1, 1)) do
+    Date.stub(:today, Date.parse('2023-01-01')) do
       search_url_parser = get_test_object
       url = 'https://app.asana.com/0/search?completion=incomplete&subtask=is_not_subtask&due_date.operator=something_else&due_date.value=0&due_date.unit=day&any_projects.ids=123'
       e = assert_raises(RuntimeError) do
@@ -449,7 +449,7 @@ class TestSearchUrlParser < ClassTest
 
   # @return [void]
   def test_convert_params_29
-    Date.stub(:today, Date.new(2023, 1, 1)) do
+    Date.stub(:today, Date.parse('2023-01-01')) do
       search_url_parser = get_test_object
       url = 'https://app.asana.com/0/search?completion=incomplete&subtask=is_not_subtask&due_date.operator=through_next&due_date.value=0&due_date.unit=something_else&any_projects.ids=123'
       e = assert_raises(RuntimeError) do
@@ -614,7 +614,7 @@ class TestSearchUrlParser < ClassTest
 
   # @return [void]
   def test_convert_params_40
-    Date.stub(:today, Date.new(2023, 1, 1)) do
+    Date.stub(:today, Date.parse('2023-01-01')) do
       search_url_parser = get_test_object
       url = 'https://app.asana.com/0/search?completion=complete&subtask=is_not_subtask&completion_date.operator=within_last&completion_date.value=7&completion_date.unit=day&any_projects.ids=123~456~789~12'
       asana_api_params = {
@@ -634,7 +634,7 @@ class TestSearchUrlParser < ClassTest
 
   # @return [void]
   def test_convert_params_41
-    Date.stub(:today, Date.new(2023, 1, 1)) do
+    Date.stub(:today, Date.parse('2023-01-01')) do
       search_url_parser = get_test_object
       url = 'https://app.asana.com/0/search?sort=completion_time&completion=incomplete&milestone=is_not_milestone&subtask=is_not_subtask&due_date.operator=within_next&due_date.value=7&due_date.unit=day&portfolios.ids=123&custom_field_456.variant=no_value'
       asana_api_params = {

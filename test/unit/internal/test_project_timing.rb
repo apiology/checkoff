@@ -12,15 +12,17 @@ class TestProjectTiming < ClassTest
 
   let_mock :project, :custom_field_name
 
+  # @return [void]
   def test_date_or_time_field_by_name_due
     project_timing = get_test_object do
       @mocks[:date_class] = Date
       project.expects(:due_on).returns('2020-01-23').at_least_once
     end
 
-    assert_equal(Date.new(2020, 1, 23), project_timing.date_or_time_field_by_name(project, :due))
+    assert_equal(Date.parse('2020-01-23'), project_timing.date_or_time_field_by_name(project, :due))
   end
 
+  # @return [void]
   def test_date_or_time_field_by_name_due_nil
     project_timing = get_test_object do
       @mocks[:date_class] = Date
@@ -36,9 +38,10 @@ class TestProjectTiming < ClassTest
       project.expects(:start_on).returns('2020-01-23').at_least_once
     end
 
-    assert_equal(Date.new(2020, 1, 23), project_timing.date_or_time_field_by_name(project, :start))
+    assert_equal(Date.parse('2020-01-23'), project_timing.date_or_time_field_by_name(project, :start))
   end
 
+  # @return [void]
   def test_date_or_time_field_by_name_start_nil
     project_timing = get_test_object do
       @mocks[:date_class] = Date
@@ -48,15 +51,17 @@ class TestProjectTiming < ClassTest
     assert_nil(project_timing.date_or_time_field_by_name(project, :start))
   end
 
+  # @return [void]
   def test_date_or_time_field_by_name_ready
     project_timing = get_test_object do
       @mocks[:date_class] = Date
       project.expects(:start_on).returns('2020-01-23').at_least_once
     end
 
-    assert_equal(Date.new(2020, 1, 23), project_timing.date_or_time_field_by_name(project, :ready))
+    assert_equal(Date.parse('2020-01-23'), project_timing.date_or_time_field_by_name(project, :ready))
   end
 
+  # @return [void]
   def test_date_or_time_field_by_name_custom_field
     project_timing = get_test_object do
       @mocks[:date_class] = Date
@@ -74,6 +79,7 @@ class TestProjectTiming < ClassTest
                                                             custom_field_name]))
   end
 
+  # @return [void]
   def test_date_or_time_field_by_name_custom_field_nil
     project_timing = get_test_object do
       @mocks[:date_class] = Date
@@ -90,6 +96,7 @@ class TestProjectTiming < ClassTest
                                                           custom_field_name]))
   end
 
+  # @return [void]
   def test_date_or_time_field_by_name_raises_if_unknown_field
     project_timing = get_test_object
     e = assert_raises(RuntimeError) { project_timing.date_or_time_field_by_name(project, :blah) }
@@ -97,6 +104,7 @@ class TestProjectTiming < ClassTest
     assert_equal 'Teach me how to handle field :blah', e.message
   end
 
+  # @return [void]
   def test_date_or_time_field_by_name_raises_if_unknown_array_field
     project_timing = get_test_object
     e = assert_raises(RuntimeError) { project_timing.date_or_time_field_by_name(project, [:blah]) }
@@ -104,6 +112,7 @@ class TestProjectTiming < ClassTest
     assert_equal 'Teach me how to handle field [:blah]', e.message
   end
 
+  # @return [void]
   def class_under_test
     Checkoff::Internal::ProjectTiming
   end

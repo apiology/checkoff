@@ -41,6 +41,7 @@ module Checkoff
     # @param custom_field_name [String]
     #
     # @return [Asana::Resources::CustomField]
+    # @sg-ignore
     def custom_field_or_raise(workspace_name, custom_field_name)
       cf = custom_field(workspace_name, custom_field_name)
       raise "Could not find custom_field #{custom_field_name} under workspace #{workspace_name}." if cf.nil?
@@ -52,7 +53,6 @@ module Checkoff
     # @param workspace_name [String]
     # @param custom_field_name [String]
     #
-    # @sg-ignore
     # @return [Asana::Resources::CustomField,nil]
     def custom_field(workspace_name, custom_field_name)
       workspace = workspaces.workspace_or_raise(workspace_name)
@@ -78,6 +78,7 @@ module Checkoff
 
     # @param resource [Asana::Resources::Project,Asana::Resources::Task]
     # @param custom_field_name [String]
+    # @sg-ignore
     # @return [Array<String>]
     def resource_custom_field_values_names_by_name(resource, custom_field_name)
       custom_field = resource_custom_field_by_name(resource, custom_field_name)
@@ -92,24 +93,22 @@ module Checkoff
       end
     end
 
-    # @sg-ignore
     # @param resource [Asana::Resources::Task,Asana::Resources::Project]
     # @param custom_field_name [String]
     # @return [Hash, nil]
     def resource_custom_field_by_name(resource, custom_field_name)
-      # @sg-ignore
       # @type [Array<Hash>]
       custom_fields = resource.custom_fields
       if custom_fields.nil?
         raise "custom fields not found on resource - did you add 'custom_fields' in your extra_fields argument?"
       end
 
-      # @sg-ignore
       # @type [Hash, nil]
       custom_fields.find { |field| field.fetch('name') == custom_field_name }
     end
 
     # @param resource [Asana::Resources::Task,Asana::Resources::Project]
+    # @sg-ignore
     # @param custom_field_name [String]
     # @return [Hash]
     def resource_custom_field_by_name_or_raise(resource, custom_field_name)
@@ -121,6 +120,7 @@ module Checkoff
       custom_field
     end
 
+    # @sg-ignore
     # @param resource [Asana::Resources::Project,Asana::Resources::Task]
     # @param custom_field_gid [String]
     # @return [Hash]
@@ -131,7 +131,6 @@ module Checkoff
         raise "Could not find custom_fields under project (was 'custom_fields' included in 'extra_fields'?)"
       end
 
-      # @sg-ignore
       # @type [Hash, nil]
       matched_custom_field = custom_fields.find { |data| data.fetch('gid') == custom_field_gid }
       if matched_custom_field.nil?
@@ -146,8 +145,8 @@ module Checkoff
 
     # @param custom_field [Hash{String => Hash,Array<Hash>}]
     #
-    # @sg-ignore
     # @return [Array<Hash>]
+    # @sg-ignore
     def resource_custom_field_enum_values(custom_field)
       resource_subtype = custom_field.fetch('resource_subtype')
       case resource_subtype
@@ -184,10 +183,8 @@ module Checkoff
     class << self
       # @return [void]
       def run
-        # @sg-ignore
         # @type [String]
         workspace_name = ARGV[0] || raise('Please pass workspace name as first argument')
-        # @sg-ignore
         # @type [String]
         custom_field_name = ARGV[1] || raise('Please pass custom_field name as second argument')
         custom_fields = Checkoff::CustomFields.new

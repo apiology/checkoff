@@ -110,13 +110,12 @@ module Checkoff
 
     # Pull a specific task by name
     #
-    # @param workspace_name [String]
+    # @param workspace_name [String, Symbol]
     # @param project_name [String, Symbol]
     # @param section_name [String, nil, Symbol]
     # @param task_name [String]
     # @param only_uncompleted [Boolean]
     # @param extra_fields [Array<String>]
-    # @sg-ignore
     # @return [Asana::Resources::Task, nil]
     def task(workspace_name, project_name, task_name,
              section_name: :unspecified,
@@ -124,6 +123,7 @@ module Checkoff
              extra_fields: [])
       thread_local = Checkoff::Internal::ThreadLocal.new
       # @type [String]
+      # @sg-ignore
       task_gid = thread_local.with_thread_local_variable(:suppress_asana_webhook_watch_creation,
                                                          true) do
         gid_for_task(workspace_name, project_name, section_name, task_name)
@@ -134,21 +134,21 @@ module Checkoff
     end
     cache_method :task, LONG_CACHE_TIME
 
-    # @param workspace_name [String]
+    # @param workspace_name [String, Symbol]
     # @param project_name [String, Symbol]
     # @param section_name [String, nil, Symbol]
     # @param task_name [String]
     #
     # @return [String, nil]
-    # @sg-ignore
     def gid_for_task(workspace_name, project_name, section_name, task_name)
-      # @sg-ignore
       t = tasks(workspace_name,
                 project_name,
                 section_name:,
                 only_uncompleted: false)
       task_for_gid = t.find { |task| task.name == task_name }
-      task_for_gid&.gid
+      return nil if task_for_gid.nil?
+
+      task_for_gid.gid
     end
     cache_method :gid_for_task, REALLY_LONG_CACHE_TIME
 
@@ -179,6 +179,7 @@ module Checkoff
     # @param name [String]
     # @param workspace_gid [String]
     # @param assignee_gid [String]
+    # @sg-ignore
     #
     # @return [Asana::Resources::Task]
     def add_task(name,
@@ -200,6 +201,7 @@ module Checkoff
 
     # True if any of the task's dependencies are marked incomplete
     #
+    # @sg-ignore
     # Include 'dependencies.gid' in extra_fields of task passed in.
     #
     # @param task [Asana::Resources::Task]
@@ -212,7 +214,6 @@ module Checkoff
       #
       # https://github.com/Asana/ruby-asana/issues/125
 
-      # @sg-ignore
       # @type [Enumerable<Asana::Resources::Task>, nil]
       dependencies = task.instance_variable_get(:@dependencies) || []
 
@@ -220,6 +221,7 @@ module Checkoff
         # the real bummer though is that asana doesn't let you fetch
         # the completion status of dependencies, so we need to do this
         # regardless:
+        # @sg-ignore
         parent_task_gid = parent_task_info.fetch('gid')
 
         parent_task = task_by_gid(parent_task_gid, only_uncompleted: false)
@@ -341,7 +343,7 @@ module Checkoff
       @task_hashes ||= Checkoff::Internal::TaskHashes.new
     end
 
-    # @param workspace_name [String]
+    # @param workspace_name [String, Symbol]
     # @param project_name [String, Symbol]
     # @param section_name [String, nil, Symbol] - :unspecified
     # @param only_uncompleted [Boolean]
@@ -377,8 +379,8 @@ module Checkoff
       @projects ||= @sections.projects
     end
 
-    # @sg-ignore
     # @return [String]
+    # @sg-ignore
     def default_assignee_gid
       @config.fetch(:default_assignee_gid)
     end

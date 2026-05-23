@@ -122,10 +122,8 @@ module Checkoff
     class << self
       # @return [void]
       def run
-        # @sg-ignore
         # @type [String]
         # workspace_name = ARGV[0] || raise('Please pass workspace name as first argument')
-        # @sg-ignore
         # @type [String]
         # event_name = ARGV[1] || raise('Please pass event name as second argument')
         # events = Checkoff::Events.new

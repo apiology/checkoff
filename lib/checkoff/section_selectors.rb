@@ -43,7 +43,6 @@ module Checkoff
     #        section details.  Examples: [:tag, 'foo'] [:not, [:tag, 'foo']] [:tag, 'foo']
     # @return [Boolean]
     def filter_via_section_selector(section, section_selector)
-      # @sg-ignore
       evaluator = SectionSelectorEvaluator.new(section:, sections:, custom_fields:,
                                                client:)
       !!evaluator.evaluate(section_selector)

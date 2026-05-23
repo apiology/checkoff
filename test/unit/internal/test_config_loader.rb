@@ -5,12 +5,14 @@ require_relative '../class_test'
 
 # Test the Checkoff::Internal::ConfigLoader class
 class TestConfigLoader < Minitest::Test
+  # @return [void]
   def mock_yaml_loaded
     filename = File.expand_path('~/.foo.yml')
     File.expects(:exist?).with(filename).returns(true)
     YAML.expects(:load_file).returns({ 'bar' => 'yaml_value' })
   end
 
+  # @return [void]
   def test_requests_from_env_variable_neither_populated
     mock_yaml_loaded
 
@@ -24,6 +26,7 @@ class TestConfigLoader < Minitest::Test
     end
   end
 
+  # @return [void]
   def test_requests_from_env_variable_if_yaml_not_populated
     mock_yaml_loaded
 
@@ -35,6 +38,7 @@ class TestConfigLoader < Minitest::Test
     assert_equal('123', config_hash.fetch(:env_only_key))
   end
 
+  # @return [void]
   def test_defers_to_yaml
     mock_yaml_loaded
 

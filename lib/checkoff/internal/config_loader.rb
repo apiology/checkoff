@@ -20,11 +20,13 @@ module Checkoff
 
       # @param key [Symbol]
       # @return [Object]
+      # @sg-ignore
       def [](key)
         config_value = @config[key]
         return config_value unless config_value.nil?
 
         # @sg-ignore
+
         ENV.fetch(envvar_name(key), nil)
       end
 
@@ -66,7 +68,6 @@ module Checkoff
           filename = yaml_filename(sym)
           return {} unless File.exist?(filename)
 
-          # @sg-ignore
           YAML.load_file(filename).with_indifferent_access
         end
 

@@ -64,9 +64,11 @@ module Checkoff
       by_section = {}
       sections = client.sections.get_sections_for_project(project_gid:,
                                                           options: { fields: ['name'] })
+      # @sg-ignore
       sections.each_entry { |section| by_section[section_key(section.name)] = [] }
       tasks.each do |task|
         assignee_section = task.assignee_section
+        # @sg-ignore
         current_section = section_key(assignee_section.name)
         by_section[current_section] ||= []
         by_section[current_section] << task

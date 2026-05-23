@@ -9,18 +9,22 @@ class TestCLIHelp < Minitest::Test
   let_mock :config, :workspaces, :sections, :tasks,
            :workspace, :workspace_gid, :task_a, :task_b, :task_c
 
+  # @return [void]
   def expect_workspaces_created
     Checkoff::Workspaces.expects(:new).returns(workspaces).at_least(0)
   end
 
+  # @return [void]
   def expect_config_loaded
     Checkoff::Internal::ConfigLoader.expects(:load).returns(config).at_least(0)
   end
 
+  # @return [void]
   def expect_sections_created
     Checkoff::Sections.expects(:new).returns(sections).at_least(0)
   end
 
+  # @return [void]
   def expect_tasks_created
     Checkoff::Tasks.expects(:new).returns(tasks).at_least(0)
   end
@@ -36,6 +40,7 @@ class TestCLIHelp < Minitest::Test
     }
   end
 
+  # @return [void]
   def get_test_object(&twiddle_mocks)
     set_mocks
     expect_workspaces_created
@@ -47,6 +52,7 @@ class TestCLIHelp < Minitest::Test
     Checkoff::CheckoffGLIApp
   end
 
+  # @return [void]
   def test_run_with_help_arg
     cli = get_test_object do
       @mocks[:stdout].expects(:puts).at_least(1)

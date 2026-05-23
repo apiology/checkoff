@@ -16,6 +16,7 @@ class TestSubtasks < ClassTest
            :subtask_section_3, :subtask_3a,
            :is_rendered_as_separator
 
+  # @return [void]
   def task_options
     {
       task_options: true,
@@ -26,6 +27,7 @@ class TestSubtasks < ClassTest
     }
   end
 
+  # @return [void]
   def subtask_options
     {
       task_options: true,
@@ -53,6 +55,7 @@ class TestSubtasks < ClassTest
     projects.expects(:active_tasks).with(raw_subtasks).returns(active_subtasks)
   end
 
+  # @return [void]
   def allow_all_section_status_queried
     allow_subtask_section_status_queried(subtask_section_1, true)
     allow_subtask_section_status_queried(subtask_section_2, true)
@@ -87,27 +90,32 @@ class TestSubtasks < ClassTest
   #   assert_equal(subtasks.subtask_section?(subtask), is_rendered_as_separator)
   # end
 
+  # @return [void]
   def allow_subtask_section_1_named
     subtask_section_1.expects(:name).returns('1:').at_least(0)
     subtask_1a.expects(:name).returns('1a').at_least(0)
     subtask_1b.expects(:name).returns('1b').at_least(0)
   end
 
+  # @return [void]
   def allow_subtask_section_2_named
     subtask_section_2.expects(:name).returns('2:').at_least(0)
   end
 
+  # @return [void]
   def allow_subtask_section_3_named
     subtask_section_3.expects(:name).returns('3:').at_least(0)
     subtask_3a.expects(:name).returns('3a').at_least(0)
   end
 
+  # @return [void]
   def allow_subtask_names_queried
     allow_subtask_section_1_named
     allow_subtask_section_2_named
     allow_subtask_section_3_named
   end
 
+  # @return [void]
   def mock_by_section
     allow_subtask_names_queried
     allow_all_section_status_queried
@@ -140,6 +148,7 @@ class TestSubtasks < ClassTest
   #   assert_equal('More than one section named 1:', e.message)
   # end
 
+  # @return [void]
   def expect_raw_subtasks_pulled
     task.expects(:subtasks).with(**subtask_options).returns(raw_subtasks)
   end
@@ -158,6 +167,7 @@ class TestSubtasks < ClassTest
   #   refute_nil subtasks
   # end
 
+  # @return [void]
   def class_under_test
     Checkoff::Subtasks
   end

@@ -10,7 +10,7 @@ class TestTasks < BaseAsana
   extend Forwardable
 
   def_delegators :@mocks, :sections, :asana_task, :time_class, :date_class, :client, :workspaces,
-                 :portfolios, :projects
+                 :portfolios
 
   let_mock :mock_tasks, :modified_mock_tasks, :tasks_by_section,
            :unflattened_modified_mock_tasks, :task_hashes, :project_gid, :wrong_project,
@@ -30,16 +30,19 @@ class TestTasks < BaseAsana
            :dependency_1_full_task, :now,
            :dependent_1, :dependent_1_gid
 
+  # @return [void]
   def expect_now_pulled
     time_class.expects(:now).returns(now).at_least_once
   end
 
+  # @return [void]
   def expect_due_on_parsed(less_than_now:)
     date_class.expects(:parse).with(due_on_string).returns(due_on_date_obj).at_least(0)
     due_on_date_obj.expects(:to_time).returns(due_on_time_obj).at_least(0)
     due_on_time_obj.expects(:<).with(now).returns(less_than_now).at_least(0)
   end
 
+  # @return [void]
   def expect_start_on_parsed(less_than_now:)
     date_class.expects(:parse).with(start_on_string).returns(start_on_date_obj)
     start_on_date_obj.expects(:to_time).returns(start_on_time_obj).at_least(1)
@@ -47,6 +50,7 @@ class TestTasks < BaseAsana
     start_on_time_obj.expects(:<).with(now).returns(less_than_now)
   end
 
+  # @return [void]
   def expect_start_at_parsed(less_than_now:)
     time_class.expects(:parse).with(start_at_string).returns(start_at_time_obj)
     start_at_time_obj.expects(:localtime).returns(start_at_time_obj)
@@ -54,6 +58,7 @@ class TestTasks < BaseAsana
     start_at_time_obj.expects(:<).with(now).returns(less_than_now)
   end
 
+  # @return [void]
   def mock_task_ready_false_due_in_future_on_date
     expect_dependency_gids_pulled(task, [])
     expect_now_pulled
@@ -61,6 +66,7 @@ class TestTasks < BaseAsana
     expect_due_on_parsed(less_than_now: false)
   end
 
+  # @return [void]
   def test_task_ready_false_due_in_future_on_date
     tasks = get_test_object do
       mock_task_ready_false_due_in_future_on_date
@@ -77,6 +83,7 @@ class TestTasks < BaseAsana
     expect_due_on_parsed(less_than_now: false)
   end
 
+  # @return [void]
   def test_task_ready_true_start_in_past
     tasks = get_test_object do
       mock_task_ready_true_start_in_past
@@ -85,6 +92,7 @@ class TestTasks < BaseAsana
     assert(tasks.task_ready?(task))
   end
 
+  # @return [void]
   def mock_task_ready_true_start_in_past_time
     expect_dependency_gids_pulled(task, [])
     allow_task_due(start_at: start_at_string, due_on: due_on_string, due_at: nil)
@@ -93,6 +101,7 @@ class TestTasks < BaseAsana
     expect_due_on_parsed(less_than_now: false)
   end
 
+  # @return [void]
   def test_task_ready_true_start_in_past_time
     tasks = get_test_object do
       mock_task_ready_true_start_in_past_time
@@ -101,6 +110,7 @@ class TestTasks < BaseAsana
     assert(tasks.task_ready?(task))
   end
 
+  # @return [void]
   def expect_due_at_parsed(less_than_now:)
     time_class.expects(:parse).with(due_at_string).returns(due_at_time_obj)
     due_at_time_obj.expects(:localtime).returns(due_at_time_obj)
@@ -109,12 +119,14 @@ class TestTasks < BaseAsana
     due_at_time_obj.expects(:<).with(now).returns(less_than_now)
   end
 
+  # @return [void]
   def mock_task_ready_false_due_in_future_at_time
     expect_dependency_gids_pulled(task, [])
     allow_task_due(due_on: nil, due_at: due_at_string)
     expect_due_at_parsed(less_than_now: false)
   end
 
+  # @return [void]
   def test_task_ready_false_due_in_future_at_time
     tasks = get_test_object do
       mock_task_ready_false_due_in_future_at_time
@@ -123,10 +135,12 @@ class TestTasks < BaseAsana
     refute(tasks.task_ready?(task))
   end
 
+  # @return [void]
   def expect_dependency_gids_pulled(task, dependency_gids)
     task.expects(:instance_variable_get).with(:@dependencies).returns(dependency_gids)
   end
 
+  # @return [void]
   def test_task_ready_true_no_due_anything
     tasks = get_test_object do
       expect_dependency_gids_pulled(task, [])
@@ -136,19 +150,23 @@ class TestTasks < BaseAsana
     assert(tasks.task_ready?(task))
   end
 
+  # @return [void]
   def expect_asana_tasks_client_pulled
     client.expects(:tasks).returns(asana_tasks_client)
   end
 
+  # @return [void]
   def default_fields
     ['completed_at', 'due_at', 'due_on', 'memberships.project.gid', 'memberships.project.name',
      'memberships.section.name', 'name', 'start_at', 'start_on', 'tags']
   end
 
+  # @return [void]
   def fields_including(extra_fields)
     (default_fields + extra_fields).sort.uniq
   end
 
+  # @return [void]
   def expect_dependency_completion_pulled(dependency_gid, dependency_full_task,
                                           completed)
     expect_task_options_pulled
@@ -159,6 +177,7 @@ class TestTasks < BaseAsana
     dependency_full_task.expects(:completed_at).returns(completed ? 'some time' : nil)
   end
 
+  # @return [void]
   def mock_task_ready_false_dependency
     allow_task_due(due_on: nil, due_at: nil)
     expect_dependency_gids_pulled(task, [{ 'gid' => dependency_1_gid }])
@@ -174,6 +193,7 @@ class TestTasks < BaseAsana
     refute(tasks.task_ready?(task))
   end
 
+  # @return [void]
   def test_task_ready_false_dependency_cached
     tasks = get_test_object do
       allow_task_due(due_on: nil, due_at: nil)
@@ -186,6 +206,7 @@ class TestTasks < BaseAsana
     refute(tasks.task_ready?(task))
   end
 
+  # @return [void]
   def allow_task_due(start_on: nil, start_at: nil, due_on: nil, due_at: nil)
     allow_start_at_pulled(task, start_at)
     allow_start_on_pulled(task, start_on)
@@ -193,6 +214,7 @@ class TestTasks < BaseAsana
     allow_due_on_pulled(task, due_on)
   end
 
+  # @return [void]
   def allow_start_at_pulled(task, start_at)
     task.expects(:start_at).returns(start_at).at_least(0)
   end
@@ -201,6 +223,7 @@ class TestTasks < BaseAsana
     task.expects(:start_on).returns(start_on).at_least(0)
   end
 
+  # @return [void]
   def allow_due_at_pulled(task, due_at)
     task.expects(:due_at).returns(due_at).at_least(0)
   end
@@ -224,12 +247,14 @@ class TestTasks < BaseAsana
                                               name: task_name)
   end
 
+  # @return [void]
   def mock_add_task
     @mocks[:config].expects(:fetch).with(:default_assignee_gid)
       .returns(default_assignee_gid)
     expect_task_created
   end
 
+  # @return [void]
   def test_add_task
     tasks = get_test_object do
       mock_add_task
@@ -248,6 +273,7 @@ class TestTasks < BaseAsana
     task.expects(:name).returns(task_name)
   end
 
+  # @return [void]
   def expect_project_pulled
     projects.expects(:project_or_raise).with(workspace_name, project_name)
       .returns(project)
@@ -287,6 +313,7 @@ class TestTasks < BaseAsana
     expect_task_options_pulled
   end
 
+  # @return [void]
   def test_task_with_section
     tasks = get_test_object { mock_task_with_section }
     returned_task = tasks.task(workspace_name, project_name, task_name,
@@ -301,6 +328,7 @@ class TestTasks < BaseAsana
     expect_task_by_gid_pulled(extra_fields: ['dependencies'])
   end
 
+  # @return [void]
   def test_task
     tasks = get_test_object { mock_task }
     returned_task = tasks.task(workspace_name, project_name, task_name,
@@ -309,6 +337,7 @@ class TestTasks < BaseAsana
     assert_equal(task, returned_task)
   end
 
+  # @return [void]
   def test_in_portfolio_more_than_once
     tasks = get_test_object do
       portfolios.expects(:projects_in_portfolio).with('workspace_name', 'portfolio name')
@@ -329,11 +358,13 @@ class TestTasks < BaseAsana
     assert_equal(123, tasks.task_to_h(task))
   end
 
+  # @return [void]
   def expect_default_workspace_name_pulled
     workspaces.expects(:default_workspace).returns(default_workspace)
     default_workspace.expects(:name).returns('default workspace')
   end
 
+  # @return [void]
   def mock_in_portfolio_named_false_no_projects_no_memberships
     expect_default_workspace_name_pulled
     portfolios.expects(:projects_in_portfolio).with('default workspace', 'portfolio name')
@@ -341,6 +372,7 @@ class TestTasks < BaseAsana
     task.expects(:memberships).returns([])
   end
 
+  # @return [void]
   def test_in_portfolio_named_false_no_projects_no_memberships
     tasks = get_test_object do
       mock_in_portfolio_named_false_no_projects_no_memberships
@@ -349,6 +381,7 @@ class TestTasks < BaseAsana
     refute(tasks.in_portfolio_named?(task, 'portfolio name'))
   end
 
+  # @return [void]
   def mock_in_portfolio_named_false_no_projects_but_memberships
     expect_default_workspace_name_pulled
     portfolios.expects(:projects_in_portfolio).with('default workspace', 'portfolio name')
@@ -357,6 +390,7 @@ class TestTasks < BaseAsana
     task.expects(:memberships).returns(memberships)
   end
 
+  # @return [void]
   def test_in_portfolio_named_false_no_projects_but_memberships
     tasks = get_test_object do
       mock_in_portfolio_named_false_no_projects_but_memberships
@@ -365,6 +399,7 @@ class TestTasks < BaseAsana
     refute(tasks.in_portfolio_named?(task, 'portfolio name'))
   end
 
+  # @return [void]
   def mock_in_portfolio_named_false_projects_wrong_memberships
     expect_default_workspace_name_pulled
     portfolios.expects(:projects_in_portfolio).with('default workspace', 'portfolio name')
@@ -374,6 +409,7 @@ class TestTasks < BaseAsana
     task.expects(:memberships).returns(memberships)
   end
 
+  # @return [void]
   def test_in_portfolio_named_false_projects_wrong_memberships
     tasks = get_test_object do
       mock_in_portfolio_named_false_projects_wrong_memberships
@@ -382,6 +418,7 @@ class TestTasks < BaseAsana
     refute(tasks.in_portfolio_named?(task, 'portfolio name'))
   end
 
+  # @return [void]
   def test_date_or_time_field_by_name
     tasks = get_test_object do
       task.expects(:due_at).returns(due_at_string).at_least(1)
@@ -392,6 +429,7 @@ class TestTasks < BaseAsana
     assert_equal(due_at_time_obj, tasks.date_or_time_field_by_name(task, :due))
   end
 
+  # @return [void]
   def test_h_to_task
     tasks = get_test_object
     task = tasks.h_to_task({ 'name' => 'foo' })
@@ -399,6 +437,7 @@ class TestTasks < BaseAsana
     assert_equal('foo', task.name)
   end
 
+  # @return [void]
   def test_all_dependent_tasks_empty
     tasks = get_test_object do
       task.expects(:instance_variable_get).with(:@dependents).returns(nil)
@@ -407,6 +446,7 @@ class TestTasks < BaseAsana
     assert_empty(tasks.all_dependent_tasks(task))
   end
 
+  # @return [void]
   def test_all_dependent_tasks_one
     tasks = get_test_object do
       task.expects(:instance_variable_get).with(:@dependents).returns([{ 'gid' => dependent_1_gid }])
@@ -423,12 +463,14 @@ class TestTasks < BaseAsana
     assert_equal([dependent_1], tasks.all_dependent_tasks(task))
   end
 
+  # @return [void]
   def test_as_cache_key
     tasks = get_test_object
 
     assert_empty(tasks.as_cache_key)
   end
 
+  # @return [void]
   def class_under_test
     Checkoff::Tasks
   end

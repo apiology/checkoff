@@ -11,6 +11,7 @@ class TestAttachments < ClassTest
 
   let_mock :attachment_name, :resource, :parent_gid, :response
 
+  # @return [void]
   def mock_create_attachment_from_url(url)
     resource.expects(:gid).returns(parent_gid)
     body = {
@@ -28,6 +29,7 @@ class TestAttachments < ClassTest
     response.expects(:body).returns(attachment_body).at_least(1)
   end
 
+  # @return [void]
   def test_create_attachment_from_url
     url = 'http://example.com'
     attachments = get_test_object do
@@ -38,6 +40,7 @@ class TestAttachments < ClassTest
     assert_equal('bar', attachment.foo)
   end
 
+  # @return [void]
   def class_under_test
     Checkoff::Attachments
   end
@@ -51,6 +54,7 @@ class TestAttachments < ClassTest
     }
   end
 
+  # @return [void]
   def respond_like
     {}
   end

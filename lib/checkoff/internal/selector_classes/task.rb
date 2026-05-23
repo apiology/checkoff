@@ -1,4 +1,4 @@
-# typed: false
+# typed: true
 # frozen_string_literal: true
 
 require_relative 'task/function_evaluator'
@@ -18,12 +18,11 @@ module Checkoff
           false
         end
 
-        # @sg-ignore
         # @param task [Asana::Resources::Task]
         # @return [Boolean]
         def evaluate(task)
           # @type [Hash{'unwrapped' => Hash}]
-          task_data = @tasks.task_to_h(task)
+          task_data = tasks.task_to_h(task)
           # @type [Hash{'membership_by_project_name' => Hash}]
           unwrapped = task_data.fetch('unwrapped')
           # @type [Array]
@@ -43,14 +42,14 @@ module Checkoff
           false
         end
 
-        # @sg-ignore
         # @param task [Asana::Resources::Task]
         # @param section_name_prefix [String]
         # @return [Boolean]
+        # @sg-ignore
         def evaluate(task, section_name_prefix)
-          task_data = @tasks.task_to_h(task)
+          task_data = tasks.task_to_h(task)
           task_data.fetch('unwrapped').fetch('membership_by_section_name').keys.any? do |section_name|
-            section_name.start_with? section_name_prefix
+            String(section_name).start_with?(section_name_prefix)
           end
         end
       end
@@ -66,14 +65,14 @@ module Checkoff
           false
         end
 
-        # @sg-ignore
         # @param task [Asana::Resources::Task]
         # @param section_name [String]
         # @return [Boolean]
+        # @sg-ignore
         def evaluate(task, section_name)
-          task_data = @tasks.task_to_h(task)
+          task_data = tasks.task_to_h(task)
           task_data.fetch('unwrapped').fetch('membership_by_section_name').keys.any? do |actual_section_name|
-            actual_section_name == section_name
+            String(actual_section_name) == String(section_name)
           end
         end
       end
@@ -89,7 +88,6 @@ module Checkoff
           false
         end
 
-        # @sg-ignore
         # @param task [Asana::Resources::Task]
         # @param project_name [String]
         # @return [Boolean]
@@ -112,12 +110,11 @@ module Checkoff
           false
         end
 
-        # @sg-ignore
         # @param task [Asana::Resources::Task]
         # @param portfolio_name [String]
         # @return [Boolean]
         def evaluate(task, portfolio_name)
-          @tasks.in_portfolio_more_than_once?(task, portfolio_name)
+          tasks.in_portfolio_more_than_once?(task, portfolio_name)
         end
       end
 
@@ -132,10 +129,10 @@ module Checkoff
           false
         end
 
-        # @sg-ignore
         # @param task [Asana::Resources::Task]
         # @param tag_name [String]
         # @return [Boolean]
+        # @sg-ignore
         def evaluate(task, tag_name)
           task.tags.map(&:name).include? tag_name
         end
@@ -160,7 +157,7 @@ module Checkoff
         # @return [Boolean]
         # rubocop:disable Style/OptionalBooleanParameter
         def evaluate(task, period = :now_or_before, ignore_dependencies = false)
-          @tasks.task_ready?(task, period:, ignore_dependencies:)
+          tasks.task_ready?(task, period:, ignore_dependencies:)
         end
         # rubocop:enable Style/OptionalBooleanParameter
       end
@@ -181,7 +178,7 @@ module Checkoff
         # @param period [Symbol,Array<Symbol>] See Checkoff::Timing#in_period?
         # @return [Boolean]
         def evaluate(task, field_name, period)
-          @tasks.in_period?(task, field_name, period)
+          tasks.in_period?(task, field_name, period)
         end
       end
 
@@ -206,7 +203,6 @@ module Checkoff
           fn?(selector, FUNCTION_NAME)
         end
 
-        # @sg-ignore
         # @param task [Asana::Resources::Task]
         # @return [Boolean]
         def evaluate(task)
@@ -235,11 +231,13 @@ module Checkoff
 
           # @type [Array<Asana::Resources::Story>]
           stories = task.stories(per_page: 100).to_a.reject do |story|
+            # @sg-ignore
             excluding_resource_subtypes.include? story.resource_subtype
           end
           return true if stories.empty? # no stories == infinitely old!
 
           last_story = stories.last
+          # @sg-ignore
           last_story_created_at = Time.parse(last_story.created_at)
           n_days_ago = Time.now - (num_days * 24 * 60 * 60)
           last_story_created_at < n_days_ago
@@ -262,7 +260,6 @@ module Checkoff
           start_on = Date.parse(task.start_on) unless task.start_on.nil?
           due_on = Date.parse(task.due_on) unless task.due_on.nil?
           allocated_hours = 8.0
-          # @sg-ignore
           allocated_hours = (due_on - start_on + 1).to_i * 8.0 if start_on && due_on
           allocated_hours
         end
@@ -270,11 +267,10 @@ module Checkoff
         # @param task [Asana::Resources::Task]
         # @return [Boolean]
         def evaluate(task)
-          custom_field = @custom_fields.resource_custom_field_by_name(task, 'Estimated time')
+          custom_field = custom_fields.resource_custom_field_by_name(task, 'Estimated time')
 
           return false if custom_field.nil?
 
-          # @sg-ignore
           # @type [Integer, nil]
           estimate_minutes = custom_field.fetch('number_value')
 
@@ -303,8 +299,8 @@ module Checkoff
         #
         # @return [Boolean]
         def evaluate(task, limit_to_portfolio_gid: nil)
-          @timelines.task_dependent_on_previous_section_last_milestone?(task,
-                                                                        limit_to_portfolio_gid:)
+          timelines.task_dependent_on_previous_section_last_milestone?(task,
+                                                                       limit_to_portfolio_gid:)
         end
       end
 
@@ -321,7 +317,7 @@ module Checkoff
         #
         # @return [Boolean]
         def evaluate(task, portfolio_name)
-          @tasks.in_portfolio_named?(task, portfolio_name)
+          tasks.in_portfolio_named?(task, portfolio_name)
         end
       end
 
@@ -342,8 +338,8 @@ module Checkoff
         #
         # @return [Boolean]
         def evaluate(task, limit_to_portfolio_name = nil)
-          !@timelines.last_task_milestone_depends_on_this_task?(task,
-                                                                limit_to_portfolio_name:)
+          !timelines.last_task_milestone_depends_on_this_task?(task,
+                                                               limit_to_portfolio_name:)
         end
       end
 
@@ -362,6 +358,7 @@ module Checkoff
         # @param task [Asana::Resources::Task]
         #
         # @return [Boolean]
+        # @sg-ignore
         def evaluate(task)
           raise 'Please add resource_subtype to extra_fields' if task.resource_subtype.nil?
 
@@ -386,8 +383,8 @@ module Checkoff
         #
         # @return [Boolean]
         def evaluate(task, limit_to_portfolio_name = nil)
-          !@timelines.any_milestone_depends_on_this_task?(task,
-                                                          limit_to_portfolio_name:)
+          !timelines.any_milestone_depends_on_this_task?(task,
+                                                         limit_to_portfolio_name:)
         end
       end
     end

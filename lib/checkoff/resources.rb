@@ -113,10 +113,8 @@ module Checkoff
     class << self
       # @return [void]
       def run
-        # # @sg-ignore
         # # @type [String]
         # workspace_name = ARGV[0] || raise('Please pass workspace name as first argument')
-        # # @sg-ignore
         # # @type [String]
         # resource_name = ARGV[1] || raise('Please pass resource name as second argument')
         # resources = Checkoff::Resources.new

@@ -49,7 +49,6 @@ module Checkoff
     # @param limit_to_portfolio_gid [String, nil]
     def task_dependent_on_previous_section_last_milestone?(task, limit_to_portfolio_gid: nil)
       task_data = @tasks.task_to_h(task)
-      # @sg-ignore
       # @type [Array<Hash{String => Hash{String => String}}>]
       memberships_data = task_data.fetch('memberships')
       memberships_data.all? do |membership_data|
@@ -57,6 +56,7 @@ module Checkoff
         section_data = membership_data.fetch('section')
         section_gid = section_data.fetch('gid')
         section = @sections.section_by_gid(section_gid)
+        # @sg-ignore
         task_data_dependent_on_previous_section_last_milestone?(task_data, section)
       end
     end
@@ -88,6 +88,8 @@ module Checkoff
 
         all_dependent_task_gids ||= @tasks.all_dependent_tasks(task).map(&:gid)
 
+        # @sg-ignore
+
         all_dependent_task_gids.include? last_milestone.gid
       end
     end
@@ -116,6 +118,7 @@ module Checkoff
             dependent_task.resource_subtype == 'milestone'
           end
 
+        # @sg-ignore
         all_dependent_milestones.any? do |milestone|
           milestone.memberships.any? do |milestone_membership_data|
             milestone_membership_data.fetch('project').fetch('gid') == project_gid
@@ -148,7 +151,6 @@ module Checkoff
       previous_section_last_milestone = last_milestone_in_section(previous_section.gid)
       return true if previous_section_last_milestone.nil?
 
-      # @sg-ignore
       # @type [Array<Hash{String => String}>]
       dependencies = task_data.fetch('dependencies')
       return false if dependencies.empty?
@@ -167,10 +169,8 @@ module Checkoff
     class << self
       # @return [void]
       def run
-        # @sg-ignore
         # @type [String]
         # workspace_name = ARGV[0] || raise('Please pass workspace name as first argument')
-        # @sg-ignore
         # @type [String]
         # timeline_name = ARGV[1] || raise('Please pass timeline name as second argument')
         # timelines = Checkoff::Timelines.new

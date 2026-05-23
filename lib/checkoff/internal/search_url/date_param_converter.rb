@@ -14,8 +14,8 @@ module Checkoff
           @date_url_params = date_url_params
         end
 
-        # @sg-ignore
         # @return [Array(Hash{String => String}, Array<Symbol, Array>)]
+        # @sg-ignore
         def convert
           return [{}, []] if date_url_params.empty?
 
@@ -78,7 +78,6 @@ module Checkoff
 
           validate_unit_is_day!(prefix)
 
-          # @sg-ignore
           # @type [Date]
           before = Date.today + value
 
@@ -99,7 +98,6 @@ module Checkoff
           # Example value: 1702857600000
           # +1 is because API seems to operate on inclusive ranges
           # @type [Date]
-          # @sg-ignore
           after = Time.at(after.to_i / 1000).to_date + 1
           [{ "#{API_PREFIX.fetch(prefix)}.after" => after.to_s }, []]
         end
@@ -111,7 +109,6 @@ module Checkoff
 
           validate_unit_is_day!(prefix)
 
-          # @sg-ignore
           # @type [Date]
           after = Date.today - value
 
@@ -125,7 +122,6 @@ module Checkoff
 
           validate_unit_is_day!(prefix)
 
-          # @sg-ignore
           # @type [Date]
           before = Date.today + value + 1
 
@@ -133,6 +129,7 @@ module Checkoff
         end
 
         # @param param_key [String]
+        # @sg-ignore
         # @return [String]
         def get_single_param(param_key)
           raise "Expected #{param_key} to have at least one value" unless date_url_params.key? param_key

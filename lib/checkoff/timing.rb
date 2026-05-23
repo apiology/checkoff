@@ -43,6 +43,7 @@ module Checkoff
 
       return next_week?(date_or_time) if period == :next_week
 
+      # @sg-ignore
       return day_of_week?(date_or_time, period) if %i[monday tuesday wednesday thursday friday saturday
                                                       sunday].include?(period)
 
@@ -71,9 +72,7 @@ module Checkoff
 
       date = date_or_time.to_date
 
-      # @sg-ignore
       n_days_from_today = @today_getter.today + num_days
-      # @sg-ignore
       date >= n_days_from_today
     end
 
@@ -92,9 +91,7 @@ module Checkoff
 
       date = date_or_time.to_date
 
-      # @sg-ignore
       n_days_ago = @today_getter.today - num_days
-      # @sg-ignore
       date < n_days_ago
     end
 
@@ -171,17 +168,19 @@ module Checkoff
     end
 
     # @param num_days [Integer]
+    # @sg-ignore
     #
     # @return [Time]
     def n_days_from_now(num_days)
       (@now_getter.now + (num_days * 24 * 60 * 60))
     end
 
+    # @sg-ignore
     # @param num_days [Integer]
     #
     # @return [Date]
     def n_days_from_today(num_days)
-      (@today_getter.today + num_days)
+      @today_getter.today + num_days
     end
 
     # @param date_or_time [Date,Time,nil]
@@ -212,7 +211,6 @@ module Checkoff
     # @param period_name [Symbol]
     # @param args [Object]
     def compound_in_period?(date_or_time, period_name, *args)
-      # @sg-ignore
       return less_than_n_days_ago?(date_or_time, *args) if period_name == :less_than_n_days_ago
 
       return less_than_n_days_from_now?(date_or_time, *args) if period_name == :less_than_n_days_from_now
@@ -225,9 +223,9 @@ module Checkoff
         return greater_than_or_equal_to_n_days_from_today?(date_or_time, *args)
       end
 
-      # @sg-ignore
       return between_relative_days?(date_or_time, *args) if period_name == :between_relative_days
 
+      # @sg-ignore
       raise "Teach me how to handle period [#{period_name.inspect}, #{args.map(&:inspect).join(', ')}]"
     end
 

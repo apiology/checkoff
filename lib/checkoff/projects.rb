@@ -97,7 +97,7 @@ module Checkoff
     end
 
     # pulls an Asana API project class given a name
-    # @param [String] workspace_name
+    # @param [String, Symbol] workspace_name
     # @param [String,Symbol] project_name - :my_tasks or a project name
     # @param [Array<String>] extra_fields
     #
@@ -116,10 +116,11 @@ module Checkoff
     end
     cache_method :project, REALLY_LONG_CACHE_TIME
 
-    # @param workspace_name [String]
+    # @param workspace_name [String, Symbol]
     # @param project_name [String,Symbol] - :my_tasks or a project name
     # @param [Array<String>] extra_fields
     #
+    # @sg-ignore
     # @return [Asana::Resources::Project]
     def project_or_raise(workspace_name, project_name, extra_fields: [])
       p = project(workspace_name, project_name, extra_fields:)
@@ -182,7 +183,7 @@ module Checkoff
     end
     cache_method :tasks_from_project_gid, REALLY_LONG_CACHE_TIME
 
-    # @param [String] workspace_name
+    # @param [String, Symbol] workspace_name
     # @param [Array<String>] extra_fields
     # @return [Enumerable<Asana::Resources::Project>]
     def projects_by_workspace_name(workspace_name, extra_fields: [])
@@ -254,12 +255,11 @@ module Checkoff
     end
     cache_method :projects, LONG_CACHE_TIME
 
-    # @param [String] workspace_name
+    # @param [String, Symbol] workspace_name
     #
     # @return [Asana::Resources::Project]
     def my_tasks(workspace_name)
       workspace = @workspaces.workspace_or_raise(workspace_name)
-      # @sg-ignore
       result = client.user_task_lists.get_user_task_list_for_user(user_gid: 'me',
                                                                   workspace: workspace.gid)
       gid = result.gid

@@ -5,6 +5,7 @@ require 'stringio'
 require_relative '../test_helper'
 
 class TestLogging < Minitest::Test
+  # @return [void]
   def test_logger_defaults_without_rails
     with_removed_rails do
       logger_owner = build_logger_owner
@@ -16,6 +17,7 @@ class TestLogging < Minitest::Test
     end
   end
 
+  # @return [void]
   def test_logger_uses_rails_logger_when_available
     rails_logger = Logger.new(StringIO.new)
     rails_module = Module.new
@@ -28,6 +30,7 @@ class TestLogging < Minitest::Test
     end
   end
 
+  # @return [void]
   def test_logger_falls_back_when_rails_has_no_logger
     with_temporary_rails(Module.new) do
       logger_owner = build_logger_owner
@@ -38,12 +41,14 @@ class TestLogging < Minitest::Test
 
   private
 
+  # @return [void]
   def build_logger_owner
     Class.new do
       include Logging
     end.new
   end
 
+  # @return [void]
   def with_removed_rails
     had_rails = Object.const_defined?(:Rails)
     original_rails = Object.const_get(:Rails) if had_rails
@@ -54,6 +59,7 @@ class TestLogging < Minitest::Test
     Object.const_set(:Rails, original_rails) if had_rails
   end
 
+  # @return [void]
   def with_temporary_rails(rails_const)
     with_removed_rails do
       Object.const_set(:Rails, rails_const)

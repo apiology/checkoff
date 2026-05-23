@@ -14,6 +14,7 @@ class TestTimelines < ClassTest
            :milestone, :milestone_gid, :task_gid, :portfolio_name, :default_workspace,
            :default_workspace_name, :project_a_gid, :project_a
 
+  # @return [void]
   def test_task_dependent_on_previous_section_last_milestone_no_memberships
     timelines = get_test_object do
       expect_task_data_created(task, { 'memberships' => [] })
@@ -22,6 +23,7 @@ class TestTimelines < ClassTest
     assert(timelines.task_dependent_on_previous_section_last_milestone?(task, limit_to_portfolio_gid: nil))
   end
 
+  # @return [void]
   def mock_task_dependent_on_previous_section_last_milestone_false_no_dependencies
     memberships = [
       { 'section' => { 'gid' => section_2_gid } },
@@ -38,6 +40,7 @@ class TestTimelines < ClassTest
     expect_milestone_queried
   end
 
+  # @return [void]
   def test_task_dependent_on_previous_section_last_milestone_false_no_dependencies_
     timelines = get_test_object do
       mock_task_dependent_on_previous_section_last_milestone_false_no_dependencies
@@ -46,6 +49,7 @@ class TestTimelines < ClassTest
     refute(timelines.task_dependent_on_previous_section_last_milestone?(task, limit_to_portfolio_gid: nil))
   end
 
+  # @return [void]
   def expect_task_data_created(task, task_data)
     tasks.expects(:task_to_h).with(task).returns(task_data)
   end
@@ -54,19 +58,23 @@ class TestTimelines < ClassTest
     sections.expects(:section_by_gid).with(section_2_gid).returns(section_2)
   end
 
+  # @return [void]
   def expect_section_2_previous_section_called
     sections.expects(:previous_section).with(section_2).returns(section_1)
   end
 
+  # @return [void]
   def expect_section_1_gid_pulled
     section_1.expects(:gid).returns(section_1_gid)
   end
 
+  # @return [void]
   def expect_no_section_1_tasks
     sections.expects(:tasks_by_section_gid).with(section_1_gid,
                                                  extra_fields: ['resource_subtype']).returns([])
   end
 
+  # @return [void]
   def mock_task_dependent_on_previous_section_last_milestone_true_no_tasks
     memberships = [
       { 'section' => { 'gid' => section_2_gid } },
@@ -84,6 +92,7 @@ class TestTimelines < ClassTest
     expect_no_section_1_tasks
   end
 
+  # @return [void]
   def test_task_dependent_on_previous_section_last_milestone_true_no_tasks
     timelines = get_test_object do
       mock_task_dependent_on_previous_section_last_milestone_true_no_tasks
@@ -92,17 +101,20 @@ class TestTimelines < ClassTest
     assert(timelines.task_dependent_on_previous_section_last_milestone?(task, limit_to_portfolio_gid: nil))
   end
 
+  # @return [void]
   def expect_section_1_tasks_pulled
     sections.expects(:tasks_by_section_gid)
       .with(section_1_gid, extra_fields: ['resource_subtype'])
       .returns([milestone])
   end
 
+  # @return [void]
   def expect_milestone_queried
     milestone.expects(:resource_subtype).returns('milestone')
     milestone.expects(:gid).returns(milestone_gid).at_least(0)
   end
 
+  # @return [void]
   def mock_task_dependent_on_previous_section_last_milestone_true
     memberships = [
       { 'section' => { 'gid' => section_2_gid } },
@@ -129,6 +141,7 @@ class TestTimelines < ClassTest
     assert(timelines.task_dependent_on_previous_section_last_milestone?(task, limit_to_portfolio_gid: nil))
   end
 
+  # @return [void]
   def mock_task_dependent_on_previous_section_last_milestone_false_no_previous_section
     memberships = [
       { 'section' => { 'gid' => section_2_gid } },
@@ -144,6 +157,7 @@ class TestTimelines < ClassTest
     sections.expects(:previous_section).with(section_2).returns(nil)
   end
 
+  # @return [void]
   def test_task_dependent_on_previous_section_last_milestone_false_no_previous_section
     timelines = get_test_object do
       mock_task_dependent_on_previous_section_last_milestone_false_no_previous_section
@@ -152,6 +166,7 @@ class TestTimelines < ClassTest
     refute(timelines.task_dependent_on_previous_section_last_milestone?(task, limit_to_portfolio_gid: nil))
   end
 
+  # @return [void]
   def test_last_task_milestone_depends_on_this_task_no_memberships
     timelines = get_test_object do
       task.expects(:memberships).returns([])
@@ -164,25 +179,30 @@ class TestTimelines < ClassTest
     tasks.expects(:all_dependent_tasks).with(task).returns(dependents)
   end
 
+  # @return [void]
   def expect_memberships_pulled(task, memberships)
     task.expects(:memberships).returns(memberships)
   end
 
+  # @return [void]
   def expect_tasks_by_section_gid_pulled(tasks)
     sections.expects(:tasks_by_section_gid)
       .with(section_1_gid, extra_fields: ['resource_subtype'])
       .returns(tasks)
   end
 
+  # @return [void]
   def expect_milestone_details_pulled
     milestone.expects(:resource_subtype).returns('milestone')
     milestone.expects(:gid).returns(milestone_gid).at_least(1)
   end
 
+  # @return [void]
   def expect_task_gid_pulled
     task.expects(:gid).returns(task_gid)
   end
 
+  # @return [void]
   def test_last_task_milestone_depends_on_this_task_false
     timelines = get_test_object do
       expect_all_dependent_tasks_pulled(task, [])
@@ -202,6 +222,7 @@ class TestTimelines < ClassTest
     refute(timelines.last_task_milestone_depends_on_this_task?(task))
   end
 
+  # @return [void]
   def test_last_task_milestone_depends_on_this_task_no_milestone
     timelines = get_test_object do
       # expect_all_dependent_tasks_pulled(task, [])
@@ -219,6 +240,7 @@ class TestTimelines < ClassTest
     refute(timelines.last_task_milestone_depends_on_this_task?(task))
   end
 
+  # @return [void]
   def test_last_task_milestone_depends_on_this_task_is_last_milestone
     timelines = get_test_object do
       # expect_all_dependent_tasks_pulled(milestone, [])
@@ -237,6 +259,7 @@ class TestTimelines < ClassTest
     assert(timelines.last_task_milestone_depends_on_this_task?(milestone))
   end
 
+  # @return [void]
   def export_portfolio_projects_pulled(projects)
     workspaces.expects(:default_workspace).returns(default_workspace)
     default_workspace.expects(:name).returns(default_workspace_name)
@@ -244,6 +267,7 @@ class TestTimelines < ClassTest
                                                     portfolio_name).returns(projects)
   end
 
+  # @return [void]
   def test_last_task_milestone_depends_on_this_task_is_last_milestone_limited_to_portfolio_no_projects
     timelines = get_test_object do
       # expect_all_dependent_tasks_pulled(milestone, [])
@@ -268,6 +292,7 @@ class TestTimelines < ClassTest
                                                                limit_to_portfolio_name: portfolio_name))
   end
 
+  # @return [void]
   def mock_last_task_milestone_depends_on_this_task_is_last_milestone_limited_to_portfolio
     memberships = [
       {
@@ -283,6 +308,7 @@ class TestTimelines < ClassTest
     export_portfolio_projects_pulled([])
   end
 
+  # @return [void]
   def test_last_task_milestone_depends_on_this_task_is_last_milestone_limited_to_portfolio
     timelines = get_test_object do
       mock_last_task_milestone_depends_on_this_task_is_last_milestone_limited_to_portfolio
@@ -292,12 +318,14 @@ class TestTimelines < ClassTest
                                                                limit_to_portfolio_name: portfolio_name))
   end
 
+  # @return [void]
   def test_init
     timelines = get_test_object
 
     refute_nil(timelines)
   end
 
+  # @return [void]
   def class_under_test
     Checkoff::Timelines
   end
