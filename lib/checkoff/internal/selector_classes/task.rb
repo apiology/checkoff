@@ -72,9 +72,7 @@ module Checkoff
         # @return [Boolean]
         def evaluate(task, section_name)
           task_data = @tasks.task_to_h(task)
-          task_data.fetch('unwrapped').fetch('membership_by_section_name').keys.any? do |actual_section_name|
-            actual_section_name == section_name
-          end
+          task_data.fetch('unwrapped').fetch('membership_by_section_name').keys.any?(section_name)
         end
       end
 
