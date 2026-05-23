@@ -2165,12 +2165,12 @@ module Overcommit::Utils
     #
     # @return [true, false]
     #
-    # source://overcommit//lib/overcommit/utils.rb#268
+    # source://overcommit//lib/overcommit/utils.rb#240
     def broken_symlink?(file); end
 
     # Converts a string containing underscores/hyphens/spaces into CamelCase.
     #
-    # source://overcommit//lib/overcommit/utils.rb#97
+    # source://overcommit//lib/overcommit/utils.rb#98
     def camel_case(str); end
 
     # Convert a glob pattern to an absolute path glob pattern rooted from the
@@ -2179,7 +2179,7 @@ module Overcommit::Utils
     # @param glob [String]
     # @return [String]
     #
-    # source://overcommit//lib/overcommit/utils.rb#279
+    # source://overcommit//lib/overcommit/utils.rb#251
     def convert_glob_to_absolute(glob); end
 
     # Execute a command in a subprocess, capturing exit status and output from
@@ -2203,7 +2203,7 @@ module Overcommit::Utils
     # @param options [Hash]
     # @return [Overcommit::Subprocess::Result] status, stdout, and stderr
     #
-    # source://overcommit//lib/overcommit/utils.rb#175
+    # source://overcommit//lib/overcommit/utils.rb#179
     def execute(initial_args, options = T.unsafe(nil)); end
 
     # Execute a command in a subprocess, returning immediately.
@@ -2214,31 +2214,31 @@ module Overcommit::Utils
     # @param args [Array<String>]
     # @return [ChildProcess] detached process spawned in the background
     #
-    # source://overcommit//lib/overcommit/utils.rb#204
+    # source://overcommit//lib/overcommit/utils.rb#208
     def execute_in_background(args); end
 
     # Returns an absolute path to the .git directory for a repo.
     #
     # @return [String]
     #
-    # source://overcommit//lib/overcommit/utils.rb#61
+    # source://overcommit//lib/overcommit/utils.rb#62
     def git_dir; end
 
     # @param cmd [String]
     # @return [true, false] whether a command can be found given the current
     #   environment path.
     #
-    # source://overcommit//lib/overcommit/utils.rb#119
+    # source://overcommit//lib/overcommit/utils.rb#120
     def in_path?(cmd); end
 
     # @return [Overcommit::Logger] logger with which to send debug output
     #
-    # source://overcommit//lib/overcommit/utils.rb#32
+    # source://overcommit//lib/overcommit/utils.rb#33
     def log; end
 
     # @return [Overcommit::Logger] logger with which to send debug output
     #
-    # source://overcommit//lib/overcommit/utils.rb#32
+    # source://overcommit//lib/overcommit/utils.rb#33
     def log=(_arg0); end
 
     # Return whether a pattern matches the given path.
@@ -2247,21 +2247,19 @@ module Overcommit::Utils
     # @param path [String]
     # @return [Boolean]
     #
-    # source://overcommit//lib/overcommit/utils.rb#287
+    # source://overcommit//lib/overcommit/utils.rb#259
     def matches_path?(pattern, path); end
 
     # Return the parent command that triggered this hook run
     #
     # @return [String, nil] the command as a string, if a parent exists.
     #
-    # source://overcommit//lib/overcommit/utils.rb#138
+    # source://overcommit//lib/overcommit/utils.rb#139
     def parent_command; end
 
     # Return the number of processors used by the OS for process scheduling.
     #
-    # @see https://github.com/grosser/parallel/blob/v1.6.1/lib/parallel/processor_count.rb#L17-L51
-    #
-    # source://overcommit//lib/overcommit/utils.rb#217
+    # source://overcommit//lib/overcommit/utils.rb#219
     def processor_count; end
 
     # Returns an absolute path to the root of the repository.
@@ -2272,16 +2270,16 @@ module Overcommit::Utils
     #
     # @return [String]
     #
-    # source://overcommit//lib/overcommit/utils.rb#45
+    # source://overcommit//lib/overcommit/utils.rb#46
     def repo_root; end
 
-    # source://overcommit//lib/overcommit/utils.rb#34
+    # source://overcommit//lib/overcommit/utils.rb#35
     def script_path(script); end
 
     # Shamelessly stolen from:
     # stackoverflow.com/questions/1509915/converting-camel-case-to-underscore-case-in-ruby
     #
-    # source://overcommit//lib/overcommit/utils.rb#88
+    # source://overcommit//lib/overcommit/utils.rb#89
     def snake_case(str); end
 
     # Remove ANSI escape sequences from a string.
@@ -2291,23 +2289,23 @@ module Overcommit::Utils
     # @param text [String]
     # @return [String]
     #
-    # source://overcommit//lib/overcommit/utils.rb#82
+    # source://overcommit//lib/overcommit/utils.rb#83
     def strip_color_codes(text); end
 
     # Returns a list of supported hook classes (PreCommit, CommitMsg, etc.)
     #
-    # source://overcommit//lib/overcommit/utils.rb#110
+    # source://overcommit//lib/overcommit/utils.rb#111
     def supported_hook_type_classes; end
 
     # Returns a list of supported hook types (pre-commit, commit-msg, etc.)
     #
-    # source://overcommit//lib/overcommit/utils.rb#102
+    # source://overcommit//lib/overcommit/utils.rb#103
     def supported_hook_types; end
 
     # Calls a block of code with a modified set of environment variables,
     # restoring them once the code has executed.
     #
-    # source://overcommit//lib/overcommit/utils.rb#253
+    # source://overcommit//lib/overcommit/utils.rb#225
     def with_environment(env); end
 
     private
@@ -2320,7 +2318,7 @@ module Overcommit::Utils
     #
     # @param args [Array<String>]
     #
-    # source://overcommit//lib/overcommit/utils.rb#304
+    # source://overcommit//lib/overcommit/utils.rb#276
     def debug(*args); end
   end
 end
@@ -2376,24 +2374,24 @@ end
 #
 # This allows us to execute code based on the git version.
 #
-# source://overcommit//lib/overcommit/utils.rb#15
+# source://overcommit//lib/overcommit/utils.rb#16
 class Overcommit::Utils::Version < ::Gem::Version
-  # source://overcommit//lib/overcommit/utils.rb#19
+  # source://overcommit//lib/overcommit/utils.rb#20
   def !=(version); end
 
-  # source://overcommit//lib/overcommit/utils.rb#19
+  # source://overcommit//lib/overcommit/utils.rb#20
   def <(version); end
 
-  # source://overcommit//lib/overcommit/utils.rb#19
+  # source://overcommit//lib/overcommit/utils.rb#20
   def <=(version); end
 
-  # source://overcommit//lib/overcommit/utils.rb#19
+  # source://overcommit//lib/overcommit/utils.rb#20
   def ==(version); end
 
-  # source://overcommit//lib/overcommit/utils.rb#19
+  # source://overcommit//lib/overcommit/utils.rb#20
   def >(version); end
 
-  # source://overcommit//lib/overcommit/utils.rb#19
+  # source://overcommit//lib/overcommit/utils.rb#20
   def >=(version); end
 end
 
