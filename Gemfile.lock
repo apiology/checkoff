@@ -43,7 +43,7 @@ GIT
 PATH
   remote: .
   specs:
-    checkoff (0.244.0)
+    checkoff (0.245.0)
       activesupport
       asana (> 0.10.0)
       cache_method
@@ -75,7 +75,7 @@ GEM
     base64 (0.3.0)
     benchmark (0.5.0)
     bigdecimal (4.1.2)
-    brakeman (7.0.2)
+    brakeman (8.0.4)
       racc
     builder (3.3.0)
     bump (0.10.0)
