@@ -55,12 +55,12 @@ commands:
       - restore_cache:
           name: Restore ruby-types cache
           keys:
-            - ruby-types-v4-{{ checksum "checkoff.gemspec" }}-{{ checksum "Gemfile" }}-{{ checksum "Gemfile.lock" }}-{{ checksum "Makefile" }}-{{ checksum ".circleci/config.yml" }}- # yamllint disable-line rule:line-length
-            - ruby-types-v4-{{ checksum "checkoff.gemspec" }}-{{ checksum "Gemfile" }}-{{ checksum "Gemfile.lock" }}-{{ checksum "Makefile" }}- # yamllint disable-line rule:line-length
-            - ruby-types-v4-{{ checksum "checkoff.gemspec" }}-{{ checksum "Gemfile" }}-{{ checksum "Gemfile.lock" }}- # yamllint disable-line rule:line-length
-            - ruby-types-v4-{{ checksum "checkoff.gemspec" }}-{{ checksum "Gemfile" }}-
-            - ruby-types-v4-{{ checksum "checkoff.gemspec" }}-
-            - ruby-types-v4-
+            - ruby-types-v5-{{ checksum "checkoff.gemspec" }}-{{ checksum "Gemfile" }}-{{ checksum "Gemfile.lock" }}-{{ checksum "Makefile" }}-{{ checksum ".circleci/config.yml" }}- # yamllint disable-line rule:line-length
+            - ruby-types-v5-{{ checksum "checkoff.gemspec" }}-{{ checksum "Gemfile" }}-{{ checksum "Gemfile.lock" }}-{{ checksum "Makefile" }}- # yamllint disable-line rule:line-length
+            - ruby-types-v5-{{ checksum "checkoff.gemspec" }}-{{ checksum "Gemfile" }}-{{ checksum "Gemfile.lock" }}- # yamllint disable-line rule:line-length
+            - ruby-types-v5-{{ checksum "checkoff.gemspec" }}-{{ checksum "Gemfile" }}-
+            - ruby-types-v5-{{ checksum "checkoff.gemspec" }}-
+            - ruby-types-v5-
       - restore_cache:
           name: Restore pyenv cache
           keys:
@@ -69,6 +69,7 @@ commands:
             - pyenv-
       - run:
           name: Initialize packages
+          no_output_timeout: 30m
           command: |
             # measuring slows down the script - only enable when you
             # want to debug where this is spending time
@@ -244,15 +245,11 @@ jobs:
           path: rbi/checkoff.rbi
       - save_cache:
           name: 'Save ruby-types cache'
-          key: ruby-types-v4-{{ checksum "checkoff.gemspec" }}-{{ checksum "Gemfile" }}-{{ checksum "Gemfile.lock" }}-{{ checksum "Makefile" }}-{{ checksum ".circleci/config.yml" }}-{{ checksum ".ruby-version" }}-{{ checksum "rbi/checkoff.rbi" }}  # yamllint disable-line rule:line-length
+          key: ruby-types-v5-{{ checksum "checkoff.gemspec" }}-{{ checksum "Gemfile" }}-{{ checksum "Gemfile.lock" }}-{{ checksum "Makefile" }}-{{ checksum ".circleci/config.yml" }}-{{ checksum ".ruby-version" }}-{{ checksum "rbi/checkoff.rbi" }}  # yamllint disable-line rule:line-length
           paths:
-            - ".yardoc"
-            - 'yarddoc'
-            - "/home/circleci/.cache/solargraph"
             - "/home/circleci/.sorbet-cache"
             - "/home/circleci/.cache/sorbet"
             - "types.installed"
-            - "yardoc.installed"
             - "tapioca.installed"
             - "sorbet/machine_specific_config"
             - "rbi/checkoff.rbi"
