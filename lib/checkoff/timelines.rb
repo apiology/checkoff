@@ -65,7 +65,6 @@ module Checkoff
     # @param task [Asana::Resources::Task]
     # @param limit_to_portfolio_name [String, nil]
     # @return [Boolean]
-    # @sg-ignore
     def last_task_milestone_depends_on_this_task?(task, limit_to_portfolio_name: nil)
       unless limit_to_portfolio_name.nil?
         limit_to_projects = @portfolios.projects_in_portfolio(@workspaces.default_workspace.name,
@@ -75,13 +74,10 @@ module Checkoff
       all_dependent_task_gids = nil
       task.memberships.all? do |membership_data|
         unless limit_to_portfolio_name.nil?
-          # @sg-ignore
           project_gid = membership_data.fetch('project').fetch('gid')
           next true unless limit_to_projects.map(&:gid).include? project_gid
         end
-        # @sg-ignore
         section_data = membership_data.fetch('section')
-        # @sg-ignore
         section_gid = section_data.fetch('gid')
 
         last_milestone = last_milestone_in_section(section_gid)
@@ -100,7 +96,6 @@ module Checkoff
     # @param task [Asana::Resources::Task]
     # @param limit_to_portfolio_name [String, nil]
     # @return [Boolean]
-    # @sg-ignore
     def any_milestone_depends_on_this_task?(task, limit_to_portfolio_name: nil)
       unless limit_to_portfolio_name.nil?
         limit_to_projects = @portfolios.projects_in_portfolio(@workspaces.default_workspace.name,
@@ -110,7 +105,6 @@ module Checkoff
       all_dependent_milestones = nil
       task.memberships.all? do |membership_data|
         unless limit_to_portfolio_name.nil?
-          # @sg-ignore
           project_gid = membership_data.fetch('project').fetch('gid')
           next true unless limit_to_projects.map(&:gid).include? project_gid
         end
