@@ -888,7 +888,7 @@ class TestTaskSelectors < ClassTest
   def test_filter_via_task_selector_in_section_named_false
     task_selectors = get_test_object do
       tasks.expects(:task_to_h).with(task).returns(
-        'unwrapped' => { 'membership_by_section_name' => {} },
+        'unwrapped' => { 'membership_by_section_name' => {} }
       )
     end
 
@@ -899,7 +899,7 @@ class TestTaskSelectors < ClassTest
   def test_filter_via_task_selector_in_section_named_true
     task_selectors = get_test_object do
       tasks.expects(:task_to_h).with(task).returns(
-        'unwrapped' => { 'membership_by_section_name' => { 'foo' => {}, 'bar' => {} } },
+        'unwrapped' => { 'membership_by_section_name' => { 'foo' => {}, 'bar' => {} } }
       )
     end
 
