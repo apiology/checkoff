@@ -885,6 +885,28 @@ class TestTaskSelectors < ClassTest
                                                    [:in_project_named?, 'foo']))
   end
 
+  def test_filter_via_task_selector_in_section_named_false
+    task_selectors = get_test_object do
+      tasks.expects(:task_to_h).with(task).returns(
+        'unwrapped' => { 'membership_by_section_name' => {} },
+      )
+    end
+
+    refute(task_selectors.filter_via_task_selector(task,
+                                                   [:in_section_named?, 'foo']))
+  end
+
+  def test_filter_via_task_selector_in_section_named_true
+    task_selectors = get_test_object do
+      tasks.expects(:task_to_h).with(task).returns(
+        'unwrapped' => { 'membership_by_section_name' => { 'foo' => {}, 'bar' => {} } },
+      )
+    end
+
+    assert(task_selectors.filter_via_task_selector(task,
+                                                   [:in_section_named?, 'foo']))
+  end
+
   def test_dependent_on_previous_section_last_milestone
     task_selectors = get_test_object do
       timelines
