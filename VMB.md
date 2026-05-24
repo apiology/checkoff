@@ -1,1 +1,0 @@
-cd /Users/broz/src/solargraph/ && bundle exec rake install && cd ~/src/checkoff && gem install ../solargraph/pkg/solargraph-0.0.1.dev.pre.refactorrbsconversions.gem && solargraph _0.0.1.dev.pre.refactorrbsconversions_ --version
