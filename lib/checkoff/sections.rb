@@ -283,7 +283,8 @@ module Checkoff
     # @return [void]
     def file_task_by_section(by_section, task, project_gid)
       membership = task.memberships.find do |m|
-        T.cast(m['project'], T::Hash[String, T.untyped])['gid'] == project_gid
+        membership_hash = T.unsafe(m)
+        T.cast(membership_hash['project'], T::Hash[String, T.untyped])['gid'] == project_gid
       end
       raise "Could not find task in project_gid #{project_gid}: #{task}" if membership.nil?
 

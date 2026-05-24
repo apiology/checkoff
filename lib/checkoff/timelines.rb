@@ -13,7 +13,7 @@ require_relative 'clients'
 
 module Checkoff
   # Manages timelines of dependent tasks with dates and milestones
-  class Timelines
+  class Timelines # rubocop:disable Metrics/ClassLength
     # @!parse
     #   extend CacheMethod::ClassMethods
 
@@ -72,12 +72,19 @@ module Checkoff
       end
 
       all_dependent_task_gids = nil
-      task.memberships.all? do |membership_data|
+      # @type [Array<Hash{String => Object}>]
+      memberships = task.memberships
+      memberships.all? do |membership_data|
+        # @type [Hash{String => Object}]
+        md = membership_data
         unless limit_to_portfolio_name.nil?
-          project_gid = membership_data.fetch('project').fetch('gid')
+          # @type [Hash{String => Object}]
+          project_data = md.fetch('project')
+          project_gid = project_data.fetch('gid')
           next true unless limit_to_projects.map(&:gid).include? project_gid
         end
-        section_data = membership_data.fetch('section')
+        # @type [Hash{String => Object}]
+        section_data = md.fetch('section')
         section_gid = section_data.fetch('gid')
 
         last_milestone = last_milestone_in_section(section_gid)
@@ -103,9 +110,15 @@ module Checkoff
       end
 
       all_dependent_milestones = nil
-      task.memberships.all? do |membership_data|
+      # @type [Array<Hash{String => Object}>]
+      memberships = task.memberships
+      memberships.all? do |membership_data|
+        # @type [Hash{String => Object}]
+        md = membership_data
         unless limit_to_portfolio_name.nil?
-          project_gid = membership_data.fetch('project').fetch('gid')
+          # @type [Hash{String => Object}]
+          project_data = md.fetch('project')
+          project_gid = project_data.fetch('gid')
           next true unless limit_to_projects.map(&:gid).include? project_gid
         end
 

@@ -296,13 +296,14 @@ module Checkoff
                             portfolio_name,
                             workspace_name: @workspaces.default_workspace.name)
       portfolio_projects = @portfolios.projects_in_portfolio(workspace_name, portfolio_name)
-      task.memberships.any? do |membership|
+      found = task.memberships.any? do |membership|
         m = T.cast(membership, T::Hash[String, T.untyped])
         project_gid = T.cast(m.fetch('project'), T::Hash[String, T.untyped]).fetch('gid')
         portfolio_projects.any? do |portfolio_project|
           portfolio_project.gid == project_gid
         end
       end
+      !!found
     end
 
     # True if the task is in a project which is in the given portfolio
