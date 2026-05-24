@@ -458,7 +458,11 @@ ensure_rugged_packages_installed() {
 ensure_rbenv
 
 ensure_types_built() {
-  make build-typecheck
+  if [ -n "${CIRCLECI:-}" ]; then
+    make ci-build-typecheck
+  else
+    make build-typecheck
+  fi
 }
 
 ensure_hooks_path

@@ -6,6 +6,7 @@
 require 'date'
 require 'time'
 require 'active_support'
+require 'active_support/core_ext/integer/time'
 # require 'active_support/time'
 require 'forwardable'
 require 'cache_method'
@@ -169,10 +170,9 @@ module Checkoff
 
     # @param num_days [Integer]
     #
-    # @return [Time]
-    # @sg-ignore
+    # @return [ActiveSupport::TimeWithZone]
     def n_days_from_now(num_days)
-      Time.at(@now_getter.now.to_i + (num_days * 86_400))
+      num_days.days.since(@now_getter.now)
     end
 
     # @param num_days [Integer]
