@@ -34,7 +34,7 @@ group :development do
   gem 'bump'
   gem 'bundler-audit'
   gem 'fasterer'
-  gem 'overcommit', '~>0.68.0'
+  gem 'overcommit', '~>0.69.0'
   gem 'punchlist', ['>=1.3.1']
   gem 'rubocop', ['~> 1.52']
   gem 'rubocop-performance'

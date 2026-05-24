@@ -37,13 +37,13 @@ rbi/checkoff.rbi: tapioca.installed yardoc.installed sorbet/config .gem_rbs_coll
 	rm -f rbi/checkoff.rbi.bak
 	touch rbi/checkoff.rbi
 
-sig/checkoff.rbs: yardoc.installed gem_rbs_collection/.keepme ## Generate RBS file
+sig/checkoff.rbs: yardoc.installed .gem_rbs_collection/.keepme ## Generate RBS file
 	rm -f rbi/checkoff.rbs
 	bin/sord gen $(SORD_GEN_OPTIONS) sig/checkoff.rbs # YARD to RBS
 
 YARD_PLUGIN_OPTS = --plugin yard-sorbet --plugin yard-solargraph
 
-YARD_OPTS = $(YARD_PLUGIN_OPTS) -c .yardoc --output-dir yardoc --backtrace --exclude '^config/' '{lib,app,test}/**/*.rb' 'ext/**/*.{c,rb}'
+YARD_OPTS = $(YARD_PLUGIN_OPTS) -c .yardoc --output-dir yardoc --backtrace --exclude '^config/' '{lib,app,spec,feature}/**/*.rb' 'ext/**/*.{c,rb}'
 
 types.installed: tapioca.installed Gemfile.lock Gemfile.lock.installed rbi/checkoff.rbi sorbet/tapioca/require.rb sorbet/config ## Ensure typechecking dependencies are in place
 	bin/solargraph gems
@@ -71,8 +71,8 @@ rbs_collection.lock.yaml: Gemfile.lock rbs_collection.yaml
 	bin/rbs collection update
 	touch rbs_collection.lock.yaml
 
-rbs_collection.yaml:
-	bin/rbs collection init
+rbs_collection.yaml: Gemfile.lock.installed
+	@if [ ! -f rbs_collection.yaml ]; then bin/rbs collection init; fi
 
 .gem_rbs_collection/.keepme: rbs_collection.lock.yaml
 	# Ensure that the gem rbs collection is installed
@@ -80,7 +80,7 @@ rbs_collection.yaml:
 	touch .gem_rbs_collection/.keepme
 
 ci-build-typecheck: build-typecheck  ## Ensure cache is filled for CI to save regardless of actions run
-	bundle exec solargraph gems
+	bin/solargraph gems
 
 # Only create this once, so no dependencies
 sorbet/tapioca/require.rb:
@@ -94,7 +94,7 @@ tapioca.installed: sorbet/tapioca/require.rb Gemfile.lock.installed ## Install T
 #	bin/tapioca dsl
 	touch tapioca.installed
 
-yardoc.installed: $(wildcard config/annotations_*.rb) $(SOURCE_FILES) ## Generate YARD documentation
+yardoc.installed: Makefile $(wildcard config/annotations_*.rb) $(SOURCE_FILES) ## Generate YARD documentation
 	bin/yard doc $(YARD_OPTS)
 	touch yardoc.installed
 
@@ -138,18 +138,12 @@ solargraph-strict: build-typecheck ## Run Solargraph typechecker
 solargraph-strong: build-typecheck ## Run Solargraph typechecker
 	bin/solargraph typecheck --level strong
 
-solargraph-normal: build-typecheck ## Run Solargraph typechecker
-	bin/solargraph typecheck --level normal
-
-solargraph-typed: build-typecheck ## Run Solargraph typechecker
-	bin/solargraph typecheck --level typed
-
-solargraph-strict: build-typecheck ## Run Solargraph typechecker
-	bin/solargraph typecheck --level strict
-
 typecheck: build-typecheck srb solargraph  ## validate types in code and configuration
 
-citypecheck: ci-build-typecheck srb solargraph ## Run type check from CircleCI
+citypecheck: ci-build-typecheck srb ci-solargraph ## Run type check from CircleCI
+
+ci-solargraph: ## Run Solargraph typechecker in CI
+	bin/solargraph typecheck --level strong
 
 typecoverage: typecheck ## Run type checking and then ratchet coverage in metrics/
 
