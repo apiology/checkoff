@@ -41,7 +41,7 @@ sig/checkoff.rbs: yardoc.installed .gem_rbs_collection/.keepme ## Generate RBS f
 	rm -f rbi/checkoff.rbs
 	bin/sord gen $(SORD_GEN_OPTIONS) sig/checkoff.rbs # YARD to RBS
 
-YARD_PLUGIN_OPTS = --plugin yard-sorbet --plugin yard-solargraph
+YARD_PLUGIN_OPTS = --plugin yard-sorbet --plugin yard-solargraph --plugin yard-activesupport-concern
 
 YARD_OPTS = $(YARD_PLUGIN_OPTS) -c .yardoc --output-dir yardoc --backtrace --exclude '^config/' '{lib,app,test}/**/*.rb' 'ext/**/*.{c,rb}'
 
