@@ -21,6 +21,7 @@ class TestMvSubcommand < ClassTest
               :from_workspace_name, :from_project_name, :from_section_name,
               :to_workspace_name, :to_project_name, :to_section_name
 
+  # @return [void]
   def argument_to_name(arg)
     if arg.start_with? ':'
       arg[1..].to_sym
@@ -29,17 +30,20 @@ class TestMvSubcommand < ClassTest
     end
   end
 
+  # @return [void]
   def expect_project_pulled(workspace_name, project_name, project)
     projects.expects(:project_or_raise)
       .with(workspace_name, project_name)
       .returns(project)
   end
 
+  # @return [void]
   def expect_section_pulled(workspace_name, project_name, section_name, section)
     sections.expects(:section_or_raise).with(workspace_name, project_name, section_name)
       .returns(section)
   end
 
+  # @return [void]
   def expect_tasks_pulled(workspace_name, project_name, section_name, tasks)
     return if section_name == :all_sections # not implemented yet
 
@@ -47,30 +51,37 @@ class TestMvSubcommand < ClassTest
       .returns(tasks)
   end
 
+  # @return [void]
   def expect_task_named(task, task_name)
     task.expects(:name).returns(task_name)
   end
 
+  # @return [void]
   def expect_section_named(section, section_name)
     section.expects(:name).returns(section_name)
   end
 
+  # @return [void]
   def expect_project_gid_pulled(project, project_gid)
     project.expects(:gid).returns(project_gid)
   end
 
+  # @return [void]
   def expect_section_gid_pulled(section, section_gid)
     section.expects(:gid).returns(section_gid)
   end
 
+  # @return [void]
   def expect_task_added_to_project(task, project_gid, section_gid)
     task.expects(:add_project).with(project: project_gid, section: section_gid)
   end
 
+  # @return [void]
   def allow_logger_used
     logger.expects(:puts).at_least(0)
   end
 
+  # @return [void]
   def set_initializer_arguments
     @mocks[:from_workspace_arg] = from_workspace_arg
     @mocks[:from_project_arg] = from_project_arg
@@ -80,6 +91,7 @@ class TestMvSubcommand < ClassTest
     @mocks[:to_section_arg] = to_section_arg
   end
 
+  # @return [void]
   def determine_to_workspace_name(from_workspace_arg, to_workspace_arg)
     if to_workspace_arg == :source_workspace
       from_workspace_arg
@@ -88,6 +100,7 @@ class TestMvSubcommand < ClassTest
     end
   end
 
+  # @return [void]
   def determine_to_project_name(from_project_name, to_project_arg)
     if to_project_arg == :source_project
       from_project_name
@@ -96,6 +109,7 @@ class TestMvSubcommand < ClassTest
     end
   end
 
+  # @return [void]
   def determine_to_section_name(from_section_name, to_section_arg)
     if to_section_arg == :source_section
       from_section_name
@@ -104,6 +118,7 @@ class TestMvSubcommand < ClassTest
     end
   end
 
+  # @return [void]
   def expect_task_added_to_section(task, task_name)
     return if from_section_name == :all_sections # not implemented yet
 
@@ -114,6 +129,7 @@ class TestMvSubcommand < ClassTest
     expect_task_added_to_project(task, to_project_gid, to_section_gid)
   end
 
+  # @return [void]
   def set_names
     @from_workspace_name = from_workspace_arg
     @from_project_name = argument_to_name(from_project_arg)
@@ -123,11 +139,13 @@ class TestMvSubcommand < ClassTest
     @to_section_name = determine_to_section_name(from_section_name, to_section_arg)
   end
 
+  # @return [void]
   def expect_to_objects_pulled
     expect_project_pulled(to_workspace_name, to_project_name, to_project)
     expect_section_pulled(to_workspace_name, to_project_name, to_section_name, to_section)
   end
 
+  # @return [void]
   def expect_run
     set_names
     set_initializer_arguments
@@ -140,6 +158,7 @@ class TestMvSubcommand < ClassTest
     allow_logger_used
   end
 
+  # @return [void]
   def mock_run_to_different_workspace
     @from_workspace_arg = 'My workspace'
     @from_project_arg = 'My project'
@@ -151,6 +170,7 @@ class TestMvSubcommand < ClassTest
     expect_run
   end
 
+  # @return [void]
   def test_run_to_different_workspace
     assert_raises(NotImplementedError) do
       get_test_object do
@@ -159,6 +179,7 @@ class TestMvSubcommand < ClassTest
     end
   end
 
+  # @return [void]
   def mock_run_from_all_sections
     @from_workspace_arg = 'My workspace'
     @from_project_arg = ':my_tasks'
@@ -170,6 +191,7 @@ class TestMvSubcommand < ClassTest
     expect_run
   end
 
+  # @return [void]
   def test_run_from_all_sections
     mv_subcommand = get_test_object do
       mock_run_from_all_sections
@@ -179,6 +201,7 @@ class TestMvSubcommand < ClassTest
     end
   end
 
+  # @return [void]
   def mock_run_from_regular_project
     @from_workspace_arg = 'My workspace'
     @from_project_arg = 'My project'
@@ -190,6 +213,7 @@ class TestMvSubcommand < ClassTest
     expect_run
   end
 
+  # @return [void]
   def test_run_from_regular_project
     mv_subcommand = get_test_object do
       mock_run_from_regular_project
@@ -197,6 +221,7 @@ class TestMvSubcommand < ClassTest
     mv_subcommand.run
   end
 
+  # @return [void]
   def mock_run_to_same_section_different_project
     @from_workspace_arg = 'My workspace'
     @from_project_arg = ':my_tasks'
@@ -208,6 +233,7 @@ class TestMvSubcommand < ClassTest
     expect_run
   end
 
+  # @return [void]
   def test_run_to_same_section_different_project
     mv_subcommand = get_test_object do
       mock_run_to_same_section_different_project
@@ -215,6 +241,7 @@ class TestMvSubcommand < ClassTest
     mv_subcommand.run
   end
 
+  # @return [void]
   def mock_run_with_explicit_to_project
     @from_workspace_arg = 'My workspace'
     @from_project_arg = ':my_tasks'
@@ -226,6 +253,7 @@ class TestMvSubcommand < ClassTest
     expect_run
   end
 
+  # @return [void]
   def test_run_with_explicit_to_project
     mv_subcommand = get_test_object do
       mock_run_with_explicit_to_project
@@ -233,6 +261,7 @@ class TestMvSubcommand < ClassTest
     mv_subcommand.run
   end
 
+  # @return [void]
   def mock_run_from_my_tasks
     @from_workspace_arg = 'My workspace'
     @from_project_arg = ':my_tasks'
@@ -244,6 +273,7 @@ class TestMvSubcommand < ClassTest
     expect_run
   end
 
+  # @return [void]
   def test_run_from_my_tasks
     mv_subcommand = get_test_object do
       mock_run_from_my_tasks
@@ -251,6 +281,7 @@ class TestMvSubcommand < ClassTest
     mv_subcommand.run
   end
 
+  # @return [void]
   def mock_init_default_workspace_not_implemented
     @from_workspace_arg = :default_workspace
     @from_project_arg = ':my_tasks'
@@ -262,6 +293,7 @@ class TestMvSubcommand < ClassTest
     set_initializer_arguments
   end
 
+  # @return [void]
   def test_init_default_workspace_not_implemented
     assert_raises(NotImplementedError) do
       get_test_object do
@@ -270,6 +302,7 @@ class TestMvSubcommand < ClassTest
     end
   end
 
+  # @return [void]
   def test_init
     mv_subcommand = get_test_object do
       @from_workspace_arg = 'My workspace'
@@ -285,6 +318,7 @@ class TestMvSubcommand < ClassTest
     refute_nil mv_subcommand
   end
 
+  # @return [void]
   def class_under_test
     ::Checkoff::MvSubcommand
   end

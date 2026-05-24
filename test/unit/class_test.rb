@@ -5,6 +5,7 @@ require_relative 'test_helper'
 
 # Test a class that uses initializer mocks.
 class ClassTest < Minitest::Test
+  # @return [void]
   # Implement 'class_under_test' returning the class name to be
   # initialized with keyword mocks
   #
@@ -31,14 +32,17 @@ class ClassTest < Minitest::Test
   # setting this to non-nil values, which are validated and require
   # setting a full hash of values
 
+  # @return [void]
   def respond_like_instance_of
     nil
   end
 
+  # @return [void]
   def respond_like
     nil
   end
 
+  # @return [void]
   def create_object(clazz = class_under_test)
     clazz.new(**@mocks.to_h)
   end

@@ -14,8 +14,8 @@ module Checkoff
         true
       end
 
-      # @sg-ignore
       # @return [Boolean]
+      # @sg-ignore
       def matches?
         raise 'Override me!'
       end

@@ -71,9 +71,9 @@ module Checkoff
     # @return [Enumerable<Asana::Resources::Task>]
     def task_search(workspace_name, url, extra_fields: [])
       workspace = workspaces.workspace_or_raise(workspace_name)
-      # @sg-ignore
       api_params, task_selector = @search_url_parser.convert_params(url)
       debug { "Task search params: api_params=#{api_params}, task_selector=#{task_selector}" }
+      # @sg-ignore
       raw_task_search(api_params, workspace_gid: workspace.gid, task_selector:,
                                   extra_fields:)
     end
@@ -93,13 +93,9 @@ module Checkoff
     def raw_task_search(api_params,
                         workspace_gid:, extra_fields: [], task_selector: [],
                         fetch_all: true)
-      # @sg-ignore
       tasks = api_task_search_request(api_params, workspace_gid:, extra_fields:)
 
-      if fetch_all && tasks.count == 100
-        # @sg-ignore
-        tasks = iterated_raw_task_search(api_params, workspace_gid:, extra_fields:)
-      end
+      tasks = iterated_raw_task_search(api_params, workspace_gid:, extra_fields:) if fetch_all && tasks.count == 100
 
       debug { "#{tasks.count} raw tasks returned" }
 
@@ -203,10 +199,8 @@ module Checkoff
     class << self
       # @return [void]
       def run
-        # @sg-ignore
         # @type [String]
         workspace_name = ARGV[0] || raise('Please pass workspace name as first argument')
-        # @sg-ignore
         # @type [String]
         url = ARGV[1] || raise('Please pass task search URL as second argument')
         task_searches = Checkoff::TaskSearches.new

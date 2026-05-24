@@ -11,10 +11,12 @@ class TestClients < ClassTest
 
   let_mock :client, :personal_access_token
 
+  # @return [void]
   def expect_client_created
     asana_client_class.expects(:new).yields(client).returns(client)
   end
 
+  # @return [void]
   def mock_client
     expect_client_created
     config.expects(:fetch).with(:personal_access_token).returns(personal_access_token)
@@ -23,6 +25,7 @@ class TestClients < ClassTest
       .with('asana-enable' => 'new_project_templates,new_user_task_lists,new_memberships,new_goal_memberships')
   end
 
+  # @return [void]
   def test_client
     clients = get_test_object do
       mock_client
@@ -31,6 +34,7 @@ class TestClients < ClassTest
     assert_equal(client, clients.client)
   end
 
+  # @return [void]
   def class_under_test
     Checkoff::Clients
   end

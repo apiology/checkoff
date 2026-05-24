@@ -6,12 +6,7 @@
 # Note that changes in the inspected code, or installation of new
 # versions of RuboCop, may require this file to be generated again.
 
-# Offense count: 1
-Lint/DuplicateMethods:
-  Exclude:
-    - 'test/unit/test_tasks.rb'
-
-# Offense count: 22
+# Offense count: 26
 # Configuration parameters: AllowedMethods, AllowedPatterns, CountRepeatedAttributes, Max.
 Metrics/AbcSize:
   Exclude:
@@ -47,7 +42,7 @@ Metrics/CyclomaticComplexity:
     - 'lib/checkoff/internal/task_timing.rb'
     - 'lib/checkoff/timelines.rb'
 
-# Offense count: 13
+# Offense count: 14
 # Configuration parameters: CountComments, Max, CountAsOne, AllowedMethods, AllowedPatterns.
 Metrics/MethodLength:
   Exclude:
@@ -67,7 +62,7 @@ Metrics/PerceivedComplexity:
   Exclude:
     - 'lib/checkoff/timelines.rb'
 
-# Offense count: 26
+# Offense count: 25
 # Configuration parameters: Mode, AllowedMethods, AllowedPatterns, AllowBangMethods, WaywardPredicates.
 # AllowedMethods: call
 # WaywardPredicates: infinite?, nonzero?

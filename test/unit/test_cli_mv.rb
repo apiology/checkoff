@@ -9,22 +9,27 @@ require_relative 'test_helper'
 class TestCLIMv < Minitest::Test
   let_mock :config, :workspaces, :sections, :tasks
 
+  # @return [void]
   def expect_workspaces_created
     Checkoff::Workspaces.expects(:new).returns(workspaces).at_least(0)
   end
 
+  # @return [void]
   def expect_config_loaded
     Checkoff::Internal::ConfigLoader.expects(:load).returns(config).at_least(0)
   end
 
+  # @return [void]
   def expect_sections_created
     Checkoff::Sections.expects(:new).returns(sections).at_least(0)
   end
 
+  # @return [void]
   def expect_tasks_created
     Checkoff::Tasks.expects(:new).returns(tasks).at_least(0)
   end
 
+  # @return [void]
   def set_mocks
     @mocks = {
       config:,
@@ -36,6 +41,7 @@ class TestCLIMv < Minitest::Test
     }
   end
 
+  # @return [void]
   def get_test_object(&_twiddle_mocks)
     set_mocks
     expect_workspaces_created
@@ -49,6 +55,7 @@ class TestCLIMv < Minitest::Test
 
   let_mock :mv_subcommand
 
+  # @return [void]
   def mock_mv_original_use_case
     Checkoff::MvSubcommand.expects(:new).with(from_workspace_arg: 'from_workspace_name',
                                               from_project_arg: ':my_tasks',
@@ -59,6 +66,7 @@ class TestCLIMv < Minitest::Test
     mv_subcommand.expects(:run)
   end
 
+  # @return [void]
   def test_mv_original_use_case
     cli = get_test_object do
       mock_mv_original_use_case

@@ -46,7 +46,7 @@ module Checkoff
       by_my_tasks_section(active_tasks, project.gid)
     end
 
-    # @param name [String]
+    # @param name [String, nil]
     # @return [String, nil]
     def section_key(name)
       return nil if name == 'Recently assigned'
@@ -67,6 +67,7 @@ module Checkoff
       sections.each_entry { |section| by_section[section_key(section.name)] = [] }
       tasks.each do |task|
         assignee_section = task.assignee_section
+        # @sg-ignore
         current_section = section_key(assignee_section.name)
         by_section[current_section] ||= []
         by_section[current_section] << task

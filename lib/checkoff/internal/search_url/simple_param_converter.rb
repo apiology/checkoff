@@ -21,7 +21,6 @@ module Checkoff
 
           private
 
-          # @sg-ignore
           # @return [String] the single value of the search url param
           def single_value
             @single_value ||= begin
@@ -48,7 +47,6 @@ module Checkoff
           # @return [void]
           def parse_projects_and_sections(projects, sections)
             single_value.split('~').each do |project_section_pair|
-              # @sg-ignore
               project, section = project_section_pair.split('_column_')
               raise "Invalid query string: #{project_section_pair}" if project.nil?
 
@@ -228,6 +226,7 @@ module Checkoff
         # @return [Hash{String => String}] the converted params
         def convert
           # @type [Array<Array(String, String)>]
+          # @sg-ignore
           arr_of_tuples = simple_url_params.to_a.flat_map do |key, values|
             # @type
             entry = convert_arg(key, values).each_slice(2).to_a
@@ -264,14 +263,13 @@ module Checkoff
         private_constant :ARGS
 
         # https://developers.asana.com/docs/search-tasks-in-a-workspace
-        # @sg-ignore
         # @param key [String] the name of the search url param
         # @param values [Array<String>] the values of the search url param
+        # @sg-ignore
         # @return [Hash{String => String}] the converted params
         def convert_arg(key, values)
           # @type [Class<SimpleParam::SimpleParam>]
           clazz = ARGS.fetch(key)
-          # @sg-ignore
           # @type [SimpleParam::SimpleParam]
           obj = clazz.new(key:, values:)
           # @sg-ignore

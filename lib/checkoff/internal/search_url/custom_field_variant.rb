@@ -32,7 +32,6 @@ module Checkoff
 
           # @param [String] param_name
           #
-          # @sg-ignore
           # @return [String]
           def fetch_solo_param(param_name)
             case remaining_params.keys

@@ -24,6 +24,7 @@ class TestSections < BaseAsana
            :assignee_section_name, :empty_section, :empty_section_gid,
            :project_gid, :get_results
 
+  # @return [void]
   def test_section_task_names_no_tasks
     sections = get_test_object do
       @mocks[:projects] = projects
@@ -39,6 +40,7 @@ class TestSections < BaseAsana
     @projects ||= Checkoff::Projects.new(client:)
   end
 
+  # @return [void]
   def test_section_task_names
     sections = get_test_object do
       @mocks[:projects] = projects
@@ -50,6 +52,7 @@ class TestSections < BaseAsana
                  sections.section_task_names('Workspace 1', a_name, 'Section 1:'))
   end
 
+  # @return [void]
   def mock_sections_or_raise
     expect_project_pulled('Workspace 1', project_a, a_name)
     expect_project_gid_pulled(project_a, a_gid)
@@ -57,6 +60,7 @@ class TestSections < BaseAsana
     expect_project_sections_pulled(a_gid, [section_1, section_2])
   end
 
+  # @return [void]
   def test_sections_or_raise
     sections = get_test_object do
       mock_sections_or_raise
@@ -65,11 +69,13 @@ class TestSections < BaseAsana
     assert_equal([section_1, section_2], sections.sections_or_raise('Workspace 1', a_name))
   end
 
+  # @return [void]
   def test_sections_or_raise_nil_project_name
     sections = get_test_object
     assert_raises(ArgumentError) { sections.sections_or_raise('Workspace 1', nil) }
   end
 
+  # @return [void]
   def expect_my_tasks_pulled(project, tasks_arr, active_tasks_arr)
     @mocks[:projects]
       .expects(:tasks_from_project).with(project,
@@ -83,16 +89,19 @@ class TestSections < BaseAsana
       .at_least(1)
   end
 
+  # @return [void]
   def expect_section_named(section, name)
     section.expects(:name).returns(name).at_least(1)
   end
 
+  # @return [void]
   def expect_assignee_section_pulled(task, section)
     task.expects(:assignee_section).returns(section).at_least(0)
   end
 
   let_mock :my_tasks_project
 
+  # @return [void]
   def expect_my_tasks_sections_pulled
     expect_sections_client_pulled
     expect_section_named(recently_assigned, 'Recently assigned')
@@ -105,6 +114,7 @@ class TestSections < BaseAsana
     expect_assignee_section_pulled(task_c, assignee_section)
   end
 
+  # @return [void]
   def mock_tasks_by_section_my_tasks
     expect_my_tasks_tasks_pulled
     expect_section_named(assignee_section, assignee_section_name)
@@ -112,6 +122,7 @@ class TestSections < BaseAsana
     expect_my_tasks_sections_pulled
   end
 
+  # @return [void]
   def test_tasks_by_section_my_tasks
     sections = get_test_object do
       mock_tasks_by_section_my_tasks
@@ -126,11 +137,13 @@ class TestSections < BaseAsana
     assert_raises(ArgumentError) { sections.tasks_by_section(nil, :my_tasks) }
   end
 
+  # @return [void]
   def test_tasks_by_section_nil_project_name
     sections = get_test_object
     assert_raises(ArgumentError) { sections.tasks_by_section('Workspace 1', nil) }
   end
 
+  # @return [void]
   def test_tasks_by_section_some_in_empty_section
     sections = get_test_object do
       expect_tasks_and_sections_pulled('Workspace 1', project_a, a_name, '(no section)')
@@ -143,6 +156,7 @@ class TestSections < BaseAsana
     assert_equal({ nil => [task_c] }, sections.tasks_by_section('Workspace 1', a_name))
   end
 
+  # @return [void]
   def expect_project_a_tasks_pulled
     expect_tasks_and_sections_pulled('Workspace 1', project_a, a_name, 'Section 1')
     expect_project_gid_pulled(project_a, a_gid)
@@ -161,10 +175,12 @@ class TestSections < BaseAsana
                  sections.tasks_by_section('Workspace 1', a_name))
   end
 
+  # @return [void]
   def expect_named(task, name)
     task.expects(:name).returns(name).at_least(1)
   end
 
+  # @return [void]
   def expect_tasks_pulled(project, tasks_arr, active_tasks_arr)
     @mocks[:projects]
       .expects(:tasks_from_project).with(project,
@@ -178,6 +194,7 @@ class TestSections < BaseAsana
       .at_least(1)
   end
 
+  # @return [void]
   def expect_project_pulled(workspace, project, project_name)
     @mocks[:projects]
       .expects(:project).with(workspace, project_name)
@@ -208,6 +225,7 @@ class TestSections < BaseAsana
     expect_task_memberships_queried(section_name)
   end
 
+  # @return [void]
   def expect_project_gid_pulled(project, gid)
     project.expects(:gid).returns(gid).at_least(1)
   end
@@ -216,11 +234,13 @@ class TestSections < BaseAsana
     client.expects(:sections).returns(sections).at_least(1)
   end
 
+  # @return [void]
   def expect_project_sections_pulled(project_gid, sections_array)
     sections.expects(:get_sections_for_project).with(project_gid:, options: { fields: ['name'] })
       .returns(sections_array).at_least(1)
   end
 
+  # @return [void]
   def original_task_options
     {
       per_page: 100,
@@ -237,6 +257,7 @@ class TestSections < BaseAsana
     out
   end
 
+  # @return [void]
   def expect_tasks_api_called_for_section(section_gid, task_list, only_uncompleted:)
     options = fixed_task_options(only_uncompleted:)
     tasks.expects(:get_tasks).with(section: section_gid,
@@ -244,6 +265,7 @@ class TestSections < BaseAsana
       .returns(task_list)
   end
 
+  # @return [void]
   def expect_section_1_gid_pulled
     section_1.expects(:gid).returns(section_1_gid).at_least(1)
   end
@@ -262,6 +284,7 @@ class TestSections < BaseAsana
     expect_tasks_api_called_for_section(section_gid, task_list, only_uncompleted:)
   end
 
+  # @return [void]
   def test_tasks_not_only_uncompleted
     sections = get_test_object do
       @mocks[:projects] = projects
@@ -285,6 +308,7 @@ class TestSections < BaseAsana
     empty_section.expects(:name).returns('(no section)').at_least(0)
   end
 
+  # @return [void]
   def mock_tasks_normal_project(only_uncompleted:)
     expect_project_pulled('Workspace 1', project_a, a_name)
     expect_sections_client_pulled
@@ -308,6 +332,7 @@ class TestSections < BaseAsana
     assert_equal([task_c], out)
   end
 
+  # @return [void]
   def test_tasks_by_section_gid
     sections = get_test_object do
       @mocks[:projects] = projects
@@ -319,6 +344,7 @@ class TestSections < BaseAsana
                  sections.tasks_by_section_gid(section_1_gid))
   end
 
+  # @return [void]
   def test_tasks_by_section_also_completed
     sections = get_test_object do
       @mocks[:projects] = projects
@@ -374,6 +400,7 @@ class TestSections < BaseAsana
     end
   end
 
+  # @return [void]
   def test_previous_section
     sections = get_test_object do
       section_2.expects(:project).returns({ 'gid' => project_gid })
@@ -397,6 +424,7 @@ class TestSections < BaseAsana
     assert_nil(sections.previous_section(section_1))
   end
 
+  # @return [void]
   def test_section_by_gid
     sections = get_test_object do
       client.expects(:get).returns(get_results)
@@ -407,6 +435,7 @@ class TestSections < BaseAsana
     assert_equal(123, section.gid)
   end
 
+  # @return [void]
   def test_section_by_gid_bad_server_data
     sections = get_test_object do
       client.expects(:get).returns(get_results)
@@ -435,6 +464,7 @@ class TestSections < BaseAsana
     }
   end
 
+  # @return [void]
   def class_under_test
     Checkoff::Sections
   end

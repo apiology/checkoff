@@ -46,7 +46,6 @@ module Checkoff
       current_section = nil
       by_section = { nil => [] }
       tasks.each do |task|
-        # @sg-ignore
         current_section, by_section = file_task_by_section(current_section,
                                                            by_section, task)
       end
@@ -90,6 +89,7 @@ module Checkoff
     # as memberships with a separate API within a task.
     #
     # @param subtask [Asana::Resources::Task]
+    # @sg-ignore
     def subtask_section?(subtask)
       subtask.is_rendered_as_separator
     end

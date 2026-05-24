@@ -14,7 +14,6 @@ class TestProjectSelectors < ClassTest
   #  # @return [Checkoff::ProjectSelectors]
   #  def get_test_object; end
 
-  # @sg-ignore
   let_mock :project
 
   # @return [void]
@@ -28,7 +27,6 @@ class TestProjectSelectors < ClassTest
     project_selectors = get_test_object do
       @mocks[:custom_fields] = Checkoff::CustomFields.new(client:)
       custom_fields = [custom_field]
-      # @sg-ignore
       project.expects(:custom_fields).returns(custom_fields)
     end
 
@@ -48,7 +46,6 @@ class TestProjectSelectors < ClassTest
     project_selectors = get_test_object do
       @mocks[:custom_fields] = Checkoff::CustomFields.new(client:)
       custom_fields = [custom_field]
-      # @sg-ignore
       project.expects(:custom_fields).returns(custom_fields)
     end
 
@@ -69,7 +66,6 @@ class TestProjectSelectors < ClassTest
     project_selectors = get_test_object do
       @mocks[:custom_fields] = Checkoff::CustomFields.new(client:)
       custom_fields = [custom_field]
-      # @sg-ignore
       project.expects(:custom_fields).returns(custom_fields)
     end
 
@@ -92,7 +88,6 @@ class TestProjectSelectors < ClassTest
     project_selectors = get_test_object do
       @mocks[:custom_fields] = Checkoff::CustomFields.new(client:)
       custom_fields = [custom_field]
-      # @sg-ignore
       project.expects(:custom_fields).returns(custom_fields)
     end
 
@@ -112,7 +107,6 @@ class TestProjectSelectors < ClassTest
     project_selectors = get_test_object do
       @mocks[:custom_fields] = Checkoff::CustomFields.new(client:)
       custom_fields = [custom_field]
-      # @sg-ignore
       project.expects(:custom_fields).returns(custom_fields)
     end
 
@@ -126,7 +120,6 @@ class TestProjectSelectors < ClassTest
     project_selectors = get_test_object do
       @mocks[:custom_fields] = Checkoff::CustomFields.new(client:)
       custom_fields = []
-      # @sg-ignore
       project.expects(:custom_fields).returns(custom_fields).at_least(1)
     end
 
@@ -138,7 +131,6 @@ class TestProjectSelectors < ClassTest
   # @return [void]
   def test_filter_via_due_date_false
     project_selectors = get_test_object do
-      # @sg-ignore
       project.expects(:due_date).returns('2099-01-01').at_least(1)
     end
 
@@ -170,6 +162,7 @@ class TestProjectSelectors < ClassTest
     Checkoff::ProjectSelectors
   end
 
+  # @return [void]
   def respond_like_instance_of
     {
       config: Hash,
@@ -182,6 +175,7 @@ class TestProjectSelectors < ClassTest
     }
   end
 
+  # @return [void]
   def respond_like
     {}
   end

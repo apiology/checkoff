@@ -6,14 +6,17 @@
 module TestDate
   attr_writer :time_period, :mock_date_str
 
+  # @return [void]
   def time_period
     @time_period ||= :afternoon
   end
 
+  # @return [void]
   def mock_date_str
     @mock_date_str ||= '2013-05-24'
   end
 
+  # @return [void]
   def mock_date
     @mock_date ||= Date.parse(mock_date_str)
   end
@@ -46,6 +49,7 @@ module TestDate
     times.to_h
   end
 
+  # @return [void]
   def mock_now_with_zone(zone)
     time = time_by_period(zone)[time_period]
     raise if time.nil?
@@ -53,6 +57,7 @@ module TestDate
     time
   end
 
+  # @return [void]
   def mock_now
     zone = Time.now.zone
     zone = 'America/New_York' if %w[EST EDT].include? zone

@@ -55,7 +55,7 @@ module Checkoff
     end
 
     # Returns a list of Asana API section objects for a given project
-    # @param workspace_name [String]
+    # @param workspace_name [String, Symbol]
     # @param project_name [String, Symbol]
     # @param extra_fields [Array<String>]
     #
@@ -115,9 +115,9 @@ module Checkoff
 
     # Pulls task objects from a specified section
     #
-    # @param workspace_name [String]
+    # @param workspace_name [String, Symbol]
     # @param project_name [String, Symbol]
-    # @param section_name [String, nil]
+    # @param section_name [String, nil, Symbol]
     # @param only_uncompleted [Boolean]
     # @param extra_fields [Array<String>]
     #
@@ -141,8 +141,8 @@ module Checkoff
     # @param project_name [String, Symbol]
     # @param section_name [String, nil]
     #
-    # @sg-ignore
     # @return [Array<String>]
+    # @sg-ignore
     def section_task_names(workspace_name, project_name, section_name)
       task_array = tasks(workspace_name, project_name, section_name)
       # @type [Array<String>]
@@ -150,13 +150,13 @@ module Checkoff
     end
     cache_method :section_task_names, SHORT_CACHE_TIME
 
-    # @param workspace_name [String]
+    # @param workspace_name [String, Symbol]
     # @param project_name [String, Symbol]
-    # @param section_name [String, nil]
+    # @param section_name [String, nil, Symbol]
     # @param extra_section_fields [Array<String>]
     #
-    # @sg-ignore
     # @return [Asana::Resources::Section]
+    # @sg-ignore section() is nil-checked below
     def section_or_raise(workspace_name, project_name, section_name, extra_section_fields: [])
       s = section(workspace_name, project_name, section_name,
                   extra_section_fields:)
@@ -171,7 +171,7 @@ module Checkoff
     end
     cache_method :section_or_raise, LONG_CACHE_TIME
 
-    # @param name [String]
+    # @param name [String, nil]
     # @return [String, nil]
     def section_key(name)
       inbox_section_names = ['(no section)', 'Untitled section', 'Inbox', 'Recently assigned']
@@ -187,11 +187,13 @@ module Checkoff
       sections = sections_by_project_gid(section.project.fetch('gid'))
 
       # @type [Array<Asana::Resources::Section>]
+      # @sg-ignore
       sections = sections.to_a
 
       index = sections.find_index { |s| s.gid == section.gid }
       return nil if index.nil? || index.zero?
 
+      # @sg-ignore
       sections[index - 1]
     end
     cache_method :previous_section, SHORT_CACHE_TIME
@@ -214,10 +216,9 @@ module Checkoff
       {}
     end
 
-    # @sg-ignore
-    # @param workspace_name [String]
+    # @param workspace_name [String, Symbol]
     # @param project_name [String, Symbol]
-    # @param section_name [String, nil]
+    # @param section_name [String, nil, Symbol]
     # @param extra_section_fields [Array<String>]
     #
     # @return [Asana::Resources::Section, nil]
@@ -268,7 +269,6 @@ module Checkoff
     # @return [Hash{String, nil => Enumerable<Asana::Resources::Task>}]
     def by_section(tasks, project_gid)
       by_section = {}
-      # @sg-ignore
       sections = client.sections.get_sections_for_project(project_gid:,
                                                           options: { fields: ['name'] })
       sections.each_entry { |section| by_section[section_key(section.name)] = [] }
@@ -282,7 +282,10 @@ module Checkoff
     # @param project_gid [String]
     # @return [void]
     def file_task_by_section(by_section, task, project_gid)
-      membership = task.memberships.find { |m| T.cast(m['project'], T::Hash[String, T.untyped])['gid'] == project_gid }
+      membership = task.memberships.find do |m|
+        # @sg-ignore
+        T.cast(m['project'], T::Hash[String, T.untyped])['gid'] == project_gid
+      end
       raise "Could not find task in project_gid #{project_gid}: #{task}" if membership.nil?
 
       section = T.cast(membership['section'], T::Hash[String, T.untyped])
@@ -295,9 +298,10 @@ module Checkoff
       by_section.fetch(current_section) << task
     end
 
-    # @param workspace_name [String]
+    # @param workspace_name [String, Symbol]
     # @param project_name [String, Symbol]
     # @return [Asana::Resources::Project]
+    # @sg-ignore projects.project may be nil but is raised below
     def project_or_raise(workspace_name, project_name)
       raise ArgumentError, 'Provide nil project_name' if T.unsafe(project_name).nil?
 

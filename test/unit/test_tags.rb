@@ -13,6 +13,7 @@ class TestTags < ClassTest
            :tags_api, :wrong_tag, :wrong_tag_name, :task_collection, :response,
            :parsed_data, :response_body, :response_body_data
 
+  # @return [void]
   def test_tag_or_raise_raises
     tags = get_test_object do
       tag_arr = [wrong_tag]
@@ -23,6 +24,7 @@ class TestTags < ClassTest
     end
   end
 
+  # @return [void]
   def test_tag_or_raise
     tags = get_test_object do
       tag_arr = [wrong_tag, tag]
@@ -37,11 +39,13 @@ class TestTags < ClassTest
     workspace.expects(:gid).returns(workspace_gid)
   end
 
+  # @return [void]
   def allow_tags_named
     wrong_tag.expects(:name).returns(wrong_tag_name).at_least(0)
     tag.expects(:name).returns(tag_name).at_least(0)
   end
 
+  # @return [void]
   def expect_tags_pulled(tag_arr)
     expect_workspace_pulled
     client.expects(:tags).returns(tags_api)
@@ -49,6 +53,7 @@ class TestTags < ClassTest
     allow_tags_named
   end
 
+  # @return [void]
   def test_tag
     tags = get_test_object do
       tag_arr = [wrong_tag, tag]
@@ -58,6 +63,7 @@ class TestTags < ClassTest
     assert_equal(tag, tags.tag(workspace_name, tag_name))
   end
 
+  # @return [void]
   def mock_tasks(only_uncompleted: true)
     task_params = build_task_params(only_uncompleted)
     merged_task_options = generate_merged_task_options
@@ -69,26 +75,31 @@ class TestTags < ClassTest
     setup_collection_expects
   end
 
+  # @return [void]
   def build_task_params(only_uncompleted)
     task_params = { limit: 100 }
     task_params[:completed_since] = '9999-12-01' if only_uncompleted
     task_params
   end
 
+  # @return [void]
   def build_response_body
     {
       'data' => response_body_data,
     }
   end
 
+  # @return [void]
   def setup_client_expects(task_endpoint, task_params, merged_task_options)
     client.expects(:get).with(task_endpoint, params: task_params, options: merged_task_options).returns(response)
   end
 
+  # @return [void]
   def setup_response_expects(response_body)
     response.expects(:body).returns(response_body).at_least(1)
   end
 
+  # @return [void]
   def setup_collection_expects
     Asana::Resources::Collection.expects(:new).with([response_body_data, {}],
                                                     type: Asana::Resources::Task,
@@ -96,6 +107,7 @@ class TestTags < ClassTest
       .returns(task_collection)
   end
 
+  # @return [void]
   def generate_task_options
     {
       per_page: 100,
@@ -107,6 +119,7 @@ class TestTags < ClassTest
     }
   end
 
+  # @return [void]
   def generate_merged_task_options
     {
       fields: %w[name completed_at due_at due_on tags
@@ -116,15 +129,18 @@ class TestTags < ClassTest
     }
   end
 
+  # @return [void]
   def generate_task_endpoint
     tag.expects(:gid).returns('tag_gid').at_least(1)
     "/tags/#{tag.gid}/tasks"
   end
 
+  # @return [void]
   def projects
     Checkoff::Projects.new(client:)
   end
 
+  # @return [void]
   def test_tasks
     tags = get_test_object do
       @mocks[:projects] = projects
@@ -141,6 +157,7 @@ class TestTags < ClassTest
     assert_equal(task_collection, result)
   end
 
+  # @return [void]
   def test_tasks_with_completed
     tags = get_test_object do
       @mocks[:projects] = projects
@@ -171,6 +188,7 @@ class TestTags < ClassTest
     {}
   end
 
+  # @return [void]
   def class_under_test
     Checkoff::Tags
   end

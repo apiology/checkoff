@@ -15,18 +15,22 @@ class TestTaskSearches < ClassTest
            :task_selector, :search_response, :body, :data, :something_else,
            :good_task, :bad_task
 
+  # @return [void]
   def expect_workspace_pulled
     workspaces.expects(:workspace_or_raise).with(workspace_name).returns(workspace)
   end
 
+  # @return [void]
   def expect_workspace_gid_pulled
     workspace.expects(:gid).returns('abc')
   end
 
+  # @return [void]
   def expect_convert_params_called
     search_url_parser.expects(:convert_params).with(url).returns([api_params, task_selector])
   end
 
+  # @return [void]
   def default_fields
     ['completed_at', 'custom_fields', 'dependencies', 'due_at', 'due_on', 'memberships.project.gid',
      'memberships.project.name', 'memberships.section.name', 'name', 'start_at', 'start_on', 'tags']
@@ -40,6 +44,7 @@ class TestTaskSearches < ClassTest
       .returns(search_response)
   end
 
+  # @return [void]
   def expect_search_response_queried
     expect_client_get_called
     body = {
@@ -60,6 +65,7 @@ class TestTaskSearches < ClassTest
       .returns(response_array)
   end
 
+  # @return [void]
   def expect_tasks_filtered
     task_selectors
       .expects(:filter_via_task_selector)
@@ -71,10 +77,12 @@ class TestTaskSearches < ClassTest
       .returns(false)
   end
 
+  # @return [void]
   def expect_task_selector_queried
     task_selector.expects(:empty?).returns(false)
   end
 
+  # @return [void]
   def mock_task_search
     expect_workspace_pulled
     expect_workspace_gid_pulled
@@ -85,10 +93,12 @@ class TestTaskSearches < ClassTest
     expect_tasks_filtered
   end
 
+  # @return [void]
   def projects
     Checkoff::Projects.new(client:)
   end
 
+  # @return [void]
   def test_task_search
     task_searches = get_test_object do
       @mocks[:projects] = projects
@@ -98,6 +108,7 @@ class TestTaskSearches < ClassTest
     assert_equal([good_task], task_searches.task_search(workspace_name, url))
   end
 
+  # @return [void]
   def mock_task_search_overloaded
     expect_workspace_pulled
     expect_workspace_gid_pulled
@@ -106,12 +117,57 @@ class TestTaskSearches < ClassTest
     expect_response_wrapped(Array.new(100) { good_task })
   end
 
+  # @return [void]
   def test_as_cache_key
     task_searches = get_test_object
 
     assert_empty(task_searches.as_cache_key)
   end
 
+  # @return [void]
+  def test_raw_task_search_without_selector
+    task_searches = get_test_object do
+      @mocks[:projects] = projects
+    end
+    collection = mock('collection')
+    collection.expects(:count).returns(1)
+    task_searches.expects(:api_task_search_request)
+      .with(api_params, workspace_gid: 'abc', extra_fields: [])
+      .returns(collection)
+
+    result = task_searches.send(:raw_task_search, api_params, workspace_gid: 'abc', task_selector: [])
+
+    assert_same(collection, result)
+  end
+
+  # @param task_searches [Checkoff::TaskSearches]
+  # @return [Array]
+  def mock_full_page_raw_task_search(task_searches)
+    first_page = mock('first_page')
+    first_page.expects(:count).returns(100)
+    paginated = [good_task]
+    task_searches.expects(:api_task_search_request)
+      .with(api_params, workspace_gid: 'abc', extra_fields: [])
+      .returns(first_page)
+    task_searches.expects(:iterated_raw_task_search)
+      .with(api_params, workspace_gid: 'abc', extra_fields: [])
+      .returns(paginated)
+    paginated
+  end
+
+  # @return [void]
+  def test_raw_task_search_paginates_when_full_page
+    task_searches = get_test_object do
+      @mocks[:projects] = projects
+    end
+    paginated = mock_full_page_raw_task_search(task_searches)
+
+    result = task_searches.send(:raw_task_search, api_params, workspace_gid: 'abc', task_selector: [])
+
+    assert_equal(paginated, result.to_a)
+  end
+
+  # @return [void]
   def class_under_test
     Checkoff::TaskSearches
   end

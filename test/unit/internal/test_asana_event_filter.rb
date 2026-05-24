@@ -11,6 +11,7 @@ class TestAsanaEventFilter < ClassTest
 
   let_mock :task, :asana_tasks
 
+  # @return [void]
   def test_matches_nil_filters_true
     asana_event_filter = get_test_object do
       @mocks[:filters] = nil
@@ -19,6 +20,7 @@ class TestAsanaEventFilter < ClassTest
     assert(asana_event_filter.matches?([{}]))
   end
 
+  # @return [void]
   def test_matches_zero_filters_false
     asana_event_filter = get_test_object do
       @mocks[:filters] = []
@@ -27,6 +29,7 @@ class TestAsanaEventFilter < ClassTest
     refute(asana_event_filter.matches?({}))
   end
 
+  # @return [void]
   def test_matches_on_resource_type_true
     asana_event_filter = get_test_object do
       @mocks[:filters] = [{ 'resource_type' => 'task' }]
@@ -35,6 +38,7 @@ class TestAsanaEventFilter < ClassTest
     assert(asana_event_filter.matches?({ 'resource' => { 'resource_type' => 'task' } }))
   end
 
+  # @return [void]
   def test_matches_on_resource_subtype_true
     asana_event_filter = get_test_object do
       @mocks[:filters] = [{ 'resource_subtype' => 'milestone' }]
@@ -43,6 +47,7 @@ class TestAsanaEventFilter < ClassTest
     assert(asana_event_filter.matches?({ 'resource' => { 'resource_subtype' => 'milestone' } }))
   end
 
+  # @return [void]
   def test_matches_on_action_true
     asana_event_filter = get_test_object do
       @mocks[:filters] = [{ 'action' => 'deleted' }]
@@ -156,6 +161,7 @@ class TestAsanaEventFilter < ClassTest
     },
   }.freeze
 
+  # @return [void]
   def test_fetched_section_gid
     asana_event_filter = get_test_object do
       @mocks[:filters] = [{ 'checkoff:fetched.section.gid' => '123' }]
@@ -176,6 +182,7 @@ class TestAsanaEventFilter < ClassTest
     assert(asana_event_filter.matches?(TASK_NAME_CHANGED_EVENT))
   end
 
+  # @return [void]
   def test_matches_on_fields_true
     asana_event_filter = get_test_object do
       @mocks[:filters] = [{ 'fields' => ['custom_fields'] }]
@@ -184,6 +191,7 @@ class TestAsanaEventFilter < ClassTest
     assert(asana_event_filter.matches?(CUSTOM_FIELD_CHANGED_EVENT))
   end
 
+  # @return [void]
   def expect_task_fetched(gid, fields, task_obj)
     client.expects(:tasks).returns(asana_tasks)
     asana_tasks
@@ -193,6 +201,7 @@ class TestAsanaEventFilter < ClassTest
       .returns(task_obj)
   end
 
+  # @return [void]
   def test_task_completed_event_true
     asana_event_filter = get_test_object do
       @mocks[:filters] = [
@@ -211,6 +220,7 @@ class TestAsanaEventFilter < ClassTest
     assert(asana_event_filter.matches?(TASK_COMPLETED_EVENT))
   end
 
+  # @return [void]
   def test_matches_on_parent_gid_true
     asana_event_filter = get_test_object do
       @mocks[:filters] = [{ 'checkoff:parent.gid' => '90' }]
@@ -219,6 +229,7 @@ class TestAsanaEventFilter < ClassTest
     assert(asana_event_filter.matches?(TASK_REMOVED_FROM_SECTION_EVENT))
   end
 
+  # @return [void]
   def test_matches_on_bad_key_raises
     asana_event_filter = get_test_object do
       @mocks[:filters] = [{ 'checkoff:bogus' => '90' }]
@@ -230,6 +241,7 @@ class TestAsanaEventFilter < ClassTest
     assert_match(/Unknown filter key checkoff:bogus/, e.message)
   end
 
+  # @return [void]
   def class_under_test
     Checkoff::Internal::AsanaEventFilter
   end

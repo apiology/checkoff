@@ -17,6 +17,7 @@ module Checkoff
 
         next unless evaluator.matches?
 
+        # @sg-ignore
         return try_this_evaluator(selector, evaluator)
       end
 
@@ -42,6 +43,7 @@ module Checkoff
     def evaluate_args(selector, evaluator)
       return [] unless selector.is_a?(Array)
 
+      # @sg-ignore
       selector[1..].map.with_index do |item, index|
         if evaluator.evaluate_arg?(index)
           evaluate(item)

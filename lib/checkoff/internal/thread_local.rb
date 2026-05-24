@@ -9,8 +9,8 @@ module Checkoff
       # @param name [Symbol]
       # @param value [Object,Boolean]
       # @yieldreturn [generic<T>]
-      # @sg-ignore
       # @return [generic<T>]
+      # @sg-ignore
       def with_thread_local_variable(name, value, &block)
         old_value = Thread.current[name]
         Thread.current[name] = value

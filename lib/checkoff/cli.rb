@@ -29,6 +29,7 @@ module Checkoff
       end
 
       @from_workspace_name = from_workspace_arg
+      # @sg-ignore
       @from_project_name = project_arg_to_name(from_project_arg)
       @from_section_name = from_section_arg
     end
@@ -40,6 +41,7 @@ module Checkoff
       if to_project_arg == :source_project
         from_project_name
       else
+        # @sg-ignore
         project_arg_to_name(to_project_arg)
       end
     end
@@ -112,9 +114,9 @@ module Checkoff
       end
     end
 
-    # @param from_workspace_name [String]
+    # @param from_workspace_name [String, Symbol]
     # @param from_project_name [String, Symbol]
-    # @param from_section_name [String, Symbol]
+    # @param from_section_name [String, Symbol, nil]
     # @return [Enumerable<Asana::Resources::Task>]
     def fetch_tasks(from_workspace_name, from_project_name, from_section_name)
       if from_section_name == :all_sections
@@ -147,10 +149,11 @@ module Checkoff
     # @param project_arg [String]
     # @return [Symbol, String]
     def project_arg_to_name(project_arg)
-      if project_arg.start_with? ':'
-        project_arg[1..].to_sym
+      arg = project_arg.to_s
+      if arg.start_with?(':')
+        arg.delete_prefix(':').to_sym
       else
-        project_arg
+        arg
       end
     end
   end
@@ -191,19 +194,21 @@ module Checkoff
       elsif task_name.nil?
         run_on_section(workspace_name, project_name, section_name)
       else
+        # @sg-ignore
         run_on_task(workspace_name, project_name, section_name, task_name)
       end
     end
 
     private
 
-    # @param project_name [String]
+    # @param project_name [String, Symbol]
     # @return [String, Symbol]
     def validate_and_assign_project_name(project_name)
-      @project_name = if project_name.start_with? ':'
-                        project_name[1..].to_sym
+      name = project_name.to_s
+      @project_name = if name.start_with?(':')
+                        name.delete_prefix(':').to_sym
                       else
-                        project_name
+                        name
                       end
     end
 
@@ -211,14 +216,13 @@ module Checkoff
     # @param project [String, Symbol]
     #
     # @return [String]
-    # @sg-ignore
     def run_on_project(workspace, project)
       tasks_by_section =
+        # @sg-ignore
         sections.tasks_by_section(workspace, project)
       tasks_by_section.update(tasks_by_section) do |_key, tasks|
         tasks_to_hash(tasks)
       end
-      # @sg-ignore
       tasks_by_section.to_json
     end
 
@@ -226,11 +230,9 @@ module Checkoff
     # @param project [String, Symbol]
     # @param section [String, Symbol, nil]
     # @return [String]
-    # @sg-ignore
     def run_on_section(workspace, project, section)
       section = nil if section == ''
       tasks = sections.tasks(workspace, project, section) || []
-      # @sg-ignore
       tasks_to_hash(tasks).to_json
     end
 
@@ -239,11 +241,12 @@ module Checkoff
     # @param section [String, Symbol, nil]
     # @param task_name [String]
     # @return [String]
-    # @sg-ignore
     def run_on_task(workspace, project, section, task_name)
       section = nil if section == ''
-      task = tasks.task(workspace, project, task_name, section_name: section)
-      # @sg-ignore
+      task = tasks.task(workspace.to_s, project, task_name, section_name: section)
+      raise "Task not found: #{task_name}" if task.nil?
+
+      # @sg-ignore nil check above is not flow-sensitive
       task_to_hash(task).to_json
     end
 
@@ -312,6 +315,7 @@ module Checkoff
     arg 'workspace'
     arg 'task_name'
     command :quickadd do |c|
+      # @sg-ignore
       c.action do |_global_options, _options, args|
         workspace_name = args.fetch(0)
         task_name = args.fetch(1)
@@ -326,6 +330,7 @@ module Checkoff
     arg 'section', :optional
     arg 'task_name', :optional
     command :view do |c|
+      # @sg-ignore
       c.action do |_global_options, _options, args|
         workspace_name = args.fetch(0)
         project_name = args.fetch(1)
@@ -340,30 +345,37 @@ module Checkoff
 
     # rubocop:disable Metrics/BlockLength
     command :mv do |c|
+      # @sg-ignore
       c.flag :from_workspace,
              type: String,
              default_value: :default_workspace,
              desc: 'Workspace to move tasks from'
+      # @sg-ignore
       c.flag :from_project,
              type: String,
              required: true,
              desc: 'Project to move tasks from'
+      # @sg-ignore
       c.flag :from_section,
              type: String,
              default_value: :all_sections,
              desc: 'Section to move tasks from'
+      # @sg-ignore
       c.flag :to_workspace,
              type: String,
              default_value: :source_workspace,
              desc: 'Workspace to move tasks to'
+      # @sg-ignore
       c.flag :to_project,
              type: String,
              default_value: :source_project,
              desc: 'Section to move tasks to'
+      # @sg-ignore
       c.flag :to_section,
              type: String,
              default_value: :source_section,
              desc: 'Section to move tasks to'
+      # @sg-ignore
       c.action do |_global_options, options, _args|
         from_workspace = options.fetch('from_workspace')
         from_project = options.fetch('from_project')

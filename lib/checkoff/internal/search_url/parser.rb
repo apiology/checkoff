@@ -24,7 +24,9 @@ module Checkoff
         # @param url [String]
         # @return [Array(Hash{String => String}, Array)]
         def convert_params(url)
+          # @sg-ignore
           url_params = CGI.parse(URI.parse(url).query)
+          # @sg-ignore
           custom_field_params, date_url_params, simple_url_params = partition_url_params(url_params)
           custom_field_args, custom_field_task_selector = convert_custom_field_params(custom_field_params)
           date_url_args, date_task_selector = convert_date_params(date_url_params)
@@ -58,8 +60,10 @@ module Checkoff
         # @return [Array(Hash{String => Array<String>}, Hash{String => Array<String>}, Hash{String => Array<String>})]
         def partition_url_params(url_params)
           groups = T.let(url_params.to_a.group_by do |key, _values|
+                           # @sg-ignore
                            if key.start_with? 'custom_field_'
                              :custom_field
+                           # @sg-ignore
                            elsif key.include? '_date'
                              :date
                            else

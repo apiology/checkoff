@@ -14,7 +14,6 @@ class TestSectionSelectors < ClassTest
 
   def_delegators(:@mocks, :client, :sections)
 
-  # @sg-ignore
   let_mock :section
 
   let_mock :tasks
@@ -39,10 +38,12 @@ class TestSectionSelectors < ClassTest
     client.expects(:tasks).returns(tasks)
   end
 
+  # @return [void]
   def expect_section_gid_pulled
     section.expects(:gid).returns('1234')
   end
 
+  # @return [void]
   def mock_filter_via_ends_with_milestone_true
     expect_client_tasks_pulled
     expect_section_gid_pulled

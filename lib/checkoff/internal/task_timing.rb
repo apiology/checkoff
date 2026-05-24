@@ -19,11 +19,13 @@ module Checkoff
 
       # @param task [Asana::Resources::Task]
       # @return [Time, nil]
+      # @sg-ignore
       def start_time(task)
         date_or_time_field_by_name(task, :start)&.to_time
       end
 
       # @param task [Asana::Resources::Task]
+      # @sg-ignore
       # @return [Time, nil]
       def due_time(task)
         date_or_time_field_by_name(task, :due)&.to_time
@@ -31,9 +33,9 @@ module Checkoff
 
       # @param task [Asana::Resources::Task]
       #
-      # @sg-ignore
       # @return [Date, Time, nil]
       def start_date_or_time(task)
+        # @sg-ignore
         return @time_class.parse(task.start_at).localtime unless task.start_at.nil?
 
         return @date_class.parse(task.start_on) unless task.start_on.nil?
@@ -43,10 +45,9 @@ module Checkoff
 
       # @param task [Asana::Resources::Task]
       #
-      # @sg-ignore
       # @return [Date, Time, nil]
       def due_date_or_time(task)
-        return @time_class.parse(task.due_at).localtime unless task.due_at.nil?
+        return @time_class.parse(T.must(task.due_at)).localtime unless task.due_at.nil?
 
         return @date_class.parse(task.due_on) unless task.due_on.nil?
 
@@ -66,7 +67,6 @@ module Checkoff
       # @return [Time, Date, nil]
       def custom_field(task, custom_field_name)
         custom_field = @custom_fields.resource_custom_field_by_name_or_raise(task, custom_field_name)
-        # @sg-ignore
         # @type [String, nil]
         time_str = custom_field.fetch('display_value')
         return nil if time_str.nil?
@@ -77,7 +77,6 @@ module Checkoff
       # @param task [Asana::Resources::Task]
       # @param field_name [Symbol,Array]
       #
-      # @sg-ignore
       # @return [Date, Time, nil]
       def date_or_time_field_by_name(task, field_name)
         return due_date_or_time(task) if field_name == :due
@@ -89,7 +88,6 @@ module Checkoff
         return start_date_or_time(task) || due_date_or_time(task) if field_name == :ready
 
         if field_name.is_a?(Array)
-          # @sg-ignore
           # @type [Symbol]
           actual_field_name = field_name.first
           args = field_name[1..]

@@ -90,6 +90,7 @@ class TestTaskHashes < ClassTest
     },
   }.freeze
 
+  # @return [void]
   def test_task_a_to_h
     task_hashes = get_test_object do
       task.expects(:to_h).returns(TASK_A_RAW_HASH.dup)
@@ -99,6 +100,7 @@ class TestTaskHashes < ClassTest
     assert_equal(TASK_A_HASH, task_hashes.task_to_h(task))
   end
 
+  # @return [void]
   def test_task_b_to_h
     task_hashes = get_test_object do
       task.expects(:to_h).returns(TASK_B_RAW_HASH.dup)
@@ -108,6 +110,7 @@ class TestTaskHashes < ClassTest
     assert_equal(TASK_B_HASH, task_hashes.task_to_h(task))
   end
 
+  # @return [void]
   def class_under_test
     Checkoff::Internal::TaskHashes
   end

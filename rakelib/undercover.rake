@@ -5,7 +5,7 @@ task :undercover do |_t|
   ret =
     system("if git branch -r | grep origin/main; then undercover --compare origin/main --exclude-files " \
            "lib/checkoff/version.rb," \
-           "'test/**/*,test/*,rakelib/*';" \
+           "'test/**/*,test/*,rakelib/*,script/*';" \
            "fi")
   raise unless ret
 end

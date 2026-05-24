@@ -79,6 +79,7 @@ module Checkoff
     # @param tag_name [String]
     #
     # @return [Asana::Resources::Tag]
+    # @sg-ignore
     def tag_or_raise(workspace_name, tag_name)
       t = tag(workspace_name, tag_name)
 
@@ -92,7 +93,6 @@ module Checkoff
     # @param tag_name [String]
     #
     # @return [Asana::Resources::Tag,nil]
-    # @sg-ignore
     def tag(workspace_name, tag_name)
       workspace = workspaces.workspace_or_raise(workspace_name)
       tags = client.tags.get_tags_for_workspace(workspace_gid: workspace.gid)
@@ -111,10 +111,10 @@ module Checkoff
 
     # @param options [Hash{Symbol => Object}]
     #
-    # @sg-ignore
     # @return [Hash{Symbol => Object}]
     def build_params(options)
       { limit: options[:per_page], completed_since: options[:completed_since] }.reject do |_, v|
+        # @sg-ignore
         v.nil? || Array(v).empty?
       end
     end
@@ -135,10 +135,8 @@ module Checkoff
     class << self
       # @return [void]
       def run
-        # @sg-ignore
         # @type [String]
         workspace_name = ARGV[0] || raise('Please pass workspace name as first argument')
-        # @sg-ignore
         # @type [String]
         tag_name = ARGV[1] || raise('Please pass tag name as second argument')
         tags = Checkoff::Tags.new

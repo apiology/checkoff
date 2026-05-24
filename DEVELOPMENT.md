@@ -59,6 +59,12 @@ rake release && git push --no-verify && git push --tags
 ```
 
 
+## Solargraph typecheck
+
+Local gate: `direnv exec . make solargraph-strong` (after `make build-typecheck`).
+
+Cursor agents should follow the project skill at `.cursor/skills/solargraph-typecheck/SKILL.md` when fixing Solargraph or `@sg-ignore` issues.
+
 ## Developing
 
 ```sh

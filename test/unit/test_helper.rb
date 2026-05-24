@@ -82,6 +82,7 @@ end
 #
 # rubocop:disable Style/OpenStructUse
 class MyOpenStruct < OpenStruct
+  # @return [void]
   def delete(sym)
     delete_field(sym) if respond_to? sym
   end

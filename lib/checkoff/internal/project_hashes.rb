@@ -26,7 +26,6 @@ module Checkoff
       # @param project_hash [Hash]
       # @return [void]
       def unwrap_custom_fields(project_hash)
-        # @sg-ignore
         # @type [Array<Hash>,nil]
         custom_fields = project_hash.fetch('custom_fields', nil)
 

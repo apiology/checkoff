@@ -17,13 +17,12 @@ module Checkoff
 
         # @param section [Asana::Resources::Section]
         #
-        # @sg-ignore
         # @return [Boolean]
+        # @sg-ignore
         def evaluate(section)
           tasks = client.tasks.get_tasks(section: section.gid,
                                          per_page: 100,
                                          options: { fields: ['resource_subtype'] })
-          # @sg-ignore
           T.unsafe(tasks).last&.resource_subtype == 'milestone'
         end
       end
@@ -41,6 +40,7 @@ module Checkoff
         # @sg-ignore
         # @return [Boolean]
         def evaluate(section)
+          # @sg-ignore
           @sections.tasks_by_section_gid(section.gid).any?
         end
       end

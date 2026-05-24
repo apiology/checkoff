@@ -20,7 +20,6 @@ module Checkoff
     LONG_CACHE_TIME = MINUTE * 15
     SHORT_CACHE_TIME = MINUTE
 
-    # @sg-ignore
     # @param [Hash,Checkoff::Internal::EnvFallbackConfigLoader] config
     # @param [Asana::Client] client
     # @param [Checkoff::Tasks] tasks
@@ -64,8 +63,8 @@ module Checkoff
     # bundle exec ./task_selectors.rb
     # :nocov:
     class << self
-      # @sg-ignore
       # @return [String]
+      # @sg-ignore
       def project_name
         ARGV[1] || raise('Please pass project name to pull tasks from as first argument')
       end
@@ -76,8 +75,8 @@ module Checkoff
         ARGV[0] || raise('Please pass workspace name as first argument')
       end
 
-      # @sg-ignore
       # @return [Array(Symbol, Array)]
+      # @sg-ignore
       def task_selector
         task_selector_json = ARGV[2] || raise('Please pass task_selector in JSON form as third argument')
 

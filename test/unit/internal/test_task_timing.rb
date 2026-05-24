@@ -7,6 +7,7 @@ require 'checkoff/internal/task_timing'
 
 class TestTaskTiming < ClassTest
   let_mock :task
+  # @return [void]
   def test_date_or_time_field_by_name_raises_if_unknown_field
     task_timing = get_test_object
     e = assert_raises(RuntimeError) { task_timing.date_or_time_field_by_name(task, :blah) }
@@ -14,6 +15,7 @@ class TestTaskTiming < ClassTest
     assert_equal 'Teach me how to handle field :blah', e.message
   end
 
+  # @return [void]
   def class_under_test
     Checkoff::Internal::TaskTiming
   end
@@ -25,6 +27,7 @@ class TestTaskTiming < ClassTest
     }
   end
 
+  # @return [void]
   def respond_like
     {
       time_class: Time,

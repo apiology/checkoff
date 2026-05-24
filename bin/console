@@ -12,5 +12,4 @@ require 'checkoff'
 # Pry.start
 
 require 'irb'
-# @sg-ignore
 IRB.start

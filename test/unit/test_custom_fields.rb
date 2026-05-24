@@ -12,6 +12,7 @@ class TestCustomFields < ClassTest
   let_mock :workspace_name, :custom_field_name, :custom_field, :workspace, :workspace_gid,
            :custom_fields_api, :wrong_custom_field, :wrong_custom_field_name
 
+  # @return [void]
   def test_custom_field_or_raise_raises
     custom_fields = get_test_object do
       custom_field_arr = [wrong_custom_field]
@@ -22,6 +23,7 @@ class TestCustomFields < ClassTest
     end
   end
 
+  # @return [void]
   def test_custom_field_or_raise
     custom_fields = get_test_object do
       custom_field_arr = [wrong_custom_field, custom_field]
@@ -37,11 +39,13 @@ class TestCustomFields < ClassTest
     workspace.expects(:gid).returns(workspace_gid)
   end
 
+  # @return [void]
   def allow_custom_fields_named
     wrong_custom_field.expects(:name).returns(wrong_custom_field_name).at_least(0)
     custom_field.expects(:name).returns(custom_field_name).at_least(0)
   end
 
+  # @return [void]
   def expect_custom_fields_pulled(custom_field_arr)
     expect_workspace_pulled
     client.expects(:custom_fields).returns(custom_fields_api)
@@ -49,6 +53,7 @@ class TestCustomFields < ClassTest
     allow_custom_fields_named
   end
 
+  # @return [void]
   def test_custom_field
     custom_fields = get_test_object do
       custom_field_arr = [wrong_custom_field, custom_field]
@@ -58,6 +63,7 @@ class TestCustomFields < ClassTest
     assert_equal(custom_field, custom_fields.custom_field(workspace_name, custom_field_name))
   end
 
+  # @return [void]
   def class_under_test
     Checkoff::CustomFields
   end

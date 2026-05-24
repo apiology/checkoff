@@ -22,13 +22,11 @@ module Checkoff
           # @type task_selector [Array<Symbol, Array>]
           task_selector = []
           by_custom_field.each do |gid, single_custom_field_params|
-            # @sg-ignore
             new_args, new_task_selector = convert_single_custom_field_params(gid,
                                                                              single_custom_field_params)
 
             args = ResultsMerger.merge_args(args, new_args)
 
-            # @sg-ignore
             task_selector = ResultsMerger.merge_task_selectors(task_selector, new_task_selector)
           end
           [args, task_selector]
@@ -36,7 +34,6 @@ module Checkoff
 
         private
 
-        # @sg-ignore
         # @return [Hash{String => Hash}]
         def by_custom_field
           custom_field_params.group_by do |key, _value|
@@ -61,18 +58,20 @@ module Checkoff
 
         # @param gid [String]
         # @param single_custom_field_params [Hash{String => Array<String>}]
-        # @sg-ignore
         # @return [Array(Hash{String => String}, Array<Symbol, Array>)]
+        # @sg-ignore
         def convert_single_custom_field_params(gid, single_custom_field_params)
           variant_key = "custom_field_#{gid}.variant"
           variant = single_custom_field_params.fetch(variant_key)
           remaining_params = single_custom_field_params.reject { |k, _v| k == variant_key }
           raise "Teach me how to handle #{variant_key} = #{variant}" unless variant.length == 1
 
-          # @type [Class<CustomFieldVariant>]
-          variant_class = VARIANTS[variant[0]]
           # @sg-ignore
+          # @type [Class<CustomFieldVariant>]
+          # @sg-ignore
+          variant_class = VARIANTS[variant[0]]
           # @type [Array(Hash{String => String}, Array<Symbol, Array>)]
+          # @sg-ignore
           return variant_class.new(gid, remaining_params).convert unless variant_class.nil?
 
           raise "Teach me how to handle #{variant_key} = #{variant}"
@@ -80,7 +79,9 @@ module Checkoff
 
         # @param key [String]
         # @return [String]
+        # @sg-ignore
         def gid_from_custom_field_key(key)
+          # @sg-ignore
           key.split('_')[2].split('.')[0]
         end
 

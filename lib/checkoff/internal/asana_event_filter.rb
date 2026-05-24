@@ -56,7 +56,6 @@ module Checkoff
       # @param asana_event [Hash]
       # @param failures [Array<String>]
       #
-      # @sg-ignore
       # @return [Boolean]
       def filter_matches_asana_event?(filter, asana_event, failures)
         # @param key [String]
@@ -73,7 +72,6 @@ module Checkoff
       # @param value [String, Array<String>]
       # @param asana_event [Hash]
       #
-      # @sg-ignore
       # @return [Boolean]
       def asana_event_matches_filter_item?(key, value, asana_event)
         case key
@@ -122,7 +120,6 @@ module Checkoff
       # @return [Asana::Resources::Task,nil]
       def uncached_fetch_task(key, asana_event, fields)
         # @type [Hash{String => String}]
-        # @sg-ignore
         resource = asana_event.fetch('resource')
         # @type [String]
         resource_type = resource.fetch('resource_type')

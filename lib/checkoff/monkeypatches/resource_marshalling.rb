@@ -30,10 +30,8 @@ module Asana
       #
       # @return [void]
       def marshal_load(data)
-        # @sg-ignore
         # @type [Asana::Client]
         @_client = data.fetch('client')
-        # @sg-ignore
         # @type [Hash]
         @_data = data.fetch('data')
         @_data.each do |k, v|

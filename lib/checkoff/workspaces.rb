@@ -34,8 +34,7 @@ module Checkoff
     end
 
     # Pulls an Asana workspace object
-    # @param [String] workspace_name
-    # @sg-ignore
+    # @param [String, Symbol] workspace_name
     # @return [Asana::Resources::Workspace, nil]
     def workspace(workspace_name)
       client.workspaces.find_all.find do |workspace|
@@ -45,13 +44,15 @@ module Checkoff
     cache_method :workspace, LONG_CACHE_TIME
 
     # @return [Asana::Resources::Workspace]
+    # @sg-ignore
     def default_workspace
       @asana_workspace.find_by_id(client, default_workspace_gid)
     end
     cache_method :default_workspace, REALLY_LONG_CACHE_TIME
 
-    # @param [String] workspace_name
+    # @param [String, Symbol] workspace_name
     # @return [Asana::Resources::Workspace]
+    # @sg-ignore workspace() is nil-checked below
     def workspace_or_raise(workspace_name)
       w = workspace(workspace_name)
       raise "Could not find workspace #{workspace_name}" if w.nil?
@@ -59,8 +60,8 @@ module Checkoff
       w
     end
 
-    # @sg-ignore
     # @return [String]
+    # @sg-ignore
     def default_workspace_gid
       @config.fetch(:default_workspace_gid)
     end

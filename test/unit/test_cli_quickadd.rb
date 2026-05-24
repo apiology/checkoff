@@ -9,18 +9,22 @@ class TestCLIQuickadd < Minitest::Test
   let_mock :config, :workspaces, :sections, :tasks,
            :workspace, :workspace_gid, :task_a, :task_b, :task_c
 
+  # @return [void]
   def workspace_name
     'my workspace'
   end
 
+  # @return [void]
   def expect_workspaces_created
     Checkoff::Workspaces.expects(:new).returns(workspaces).at_least(0)
   end
 
+  # @return [void]
   def expect_config_loaded
     Checkoff::Internal::ConfigLoader.expects(:load).returns(config).at_least(0)
   end
 
+  # @return [void]
   def expect_sections_created
     Checkoff::Sections.expects(:new).returns(sections).at_least(0)
   end
@@ -40,6 +44,7 @@ class TestCLIQuickadd < Minitest::Test
     }
   end
 
+  # @return [void]
   def get_test_object(&_twiddle_mocks)
     set_mocks
     expect_workspaces_created
@@ -51,6 +56,7 @@ class TestCLIQuickadd < Minitest::Test
     Checkoff::CheckoffGLIApp
   end
 
+  # @return [void]
   def mock_quickadd
     @mocks[:workspaces].expects(:workspace_or_raise).with(workspace_name).returns(workspace)
 
@@ -59,6 +65,7 @@ class TestCLIQuickadd < Minitest::Test
                                            workspace_gid:)
   end
 
+  # @return [void]
   def test_quickadd
     cli = get_test_object do
       mock_quickadd

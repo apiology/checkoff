@@ -34,7 +34,6 @@ module Checkoff
       # @param task_hash [Hash]
       # @return [void]
       def unwrap_custom_fields(task_hash)
-        # @sg-ignore
         # @type [Array<Hash>,nil]
         custom_fields = task_hash.fetch('custom_fields', nil)
 
@@ -72,7 +71,6 @@ module Checkoff
       #
       # @return [void]
       def unwrap_memberships(task_hash, memberships, resource, key)
-        # @sg-ignore
         # @type [Hash]
         unwrapped = task_hash.fetch('unwrapped')
         unwrapped["membership_by_#{resource}_#{key}"] = memberships.group_by do |membership|
@@ -83,7 +81,6 @@ module Checkoff
       # @param task_hash [Hash]
       # @return [void]
       def unwrap_all_memberships(task_hash)
-        # @sg-ignore
         # @type [Array<Hash>]
         memberships = task_hash.fetch('memberships', []).dup
         add_user_task_list(task_hash, memberships)

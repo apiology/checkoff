@@ -10,10 +10,12 @@ class TestProjects < BaseAsana
 
   def_delegators(:@mocks, :client, :project_hashes, :project_timing, :timing)
 
+  # @return [void]
   def setup_config
     @mocks[:config] = { personal_access_token: }
   end
 
+  # @return [void]
   def setup_projects_pulled
     client.expects(:projects).returns(projects).at_least(1)
   end
@@ -25,6 +27,7 @@ class TestProjects < BaseAsana
            :project, :project_gid, :client_projects, :field_name, :period,
            :returned_date
 
+  # @return [void]
   def sample_projects
     { project_a => a_name, project_b => b_name, project_c => c_name }
   end
@@ -40,12 +43,14 @@ class TestProjects < BaseAsana
     end
   end
 
+  # @return [void]
   def expect_tasks_found(options:)
     options[:project] = a_gid
     tasks.expects(:find_all).with(**options).returns(tasks)
     tasks.expects(:to_a).returns(tasks)
   end
 
+  # @return [void]
   def mock_tasks_from_project(options:)
     setup_config
     project_a.expects(:gid).returns(a_gid)
@@ -53,6 +58,7 @@ class TestProjects < BaseAsana
     expect_tasks_found(options:)
   end
 
+  # @return [void]
   def test_tasks_from_project_not_only_uncompleted
     projects = get_test_object do
       mock_tasks_from_project(options: task_options_with_completed)
@@ -62,6 +68,7 @@ class TestProjects < BaseAsana
                                                     only_uncompleted: false))
   end
 
+  # @return [void]
   def test_tasks_from_project
     projects = get_test_object do
       mock_tasks_from_project(options: task_options(extra_fields: []))
@@ -70,6 +77,7 @@ class TestProjects < BaseAsana
     assert_equal(tasks, projects.tasks_from_project(project_a))
   end
 
+  # @return [void]
   def test_active_tasks
     projects = get_test_object do
       task_a.expects(:completed_at).returns(mock_now)
@@ -79,12 +87,14 @@ class TestProjects < BaseAsana
     assert_equal([task_b], projects.active_tasks([task_a, task_b]))
   end
 
+  # @return [void]
   def setup_workspace_pulled
     @mocks[:workspaces].expects(:workspace_or_raise)
       .with('Workspace 1').returns(workspace_one)
     workspace_one.expects(:gid).returns(workspace_one_gid)
   end
 
+  # @return [void]
   def setup_user_task_list_pulled
     client.expects(:user_task_lists).returns(user_task_lists)
     user_task_lists.expects(:get_user_task_list_for_user)
@@ -93,6 +103,7 @@ class TestProjects < BaseAsana
     user_task_list.expects(:gid).returns(my_tasks_in_workspace_gid)
   end
 
+  # @return [void]
   def mock_project_or_raise_unknown
     setup_config
     setup_workspace_pulled
@@ -100,6 +111,7 @@ class TestProjects < BaseAsana
     setup_projects_queried(workspace_gid: workspace_one_gid)
   end
 
+  # @return [void]
   def test_project_or_raise_unknown
     projects = get_test_object do
       mock_project_or_raise_unknown
@@ -119,6 +131,7 @@ class TestProjects < BaseAsana
     assert_equal(project, projects.project_by_gid(project_gid))
   end
 
+  # @return [void]
   def test_project_or_raise_my_tasks
     projects = get_test_object do
       mock_project_my_tasks
@@ -137,6 +150,7 @@ class TestProjects < BaseAsana
       .returns(my_tasks_project)
   end
 
+  # @return [void]
   def test_project_my_tasks
     projects = get_test_object do
       mock_project_my_tasks
@@ -161,6 +175,7 @@ class TestProjects < BaseAsana
       .returns(true)
   end
 
+  # @return [void]
   def test_in_period
     projects = get_test_object do
       mock_test_in_period
@@ -169,6 +184,7 @@ class TestProjects < BaseAsana
     assert(projects.in_period?(project, field_name, period))
   end
 
+  # @return [void]
   def mock_project_ready
     project_timing.expects(:date_or_time_field_by_name)
       .with(project, :ready).returns(returned_date)
@@ -176,6 +192,7 @@ class TestProjects < BaseAsana
       .returns(true)
   end
 
+  # @return [void]
   def test_project_ready
     projects = get_test_object do
       mock_project_ready
@@ -186,6 +203,7 @@ class TestProjects < BaseAsana
 
   let_mock :my_tasks_config
 
+  # @return [void]
   def class_under_test
     Checkoff::Projects
   end
