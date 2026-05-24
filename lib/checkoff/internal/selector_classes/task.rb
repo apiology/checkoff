@@ -65,15 +65,13 @@ module Checkoff
           false
         end
 
+        # @sg-ignore
         # @param task [Asana::Resources::Task]
         # @param section_name [String]
         # @return [Boolean]
-        # @sg-ignore
         def evaluate(task, section_name)
           task_data = tasks.task_to_h(task)
-          task_data.fetch('unwrapped').fetch('membership_by_section_name').keys.any? do |actual_section_name|
-            String(actual_section_name) == String(section_name)
-          end
+          task_data.fetch('unwrapped').fetch('membership_by_section_name').keys.any?(section_name)
         end
       end
 

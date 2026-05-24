@@ -36728,8 +36728,8 @@ end
 # source://prism//lib/prism/translation/parser.rb#47
 Prism::Translation::Parser::Racc_debug_parser = T.let(T.unsafe(nil), FalseClass)
 
-# source://prism//lib/prism/translation/parser_current.rb#10
-Prism::Translation::ParserCurrent = Prism::Translation::Parser33
+# source://prism//lib/prism/translation/parser_current.rb#12
+Prism::Translation::ParserCurrent = Prism::Translation::Parser34
 
 # This class provides a compatibility layer between prism and Ripper. It
 # functions by parsing the entire tree first and then walking it and
@@ -38746,7 +38746,7 @@ Prism::Translation::Ripper::KEYWORDS = T.let(T.unsafe(nil), Array)
 # source://prism//lib/prism/translation/ripper.rb#449
 Prism::Translation::Ripper::LEX_STATE_NAMES = T.let(T.unsafe(nil), Hash)
 
-# source://prism//lib/prism/translation/ripper/lexer.rb#10
+# source://prism//lib/prism/translation/ripper/lexer.rb#9
 class Prism::Translation::Ripper::Lexer < ::Prism::Translation::Ripper
   # Pretty much just the same as Prism.lex_compat.
   #
