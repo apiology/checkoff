@@ -79,7 +79,9 @@ rbs_collection.yaml: Gemfile.lock.installed
 	bin/rbs collection install
 	touch .gem_rbs_collection/.keepme
 
-ci-build-typecheck: build-typecheck ## Ensure cache is filled for CI to save regardless of actions run
+ci-build-typecheck: ## Ensure cache is filled for CI to save regardless of actions run
+	@if [ -n "$${CIRCLECI:-}" ]; then rm -f types.installed yardoc.installed; fi
+	$(MAKE) build-typecheck
 	bin/solargraph gems
 
 # Only create this once, so no dependencies
