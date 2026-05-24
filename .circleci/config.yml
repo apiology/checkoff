@@ -61,7 +61,6 @@ commands:
             - ruby-types-v4-{{ checksum "checkoff.gemspec" }}-{{ checksum "Gemfile" }}-
             - ruby-types-v4-{{ checksum "checkoff.gemspec" }}-
             - ruby-types-v4-
-            - ruby-types-
       - restore_cache:
           name: Restore pyenv cache
           keys:
