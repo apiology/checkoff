@@ -16,6 +16,24 @@ quality checks.  `bundle exec overcommit --install` will install it.
 This project uses direnv to manage environment variables used during
 development.  See the `.envrc` file for detail.
 
+Shared secret references live in `config/env.1p` (committed). For
+machine-specific values, use a [1Password Environment](https://www.1password.dev/environments)
+with a **Local .env file** destination mounted at `config/env.local` in
+this repo (absolute path). Secrets are served on read and are not stored
+as plaintext on disk; `config/env.local` is gitignored.
+
+1. In 1Password: **Developer → Environments → New environment** (for
+   example, `checkoff local`).
+2. Add variables (import from `config/env.1p` or enter manually), such as
+   `ASANA__PERSONAL_ACCESS_TOKEN` and `LOG_LEVEL`.
+3. **Destinations → Local .env file → Choose file path** →
+   `<repo>/config/env.local` → **Mount .env file**.
+4. Run `direnv allow` in the repo root. Approve 1Password when prompted
+   on first read of `config/env.local`.
+
+Variables from the mounted file override the same names from
+`config/env.1p`.
+
 ## cache_method
 
 Checkoff uses the
