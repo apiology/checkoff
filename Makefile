@@ -144,7 +144,6 @@ typecheck: build-typecheck srb solargraph  ## validate types in code and configu
 citypecheck: ci-build-typecheck srb ci-solargraph ## Run type check from CircleCI
 
 ci-solargraph: ## Run Solargraph typechecker in CI
-	rm -fr ~/.cache/solargraph
 	bin/solargraph typecheck --level strong
 
 typecoverage: typecheck ## Run type checking and then ratchet coverage in metrics/
