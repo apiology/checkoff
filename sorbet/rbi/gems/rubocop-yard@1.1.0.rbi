@@ -217,29 +217,29 @@ class RuboCop::Cop::YARD::MismatchName < ::RuboCop::Cop::Base
 
   private
 
-  # source://rubocop-yard//lib/rubocop/cop/yard/mismatch_name.rb#172
+  # source://rubocop-yard//lib/rubocop/cop/yard/mismatch_name.rb#173
   def add_offense_to_tag(node, comment, tag); end
 
-  # source://rubocop-yard//lib/rubocop/cop/yard/mismatch_name.rb#150
+  # source://rubocop-yard//lib/rubocop/cop/yard/mismatch_name.rb#151
   def cop_config_prototype_name; end
 
-  # source://rubocop-yard//lib/rubocop/cop/yard/mismatch_name.rb#158
+  # source://rubocop-yard//lib/rubocop/cop/yard/mismatch_name.rb#159
   def each_tags_by_docstring(tag_names, docstring); end
 
-  # source://rubocop-yard//lib/rubocop/cop/yard/mismatch_name.rb#164
+  # source://rubocop-yard//lib/rubocop/cop/yard/mismatch_name.rb#165
   def find_by_tag(preceding_lines, tag, i); end
 
   # @return [Boolean]
   #
-  # source://rubocop-yard//lib/rubocop/cop/yard/mismatch_name.rb#189
+  # source://rubocop-yard//lib/rubocop/cop/yard/mismatch_name.rb#190
   def include_overload_tag?(docstring); end
 
-  # source://rubocop-yard//lib/rubocop/cop/yard/mismatch_name.rb#119
+  # source://rubocop-yard//lib/rubocop/cop/yard/mismatch_name.rb#120
   def literal_to_yard_type(node); end
 
   # @param argument [RuboCop::AST::ArgNode]
   #
-  # source://rubocop-yard//lib/rubocop/cop/yard/mismatch_name.rb#99
+  # source://rubocop-yard//lib/rubocop/cop/yard/mismatch_name.rb#100
   def tag_prototype(argument); end
 end
 
