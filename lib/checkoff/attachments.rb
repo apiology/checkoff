@@ -164,6 +164,7 @@ module Checkoff
     #
     # @return [String,nil]
     def content_type_from_filename(filename)
+      # @sg-ignore
       MIME::Types.type_for(filename)&.first&.content_type
     end
 
@@ -186,25 +187,22 @@ module Checkoff
     attr_reader :client
 
     # bundle exec ./attachments.rb
-    # :nocov:
     class << self
       # @return [void]
       def run
-        # @sg-ignore
         # @type [String]
         gid = ARGV[0] || raise('Please pass task gid as first argument')
-        # @sg-ignore
         # @type [String]
         url = ARGV[1] || raise('Please pass attachment URL as second argument')
 
         tasks = Checkoff::Tasks.new
         attachments = Checkoff::Attachments.new
         task = tasks.task_by_gid(gid)
+        # @sg-ignore
         attachment = attachments.create_attachment_from_url!(url, task)
         puts "Results: #{attachment.inspect}"
       end
     end
-    # :nocov:
   end
 end
 

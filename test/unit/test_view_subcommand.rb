@@ -24,12 +24,22 @@ class TestViewSubcommand < ClassTest
   end
 
   # @return [void]
+  def expect_task_lookup
+    tasks.expects(:task).with('workspace', :project, task_name, section_name: nil).returns(task)
+  end
+
+  # @return [void]
+  def stub_task_due_fields
+    task.expects(:name).returns(task_name).at_least(0)
+    task.expects(:due_on).returns(nil).at_least(0)
+    task.expects(:due_at).returns(due_at_value).at_least(0)
+  end
+
+  # @return [void]
   def test_run_on_task
     view = get_test_object do
-      tasks.expects(:task).with('workspace', :project, task_name, section_name: nil).returns(task)
-      task.expects(:name).returns(task_name).at_least(0)
-      task.expects(:due_on).returns(nil).at_least(0)
-      task.expects(:due_at).returns(due_at_value).at_least(0)
+      expect_task_lookup
+      stub_task_due_fields
     end
 
     result = JSON.parse(view.send(:run_on_task, 'workspace', :project, '', task_name))

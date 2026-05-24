@@ -3,6 +3,7 @@
 require_relative 'test_helper'
 require_relative 'class_test'
 require 'checkoff/attachments'
+require 'stringio'
 
 class TestAttachments < ClassTest
   extend Forwardable
@@ -38,6 +39,46 @@ class TestAttachments < ClassTest
     attachment = attachments.create_attachment_from_url!(url, resource, attachment_name:, just_the_url: true)
 
     assert_equal('bar', attachment.foo)
+  end
+
+  # @param gid [String]
+  # @param url [String]
+  # @return [Mocha::Mock]
+  def expect_run_on_attachment(gid, url)
+    task = mock('task')
+    attachment = mock('attachment')
+    tasks_client = mock('tasks_client')
+    attachments_client = mock('attachments_client')
+
+    Checkoff::Tasks.expects(:new).returns(tasks_client)
+    tasks_client.expects(:task_by_gid).with(gid).returns(task)
+    Checkoff::Attachments.expects(:new).returns(attachments_client)
+    attachments_client.expects(:create_attachment_from_url!).with(url, task).returns(attachment)
+    attachment.expects(:inspect).returns('#<Attachment>')
+    attachment
+  end
+
+  # @return [String]
+  def capture_attachments_run
+    old_stdout = $stdout
+    $stdout = StringIO.new
+    Checkoff::Attachments.run
+    $stdout.string
+  ensure
+    $stdout = old_stdout if old_stdout
+  end
+
+  # @return [void]
+  def test_run
+    gid = '123'
+    url = 'http://example.com'
+
+    ARGV.replace([gid, url])
+    expect_run_on_attachment(gid, url)
+
+    assert_match(/#<Attachment>/, capture_attachments_run)
+  ensure
+    ARGV.replace([$PROGRAM_NAME])
   end
 
   # @return [void]

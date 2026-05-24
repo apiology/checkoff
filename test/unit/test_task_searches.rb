@@ -140,11 +140,9 @@ class TestTaskSearches < ClassTest
     assert_same(collection, result)
   end
 
-  # @return [void]
-  def test_raw_task_search_paginates_when_full_page
-    task_searches = get_test_object do
-      @mocks[:projects] = projects
-    end
+  # @param task_searches [Checkoff::TaskSearches]
+  # @return [Array]
+  def mock_full_page_raw_task_search(task_searches)
     first_page = mock('first_page')
     first_page.expects(:count).returns(100)
     paginated = [good_task]
@@ -154,6 +152,15 @@ class TestTaskSearches < ClassTest
     task_searches.expects(:iterated_raw_task_search)
       .with(api_params, workspace_gid: 'abc', extra_fields: [])
       .returns(paginated)
+    paginated
+  end
+
+  # @return [void]
+  def test_raw_task_search_paginates_when_full_page
+    task_searches = get_test_object do
+      @mocks[:projects] = projects
+    end
+    paginated = mock_full_page_raw_task_search(task_searches)
 
     result = task_searches.send(:raw_task_search, api_params, workspace_gid: 'abc', task_selector: [])
 
