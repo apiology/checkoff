@@ -1,0 +1,26 @@
+/Users/broz/src/checkoff/lib/checkoff/cli.rb:38 - Checkoff::MvSubcommand#create_to_project_name return type could not be inferred
+/Users/broz/src/checkoff/lib/checkoff/cli.rb:86 - Untyped method Checkoff::MvSubcommand#move_tasks could not be inferred
+/Users/broz/src/checkoff/lib/checkoff/cli.rb:118 - Untyped method Checkoff::MvSubcommand#from_project_name could not be inferred
+/Users/broz/src/checkoff/lib/checkoff/cli.rb:122 - Untyped method Checkoff::MvSubcommand#project_arg_to_name could not be inferred
+/Users/broz/src/checkoff/lib/checkoff/cli.rb:163 - Untyped method Checkoff::ViewSubcommand#validate_and_assign_project_name could not be inferred
+/Users/broz/src/checkoff/lib/checkoff/cli.rb:180 - Untyped method Checkoff::ViewSubcommand#run_on_section could not be inferred
+/Users/broz/src/checkoff/lib/checkoff/cli.rb:204 - Untyped method Checkoff::ViewSubcommand#tasks_to_hash could not be inferred
+/Users/broz/src/checkoff/lib/checkoff/cli.rb:208 - Untyped method Checkoff::ViewSubcommand#workspace_name could not be inferred
+/Users/broz/src/checkoff/lib/checkoff/cli.rb:208 - Untyped method Checkoff::ViewSubcommand#project_name could not be inferred
+/Users/broz/src/checkoff/lib/checkoff/cli.rb:208 - Untyped method Checkoff::ViewSubcommand#section_name could not be inferred
+/Users/broz/src/checkoff/lib/checkoff/cli.rb:208 - Untyped method Checkoff::ViewSubcommand#task_name could not be inferred
+/Users/broz/src/checkoff/lib/checkoff/cli.rb:231 - Untyped method Checkoff::QuickaddSubcommand#workspace_name could not be inferred
+/Users/broz/src/checkoff/lib/checkoff/cli.rb:231 - Untyped method Checkoff::QuickaddSubcommand#task_name could not be inferred
+/Users/broz/src/checkoff/lib/checkoff/internal/config_loader.rb:23 - Checkoff::Internal::EnvFallbackConfigLoader#[] return type could not be inferred
+/Users/broz/src/checkoff/lib/checkoff/internal/search_url/date_param_converter.rb:138 - Checkoff::Internal::SearchUrl::DateParamConverter#get_single_param return type could not be inferred
+/Users/broz/src/checkoff/lib/checkoff/internal/selector_classes/project.rb:20 - Checkoff::SelectorClasses::Project::DueDateFunctionEvaluator#evaluate return type could not be inferred
+/Users/broz/src/checkoff/lib/checkoff/internal/selector_classes/task.rb:196 - Checkoff::SelectorClasses::Task::UnassignedPFunctionEvaluator#evaluate return type could not be inferred
+/Users/broz/src/checkoff/lib/checkoff/internal/selector_classes/task.rb:259 - Checkoff::SelectorClasses::Task::EstimateExceedsDurationPFunctionEvaluator#calculate_allocated_hours return type could not be inferred
+/Users/broz/src/checkoff/lib/checkoff/internal/selector_classes/task.rb:366 - Checkoff::SelectorClasses::Task::MilestonePFunctionEvaluator#evaluate return type could not be inferred
+/Users/broz/src/checkoff/lib/checkoff/subtasks.rb:93 - Checkoff::Subtasks#subtask_section? return type could not be inferred
+/Users/broz/src/checkoff/lib/checkoff/task_searches.rb:195 - Checkoff::TaskSearches#calculate_api_options return type could not be inferred
+/Users/broz/src/checkoff/lib/checkoff/task_selectors.rb:79 - Checkoff::TaskSelectors.task_selector return type could not be inferred
+/Users/broz/src/checkoff/lib/checkoff/tasks.rb:184 - Checkoff::Tasks#add_task return type could not be inferred
+/Users/broz/src/checkoff/lib/checkoff/timing.rb:176 - Checkoff::Timing#n_days_from_now return type could not be inferred
+/Users/broz/src/checkoff/lib/checkoff/workspaces.rb:48 - Checkoff::Workspaces#default_workspace return type could not be inferred
+/Users/broz/src/checkoff/bin/console:15 - Unresolved constant IRB

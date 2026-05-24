@@ -1,4 +1,4 @@
-.PHONY: build build-typecheck bundle_install cicoverage citypecheck citest citypecoverage clean clean-coverage clean-typecheck clean-typecoverage coverage default docs gem_dependencies help overcommit quality repl report-coverage rubocop rubocop-ratchet test typecheck typecoverage update_from_cookiecutter yard
+.PHONY: build build-typecheck bundle_install cicoverage citypecheck citest citypecoverage clean clean-coverage clean-typecheck clean-typecoverage coverage default docs feature gem_dependencies help overcommit quality repl report-coverage rubocop rubocop-ratchet spec test typecheck typecoverage update_from_cookiecutter yard
 
 .DEFAULT_GOAL := default
 
@@ -33,7 +33,7 @@ rbi/checkoff.rbi: tapioca.installed yardoc.installed sorbet/config .gem_rbs_coll
 	bin/sord gen $(SORD_GEN_OPTIONS) rbi/checkoff-sord.rbi # YARD to RBI
 	cat rbi/checkoff-parlour.rbi rbi/checkoff-sord.rbi > rbi/checkoff.rbi
 	rm -f rbi/checkoff-sord.rbi rbi/checkoff-parlour.rbi
-	sed -i.bak -e 's/^# typed: strong/# typed: ignore/' rbi/checkoff.rbi
+#	sed -i.bak -e 's/^# typed: strong/# typed: ignore/' rbi/checkoff.rbi
 	rm -f rbi/checkoff.rbi.bak
 	touch rbi/checkoff.rbi
 
@@ -43,7 +43,7 @@ sig/checkoff.rbs: yardoc.installed .gem_rbs_collection/.keepme ## Generate RBS f
 
 YARD_PLUGIN_OPTS = --plugin yard-sorbet --plugin yard-solargraph
 
-YARD_OPTS = $(YARD_PLUGIN_OPTS) -c .yardoc --output-dir yardoc --backtrace --exclude '^config/' '{lib,app,test}/**/*.rb' 'ext/**/*.{c,rb}'
+YARD_OPTS = $(YARD_PLUGIN_OPTS) -c .yardoc --output-dir yardoc --backtrace --exclude '^config/' '{lib,app,spec,feature}/**/*.rb' 'ext/**/*.{c,rb}'
 
 types.installed: tapioca.installed Gemfile.lock Gemfile.lock.installed rbi/checkoff.rbi sorbet/tapioca/require.rb sorbet/config ## Ensure typechecking dependencies are in place
 	bin/solargraph gems
@@ -51,7 +51,7 @@ types.installed: tapioca.installed Gemfile.lock Gemfile.lock.installed rbi/check
 	# bin/solargraph scan 2>&1
 	bin/spoom srb bump || true
 	# spoom rudely updates timestamps on files, so let's keep up by
-	# touching yardoc.installed so we dont' end up in a vicious
+	# touching yardoc.installed so we don't end up in a vicious
 	# cycle
 	touch yardoc.installed rbi/checkoff.rbi
 	# bin/solargraph scan 2>&1
@@ -71,8 +71,8 @@ rbs_collection.lock.yaml: Gemfile.lock rbs_collection.yaml
 	bin/rbs collection update
 	touch rbs_collection.lock.yaml
 
-rbs_collection.yaml:
-	bin/rbs collection init
+rbs_collection.yaml: Gemfile.lock.installed
+	@if [ ! -f rbs_collection.yaml ]; then bin/rbs collection init; fi
 
 .gem_rbs_collection/.keepme: rbs_collection.lock.yaml
 	# Ensure that the gem rbs collection is installed
@@ -94,7 +94,7 @@ tapioca.installed: sorbet/tapioca/require.rb Gemfile.lock.installed ## Install T
 #	bin/tapioca dsl
 	touch tapioca.installed
 
-yardoc.installed: Makefile $(SOURCE_FILES) ## Generate YARD documentation
+yardoc.installed: Makefile $(wildcard config/annotations_*.rb) $(SOURCE_FILES) ## Generate YARD documentation
 	bin/yard doc $(YARD_OPTS)
 	touch yardoc.installed
 
@@ -105,6 +105,7 @@ docs: ## Generate YARD documentation
 
 clean-typecheck: ## Refresh the easily-regenerated information that type checking depends on
 	rm -fr .yardoc/ rbi/checkoff.rbi types.installed yardoc.installed sig/checkoff.rbs || true
+	rm -fr ../checkoff/.yardoc || true
 	echo all clear
 
 realclean-typecheck: clean-typecheck ## Remove all type checking artifacts
@@ -142,7 +143,7 @@ typecheck: build-typecheck srb solargraph  ## validate types in code and configu
 citypecheck: ci-build-typecheck srb ci-solargraph ## Run type check from CircleCI
 
 ci-solargraph: ## Run Solargraph typechecker in CI
-	  bin/solargraph typecheck --level strong
+	bin/solargraph typecheck --level strong
 
 typecoverage: typecheck ## Run type checking and then ratchet coverage in metrics/
 
@@ -174,6 +175,7 @@ gem_dependencies: .bundle/config
 # Ensure any Gemfile.lock changes, even pulled from git, ensure a
 # bundle is installed.
 Gemfile.lock.installed: Gemfile checkoff.gemspec vendor/.keep
+	bundle install
 	touch Gemfile.lock.installed
 
 vendor/.keep: Gemfile.lock .ruby-version
@@ -188,6 +190,8 @@ clear_metrics: ## remove or reset result artifacts created by tests and quality 
 
 clean: clear_metrics clean-typecoverage clean-typecheck clean-coverage ## remove all built artifacts
 
+test: spec feature ## run tests quickly
+
 citest: test ## Run unit tests from CircleCI
 
 overcommit: ## run precommit quality checks
@@ -197,9 +201,6 @@ overcommit_branch: ## run precommit quality checks only on changed files
 	bin/overcommit --run --diff origin/main
 
 quality: overcommit ## run precommit quality checks
-
-test: ## Run lower-level tests
-	@bin/rake test
 
 rubocop: ## Run rubocop
 	@bin/rubocop
@@ -212,6 +213,12 @@ rubocop-ratchet: rubocop ## Run rubocop and then ratchet numbers of errors in to
 	    git diff --exit-code .rubocop_todo.yml; \
 	fi
 
+spec: ## Run lower-level tests
+	@bin/rake spec
+
+feature: ## Run higher-level tests
+	@bin/rake feature
+
 repl: bundle_install ## Launch an interactive development shell
 	@bin/rake repl
 
@@ -221,7 +228,7 @@ coverage: test report-coverage ## check code coverage
 	@bin/rake undercover
 
 release: sig/checkoff.rbs rbi/checkoff.rbi ## Create a new release
-	bin/rake release
+	bundle exec rake release
 
 report-coverage: test ## Report summary of coverage to stdout, and generate HTML, XML coverage report
 

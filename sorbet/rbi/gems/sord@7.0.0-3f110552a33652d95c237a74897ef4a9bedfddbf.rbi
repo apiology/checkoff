@@ -10,54 +10,49 @@
 # Generic - these will be put in a `Types::Raw`, so writing RBS syntax is a little devious,
 # but by their nature we know they'll only be used in an RBS file, so it's probably fine
 
-# source://sord//lib/sord/version.rb#2
+# pkg:gem/sord#lib/sord/version.rb:2
 # typed: strong
 module Sord; end
 
 # Converts the current working directory's YARD registry into an type
 # signature file.
 #
-# source://sord//lib/sord/generator.rb#12
-# Converts the current working directory's YARD registry into an type
+# pkg:gem/sord#lib/sord/generator.rb:12
 class Sord::Generator
   # Create a new generator.
-  #
-  # @option options
-  # @option options
-  # @option options
-  # @option options
-  # @option options
-  # @option options
-  # @option options
-  # @option options
-  # @param options [Hash]
+  # @param [Hash] options
+  # @option options [Symbol] mode
+  # @option options [Integer] break_params
+  # @option options [Boolean] replace_errors_with_untyped
+  # @option options [Boolean] replace_unresolved_with_untyped
+  # @option options [Boolean] hide_private
+  # @option options [Boolean] comments
+  # @option options [Parlour::Generator] generator
+  # @option options [Parlour::TypedObject] root
   # @return [void]
   #
-  # source://sord//lib/sord/generator.rb#37
+  # pkg:gem/sord#lib/sord/generator.rb:37
   # _@param_ `options`
   sig { params(options: T::Hash[T.untyped, T.untyped]).void }
   def initialize(options); end
 
   # Given a YARD NamespaceObject, add lines defining either its class
   # and instance attributes and their signatures to the current file.
-  #
-  # @param item [YARD::CodeObjects::NamespaceObject]
+  # @param [YARD::CodeObjects::NamespaceObject] item
   # @return [void]
   #
-  # source://sord//lib/sord/generator.rb#498
+  # pkg:gem/sord#lib/sord/generator.rb:498
   # sord warn - YARD::CodeObjects::NamespaceObject wasn't able to be resolved to a constant in this project
-  # Given a YARD NamespaceObject, add lines defining either its class
   # _@param_ `item`
   sig { params(item: YARD::CodeObjects::NamespaceObject).void }
   def add_attributes(item); end
 
   # Adds comments to an object based on a docstring.
-  #
-  # @param item [YARD::CodeObjects::NamespaceObject]
-  # @param typed_object [Parlour::TypedObject]
+  # @param [YARD::CodeObjects::NamespaceObject] item
+  # @param [Parlour::TypedObject] typed_object
   # @return [void]
   #
-  # source://sord//lib/sord/generator.rb#195
+  # pkg:gem/sord#lib/sord/generator.rb:195
   # sord warn - YARD::CodeObjects::NamespaceObject wasn't able to be resolved to a constant in this project
   # sord warn - Parlour::TypedObject wasn't able to be resolved to a constant in this project
   # _@param_ `item`
@@ -66,11 +61,10 @@ class Sord::Generator
   def add_comments(item, typed_object); end
 
   # Given a YARD NamespaceObject, add lines defining constants.
-  #
-  # @param item [YARD::CodeObjects::NamespaceObject]
+  # @param [YARD::CodeObjects::NamespaceObject] item
   # @return [void]
   #
-  # source://sord//lib/sord/generator.rb#127
+  # pkg:gem/sord#lib/sord/generator.rb:127
   # sord warn - YARD::CodeObjects::NamespaceObject wasn't able to be resolved to a constant in this project
   # _@param_ `item`
   sig { params(item: YARD::CodeObjects::NamespaceObject).void }
@@ -78,67 +72,58 @@ class Sord::Generator
 
   # Given a YARD NamespaceObject, add lines defining its methods and their
   # signatures to the current file.
-  #
-  # @param item [YARD::CodeObjects::NamespaceObject]
+  # @param [YARD::CodeObjects::NamespaceObject] item
   # @return [void]
   #
-  # source://sord//lib/sord/generator.rb#306
+  # pkg:gem/sord#lib/sord/generator.rb:306
   # sord warn - YARD::CodeObjects::NamespaceObject wasn't able to be resolved to a constant in this project
-  # Given a YARD NamespaceObject, add lines defining its methods and their
   # _@param_ `item`
   sig { params(item: YARD::CodeObjects::NamespaceObject).void }
   def add_methods(item); end
 
   # Given a YARD CodeObject, add lines defining its mixins (that is, extends
   # and includes) to the current file. Returns the number of mixins.
-  #
-  # @param item [YARD::CodeObjects::Base]
+  # @param [YARD::CodeObjects::Base] item
   # @return [Integer]
   #
-  # source://sord//lib/sord/generator.rb#104
+  # pkg:gem/sord#lib/sord/generator.rb:104
   # sord warn - YARD::CodeObjects::Base wasn't able to be resolved to a constant in this project
-  # Given a YARD CodeObject, add lines defining its mixins (that is, extends
   # _@param_ `item`
   sig { params(item: YARD::CodeObjects::Base).returns(Integer) }
   def add_mixins(item); end
 
   # Given a YARD NamespaceObject, add lines defining its mixins, methods
   # and children to the file.
-  #
-  # @param item [YARD::CodeObjects::NamespaceObject]
+  # @param [YARD::CodeObjects::NamespaceObject] item
   # @return [void]
   #
-  # source://sord//lib/sord/generator.rb#606
+  # pkg:gem/sord#lib/sord/generator.rb:606
   # sord warn - YARD::CodeObjects::NamespaceObject wasn't able to be resolved to a constant in this project
-  # Given a YARD NamespaceObject, add lines defining its mixins, methods
   # _@param_ `item`
   sig { params(item: YARD::CodeObjects::NamespaceObject).void }
   def add_namespace(item); end
 
   # Increment the method counter.
-  #
   # @return [void]
   #
-  # source://sord//lib/sord/generator.rb#96
+  # pkg:gem/sord#lib/sord/generator.rb:96
   sig { void }
   def count_method; end
 
   # Increment the namespace counter.
-  #
   # @return [void]
   #
-  # source://sord//lib/sord/generator.rb#90
+  # pkg:gem/sord#lib/sord/generator.rb:90
   sig { void }
   def count_namespace; end
 
   # Removes the last character of a default parameter value if it begins with
   # '-', working around a bug in YARD. (See lsegal/yard #894)
   #
-  # @param default [String]
+  # @param [String] default
   # @return [String, nil]
   #
-  # source://sord//lib/sord/generator.rb#740
-  # Removes the last character of a default parameter value if it begins with
+  # pkg:gem/sord#lib/sord/generator.rb:740
   # _@param_ `default`
   sig { params(default: String).returns(T.nilable(String)) }
   def fix_default_if_unary_minus(default); end
@@ -146,12 +131,9 @@ class Sord::Generator
   # Populates the generator with the contents of the YARD registry, then
   # uses the loaded Parlour::Generator to generate the file. You must
   # load the YARD registry first!
-  #
   # @return [void]
   #
-  # source://sord//lib/sord/generator.rb#646
-  # Populates the generator with the contents of the YARD registry, then
-  # uses the loaded Parlour::Generator to generate the file. You must
+  # pkg:gem/sord#lib/sord/generator.rb:646
   sig { void }
   def generate; end
 
@@ -159,7 +141,7 @@ class Sord::Generator
   # @param tag_name [String]
   # @return [YARD::Tags::Tag, nil]
   #
-  # source://sord//lib/sord/generator.rb#295
+  # pkg:gem/sord#lib/sord/generator.rb:295
   # sord warn - YARD::CodeObjects::MethodObject wasn't able to be resolved to a constant in this project
   # sord warn - YARD::Tags::Tag wasn't able to be resolved to a constant in this project
   # _@param_ `method`
@@ -171,7 +153,7 @@ class Sord::Generator
   # @param tag_name [String]
   # @return [Array<YARD::Tags::Tag>]
   #
-  # source://sord//lib/sord/generator.rb#285
+  # pkg:gem/sord#lib/sord/generator.rb:285
   # sord warn - YARD::CodeObjects::MethodObject wasn't able to be resolved to a constant in this project
   # sord warn - YARD::Tags::Tag wasn't able to be resolved to a constant in this project
   # _@param_ `method`
@@ -182,7 +164,7 @@ class Sord::Generator
   # @return [Integer] The number of objects this generator has processed so
   #   far.
   #
-  # source://sord//lib/sord/generator.rb#17
+  # pkg:gem/sord#lib/sord/generator.rb:17
   # _@return_ — The number of objects this generator has processed so
   # far.
   sig { returns(Integer) }
@@ -190,21 +172,17 @@ class Sord::Generator
 
   # Populates the generator with the contents of the YARD registry. You
   # must load the YARD registry first!
-  #
   # @return [void]
   #
-  # source://sord//lib/sord/generator.rb#635
-  # Populates the generator with the contents of the YARD registry. You
+  # pkg:gem/sord#lib/sord/generator.rb:635
   sig { void }
   def populate; end
 
   # Loads the YARD registry, populates the file, and prints any relevant
   # final logs.
-  #
   # @return [void]
   #
-  # source://sord//lib/sord/generator.rb#654
-  # Loads the YARD registry, populates the file, and prints any relevant
+  # pkg:gem/sord#lib/sord/generator.rb:654
   sig { void }
   def run; end
 
@@ -213,14 +191,11 @@ class Sord::Generator
   # valid for Sorbet. Sorbet requires that, e.g. required kwargs go before
   # optional kwargs.
   #
-  # @param pair1 [Array]
-  # @param pair2 [Array]
+  # @param [Array] pair1
+  # @param [Array] pair2
   # @return Integer
   #
-  # source://sord//lib/sord/generator.rb#703
-  # Given two pairs of arrays representing method parameters, in the form
-  # of ["variable_name", "default_value"], sort the parameters so they're
-  # valid for Sorbet. Sorbet requires that, e.g. required kwargs go before
+  # pkg:gem/sord#lib/sord/generator.rb:703
   # _@param_ `pair1`
   # _@param_ `pair2`
   # _@return_ — Integer
@@ -231,129 +206,115 @@ class Sord::Generator
   #   errors encountered by by the generator. Each element is of the form
   #   [message, item, line].
   #
-  # source://sord//lib/sord/generator.rb#24
+  # pkg:gem/sord#lib/sord/generator.rb:24
   def warnings; end
 end
 
-# source://sord//lib/sord/generator.rb#13
+# pkg:gem/sord#lib/sord/generator.rb:13
 Sord::Generator::VALID_MODES = T.let(T.unsafe(nil), Array)
 
 # Handles writing logs to stdout and any other classes which request them.
 #
-# source://sord//lib/sord/logging.rb#6
+# pkg:gem/sord#lib/sord/logging.rb:6
 module Sord::Logging
   class << self
     # Adds a hook to the logger.
-    #
-    # @return [void]
-    # @yieldparam kind [Symbol] The kind of log message this is.
-    # @yieldparam msg [String] The log message to write.
-    # @yieldparam item [YARD::CodeObjects::Base] The CodeObject which this log
-    #   is associated with, if any. This is shown before the log message if it is
-    #   specified.
+    # @yieldparam [Symbol] kind The kind of log message this is.
+    # @yieldparam [String] msg The log message to write.
+    # @yieldparam [YARD::CodeObjects::Base] item The CodeObject which this log
+    #  is associated with, if any. This is shown before the log message if it is
+    #  specified.
     # @yieldreturn [void]
+    # @return [void]
     #
-    # source://sord//lib/sord/logging.rb#188
+    # pkg:gem/sord#lib/sord/logging.rb:188
     # sord warn - YARD::CodeObjects::Base wasn't able to be resolved to a constant in this project
     sig { params(blk: T.proc.params(kind: Symbol, msg: String, item: YARD::CodeObjects::Base).void).void }
     def add_hook(&blk); end
 
     # Print a done message. This should be used when a process completes
     # successfully.
-    #
-    # @param msg [String] The log message to write.
-    # @param item [YARD::CodeObjects::Base] The CodeObject which this log
-    #   is associated with, if any. This is shown before the log message if it is
-    #   specified.
+    # @param [String] msg The log message to write.
+    # @param [YARD::CodeObjects::Base] item The CodeObject which this log
+    #  is associated with, if any. This is shown before the log message if it is
+    #  specified.
     # @return [void]
     #
-    # source://sord//lib/sord/logging.rb#163
+    # pkg:gem/sord#lib/sord/logging.rb:163
     # sord warn - YARD::CodeObjects::Base wasn't able to be resolved to a constant in this project
     # sord omit - no YARD type given for "**opts", using untyped
-    # Print a done message. This should be used when a process completes
     # _@param_ `msg` — The log message to write.
     # _@param_ `item` — The CodeObject which this log  is associated with, if any. This is shown before the log message if it is specified.
     sig { params(msg: String, item: T.nilable(YARD::CodeObjects::Base), opts: T.untyped).void }
-    def done(msg, item = T.unsafe(nil), **opts); end
+    def done(msg, item = nil, **opts); end
 
     # Print a duck-typing message. This should be used when the YARD
     # documentation contains duck typing, which isn't supported by Sorbet, so
     # it is substituted for something different.
-    #
-    # @param msg [String] The log message to write.
-    # @param item [YARD::CodeObjects::Base] The CodeObject which this log
-    #   is associated with, if any. This is shown before the log message if it is
-    #   specified.
+    # @param [String] msg The log message to write.
+    # @param [YARD::CodeObjects::Base] item The CodeObject which this log
+    #  is associated with, if any. This is shown before the log message if it is
+    #  specified.
     # @return [void]
     #
-    # source://sord//lib/sord/logging.rb#117
+    # pkg:gem/sord#lib/sord/logging.rb:117
     # sord warn - YARD::CodeObjects::Base wasn't able to be resolved to a constant in this project
     # sord omit - no YARD type given for "**opts", using untyped
-    # Print a duck-typing message. This should be used when the YARD
-    # documentation contains duck typing, which isn't supported by Sorbet, so
     # _@param_ `msg` — The log message to write.
     # _@param_ `item` — The CodeObject which this log  is associated with, if any. This is shown before the log message if it is specified.
     sig { params(msg: String, item: T.nilable(YARD::CodeObjects::Base), opts: T.untyped).void }
-    def duck(msg, item = T.unsafe(nil), **opts); end
+    def duck(msg, item = nil, **opts); end
 
     # Gets the array of log messages types which should be processed. Any not on
     # this list will be discarded.
-    #
     # @return [Array<Symbol>]
     # @return [void]
     #
-    # source://sord//lib/sord/logging.rb#50
-    # Gets the array of log messages types which should be processed. Any not on
+    # pkg:gem/sord#lib/sord/logging.rb:50
     sig { returns(T::Array[Symbol]) }
     def enabled_types; end
 
     # Sets the array of log messages types which should be processed. Any not on
     # this list will be discarded. This should be a subset of AVAILABLE_TYPES.
-    #
-    # @param value [Array<Symbol>]
+    # @param [Array<Symbol>] value
     # @return [void]
     #
-    # source://sord//lib/sord/logging.rb#41
-    # Sets the array of log messages types which should be processed. Any not on
+    # pkg:gem/sord#lib/sord/logging.rb:41
     # _@param_ `value`
     sig { params(value: T::Array[Symbol]).void }
     def enabled_types=(value); end
 
     # Print an error message. This should be used for things which require the
     # current process to stop.
-    #
-    # @param msg [String] The log message to write.
-    # @param item [YARD::CodeObjects::Base] The CodeObject which this log
-    #   is associated with, if any. This is shown before the log message if it is
-    #   specified.
+    # @param [String] msg The log message to write.
+    # @param [YARD::CodeObjects::Base] item The CodeObject which this log
+    #  is associated with, if any. This is shown before the log message if it is
+    #  specified.
     # @return [void]
     #
-    # source://sord//lib/sord/logging.rb#128
+    # pkg:gem/sord#lib/sord/logging.rb:128
     # sord warn - YARD::CodeObjects::Base wasn't able to be resolved to a constant in this project
     # sord omit - no YARD type given for "**opts", using untyped
-    # Print an error message. This should be used for things which require the
     # _@param_ `msg` — The log message to write.
     # _@param_ `item` — The CodeObject which this log  is associated with, if any. This is shown before the log message if it is specified.
     sig { params(msg: String, item: T.nilable(YARD::CodeObjects::Base), opts: T.untyped).void }
-    def error(msg, item = T.unsafe(nil), **opts); end
+    def error(msg, item = nil, **opts); end
 
     # A generic log message writer which is called by all other specific logging
     # methods. This shouldn't be called outside of the Logging class itself.
-    #
-    # @param kind [Symbol] The kind of log message this is.
-    # @param header [String] The prefix for this log message. For consistency,
+    # @param [Symbol] kind The kind of log message this is.
+    # @param [String] header The prefix for this log message. For consistency,
     #   it should be up to five uppercase characters wrapped in square brackets,
     #   with some unique colour applied.
-    # @param msg [String] The log message to write.
-    # @param item [YARD::CodeObjects::Base] The CodeObject which this log
-    #   is associated with, if any. This is shown before the log message if it is
-    #   specified.
+    # @param [String] msg The log message to write.
+    # @param [YARD::CodeObjects::Base] item The CodeObject which this log
+    #  is associated with, if any. This is shown before the log message if it is
+    #  specified.
     # @return [void]
     #
-    # source://sord//lib/sord/logging.rb#73
+    # pkg:gem/sord#lib/sord/logging.rb:73
     # sord warn - YARD::CodeObjects::Base wasn't able to be resolved to a constant in this project
     # sord omit - no YARD type given for "**opts", using untyped
-    # A generic log message writer which is called by all other specific logging
     # _@param_ `kind` — The kind of log message this is.
     # _@param_ `header` — The prefix for this log message. For consistency, it should be up to five uppercase characters wrapped in square brackets, with some unique colour applied.
     # _@param_ `msg` — The log message to write.
@@ -363,7 +324,7 @@ module Sord::Logging
 
     # @return [Array<Proc>] The hooks registered on the logger.
     #
-    # source://sord//lib/sord/logging.rb#12
+    # pkg:gem/sord#lib/sord/logging.rb:12
     # _@return_ — The hooks registered on the logger.
     sig { returns(T::Array[Proc]) }
     def hooks; end
@@ -371,51 +332,45 @@ module Sord::Logging
     # Print an infer message. This should be used when the user should be told
     # that some information has been filled in or guessed for them, and that
     # information is likely correct.
-    #
-    # @param msg [String] The log message to write.
-    # @param item [YARD::CodeObjects::Base] The CodeObject which this log
-    #   is associated with, if any. This is shown before the log message if it is
-    #   specified.
+    # @param [String] msg The log message to write.
+    # @param [YARD::CodeObjects::Base] item The CodeObject which this log
+    #  is associated with, if any. This is shown before the log message if it is
+    #  specified.
     # @return [void]
     #
-    # source://sord//lib/sord/logging.rb#140
+    # pkg:gem/sord#lib/sord/logging.rb:140
     # sord warn - YARD::CodeObjects::Base wasn't able to be resolved to a constant in this project
     # sord omit - no YARD type given for "**opts", using untyped
-    # Print an infer message. This should be used when the user should be told
-    # that some information has been filled in or guessed for them, and that
     # _@param_ `msg` — The log message to write.
     # _@param_ `item` — The CodeObject which this log  is associated with, if any. This is shown before the log message if it is specified.
     sig { params(msg: String, item: T.nilable(YARD::CodeObjects::Base), opts: T.untyped).void }
-    def infer(msg, item = T.unsafe(nil), **opts); end
+    def infer(msg, item = nil, **opts); end
 
     # Print an info message. This should be used for generic informational
     # messages which the user doesn't need to act on.
-    #
-    # @param msg [String] The log message to write.
-    # @param item [YARD::CodeObjects::Base] The CodeObject which this log
-    #   is associated with, if any. This is shown before the log message if it is
-    #   specified.
+    # @param [String] msg The log message to write.
+    # @param [YARD::CodeObjects::Base] item The CodeObject which this log
+    #  is associated with, if any. This is shown before the log message if it is
+    #  specified.
     # @return [void]
     #
-    # source://sord//lib/sord/logging.rb#105
+    # pkg:gem/sord#lib/sord/logging.rb:105
     # sord warn - YARD::CodeObjects::Base wasn't able to be resolved to a constant in this project
     # sord omit - no YARD type given for "**opts", using untyped
-    # Print an info message. This should be used for generic informational
     # _@param_ `msg` — The log message to write.
     # _@param_ `item` — The CodeObject which this log  is associated with, if any. This is shown before the log message if it is specified.
     sig { params(msg: String, item: T.nilable(YARD::CodeObjects::Base), opts: T.untyped).void }
-    def info(msg, item = T.unsafe(nil), **opts); end
+    def info(msg, item = nil, **opts); end
 
     # Invokes all registered hooks on the logger.
-    #
-    # @param kind [Symbol] The kind of log message this is.
-    # @param msg [String] The log message to write.
-    # @param item [YARD::CodeObjects::Base] The CodeObject which this log
-    #   is associated with, if any. This is shown before the log message if it is
-    #   specified.
+    # @param [Symbol] kind The kind of log message this is.
+    # @param [String] msg The log message to write.
+    # @param [YARD::CodeObjects::Base] item The CodeObject which this log
+    #  is associated with, if any. This is shown before the log message if it is
+    #  specified.
     # @return [void]
     #
-    # source://sord//lib/sord/logging.rb#174
+    # pkg:gem/sord#lib/sord/logging.rb:174
     # sord warn - YARD::CodeObjects::Base wasn't able to be resolved to a constant in this project
     # sord omit - no YARD type given for "**opts", using untyped
     # _@param_ `kind` — The kind of log message this is.
@@ -427,29 +382,25 @@ module Sord::Logging
     # Print an omit message. This should be used as a special type of warning
     # to alert the user that there is some information missing, but this
     # information is not critical to the completion of the process.
-    #
-    # @param msg [String] The log message to write.
-    # @param item [YARD::CodeObjects::Base] The CodeObject which this log
-    #   is associated with, if any. This is shown before the log message if it is
-    #   specified.
+    # @param [String] msg The log message to write.
+    # @param [YARD::CodeObjects::Base] item The CodeObject which this log
+    #  is associated with, if any. This is shown before the log message if it is
+    #  specified.
     # @return [void]
     #
-    # source://sord//lib/sord/logging.rb#152
+    # pkg:gem/sord#lib/sord/logging.rb:152
     # sord warn - YARD::CodeObjects::Base wasn't able to be resolved to a constant in this project
     # sord omit - no YARD type given for "**opts", using untyped
-    # Print an omit message. This should be used as a special type of warning
-    # to alert the user that there is some information missing, but this
     # _@param_ `msg` — The log message to write.
     # _@param_ `item` — The CodeObject which this log  is associated with, if any. This is shown before the log message if it is specified.
     sig { params(msg: String, item: T.nilable(YARD::CodeObjects::Base), opts: T.untyped).void }
-    def omit(msg, item = T.unsafe(nil), **opts); end
+    def omit(msg, item = nil, **opts); end
 
     # Sets whether log messages should be printed or not.
-    #
-    # @param value [Boolean]
+    # @param [Boolean] value
     # @return [void]
     #
-    # source://sord//lib/sord/logging.rb#28
+    # pkg:gem/sord#lib/sord/logging.rb:28
     # _@param_ `value`
     sig { params(value: T::Boolean).void }
     def silent=(value); end
@@ -457,7 +408,7 @@ module Sord::Logging
     # @return [Boolean] Whether log messages should be printed or not. This is
     #   used for testing.
     #
-    # source://sord//lib/sord/logging.rb#21
+    # pkg:gem/sord#lib/sord/logging.rb:21
     # _@return_ — Whether log messages should be printed or not. This is
     # used for testing.
     sig { returns(T::Boolean) }
@@ -465,150 +416,136 @@ module Sord::Logging
 
     # Returns a boolean indicating whether a given array is a valid value for
     # #enabled_types.
-    #
-    # @param value [Array<Symbol>]
+    # @param [Array<Symbol>] value
     # @return [void]
     #
-    # source://sord//lib/sord/logging.rb#58
-    # Returns a boolean indicating whether a given array is a valid value for
+    # pkg:gem/sord#lib/sord/logging.rb:58
     # _@param_ `value`
     sig { params(value: T::Array[Symbol]).void }
     def valid_types?(value); end
 
     # Print a warning message. This should be used for things which require the
     # user's attention but do not prevent the process from stopping.
-    #
-    # @param msg [String] The log message to write.
-    # @param item [YARD::CodeObjects::Base] The CodeObject which this log
-    #   is associated with, if any. This is shown before the log message if it is
-    #   specified.
+    # @param [String] msg The log message to write.
+    # @param [YARD::CodeObjects::Base] item The CodeObject which this log
+    #  is associated with, if any. This is shown before the log message if it is
+    #  specified.
     # @return [void]
     #
-    # source://sord//lib/sord/logging.rb#94
+    # pkg:gem/sord#lib/sord/logging.rb:94
     # sord warn - YARD::CodeObjects::Base wasn't able to be resolved to a constant in this project
     # sord omit - no YARD type given for "**opts", using untyped
-    # Print a warning message. This should be used for things which require the
     # _@param_ `msg` — The log message to write.
     # _@param_ `item` — The CodeObject which this log  is associated with, if any. This is shown before the log message if it is specified.
     sig { params(msg: String, item: T.nilable(YARD::CodeObjects::Base), opts: T.untyped).void }
-    def warn(msg, item = T.unsafe(nil), **opts); end
+    def warn(msg, item = nil, **opts); end
   end
 end
 
 # An array of all available logging types.
 #
-# source://sord//lib/sord/logging.rb#33
+# pkg:gem/sord#lib/sord/logging.rb:33
 Sord::Logging::AVAILABLE_TYPES = T.let(T.unsafe(nil), Array)
 
-# source://sord//lib/sord/parlour_plugin.rb#6
+# pkg:gem/sord#lib/sord/parlour_plugin.rb:6
 class Sord::ParlourPlugin < ::Parlour::Plugin
-  # @return [ParlourPlugin] a new instance of ParlourPlugin
-  #
-  # source://sord//lib/sord/parlour_plugin.rb#10
+  # pkg:gem/sord#lib/sord/parlour_plugin.rb:10
   # sord omit - no YARD type given for "options", using untyped
   sig { params(options: T.untyped).void }
   def initialize(options); end
 
-  # source://sord//lib/sord/parlour_plugin.rb#82
+  # pkg:gem/sord#lib/sord/parlour_plugin.rb:82
   # sord omit - no YARD return type given, using untyped
   sig { returns(T.untyped) }
   def add_custom_tags; end
 
-  # source://sord//lib/sord/parlour_plugin.rb#20
+  # pkg:gem/sord#lib/sord/parlour_plugin.rb:20
   # sord omit - no YARD type given for "root", using untyped
   # sord omit - no YARD return type given, using untyped
   sig { params(root: T.untyped).returns(T.untyped) }
   def generate(root); end
 
-  # Returns the value of attribute options.
-  #
-  # source://sord//lib/sord/parlour_plugin.rb#7
+  # pkg:gem/sord#lib/sord/parlour_plugin.rb:7
   def options; end
 
-  # Returns the value of attribute parlour.
-  #
-  # source://sord//lib/sord/parlour_plugin.rb#8
+  # pkg:gem/sord#lib/sord/parlour_plugin.rb:8
   def parlour; end
 
-  # Sets the attribute parlour
-  #
-  # @param value the value to set the attribute parlour to.
-  #
-  # source://sord//lib/sord/parlour_plugin.rb#8
+  # pkg:gem/sord#lib/sord/parlour_plugin.rb:8
   def parlour=(_arg0); end
 
   class << self
-    # source://sord//lib/sord/parlour_plugin.rb#92
+    # pkg:gem/sord#lib/sord/parlour_plugin.rb:92
     # sord omit - no YARD return type given, using untyped
     sig { params(block: T.untyped).returns(T.untyped) }
     def with_clean_env(&block); end
   end
 end
 
-# source://sord//lib/sord/resolver.rb#7
+# pkg:gem/sord#lib/sord/resolver.rb:7
 module Sord::Resolver
   class << self
-    # source://sord//lib/sord/resolver.rb#69
+    # pkg:gem/sord#lib/sord/resolver.rb:69
     # sord omit - no YARD type given for "nodes", using untyped
     # sord omit - no YARD type given for "names_to_paths", using untyped
     # sord omit - no YARD type given for "path", using untyped
     # sord omit - no YARD return type given, using untyped
     sig { params(nodes: T.untyped, names_to_paths: T.untyped, path: T.untyped).returns(T.untyped) }
-    def add_rbi_objects_to_paths(nodes, names_to_paths, path = T.unsafe(nil)); end
+    def add_rbi_objects_to_paths(nodes, names_to_paths, path = []); end
 
-    # source://sord//lib/sord/resolver.rb#44
+    # pkg:gem/sord#lib/sord/resolver.rb:44
     # sord omit - no YARD type given for "env", using untyped
     # sord omit - no YARD type given for "names_to_paths", using untyped
     # sord omit - no YARD type given for "path", using untyped
     # sord omit - no YARD return type given, using untyped
     sig { params(env: T.untyped, names_to_paths: T.untyped, path: T.untyped).returns(T.untyped) }
-    def add_rbs_objects_to_paths(env, names_to_paths, path = T.unsafe(nil)); end
+    def add_rbs_objects_to_paths(env, names_to_paths, path = []); end
 
     # @return [Array<String>]
     #
-    # source://sord//lib/sord/resolver.rb#115
+    # pkg:gem/sord#lib/sord/resolver.rb:115
     sig { returns(T::Array[String]) }
     def builtin_classes; end
 
     # @return [void]
     #
-    # source://sord//lib/sord/resolver.rb#92
+    # pkg:gem/sord#lib/sord/resolver.rb:92
     sig { void }
     def clear; end
 
-    # source://sord//lib/sord/resolver.rb#24
+    # pkg:gem/sord#lib/sord/resolver.rb:24
     # sord omit - no YARD type given for "hash", using untyped
     # sord omit - no YARD return type given, using untyped
     sig { params(hash: T.untyped).returns(T.untyped) }
     def load_gem_objects(hash); end
 
-    # @param name [String]
+    # @param [String] name
     # @return [String, nil]
     #
-    # source://sord//lib/sord/resolver.rb#110
+    # pkg:gem/sord#lib/sord/resolver.rb:110
     # _@param_ `name`
     sig { params(name: String).returns(T.nilable(String)) }
     def path_for(name); end
 
-    # @param name [String]
+    # @param [String] name
     # @return [Array<String>]
     #
-    # source://sord//lib/sord/resolver.rb#98
+    # pkg:gem/sord#lib/sord/resolver.rb:98
     # _@param_ `name`
     sig { params(name: String).returns(T::Array[String]) }
     def paths_for(name); end
 
     # @return [void]
     #
-    # source://sord//lib/sord/resolver.rb#9
+    # pkg:gem/sord#lib/sord/resolver.rb:9
     sig { void }
     def prepare; end
 
-    # @param name [String]
-    # @param item [Object]
+    # @param [String] name
+    # @param [Object] item
     # @return [Boolean]
     #
-    # source://sord//lib/sord/resolver.rb#134
+    # pkg:gem/sord#lib/sord/resolver.rb:134
     # _@param_ `name`
     # _@param_ `item`
     sig { params(name: String, item: Object).returns(T::Boolean) }
@@ -618,7 +555,7 @@ end
 
 # Contains methods to convert YARD types to Parlour types.
 #
-# source://sord//lib/sord/type_converter.rb#9
+# pkg:gem/sord#lib/sord/type_converter.rb:9
 module Sord::TypeConverter
   class << self
     # Given a YARD duck type string, attempts to convert it to one of a list of pre-defined RBS
@@ -628,27 +565,24 @@ module Sord::TypeConverter
     #
     # If no such interface exists, returns `nil`.
     #
-    # @param type [String]
+    # @param [String] type
     # @return [Parlour::Types::Type, nil]
     #
-    # source://sord//lib/sord/type_converter.rb#328
+    # pkg:gem/sord#lib/sord/type_converter.rb:328
     # sord warn - Parlour::Types::Type wasn't able to be resolved to a constant in this project
-    # Given a YARD duck type string, attempts to convert it to one of a list of pre-defined RBS
-    # built-in interfaces.
-    # For example, the common duck type `#to_s` has a built-in RBS equivalent `_ToS`.
     # _@param_ `type`
     sig { params(type: String).returns(T.nilable(Parlour::Types::Type)) }
     def duck_type_to_rbs_type(type); end
 
     # Handles SORD_ERRORs.
     #
-    # @param name [String, Parlour::Types::Type]
-    # @param log_warning [String]
-    # @param item [YARD::CodeObjects::Base]
-    # @param replace_errors_with_untyped [Boolean]
+    # @param [String, Parlour::Types::Type] name
+    # @param [String] log_warning
+    # @param [YARD::CodeObjects::Base] item
+    # @param [Boolean] replace_errors_with_untyped
     # @return [Parlour::Types::Type]
     #
-    # source://sord//lib/sord/type_converter.rb#284
+    # pkg:gem/sord#lib/sord/type_converter.rb:284
     # sord warn - Parlour::Types::Type wasn't able to be resolved to a constant in this project
     # sord warn - YARD::CodeObjects::Base wasn't able to be resolved to a constant in this project
     # _@param_ `name`
@@ -667,27 +601,24 @@ module Sord::TypeConverter
 
     # Given a string of YARD type parameters (without angle brackets), splits
     # the string into an array of each type parameter.
-    #
-    # @param params [String] The type parameters.
+    # @param [String] params The type parameters.
     # @return [Array<String>] The split type parameters.
     #
-    # source://sord//lib/sord/type_converter.rb#53
-    # Given a string of YARD type parameters (without angle brackets), splits
+    # pkg:gem/sord#lib/sord/type_converter.rb:53
     # _@param_ `params` — The type parameters.
     # _@return_ — The split type parameters.
     sig { params(params: String).returns(T::Array[String]) }
     def split_type_parameters(params); end
 
     # Converts a YARD type into a Parlour type.
-    #
-    # @param yard [Boolean, Array, String] The YARD type.
-    # @param item [YARD::CodeObjects::Base] The CodeObject which the YARD type
+    # @param [Boolean, Array, String] yard The YARD type.
+    # @param [YARD::CodeObjects::Base] item The CodeObject which the YARD type
     #   is associated with. This is used for logging and can be nil, but this
     #   will lead to less informative log messages.
-    # @param config [Configuration] The generation configuration.
+    # @param [Configuration] config The generation configuration.
     # @return [Parlour::Types::Type]
     #
-    # source://sord//lib/sord/type_converter.rb#128
+    # pkg:gem/sord#lib/sord/type_converter.rb:128
     # sord warn - YARD::CodeObjects::Base wasn't able to be resolved to a constant in this project
     # sord warn - Parlour::Types::Type wasn't able to be resolved to a constant in this project
     # _@param_ `yard` — The YARD type.
@@ -706,11 +637,9 @@ end
 
 # Configuration for how the type converter should work in particular cases.
 #
-# source://sord//lib/sord/type_converter.rb#101
+# pkg:gem/sord#lib/sord/type_converter.rb:101
 class Sord::TypeConverter::Configuration
-  # @return [Configuration] a new instance of Configuration
-  #
-  # source://sord//lib/sord/type_converter.rb#102
+  # pkg:gem/sord#lib/sord/type_converter.rb:102
   # sord omit - no YARD type given for "replace_errors_with_untyped:", using untyped
   # sord omit - no YARD type given for "replace_unresolved_with_untyped:", using untyped
   # sord omit - no YARD type given for "output_language:", using untyped
@@ -726,37 +655,37 @@ class Sord::TypeConverter::Configuration
   # The language which the generated types will be converted to - one of
   # `:rbi` or `:rbs`.
   #
-  # source://sord//lib/sord/type_converter.rb#110
+  # pkg:gem/sord#lib/sord/type_converter.rb:110
   def output_language; end
 
   # The language which the generated types will be converted to - one of
   # `:rbi` or `:rbs`.
   #
-  # source://sord//lib/sord/type_converter.rb#110
+  # pkg:gem/sord#lib/sord/type_converter.rb:110
   def output_language=(_arg0); end
 
   # @return [Boolean] If true, T.untyped is used instead of SORD_ERROR_
   #   constants for unknown types.
   #
-  # source://sord//lib/sord/type_converter.rb#114
+  # pkg:gem/sord#lib/sord/type_converter.rb:114
   def replace_errors_with_untyped; end
 
   # @return [Boolean] If true, T.untyped is used instead of SORD_ERROR_
   #   constants for unknown types.
   #
-  # source://sord//lib/sord/type_converter.rb#114
+  # pkg:gem/sord#lib/sord/type_converter.rb:114
   def replace_errors_with_untyped=(_arg0); end
 
-  # @param replace_unresolved_with_untyped [Boolean] If true, T.untyped is
+  # @param [Boolean] replace_unresolved_with_untyped If true, T.untyped is
   #   used when Sord is unable to resolve a constant.
   #
-  # source://sord//lib/sord/type_converter.rb#118
+  # pkg:gem/sord#lib/sord/type_converter.rb:118
   def replace_unresolved_with_untyped; end
 
-  # @param replace_unresolved_with_untyped [Boolean] If true, T.untyped is
+  # @param [Boolean] replace_unresolved_with_untyped If true, T.untyped is
   #   used when Sord is unable to resolve a constant.
   #
-  # source://sord//lib/sord/type_converter.rb#118
+  # pkg:gem/sord#lib/sord/type_converter.rb:118
   def replace_unresolved_with_untyped=(_arg0); end
 end
 
@@ -766,13 +695,13 @@ end
 # Interfaces which use generic arguments have those arguments as `untyped`, since I'm not aware
 # of any standard way that these are specified.
 #
-# source://sord//lib/sord/type_converter.rb#297
+# pkg:gem/sord#lib/sord/type_converter.rb:297
 Sord::TypeConverter::DUCK_TYPES_TO_RBS_TYPE_NAMES = T.let(T.unsafe(nil), Hash)
 
 # Match duck types which require the object implement one or more methods,
 # like '#foo', '#foo & #bar', '#foo&#bar&#baz', and '#foo&#bar&#baz&#foo_bar'.
 #
-# source://sord//lib/sord/type_converter.rb#31
+# pkg:gem/sord#lib/sord/type_converter.rb:31
 Sord::TypeConverter::DUCK_TYPE_REGEX = T.let(T.unsafe(nil), Regexp)
 
 # A regular expression which matches a Ruby namespace immediately followed
@@ -781,44 +710,44 @@ Sord::TypeConverter::DUCK_TYPE_REGEX = T.let(T.unsafe(nil), Regexp)
 # types, such as "Array<String>", "Hash<String, Symbol>",
 # "Hash{String => Symbol}", etc.
 #
-# source://sord//lib/sord/type_converter.rb#21
+# pkg:gem/sord#lib/sord/type_converter.rb:21
 Sord::TypeConverter::GENERIC_TYPE_REGEX = T.let(T.unsafe(nil), Regexp)
 
 # Matches valid method names.
 # From: https://stackoverflow.com/a/4379197/2626000
 #
-# source://sord//lib/sord/type_converter.rb#26
+# pkg:gem/sord#lib/sord/type_converter.rb:26
 Sord::TypeConverter::METHOD_NAME_REGEX = T.let(T.unsafe(nil), Regexp)
 
 # A regular expression which matches ordered lists in the format of
 # either "Array(String, Symbol)" or "(String, Symbol)".
 #
-# source://sord//lib/sord/type_converter.rb#36
+# pkg:gem/sord#lib/sord/type_converter.rb:36
 Sord::TypeConverter::ORDERED_LIST_REGEX = T.let(T.unsafe(nil), Regexp)
 
 # A regular expression which matches the shorthand Array syntax,
 # "<String>".
 #
-# source://sord//lib/sord/type_converter.rb#44
+# pkg:gem/sord#lib/sord/type_converter.rb:44
 Sord::TypeConverter::SHORTHAND_ARRAY_SYNTAX = T.let(T.unsafe(nil), Regexp)
 
 # A regular expression which matches the shorthand Hash syntax,
 # "{String => Symbol}".
 #
-# source://sord//lib/sord/type_converter.rb#40
+# pkg:gem/sord#lib/sord/type_converter.rb:40
 Sord::TypeConverter::SHORTHAND_HASH_SYNTAX = T.let(T.unsafe(nil), Regexp)
 
 # A regular expression which matches Ruby namespaces and identifiers.
 # "Foo", "Foo::Bar", and "::Foo::Bar" are all matches, whereas "Foo.Bar"
 # or "Foo#bar" are not.
 #
-# source://sord//lib/sord/type_converter.rb#13
+# pkg:gem/sord#lib/sord/type_converter.rb:13
 Sord::TypeConverter::SIMPLE_TYPE_REGEX = T.let(T.unsafe(nil), Regexp)
 
 # Built in parlour single arg generics
 #
-# source://sord//lib/sord/type_converter.rb#47
+# pkg:gem/sord#lib/sord/type_converter.rb:47
 Sord::TypeConverter::SINGLE_ARG_GENERIC_TYPES = T.let(T.unsafe(nil), Array)
 
-# source://sord//lib/sord/version.rb#3
+# pkg:gem/sord#lib/sord/version.rb:3
 Sord::VERSION = T.let(T.unsafe(nil), String)

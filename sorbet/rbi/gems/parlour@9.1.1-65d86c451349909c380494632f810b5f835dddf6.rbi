@@ -5,24 +5,47 @@
 # Please instead update this file by running `bin/tapioca gem parlour`.
 
 
-# source://parlour//lib/parlour/version.rb#2
+# pkg:gem/parlour#lib/parlour/version.rb:2
 # typed: strong
 module Parlour; end
 
 # Responsible for resolving conflicts (that is, multiple definitions with the
 # same name) between objects defined in the same namespace.
 #
-# source://parlour//lib/parlour/conflict_resolver.rb#7
+# pkg:gem/parlour#lib/parlour/conflict_resolver.rb:7
 class Parlour::ConflictResolver
   extend T::Sig
 
-  # @return [ConflictResolver] a new instance of ConflictResolver
-  #
-  # source://parlour//lib/parlour/conflict_resolver.rb#10
+  # pkg:gem/parlour#lib/parlour/conflict_resolver.rb:10
   sig { void }
   def initialize; end
 
-  # source://parlour//lib/parlour/conflict_resolver.rb#47
+  # Given a namespace, attempts to automatically resolve conflicts in the
+  # namespace's definitions. (A conflict occurs when multiple objects share
+  # the same name.)
+  #
+  # All children of the given namespace which are also namespaces are
+  # processed recursively, so passing {RbiGenerator#root} will eliminate all
+  # conflicts in the entire object tree.
+  #
+  # If automatic resolution is not possible, the block passed to this method
+  # is invoked and passed two arguments: a message on what the conflict is,
+  # and an array of candidate objects. The block should return one of these
+  # candidate objects, which will be kept, and all other definitions are
+  # deleted. Alternatively, the block may return nil, which will delete all
+  # definitions. The block may be invoked many times from one call to
+  # {resolve_conflicts}, one for each unresolvable conflict.
+  #
+  # @param namespace [RbiGenerator::Namespace] The starting namespace to
+  #   resolve conflicts in.
+  # @yieldparam message [String] A descriptional message on what the conflict is.
+  # @yieldparam candidates [Array<RbiGenerator::RbiObject>] The objects for
+  #   which there is a conflict.
+  # @yieldreturn [RbiGenerator::RbiObject] One of the +candidates+, which
+  #   will be kept, or nil to keep none of them.
+  # @return [void]
+  #
+  # pkg:gem/parlour#lib/parlour/conflict_resolver.rb:47
   sig do
     params(
       namespace: Parlour::RbiGenerator::Namespace,
@@ -33,96 +56,130 @@ class Parlour::ConflictResolver
 
   private
 
-  # source://parlour//lib/parlour/conflict_resolver.rb#244
+  # Given an array, returns true if all elements in the array are equal by
+  # +==+. (Assumes a transitive definition of +==+.)
+  #
+  # @param arr [Array] The array.
+  # @return [Boolean] A boolean indicating if all elements are equal by +==+.
+  #
+  # pkg:gem/parlour#lib/parlour/conflict_resolver.rb:244
   sig { params(arr: T::Array[T.untyped]).returns(T::Boolean) }
   def all_eql?(arr); end
 
-  # source://parlour//lib/parlour/conflict_resolver.rb#255
+  # Given a namespace and a child name, removes all duplicate children that are mixins
+  # and that have the given name, except the first found instance.
+  #
+  # @param namespace [RbiGenerator::Namespace] The namespace to deduplicate mixins in.
+  # @param name [String] The name of the mixin modules to deduplicate.
+  # @return [void]
+  #
+  # pkg:gem/parlour#lib/parlour/conflict_resolver.rb:255
   sig { params(namespace: Parlour::RbiGenerator::Namespace, name: T.nilable(::String)).void }
   def deduplicate_mixins_of_name(namespace, name); end
 
-  # source://parlour//lib/parlour/conflict_resolver.rb#217
+  # Given an array, if all elements in the array are instances of the exact
+  # same class or are otherwise mergeable (for example Namespace and
+  # ClassNamespace), returns the kind of merge which needs to be made. A
+  # return value of nil indicates that the values cannot be merged.
+  #
+  # The following kinds are available:
+  #   - They are all the same. (:normal)
+  #   - There are exactly two types, one of which is Namespace and other is a
+  #     subclass of it. (:differing_namespaces)
+  #   - One of them is Namespace or a subclass (or both, as described above),
+  #     and the only other is Method. (also :differing_namespaces)
+  #
+  # @param arr [Array] The array.
+  # @return [Symbol] The merge strategy to use, or nil if they can't be
+  #   merged.
+  #
+  # pkg:gem/parlour#lib/parlour/conflict_resolver.rb:217
   sig { params(arr: T::Array[T.untyped]).returns(T.nilable(::Symbol)) }
   def merge_strategy(arr); end
 end
 
-# source://parlour//lib/parlour/conversion/converter.rb#5
+# pkg:gem/parlour#lib/parlour/conversion/converter.rb:5
 module Parlour::Conversion; end
 
 # An abstract class which converts between the node trees of two type
 # systems.
 #
-# @abstract It cannot be directly instantiated. Subclasses must implement the `abstract` methods below.
-#
-# source://parlour//lib/parlour/conversion/converter.rb#8
+# pkg:gem/parlour#lib/parlour/conversion/converter.rb:8
 class Parlour::Conversion::Converter
   extend T::Sig
   extend T::Helpers
 
   abstract!
 
-  # @return [Converter] a new instance of Converter
-  #
-  # source://parlour//lib/parlour/conversion/converter.rb#13
+  # pkg:gem/parlour#lib/parlour/conversion/converter.rb:13
   sig { void }
   def initialize; end
 
-  # source://parlour//lib/parlour/conversion/converter.rb#21
+  # pkg:gem/parlour#lib/parlour/conversion/converter.rb:21
   sig { params(msg: ::String, node: ::Parlour::RbiGenerator::RbiObject).void }
   def add_warning(msg, node); end
 
-  # source://parlour//lib/parlour/conversion/converter.rb#18
+  # pkg:gem/parlour#lib/parlour/conversion/converter.rb:18
   sig { returns(T::Array[[::String, ::Parlour::TypedObject]]) }
   def warnings; end
 end
 
 # Converts RBI types to RBS types.
 #
-# source://parlour//lib/parlour/conversion/rbi_to_rbs.rb#5
+# pkg:gem/parlour#lib/parlour/conversion/rbi_to_rbs.rb:5
 class Parlour::Conversion::RbiToRbs < ::Parlour::Conversion::Converter
   extend T::Sig
 
-  # source://parlour//lib/parlour/conversion/rbi_to_rbs.rb#9
+  # pkg:gem/parlour#lib/parlour/conversion/rbi_to_rbs.rb:9
   sig { params(rbs_gen: ::Parlour::RbsGenerator).void }
   def initialize(rbs_gen); end
 
-  # source://parlour//lib/parlour/conversion/rbi_to_rbs.rb#18
+  # pkg:gem/parlour#lib/parlour/conversion/rbi_to_rbs.rb:18
   sig { params(from: Parlour::RbiGenerator::Namespace, to: Parlour::RbsGenerator::Namespace).void }
   def convert_all(from, to); end
 
-  # source://parlour//lib/parlour/conversion/rbi_to_rbs.rb#30
+  # pkg:gem/parlour#lib/parlour/conversion/rbi_to_rbs.rb:30
   sig { params(node: ::Parlour::RbiGenerator::RbiObject, new_parent: Parlour::RbsGenerator::Namespace).void }
   def convert_object(node, new_parent); end
 
-  # source://parlour//lib/parlour/conversion/rbi_to_rbs.rb#15
+  # pkg:gem/parlour#lib/parlour/conversion/rbi_to_rbs.rb:15
   sig { returns(::Parlour::RbsGenerator) }
   def rbs_gen; end
 end
 
 # Contains methods to enable debugging facilities for Parlour.
 #
-# source://parlour//lib/parlour/debugging.rb#6
+# pkg:gem/parlour#lib/parlour/debugging.rb:6
 module Parlour::Debugging
   extend T::Sig
 
   class << self
     # Set whether debug messages should be printed.
+    # @param [Boolean] value True if debug messages will be printed, false
+    #   otherwise.
+    # @return [Boolean] The new value.
     #
-    # source://parlour//lib/parlour/debugging.rb#16
+    # pkg:gem/parlour#lib/parlour/debugging.rb:16
     sig { params(value: T::Boolean).returns(T::Boolean) }
     def debug_mode=(value); end
 
     # Whether debug messages sent by {.debug_puts} should be printed.
     # Defaults to true if the PARLOUR_DEBUG environment variable is set.
+    # @return [Boolean] True if debug messages will be printed, false otherwise.
     #
-    # source://parlour//lib/parlour/debugging.rb#24
+    # pkg:gem/parlour#lib/parlour/debugging.rb:24
     sig { returns(T::Boolean) }
     def debug_mode?; end
 
     # Prints a message with a debugging prefix to STDOUT if {.debug_mode?} is
     # true.
+    # @param [Object] object The object which is printing this debug message.
+    #   Callers should pass +self+.
+    # @param [String] message The message to print. It should not contain
+    #   newlines.
+    # @return [void]
     #
-    # source://parlour//lib/parlour/debugging.rb#36
+    # pkg:gem/parlour#lib/parlour/debugging.rb:36
     sig { params(object: T.untyped, message: ::String).void }
     def debug_puts(object, message); end
 
@@ -130,8 +187,10 @@ module Parlour::Debugging
     # For example, passing an instance of {ConflictResolver} returns
     # "conflict resolver". If the object type is unknown, this returns its class
     # name.
+    # @param [Object] object The object to convert.
+    # @return [String] A string describing the object for {.debug_puts}.
     #
-    # source://parlour//lib/parlour/debugging.rb#50
+    # pkg:gem/parlour#lib/parlour/debugging.rb:50
     sig { params(object: T.untyped).returns(::String) }
     def name_for_debug_caller(object); end
   end
@@ -140,62 +199,66 @@ end
 # A module for generating a globally-consistent, nicely-formatted tree of
 # output using Unicode block characters.
 #
-# source://parlour//lib/parlour/debugging.rb#66
+# pkg:gem/parlour#lib/parlour/debugging.rb:66
 class Parlour::Debugging::Tree
   extend T::Sig
 
-  # source://parlour//lib/parlour/debugging.rb#78
+  # pkg:gem/parlour#lib/parlour/debugging.rb:78
   sig { params(colour: T::Boolean).void }
   def initialize(colour: T.unsafe(nil)); end
 
   # Returns a new heading, and then decents the tree one level into it.
   # (That is, future output will go under the new heading.)
+  # @param [String] message The heading.
+  # @return [String] The line of this tree which should be printed.
   #
-  # source://parlour//lib/parlour/debugging.rb#88
+  # pkg:gem/parlour#lib/parlour/debugging.rb:88
   sig { params(message: ::String).returns(::String) }
   def begin(message); end
 
   # Whether to colour output or not.
   #
-  # source://parlour//lib/parlour/debugging.rb#75
+  # pkg:gem/parlour#lib/parlour/debugging.rb:75
   sig { returns(T::Boolean) }
   def colour; end
 
   # Prints the final tree element at the current level, then ascends one
   # level.
+  # @param [String] message The element.
+  # @return [String] The line of this tree which should be printed.
   #
-  # source://parlour//lib/parlour/debugging.rb#108
+  # pkg:gem/parlour#lib/parlour/debugging.rb:108
   sig { params(message: ::String).returns(::String) }
   def end(message); end
 
   # Prints a new tree element at the current level.
+  # @param [String] message The element.
+  # @return [String] The line of this tree which should be printed.
   #
-  # source://parlour//lib/parlour/debugging.rb#99
+  # pkg:gem/parlour#lib/parlour/debugging.rb:99
   sig { params(message: ::String).returns(::String) }
   def here(message); end
 
   # Modifies the current indent level by the given offset.
   #
-  # source://parlour//lib/parlour/debugging.rb#130
+  # pkg:gem/parlour#lib/parlour/debugging.rb:130
   sig { params(offset: T.untyped).returns(T.untyped) }
   def indent!(offset); end
 
   # The prefix which should be printed before anything else on this line of
   # the tree, based on the current indent level.
-  #
   # @return [String]
   #
-  # source://parlour//lib/parlour/debugging.rb#117
+  # pkg:gem/parlour#lib/parlour/debugging.rb:117
   sig { returns(T.untyped) }
   def line_prefix; end
 
   # The horizontal lines which should be printed between the beginning of
   # the current element and its text, based on the specified number of
   # spaces to use for indents.
-  #
   # @return [String]
   #
-  # source://parlour//lib/parlour/debugging.rb#125
+  # pkg:gem/parlour#lib/parlour/debugging.rb:125
   sig { returns(T.untyped) }
   def text_prefix; end
 end
@@ -203,78 +266,94 @@ end
 # The number of spaces to indent each layer of the tree by. Should be at
 # least 1.
 #
-# source://parlour//lib/parlour/debugging.rb#71
+# pkg:gem/parlour#lib/parlour/debugging.rb:71
 Parlour::Debugging::Tree::INDENT_SPACES = T.let(T.unsafe(nil), Integer)
 
-# source://parlour//lib/parlour/detached_rbi_generator.rb#4
+# pkg:gem/parlour#lib/parlour/detached_rbi_generator.rb:4
 class Parlour::DetachedRbiGenerator < ::Parlour::RbiGenerator
-  # source://parlour//lib/parlour/detached_rbi_generator.rb#16
+  # pkg:gem/parlour#lib/parlour/detached_rbi_generator.rb:16
   sig { override.returns(T.nilable(::Parlour::Plugin)) }
   def current_plugin; end
 
-  # source://parlour//lib/parlour/detached_rbi_generator.rb#6
+  # pkg:gem/parlour#lib/parlour/detached_rbi_generator.rb:6
   sig { returns(T.untyped) }
   def detached!; end
 
-  # source://parlour//lib/parlour/detached_rbi_generator.rb#11
+  # pkg:gem/parlour#lib/parlour/detached_rbi_generator.rb:11
   sig { override.returns(::Parlour::Options) }
   def options; end
 
-  # source://parlour//lib/parlour/detached_rbi_generator.rb#21
+  # pkg:gem/parlour#lib/parlour/detached_rbi_generator.rb:21
   sig { override.params(strictness: ::String).returns(::String) }
   def rbi(strictness = T.unsafe(nil)); end
 end
 
-# source://parlour//lib/parlour/detached_rbs_generator.rb#4
+# pkg:gem/parlour#lib/parlour/detached_rbs_generator.rb:4
 class Parlour::DetachedRbsGenerator < ::Parlour::RbsGenerator
-  # source://parlour//lib/parlour/detached_rbs_generator.rb#16
+  # pkg:gem/parlour#lib/parlour/detached_rbs_generator.rb:16
   sig { override.returns(T.nilable(::Parlour::Plugin)) }
   def current_plugin; end
 
-  # source://parlour//lib/parlour/detached_rbs_generator.rb#6
+  # pkg:gem/parlour#lib/parlour/detached_rbs_generator.rb:6
   sig { returns(T.untyped) }
   def detached!; end
 
-  # source://parlour//lib/parlour/detached_rbs_generator.rb#11
+  # pkg:gem/parlour#lib/parlour/detached_rbs_generator.rb:11
   sig { override.returns(::Parlour::Options) }
   def options; end
 
-  # source://parlour//lib/parlour/detached_rbs_generator.rb#21
+  # pkg:gem/parlour#lib/parlour/detached_rbs_generator.rb:21
   sig { override.returns(::String) }
   def rbs; end
 end
 
-# source://parlour//lib/parlour/generator.rb#3
+# pkg:gem/parlour#lib/parlour/generator.rb:3
 class Parlour::Generator
   extend T::Sig
 
-  # source://parlour//lib/parlour/generator.rb#15
+  # Creates a new generator.
+  #
+  # @param break_params [Integer] If there are at least this many parameters in a
+  #   signature, then it is broken onto separate lines.
+  # @param tab_size [Integer] The number of spaces to use per indent.
+  # @param sort_namespaces [Boolean] Whether to sort all items within a
+  #   namespace alphabetically.
+  # @return [void]
+  #
+  # pkg:gem/parlour#lib/parlour/generator.rb:15
   sig { params(break_params: ::Integer, tab_size: ::Integer, sort_namespaces: T::Boolean).void }
   def initialize(break_params: T.unsafe(nil), tab_size: T.unsafe(nil), sort_namespaces: T.unsafe(nil)); end
 
-  # source://parlour//lib/parlour/generator.rb#32
+  # The plugin which is currently generating new definitions.
+  # {Plugin#run_plugins} controls this value.
+  # @return [Plugin, nil]
+  #
+  # pkg:gem/parlour#lib/parlour/generator.rb:32
   sig { overridable.returns(T.nilable(::Parlour::Plugin)) }
   def current_plugin; end
 
+  # The plugin which is currently generating new definitions.
+  # {Plugin#run_plugins} controls this value.
   # @return [Plugin, nil]
   #
-  # source://parlour//lib/parlour/generator.rb#32
+  # pkg:gem/parlour#lib/parlour/generator.rb:32
   def current_plugin=(_arg0); end
 
-  # source://parlour//lib/parlour/generator.rb#26
+  # The formatting options for this generator. Currently ignored.
+  # @return [Options]
+  #
+  # pkg:gem/parlour#lib/parlour/generator.rb:26
   sig { overridable.returns(::Parlour::Options) }
   def options; end
 end
 
-# source://parlour//lib/parlour/mixin/searchable.rb#4
+# pkg:gem/parlour#lib/parlour/mixin/searchable.rb:4
 module Parlour::Mixin; end
 
 # Extends a particular type system's Namespace class to provide searchable
 # children.
 #
-# @abstract Subclasses must implement the `abstract` methods below.
-#
-# source://parlour//lib/parlour/mixin/searchable.rb#7
+# pkg:gem/parlour#lib/parlour/mixin/searchable.rb:7
 module Parlour::Mixin::Searchable
   extend T::Generic
   extend T::Sig
@@ -283,69 +362,125 @@ module Parlour::Mixin::Searchable
 
   Child = type_member { { upper: Parlour::TypedObject } }
 
-  # @abstract
-  #
-  # source://parlour//lib/parlour/mixin/searchable.rb#16
+  # pkg:gem/parlour#lib/parlour/mixin/searchable.rb:16
   sig { abstract.returns(T::Array[Child]) }
   def children; end
 
-  # source://parlour//lib/parlour/mixin/searchable.rb#24
+  # Finds the first child matching the given predicates.
+  #
+  # @param [String, nil] name The name of the child to filter on, or nil.
+  # @param [Class, nil] type The type of the child to filter on, or nil. The
+  #   type is compared using #is_a?.
+  #
+  # pkg:gem/parlour#lib/parlour/mixin/searchable.rb:24
   sig { params(name: T.nilable(::String), type: T.nilable(::Class)).returns(Child) }
   def find(name: T.unsafe(nil), type: T.unsafe(nil)); end
 
-  # source://parlour//lib/parlour/mixin/searchable.rb#34
+  # Finds the first child matching the given predicates.
+  #
+  # @param [String, nil] name The name of the child to filter on, or nil.
+  # @param [Class, nil] type The type of the child to filter on, or nil. The
+  #   type is compared using #is_a?.
+  #
+  # pkg:gem/parlour#lib/parlour/mixin/searchable.rb:34
   sig { params(name: T.nilable(::String), type: T.nilable(::Class)).returns(T::Array[Child]) }
   def find_all(name: T.unsafe(nil), type: T.unsafe(nil)); end
 
   private
 
-  # source://parlour//lib/parlour/mixin/searchable.rb#48
+  # pkg:gem/parlour#lib/parlour/mixin/searchable.rb:48
   sig { params(child: Child, name: T.nilable(::String), type: T.nilable(::Class)).returns(T::Boolean) }
   def searchable_child_matches(child, name, type); end
 end
 
 # A set of immutable formatting options.
 #
-# source://parlour//lib/parlour/options.rb#4
+# pkg:gem/parlour#lib/parlour/options.rb:4
 class Parlour::Options
   extend T::Sig
 
-  # source://parlour//lib/parlour/options.rb#19
+  # Creates a new set of formatting options.
+  #
+  # @example Create Options with +break_params+ of +4+ and +tab_size+ of +2+.
+  #   Parlour::Options.new(break_params: 4, tab_size: 2)
+  #
+  # @param break_params [Integer] If there are at least this many parameters in a
+  #   signature, then it is broken onto separate lines.
+  # @param tab_size [Integer] The number of spaces to use per indent.
+  # @param sort_namespaces [Boolean] Whether to sort all items within a
+  #   namespace alphabetically.
+  # @return [void]
+  #
+  # pkg:gem/parlour#lib/parlour/options.rb:19
   sig { params(break_params: ::Integer, tab_size: ::Integer, sort_namespaces: T::Boolean).void }
   def initialize(break_params:, tab_size:, sort_namespaces:); end
 
-  # source://parlour//lib/parlour/options.rb#43
+  # If there are at least this many parameters in a signature, then it
+  # is broken onto separate lines.
+  #
+  #   # With break_params: 5
+  #   sig { params(name: String, age: Integer, hobbies: T::Array(String), country: Symbol).void }
+  #
+  #   # With break_params: 4
+  #   sig do
+  #     params(
+  #       name: String,
+  #       age: Integer,
+  #       hobbies: T::Array(String),
+  #       country: Symbol
+  #     ).void
+  #   end
+  #
+  # @return [Integer]
+  #
+  # pkg:gem/parlour#lib/parlour/options.rb:43
   sig { returns(::Integer) }
   def break_params; end
 
-  # source://parlour//lib/parlour/options.rb#67
+  # Returns a string indented to the given indent level, according to the
+  # set {tab_size}.
+  #
+  # @param level [Integer] The indent level, as an integer. 0 is totally unindented.
+  # @param str [String] The string to indent.
+  # @return [String] The indented string.
+  #
+  # pkg:gem/parlour#lib/parlour/options.rb:67
   sig { params(level: ::Integer, str: ::String).returns(::String) }
   def indented(level, str); end
 
-  # source://parlour//lib/parlour/options.rb#58
+  # Whether to sort all items within a namespace alphabetically.
+  # Items which are typically grouped together, such as "include" or
+  # "extend" calls, will remain grouped together when sorted.
+  # If true, items are sorted by their name when the RBI is generated.
+  # If false, items are generated in the order they are added to the
+  # namespace.
+  # @return [Boolean]
+  #
+  # pkg:gem/parlour#lib/parlour/options.rb:58
   sig { returns(T::Boolean) }
   def sort_namespaces; end
 
-  # source://parlour//lib/parlour/options.rb#48
+  # The number of spaces to use per indent.
+  # @return [Integer]
+  #
+  # pkg:gem/parlour#lib/parlour/options.rb:48
   sig { returns(::Integer) }
   def tab_size; end
 end
 
-# source://parlour//lib/parlour/parse_error.rb#4
+# pkg:gem/parlour#lib/parlour/parse_error.rb:4
 class Parlour::ParseError < ::StandardError
   extend T::Sig
 
-  # @return [ParseError] a new instance of ParseError
-  #
-  # source://parlour//lib/parlour/parse_error.rb#13
+  # pkg:gem/parlour#lib/parlour/parse_error.rb:13
   sig { params(buffer: T.untyped, range: T.untyped).void }
   def initialize(buffer, range); end
 
-  # source://parlour//lib/parlour/parse_error.rb#8
+  # pkg:gem/parlour#lib/parlour/parse_error.rb:8
   sig { returns(::Parser::Source::Buffer) }
   def buffer; end
 
-  # source://parlour//lib/parlour/parse_error.rb#11
+  # pkg:gem/parlour#lib/parlour/parse_error.rb:11
   sig { returns(::Parser::Source::Range) }
   def range; end
 end
@@ -354,44 +489,75 @@ end
 #
 # This class is *abstract*.
 #
-# @abstract It cannot be directly instantiated. Subclasses must implement the `abstract` methods below.
-#
-# source://parlour//lib/parlour/plugin.rb#6
+# pkg:gem/parlour#lib/parlour/plugin.rb:6
 class Parlour::Plugin
   extend T::Sig
   extend T::Helpers
 
   abstract!
 
-  # source://parlour//lib/parlour/plugin.rb#55
+  # pkg:gem/parlour#lib/parlour/plugin.rb:55
   sig { params(options: T::Hash[T.untyped, T.untyped]).void }
   def initialize(options); end
 
-  # @abstract
+  # Plugin subclasses should redefine this method and do their RBI generation
+  # inside it.
   #
-  # source://parlour//lib/parlour/plugin.rb#65
+  # This method is *abstract*.
+  #
+  # @param root [RbiGenerator::Namespace] The root {RbiGenerator::Namespace}.
+  # @return [void]
+  #
+  # pkg:gem/parlour#lib/parlour/plugin.rb:65
   sig { abstract.params(root: Parlour::RbiGenerator::Namespace).void }
   def generate(root); end
 
-  # source://parlour//lib/parlour/plugin.rb#72
+  # The strictness level which this plugin would prefer the generated RBI
+  # uses. If other plugins request different strictness levels, then the
+  # lowest strictness will be used, meaning there is no guarantee that this
+  # level will be used.
+  #
+  # pkg:gem/parlour#lib/parlour/plugin.rb:72
   sig { returns(T.nilable(::String)) }
   def strictness; end
 
-  # @return [String, nil]
+  # The strictness level which this plugin would prefer the generated RBI
+  # uses. If other plugins request different strictness levels, then the
+  # lowest strictness will be used, meaning there is no guarantee that this
+  # level will be used.
   #
-  # source://parlour//lib/parlour/plugin.rb#72
+  # pkg:gem/parlour#lib/parlour/plugin.rb:72
   def strictness=(_arg0); end
 
   class << self
-    # source://parlour//lib/parlour/plugin.rb#28
+    # Called automatically by the Ruby interpreter when {Plugin} is subclassed.
+    # This registers the new subclass into {registered_plugins}.
+    #
+    # @param new_plugin [Plugin] The new plugin.
+    # @return [void]
+    #
+    # pkg:gem/parlour#lib/parlour/plugin.rb:28
     sig { params(new_plugin: T.class_of(Parlour::Plugin)).void }
     def inherited(new_plugin); end
 
-    # source://parlour//lib/parlour/plugin.rb#18
+    # Returns all registered plugins, as a hash of their paths to the {Plugin}
+    # instances themselves.
+    #
+    # @return [{String, Plugin}]
+    #
+    # pkg:gem/parlour#lib/parlour/plugin.rb:18
     sig { returns(T::Hash[::String, T.class_of(Parlour::Plugin)]) }
     def registered_plugins; end
 
-    # source://parlour//lib/parlour/plugin.rb#41
+    # Runs an array of plugins on a given generator instance.
+    #
+    # @param plugins [Array<Plugin>] An array of {Plugin} instances.
+    # @param generator [RbiGenerator] The {RbiGenerator} to run the plugins on.
+    # @param allow_failure [Boolean] Whether to keep running plugins if a plugin
+    #   throws an exception. If false, the exception is re-raised when caught.
+    # @return [void]
+    #
+    # pkg:gem/parlour#lib/parlour/plugin.rb:41
     sig do
       params(
         plugins: T::Array[::Parlour::Plugin],
@@ -405,28 +571,38 @@ end
 
 # The RBI generator.
 #
-# source://parlour//lib/parlour/rbi_generator/parameter.rb#4
+# pkg:gem/parlour#lib/parlour/rbi_generator/parameter.rb:4
 class Parlour::RbiGenerator < ::Parlour::Generator
-  # @return [RbiGenerator] a new instance of RbiGenerator
-  #
-  # source://parlour//lib/parlour/rbi_generator.rb#9
+  # pkg:gem/parlour#lib/parlour/rbi_generator.rb:9
   sig { params(hash: T.untyped).void }
   def initialize(**hash); end
 
-  # source://parlour//lib/parlour/rbi_generator.rb#23
+  # Returns the complete contents of the generated RBI file as a string.
+  #
+  # @return [String] The generated RBI file
+  #
+  # pkg:gem/parlour#lib/parlour/rbi_generator.rb:23
   sig { overridable.params(strictness: ::String).returns(::String) }
   def rbi(strictness = T.unsafe(nil)); end
 
-  # source://parlour//lib/parlour/rbi_generator.rb#17
+  # The root {Namespace} of this generator.
+  # @return [Namespace]
+  #
+  # pkg:gem/parlour#lib/parlour/rbi_generator.rb:17
   sig { overridable.returns(Parlour::RbiGenerator::Namespace) }
   def root; end
 end
 
 # Represents miscellaneous Ruby code.
 #
-# source://parlour//lib/parlour/rbi_generator/arbitrary.rb#5
+# pkg:gem/parlour#lib/parlour/rbi_generator/arbitrary.rb:5
 class Parlour::RbiGenerator::Arbitrary < ::Parlour::RbiGenerator::RbiObject
-  # source://parlour//lib/parlour/rbi_generator/arbitrary.rb#17
+  # Creates new arbitrary code.
+  #
+  # @param code [String] The arbitrary code string. Indentation is added to
+  #   the beginning of each line.
+  #
+  # pkg:gem/parlour#lib/parlour/rbi_generator/arbitrary.rb:17
   sig do
     params(
       generator: ::Parlour::Generator,
@@ -436,45 +612,87 @@ class Parlour::RbiGenerator::Arbitrary < ::Parlour::RbiGenerator::RbiObject
   end
   def initialize(generator, code: T.unsafe(nil), &block); end
 
-  # source://parlour//lib/parlour/rbi_generator/arbitrary.rb#33
+  # Returns true if this instance is equal to another arbitrary code line.
+  #
+  # @param other [Object] The other instance. If this is not a {Arbitrary} (or a
+  #   subclass of it), this will always return false.
+  # @return [Boolean]
+  #
+  # pkg:gem/parlour#lib/parlour/rbi_generator/arbitrary.rb:33
   sig { params(other: ::Object).returns(T::Boolean) }
   def ==(other); end
 
-  # source://parlour//lib/parlour/rbi_generator/arbitrary.rb#25
+  # Returns arbitrary code string.
+  #
+  # pkg:gem/parlour#lib/parlour/rbi_generator/arbitrary.rb:25
   sig { returns(::String) }
   def code; end
 
-  # @return [String]
+  # Returns arbitrary code string.
   #
-  # source://parlour//lib/parlour/rbi_generator/arbitrary.rb#25
+  # pkg:gem/parlour#lib/parlour/rbi_generator/arbitrary.rb:25
   def code=(_arg0); end
 
-  # source://parlour//lib/parlour/rbi_generator/arbitrary.rb#84
+  # pkg:gem/parlour#lib/parlour/rbi_generator/arbitrary.rb:84
   sig { override.returns(T::Array[T.any(::Symbol, T::Hash[::Symbol, ::String])]) }
   def describe_attrs; end
 
-  # source://parlour//lib/parlour/rbi_generator/arbitrary.rb#89
+  # pkg:gem/parlour#lib/parlour/rbi_generator/arbitrary.rb:89
   sig { override.void }
   def generalize_from_rbi!; end
 
-  # source://parlour//lib/parlour/rbi_generator/arbitrary.rb#48
+  # Generates the RBI lines for this arbitrary code.
+  #
+  # @param indent_level [Integer] The indentation level to generate the lines at.
+  # @param options [Options] The formatting options to use.
+  # @return [Array<String>] The RBI lines, formatted as specified.
+  #
+  # pkg:gem/parlour#lib/parlour/rbi_generator/arbitrary.rb:48
   sig { override.params(indent_level: ::Integer, options: ::Parlour::Options).returns(T::Array[::String]) }
   def generate_rbi(indent_level, options); end
 
-  # source://parlour//lib/parlour/rbi_generator/arbitrary.rb#79
+  # Given an array of {Arbitrary} instances, merges them into this one.
+  # This particular implementation always throws an exception, because
+  # {mergeable?} is always false.
+  #
+  # @param others [Array<RbiGenerator::RbiObject>] An array of other
+  #   {Arbitrary} instances.
+  # @return [void]
+  #
+  # pkg:gem/parlour#lib/parlour/rbi_generator/arbitrary.rb:79
   sig { override.params(others: T::Array[::Parlour::RbiGenerator::RbiObject]).void }
   def merge_into_self(others); end
 
-  # source://parlour//lib/parlour/rbi_generator/arbitrary.rb#63
+  # Given an array of {Arbitrary} instances, returns true if they may be
+  # merged into this instance using {merge_into_self}. This is always false.
+  #
+  # @param others [Array<RbiGenerator::RbiObject>] An array of other
+  #   {Arbitrary} instances.
+  # @return [Boolean] Whether this instance may be merged with them.
+  #
+  # pkg:gem/parlour#lib/parlour/rbi_generator/arbitrary.rb:63
   sig { override.params(others: T::Array[::Parlour::RbiGenerator::RbiObject]).returns(T::Boolean) }
   def mergeable?(others); end
 end
 
 # Represents an attribute reader, writer or accessor.
 #
-# source://parlour//lib/parlour/rbi_generator/attribute.rb#5
+# pkg:gem/parlour#lib/parlour/rbi_generator/attribute.rb:5
 class Parlour::RbiGenerator::Attribute < ::Parlour::RbiGenerator::Method
-  # source://parlour//lib/parlour/rbi_generator/attribute.rb#28
+  # Creates a new attribute.
+  # @note You should use {Namespace#create_attribute} rather than this directly.
+  #
+  # @param generator [RbiGenerator] The current RbiGenerator.
+  # @param name [String] The name of this attribute.
+  # @param kind [Symbol] The kind of attribute this is; one of :writer, :reader or
+  #   :accessor.
+  # @param type [String, Types::Type] This attribute's type.
+  # @param class_attribute [Boolean] Whether this attribute belongs to the
+  #   singleton class.
+  # @param block A block which the new instance yields itself to.
+  # @return [void]
+  #
+  # pkg:gem/parlour#lib/parlour/rbi_generator/attribute.rb:28
   sig do
     params(
       generator: ::Parlour::Generator,
@@ -487,47 +705,79 @@ class Parlour::RbiGenerator::Attribute < ::Parlour::RbiGenerator::Method
   end
   def initialize(generator, name, kind, type, class_attribute: T.unsafe(nil), &block); end
 
-  # source://parlour//lib/parlour/rbi_generator/attribute.rb#68
+  # Returns true if this instance is equal to another attribute.
+  #
+  # @param other [Object] The other instance. If this is not a {Attribute}
+  #   (or a subclass of it), this will always return false.
+  # @return [Boolean]
+  #
+  # pkg:gem/parlour#lib/parlour/rbi_generator/attribute.rb:68
   sig { override.params(other: ::Object).returns(T::Boolean) }
   def ==(other); end
 
-  # source://parlour//lib/parlour/rbi_generator/attribute.rb#56
+  # Whether this attribute belongs to the singleton class.
+  #
+  # pkg:gem/parlour#lib/parlour/rbi_generator/attribute.rb:56
   sig { returns(T::Boolean) }
   def class_attribute; end
 
-  # source://parlour//lib/parlour/rbi_generator/attribute.rb#82
+  # pkg:gem/parlour#lib/parlour/rbi_generator/attribute.rb:82
   sig { override.returns(T::Array[T.any(::Symbol, T::Hash[::Symbol, ::String])]) }
   def describe_attrs; end
 
-  # source://parlour//lib/parlour/rbi_generator/attribute.rb#77
+  # pkg:gem/parlour#lib/parlour/rbi_generator/attribute.rb:77
   sig { override.void }
   def generalize_from_rbi!; end
 
-  # source://parlour//lib/parlour/rbi_generator/attribute.rb#52
+  # The kind of attribute this is; one of +:writer+, +:reader+, or +:accessor+.
+  # @return [Symbol]
+  #
+  # pkg:gem/parlour#lib/parlour/rbi_generator/attribute.rb:52
   sig { returns(::Symbol) }
   def kind; end
 
-  # source://parlour//lib/parlour/rbi_generator/attribute.rb#60
+  # The type of this attribute.
+  #
+  # pkg:gem/parlour#lib/parlour/rbi_generator/attribute.rb:60
   sig { returns(T.any(::Parlour::Types::Type, ::String)) }
   def type; end
 
   private
 
-  # source://parlour//lib/parlour/rbi_generator/attribute.rb#103
+  # Generates the RBI lines for this method.
+  #
+  # @param indent_level [Integer] The indentation level to generate the lines at.
+  # @param options [Options] The formatting options to use.
+  # @return [Array<String>] The RBI lines, formatted as specified.
+  #
+  # pkg:gem/parlour#lib/parlour/rbi_generator/attribute.rb:103
   sig { override.params(indent_level: ::Integer, options: ::Parlour::Options).returns(T::Array[::String]) }
   def generate_definition(indent_level, options); end
 end
 
 # Represents a class definition.
 #
-# source://parlour//lib/parlour/rbi_generator/class_namespace.rb#5
+# pkg:gem/parlour#lib/parlour/rbi_generator/class_namespace.rb:5
 class Parlour::RbiGenerator::ClassNamespace < ::Parlour::RbiGenerator::Namespace
   extend T::Generic
   extend T::Sig
 
   Child = type_member { { fixed: Parlour::RbiGenerator::RbiObject } }
 
-  # source://parlour//lib/parlour/rbi_generator/class_namespace.rb#33
+  # Creates a new class definition.
+  # @note You should use {Namespace#create_class} rather than this directly.
+  #
+  # @param generator [RbiGenerator] The current RbiGenerator.
+  # @param name [String] The name of this class.
+  # @param final [Boolean] Whether this namespace is final.
+  # @param sealed [Boolean] Whether this namespace is sealed.
+  # @param superclass [String, nil] The superclass of this class, or nil if it doesn't
+  #   have one.
+  # @param abstract [Boolean] A boolean indicating whether this class is abstract.
+  # @param block A block which the new instance yields itself to.
+  # @return [void]
+  #
+  # pkg:gem/parlour#lib/parlour/rbi_generator/class_namespace.rb:33
   sig do
     params(
       generator: ::Parlour::Generator,
@@ -541,40 +791,74 @@ class Parlour::RbiGenerator::ClassNamespace < ::Parlour::RbiGenerator::Namespace
   end
   def initialize(generator, name, final, sealed, superclass, abstract, &block); end
 
-  # source://parlour//lib/parlour/rbi_generator/class_namespace.rb#70
+  # A boolean indicating whether this class is abstract or not.
+  # @return [Boolean]
+  #
+  # pkg:gem/parlour#lib/parlour/rbi_generator/class_namespace.rb:70
   sig { returns(T::Boolean) }
   def abstract; end
 
-  # source://parlour//lib/parlour/rbi_generator/class_namespace.rb#116
+  # pkg:gem/parlour#lib/parlour/rbi_generator/class_namespace.rb:116
   sig { override.returns(T::Array[T.any(::Symbol, T::Hash[::Symbol, ::String])]) }
   def describe_attrs; end
 
-  # source://parlour//lib/parlour/rbi_generator/class_namespace.rb#122
+  # pkg:gem/parlour#lib/parlour/rbi_generator/class_namespace.rb:122
   sig { override.void }
   def generalize_from_rbi!; end
 
-  # source://parlour//lib/parlour/rbi_generator/class_namespace.rb#50
+  # Generates the RBI lines for this class.
+  #
+  # @param indent_level [Integer] The indentation level to generate the lines at.
+  # @param options [Options] The formatting options to use.
+  # @return [Array<String>] The RBI lines, formatted as specified.
+  #
+  # pkg:gem/parlour#lib/parlour/rbi_generator/class_namespace.rb:50
   sig { override.params(indent_level: ::Integer, options: ::Parlour::Options).returns(T::Array[::String]) }
   def generate_rbi(indent_level, options); end
 
-  # source://parlour//lib/parlour/rbi_generator/class_namespace.rb#104
+  # Given an array of {ClassNamespace} instances, merges them into this one.
+  # You MUST ensure that {mergeable?} is true for those instances.
+  #
+  # @param others [Array<RbiGenerator::RbiObject>] An array of other {ClassNamespace} instances.
+  # @return [void]
+  #
+  # pkg:gem/parlour#lib/parlour/rbi_generator/class_namespace.rb:104
   sig { override.params(others: T::Array[::Parlour::RbiGenerator::RbiObject]).void }
   def merge_into_self(others); end
 
-  # source://parlour//lib/parlour/rbi_generator/class_namespace.rb#84
+  # Given an array of {Namespace} instances, returns true if they may
+  # be merged into this instance using {merge_into_self}. For instances to
+  # be mergeable, they must either all be abstract or all not be abstract,
+  # and they must define the same superclass (or none at all).
+  #
+  # @param others [Array<RbiGenerator::RbiObject>] An array of other {Namespace} instances.
+  # @return [Boolean] Whether this instance may be merged with them.
+  #
+  # pkg:gem/parlour#lib/parlour/rbi_generator/class_namespace.rb:84
   sig { override.params(others: T::Array[::Parlour::RbiGenerator::RbiObject]).returns(T::Boolean) }
   def mergeable?(others); end
 
-  # source://parlour//lib/parlour/rbi_generator/class_namespace.rb#65
+  # The superclass of this class, or nil if it doesn't have one.
+  # @return [String, nil]
+  #
+  # pkg:gem/parlour#lib/parlour/rbi_generator/class_namespace.rb:65
   sig { returns(T.nilable(::String)) }
   def superclass; end
 end
 
 # Represents a constant definition.
 #
-# source://parlour//lib/parlour/rbi_generator/constant.rb#5
+# pkg:gem/parlour#lib/parlour/rbi_generator/constant.rb:5
 class Parlour::RbiGenerator::Constant < ::Parlour::RbiGenerator::RbiObject
-  # source://parlour//lib/parlour/rbi_generator/constant.rb#23
+  # Creates a new constant definition.
+  #
+  # @param name [String] The name of the constant.
+  # @param value [String] The value of the constant, as a Ruby code string.
+  # @param eigen_constant [Boolean] Whether this constant is defined on the
+  #   eigenclass of the current namespace.
+  # @param heredocs [String,nil] Definitions of the heredocs used in the value, if any
+  #
+  # pkg:gem/parlour#lib/parlour/rbi_generator/constant.rb:23
   sig do
     params(
       generator: ::Parlour::Generator,
@@ -587,56 +871,98 @@ class Parlour::RbiGenerator::Constant < ::Parlour::RbiGenerator::RbiObject
   end
   def initialize(generator, name: T.unsafe(nil), value: T.unsafe(nil), eigen_constant: T.unsafe(nil), heredocs: T.unsafe(nil), &block); end
 
-  # source://parlour//lib/parlour/rbi_generator/constant.rb#48
+  # Returns true if this instance is equal to another extend.
+  #
+  # @param other [Object] The other instance. If this is not a {Extend} (or a
+  #   subclass of it), this will always return false.
+  # @return [Boolean]
+  #
+  # pkg:gem/parlour#lib/parlour/rbi_generator/constant.rb:48
   sig { params(other: ::Object).returns(T::Boolean) }
   def ==(other); end
 
-  # source://parlour//lib/parlour/rbi_generator/constant.rb#109
+  # pkg:gem/parlour#lib/parlour/rbi_generator/constant.rb:109
   sig { override.returns(T::Array[T.any(::Symbol, T::Hash[::Symbol, ::String])]) }
   def describe_attrs; end
 
   # @return [Boolean] Whether this constant is defined on the eigenclass
   #   of the current namespace.
   #
-  # source://parlour//lib/parlour/rbi_generator/constant.rb#37
+  # pkg:gem/parlour#lib/parlour/rbi_generator/constant.rb:37
   def eigen_constant; end
 
-  # source://parlour//lib/parlour/rbi_generator/constant.rb#114
+  # pkg:gem/parlour#lib/parlour/rbi_generator/constant.rb:114
   sig { override.void }
   def generalize_from_rbi!; end
 
-  # source://parlour//lib/parlour/rbi_generator/constant.rb#64
+  # Generates the RBI lines for this constant.
+  #
+  # @param indent_level [Integer] The indentation level to generate the lines at.
+  # @param options [Options] The formatting options to use.
+  # @return [Array<String>] The RBI lines, formatted as specified.
+  #
+  # pkg:gem/parlour#lib/parlour/rbi_generator/constant.rb:64
   sig { override.params(indent_level: ::Integer, options: ::Parlour::Options).returns(T::Array[::String]) }
   def generate_rbi(indent_level, options); end
 
-  # @return [String, nil] Definitions of the heredocs used in the value, if any
+  # @return [String,nil] Definitions of the heredocs used in the value, if any
   #
-  # source://parlour//lib/parlour/rbi_generator/constant.rb#40
+  # pkg:gem/parlour#lib/parlour/rbi_generator/constant.rb:40
   def heredocs; end
 
-  # source://parlour//lib/parlour/rbi_generator/constant.rb#104
+  # Given an array of {Constant} instances, merges them into this one.
+  # This particular implementation will simply do nothing, as instances
+  # are only mergeable if they are indentical.
+  # You MUST ensure that {mergeable?} is true for those instances.
+  #
+  # @param others [Array<RbiGenerator::RbiObject>] An array of other
+  #   {Extend} instances.
+  # @return [void]
+  #
+  # pkg:gem/parlour#lib/parlour/rbi_generator/constant.rb:104
   sig { override.params(others: T::Array[::Parlour::RbiGenerator::RbiObject]).void }
   def merge_into_self(others); end
 
-  # source://parlour//lib/parlour/rbi_generator/constant.rb#87
+  # Given an array of {Constant} instances, returns true if they may be
+  # merged into this instance using {merge_into_self}. This is always false.
+  #
+  # @param others [Array<RbiGenerator::RbiObject>] An array of other
+  #   {Constant} instances.
+  # @return [Boolean] Whether this instance may be merged with them.
+  #
+  # pkg:gem/parlour#lib/parlour/rbi_generator/constant.rb:87
   sig { override.params(others: T::Array[::Parlour::RbiGenerator::RbiObject]).returns(T::Boolean) }
   def mergeable?(others); end
 
-  # source://parlour//lib/parlour/rbi_generator/constant.rb#33
+  # @return [String] The value or type of the constant.
+  #
+  # pkg:gem/parlour#lib/parlour/rbi_generator/constant.rb:33
   sig { returns(T.any(::Parlour::Types::Type, ::String)) }
   def value; end
 end
 
 # Represents an enum definition; that is, a class with an +enum+ call.
 #
-# source://parlour//lib/parlour/rbi_generator/enum_class_namespace.rb#5
+# pkg:gem/parlour#lib/parlour/rbi_generator/enum_class_namespace.rb:5
 class Parlour::RbiGenerator::EnumClassNamespace < ::Parlour::RbiGenerator::ClassNamespace
   extend T::Generic
   extend T::Sig
 
   Child = type_member { { fixed: Parlour::RbiGenerator::RbiObject } }
 
-  # source://parlour//lib/parlour/rbi_generator/enum_class_namespace.rb#32
+  # Creates a new enum class definition.
+  # @note You should use {Namespace#create_class} rather than this directly.
+  #
+  # @param generator [RbiGenerator] The current RbiGenerator.
+  # @param name [String] The name of this class.
+  # @param final [Boolean] Whether this namespace is final.
+  # @param sealed [Boolean] Whether this namespace is sealed.
+  # @param enums [Array<(String, String), String>] The values of the enumeration.
+  # @param abstract [Boolean] A boolean indicating whether this class is abstract.
+  # @param block A block which the new instance yields itself to.
+  # @return [void]
+  #
+  # pkg:gem/parlour#lib/parlour/rbi_generator/enum_class_namespace.rb:32
   sig do
     params(
       generator: ::Parlour::Generator,
@@ -650,36 +976,64 @@ class Parlour::RbiGenerator::EnumClassNamespace < ::Parlour::RbiGenerator::Class
   end
   def initialize(generator, name, final, sealed, enums, abstract, &block); end
 
-  # source://parlour//lib/parlour/rbi_generator/enum_class_namespace.rb#121
+  # pkg:gem/parlour#lib/parlour/rbi_generator/enum_class_namespace.rb:121
   sig { override.returns(T::Array[T.any(::Symbol, T::Hash[::Symbol, ::String])]) }
   def describe_attrs; end
 
-  # source://parlour//lib/parlour/rbi_generator/enum_class_namespace.rb#40
+  # The values of the enumeration.
+  # @return [Array<(String, String), String>]
+  #
+  # pkg:gem/parlour#lib/parlour/rbi_generator/enum_class_namespace.rb:40
   sig { returns(T::Array[T.any(::String, [::String, ::String])]) }
   def enums; end
 
-  # source://parlour//lib/parlour/rbi_generator/enum_class_namespace.rb#116
+  # pkg:gem/parlour#lib/parlour/rbi_generator/enum_class_namespace.rb:116
   sig { override.void }
   def generalize_from_rbi!; end
 
-  # source://parlour//lib/parlour/rbi_generator/enum_class_namespace.rb#54
+  # Generates the RBI lines for the body of this enum. This consists of
+  # {enums}, {includes}, {extends} and {children}.
+  #
+  # @param indent_level [Integer] The indentation level to generate the lines at.
+  # @param options [Options] The formatting options to use.
+  # @return [Array<String>] The RBI lines for the body, formatted as specified.
+  #
+  # pkg:gem/parlour#lib/parlour/rbi_generator/enum_class_namespace.rb:54
   sig { override.params(indent_level: ::Integer, options: ::Parlour::Options).returns(T::Array[::String]) }
   def generate_body(indent_level, options); end
 
-  # source://parlour//lib/parlour/rbi_generator/enum_class_namespace.rb#104
+  # Given an array of {EnumClassNamespace} instances, merges them into this one.
+  # You MUST ensure that {mergeable?} is true for those instances.
+  #
+  # @param others [Array<RbiGenerator::RbiObject>] An array of other {EnumClassNamespace} instances.
+  # @return [void]
+  #
+  # pkg:gem/parlour#lib/parlour/rbi_generator/enum_class_namespace.rb:104
   sig { override.params(others: T::Array[::Parlour::RbiGenerator::RbiObject]).void }
   def merge_into_self(others); end
 
-  # source://parlour//lib/parlour/rbi_generator/enum_class_namespace.rb#86
+  # Given an array of {EnumClassNamespace} instances, returns true if they may
+  # be merged into this instance using {merge_into_self}. For instances to
+  # be mergeable, they must either all be abstract or all not be abstract,
+  # and they must define the same superclass (or none at all).
+  #
+  # @param others [Array<RbiGenerator::RbiObject>] An array of other {EnumClassNamespace} instances.
+  # @return [Boolean] Whether this instance may be merged with them.
+  #
+  # pkg:gem/parlour#lib/parlour/rbi_generator/enum_class_namespace.rb:86
   sig { override.params(others: T::Array[::Parlour::RbiGenerator::RbiObject]).returns(T::Boolean) }
   def mergeable?(others); end
 end
 
 # Represents an +extend+ call.
 #
-# source://parlour//lib/parlour/rbi_generator/extend.rb#5
+# pkg:gem/parlour#lib/parlour/rbi_generator/extend.rb:5
 class Parlour::RbiGenerator::Extend < ::Parlour::RbiGenerator::RbiObject
-  # source://parlour//lib/parlour/rbi_generator/extend.rb#16
+  # Creates a new +extend+ call.
+  #
+  # @param name [String] The name of the object to be extended.
+  #
+  # pkg:gem/parlour#lib/parlour/rbi_generator/extend.rb:16
   sig do
     params(
       generator: ::Parlour::Generator,
@@ -689,36 +1043,70 @@ class Parlour::RbiGenerator::Extend < ::Parlour::RbiGenerator::RbiObject
   end
   def initialize(generator, name: T.unsafe(nil), &block); end
 
-  # source://parlour//lib/parlour/rbi_generator/extend.rb#27
+  # Returns true if this instance is equal to another extend.
+  #
+  # @param other [Object] The other instance. If this is not a {Extend} (or a
+  #   subclass of it), this will always return false.
+  # @return [Boolean]
+  #
+  # pkg:gem/parlour#lib/parlour/rbi_generator/extend.rb:27
   sig { params(other: ::Object).returns(T::Boolean) }
   def ==(other); end
 
-  # source://parlour//lib/parlour/rbi_generator/extend.rb#82
+  # Nothing to do
+  #
+  # pkg:gem/parlour#lib/parlour/rbi_generator/extend.rb:82
   sig { override.returns(T::Array[T.any(::Symbol, T::Hash[::Symbol, ::String])]) }
   def describe_attrs; end
 
-  # source://parlour//lib/parlour/rbi_generator/extend.rb#79
+  # pkg:gem/parlour#lib/parlour/rbi_generator/extend.rb:79
   sig { override.void }
   def generalize_from_rbi!; end
 
-  # source://parlour//lib/parlour/rbi_generator/extend.rb#42
+  # Generates the RBI lines for this extend.
+  #
+  # @param indent_level [Integer] The indentation level to generate the lines at.
+  # @param options [Options] The formatting options to use.
+  # @return [Array<String>] The RBI lines, formatted as specified.
+  #
+  # pkg:gem/parlour#lib/parlour/rbi_generator/extend.rb:42
   sig { override.params(indent_level: ::Integer, options: ::Parlour::Options).returns(T::Array[::String]) }
   def generate_rbi(indent_level, options); end
 
-  # source://parlour//lib/parlour/rbi_generator/extend.rb#74
+  # Given an array of {Extend} instances, merges them into this one.
+  # This particular implementation will simply do nothing, as instances
+  # are only mergeable if they are indentical.
+  # You MUST ensure that {mergeable?} is true for those instances.
+  #
+  # @param others [Array<RbiGenerator::RbiObject>] An array of other
+  #   {Extend} instances.
+  # @return [void]
+  #
+  # pkg:gem/parlour#lib/parlour/rbi_generator/extend.rb:74
   sig { override.params(others: T::Array[::Parlour::RbiGenerator::RbiObject]).void }
   def merge_into_self(others); end
 
-  # source://parlour//lib/parlour/rbi_generator/extend.rb#57
+  # Given an array of {Extend} instances, returns true if they may be
+  # merged into this instance using {merge_into_self}. This is always false.
+  #
+  # @param others [Array<RbiGenerator::RbiObject>] An array of other
+  #   {Extend} instances.
+  # @return [Boolean] Whether this instance may be merged with them.
+  #
+  # pkg:gem/parlour#lib/parlour/rbi_generator/extend.rb:57
   sig { override.params(others: T::Array[::Parlour::RbiGenerator::RbiObject]).returns(T::Boolean) }
   def mergeable?(others); end
 end
 
 # Represents an +include+ call.
 #
-# source://parlour//lib/parlour/rbi_generator/include.rb#5
+# pkg:gem/parlour#lib/parlour/rbi_generator/include.rb:5
 class Parlour::RbiGenerator::Include < ::Parlour::RbiGenerator::RbiObject
-  # source://parlour//lib/parlour/rbi_generator/include.rb#16
+  # Creates a new +include+ call.
+  #
+  # @param name [String] The name of the object to be included.
+  #
+  # pkg:gem/parlour#lib/parlour/rbi_generator/include.rb:16
   sig do
     params(
       generator: ::Parlour::Generator,
@@ -728,38 +1116,90 @@ class Parlour::RbiGenerator::Include < ::Parlour::RbiGenerator::RbiObject
   end
   def initialize(generator, name: T.unsafe(nil), &block); end
 
-  # source://parlour//lib/parlour/rbi_generator/include.rb#27
+  # Returns true if this instance is equal to another include.
+  #
+  # @param other [Object] The other instance. If this is not a {Include} (or a
+  #   subclass of it), this will always return false.
+  # @return [Boolean]
+  #
+  # pkg:gem/parlour#lib/parlour/rbi_generator/include.rb:27
   sig { params(other: ::Object).returns(T::Boolean) }
   def ==(other); end
 
-  # source://parlour//lib/parlour/rbi_generator/include.rb#82
+  # Nothing to do
+  #
+  # pkg:gem/parlour#lib/parlour/rbi_generator/include.rb:82
   sig { override.returns(T::Array[T.any(::Symbol, T::Hash[::Symbol, ::String])]) }
   def describe_attrs; end
 
-  # source://parlour//lib/parlour/rbi_generator/include.rb#79
+  # pkg:gem/parlour#lib/parlour/rbi_generator/include.rb:79
   sig { override.void }
   def generalize_from_rbi!; end
 
-  # source://parlour//lib/parlour/rbi_generator/include.rb#42
+  # Generates the RBI lines for this include.
+  #
+  # @param indent_level [Integer] The indentation level to generate the lines at.
+  # @param options [Options] The formatting options to use.
+  # @return [Array<String>] The RBI lines, formatted as specified.
+  #
+  # pkg:gem/parlour#lib/parlour/rbi_generator/include.rb:42
   sig { override.params(indent_level: ::Integer, options: ::Parlour::Options).returns(T::Array[::String]) }
   def generate_rbi(indent_level, options); end
 
-  # source://parlour//lib/parlour/rbi_generator/include.rb#74
+  # Given an array of {Include} instances, merges them into this one.
+  # This particular implementation will simply do nothing, as instances
+  # are only mergeable if they are indentical.
+  # You MUST ensure that {mergeable?} is true for those instances.
+  #
+  # @param others [Array<RbiGenerator::RbiObject>] An array of other
+  #   {Include} instances.
+  # @return [void]
+  #
+  # pkg:gem/parlour#lib/parlour/rbi_generator/include.rb:74
   sig { override.params(others: T::Array[::Parlour::RbiGenerator::RbiObject]).void }
   def merge_into_self(others); end
 
-  # source://parlour//lib/parlour/rbi_generator/include.rb#57
+  # Given an array of {Include} instances, returns true if they may be
+  # merged into this instance using {merge_into_self}. This is always false.
+  #
+  # @param others [Array<RbiGenerator::RbiObject>] An array of other
+  #   {Include} instances.
+  # @return [Boolean] Whether this instance may be merged with them.
+  #
+  # pkg:gem/parlour#lib/parlour/rbi_generator/include.rb:57
   sig { override.params(others: T::Array[::Parlour::RbiGenerator::RbiObject]).returns(T::Boolean) }
   def mergeable?(others); end
 end
 
 # Represents a method definition.
 #
-# source://parlour//lib/parlour/rbi_generator/method.rb#5
+# pkg:gem/parlour#lib/parlour/rbi_generator/method.rb:5
 class Parlour::RbiGenerator::Method < ::Parlour::RbiGenerator::RbiObject
   extend T::Sig
 
-  # source://parlour//lib/parlour/rbi_generator/method.rb#45
+  # Creates a new method definition.
+  # @note You should use {Namespace#create_method} rather than this directly.
+  #
+  # @param generator [RbiGenerator] The current RbiGenerator.
+  # @param name [String] The name of this method. You should not specify +self.+ in
+  #   this - use the +class_method+ parameter instead.
+  # @param parameters [Array<Parameter>] An array of {Parameter} instances representing this
+  #   method's parameters.
+  # @param return_type [Types::TypeLike, nil] What this method returns. Passing nil denotes a void return.
+  # @param abstract [Boolean] Whether this method is abstract.
+  # @param implementation [Boolean] DEPRECATED: Whether this method is an
+  #   implementation of a parent abstract method.
+  # @param override [Boolean] Whether this method is overriding a parent overridable
+  #   method, or implementing a parent abstract method.
+  # @param overridable [Boolean] Whether this method is overridable by subclasses.
+  # @param class_method [Boolean] Whether this method is a class method; that is, it
+  #   it is defined using +self.+.
+  # @param final [Boolean] Whether this method is final.
+  # @param type_parameters [Array<Symbol>, nil] This method's type parameters.
+  # @param block A block which the new instance yields itself to.
+  # @return [void]
+  #
+  # pkg:gem/parlour#lib/parlour/rbi_generator/method.rb:45
   sig do
     params(
       generator: ::Parlour::Generator,
@@ -778,87 +1218,172 @@ class Parlour::RbiGenerator::Method < ::Parlour::RbiGenerator::RbiObject
   end
   def initialize(generator, name, parameters, return_type = T.unsafe(nil), abstract: T.unsafe(nil), implementation: T.unsafe(nil), override: T.unsafe(nil), overridable: T.unsafe(nil), class_method: T.unsafe(nil), final: T.unsafe(nil), type_parameters: T.unsafe(nil), &block); end
 
-  # source://parlour//lib/parlour/rbi_generator/method.rb#65
+  # Returns true if this instance is equal to another method.
+  #
+  # @param other [Object] The other instance. If this is not a {Method} (or a
+  #   subclass of it), this will always return false.
+  # @return [Boolean]
+  #
+  # pkg:gem/parlour#lib/parlour/rbi_generator/method.rb:65
   sig { overridable.params(other: ::Object).returns(T::Boolean) }
   def ==(other); end
 
-  # source://parlour//lib/parlour/rbi_generator/method.rb#92
+  # Whether this method is abstract.
+  # @return [Boolean]
+  #
+  # pkg:gem/parlour#lib/parlour/rbi_generator/method.rb:92
   sig { returns(T::Boolean) }
   def abstract; end
 
-  # source://parlour//lib/parlour/rbi_generator/method.rb#117
+  # Whether this method is a class method; that is, it it is defined using
+  # +self.+.
+  # @return [Boolean]
+  #
+  # pkg:gem/parlour#lib/parlour/rbi_generator/method.rb:117
   sig { returns(T::Boolean) }
   def class_method; end
 
-  # source://parlour//lib/parlour/rbi_generator/method.rb#217
+  # pkg:gem/parlour#lib/parlour/rbi_generator/method.rb:217
   sig { override.returns(T::Array[T.any(::Symbol, T::Hash[::Symbol, ::String])]) }
   def describe_attrs; end
 
-  # source://parlour//lib/parlour/rbi_generator/method.rb#122
+  # Whether this method is final.
+  # @return [Boolean]
+  #
+  # pkg:gem/parlour#lib/parlour/rbi_generator/method.rb:122
   sig { returns(T::Boolean) }
   def final; end
 
-  # source://parlour//lib/parlour/rbi_generator/method.rb#210
+  # pkg:gem/parlour#lib/parlour/rbi_generator/method.rb:210
   sig { override.void }
   def generalize_from_rbi!; end
 
-  # source://parlour//lib/parlour/rbi_generator/method.rb#140
+  # Generates the RBI lines for this method.
+  #
+  # @param indent_level [Integer] The indentation level to generate the lines at.
+  # @param options [Options] The formatting options to use.
+  # @return [Array<String>] The RBI lines, formatted as specified.
+  #
+  # pkg:gem/parlour#lib/parlour/rbi_generator/method.rb:140
   sig { override.params(indent_level: ::Integer, options: ::Parlour::Options).returns(T::Array[::String]) }
   def generate_rbi(indent_level, options); end
 
-  # source://parlour//lib/parlour/rbi_generator/method.rb#100
+  # Whether this method is an implementation of a parent abstract method.
+  # @deprecated Removed from Sorbet, as {#override} is used for both
+  #   abstract class implementations and superclass overrides. In Parlour,
+  #   this will now generate +override+.
+  # @return [Boolean]
+  #
+  # pkg:gem/parlour#lib/parlour/rbi_generator/method.rb:100
   sig { returns(T::Boolean) }
   def implementation; end
 
-  # source://parlour//lib/parlour/rbi_generator/method.rb#205
+  # Given an array of {Method} instances, merges them into this one.
+  # This particular implementation in fact does nothing, because {Method}
+  # instances are only mergeable if they are identical, so nothing needs
+  # to be changed.
+  # You MUST ensure that {mergeable?} is true for those instances.
+  #
+  # @param others [Array<RbiGenerator::RbiObject>] An array of other {Method} instances.
+  # @return [void]
+  #
+  # pkg:gem/parlour#lib/parlour/rbi_generator/method.rb:205
   sig { override.params(others: T::Array[::Parlour::RbiGenerator::RbiObject]).void }
   def merge_into_self(others); end
 
-  # source://parlour//lib/parlour/rbi_generator/method.rb#188
+  # Given an array of {Method} instances, returns true if they may be merged
+  # into this instance using {merge_into_self}. For instances to be
+  # mergeable, their signatures and definitions must be identical.
+  #
+  # @param others [Array<RbiGenerator::RbiObject>] An array of other {Method} instances.
+  # @return [Boolean] Whether this instance may be merged with them.
+  #
+  # pkg:gem/parlour#lib/parlour/rbi_generator/method.rb:188
   sig { override.params(others: T::Array[::Parlour::RbiGenerator::RbiObject]).returns(T::Boolean) }
   def mergeable?(others); end
 
-  # source://parlour//lib/parlour/rbi_generator/method.rb#111
+  # Whether this method is overridable by subclasses.
+  # @return [Boolean]
+  #
+  # pkg:gem/parlour#lib/parlour/rbi_generator/method.rb:111
   sig { returns(T::Boolean) }
   def overridable; end
 
-  # source://parlour//lib/parlour/rbi_generator/method.rb#106
+  # Whether this method is overriding a parent overridable method, or
+  #   implementing a parent abstract method.
+  # @return [Boolean]
+  #
+  # pkg:gem/parlour#lib/parlour/rbi_generator/method.rb:106
   sig { returns(T::Boolean) }
   def override; end
 
-  # source://parlour//lib/parlour/rbi_generator/method.rb#82
+  # An array of {Parameter} instances representing this method's parameters.
+  # @return [Array<Parameter>]
+  #
+  # pkg:gem/parlour#lib/parlour/rbi_generator/method.rb:82
   sig { returns(T::Array[::Parlour::RbiGenerator::Parameter]) }
   def parameters; end
 
-  # source://parlour//lib/parlour/rbi_generator/method.rb#87
+  # What this method returns. Passing nil denotes a void return.
+  # @return [Types::TypeLike, nil]
+  #
+  # pkg:gem/parlour#lib/parlour/rbi_generator/method.rb:87
   sig { returns(T.nilable(T.any(::Parlour::Types::Type, ::String))) }
   def return_type; end
 
-  # source://parlour//lib/parlour/rbi_generator/method.rb#127
+  # This method's type parameters.
+  # @return [Array<Symbol>]
+  #
+  # pkg:gem/parlour#lib/parlour/rbi_generator/method.rb:127
   sig { returns(T::Array[::Symbol]) }
   def type_parameters; end
 
   private
 
-  # source://parlour//lib/parlour/rbi_generator/method.rb#244
+  # Generates the RBI lines for this method.
+  #
+  # @param indent_level [Integer] The indentation level to generate the lines at.
+  # @param options [Options] The formatting options to use.
+  # @return [Array<String>] The RBI lines, formatted as specified.
+  #
+  # pkg:gem/parlour#lib/parlour/rbi_generator/method.rb:244
   sig { overridable.params(indent_level: ::Integer, options: ::Parlour::Options).returns(T::Array[::String]) }
   def generate_definition(indent_level, options); end
 
-  # source://parlour//lib/parlour/rbi_generator/method.rb#261
+  # Returns the qualifiers which go in front of the +params+ part of this
+  # method's Sorbet +sig+. For example, if {abstract} is true, then this
+  # will return +abstract.+.
+  #
+  # @return [String]
+  #
+  # pkg:gem/parlour#lib/parlour/rbi_generator/method.rb:261
   sig { returns(::String) }
   def qualifiers; end
 end
 
 # Represents a module definition.
 #
-# source://parlour//lib/parlour/rbi_generator/module_namespace.rb#5
+# pkg:gem/parlour#lib/parlour/rbi_generator/module_namespace.rb:5
 class Parlour::RbiGenerator::ModuleNamespace < ::Parlour::RbiGenerator::Namespace
   extend T::Generic
   extend T::Sig
 
   Child = type_member { { fixed: Parlour::RbiGenerator::RbiObject } }
 
-  # source://parlour//lib/parlour/rbi_generator/module_namespace.rb#33
+  # Creates a new module definition.
+  # @note You should use {Namespace#create_module} rather than this directly.
+  #
+  # @param generator [RbiGenerator] The current RbiGenerator.
+  # @param name [String] The name of this module.
+  # @param final [Boolean] Whether this namespace is final.
+  # @param sealed [Boolean] Whether this namespace is sealed.
+  # @param interface [Boolean] A boolean indicating whether this module is an
+  #   interface.
+  # @param abstract [Boolean] A boolean indicating whether this module is abstract.
+  # @param block A block which the new instance yields itself to.
+  # @return [void]
+  #
+  # pkg:gem/parlour#lib/parlour/rbi_generator/module_namespace.rb:33
   sig do
     params(
       generator: ::Parlour::Generator,
@@ -872,31 +1397,57 @@ class Parlour::RbiGenerator::ModuleNamespace < ::Parlour::RbiGenerator::Namespac
   end
   def initialize(generator, name, final, sealed, interface, abstract, &block); end
 
-  # source://parlour//lib/parlour/rbi_generator/module_namespace.rb#68
+  # A boolean indicating whether this module is abstract or not.
+  # @return [Boolean]
+  #
+  # pkg:gem/parlour#lib/parlour/rbi_generator/module_namespace.rb:68
   sig { returns(T::Boolean) }
   def abstract; end
 
-  # source://parlour//lib/parlour/rbi_generator/module_namespace.rb#111
+  # pkg:gem/parlour#lib/parlour/rbi_generator/module_namespace.rb:111
   sig { override.returns(T::Array[T.any(::Symbol, T::Hash[::Symbol, ::String])]) }
   def describe_attrs; end
 
-  # source://parlour//lib/parlour/rbi_generator/module_namespace.rb#106
+  # pkg:gem/parlour#lib/parlour/rbi_generator/module_namespace.rb:106
   sig { override.void }
   def generalize_from_rbi!; end
 
-  # source://parlour//lib/parlour/rbi_generator/module_namespace.rb#51
+  # Generates the RBI lines for this module.
+  #
+  # @param indent_level [Integer] The indentation level to generate the lines at.
+  # @param options [Options] The formatting options to use.
+  # @return [Array<String>] The RBI lines, formatted as specified.
+  #
+  # pkg:gem/parlour#lib/parlour/rbi_generator/module_namespace.rb:51
   sig { override.params(indent_level: ::Integer, options: ::Parlour::Options).returns(T::Array[::String]) }
   def generate_rbi(indent_level, options); end
 
-  # source://parlour//lib/parlour/rbi_generator/module_namespace.rb#63
+  # A boolean indicating whether this module is an interface or not.
+  # @return [Boolean]
+  #
+  # pkg:gem/parlour#lib/parlour/rbi_generator/module_namespace.rb:63
   sig { returns(T::Boolean) }
   def interface; end
 
-  # source://parlour//lib/parlour/rbi_generator/module_namespace.rb#101
+  # Given an array of {ModuleNamespace} instances, merges them into this one.
+  # You MUST ensure that {mergeable?} is true for those instances.
+  #
+  # @param others [Array<RbiGenerator::RbiObject>] An array of other {ModuleNamespace} instances.
+  # @return [void]
+  #
+  # pkg:gem/parlour#lib/parlour/rbi_generator/module_namespace.rb:101
   sig { override.params(others: T::Array[::Parlour::RbiGenerator::RbiObject]).void }
   def merge_into_self(others); end
 
-  # source://parlour//lib/parlour/rbi_generator/module_namespace.rb#82
+  # Given an array of {Namespace} instances, returns true if they may
+  # be merged into this instance using {merge_into_self}. For instances to
+  # be mergeable, they must either all be interfaces or all not be
+  # interfaces.
+  #
+  # @param others [Array<RbiGenerator::RbiObject>] An array of other {Namespace} instances.
+  # @return [Boolean] Whether this instance may be merged with them.
+  #
+  # pkg:gem/parlour#lib/parlour/rbi_generator/module_namespace.rb:82
   sig { override.params(others: T::Array[::Parlour::RbiGenerator::RbiObject]).returns(T::Boolean) }
   def mergeable?(others); end
 end
@@ -904,7 +1455,7 @@ end
 # A generic namespace. This shouldn't be used, except as the type of
 # {RbiGenerator#root}.
 #
-# source://parlour//lib/parlour/rbi_generator/namespace.rb#6
+# pkg:gem/parlour#lib/parlour/rbi_generator/namespace.rb:6
 class Parlour::RbiGenerator::Namespace < ::Parlour::RbiGenerator::RbiObject
   extend T::Generic
   include ::Parlour::Mixin::Searchable
@@ -913,7 +1464,18 @@ class Parlour::RbiGenerator::Namespace < ::Parlour::RbiGenerator::RbiObject
 
   Child = type_member { { fixed: Parlour::RbiGenerator::RbiObject } }
 
-  # source://parlour//lib/parlour/rbi_generator/namespace.rb#45
+  # Creates a new namespace.
+  # @note Unless you're doing something impressively hacky, this shouldn't
+  #   be invoked outside of {RbiGenerator#initialize}.
+  #
+  # @param generator [RbiGenerator] The current RbiGenerator.
+  # @param name [String, nil] The name of this module.
+  # @param final [Boolean] Whether this namespace is final.
+  # @param final [Boolean] Whether this namespace is sealed.
+  # @param block A block which the new instance yields itself to.
+  # @return [void]
+  #
+  # pkg:gem/parlour#lib/parlour/rbi_generator/namespace.rb:45
   sig do
     params(
       generator: ::Parlour::Generator,
@@ -925,19 +1487,41 @@ class Parlour::RbiGenerator::Namespace < ::Parlour::RbiGenerator::RbiObject
   end
   def initialize(generator, name = T.unsafe(nil), final = T.unsafe(nil), sealed = T.unsafe(nil), &block); end
 
-  # source://parlour//lib/parlour/rbi_generator/namespace.rb#157
+  # Adds one or more comments to the next child RBI object to be created.
+  #
+  # @example Creating a module with a comment.
+  #   namespace.add_comment_to_next_child('This is a module')
+  #   namespace.create_module('M')
+  #
+  # @example Creating a class with a multi-line comment.
+  #   namespace.add_comment_to_next_child(['This is a multi-line comment!', 'It can be as long as you want!'])
+  #   namespace.create_class('C')
+  #
+  # @param comment [String, Array<String>] The new comment(s).
+  # @return [void]
+  #
+  # pkg:gem/parlour#lib/parlour/rbi_generator/namespace.rb:157
   sig { params(comment: T.any(::String, T::Array[::String])).void }
   def add_comment_to_next_child(comment); end
 
-  # source://parlour//lib/parlour/rbi_generator/namespace.rb#95
+  # The {RbiGenerator::TypeAlias} objects from {children}.
+  # @return [Array<RbiGenerator::TypeAlias>]
+  #
+  # pkg:gem/parlour#lib/parlour/rbi_generator/namespace.rb:95
   sig { returns(T::Array[::Parlour::RbiGenerator::TypeAlias]) }
   def aliases; end
 
-  # source://parlour//lib/parlour/rbi_generator/namespace.rb#67
+  # The child {RbiObject} instances inside this namespace.
+  # @return [Array<RbiObject>]
+  #
+  # pkg:gem/parlour#lib/parlour/rbi_generator/namespace.rb:67
   sig { override.returns(T::Array[::Parlour::RbiGenerator::RbiObject]) }
   def children; end
 
-  # source://parlour//lib/parlour/rbi_generator/namespace.rb#106
+  # The {RbiGenerator::Constant} objects from {children}.
+  # @return [Array<RbiGenerator::Constant>]
+  #
+  # pkg:gem/parlour#lib/parlour/rbi_generator/namespace.rb:106
   sig { returns(T::Array[::Parlour::RbiGenerator::Constant]) }
   def constants; end
 
@@ -948,21 +1532,24 @@ class Parlour::RbiGenerator::Namespace < ::Parlour::RbiGenerator::RbiObject
   # @param block A block which the new instance yields itself to.
   # @return [RbiGenerator::Arbitrary]
   #
-  # source://parlour//lib/parlour/rbi_generator/namespace.rb#482
+  # pkg:gem/parlour#lib/parlour/rbi_generator/namespace.rb:482
   sig { params(code: T.untyped, block: T.untyped).returns(T.untyped) }
   def create_arbitrary(code:, &block); end
 
-  # @param name [String]
-  # @param kind [Symbol]
-  # @param type [Types::TypeLike]
-  # @param class_attribute [Boolean]
-  # @param block [T.proc.params(x: Attribute).void, nil]
-  # @return [Attribute]
-  #
-  # source://sorbet-runtime/0.5.12214/lib/types/private/methods/_methods.rb#257
+  # pkg:gem/parlour#lib/parlour/rbi_generator/namespace.rb:411
   def create_attr(*args, **_arg1, &blk); end
 
-  # source://parlour//lib/parlour/rbi_generator/namespace.rb#472
+  # Creates a new read and write attribute (+attr_accessor+).
+  #
+  # @param name [String] The name of this attribute.
+  # @param type [String] A Sorbet string of this attribute's type, such as
+  #   +"String"+ or +"T.untyped"+.
+  # @param class_attribute [Boolean] Whether this attribute belongs to the
+  #   singleton class.
+  # @param block A block which the new instance yields itself to.
+  # @return [RbiGenerator::Attribute]
+  #
+  # pkg:gem/parlour#lib/parlour/rbi_generator/namespace.rb:472
   sig do
     params(
       name: ::String,
@@ -973,7 +1560,17 @@ class Parlour::RbiGenerator::Namespace < ::Parlour::RbiGenerator::RbiObject
   end
   def create_attr_accessor(name, type:, class_attribute: T.unsafe(nil), &block); end
 
-  # source://parlour//lib/parlour/rbi_generator/namespace.rb#430
+  # Creates a new read-only attribute (+attr_reader+).
+  #
+  # @param name [String] The name of this attribute.
+  # @param type [String] A Sorbet string of this attribute's type, such as
+  #   +"String"+ or +"T.untyped"+.
+  # @param class_attribute [Boolean] Whether this attribute belongs to the
+  #   singleton class.
+  # @param block A block which the new instance yields itself to.
+  # @return [RbiGenerator::Attribute]
+  #
+  # pkg:gem/parlour#lib/parlour/rbi_generator/namespace.rb:430
   sig do
     params(
       name: ::String,
@@ -984,7 +1581,17 @@ class Parlour::RbiGenerator::Namespace < ::Parlour::RbiGenerator::RbiObject
   end
   def create_attr_reader(name, type:, class_attribute: T.unsafe(nil), &block); end
 
-  # source://parlour//lib/parlour/rbi_generator/namespace.rb#451
+  # Creates a new write-only attribute (+attr_writer+).
+  #
+  # @param name [String] The name of this attribute.
+  # @param type [String] A Sorbet string of this attribute's type, such as
+  #   +"String"+ or +"T.untyped"+.
+  # @param class_attribute [Boolean] Whether this attribute belongs to the
+  #   singleton class.
+  # @param block A block which the new instance yields itself to.
+  # @return [RbiGenerator::Attribute]
+  #
+  # pkg:gem/parlour#lib/parlour/rbi_generator/namespace.rb:451
   sig do
     params(
       name: ::String,
@@ -995,7 +1602,41 @@ class Parlour::RbiGenerator::Namespace < ::Parlour::RbiGenerator::RbiObject
   end
   def create_attr_writer(name, type:, class_attribute: T.unsafe(nil), &block); end
 
-  # source://parlour//lib/parlour/rbi_generator/namespace.rb#398
+  # Creates a new attribute.
+  #
+  # @example Create an +attr_reader+.
+  #   module.create_attribute('readable', kind: :reader, type: 'String')
+  #   # #=> sig { returns(String) }
+  #   #     attr_reader :readable
+  #
+  # @example Create an +attr_writer+.
+  #   module.create_attribute('writable', kind: :writer, type: 'Integer')
+  #   # #=> sig { params(writable: Integer).returns(Integer) }
+  #   #     attr_writer :writable
+  #
+  # @example Create an +attr_accessor+.
+  #   module.create_attribute('accessible', kind: :accessor, type: 'T::Boolean')
+  #   # #=> sig { returns(T::Boolean) }
+  #   #     attr_accessor :accessible
+  #
+  # @example Create an +attr_accessor+ on the singleton class.
+  #   module.create_attribute('singleton_attr', kind: :accessor, type: 'T::Boolean')
+  #   # #=> class << self
+  #   #       sig { returns(T::Boolean) }
+  #   #       attr_accessor :singleton_attr
+  #   #     end
+  #
+  # @param name [String] The name of this attribute.
+  # @param kind [Symbol] The kind of attribute this is; one of +:writer+, +:reader+, or
+  #   +:accessor+.
+  # @param type [String] A Sorbet string of this attribute's type, such as
+  #   +"String"+ or +"T.untyped"+.
+  # @param class_attribute [Boolean] Whether this attribute belongs to the
+  #   singleton class.
+  # @param block A block which the new instance yields itself to.
+  # @return [RbiGenerator::Attribute]
+  #
+  # pkg:gem/parlour#lib/parlour/rbi_generator/namespace.rb:398
   sig do
     params(
       name: ::String,
@@ -1007,7 +1648,26 @@ class Parlour::RbiGenerator::Namespace < ::Parlour::RbiGenerator::RbiObject
   end
   def create_attribute(name, kind:, type:, class_attribute: T.unsafe(nil), &block); end
 
-  # source://parlour//lib/parlour/rbi_generator/namespace.rb#193
+  # Creates a new class definition as a child of this namespace.
+  #
+  # @example Create a class with a nested module.
+  #   namespace.create_class('Foo') do |foo|
+  #     foo.create_module('Bar')
+  #   end
+  #
+  # @example Create a class that is the child of another class.
+  #   namespace.create_class('Bar', superclass: 'Foo') #=> class Bar < Foo
+  #
+  # @param name [String] The name of this class.
+  # @param final [Boolean] Whether this namespace is final.
+  # @param sealed [Boolean] Whether this namespace is sealed.
+  # @param superclass [String, nil] The superclass of this class, or nil if it doesn't
+  #   have one.
+  # @param abstract [Boolean] A boolean indicating whether this class is abstract.
+  # @param block A block which the new instance yields itself to.
+  # @return [ClassNamespace]
+  #
+  # pkg:gem/parlour#lib/parlour/rbi_generator/namespace.rb:193
   sig do
     params(
       name: ::String,
@@ -1020,7 +1680,20 @@ class Parlour::RbiGenerator::Namespace < ::Parlour::RbiGenerator::RbiObject
   end
   def create_class(name, final: T.unsafe(nil), sealed: T.unsafe(nil), superclass: T.unsafe(nil), abstract: T.unsafe(nil), &block); end
 
-  # source://parlour//lib/parlour/rbi_generator/namespace.rb#580
+  # Adds a new constant definition to this namespace.
+  #
+  # @example Add an +Elem+ constant to the class.
+  #   class.create_constant('Elem', value: 'String') #=> Elem = String
+  #
+  # @param name [String] The name of the constant.
+  # @param value [String] The value of the constant, as a Ruby code string.
+  # @param eigen_constant [Boolean] Whether this constant is defined on the
+  #   eigenclass of the current namespace.
+  # @param heredocs [String,nil] Values of the heredocs used, in order
+  # @param block A block which the new instance yields itself to.
+  # @return [RbiGenerator::Constant]
+  #
+  # pkg:gem/parlour#lib/parlour/rbi_generator/namespace.rb:580
   sig do
     params(
       name: ::String,
@@ -1032,7 +1705,20 @@ class Parlour::RbiGenerator::Namespace < ::Parlour::RbiGenerator::RbiObject
   end
   def create_constant(name, value:, eigen_constant: T.unsafe(nil), heredocs: T.unsafe(nil), &block); end
 
-  # source://parlour//lib/parlour/rbi_generator/namespace.rb#222
+  # Creates a new enum class definition as a child of this namespace.
+  #
+  # @example Create a compass direction enum.
+  #   namespace.create_class('Direction', enums: ['North', 'South', 'East', 'West'])
+  #
+  # @param name [String] The name of this class.
+  # @param final [Boolean] Whether this namespace is final.
+  # @param sealed [Boolean] Whether this namespace is sealed.
+  # @param enums [Array<(String, String), String>] The values of the enumeration.
+  # @param abstract [Boolean] A boolean indicating whether this class is abstract.
+  # @param block A block which the new instance yields itself to.
+  # @return [EnumClassNamespace]
+  #
+  # pkg:gem/parlour#lib/parlour/rbi_generator/namespace.rb:222
   sig do
     params(
       name: ::String,
@@ -1045,7 +1731,17 @@ class Parlour::RbiGenerator::Namespace < ::Parlour::RbiGenerator::RbiObject
   end
   def create_enum_class(name, final: T.unsafe(nil), sealed: T.unsafe(nil), enums: T.unsafe(nil), abstract: T.unsafe(nil), &block); end
 
-  # source://parlour//lib/parlour/rbi_generator/namespace.rb#503
+  # Adds a new +extend+ to this namespace.
+  #
+  # @example Add an +extend+ to a class.
+  #   class.create_extend('ExtendableClass') #=> extend ExtendableClass
+  #
+  # @param object [String] A code string for what is extended, for example
+  #   +"MyModule"+.
+  # @param block A block which the new instance yields itself to.
+  # @return [RbiGenerator::Extend]
+  #
+  # pkg:gem/parlour#lib/parlour/rbi_generator/namespace.rb:503
   sig do
     params(
       name: ::String,
@@ -1054,11 +1750,29 @@ class Parlour::RbiGenerator::Namespace < ::Parlour::RbiGenerator::RbiObject
   end
   def create_extend(name, &block); end
 
-  # source://parlour//lib/parlour/rbi_generator/namespace.rb#522
+  # Adds new +extend+s to this namespace.
+  #
+  # @example Add +extend+s to a class.
+  #   class.create_extends(['Foo', 'Bar'])
+  #
+  # @param [Array<String>] extendables An array of names for whatever is being extended.
+  # @return [Array<RbiGenerator::Extend>]
+  #
+  # pkg:gem/parlour#lib/parlour/rbi_generator/namespace.rb:522
   sig { params(extendables: T::Array[::String]).returns(T::Array[::Parlour::RbiGenerator::Extend]) }
   def create_extends(extendables); end
 
-  # source://parlour//lib/parlour/rbi_generator/namespace.rb#540
+  # Adds a new +include+ to this namespace.
+  #
+  # @example Add an +include+ to a class.
+  #   class.create_include('IncludableClass') #=> include IncludableClass
+  #
+  # @param [String] name A code string for what is included, for example
+  #   +"Enumerable"+.
+  # @param block A block which the new instance yields itself to.
+  # @return [RbiGenerator::Include]
+  #
+  # pkg:gem/parlour#lib/parlour/rbi_generator/namespace.rb:540
   sig do
     params(
       name: ::String,
@@ -1067,11 +1781,41 @@ class Parlour::RbiGenerator::Namespace < ::Parlour::RbiGenerator::RbiObject
   end
   def create_include(name, &block); end
 
-  # source://parlour//lib/parlour/rbi_generator/namespace.rb#559
+  # Adds new +include+s to this namespace.
+  #
+  # @example Add +include+s to a class.
+  #   class.create_includes(['Foo', 'Bar'])
+  #
+  # @param [Array<String>] includables An array of names for whatever is being included.
+  # @return [Array<RbiGenerator::Include>]
+  #
+  # pkg:gem/parlour#lib/parlour/rbi_generator/namespace.rb:559
   sig { params(includables: T::Array[::String]).returns(T::Array[::Parlour::RbiGenerator::Include]) }
   def create_includes(includables); end
 
-  # source://parlour//lib/parlour/rbi_generator/namespace.rb#333
+  # Creates a new method definition as a child of this namespace.
+  #
+  # @param name [String] The name of this method. You should not specify +self.+ in
+  #   this - use the +class_method+ parameter instead.
+  # @param parameters [Array<Parameter>] An array of {Parameter} instances representing this
+  #   method's parameters.
+  # @param return_type [String, nil] A Sorbet string of what this method returns, such as
+  #   +"String"+ or +"T.untyped"+. Passing nil denotes a void return.
+  # @param returns [String, nil] Same as return_type.
+  # @param abstract [Boolean] Whether this method is abstract.
+  # @param implementation [Boolean] DEPRECATED: Whether this method is an
+  #   implementation of a parent abstract method.
+  # @param override [Boolean] Whether this method is overriding a parent overridable
+  #   method, or implementing a parent abstract method.
+  # @param overridable [Boolean] Whether this method is overridable by subclasses.
+  # @param class_method [Boolean] Whether this method is a class method; that is, it
+  #   it is defined using +self.+.
+  # @param final [Boolean] Whether this method is final.
+  # @param type_parameters [Array<Symbol>, nil] This method's type parameters.
+  # @param block A block which the new instance yields itself to.
+  # @return [Method]
+  #
+  # pkg:gem/parlour#lib/parlour/rbi_generator/namespace.rb:333
   sig do
     params(
       name: ::String,
@@ -1090,7 +1834,27 @@ class Parlour::RbiGenerator::Namespace < ::Parlour::RbiGenerator::RbiObject
   end
   def create_method(name, parameters: T.unsafe(nil), return_type: T.unsafe(nil), returns: T.unsafe(nil), abstract: T.unsafe(nil), implementation: T.unsafe(nil), override: T.unsafe(nil), overridable: T.unsafe(nil), class_method: T.unsafe(nil), final: T.unsafe(nil), type_parameters: T.unsafe(nil), &block); end
 
-  # source://parlour//lib/parlour/rbi_generator/namespace.rb#289
+  # Creates a new module definition as a child of this namespace.
+  #
+  # @example Create a basic module.
+  #   namespace.create_module('Foo')
+  #
+  # @example Create a module with a method.
+  #   namespace.create_module('Foo') do |foo|
+  #     foo.create_method('method_name', parameters: [], return_type: 'Integer')
+  #   end
+  #
+  # @param name [String] The name of this module.
+  # @param final [Boolean] Whether this namespace is final.
+  # @param sealed [Boolean] Whether this namespace is sealed.
+  # @param interface [Boolean] A boolean indicating whether this module is an
+  #   interface.
+  # @param abstract [Boolean] A boolean indicating whether this module is
+  #   abstract.
+  # @param block A block which the new instance yields itself to.
+  # @return [ModuleNamespace]
+  #
+  # pkg:gem/parlour#lib/parlour/rbi_generator/namespace.rb:289
   sig do
     params(
       name: ::String,
@@ -1103,7 +1867,22 @@ class Parlour::RbiGenerator::Namespace < ::Parlour::RbiGenerator::RbiObject
   end
   def create_module(name, final: T.unsafe(nil), sealed: T.unsafe(nil), interface: T.unsafe(nil), abstract: T.unsafe(nil), &block); end
 
-  # source://parlour//lib/parlour/rbi_generator/namespace.rb#253
+  # Creates a new struct class definition as a child of this namespace.
+  #
+  # @example Create a person struct.
+  #   namespace.create_class('Person', props: [
+  #     Parlour::RbiGenerator::StructProp.new('name', 'String')
+  #   ])
+  #
+  # @param name [String] The name of this class.
+  # @param final [Boolean] Whether this namespace is final.
+  # @param sealed [Boolean] Whether this namespace is sealed.
+  # @param props [Array<StructProp>] The props of the struct.
+  # @param abstract [Boolean] A boolean indicating whether this class is abstract.
+  # @param block A block which the new instance yields itself to.
+  # @return [EnumClassNamespace]
+  #
+  # pkg:gem/parlour#lib/parlour/rbi_generator/namespace.rb:253
   sig do
     params(
       name: ::String,
@@ -1116,7 +1895,17 @@ class Parlour::RbiGenerator::Namespace < ::Parlour::RbiGenerator::RbiObject
   end
   def create_struct_class(name, final: T.unsafe(nil), sealed: T.unsafe(nil), props: T.unsafe(nil), abstract: T.unsafe(nil), &block); end
 
-  # source://parlour//lib/parlour/rbi_generator/namespace.rb#604
+  # Adds a new type alias, in the form of a constant, to this namespace.
+  #
+  # @example Add a +MyType+ type alias, to +Integer+, to the class.
+  #   class.create_type_alias('MyType', type: 'Integer') #=> MyType = T.type_alias { Integer }
+  #
+  # @param name [String] The name of the type alias.
+  # @param value [String] The type to alias, as a Ruby code string.
+  # @param block A block which the new instance yields itself to.
+  # @return [RbiGenerator::Constant]
+  #
+  # pkg:gem/parlour#lib/parlour/rbi_generator/namespace.rb:604
   sig do
     params(
       name: ::String,
@@ -1126,58 +1915,112 @@ class Parlour::RbiGenerator::Namespace < ::Parlour::RbiGenerator::RbiObject
   end
   def create_type_alias(name, type:, &block); end
 
-  # source://parlour//lib/parlour/rbi_generator/namespace.rb#662
+  # pkg:gem/parlour#lib/parlour/rbi_generator/namespace.rb:662
   sig { override.returns(T::Array[T.any(::Symbol, T::Hash[::Symbol, ::String])]) }
   def describe_attrs; end
 
-  # source://parlour//lib/parlour/rbi_generator/namespace.rb#75
+  # The {RbiGenerator::Extend} objects from {children}.
+  # @return [Array<RbiGenerator::Extend>]
+  #
+  # pkg:gem/parlour#lib/parlour/rbi_generator/namespace.rb:75
   sig { returns(T::Array[::Parlour::RbiGenerator::Extend]) }
   def extends; end
 
-  # source://parlour//lib/parlour/rbi_generator/namespace.rb#57
+  # Whether this namespace is final.
+  # @return [Boolean]
+  #
+  # pkg:gem/parlour#lib/parlour/rbi_generator/namespace.rb:57
   sig { returns(T::Boolean) }
   def final; end
 
-  # source://parlour//lib/parlour/rbi_generator/namespace.rb#657
+  # pkg:gem/parlour#lib/parlour/rbi_generator/namespace.rb:657
   sig { override.void }
   def generalize_from_rbi!; end
 
-  # source://parlour//lib/parlour/rbi_generator/namespace.rb#21
+  # Generates the RBI lines for this namespace.
+  #
+  # @param indent_level [Integer] The indentation level to generate the lines at.
+  # @param options [Options] The formatting options to use.
+  # @return [Array<String>] The RBI lines, formatted as specified.
+  #
+  # pkg:gem/parlour#lib/parlour/rbi_generator/namespace.rb:21
   sig { override.overridable.params(indent_level: ::Integer, options: ::Parlour::Options).returns(T::Array[::String]) }
   def generate_rbi(indent_level, options); end
 
-  # source://parlour//lib/parlour/rbi_generator/namespace.rb#85
+  # The {RbiGenerator::Include} objects from {children}.
+  # @return [Array<RbiGenerator::Include>]
+  #
+  # pkg:gem/parlour#lib/parlour/rbi_generator/namespace.rb:85
   sig { returns(T::Array[::Parlour::RbiGenerator::Include]) }
   def includes; end
 
-  # source://parlour//lib/parlour/rbi_generator/namespace.rb#647
+  # Given an array of {Namespace} instances, merges them into this one.
+  # All children, constants, extends and includes are copied into this
+  # instance.
+  #
+  # There may also be {RbiGenerator::Method} instances in the stream, which
+  # are ignored.
+  #
+  # @param others [Array<RbiGenerator::RbiObject>] An array of other {Namespace} instances.
+  # @return [void]
+  #
+  # pkg:gem/parlour#lib/parlour/rbi_generator/namespace.rb:647
   sig { override.overridable.params(others: T::Array[::Parlour::RbiGenerator::RbiObject]).void }
   def merge_into_self(others); end
 
-  # source://parlour//lib/parlour/rbi_generator/namespace.rb#629
+  # Given an array of {Namespace} instances, returns true if they may be
+  # merged into this instance using {merge_into_self}. All bare namespaces
+  # can be merged into each other, as they lack definitions for themselves,
+  # so there is nothing to conflict. (This isn't the case for subclasses
+  # such as {ClassNamespace}.)
+  #
+  # @param others [Array<RbiGenerator::RbiObject>] An array of other {Namespace} instances.
+  # @return [true] Always true.
+  #
+  # pkg:gem/parlour#lib/parlour/rbi_generator/namespace.rb:629
   sig { override.overridable.params(others: T::Array[::Parlour::RbiGenerator::RbiObject]).returns(T::Boolean) }
   def mergeable?(others); end
 
-  # source://parlour//lib/parlour/rbi_generator/namespace.rb#120
+  # Given a constant (i.e. a Module instance), generates all classes
+  # and modules in the path to that object, then executes the given
+  # block on the last {Namespace}. This should only be executed on
+  # the root namespace.
+  # @param [Module] constant
+  # @param block A block which the new {Namespace} yields itself to.
+  #
+  # pkg:gem/parlour#lib/parlour/rbi_generator/namespace.rb:120
   sig { params(constant: ::Module, block: T.proc.params(x: Parlour::RbiGenerator::Namespace).void).void }
   def path(constant, &block); end
 
-  # source://parlour//lib/parlour/rbi_generator/namespace.rb#62
+  # Whether this namespace is sealed.
+  # @return [Boolean]
+  #
+  # pkg:gem/parlour#lib/parlour/rbi_generator/namespace.rb:62
   sig { returns(T::Boolean) }
   def sealed; end
 
-  # @return [Array<RbiGenerator::TypeAlias>]
-  #
-  # source://sorbet-runtime/0.5.12214/lib/types/private/methods/_methods.rb#257
+  # pkg:gem/parlour#lib/parlour/rbi_generator/namespace.rb:101
   def type_aliases(*args, **_arg1, &blk); end
 
   private
 
-  # source://parlour//lib/parlour/rbi_generator/namespace.rb#680
+  # Generates the RBI lines for the body of this namespace. This consists of
+  # {includes}, {extends} and {children}.
+  #
+  # @param indent_level [Integer] The indentation level to generate the lines at.
+  # @param options [Options] The formatting options to use.
+  # @return [Array<String>] The RBI lines for the body, formatted as specified.
+  #
+  # pkg:gem/parlour#lib/parlour/rbi_generator/namespace.rb:680
   sig { overridable.params(indent_level: ::Integer, options: ::Parlour::Options).returns(T::Array[::String]) }
   def generate_body(indent_level, options); end
 
-  # source://parlour//lib/parlour/rbi_generator/namespace.rb#771
+  # Copies the comments added with {#add_comment_to_next_child} into the
+  # given object, and clears the list of pending comments.
+  # @param object [RbiObject] The object to move the comments into.
+  # @return [void]
+  #
+  # pkg:gem/parlour#lib/parlour/rbi_generator/namespace.rb:771
   sig { params(object: ::Parlour::RbiGenerator::RbiObject).void }
   def move_next_comments(object); end
 end
@@ -1185,16 +2028,38 @@ end
 # For backwards compatibility.
 # Before Parlour 5.0, Parlour::Options was Parlour::RbiGenerator::Options.
 #
-# source://parlour//lib/parlour/rbi_generator.rb#7
+# pkg:gem/parlour#lib/parlour/rbi_generator.rb:7
 Parlour::RbiGenerator::Options = Parlour::Options
 
 # Represents a method parameter with a Sorbet type signature.
 #
-# source://parlour//lib/parlour/rbi_generator/parameter.rb#6
+# pkg:gem/parlour#lib/parlour/rbi_generator/parameter.rb:6
 class Parlour::RbiGenerator::Parameter
   extend T::Sig
 
-  # source://parlour//lib/parlour/rbi_generator/parameter.rb#37
+  # Create a new method parameter.
+  #
+  # @example Create a simple Integer parameter named +num+.
+  #   Parlour::RbiGenerator::Parameter.new('num', type: 'Integer')
+  # @example Create a nilable array parameter.
+  #   Parlour::RbiGenerator::Parameter.new('array_of_strings_or_symbols', type: 'T.nilable(T::Array(String, Symbol))')
+  # @example Create a block parameter.
+  #   Parlour::RbiGenerator::Parameter.new('&blk', type: 'T.proc.void')
+  # @example Create a parameter with a default value.
+  #   Parlour::RbiGenerator::Parameter.new('name', type: 'String', default: 'Parlour')
+  #
+  # @param name [String] The name of this parameter. This may start with +*+, +**+,
+  #   or +&+, or end with +:+, which will infer the {kind} of this
+  #   parameter. (If it contains none of those, {kind} will be +:normal+.)
+  # @param type [String, nil] A Sorbet string of this parameter's type, such as
+  #   +"String"+ or +"T.untyped"+.
+  # @param default [String, nil] A string of Ruby code for this parameter's default value.
+  #   For example, the default value of an empty string would be represented
+  #   as +"\"\""+ (or +'""'+). The default value of the decimal +3.14+
+  #   would be +"3.14"+.
+  # @return [void]
+  #
+  # pkg:gem/parlour#lib/parlour/rbi_generator/parameter.rb:37
   sig do
     params(
       name: ::String,
@@ -1204,50 +2069,86 @@ class Parlour::RbiGenerator::Parameter
   end
   def initialize(name, type: T.unsafe(nil), default: T.unsafe(nil)); end
 
-  # source://parlour//lib/parlour/rbi_generator/parameter.rb#56
+  # Returns true if this instance is equal to another method.
+  #
+  # @param other [Object] The other instance. If this is not a {Parameter} (or a
+  #   subclass of it), this will always return false.
+  # @return [Boolean]
+  #
+  # pkg:gem/parlour#lib/parlour/rbi_generator/parameter.rb:56
   sig { params(other: ::Object).returns(T::Boolean) }
   def ==(other); end
 
-  # source://parlour//lib/parlour/rbi_generator/parameter.rb#95
+  # A string of Ruby code for this parameter's default value. For example,
+  # the default value of an empty string would be represented as +"\"\""+
+  # (or +'""'+). The default value of the decimal +3.14+ would be +"3.14"+.
+  # @return [String, nil]
+  #
+  # pkg:gem/parlour#lib/parlour/rbi_generator/parameter.rb:95
   sig { returns(T.nilable(::String)) }
   def default; end
 
-  # source://parlour//lib/parlour/rbi_generator/parameter.rb#139
+  # pkg:gem/parlour#lib/parlour/rbi_generator/parameter.rb:139
   sig { returns(::String) }
   def describe_in_method; end
 
-  # source://parlour//lib/parlour/rbi_generator/parameter.rb#134
+  # pkg:gem/parlour#lib/parlour/rbi_generator/parameter.rb:134
   sig { void }
   def generalize_from_rbi!; end
 
-  # source://parlour//lib/parlour/rbi_generator/parameter.rb#101
+  # The kind of parameter that this is. This will be one of +:normal+,
+  # +:splat+, +:double_splat+, +:block+ or +:keyword+.
+  # @return [Symbol]
+  #
+  # pkg:gem/parlour#lib/parlour/rbi_generator/parameter.rb:101
   sig { returns(::Symbol) }
   def kind; end
 
-  # source://parlour//lib/parlour/rbi_generator/parameter.rb#68
+  # The name of this parameter, including any prefixes or suffixes such as
+  # +*+.
+  # @return [String]
+  #
+  # pkg:gem/parlour#lib/parlour/rbi_generator/parameter.rb:68
   sig { returns(::String) }
   def name; end
 
-  # source://parlour//lib/parlour/rbi_generator/parameter.rb#75
+  # The name of this parameter, stripped of any prefixes or suffixes. For
+  # example, +*rest+ would become +rest+, or +foo:+ would become +foo+.
+  #
+  # @return [String]
+  #
+  # pkg:gem/parlour#lib/parlour/rbi_generator/parameter.rb:75
   sig { returns(::String) }
   def name_without_kind; end
 
-  # source://parlour//lib/parlour/rbi_generator/parameter.rb#107
+  # A string of how this parameter should be defined in a method definition.
+  #
+  # @return [String]
+  #
+  # pkg:gem/parlour#lib/parlour/rbi_generator/parameter.rb:107
   sig { returns(::String) }
   def to_def_param; end
 
-  # source://parlour//lib/parlour/rbi_generator/parameter.rb#121
+  # A string of how this parameter should be defined in a Sorbet +sig+.
+  #
+  # @return [String]
+  #
+  # pkg:gem/parlour#lib/parlour/rbi_generator/parameter.rb:121
   sig { returns(::String) }
   def to_sig_param; end
 
-  # source://parlour//lib/parlour/rbi_generator/parameter.rb#88
+  # A Sorbet string of this parameter's type, such as +"String"+ or
+  # +"T.untyped"+.
+  # @return [String]
+  #
+  # pkg:gem/parlour#lib/parlour/rbi_generator/parameter.rb:88
   sig { returns(T.any(::Parlour::Types::Type, ::String)) }
   def type; end
 end
 
 # A mapping of {kind} values to the characteristic prefixes each kind has.
 #
-# source://parlour//lib/parlour/rbi_generator/parameter.rb#126
+# pkg:gem/parlour#lib/parlour/rbi_generator/parameter.rb:126
 Parlour::RbiGenerator::Parameter::PREFIXES = T.let(T.unsafe(nil), Hash)
 
 # An abstract class which is subclassed by any classes which can generate
@@ -1257,41 +2158,75 @@ Parlour::RbiGenerator::Parameter::PREFIXES = T.let(T.unsafe(nil), Hash)
 #
 # This class is *abstract*.
 #
-# @abstract It cannot be directly instantiated. Subclasses must implement the `abstract` methods below.
-#
-# source://parlour//lib/parlour/rbi_generator/rbi_object.rb#10
+# pkg:gem/parlour#lib/parlour/rbi_generator/rbi_object.rb:10
 class Parlour::RbiGenerator::RbiObject < ::Parlour::TypedObject
   abstract!
 
-  # source://parlour//lib/parlour/rbi_generator/rbi_object.rb#20
+  # Creates a new RBI object.
+  # @note Don't call this directly.
+  #
+  # @param generator [RbiGenerator] The current RbiGenerator.
+  # @param name [String] The name of this module.
+  # @return [void]
+  #
+  # pkg:gem/parlour#lib/parlour/rbi_generator/rbi_object.rb:20
   sig { params(generator: ::Parlour::Generator, name: ::String).void }
   def initialize(generator, name); end
 
-  # @abstract
+  # Assuming that the types throughout this object and its children have
+  # been specified as RBI-style types, generalises them into type instances
+  # from the {Parlour::Types} module.
   #
-  # source://parlour//lib/parlour/rbi_generator/rbi_object.rb#84
+  # This method is *abstract*.
+  #
+  # @return [void]
+  #
+  # pkg:gem/parlour#lib/parlour/rbi_generator/rbi_object.rb:84
   sig { abstract.void }
   def generalize_from_rbi!; end
 
-  # @abstract
+  # Generates the RBI lines for this object.
   #
-  # source://parlour//lib/parlour/rbi_generator/rbi_object.rb#44
+  # This method is *abstract*.
+  #
+  # @param indent_level [Integer] The indentation level to generate the lines at.
+  # @param options [Options] The formatting options to use.
+  # @return [Array<String>] The RBI lines, formatted as specified.
+  #
+  # pkg:gem/parlour#lib/parlour/rbi_generator/rbi_object.rb:44
   sig { abstract.params(indent_level: ::Integer, options: ::Parlour::Options).returns(T::Array[::String]) }
   def generate_rbi(indent_level, options); end
 
-  # source://parlour//lib/parlour/rbi_generator/rbi_object.rb#29
+  # The generator which this object belongs to.
+  # @return [Generator]
+  #
+  # pkg:gem/parlour#lib/parlour/rbi_generator/rbi_object.rb:29
   sig { returns(::Parlour::Generator) }
   def generator; end
 
-  # @abstract
+  # Given an array of other objects, merges them into this one. Each
+  # subclass will do this differently.
+  # You MUST ensure that {mergeable?} is true for those instances.
   #
-  # source://parlour//lib/parlour/rbi_generator/rbi_object.rb#74
+  # This method is *abstract*.
+  #
+  # @param others [Array<RbiGenerator::RbiObject>] An array of other {RbiObject} instances.
+  # @return [void]
+  #
+  # pkg:gem/parlour#lib/parlour/rbi_generator/rbi_object.rb:74
   sig { abstract.params(others: T::Array[::Parlour::RbiGenerator::RbiObject]).void }
   def merge_into_self(others); end
 
-  # @abstract
+  # Given an array of other objects, returns true if they may be merged
+  # into this instance using {merge_into_self}. Each subclass will have its
+  # own criteria on what allows objects to be mergeable.
   #
-  # source://parlour//lib/parlour/rbi_generator/rbi_object.rb#59
+  # This method is *abstract*.
+  #
+  # @param others [Array<RbiGenerator::RbiObject>] An array of other {RbiObject} instances.
+  # @return [Boolean] Whether this instance may be merged with them.
+  #
+  # pkg:gem/parlour#lib/parlour/rbi_generator/rbi_object.rb:59
   sig { abstract.params(others: T::Array[::Parlour::RbiGenerator::RbiObject]).returns(T::Boolean) }
   def mergeable?(others); end
 end
@@ -1299,14 +2234,26 @@ end
 # Represents an struct definition; that is, a class which subclasses
 # +T::Struct+ and declares `prop` members.
 #
-# source://parlour//lib/parlour/rbi_generator/struct_class_namespace.rb#6
+# pkg:gem/parlour#lib/parlour/rbi_generator/struct_class_namespace.rb:6
 class Parlour::RbiGenerator::StructClassNamespace < ::Parlour::RbiGenerator::ClassNamespace
   extend T::Generic
   extend T::Sig
 
   Child = type_member { { fixed: Parlour::RbiGenerator::RbiObject } }
 
-  # source://parlour//lib/parlour/rbi_generator/struct_class_namespace.rb#33
+  # Creates a new struct class definition.
+  # @note You should use {Namespace#create_struct_class} rather than this directly.
+  #
+  # @param generator [RbiGenerator] The current RbiGenerator.
+  # @param name [String] The name of this class.
+  # @param final [Boolean] Whether this namespace is final.
+  # @param sealed [Boolean] Whether this namespace is sealed.
+  # @param props [Array<StructProp>] The props of the struct.
+  # @param abstract [Boolean] A boolean indicating whether this class is abstract.
+  # @param block A block which the new instance yields itself to.
+  # @return [void]
+  #
+  # pkg:gem/parlour#lib/parlour/rbi_generator/struct_class_namespace.rb:33
   sig do
     params(
       generator: ::Parlour::Generator,
@@ -1320,38 +2267,72 @@ class Parlour::RbiGenerator::StructClassNamespace < ::Parlour::RbiGenerator::Cla
   end
   def initialize(generator, name, final, sealed, props, abstract, &block); end
 
-  # source://parlour//lib/parlour/rbi_generator/struct_class_namespace.rb#114
+  # pkg:gem/parlour#lib/parlour/rbi_generator/struct_class_namespace.rb:114
   sig { override.returns(T::Array[T.any(::Symbol, T::Hash[::Symbol, ::String])]) }
   def describe_attrs; end
 
-  # source://parlour//lib/parlour/rbi_generator/struct_class_namespace.rb#107
+  # pkg:gem/parlour#lib/parlour/rbi_generator/struct_class_namespace.rb:107
   sig { override.void }
   def generalize_from_rbi!; end
 
-  # source://parlour//lib/parlour/rbi_generator/struct_class_namespace.rb#55
+  # Generates the RBI lines for the body of this struct. This consists of
+  # {props}, {includes}, {extends} and {children}.
+  #
+  # @param indent_level [Integer] The indentation level to generate the lines at.
+  # @param options [Options] The formatting options to use.
+  # @return [Array<String>] The RBI lines for the body, formatted as specified.
+  #
+  # pkg:gem/parlour#lib/parlour/rbi_generator/struct_class_namespace.rb:55
   sig { override.params(indent_level: ::Integer, options: ::Parlour::Options).returns(T::Array[::String]) }
   def generate_body(indent_level, options); end
 
-  # source://parlour//lib/parlour/rbi_generator/struct_class_namespace.rb#95
+  # Given an array of {StructClassNamespace} instances, merges them into this one.
+  # You MUST ensure that {mergeable?} is true for those instances.
+  #
+  # @param others [Array<RbiGenerator::RbiObject>] An array of other {StructClassNamespace} instances.
+  # @return [void]
+  #
+  # pkg:gem/parlour#lib/parlour/rbi_generator/struct_class_namespace.rb:95
   sig { override.params(others: T::Array[::Parlour::RbiGenerator::RbiObject]).void }
   def merge_into_self(others); end
 
-  # source://parlour//lib/parlour/rbi_generator/struct_class_namespace.rb#77
+  # Given an array of {StructClassNamespace} instances, returns true if they may
+  # be merged into this instance using {merge_into_self}. For instances to
+  # be mergeable, they must either all be abstract or all not be abstract,
+  # and they must define the same superclass (or none at all).
+  #
+  # @param others [Array<RbiGenerator::RbiObject>] An array of other {StructClassNamespace} instances.
+  # @return [Boolean] Whether this instance may be merged with them.
+  #
+  # pkg:gem/parlour#lib/parlour/rbi_generator/struct_class_namespace.rb:77
   sig { override.params(others: T::Array[::Parlour::RbiGenerator::RbiObject]).returns(T::Boolean) }
   def mergeable?(others); end
 
-  # source://parlour//lib/parlour/rbi_generator/struct_class_namespace.rb#41
+  # The props of the struct.
+  # @return [Array<StructProp>]
+  #
+  # pkg:gem/parlour#lib/parlour/rbi_generator/struct_class_namespace.rb:41
   sig { returns(T::Array[::Parlour::RbiGenerator::StructProp]) }
   def props; end
 end
 
 # Represents a +T::Struct+ property.
 #
-# source://parlour//lib/parlour/rbi_generator/struct_prop.rb#5
+# pkg:gem/parlour#lib/parlour/rbi_generator/struct_prop.rb:5
 class Parlour::RbiGenerator::StructProp
   extend T::Sig
 
-  # source://parlour//lib/parlour/rbi_generator/struct_prop.rb#33
+  # Create a new struct property.
+  #
+  # For documentation on all optional properties, please refer to the
+  # documentation for T::Struct within the sorbet-runtime gem:
+  # https://github.com/sorbet/sorbet/blob/master/gems/sorbet-runtime/lib/types/props/_props.rb#L31-L106
+  #
+  # @param name [String] The name of this property.
+  # @param type [String] This property's type.
+  # @return [void]
+  #
+  # pkg:gem/parlour#lib/parlour/rbi_generator/struct_prop.rb:33
   sig do
     params(
       name: ::String,
@@ -1370,77 +2351,98 @@ class Parlour::RbiGenerator::StructProp
   end
   def initialize(name, type, optional: T.unsafe(nil), enum: T.unsafe(nil), dont_store: T.unsafe(nil), foreign: T.unsafe(nil), default: T.unsafe(nil), factory: T.unsafe(nil), immutable: T.unsafe(nil), array: T.unsafe(nil), override: T.unsafe(nil), redaction: T.unsafe(nil)); end
 
-  # source://parlour//lib/parlour/rbi_generator/struct_prop.rb#57
+  # Returns true if this instance is equal to another instance.
+  #
+  # @param other [Object] The other instance. If this is not a {StructProp} (or a
+  #   subclass of it), this will always return false.
+  # @return [Boolean]
+  #
+  # pkg:gem/parlour#lib/parlour/rbi_generator/struct_prop.rb:57
   sig { params(other: ::Object).returns(T::Boolean) }
   def ==(other); end
 
-  # source://parlour//lib/parlour/rbi_generator/struct_prop.rb#106
+  # pkg:gem/parlour#lib/parlour/rbi_generator/struct_prop.rb:106
   sig { returns(T.nilable(::String)) }
   def array; end
 
-  # source://parlour//lib/parlour/rbi_generator/struct_prop.rb#97
+  # pkg:gem/parlour#lib/parlour/rbi_generator/struct_prop.rb:97
   sig { returns(T.nilable(::String)) }
   def default; end
 
-  # source://parlour//lib/parlour/rbi_generator/struct_prop.rb#91
+  # pkg:gem/parlour#lib/parlour/rbi_generator/struct_prop.rb:91
   sig { returns(T.nilable(T::Boolean)) }
   def dont_store; end
 
-  # source://parlour//lib/parlour/rbi_generator/struct_prop.rb#88
+  # pkg:gem/parlour#lib/parlour/rbi_generator/struct_prop.rb:88
   sig { returns(T.nilable(::String)) }
   def enum; end
 
-  # source://parlour//lib/parlour/rbi_generator/struct_prop.rb#100
+  # pkg:gem/parlour#lib/parlour/rbi_generator/struct_prop.rb:100
   sig { returns(T.nilable(::String)) }
   def factory; end
 
-  # source://parlour//lib/parlour/rbi_generator/struct_prop.rb#94
+  # pkg:gem/parlour#lib/parlour/rbi_generator/struct_prop.rb:94
   sig { returns(T.nilable(::String)) }
   def foreign; end
 
-  # source://parlour//lib/parlour/rbi_generator/struct_prop.rb#134
+  # pkg:gem/parlour#lib/parlour/rbi_generator/struct_prop.rb:134
   sig { void }
   def generalize_from_rbi!; end
 
-  # source://parlour//lib/parlour/rbi_generator/struct_prop.rb#103
+  # pkg:gem/parlour#lib/parlour/rbi_generator/struct_prop.rb:103
   sig { returns(T.nilable(T::Boolean)) }
   def immutable; end
 
-  # source://parlour//lib/parlour/rbi_generator/struct_prop.rb#77
+  # The name of this parameter, including any prefixes or suffixes such as
+  # +*+.
+  # @return [String]
+  #
+  # pkg:gem/parlour#lib/parlour/rbi_generator/struct_prop.rb:77
   sig { returns(::String) }
   def name; end
 
-  # source://parlour//lib/parlour/rbi_generator/struct_prop.rb#85
+  # pkg:gem/parlour#lib/parlour/rbi_generator/struct_prop.rb:85
   sig { returns(T.nilable(T.any(::Symbol, T::Boolean))) }
   def optional; end
 
-  # source://parlour//lib/parlour/rbi_generator/struct_prop.rb#109
+  # pkg:gem/parlour#lib/parlour/rbi_generator/struct_prop.rb:109
   sig { returns(T.nilable(T::Boolean)) }
   def override; end
 
-  # source://parlour//lib/parlour/rbi_generator/struct_prop.rb#112
+  # pkg:gem/parlour#lib/parlour/rbi_generator/struct_prop.rb:112
   sig { returns(T.nilable(::String)) }
   def redaction; end
 
-  # source://parlour//lib/parlour/rbi_generator/struct_prop.rb#122
+  # Returns the +prop+ call required to create this property.
+  # @return [String]
+  #
+  # pkg:gem/parlour#lib/parlour/rbi_generator/struct_prop.rb:122
   sig { returns(::String) }
   def to_prop_call; end
 
-  # source://parlour//lib/parlour/rbi_generator/struct_prop.rb#82
+  # This parameter's type.
+  # @return [Types::TypeLike, nil]
+  #
+  # pkg:gem/parlour#lib/parlour/rbi_generator/struct_prop.rb:82
   sig { returns(T.any(::Parlour::Types::Type, ::String)) }
   def type; end
 end
 
 # The optional properties available on instances of this class.
 #
-# source://parlour//lib/parlour/rbi_generator/struct_prop.rb#115
+# pkg:gem/parlour#lib/parlour/rbi_generator/struct_prop.rb:115
 Parlour::RbiGenerator::StructProp::EXTRA_PROPERTIES = T.let(T.unsafe(nil), Array)
 
 # Represents a type alias.
 #
-# source://parlour//lib/parlour/rbi_generator/type_alias.rb#5
+# pkg:gem/parlour#lib/parlour/rbi_generator/type_alias.rb:5
 class Parlour::RbiGenerator::TypeAlias < ::Parlour::RbiGenerator::RbiObject
-  # source://parlour//lib/parlour/rbi_generator/type_alias.rb#18
+  # Creates a new type alias.
+  #
+  # @param name [String] The name of the alias.
+  # @param value [String] The type to alias to.
+  #
+  # pkg:gem/parlour#lib/parlour/rbi_generator/type_alias.rb:18
   sig do
     params(
       generator: ::Parlour::Generator,
@@ -1451,59 +2453,99 @@ class Parlour::RbiGenerator::TypeAlias < ::Parlour::RbiGenerator::RbiObject
   end
   def initialize(generator, name:, type:, &block); end
 
-  # source://parlour//lib/parlour/rbi_generator/type_alias.rb#34
+  # Returns true if this instance is equal to another type alias.
+  #
+  # @param other [Object] The other instance. If this is not a {TypeAlias} (or a
+  #   subclass of it), this will always return false.
+  # @return [Boolean]
+  #
+  # pkg:gem/parlour#lib/parlour/rbi_generator/type_alias.rb:34
   sig { params(other: ::Object).returns(T::Boolean) }
   def ==(other); end
 
-  # source://parlour//lib/parlour/rbi_generator/type_alias.rb#93
+  # pkg:gem/parlour#lib/parlour/rbi_generator/type_alias.rb:93
   sig { override.returns(T::Array[T.any(::Symbol, T::Hash[::Symbol, ::String])]) }
   def describe_attrs; end
 
-  # source://parlour//lib/parlour/rbi_generator/type_alias.rb#88
+  # pkg:gem/parlour#lib/parlour/rbi_generator/type_alias.rb:88
   sig { override.void }
   def generalize_from_rbi!; end
 
-  # source://parlour//lib/parlour/rbi_generator/type_alias.rb#49
+  # Generates the RBI lines for this type alias.
+  #
+  # @param indent_level [Integer] The indentation level to generate the lines at.
+  # @param options [Options] The formatting options to use.
+  # @return [Array<String>] The RBI lines, formatted as specified.
+  #
+  # pkg:gem/parlour#lib/parlour/rbi_generator/type_alias.rb:49
   sig { override.params(indent_level: ::Integer, options: ::Parlour::Options).returns(T::Array[::String]) }
   def generate_rbi(indent_level, options); end
 
-  # source://parlour//lib/parlour/rbi_generator/type_alias.rb#83
+  # Given an array of {TypeAlias} instances, merges them into this one.
+  # This particular implementation will simply do nothing, as instances
+  # are only mergeable if they are indentical.
+  # You MUST ensure that {mergeable?} is true for those instances.
+  #
+  # @param others [Array<RbiGenerator::RbiObject>] An array of other
+  #   {TypeAlias} instances.
+  # @return [void]
+  #
+  # pkg:gem/parlour#lib/parlour/rbi_generator/type_alias.rb:83
   sig { override.params(others: T::Array[::Parlour::RbiGenerator::RbiObject]).void }
   def merge_into_self(others); end
 
-  # source://parlour//lib/parlour/rbi_generator/type_alias.rb#66
+  # Given an array of {TypeAlias} instances, returns true if they may be
+  # merged into this instance using {merge_into_self}. This is always false.
+  #
+  # @param others [Array<RbiGenerator::RbiObject>] An array of other
+  #   {TypeAlias} instances.
+  # @return [Boolean] Whether this instance may be merged with them.
+  #
+  # pkg:gem/parlour#lib/parlour/rbi_generator/type_alias.rb:66
   sig { override.params(others: T::Array[::Parlour::RbiGenerator::RbiObject]).returns(T::Boolean) }
   def mergeable?(others); end
 
-  # source://parlour//lib/parlour/rbi_generator/type_alias.rb#26
+  # @return [Types::TypeLike] The type to alias to.
+  #
+  # pkg:gem/parlour#lib/parlour/rbi_generator/type_alias.rb:26
   sig { returns(T.any(::Parlour::Types::Type, ::String)) }
   def type; end
 end
 
 # The RBS generator.
 #
-# source://parlour//lib/parlour/rbs_generator/rbs_object.rb#3
+# pkg:gem/parlour#lib/parlour/rbs_generator/rbs_object.rb:3
 class Parlour::RbsGenerator < ::Parlour::Generator
-  # @return [RbsGenerator] a new instance of RbsGenerator
-  #
-  # source://parlour//lib/parlour/rbs_generator.rb#5
+  # pkg:gem/parlour#lib/parlour/rbs_generator.rb:5
   sig { params(hash: T.untyped).void }
   def initialize(**hash); end
 
-  # source://parlour//lib/parlour/rbs_generator.rb#19
+  # Returns the complete contents of the generated RBS file as a string.
+  #
+  # @return [String] The generated RBS file
+  #
+  # pkg:gem/parlour#lib/parlour/rbs_generator.rb:19
   sig { overridable.returns(::String) }
   def rbs; end
 
-  # source://parlour//lib/parlour/rbs_generator.rb#13
+  # The root {Namespace} of this generator.
+  # @return [Namespace]
+  #
+  # pkg:gem/parlour#lib/parlour/rbs_generator.rb:13
   sig { overridable.returns(Parlour::RbsGenerator::Namespace) }
   def root; end
 end
 
 # Represents miscellaneous Ruby code.
 #
-# source://parlour//lib/parlour/rbs_generator/arbitrary.rb#5
+# pkg:gem/parlour#lib/parlour/rbs_generator/arbitrary.rb:5
 class Parlour::RbsGenerator::Arbitrary < ::Parlour::RbsGenerator::RbsObject
-  # source://parlour//lib/parlour/rbs_generator/arbitrary.rb#17
+  # Creates new arbitrary code.
+  #
+  # @param code [String] The arbitrary code string. Indentation is added to
+  #   the beginning of each line.
+  #
+  # pkg:gem/parlour#lib/parlour/rbs_generator/arbitrary.rb:17
   sig do
     params(
       generator: ::Parlour::Generator,
@@ -1513,43 +2555,83 @@ class Parlour::RbsGenerator::Arbitrary < ::Parlour::RbsGenerator::RbsObject
   end
   def initialize(generator, code: T.unsafe(nil), &block); end
 
-  # source://parlour//lib/parlour/rbs_generator/arbitrary.rb#33
+  # Returns true if this instance is equal to another arbitrary code line.
+  #
+  # @param other [Object] The other instance. If this is not a {Arbitrary} (or a
+  #   subclass of it), this will always return false.
+  # @return [Boolean]
+  #
+  # pkg:gem/parlour#lib/parlour/rbs_generator/arbitrary.rb:33
   sig { params(other: ::Object).returns(T::Boolean) }
   def ==(other); end
 
-  # source://parlour//lib/parlour/rbs_generator/arbitrary.rb#25
+  # Returns arbitrary code string.
+  #
+  # pkg:gem/parlour#lib/parlour/rbs_generator/arbitrary.rb:25
   sig { returns(::String) }
   def code; end
 
-  # @return [String]
+  # Returns arbitrary code string.
   #
-  # source://parlour//lib/parlour/rbs_generator/arbitrary.rb#25
+  # pkg:gem/parlour#lib/parlour/rbs_generator/arbitrary.rb:25
   def code=(_arg0); end
 
-  # source://parlour//lib/parlour/rbs_generator/arbitrary.rb#84
+  # pkg:gem/parlour#lib/parlour/rbs_generator/arbitrary.rb:84
   sig { override.returns(T::Array[T.any(::Symbol, T::Hash[::Symbol, ::String])]) }
   def describe_attrs; end
 
-  # source://parlour//lib/parlour/rbs_generator/arbitrary.rb#48
+  # Generates the RBS lines for this arbitrary code.
+  #
+  # @param indent_level [Integer] The indentation level to generate the lines at.
+  # @param options [Options] The formatting options to use.
+  # @return [Array<String>] The RBS lines, formatted as specified.
+  #
+  # pkg:gem/parlour#lib/parlour/rbs_generator/arbitrary.rb:48
   sig { override.params(indent_level: ::Integer, options: ::Parlour::Options).returns(T::Array[::String]) }
   def generate_rbs(indent_level, options); end
 
-  # source://parlour//lib/parlour/rbs_generator/arbitrary.rb#79
+  # Given an array of {Arbitrary} instances, merges them into this one.
+  # This particular implementation always throws an exception, because
+  # {mergeable?} is always false.
+  #
+  # @param others [Array<RbsGenerator::RbsObject>] An array of other
+  #   {Arbitrary} instances.
+  # @return [void]
+  #
+  # pkg:gem/parlour#lib/parlour/rbs_generator/arbitrary.rb:79
   sig { override.params(others: T::Array[::Parlour::RbsGenerator::RbsObject]).void }
   def merge_into_self(others); end
 
-  # source://parlour//lib/parlour/rbs_generator/arbitrary.rb#63
+  # Given an array of {Arbitrary} instances, returns true if they may be
+  # merged into this instance using {merge_into_self}. This is always false.
+  #
+  # @param others [Array<RbsGenerator::RbsObject>] An array of other
+  #   {Arbitrary} instances.
+  # @return [Boolean] Whether this instance may be merged with them.
+  #
+  # pkg:gem/parlour#lib/parlour/rbs_generator/arbitrary.rb:63
   sig { override.params(others: T::Array[::Parlour::RbsGenerator::RbsObject]).returns(T::Boolean) }
   def mergeable?(others); end
 end
 
 # Represents an attribute reader, writer or accessor.
 #
-# source://parlour//lib/parlour/rbs_generator/attribute.rb#5
+# pkg:gem/parlour#lib/parlour/rbs_generator/attribute.rb:5
 class Parlour::RbsGenerator::Attribute < ::Parlour::RbsGenerator::Method
   extend T::Sig
 
-  # source://parlour//lib/parlour/rbs_generator/attribute.rb#27
+  # Creates a new attribute.
+  # @note You should use {Namespace#create_attribute} rather than this directly.
+  #
+  # @param generator [RbsGenerator] The current RbsGenerator.
+  # @param name [String] The name of this attribute.
+  # @param kind [Symbol] The kind of attribute this is; one of :writer, :reader or
+  #   :accessor.
+  # @param type [String, Types::Type] This attribute's type.
+  # @param block A block which the new instance yields itself to.
+  # @return [void]
+  #
+  # pkg:gem/parlour#lib/parlour/rbs_generator/attribute.rb:27
   sig do
     params(
       generator: ::Parlour::Generator,
@@ -1561,23 +2643,40 @@ class Parlour::RbsGenerator::Attribute < ::Parlour::RbsGenerator::Method
   end
   def initialize(generator, name, kind, type, &block); end
 
-  # source://parlour//lib/parlour/rbs_generator/attribute.rb#75
+  # Returns true if this instance is equal to another attribute.
+  #
+  # @param other [Object] The other instance. If this is not a {Attribute}
+  #   (or a subclass of it), this will always return false.
+  # @return [Boolean]
+  #
+  # pkg:gem/parlour#lib/parlour/rbs_generator/attribute.rb:75
   sig { override.params(other: ::Object).returns(T::Boolean) }
   def ==(other); end
 
-  # source://parlour//lib/parlour/rbs_generator/attribute.rb#82
+  # pkg:gem/parlour#lib/parlour/rbs_generator/attribute.rb:82
   sig { override.returns(T::Array[T.any(::Symbol, T::Hash[::Symbol, ::String])]) }
   def describe_attrs; end
 
-  # source://parlour//lib/parlour/rbs_generator/attribute.rb#62
+  # Generates the RBS lines for this arbstrary code.
+  #
+  # @param indent_level [Integer] The indentation level to generate the lines at.
+  # @param options [Options] The formatting options to use.
+  # @return [Array<String>] The RBS lines, formatted as specified.
+  #
+  # pkg:gem/parlour#lib/parlour/rbs_generator/attribute.rb:62
   sig { override.params(indent_level: ::Integer, options: ::Parlour::Options).returns(T::Array[::String]) }
   def generate_rbs(indent_level, options); end
 
-  # source://parlour//lib/parlour/rbs_generator/attribute.rb#45
+  # The kind of attribute this is; one of +:writer+, +:reader+, or +:accessor+.
+  # @return [Symbol]
+  #
+  # pkg:gem/parlour#lib/parlour/rbs_generator/attribute.rb:45
   sig { returns(::Symbol) }
   def kind; end
 
-  # source://parlour//lib/parlour/rbs_generator/attribute.rb#49
+  # The type of this attribute.
+  #
+  # pkg:gem/parlour#lib/parlour/rbs_generator/attribute.rb:49
   sig { returns(T.any(::Parlour::Types::Type, ::String)) }
   def type; end
 end
@@ -1585,41 +2684,73 @@ end
 # Represents a block in a method signature.
 # (This is not an RbsObject because it doesn't generate a full line.)
 #
-# source://parlour//lib/parlour/rbs_generator/block.rb#6
+# pkg:gem/parlour#lib/parlour/rbs_generator/block.rb:6
 class Parlour::RbsGenerator::Block
   extend T::Sig
 
-  # source://parlour//lib/parlour/rbs_generator/block.rb#14
+  # Creates a new block for a method signature.
+  #
+  # @param type [Types::Proc] The type of this block.
+  # @param required [T::Boolean] Whether this block is required.
+  #
+  # pkg:gem/parlour#lib/parlour/rbs_generator/block.rb:14
   sig { params(type: ::Parlour::Types::Proc, required: T::Boolean).void }
   def initialize(type, required); end
 
-  # source://parlour//lib/parlour/rbs_generator/block.rb#25
+  # Returns true if this instance is equal to another method signature.
+  #
+  # @param other [Object] The other instance. If this is not a {MethodSignature} (or a
+  #   subclass of it), this will always return false.
+  # @return [Boolean]
+  #
+  # pkg:gem/parlour#lib/parlour/rbs_generator/block.rb:25
   sig { overridable.params(other: ::Object).returns(T::Boolean) }
   def ==(other); end
 
-  # source://parlour//lib/parlour/rbs_generator/block.rb#44
+  # Generates the RBS string for this signature.
+  #
+  # @param options [Options] The formatting options to use.
+  # @return [Array<String>] The RBS string, formatted as specified.
+  #
+  # pkg:gem/parlour#lib/parlour/rbs_generator/block.rb:44
   sig { params(options: ::Parlour::Options).returns(T::Array[::String]) }
   def generate_rbs(options); end
 
-  # source://parlour//lib/parlour/rbs_generator/block.rb#37
+  # Whether this block is required.
+  # @return [Boolean]
+  #
+  # pkg:gem/parlour#lib/parlour/rbs_generator/block.rb:37
   sig { returns(T::Boolean) }
   def required; end
 
-  # source://parlour//lib/parlour/rbs_generator/block.rb#32
+  # The type of this block.
+  # @return [Types::Proc]
+  #
+  # pkg:gem/parlour#lib/parlour/rbs_generator/block.rb:32
   sig { returns(::Parlour::Types::Proc) }
   def type; end
 end
 
 # Represents a class definition.
 #
-# source://parlour//lib/parlour/rbs_generator/class_namespace.rb#5
+# pkg:gem/parlour#lib/parlour/rbs_generator/class_namespace.rb:5
 class Parlour::RbsGenerator::ClassNamespace < ::Parlour::RbsGenerator::Namespace
   extend T::Generic
   extend T::Sig
 
   Child = type_member { { fixed: Parlour::RbsGenerator::RbsObject } }
 
-  # source://parlour//lib/parlour/rbs_generator/class_namespace.rb#27
+  # Creates a new class definition.
+  # @note You should use {Namespace#create_class} rather than this directly.
+  #
+  # @param generator [RbsGenerator] The current RbsGenerator.
+  # @param name [String] The name of this class.
+  # @param superclass [String, nil] The superclass of this class, or nil if it doesn't
+  #   have one.
+  # @param block A block which the new instance yields itself to.
+  # @return [void]
+  #
+  # pkg:gem/parlour#lib/parlour/rbs_generator/class_namespace.rb:27
   sig do
     params(
       generator: ::Parlour::Generator,
@@ -1630,32 +2761,55 @@ class Parlour::RbsGenerator::ClassNamespace < ::Parlour::RbsGenerator::Namespace
   end
   def initialize(generator, name, superclass, &block); end
 
-  # source://parlour//lib/parlour/rbs_generator/class_namespace.rb#97
+  # pkg:gem/parlour#lib/parlour/rbs_generator/class_namespace.rb:97
   sig { override.returns(T::Array[T.any(::Symbol, T::Hash[::Symbol, ::String])]) }
   def describe_attrs; end
 
-  # source://parlour//lib/parlour/rbs_generator/class_namespace.rb#38
+  # pkg:gem/parlour#lib/parlour/rbs_generator/class_namespace.rb:38
   sig { override.params(indent_level: ::Integer, options: ::Parlour::Options).returns(T::Array[::String]) }
   def generate_rbs(indent_level, options); end
 
-  # source://parlour//lib/parlour/rbs_generator/class_namespace.rb#85
+  # Given an array of {ClassNamespace} instances, merges them into this one.
+  # You MUST ensure that {mergeable?} is true for those instances.
+  #
+  # @param others [Array<RbsGenerator::RbsObject>] An array of other {ClassNamespace} instances.
+  # @return [void]
+  #
+  # pkg:gem/parlour#lib/parlour/rbs_generator/class_namespace.rb:85
   sig { override.params(others: T::Array[::Parlour::RbsGenerator::RbsObject]).void }
   def merge_into_self(others); end
 
-  # source://parlour//lib/parlour/rbs_generator/class_namespace.rb#66
+  # Given an array of {Namespace} instances, returns true if they may
+  # be merged into this instance using {merge_into_self}. For instances to
+  # be mergeable, they must either all be abstract or all not be abstract,
+  # and they must define the same superclass (or none at all).
+  #
+  # @param others [Array<RbsGenerator::RbsObject>] An array of other {Namespace} instances.
+  # @return [Boolean] Whether this instance may be merged with them.
+  #
+  # pkg:gem/parlour#lib/parlour/rbs_generator/class_namespace.rb:66
   sig { override.params(others: T::Array[::Parlour::RbsGenerator::RbsObject]).returns(T::Boolean) }
   def mergeable?(others); end
 
-  # source://parlour//lib/parlour/rbs_generator/class_namespace.rb#52
+  # The superclass of this class, or nil if it doesn't have one.
+  # @return [Types::TypeLike, nil]
+  #
+  # pkg:gem/parlour#lib/parlour/rbs_generator/class_namespace.rb:52
   sig { returns(T.nilable(T.any(::Parlour::Types::Type, ::String))) }
   def superclass; end
 end
 
 # Represents a constant definition.
 #
-# source://parlour//lib/parlour/rbs_generator/constant.rb#5
+# pkg:gem/parlour#lib/parlour/rbs_generator/constant.rb:5
 class Parlour::RbsGenerator::Constant < ::Parlour::RbsGenerator::RbsObject
-  # source://parlour//lib/parlour/rbs_generator/constant.rb#19
+  # Creates a new constant definition.
+  #
+  # @param name [String] The name of the constant.
+  # @param value [String] The value of the constant, as a Ruby code string.
+  #   eigenclass of the current namespace.
+  #
+  # pkg:gem/parlour#lib/parlour/rbs_generator/constant.rb:19
   sig do
     params(
       generator: ::Parlour::Generator,
@@ -1666,36 +2820,70 @@ class Parlour::RbsGenerator::Constant < ::Parlour::RbsGenerator::RbsObject
   end
   def initialize(generator, name, type:, &block); end
 
-  # source://parlour//lib/parlour/rbs_generator/constant.rb#35
+  # Returns true if this instance is equal to another extend.
+  #
+  # @param other [Object] The other instance. If this is not a {Extend} (or a
+  #   subclass of it), this will always return false.
+  # @return [Boolean]
+  #
+  # pkg:gem/parlour#lib/parlour/rbs_generator/constant.rb:35
   sig { params(other: ::Object).returns(T::Boolean) }
   def ==(other); end
 
-  # source://parlour//lib/parlour/rbs_generator/constant.rb#87
+  # pkg:gem/parlour#lib/parlour/rbs_generator/constant.rb:87
   sig { override.returns(T::Array[T.any(::Symbol, T::Hash[::Symbol, ::String])]) }
   def describe_attrs; end
 
-  # source://parlour//lib/parlour/rbs_generator/constant.rb#50
+  # Generates the RBS lines for this constant.
+  #
+  # @param indent_level [Integer] The indentation level to generate the lines at.
+  # @param options [Options] The formatting options to use.
+  # @return [Array<String>] The RBS lines, formatted as specified.
+  #
+  # pkg:gem/parlour#lib/parlour/rbs_generator/constant.rb:50
   sig { override.params(indent_level: ::Integer, options: ::Parlour::Options).returns(T::Array[::String]) }
   def generate_rbs(indent_level, options); end
 
-  # source://parlour//lib/parlour/rbs_generator/constant.rb#82
+  # Given an array of {Constant} instances, merges them into this one.
+  # This particular implementation will simply do nothing, as instances
+  # are only mergeable if they are indentical.
+  # You MUST ensure that {mergeable?} is true for those instances.
+  #
+  # @param others [Array<RbsGenerator::RbsObject>] An array of other
+  #   {Extend} instances.
+  # @return [void]
+  #
+  # pkg:gem/parlour#lib/parlour/rbs_generator/constant.rb:82
   sig { override.params(others: T::Array[::Parlour::RbsGenerator::RbsObject]).void }
   def merge_into_self(others); end
 
-  # source://parlour//lib/parlour/rbs_generator/constant.rb#65
+  # Given an array of {Constant} instances, returns true if they may be
+  # merged into this instance using {merge_into_self}. This is always false.
+  #
+  # @param others [Array<RbsGenerator::RbsObject>] An array of other
+  #   {Constant} instances.
+  # @return [Boolean] Whether this instance may be merged with them.
+  #
+  # pkg:gem/parlour#lib/parlour/rbs_generator/constant.rb:65
   sig { override.params(others: T::Array[::Parlour::RbsGenerator::RbsObject]).returns(T::Boolean) }
   def mergeable?(others); end
 
-  # source://parlour//lib/parlour/rbs_generator/constant.rb#27
+  # @return [Types::TypeLike] The type of the constant.
+  #
+  # pkg:gem/parlour#lib/parlour/rbs_generator/constant.rb:27
   sig { returns(T.any(::Parlour::Types::Type, ::String)) }
   def type; end
 end
 
 # Represents an +extend+ call.
 #
-# source://parlour//lib/parlour/rbs_generator/extend.rb#5
+# pkg:gem/parlour#lib/parlour/rbs_generator/extend.rb:5
 class Parlour::RbsGenerator::Extend < ::Parlour::RbsGenerator::RbsObject
-  # source://parlour//lib/parlour/rbs_generator/extend.rb#16
+  # Creates a new +extend+ call.
+  #
+  # @param type [Types::TypeLike] The type to extend.
+  #
+  # pkg:gem/parlour#lib/parlour/rbs_generator/extend.rb:16
   sig do
     params(
       generator: ::Parlour::Generator,
@@ -1705,36 +2893,70 @@ class Parlour::RbsGenerator::Extend < ::Parlour::RbsGenerator::RbsObject
   end
   def initialize(generator, type:, &block); end
 
-  # source://parlour//lib/parlour/rbs_generator/extend.rb#28
+  # Returns true if this instance is equal to another extend.
+  #
+  # @param other [Object] The other instance. If this is not a {Extend} (or a
+  #   subclass of it), this will always return false.
+  # @return [Boolean]
+  #
+  # pkg:gem/parlour#lib/parlour/rbs_generator/extend.rb:28
   sig { params(other: ::Object).returns(T::Boolean) }
   def ==(other); end
 
-  # source://parlour//lib/parlour/rbs_generator/extend.rb#84
+  # pkg:gem/parlour#lib/parlour/rbs_generator/extend.rb:84
   sig { override.returns(T::Array[T.any(::Symbol, T::Hash[::Symbol, ::String])]) }
   def describe_attrs; end
 
-  # source://parlour//lib/parlour/rbs_generator/extend.rb#47
+  # Generates the RBS lines for this extend.
+  #
+  # @param indent_level [Integer] The indentation level to generate the lines at.
+  # @param options [Options] The formatting options to use.
+  # @return [Array<String>] The RBS lines, formatted as specified.
+  #
+  # pkg:gem/parlour#lib/parlour/rbs_generator/extend.rb:47
   sig { override.params(indent_level: ::Integer, options: ::Parlour::Options).returns(T::Array[::String]) }
   def generate_rbs(indent_level, options); end
 
-  # source://parlour//lib/parlour/rbs_generator/extend.rb#79
+  # Given an array of {Extend} instances, merges them into this one.
+  # This particular implementation will simply do nothing, as instances
+  # are only mergeable if they are indentical.
+  # You MUST ensure that {mergeable?} is true for those instances.
+  #
+  # @param others [Array<RbsGenerator::RbsObject>] An array of other
+  #   {Extend} instances.
+  # @return [void]
+  #
+  # pkg:gem/parlour#lib/parlour/rbs_generator/extend.rb:79
   sig { override.params(others: T::Array[::Parlour::RbsGenerator::RbsObject]).void }
   def merge_into_self(others); end
 
-  # source://parlour//lib/parlour/rbs_generator/extend.rb#62
+  # Given an array of {Extend} instances, returns true if they may be
+  # merged into this instance using {merge_into_self}. This is always false.
+  #
+  # @param others [Array<RbsGenerator::RbsObject>] An array of other
+  #   {Extend} instances.
+  # @return [Boolean] Whether this instance may be merged with them.
+  #
+  # pkg:gem/parlour#lib/parlour/rbs_generator/extend.rb:62
   sig { override.params(others: T::Array[::Parlour::RbsGenerator::RbsObject]).returns(T::Boolean) }
   def mergeable?(others); end
 
-  # source://parlour//lib/parlour/rbs_generator/extend.rb#34
+  # @return [Types::TypeLike] The type to extend.
+  #
+  # pkg:gem/parlour#lib/parlour/rbs_generator/extend.rb:34
   sig { returns(T.any(::Parlour::Types::Type, ::String)) }
   def type; end
 end
 
 # Represents an +include+ call.
 #
-# source://parlour//lib/parlour/rbs_generator/include.rb#5
+# pkg:gem/parlour#lib/parlour/rbs_generator/include.rb:5
 class Parlour::RbsGenerator::Include < ::Parlour::RbsGenerator::RbsObject
-  # source://parlour//lib/parlour/rbs_generator/include.rb#16
+  # Creates a new +include+ call.
+  #
+  # @param type [Types::TypeLike] The type to include.
+  #
+  # pkg:gem/parlour#lib/parlour/rbs_generator/include.rb:16
   sig do
     params(
       generator: ::Parlour::Generator,
@@ -1744,56 +2966,105 @@ class Parlour::RbsGenerator::Include < ::Parlour::RbsGenerator::RbsObject
   end
   def initialize(generator, type:, &block); end
 
-  # source://parlour//lib/parlour/rbs_generator/include.rb#28
+  # Returns true if this instance is equal to another include.
+  #
+  # @param other [Object] The other instance. If this is not a {Include} (or a
+  #   subclass of it), this will always return false.
+  # @return [Boolean]
+  #
+  # pkg:gem/parlour#lib/parlour/rbs_generator/include.rb:28
   sig { params(other: ::Object).returns(T::Boolean) }
   def ==(other); end
 
-  # source://parlour//lib/parlour/rbs_generator/include.rb#84
+  # pkg:gem/parlour#lib/parlour/rbs_generator/include.rb:84
   sig { override.returns(T::Array[T.any(::Symbol, T::Hash[::Symbol, ::String])]) }
   def describe_attrs; end
 
-  # source://parlour//lib/parlour/rbs_generator/include.rb#47
+  # Generates the RBS lines for this include.
+  #
+  # @param indent_level [Integer] The indentation level to generate the lines at.
+  # @param options [Options] The formatting options to use.
+  # @return [Array<String>] The RBS lines, formatted as specified.
+  #
+  # pkg:gem/parlour#lib/parlour/rbs_generator/include.rb:47
   sig { override.params(indent_level: ::Integer, options: ::Parlour::Options).returns(T::Array[::String]) }
   def generate_rbs(indent_level, options); end
 
-  # source://parlour//lib/parlour/rbs_generator/include.rb#79
+  # Given an array of {Include} instances, merges them into this one.
+  # This particular implementation will simply do nothing, as instances
+  # are only mergeable if they are indentical.
+  # You MUST ensure that {mergeable?} is true for those instances.
+  #
+  # @param others [Array<RbsGenerator::RbsObject>] An array of other
+  #   {Include} instances.
+  # @return [void]
+  #
+  # pkg:gem/parlour#lib/parlour/rbs_generator/include.rb:79
   sig { override.params(others: T::Array[::Parlour::RbsGenerator::RbsObject]).void }
   def merge_into_self(others); end
 
-  # source://parlour//lib/parlour/rbs_generator/include.rb#62
+  # Given an array of {Include} instances, returns true if they may be
+  # merged into this instance using {merge_into_self}. This is always false.
+  #
+  # @param others [Array<RbsGenerator::RbsObject>] An array of other
+  #   {Include} instances.
+  # @return [Boolean] Whether this instance may be merged with them.
+  #
+  # pkg:gem/parlour#lib/parlour/rbs_generator/include.rb:62
   sig { override.params(others: T::Array[::Parlour::RbsGenerator::RbsObject]).returns(T::Boolean) }
   def mergeable?(others); end
 
-  # source://parlour//lib/parlour/rbs_generator/include.rb#34
+  # @return [Types::TypeLike] The type to include.
+  #
+  # pkg:gem/parlour#lib/parlour/rbs_generator/include.rb:34
   sig { returns(T.any(::Parlour::Types::Type, ::String)) }
   def type; end
 end
 
 # Represents an interface definition.
 #
-# source://parlour//lib/parlour/rbs_generator/interface_namespace.rb#5
+# pkg:gem/parlour#lib/parlour/rbs_generator/interface_namespace.rb:5
 class Parlour::RbsGenerator::InterfaceNamespace < ::Parlour::RbsGenerator::Namespace
   extend T::Generic
   extend T::Sig
 
   Child = type_member { { fixed: Parlour::RbsGenerator::RbsObject } }
 
-  # source://parlour//lib/parlour/rbs_generator/interface_namespace.rb#29
+  # pkg:gem/parlour#lib/parlour/rbs_generator/interface_namespace.rb:29
   sig { override.returns(T::Array[T.any(::Symbol, T::Hash[::Symbol, ::String])]) }
   def describe_attrs; end
 
-  # source://parlour//lib/parlour/rbs_generator/interface_namespace.rb#21
+  # Generates the RBS lines for this interface.
+  #
+  # @param indent_level [Integer] The indentation level to generate the lines at.
+  # @param options [Options] The formatting options to use.
+  # @return [Array<String>] The RBS lines, formatted as specified.
+  #
+  # pkg:gem/parlour#lib/parlour/rbs_generator/interface_namespace.rb:21
   sig { override.params(indent_level: ::Integer, options: ::Parlour::Options).returns(T::Array[::String]) }
   def generate_rbs(indent_level, options); end
 end
 
 # Represents a method definition.
 #
-# source://parlour//lib/parlour/rbs_generator/method.rb#5
+# pkg:gem/parlour#lib/parlour/rbs_generator/method.rb:5
 class Parlour::RbsGenerator::Method < ::Parlour::RbsGenerator::RbsObject
   extend T::Sig
 
-  # source://parlour//lib/parlour/rbs_generator/method.rb#29
+  # Creates a new method definition.
+  # @note You should use {Namespace#create_method} rather than this directly.
+  #
+  # @param generator [RbsGenerator] The current RbsGenerator.
+  # @param name [String] The name of this method. You should not specify +self.+ in
+  #   this - use the +class_method+ parameter instead.
+  # @param signatures [Array<MethodSignature>] The signatures for each
+  #   overload of this method.
+  # @param class_method [Boolean] Whether this method is a class method; that is, it
+  #   it is defined using +self.+.
+  # @param block A block which the new instance yields itself to.
+  # @return [void]
+  #
+  # pkg:gem/parlour#lib/parlour/rbs_generator/method.rb:29
   sig do
     params(
       generator: ::Parlour::Generator,
@@ -1805,31 +3076,66 @@ class Parlour::RbsGenerator::Method < ::Parlour::RbsGenerator::RbsObject
   end
   def initialize(generator, name, signatures, class_method: T.unsafe(nil), &block); end
 
-  # source://parlour//lib/parlour/rbs_generator/method.rb#42
+  # Returns true if this instance is equal to another method.
+  #
+  # @param other [Object] The other instance. If this is not a {Method} (or a
+  #   subclass of it), this will always return false.
+  # @return [Boolean]
+  #
+  # pkg:gem/parlour#lib/parlour/rbs_generator/method.rb:42
   sig { overridable.params(other: ::Object).returns(T::Boolean) }
   def ==(other); end
 
-  # source://parlour//lib/parlour/rbs_generator/method.rb#58
+  # Whether this method is a class method; that is, it it is defined using
+  # +self.+.
+  # @return [Boolean]
+  #
+  # pkg:gem/parlour#lib/parlour/rbs_generator/method.rb:58
   sig { returns(T::Boolean) }
   def class_method; end
 
-  # source://parlour//lib/parlour/rbs_generator/method.rb#137
+  # pkg:gem/parlour#lib/parlour/rbs_generator/method.rb:137
   sig { override.returns(T::Array[T.any(::Symbol, T::Hash[::Symbol, ::String])]) }
   def describe_attrs; end
 
-  # source://parlour//lib/parlour/rbs_generator/method.rb#71
+  # Generates the RBS lines for this method.
+  #
+  # @param indent_level [Integer] The indentation level to generate the lines at.
+  # @param options [Options] The formatting options to use.
+  # @return [Array<String>] The RBS lines, formatted as specified.
+  #
+  # pkg:gem/parlour#lib/parlour/rbs_generator/method.rb:71
   sig { override.params(indent_level: ::Integer, options: ::Parlour::Options).returns(T::Array[::String]) }
   def generate_rbs(indent_level, options); end
 
-  # source://parlour//lib/parlour/rbs_generator/method.rb#132
+  # Given an array of {Method} instances, merges them into this one.
+  # This particular implementation in fact does nothing, because {Method}
+  # instances are only mergeable if they are identical, so nothing needs
+  # to be changed.
+  # You MUST ensure that {mergeable?} is true for those instances.
+  #
+  # @param others [Array<RbsGenerator::RbsObject>] An array of other {Method} instances.
+  # @return [void]
+  #
+  # pkg:gem/parlour#lib/parlour/rbs_generator/method.rb:132
   sig { override.params(others: T::Array[::Parlour::RbsGenerator::RbsObject]).void }
   def merge_into_self(others); end
 
-  # source://parlour//lib/parlour/rbs_generator/method.rb#115
+  # Given an array of {Method} instances, returns true if they may be merged
+  # into this instance using {merge_into_self}. For instances to be
+  # mergeable, their signatures and definitions must be identical.
+  #
+  # @param others [Array<RbsGenerator::RbsObject>] An array of other {Method} instances.
+  # @return [Boolean] Whether this instance may be merged with them.
+  #
+  # pkg:gem/parlour#lib/parlour/rbs_generator/method.rb:115
   sig { override.params(others: T::Array[::Parlour::RbsGenerator::RbsObject]).returns(T::Boolean) }
   def mergeable?(others); end
 
-  # source://parlour//lib/parlour/rbs_generator/method.rb#52
+  # The signatures for each overload of this method.
+  # @return [Array<MethodSignature>]
+  #
+  # pkg:gem/parlour#lib/parlour/rbs_generator/method.rb:52
   sig { returns(T::Array[::Parlour::RbsGenerator::MethodSignature]) }
   def signatures; end
 end
@@ -1837,11 +3143,20 @@ end
 # Represents one signature in a method definition.
 # (This is not an RbsObject because it doesn't generate a full line.)
 #
-# source://parlour//lib/parlour/rbs_generator/method_signature.rb#6
+# pkg:gem/parlour#lib/parlour/rbs_generator/method_signature.rb:6
 class Parlour::RbsGenerator::MethodSignature
   extend T::Sig
 
-  # source://parlour//lib/parlour/rbs_generator/method_signature.rb#25
+  # Creates a new method signature.
+  #
+  # @param parameters [Array<Parameter>] An array of {Parameter} instances representing this
+  #   method's parameters.
+  # @param return_type [Types::TypeLike, nil] What this method returns. Passing nil denotes a void return.
+  # @param block [Types::TypeLike, nil] The block this method accepts. Passing nil denotes none.
+  # @param type_parameters [Array<Symbol>, nil] This method's type parameters.
+  # @return [void]
+  #
+  # pkg:gem/parlour#lib/parlour/rbs_generator/method_signature.rb:25
   sig do
     params(
       parameters: T::Array[::Parlour::RbsGenerator::Parameter],
@@ -1852,49 +3167,78 @@ class Parlour::RbsGenerator::MethodSignature
   end
   def initialize(parameters, return_type = T.unsafe(nil), block: T.unsafe(nil), type_parameters: T.unsafe(nil)); end
 
-  # source://parlour//lib/parlour/rbs_generator/method_signature.rb#38
+  # Returns true if this instance is equal to another method signature.
+  #
+  # @param other [Object] The other instance. If this is not a {MethodSignature} (or a
+  #   subclass of it), this will always return false.
+  # @return [Boolean]
+  #
+  # pkg:gem/parlour#lib/parlour/rbs_generator/method_signature.rb:38
   sig { overridable.params(other: ::Object).returns(T::Boolean) }
   def ==(other); end
 
-  # source://parlour//lib/parlour/rbs_generator/method_signature.rb#59
+  # The block this method accepts.
+  # @return [Block, nil]
+  #
+  # pkg:gem/parlour#lib/parlour/rbs_generator/method_signature.rb:59
   sig { returns(T.nilable(::Parlour::RbsGenerator::Block)) }
   def block; end
 
-  # source://parlour//lib/parlour/rbs_generator/method_signature.rb#104
+  # pkg:gem/parlour#lib/parlour/rbs_generator/method_signature.rb:104
   sig { returns(::String) }
   def describe_in_method; end
 
-  # source://parlour//lib/parlour/rbs_generator/method_signature.rb#71
+  # Generates the RBS string for this signature.
+  #
+  # @param options [Options] The formatting options to use.
+  # @return [Array<String>] The RBS string, formatted as specified.
+  #
+  # pkg:gem/parlour#lib/parlour/rbs_generator/method_signature.rb:71
   sig { params(options: ::Parlour::Options).returns(T::Array[::String]) }
   def generate_rbs(options); end
 
-  # source://parlour//lib/parlour/rbs_generator/method_signature.rb#49
+  # An array of {Parameter} instances representing this method's parameters.
+  # @return [Array<Parameter>]
+  #
+  # pkg:gem/parlour#lib/parlour/rbs_generator/method_signature.rb:49
   sig { returns(T::Array[::Parlour::RbsGenerator::Parameter]) }
   def parameters; end
 
-  # source://parlour//lib/parlour/rbs_generator/method_signature.rb#54
+  # What this method returns. Passing nil denotes a void return.
+  # @return [Types::TypeLike, nil]
+  #
+  # pkg:gem/parlour#lib/parlour/rbs_generator/method_signature.rb:54
   sig { returns(T.nilable(T.any(::Parlour::Types::Type, ::String))) }
   def return_type; end
 
-  # source://parlour//lib/parlour/rbs_generator/method_signature.rb#64
+  # This method's type parameters.
+  # @return [Array<Symbol>]
+  #
+  # pkg:gem/parlour#lib/parlour/rbs_generator/method_signature.rb:64
   sig { returns(T::Array[::Symbol]) }
   def type_parameters; end
 end
 
 # Represents a module definition.
 #
-# source://parlour//lib/parlour/rbs_generator/module_namespace.rb#5
+# pkg:gem/parlour#lib/parlour/rbs_generator/module_namespace.rb:5
 class Parlour::RbsGenerator::ModuleNamespace < ::Parlour::RbsGenerator::Namespace
   extend T::Generic
   extend T::Sig
 
   Child = type_member { { fixed: Parlour::RbsGenerator::RbsObject } }
 
-  # source://parlour//lib/parlour/rbs_generator/module_namespace.rb#29
+  # pkg:gem/parlour#lib/parlour/rbs_generator/module_namespace.rb:29
   sig { override.returns(T::Array[T.any(::Symbol, T::Hash[::Symbol, ::String])]) }
   def describe_attrs; end
 
-  # source://parlour//lib/parlour/rbs_generator/module_namespace.rb#21
+  # Generates the RBS lines for this module.
+  #
+  # @param indent_level [Integer] The indentation level to generate the lines at.
+  # @param options [Options] The formatting options to use.
+  # @return [Array<String>] The RBS lines, formatted as specified.
+  #
+  # pkg:gem/parlour#lib/parlour/rbs_generator/module_namespace.rb:21
   sig { override.params(indent_level: ::Integer, options: ::Parlour::Options).returns(T::Array[::String]) }
   def generate_rbs(indent_level, options); end
 end
@@ -1902,7 +3246,7 @@ end
 # A generic namespace. This shouldn't be used, except as the type of
 # {RbsGenerator#root}.
 #
-# source://parlour//lib/parlour/rbs_generator/namespace.rb#6
+# pkg:gem/parlour#lib/parlour/rbs_generator/namespace.rb:6
 class Parlour::RbsGenerator::Namespace < ::Parlour::RbsGenerator::RbsObject
   extend T::Generic
   include ::Parlour::Mixin::Searchable
@@ -1911,7 +3255,17 @@ class Parlour::RbsGenerator::Namespace < ::Parlour::RbsGenerator::RbsObject
 
   Child = type_member { { fixed: Parlour::RbsGenerator::RbsObject } }
 
-  # source://parlour//lib/parlour/rbs_generator/namespace.rb#42
+  # Creates a new namespace.
+  # @note Unless you're doing something impressively hacky, this shouldn't
+  #   be invoked outside of {RbsGenerator#initialize}.
+  #
+  # @param generator [RbsGenerator] The current RbsGenerator.
+  # @param name [String, nil] The name of this module.
+  # @param final [Boolean] Whether this namespace is final.
+  # @param block A block which the new instance yields itself to.
+  # @return [void]
+  #
+  # pkg:gem/parlour#lib/parlour/rbs_generator/namespace.rb:42
   sig do
     params(
       generator: ::Parlour::Generator,
@@ -1921,19 +3275,41 @@ class Parlour::RbsGenerator::Namespace < ::Parlour::RbsGenerator::RbsObject
   end
   def initialize(generator, name = T.unsafe(nil), &block); end
 
-  # source://parlour//lib/parlour/rbs_generator/namespace.rb#139
+  # Adds one or more comments to the next child RBS object to be created.
+  #
+  # @example Creating a module with a comment.
+  #   namespace.add_comment_to_next_child('This is a module')
+  #   namespace.create_module('M')
+  #
+  # @example Creating a class with a multi-line comment.
+  #   namespace.add_comment_to_next_child(['This is a multi-line comment!', 'It can be as long as you want!'])
+  #   namespace.create_class('C')
+  #
+  # @param comment [String, Array<String>] The new comment(s).
+  # @return [void]
+  #
+  # pkg:gem/parlour#lib/parlour/rbs_generator/namespace.rb:139
   sig { params(comment: T.any(::String, T::Array[::String])).void }
   def add_comment_to_next_child(comment); end
 
-  # source://parlour//lib/parlour/rbs_generator/namespace.rb#80
+  # The {RbsGenerator::TypeAlias} objects from {children}.
+  # @return [Array<RbsGenerator::TypeAlias>]
+  #
+  # pkg:gem/parlour#lib/parlour/rbs_generator/namespace.rb:80
   sig { returns(T::Array[::Parlour::RbsGenerator::TypeAlias]) }
   def aliases; end
 
-  # source://parlour//lib/parlour/rbs_generator/namespace.rb#52
+  # The child {RbsObject} instances inside this namespace.
+  # @return [Array<RbsObject>]
+  #
+  # pkg:gem/parlour#lib/parlour/rbs_generator/namespace.rb:52
   sig { override.returns(T::Array[::Parlour::RbsGenerator::RbsObject]) }
   def children; end
 
-  # source://parlour//lib/parlour/rbs_generator/namespace.rb#91
+  # The {RbsGenerator::Constant} objects from {children}.
+  # @return [Array<RbsGenerator::Constant>]
+  #
+  # pkg:gem/parlour#lib/parlour/rbs_generator/namespace.rb:91
   sig { returns(T::Array[::Parlour::RbsGenerator::Constant]) }
   def constants; end
 
@@ -1944,20 +3320,23 @@ class Parlour::RbsGenerator::Namespace < ::Parlour::RbsGenerator::RbsObject
   # @param block A block which the new instance yields itself to.
   # @return [RbsGenerator::Arbitrary]
   #
-  # source://parlour//lib/parlour/rbs_generator/namespace.rb#357
+  # pkg:gem/parlour#lib/parlour/rbs_generator/namespace.rb:357
   sig { params(code: T.untyped, block: T.untyped).returns(T.untyped) }
   def create_arbitrary(code:, &block); end
 
-  # @param name [String]
-  # @param kind [Symbol]
-  # @param type [Types::TypeLike]
-  # @param block [T.proc.params(x: Attribute).void, nil]
-  # @return [Attribute]
-  #
-  # source://sorbet-runtime/0.5.12214/lib/types/private/methods/_methods.rb#257
+  # pkg:gem/parlour#lib/parlour/rbs_generator/namespace.rb:292
   def create_attr(*args, **_arg1, &blk); end
 
-  # source://parlour//lib/parlour/rbs_generator/namespace.rb#347
+  # Creates a new read and write attribute (+attr_accessor+).
+  #
+  # @param name [String] The name of this attribute.
+  # @param type [Types::TypeLike] This attribute's type.
+  # @param class_attribute [Boolean] Whether this attribute belongs to the
+  #   singleton class.
+  # @param block A block which the new instance yields itself to.
+  # @return [RbsGenerator::Attribute]
+  #
+  # pkg:gem/parlour#lib/parlour/rbs_generator/namespace.rb:347
   sig do
     params(
       name: ::String,
@@ -1967,7 +3346,16 @@ class Parlour::RbsGenerator::Namespace < ::Parlour::RbsGenerator::RbsObject
   end
   def create_attr_accessor(name, type:, &block); end
 
-  # source://parlour//lib/parlour/rbs_generator/namespace.rb#309
+  # Creates a new read-only attribute (+attr_reader+).
+  #
+  # @param name [String] The name of this attribute.
+  # @param type [Types::TypeLike] This attribute's type.
+  # @param class_attribute [Boolean] Whether this attribute belongs to the
+  #   singleton class.
+  # @param block A block which the new instance yields itself to.
+  # @return [RbsGenerator::Attribute]
+  #
+  # pkg:gem/parlour#lib/parlour/rbs_generator/namespace.rb:309
   sig do
     params(
       name: ::String,
@@ -1977,7 +3365,16 @@ class Parlour::RbsGenerator::Namespace < ::Parlour::RbsGenerator::RbsObject
   end
   def create_attr_reader(name, type:, &block); end
 
-  # source://parlour//lib/parlour/rbs_generator/namespace.rb#328
+  # Creates a new write-only attribute (+attr_writer+).
+  #
+  # @param name [String] The name of this attribute.
+  # @param type [Types::TypeLike] This attribute's type.
+  # @param class_attribute [Boolean] Whether this attribute belongs to the
+  #   singleton class.
+  # @param block A block which the new instance yields itself to.
+  # @return [RbsGenerator::Attribute]
+  #
+  # pkg:gem/parlour#lib/parlour/rbs_generator/namespace.rb:328
   sig do
     params(
       name: ::String,
@@ -1987,7 +3384,30 @@ class Parlour::RbsGenerator::Namespace < ::Parlour::RbsGenerator::RbsObject
   end
   def create_attr_writer(name, type:, &block); end
 
-  # source://parlour//lib/parlour/rbs_generator/namespace.rb#280
+  # Creates a new attribute.
+  #
+  # @example Create an +attr_reader+.
+  #   module.create_attribute('readable', kind: :reader, type: 'String')
+  #   # #=> attr_reader readable: String
+  #
+  # @example Create an +attr_writer+.
+  #   module.create_attribute('writable', kind: :writer, type: 'Integer')
+  #   # #=> attr_writer writable: Integer
+  #
+  # @example Create an +attr_accessor+.
+  #   module.create_attribute('accessible', kind: :accessor, type: Types::Boolean.new)
+  #   # #=> attr_accessor accessible: bool
+  #
+  # @param name [String] The name of this attribute.
+  # @param kind [Symbol] The kind of attribute this is; one of +:writer+, +:reader+, or
+  #   +:accessor+.
+  # @param type [Types::TypeLike] This attribute's type.
+  # @param class_attribute [Boolean] Whether this attribute belongs to the
+  #   singleton class.
+  # @param block A block which the new instance yields itself to.
+  # @return [RbsGenerator::Attribute]
+  #
+  # pkg:gem/parlour#lib/parlour/rbs_generator/namespace.rb:280
   sig do
     params(
       name: ::String,
@@ -1998,7 +3418,23 @@ class Parlour::RbsGenerator::Namespace < ::Parlour::RbsGenerator::RbsObject
   end
   def create_attribute(name, kind:, type:, &block); end
 
-  # source://parlour//lib/parlour/rbs_generator/namespace.rb#169
+  # Creates a new class definition as a child of this namespace.
+  #
+  # @example Create a class with a nested module.
+  #   namespace.create_class('Foo') do |foo|
+  #     foo.create_module('Bar')
+  #   end
+  #
+  # @example Create a class that is the child of another class.
+  #   namespace.create_class('Bar', superclass: 'Foo') #=> class Bar < Foo
+  #
+  # @param name [String] The name of this class.
+  # @param superclass [String, nil] The superclass of this class, or nil if it doesn't
+  #   have one.
+  # @param block A block which the new instance yields itself to.
+  # @return [ClassNamespace]
+  #
+  # pkg:gem/parlour#lib/parlour/rbs_generator/namespace.rb:169
   sig do
     params(
       name: ::String,
@@ -2008,7 +3444,17 @@ class Parlour::RbsGenerator::Namespace < ::Parlour::RbsGenerator::RbsObject
   end
   def create_class(name, superclass: T.unsafe(nil), &block); end
 
-  # source://parlour//lib/parlour/rbs_generator/namespace.rb#450
+  # Adds a new constant definition to this namespace.
+  #
+  # @example Add an +Elem+ constant to the class.
+  #   class.create_constant('FOO', type: 'String') #=> FOO: String
+  #
+  # @param name [String] The name of the constant.
+  # @param type [Types::TypeLike] The type of the constant, as a Ruby code string.
+  # @param block A block which the new instance yields itself to.
+  # @return [RbsGenerator::Constant]
+  #
+  # pkg:gem/parlour#lib/parlour/rbs_generator/namespace.rb:450
   sig do
     params(
       name: ::String,
@@ -2018,7 +3464,16 @@ class Parlour::RbsGenerator::Namespace < ::Parlour::RbsGenerator::RbsObject
   end
   def create_constant(name, type:, &block); end
 
-  # source://parlour//lib/parlour/rbs_generator/namespace.rb#377
+  # Adds a new +extend+ to this namespace.
+  #
+  # @example Add an +extend+ to a class.
+  #   class.create_extend('ExtendableClass') #=> extend ExtendableClass
+  #
+  # @param type [Types::TypeLike] The type to extend.
+  # @param block A block which the new instance yields itself to.
+  # @return [RbsGenerator::Extend]
+  #
+  # pkg:gem/parlour#lib/parlour/rbs_generator/namespace.rb:377
   sig do
     params(
       type: T.any(::Parlour::Types::Type, ::String),
@@ -2027,7 +3482,15 @@ class Parlour::RbsGenerator::Namespace < ::Parlour::RbsGenerator::RbsObject
   end
   def create_extend(type, &block); end
 
-  # source://parlour//lib/parlour/rbs_generator/namespace.rb#396
+  # Adds new +extend+s to this namespace.
+  #
+  # @example Add +extend+s to a class.
+  #   class.create_extends(['Foo', 'Bar'])
+  #
+  # @param [Array<Types::TypeLike>] extendables An array of types to extend.
+  # @return [Array<RbsGenerator::Extend>]
+  #
+  # pkg:gem/parlour#lib/parlour/rbs_generator/namespace.rb:396
   sig do
     params(
       extendables: T::Array[T.any(::Parlour::Types::Type, ::String)]
@@ -2035,7 +3498,16 @@ class Parlour::RbsGenerator::Namespace < ::Parlour::RbsGenerator::RbsObject
   end
   def create_extends(extendables); end
 
-  # source://parlour//lib/parlour/rbs_generator/namespace.rb#413
+  # Adds a new +include+ to this namespace.
+  #
+  # @example Add an +include+ to a class.
+  #   class.create_include('IncludableClass') #=> include IncludableClass
+  #
+  # @param type [Types::TypeLike] The type to extend.
+  # @param block A block which the new instance yields itself to.
+  # @return [RbsGenerator::Include]
+  #
+  # pkg:gem/parlour#lib/parlour/rbs_generator/namespace.rb:413
   sig do
     params(
       type: T.any(::Parlour::Types::Type, ::String),
@@ -2044,7 +3516,15 @@ class Parlour::RbsGenerator::Namespace < ::Parlour::RbsGenerator::RbsObject
   end
   def create_include(type, &block); end
 
-  # source://parlour//lib/parlour/rbs_generator/namespace.rb#432
+  # Adds new +include+s to this namespace.
+  #
+  # @example Add +include+s to a class.
+  #   class.create_includes(['Foo', 'Bar'])
+  #
+  # @param [Array<Types::TypeLike>] includables An array of types to extend.
+  # @return [Array<RbsGenerator::Include>]
+  #
+  # pkg:gem/parlour#lib/parlour/rbs_generator/namespace.rb:432
   sig do
     params(
       includables: T::Array[T.any(::Parlour::Types::Type, ::String)]
@@ -2052,7 +3532,16 @@ class Parlour::RbsGenerator::Namespace < ::Parlour::RbsGenerator::RbsObject
   end
   def create_includes(includables); end
 
-  # source://parlour//lib/parlour/rbs_generator/namespace.rb#211
+  # Creates a new interface definition as a child of this namespace.
+  #
+  # @example Create a basic interface.
+  #   namespace.create_interface('Foo')
+  #
+  # @param name [String] The name of this interface.
+  # @param block A block which the new instance yields itself to.
+  # @return [InterfaceNamespace]
+  #
+  # pkg:gem/parlour#lib/parlour/rbs_generator/namespace.rb:211
   sig do
     params(
       name: ::String,
@@ -2061,7 +3550,18 @@ class Parlour::RbsGenerator::Namespace < ::Parlour::RbsGenerator::RbsObject
   end
   def create_interface(name, &block); end
 
-  # source://parlour//lib/parlour/rbs_generator/namespace.rb#236
+  # Creates a new method definition as a child of this namespace.
+  #
+  # @param name [String] The name of this method. You should not specify +self.+ in
+  #   this - use the +class_method+ parameter instead.
+  # @param signatures [Array<MethodSignature>] The signatures for each
+  #   overload of this method.
+  # @param class_method [Boolean] Whether this method is a class method; that is, it
+  #   it is defined using +self.+.
+  # @param block A block which the new instance yields itself to.
+  # @return [Method]
+  #
+  # pkg:gem/parlour#lib/parlour/rbs_generator/namespace.rb:236
   sig do
     params(
       name: ::String,
@@ -2072,7 +3572,16 @@ class Parlour::RbsGenerator::Namespace < ::Parlour::RbsGenerator::RbsObject
   end
   def create_method(name, signatures = T.unsafe(nil), class_method: T.unsafe(nil), &block); end
 
-  # source://parlour//lib/parlour/rbs_generator/namespace.rb#190
+  # Creates a new module definition as a child of this namespace.
+  #
+  # @example Create a basic module.
+  #   namespace.create_module('Foo')
+  #
+  # @param name [String] The name of this module.
+  # @param block A block which the new instance yields itself to.
+  # @return [ModuleNamespace]
+  #
+  # pkg:gem/parlour#lib/parlour/rbs_generator/namespace.rb:190
   sig do
     params(
       name: ::String,
@@ -2081,7 +3590,17 @@ class Parlour::RbsGenerator::Namespace < ::Parlour::RbsGenerator::RbsObject
   end
   def create_module(name, &block); end
 
-  # source://parlour//lib/parlour/rbs_generator/namespace.rb#472
+  # Adds a new type alias, in the form of a constant, to this namespace.
+  #
+  # @example Add a +MyType+ type alias, to +Integer+, to the class.
+  #   class.create_type_alias('MyType', type: 'Integer') #=> type MyType = Integer
+  #
+  # @param name [String] The name of the type alias.
+  # @param value [Types::TypeLike] The type to alias.
+  # @param block A block which the new instance yields itself to.
+  # @return [RbsGenerator::TypeAlias]
+  #
+  # pkg:gem/parlour#lib/parlour/rbs_generator/namespace.rb:472
   sig do
     params(
       name: ::String,
@@ -2091,99 +3610,200 @@ class Parlour::RbsGenerator::Namespace < ::Parlour::RbsGenerator::RbsObject
   end
   def create_type_alias(name, type:, &block); end
 
-  # source://parlour//lib/parlour/rbs_generator/namespace.rb#525
+  # pkg:gem/parlour#lib/parlour/rbs_generator/namespace.rb:525
   sig { override.returns(T::Array[T.any(::Symbol, T::Hash[::Symbol, ::String])]) }
   def describe_attrs; end
 
-  # source://parlour//lib/parlour/rbs_generator/namespace.rb#60
+  # The {RbsGenerator::Extend} objects from {children}.
+  # @return [Array<RbsGenerator::Extend>]
+  #
+  # pkg:gem/parlour#lib/parlour/rbs_generator/namespace.rb:60
   sig { returns(T::Array[::Parlour::RbsGenerator::Extend]) }
   def extends; end
 
-  # source://parlour//lib/parlour/rbs_generator/namespace.rb#21
+  # Generates the RBS lines for this namespace.
+  #
+  # @param indent_level [Integer] The indentation level to generate the lines at.
+  # @param options [Options] The formatting options to use.
+  # @return [Array<String>] The RBS lines, formatted as specified.
+  #
+  # pkg:gem/parlour#lib/parlour/rbs_generator/namespace.rb:21
   sig { override.overridable.params(indent_level: ::Integer, options: ::Parlour::Options).returns(T::Array[::String]) }
   def generate_rbs(indent_level, options); end
 
-  # source://parlour//lib/parlour/rbs_generator/namespace.rb#70
+  # The {RbsGenerator::Include} objects from {children}.
+  # @return [Array<RbsGenerator::Include>]
+  #
+  # pkg:gem/parlour#lib/parlour/rbs_generator/namespace.rb:70
   sig { returns(T::Array[::Parlour::RbsGenerator::Include]) }
   def includes; end
 
-  # source://parlour//lib/parlour/rbs_generator/namespace.rb#515
+  # Given an array of {Namespace} instances, merges them into this one.
+  # All children, constants, extends and includes are copied into this
+  # instance.
+  #
+  # There may also be {RbsGenerator::Method} instances in the stream, which
+  # are ignored.
+  #
+  # @param others [Array<RbsGenerator::RbsObject>] An array of other {Namespace} instances.
+  # @return [void]
+  #
+  # pkg:gem/parlour#lib/parlour/rbs_generator/namespace.rb:515
   sig { override.overridable.params(others: T::Array[::Parlour::RbsGenerator::RbsObject]).void }
   def merge_into_self(others); end
 
-  # source://parlour//lib/parlour/rbs_generator/namespace.rb#497
+  # Given an array of {Namespace} instances, returns true if they may be
+  # merged into this instance using {merge_into_self}. All bare namespaces
+  # can be merged into each other, as they lack definitions for themselves,
+  # so there is nothing to conflict. (This isn't the case for subclasses
+  # such as {ClassNamespace}.)
+  #
+  # @param others [Array<RbsGenerator::RbsObject>] An array of other {Namespace} instances.
+  # @return [true] Always true.
+  #
+  # pkg:gem/parlour#lib/parlour/rbs_generator/namespace.rb:497
   sig { override.overridable.params(others: T::Array[::Parlour::RbsGenerator::RbsObject]).returns(T::Boolean) }
   def mergeable?(others); end
 
-  # source://parlour//lib/parlour/rbs_generator/namespace.rb#104
+  # Given a Class or Module object, generates all classes and modules in the
+  # path to that object, then executes the given block on the last
+  # {Namespace}. This should only be executed on the root namespace.
+  # @param [Class, Module] object
+  # @param block A block which the new {Namespace} yields itself to.
+  #
+  # pkg:gem/parlour#lib/parlour/rbs_generator/namespace.rb:104
   sig { params(object: T.untyped, block: T.proc.params(x: Parlour::RbsGenerator::Namespace).void).void }
   def path(object, &block); end
 
-  # @return [Array<RbsGenerator::TypeAlias>]
-  #
-  # source://sorbet-runtime/0.5.12214/lib/types/private/methods/_methods.rb#257
+  # pkg:gem/parlour#lib/parlour/rbs_generator/namespace.rb:86
   def type_aliases(*args, **_arg1, &blk); end
 
   private
 
-  # source://parlour//lib/parlour/rbs_generator/namespace.rb#545
+  # Generates the RBS lines for the body of this namespace. This consists of
+  # {includes}, {extends} and {children}.
+  #
+  # @param indent_level [Integer] The indentation level to generate the lines at.
+  # @param options [Options] The formatting options to use.
+  # @param mode [Symbol] The symbol to send to generate children: one of
+  #   :generate_rbs or :generate_rbs.
+  # @return [Array<String>] The RBS lines for the body, formatted as specified.
+  #
+  # pkg:gem/parlour#lib/parlour/rbs_generator/namespace.rb:545
   sig { overridable.params(indent_level: ::Integer, options: ::Parlour::Options).returns(T::Array[::String]) }
   def generate_body(indent_level, options); end
 
-  # source://parlour//lib/parlour/rbs_generator/namespace.rb#621
+  # Copies the comments added with {#add_comment_to_next_child} into the
+  # given object, and clears the list of pending comments.
+  # @param object [RbsObject] The object to move the comments into.
+  # @return [void]
+  #
+  # pkg:gem/parlour#lib/parlour/rbs_generator/namespace.rb:621
   sig { params(object: ::Parlour::RbsGenerator::RbsObject).void }
   def move_next_comments(object); end
 end
 
 # Represents a method parameter with a Sorbet type signature.
 #
-# source://parlour//lib/parlour/rbs_generator/parameter.rb#5
+# pkg:gem/parlour#lib/parlour/rbs_generator/parameter.rb:5
 class Parlour::RbsGenerator::Parameter
   extend T::Sig
 
-  # source://parlour//lib/parlour/rbs_generator/parameter.rb#37
+  # Create a new method parameter.
+  # Note that, in RBS, blocks are not parameters. Use a {Block} instead.
+  #
+  # @example Create a simple Integer parameter named +num+.
+  #   Parlour::RbsGenerator::Parameter.new('num', type: 'Integer')
+  # @example Create a nilable array parameter.
+  #   Parlour::RbsGenerator::Parameter.new('array_of_strings_or_symbols', type:
+  #     Parlour::Types::Nilable.new(
+  #       Parlour::Types::Array.new(
+  #         Parlour::Types::Union.new('String', 'Symbol')
+  #       )
+  #     )
+  #   )
+  # @example Create an optional parameter.
+  #   Parlour::RbsGenerator::Parameter.new('name', type: 'String', default: 'Parlour')
+  #
+  # @param name [String] The name of this parameter. This may start with +*+ or +**+,
+  #   ,or end with +:+, which will infer the {kind} of this
+  #   parameter. (If it contains none of those, {kind} will be +:normal+.)
+  # @param type [Types::TypeLike, nil] This type of this parameter.
+  # @param required [Boolean] Whether this parameter is required.
+  # @return [void]
+  #
+  # pkg:gem/parlour#lib/parlour/rbs_generator/parameter.rb:37
   sig { params(name: ::String, type: T.nilable(T.any(::Parlour::Types::Type, ::String)), required: T::Boolean).void }
   def initialize(name, type: T.unsafe(nil), required: T.unsafe(nil)); end
 
-  # source://parlour//lib/parlour/rbs_generator/parameter.rb#56
+  # Returns true if this instance is equal to another method.
+  #
+  # @param other [Object] The other instance. If this is not a {Parameter} (or a
+  #   subclass of it), this will always return false.
+  # @return [Boolean]
+  #
+  # pkg:gem/parlour#lib/parlour/rbs_generator/parameter.rb:56
   sig { params(other: ::Object).returns(T::Boolean) }
   def ==(other); end
 
-  # source://parlour//lib/parlour/rbs_generator/parameter.rb#98
+  # The kind of parameter that this is. This will be one of +:normal+,
+  # +:splat+, +:double_splat+, or +:keyword+.
+  # @return [Symbol]
+  #
+  # pkg:gem/parlour#lib/parlour/rbs_generator/parameter.rb:98
   sig { returns(::Symbol) }
   def kind; end
 
-  # source://parlour//lib/parlour/rbs_generator/parameter.rb#68
+  # The name of this parameter, including any prefixes or suffixes such as
+  # +*+.
+  # @return [String]
+  #
+  # pkg:gem/parlour#lib/parlour/rbs_generator/parameter.rb:68
   sig { returns(::String) }
   def name; end
 
-  # source://parlour//lib/parlour/rbs_generator/parameter.rb#75
+  # The name of this parameter, stripped of any prefixes or suffixes. For
+  # example, +*rest+ would become +rest+, or +foo:+ would become +foo+.
+  #
+  # @return [String]
+  #
+  # pkg:gem/parlour#lib/parlour/rbs_generator/parameter.rb:75
   sig { returns(::String) }
   def name_without_kind; end
 
-  # source://parlour//lib/parlour/rbs_generator/parameter.rb#92
+  # Whether this parameter is required.
+  # @return [Boolean]
+  #
+  # pkg:gem/parlour#lib/parlour/rbs_generator/parameter.rb:92
   sig { returns(T::Boolean) }
   def required; end
 
-  # source://parlour//lib/parlour/rbs_generator/parameter.rb#119
+  # A string of how this parameter should be defined in an RBS signature.
+  #
+  # @return [String]
+  #
+  # pkg:gem/parlour#lib/parlour/rbs_generator/parameter.rb:119
   sig { returns(::String) }
   def to_rbs_param; end
 
-  # source://parlour//lib/parlour/rbs_generator/parameter.rb#87
+  # This parameter's type.
+  # @return [String]
+  #
+  # pkg:gem/parlour#lib/parlour/rbs_generator/parameter.rb:87
   sig { returns(T.any(::Parlour::Types::Type, ::String)) }
   def type; end
 end
 
 # A mapping of {kind} values to the characteristic prefixes each kind has.
 #
-# source://parlour//lib/parlour/rbs_generator/parameter.rb#109
+# pkg:gem/parlour#lib/parlour/rbs_generator/parameter.rb:109
 Parlour::RbsGenerator::Parameter::PREFIXES = T.let(T.unsafe(nil), Hash)
 
 # An array of reserved keywords in RBS which may be used as parameter
 # names in standard Ruby.
 # TODO: probably incomplete
 #
-# source://parlour//lib/parlour/rbs_generator/parameter.rb#103
+# pkg:gem/parlour#lib/parlour/rbs_generator/parameter.rb:103
 Parlour::RbsGenerator::Parameter::RBS_KEYWORDS = T.let(T.unsafe(nil), Array)
 
 # An abstract class which is subclassed by any classes which can generate
@@ -2193,44 +3813,77 @@ Parlour::RbsGenerator::Parameter::RBS_KEYWORDS = T.let(T.unsafe(nil), Array)
 #
 # This class is *abstract*.
 #
-# @abstract It cannot be directly instantiated. Subclasses must implement the `abstract` methods below.
-#
-# source://parlour//lib/parlour/rbs_generator/rbs_object.rb#10
+# pkg:gem/parlour#lib/parlour/rbs_generator/rbs_object.rb:10
 class Parlour::RbsGenerator::RbsObject < ::Parlour::TypedObject
   abstract!
 
-  # source://parlour//lib/parlour/rbs_generator/rbs_object.rb#20
+  # Creates a new RBS object.
+  # @note Don't call this directly.
+  #
+  # @param generator [RbsGenerator] The current RbsGenerator.
+  # @param name [String] The name of this module.
+  # @return [void]
+  #
+  # pkg:gem/parlour#lib/parlour/rbs_generator/rbs_object.rb:20
   sig { params(generator: ::Parlour::Generator, name: ::String).void }
   def initialize(generator, name); end
 
-  # @abstract
+  # Generates the RBS lines for this object.
   #
-  # source://parlour//lib/parlour/rbs_generator/rbs_object.rb#44
+  # This method is *abstract*.
+  #
+  # @param indent_level [Integer] The indentation level to generate the lines at.
+  # @param options [Options] The formatting options to use.
+  # @return [Array<String>] The RBS lines, formatted as specified.
+  #
+  # pkg:gem/parlour#lib/parlour/rbs_generator/rbs_object.rb:44
   sig { abstract.params(indent_level: ::Integer, options: ::Parlour::Options).returns(T::Array[::String]) }
   def generate_rbs(indent_level, options); end
 
-  # source://parlour//lib/parlour/rbs_generator/rbs_object.rb#29
+  # The generator which this object belongs to.
+  # @return [Generator]
+  #
+  # pkg:gem/parlour#lib/parlour/rbs_generator/rbs_object.rb:29
   sig { returns(::Parlour::Generator) }
   def generator; end
 
-  # @abstract
+  # Given an array of other objects, merges them into this one. Each
+  # subclass will do this differently.
+  # You MUST ensure that {mergeable?} is true for those instances.
   #
-  # source://parlour//lib/parlour/rbs_generator/rbs_object.rb#74
+  # This method is *abstract*.
+  #
+  # @param others [Array<RbsGenerator::RbsObject>] An array of other {RbsObject} instances.
+  # @return [void]
+  #
+  # pkg:gem/parlour#lib/parlour/rbs_generator/rbs_object.rb:74
   sig { abstract.params(others: T::Array[::Parlour::RbsGenerator::RbsObject]).void }
   def merge_into_self(others); end
 
-  # @abstract
+  # Given an array of other objects, returns true if they may be merged
+  # into this instance using {merge_into_self}. Each subclass will have its
+  # own criteria on what allows objects to be mergeable.
   #
-  # source://parlour//lib/parlour/rbs_generator/rbs_object.rb#59
+  # This method is *abstract*.
+  #
+  # @param others [Array<RbsGenerator::RbsObject>] An array of other {RbsObject} instances.
+  # @return [Boolean] Whether this instance may be merged with them.
+  #
+  # pkg:gem/parlour#lib/parlour/rbs_generator/rbs_object.rb:59
   sig { abstract.params(others: T::Array[::Parlour::RbsGenerator::RbsObject]).returns(T::Boolean) }
   def mergeable?(others); end
 end
 
 # Represents a type alias.
 #
-# source://parlour//lib/parlour/rbs_generator/type_alias.rb#5
+# pkg:gem/parlour#lib/parlour/rbs_generator/type_alias.rb:5
 class Parlour::RbsGenerator::TypeAlias < ::Parlour::RbsGenerator::RbsObject
-  # source://parlour//lib/parlour/rbs_generator/type_alias.rb#18
+  # Creates a new type alias.
+  #
+  # @param name [String] The name of the alias.
+  # @param value [String] The type to alias to.
+  #
+  # pkg:gem/parlour#lib/parlour/rbs_generator/type_alias.rb:18
   sig do
     params(
       generator: ::Parlour::Generator,
@@ -2241,37 +3894,72 @@ class Parlour::RbsGenerator::TypeAlias < ::Parlour::RbsGenerator::RbsObject
   end
   def initialize(generator, name:, type:, &block); end
 
-  # source://parlour//lib/parlour/rbs_generator/type_alias.rb#34
+  # Returns true if this instance is equal to another type alias.
+  #
+  # @param other [Object] The other instance. If this is not a {TypeAlias} (or a
+  #   subclass of it), this will always return false.
+  # @return [Boolean]
+  #
+  # pkg:gem/parlour#lib/parlour/rbs_generator/type_alias.rb:34
   sig { params(other: ::Object).returns(T::Boolean) }
   def ==(other); end
 
-  # source://parlour//lib/parlour/rbs_generator/type_alias.rb#88
+  # pkg:gem/parlour#lib/parlour/rbs_generator/type_alias.rb:88
   sig { override.returns(T::Array[T.any(::Symbol, T::Hash[::Symbol, ::String])]) }
   def describe_attrs; end
 
-  # source://parlour//lib/parlour/rbs_generator/type_alias.rb#49
+  # Generates the RBS lines for this type alias.
+  #
+  # @param indent_level [Integer] The indentation level to generate the lines at.
+  # @param options [Options] The formatting options to use.
+  # @return [Array<String>] The RBS lines, formatted as specified.
+  #
+  # pkg:gem/parlour#lib/parlour/rbs_generator/type_alias.rb:49
   sig { override.params(indent_level: ::Integer, options: ::Parlour::Options).returns(T::Array[::String]) }
   def generate_rbs(indent_level, options); end
 
-  # source://parlour//lib/parlour/rbs_generator/type_alias.rb#83
+  # Given an array of {TypeAlias} instances, merges them into this one.
+  # This particular implementation will simply do nothing, as instances
+  # are only mergeable if they are indentical.
+  # You MUST ensure that {mergeable?} is true for those instances.
+  #
+  # @param others [Array<RbiGenerator::RbsObject>] An array of other
+  #   {TypeAlias} instances.
+  # @return [void]
+  #
+  # pkg:gem/parlour#lib/parlour/rbs_generator/type_alias.rb:83
   sig { override.params(others: T::Array[::Parlour::RbsGenerator::RbsObject]).void }
   def merge_into_self(others); end
 
-  # source://parlour//lib/parlour/rbs_generator/type_alias.rb#66
+  # Given an array of {TypeAlias} instances, returns true if they may be
+  # merged into this instance using {merge_into_self}. This is always false.
+  #
+  # @param others [Array<RbiGenerator::RbsObject>] An array of other
+  #   {TypeAlias} instances.
+  # @return [Boolean] Whether this instance may be merged with them.
+  #
+  # pkg:gem/parlour#lib/parlour/rbs_generator/type_alias.rb:66
   sig { override.params(others: T::Array[::Parlour::RbsGenerator::RbsObject]).returns(T::Boolean) }
   def mergeable?(others); end
 
-  # source://parlour//lib/parlour/rbs_generator/type_alias.rb#26
+  # @return [String] The type to alias to.
+  #
+  # pkg:gem/parlour#lib/parlour/rbs_generator/type_alias.rb:26
   sig { returns(T.any(::Parlour::Types::Type, ::String)) }
   def type; end
 end
 
-# source://parlour//lib/parlour/type_loader.rb#7
+# pkg:gem/parlour#lib/parlour/type_loader.rb:7
 module Parlour::TypeLoader
   extend T::Sig
 
   class << self
-    # source://parlour//lib/parlour/type_loader.rb#29
+    # Converts Ruby source code into a tree of objects from a file.
+    #
+    # @param [String] filename The name of the file to load code from.
+    # @return [RbiGenerator::Namespace] The root of the object tree.
+    #
+    # pkg:gem/parlour#lib/parlour/type_loader.rb:29
     sig do
       params(
         filename: ::String,
@@ -2280,7 +3968,20 @@ module Parlour::TypeLoader
     end
     def load_file(filename, generator: T.unsafe(nil)); end
 
-    # source://parlour//lib/parlour/type_loader.rb#54
+    # Loads an entire Sorbet project using Sorbet's file table, obeying any
+    #
+    # Files within sorbet/rbi/hidden-definitions are excluded, as they cause
+    # merging issues with abstract classes due to sorbet/sorbet#1653.
+    #
+    # @param [String] root The root of the project; where the "sorbet" directory
+    #   and "Gemfile" are located.
+    # @param [Array<String>] inclusions A list of files to include when loading
+    #   the project, relative to the given root.
+    # @param [Array<String>] exclusions A list of files to exclude when loading
+    #   the project, relative to the given root.
+    # @return [RbiGenerator::Namespace] The root of the object tree.
+    #
+    # pkg:gem/parlour#lib/parlour/type_loader.rb:54
     sig do
       params(
         root: ::String,
@@ -2291,10 +3992,14 @@ module Parlour::TypeLoader
     end
     def load_project(root, inclusions: T.unsafe(nil), exclusions: T.unsafe(nil), generator: T.unsafe(nil)); end
 
-    # TODO: make this into a class which stores configuration and passes it to
-    # all typeparsers
+    # Converts Ruby source code into a tree of objects.
     #
-    # source://parlour//lib/parlour/type_loader.rb#20
+    # @param [String] source The Ruby source code.
+    # @param [String, nil] filename The filename to use when parsing this code.
+    #   This may be used in error messages, but is optional.
+    # @return [RbiGenerator::Namespace] The root of the object tree.
+    #
+    # pkg:gem/parlour#lib/parlour/type_loader.rb:20
     sig do
       params(
         source: ::String,
@@ -2308,11 +4013,20 @@ end
 
 # Parses Ruby source to find Sorbet type signatures.
 #
-# source://parlour//lib/parlour/type_parser.rb#17
+# pkg:gem/parlour#lib/parlour/type_parser.rb:17
 class Parlour::TypeParser
   extend T::Sig
 
-  # source://parlour//lib/parlour/type_parser.rb#95
+  # Creates a new {TypeParser} from whitequark/parser AST.
+  #
+  # @param [Parser::AST::Node] The AST.
+  # @param [Boolean] unknown_node_errors Whether to raise an error if a node
+  #   of an unknown kind is encountered. If false, the node is simply ignored;
+  #   if true, a parse error is raised. Setting this to true is likely to
+  #   raise errors for lots of non-RBI Ruby code, but setting it to false
+  #   could miss genuine typed objects if Parlour or your code contains a bug.
+  #
+  # pkg:gem/parlour#lib/parlour/type_parser.rb:95
   sig do
     params(
       ast: ::Parser::AST::Node,
@@ -2322,35 +4036,66 @@ class Parlour::TypeParser
   end
   def initialize(ast, unknown_node_errors: T.unsafe(nil), generator: T.unsafe(nil)); end
 
-  # source://parlour//lib/parlour/type_parser.rb#119
+  # @return [Parser::AST::Node] The AST which this type parser should use.
+  #
+  # pkg:gem/parlour#lib/parlour/type_parser.rb:119
   sig { returns(::Parser::AST::Node) }
   def ast; end
 
-  # @return [Parser::AST::Node]
+  # @return [Parser::AST::Node] The AST which this type parser should use.
   #
-  # source://parlour//lib/parlour/type_parser.rb#119
+  # pkg:gem/parlour#lib/parlour/type_parser.rb:119
   def ast=(_arg0); end
 
-  # source://parlour//lib/parlour/type_parser.rb#422
+  # Given a node in the AST, finds all heredoc definitions within it
+  # and return them as a String
+  #
+  # e.g., for the AST for following code:
+  #
+  #  foo = <<~HEREDOC
+  #    bar
+  #  HEREDOC
+  #
+  # this method would return "  bar\nHEREDOC\n"
+  #
+  # pkg:gem/parlour#lib/parlour/type_parser.rb:422
   sig { params(body: T.nilable(::Parser::AST::Node)).returns(T.nilable(::String)) }
   def find_heredocs(body); end
 
-  # source://parlour//lib/parlour/type_parser.rb#128
+  # @return [RbiGenerator] The {RbiGenerator} to load the source into.
+  #
+  # pkg:gem/parlour#lib/parlour/type_parser.rb:128
   sig { returns(::Parlour::RbiGenerator) }
   def generator; end
 
-  # @return [RbiGenerator]
+  # @return [RbiGenerator] The {RbiGenerator} to load the source into.
   #
-  # source://parlour//lib/parlour/type_parser.rb#128
+  # pkg:gem/parlour#lib/parlour/type_parser.rb:128
   def generator=(_arg0); end
 
   # Parses the entire source file and returns the resulting root namespace.
   #
-  # source://parlour//lib/parlour/type_parser.rb#134
+  # @return [RbiGenerator::Namespace] The root namespace of the parsed source.
+  #
+  # pkg:gem/parlour#lib/parlour/type_parser.rb:134
   sig { returns(Parlour::RbiGenerator::Namespace) }
   def parse_all; end
 
-  # source://parlour//lib/parlour/type_parser.rb#688
+  # Given a path to a method in the AST, finds the associated definition and
+  # parses them into methods.
+  # Usually this will return one method; the only exception currently is for
+  # attributes, where multiple can be declared in one call, e.g.
+  # +attr_reader :x, :y, :z+.
+  #
+  # @param [NodePath] path The sig to parse.
+  # @param [Boolean] is_within_eigenclass Whether the method definition this sig is
+  #   associated with appears inside an eigenclass definition. If true, the
+  #   returned method is made a class method. If the method definition
+  #   is already a class method, an exception is thrown as the method will be
+  #   a class method of the eigenclass, which Parlour can't represent.
+  # @return [<RbiGenerator::Method>] The parsed methods.
+  #
+  # pkg:gem/parlour#lib/parlour/type_parser.rb:688
   sig do
     params(
       path: ::Parlour::TypeParser::NodePath,
@@ -2359,7 +4104,13 @@ class Parlour::TypeParser
   end
   def parse_method_into_methods(path, is_within_eigenclass: T.unsafe(nil)); end
 
-  # source://parlour//lib/parlour/type_parser.rb#793
+  # Given an AST node representing an RBI type (such as 'T::Array[String]'),
+  # parses it into a generic type.
+  #
+  # @param [Parser::AST::Node] node
+  # @return [Parlour::Types::Type]
+  #
+  # pkg:gem/parlour#lib/parlour/type_parser.rb:793
   sig { params(node: ::Parser::AST::Node).returns(::Parlour::Types::Type) }
   def parse_node_to_type(node); end
 
@@ -2370,7 +4121,12 @@ class Parlour::TypeParser
   # If the node directly represents several nodes, such as being a
   # (begin ...) node, they are all returned.
   #
-  # source://parlour//lib/parlour/type_parser.rb#152
+  # @param [NodePath] path The path to the namespace definition. Do not pass
+  #   any of the other parameters to this method in an external call.
+  # @return [Array<RbiGenerator::RbiObject>] The objects the node at the path
+  #    represents, parsed into an RBI generator object.
+  #
+  # pkg:gem/parlour#lib/parlour/type_parser.rb:152
   sig do
     params(
       path: ::Parlour::TypeParser::NodePath,
@@ -2379,7 +4135,22 @@ class Parlour::TypeParser
   end
   def parse_path_to_object(path, is_within_eigenclass: T.unsafe(nil)); end
 
-  # source://parlour//lib/parlour/type_parser.rb#535
+  # Given a path to a sig in the AST, finds the associated definition and
+  # parses them into methods.
+  # This will raise an exception if the sig is invalid.
+  # Usually this will return one method; the only exception currently is for
+  # attributes, where multiple can be declared in one call, e.g.
+  # +attr_reader :x, :y, :z+.
+  #
+  # @param [NodePath] path The sig to parse.
+  # @param [Boolean] is_within_eigenclass Whether the method definition this sig is
+  #   associated with appears inside an eigenclass definition. If true, the
+  #   returned method is made a class method. If the method definition
+  #   is already a class method, an exception is thrown as the method will be
+  #   a class method of the eigenclass, which Parlour can't represent.
+  # @return [<RbiGenerator::Method>] The parsed methods.
+  #
+  # pkg:gem/parlour#lib/parlour/type_parser.rb:535
   sig do
     params(
       path: ::Parlour::TypeParser::NodePath,
@@ -2388,53 +4159,129 @@ class Parlour::TypeParser
   end
   def parse_sig_into_methods(path, is_within_eigenclass: T.unsafe(nil)); end
 
-  # source://parlour//lib/parlour/type_parser.rb#457
+  # Given a path to a sig in the AST, parses that sig into an intermediate
+  # sig object.
+  # This will raise an exception if the sig is invalid.
+  # This is intended to be called by {#parse_sig_into_methods}, and shouldn't
+  # be called manually unless you're doing something hacky.
+  #
+  # @param [NodePath] path The sig to parse.
+  # @return [IntermediateSig] The parsed sig.
+  #
+  # pkg:gem/parlour#lib/parlour/type_parser.rb:457
   sig { params(path: ::Parlour::TypeParser::NodePath).returns(::Parlour::TypeParser::IntermediateSig) }
   def parse_sig_into_sig(path); end
 
-  # source://parlour//lib/parlour/type_parser.rb#124
+  # @return [Boolean] Whether to raise an error if a node of an unknown kind
+  #   is encountered.
+  #
+  # pkg:gem/parlour#lib/parlour/type_parser.rb:124
   sig { returns(T::Boolean) }
   def unknown_node_errors; end
 
   protected
 
-  # source://parlour//lib/parlour/type_parser.rb#1010
+  # Given an AST node and a symbol, determines if that node is a call (or a
+  # body containing a call at the top level) to the method represented by the
+  # symbol, without any arguments or a block.
+  #
+  # This is designed to be used to determine if a namespace body uses a Sorbet
+  # modifier such as "abstract!".
+  #
+  # @param [Parser::AST::Node, nil] node The AST node to search in.
+  # @param [Symbol] modifier The method name to search for.
+  # @return [T::Boolean] True if the call is found, or false otherwise.
+  #
+  # pkg:gem/parlour#lib/parlour/type_parser.rb:1010
   sig { params(node: T.nilable(::Parser::AST::Node), modifier: ::Symbol).returns(T::Boolean) }
   def body_has_modifier?(node, modifier); end
 
-  # source://parlour//lib/parlour/type_parser.rb#1025
+  # Given an AST node representing the body of a class or module, returns two
+  # arrays of the includes and extends contained within the body.
+  #
+  # @param [Parser::AST::Node] node The body of the namespace.
+  # @return [(Array<String>, Array<String>)] An array of the includes and an
+  #   array of the extends.
+  #
+  # pkg:gem/parlour#lib/parlour/type_parser.rb:1025
   sig { params(node: ::Parser::AST::Node).returns([T::Array[::String], T::Array[::String]]) }
   def body_includes_and_extends(node); end
 
-  # source://parlour//lib/parlour/type_parser.rb#950
+  # Given a node representing a simple chain of constants (such as A or
+  # A::B::C), converts that node into an array of the constant names which
+  # are accessed. For example, A::B::C would become [:A, :B, :C].
+  #
+  # @param [Parser::AST::Node, nil] node The node to convert. This must
+  #   consist only of nested (:const) nodes.
+  # @return [Array<Symbol>] The chain of constant names.
+  #
+  # pkg:gem/parlour#lib/parlour/type_parser.rb:950
   sig { params(node: T.nilable(::Parser::AST::Node)).returns(T::Array[::Symbol]) }
   def constant_names(node); end
 
-  # source://parlour//lib/parlour/type_parser.rb#992
+  # Given an AST node, returns the source code from which it was constructed.
+  # If the given AST node is nil, this returns nil.
+  #
+  # @param [Parser::AST::Node, nil] node The AST node, or nil.
+  # @return [String] The source code string it represents, or nil.
+  #
+  # pkg:gem/parlour#lib/parlour/type_parser.rb:992
   sig { params(node: T.nilable(::Parser::AST::Node)).returns(T.nilable(::String)) }
   def node_to_s(node); end
 
-  # @raise [ParseError.new(buffer, range)]
+  # Raises a parse error on a node.
+  # @param [String] desc A description of the error.
+  # @param [Parser::AST::Node, NodePath] A node, passed as either a path or a
+  #   raw parser node.
   #
-  # source://parlour//lib/parlour/type_parser.rb#1049
+  # pkg:gem/parlour#lib/parlour/type_parser.rb:1049
   sig { params(desc: ::String, node: T.any(::Parlour::TypeParser::NodePath, ::Parser::AST::Node)).returns(T.noreturn) }
   def parse_err(desc, node); end
 
-  # source://parlour//lib/parlour/type_parser.rb#975
+  # Given a path, returns a boolean indicating whether the previous sibling
+  # represents a call to "sig" with a block.
+  #
+  # @param [NodePath] path The path to the namespace definition.
+  # @return [Boolean] True if that node represents a "sig" call, false
+  #   otherwise.
+  #
+  # pkg:gem/parlour#lib/parlour/type_parser.rb:975
   sig { params(path: ::Parlour::TypeParser::NodePath).returns(T::Boolean) }
   def previous_sibling_sig_node?(path); end
 
-  # source://parlour//lib/parlour/type_parser.rb#962
+  # Given a node, returns a boolean indicating whether that node represents a
+  # a call to "sig" with a block. No further semantic checking, such as
+  # whether it preceeds a method call, is done.
+  #
+  # @param [Parser::AST::Node] node The node to check.
+  # @return [Boolean] True if that node represents a "sig" call, false
+  #   otherwise.
+  #
+  # pkg:gem/parlour#lib/parlour/type_parser.rb:962
   sig { params(node: ::Parser::AST::Node).returns(T::Boolean) }
   def sig_node?(node); end
 
-  # source://parlour//lib/parlour/type_parser.rb#932
+  # pkg:gem/parlour#lib/parlour/type_parser.rb:932
   sig { params(msg: ::String, node: ::Parser::AST::Node).void }
   def warning(msg, node); end
 
-  # @raise [ArgumentError]
+  # Given two arrays and functions to get a key for each item in the two
+  # arrays, joins the two arrays into one array of pairs by that key.
   #
-  # source://parlour//lib/parlour/type_parser.rb#1082
+  # The arrays should both be the same length, and the key functions should
+  # never return duplicate keys for two different items.
+  #
+  # @param [Array<A>] a The first array.
+  # @param [A -> Any] fa A function to obtain a key for any element in the
+  #   first array.
+  # @param [Array<B>] b The second array.
+  # @param [B -> Any] fb A function to obtain a key for any element in the
+  #   second array.
+  # @return [Array<(A, B)>] An array of pairs, where the left of the pair is
+  #   an element from A and the right is the element from B with the
+  #   corresponding key.
+  #
+  # pkg:gem/parlour#lib/parlour/type_parser.rb:1082
   sig do
     type_parameters(:A, :B)
       .params(
@@ -2447,7 +4294,14 @@ class Parlour::TypeParser
   def zip_by(a, fa, b, fb); end
 
   class << self
-    # source://parlour//lib/parlour/type_parser.rb#108
+    # Creates a new {TypeParser} from a source file and its filename.
+    #
+    # @param [String] filename A filename. This does not need to be an actual
+    #   file; it merely identifies this source.
+    # @param [String] source The Ruby source code.
+    # @return [TypeParser]
+    #
+    # pkg:gem/parlour#lib/parlour/type_parser.rb:108
     sig do
       params(
         filename: ::String,
@@ -2457,7 +4311,9 @@ class Parlour::TypeParser
     end
     def from_source(filename, source, generator: T.unsafe(nil)); end
 
-    # source://parlour//lib/parlour/type_parser.rb#782
+    # TODO doc
+    #
+    # pkg:gem/parlour#lib/parlour/type_parser.rb:782
     sig { params(str: ::String).returns(::Parlour::Types::Type) }
     def parse_single_type(str); end
   end
@@ -2465,7 +4321,7 @@ end
 
 # A parsed sig, not associated with a method.
 #
-# source://parlour//lib/parlour/type_parser.rb#401
+# pkg:gem/parlour#lib/parlour/type_parser.rb:401
 class Parlour::TypeParser::IntermediateSig < ::T::Struct
   prop :type_parameters, T.nilable(T::Array[::Symbol])
   prop :overridable, T::Boolean
@@ -2474,41 +4330,57 @@ class Parlour::TypeParser::IntermediateSig < ::T::Struct
   prop :final, T::Boolean
   prop :return_type, T.nilable(::String)
   prop :params, T.nilable(T::Array[::Parser::AST::Node])
-
-  class << self
-    # source://sorbet-runtime/0.5.12214/lib/types/struct.rb#13
-    def inherited(s); end
-  end
 end
 
 # Represents a path of indices which can be traversed to reach a specific
 # node in an AST.
 #
-# source://parlour//lib/parlour/type_parser.rb#20
+# pkg:gem/parlour#lib/parlour/type_parser.rb:20
 class Parlour::TypeParser::NodePath
   extend T::Sig
 
-  # source://parlour//lib/parlour/type_parser.rb#31
+  # Creates a new {NodePath}.
+  #
+  # @param [Array<Integer>] indices The path of indices.
+  #
+  # pkg:gem/parlour#lib/parlour/type_parser.rb:31
   sig { params(indices: T::Array[::Integer]).void }
   def initialize(indices); end
 
-  # source://parlour//lib/parlour/type_parser.rb#48
+  # @param [Integer] index The index of the child whose path to return.
+  # @return [NodePath] The path to the child at the given index.
+  #
+  # pkg:gem/parlour#lib/parlour/type_parser.rb:48
   sig { params(index: ::Integer).returns(::Parlour::TypeParser::NodePath) }
   def child(index); end
 
-  # source://parlour//lib/parlour/type_parser.rb#25
+  # @return [Array<Integer>] The path of indices.
+  #
+  # pkg:gem/parlour#lib/parlour/type_parser.rb:25
   sig { returns(T::Array[::Integer]) }
   def indices; end
 
-  # source://parlour//lib/parlour/type_parser.rb#37
+  # @return [NodePath] The parent path for the node at this path.
+  #
+  # pkg:gem/parlour#lib/parlour/type_parser.rb:37
   sig { returns(::Parlour::TypeParser::NodePath) }
   def parent; end
 
-  # source://parlour//lib/parlour/type_parser.rb#57
+  # @param [Integer] offset The sibling offset to use. 0 is the current
+  #   node, -1 is the previous node, or 3 is is the node three nodes after
+  #   this one.
+  # @return [NodePath] The path to the sibling with the given context.
+  #
+  # pkg:gem/parlour#lib/parlour/type_parser.rb:57
   sig { params(offset: ::Integer).returns(::Parlour::TypeParser::NodePath) }
   def sibling(offset); end
 
-  # source://parlour//lib/parlour/type_parser.rb#74
+  # Follows this path of indices from an AST node.
+  #
+  # @param [Parser::AST::Node] start The AST node to start from.
+  # @return [Parser::AST::Node] The resulting AST node.
+  #
+  # pkg:gem/parlour#lib/parlour/type_parser.rb:74
   sig { params(start: ::Parser::AST::Node).returns(::Parser::AST::Node) }
   def traverse(start); end
 end
@@ -2516,107 +4388,153 @@ end
 # A generic superclass of all objects which form part of type definitions in,
 # specific formats, such as RbiObject and RbsObject.
 #
-# @abstract It cannot be directly instantiated. Subclasses must implement the `abstract` methods below.
-#
-# source://parlour//lib/parlour/typed_object.rb#5
+# pkg:gem/parlour#lib/parlour/typed_object.rb:5
 class Parlour::TypedObject
   extend T::Sig
   extend T::Helpers
 
   abstract!
 
-  # source://parlour//lib/parlour/typed_object.rb#12
+  # Create a new typed object.
+  #
+  # pkg:gem/parlour#lib/parlour/typed_object.rb:12
   sig { params(name: ::String).void }
   def initialize(name); end
 
-  # source://parlour//lib/parlour/typed_object.rb#50
+  # Adds one or more comments to this RBS object. Comments always go above
+  # the definition for this object, not in the definition's body.
+  #
+  # @example Creating a module with a comment.
+  #   namespace.create_module('M') do |m|
+  #     m.add_comment('This is a module')
+  #   end
+  #
+  # @example Creating a class with a multi-line comment.
+  #   namespace.create_class('C') do |c|
+  #     c.add_comment(['This is a multi-line comment!', 'It can be as long as you want!'])
+  #   end
+  #
+  # @param comment [String, Array<String>] The new comment(s).
+  # @return [void]
+  #
+  # pkg:gem/parlour#lib/parlour/typed_object.rb:50
   sig { params(comment: T.any(::String, T::Array[::String])).void }
   def add_comment(comment); end
 
-  # @param comment [String, Array<String>]
-  # @return [void]
-  #
-  # source://sorbet-runtime/0.5.12214/lib/types/private/methods/_methods.rb#257
+  # pkg:gem/parlour#lib/parlour/typed_object.rb:58
   def add_comments(*args, **_arg1, &blk); end
 
-  # source://parlour//lib/parlour/typed_object.rb#32
+  # An array of comments which will be placed above the object in the RBS
+  # file.
+  # @return [Array<String>]
+  #
+  # pkg:gem/parlour#lib/parlour/typed_object.rb:32
   sig { returns(T::Array[::String]) }
   def comments; end
 
-  # source://parlour//lib/parlour/typed_object.rb#65
+  # Returns a human-readable brief string description of this object. This
+  # is displayed during manual conflict resolution with the +parlour+ CLI.
+  #
+  # @return [String]
+  #
+  # pkg:gem/parlour#lib/parlour/typed_object.rb:65
   sig { returns(::String) }
   def describe; end
 
-  # source://parlour//lib/parlour/typed_object.rb#116
+  # Returns a human-readable multi-line string description of this object and
+  # its children recursively.
+  #
+  # @return [String]
+  #
+  # pkg:gem/parlour#lib/parlour/typed_object.rb:116
   sig { params(tree: T.nilable(::Parlour::Debugging::Tree)).returns(::String) }
   def describe_tree(tree: T.unsafe(nil)); end
 
-  # source://parlour//lib/parlour/typed_object.rb#21
+  # The {Plugin} which was controlling the {generator} when this object was
+  # created.
+  # @return [Plugin, nil]
+  #
+  # pkg:gem/parlour#lib/parlour/typed_object.rb:21
   sig { returns(T.nilable(::Parlour::Plugin)) }
   def generated_by; end
 
-  # @return [String]
-  #
-  # source://sorbet-runtime/0.5.12214/lib/types/private/methods/_methods.rb#257
+  # pkg:gem/parlour#lib/parlour/typed_object.rb:137
   def inspect(*args, **_arg1, &blk); end
 
-  # source://parlour//lib/parlour/typed_object.rb#26
+  # The name of this object.
+  # @return [String]
+  #
+  # pkg:gem/parlour#lib/parlour/typed_object.rb:26
   sig { returns(::String) }
   def name; end
 
-  # @return [String]
-  #
-  # source://sorbet-runtime/0.5.12214/lib/types/private/methods/_methods.rb#257
+  # pkg:gem/parlour#lib/parlour/typed_object.rb:138
   def to_s(*args, **_arg1, &blk); end
 
   protected
 
-  # @abstract
+  # The attributes for an instance of this object which should be included in
+  # its string form generated by +#describe+.
+  # For each element in the returned array:
+  #   - If it is a symbol, this symbol will be called on +self+ and the
+  #     returned object will be dynamically converted into a string.
+  #   - If it is a hash, it must be of the format { Symbol => String }. The
+  #     given string will be used instead of calling the symbol.
   #
-  # source://parlour//lib/parlour/typed_object.rb#154
+  # This method is *abstract*.
+  #
+  # @return [<Symbol, String>]
+  #
+  # pkg:gem/parlour#lib/parlour/typed_object.rb:154
   sig { abstract.returns(T::Array[T.any(::Symbol, T::Hash[::Symbol, ::String])]) }
   def describe_attrs; end
 
-  # source://parlour//lib/parlour/typed_object.rb#167
+  # Generates the RBS lines for this object's comments.
+  #
+  # @param indent_level [Integer] The indentation level to generate the lines at.
+  # @param options [Options] The formatting options to use.
+  # @return [Array<String>] The RBS lines for each comment, formatted as specified.
+  #
+  # pkg:gem/parlour#lib/parlour/typed_object.rb:167
   sig { params(indent_level: ::Integer, options: ::Parlour::Options).returns(T::Array[::String]) }
   def generate_comments(indent_level, options); end
 end
 
 # Contains structured types which can be used in type signatures.
 #
-# source://parlour//lib/parlour/types.rb#5
+# pkg:gem/parlour#lib/parlour/types.rb:5
 module Parlour::Types; end
 
 # An array with known element types.
 #
-# source://parlour//lib/parlour/types.rb#269
+# pkg:gem/parlour#lib/parlour/types.rb:269
 class Parlour::Types::Array < ::Parlour::Types::SingleElementCollection
-  # source://parlour//lib/parlour/types.rb#276
+  # pkg:gem/parlour#lib/parlour/types.rb:276
   sig { params(other: ::Object).returns(T::Boolean) }
   def ==(other); end
 
-  # source://parlour//lib/parlour/types.rb#271
+  # pkg:gem/parlour#lib/parlour/types.rb:271
   sig { override.returns(::String) }
   def collection_name; end
 end
 
 # Type for a boolean.
 #
-# source://parlour//lib/parlour/types.rb#435
+# pkg:gem/parlour#lib/parlour/types.rb:435
 class Parlour::Types::Boolean < ::Parlour::Types::Type
-  # source://parlour//lib/parlour/types.rb#437
+  # pkg:gem/parlour#lib/parlour/types.rb:437
   sig { params(other: ::Object).returns(T::Boolean) }
   def ==(other); end
 
-  # source://parlour//lib/parlour/types.rb#452
+  # pkg:gem/parlour#lib/parlour/types.rb:452
   sig { override.returns(::String) }
   def describe; end
 
-  # source://parlour//lib/parlour/types.rb#442
+  # pkg:gem/parlour#lib/parlour/types.rb:442
   sig { override.returns(::String) }
   def generate_rbi; end
 
-  # source://parlour//lib/parlour/types.rb#447
+  # pkg:gem/parlour#lib/parlour/types.rb:447
   sig { override.returns(::String) }
   def generate_rbs; end
 end
@@ -2625,55 +4543,55 @@ end
 # For example, "String" means an instance of String, but "Class(String)"
 # means the actual String class.
 #
-# source://parlour//lib/parlour/types.rb#404
+# pkg:gem/parlour#lib/parlour/types.rb:404
 class Parlour::Types::Class < ::Parlour::Types::Type
-  # source://parlour//lib/parlour/types.rb#406
+  # pkg:gem/parlour#lib/parlour/types.rb:406
   sig { params(type: T.any(::Parlour::Types::Type, ::String)).void }
   def initialize(type); end
 
-  # source://parlour//lib/parlour/types.rb#411
+  # pkg:gem/parlour#lib/parlour/types.rb:411
   sig { params(other: ::Object).returns(T::Boolean) }
   def ==(other); end
 
-  # source://parlour//lib/parlour/types.rb#429
+  # pkg:gem/parlour#lib/parlour/types.rb:429
   sig { override.returns(::String) }
   def describe; end
 
-  # source://parlour//lib/parlour/types.rb#419
+  # pkg:gem/parlour#lib/parlour/types.rb:419
   sig { override.returns(::String) }
   def generate_rbi; end
 
-  # source://parlour//lib/parlour/types.rb#424
+  # pkg:gem/parlour#lib/parlour/types.rb:424
   sig { override.returns(::String) }
   def generate_rbs; end
 
-  # source://parlour//lib/parlour/types.rb#416
+  # pkg:gem/parlour#lib/parlour/types.rb:416
   sig { returns(::Parlour::Types::Type) }
   def type; end
 end
 
 # An enumerable with known element types.
 #
-# source://parlour//lib/parlour/types.rb#308
+# pkg:gem/parlour#lib/parlour/types.rb:308
 class Parlour::Types::Enumerable < ::Parlour::Types::SingleElementCollection
-  # source://parlour//lib/parlour/types.rb#315
+  # pkg:gem/parlour#lib/parlour/types.rb:315
   sig { params(other: ::Object).returns(T::Boolean) }
   def ==(other); end
 
-  # source://parlour//lib/parlour/types.rb#310
+  # pkg:gem/parlour#lib/parlour/types.rb:310
   sig { override.returns(::String) }
   def collection_name; end
 end
 
 # An enumerator with known element types.
 #
-# source://parlour//lib/parlour/types.rb#321
+# pkg:gem/parlour#lib/parlour/types.rb:321
 class Parlour::Types::Enumerator < ::Parlour::Types::SingleElementCollection
-  # source://parlour//lib/parlour/types.rb#328
+  # pkg:gem/parlour#lib/parlour/types.rb:328
   sig { params(other: ::Object).returns(T::Boolean) }
   def ==(other); end
 
-  # source://parlour//lib/parlour/types.rb#323
+  # pkg:gem/parlour#lib/parlour/types.rb:323
   sig { override.returns(::String) }
   def collection_name; end
 end
@@ -2682,9 +4600,9 @@ end
 # parameters. This class assumes at least one type_param is
 # provided, otherwise output will have empty type param lists.
 #
-# source://parlour//lib/parlour/types.rb#202
+# pkg:gem/parlour#lib/parlour/types.rb:202
 class Parlour::Types::Generic < ::Parlour::Types::Type
-  # source://parlour//lib/parlour/types.rb#204
+  # pkg:gem/parlour#lib/parlour/types.rb:204
   sig do
     params(
       type: T.any(::Parlour::Types::Type, ::String),
@@ -2693,127 +4611,127 @@ class Parlour::Types::Generic < ::Parlour::Types::Type
   end
   def initialize(type, type_params); end
 
-  # source://parlour//lib/parlour/types.rb#210
+  # pkg:gem/parlour#lib/parlour/types.rb:210
   sig { params(other: ::Object).returns(T::Boolean) }
   def ==(other); end
 
-  # source://parlour//lib/parlour/types.rb#233
+  # pkg:gem/parlour#lib/parlour/types.rb:233
   sig { override.returns(::String) }
   def describe; end
 
-  # source://parlour//lib/parlour/types.rb#223
+  # pkg:gem/parlour#lib/parlour/types.rb:223
   sig { override.returns(::String) }
   def generate_rbi; end
 
-  # source://parlour//lib/parlour/types.rb#228
+  # pkg:gem/parlour#lib/parlour/types.rb:228
   sig { override.returns(::String) }
   def generate_rbs; end
 
-  # source://parlour//lib/parlour/types.rb#217
+  # pkg:gem/parlour#lib/parlour/types.rb:217
   sig { returns(::Parlour::Types::Type) }
   def type; end
 
-  # source://parlour//lib/parlour/types.rb#220
+  # pkg:gem/parlour#lib/parlour/types.rb:220
   sig { returns(T::Array[::Parlour::Types::Type]) }
   def type_params; end
 end
 
 # A hash with known key and value types.
 #
-# source://parlour//lib/parlour/types.rb#334
+# pkg:gem/parlour#lib/parlour/types.rb:334
 class Parlour::Types::Hash < ::Parlour::Types::Type
-  # source://parlour//lib/parlour/types.rb#336
+  # pkg:gem/parlour#lib/parlour/types.rb:336
   sig { params(key: T.any(::Parlour::Types::Type, ::String), value: T.any(::Parlour::Types::Type, ::String)).void }
   def initialize(key, value); end
 
-  # source://parlour//lib/parlour/types.rb#342
+  # pkg:gem/parlour#lib/parlour/types.rb:342
   sig { params(other: ::Object).returns(T::Boolean) }
   def ==(other); end
 
-  # source://parlour//lib/parlour/types.rb#363
+  # pkg:gem/parlour#lib/parlour/types.rb:363
   sig { override.returns(::String) }
   def describe; end
 
-  # source://parlour//lib/parlour/types.rb#353
+  # pkg:gem/parlour#lib/parlour/types.rb:353
   sig { override.returns(::String) }
   def generate_rbi; end
 
-  # source://parlour//lib/parlour/types.rb#358
+  # pkg:gem/parlour#lib/parlour/types.rb:358
   sig { override.returns(::String) }
   def generate_rbs; end
 
-  # source://parlour//lib/parlour/types.rb#347
+  # pkg:gem/parlour#lib/parlour/types.rb:347
   sig { returns(::Parlour::Types::Type) }
   def key; end
 
-  # source://parlour//lib/parlour/types.rb#350
+  # pkg:gem/parlour#lib/parlour/types.rb:350
   sig { returns(::Parlour::Types::Type) }
   def value; end
 end
 
 # A type which matches all of the wrapped types.
 #
-# source://parlour//lib/parlour/types.rb#138
+# pkg:gem/parlour#lib/parlour/types.rb:138
 class Parlour::Types::Intersection < ::Parlour::Types::Type
-  # source://parlour//lib/parlour/types.rb#140
+  # pkg:gem/parlour#lib/parlour/types.rb:140
   sig { params(types: T::Array[T.any(::Parlour::Types::Type, ::String)]).void }
   def initialize(types); end
 
-  # source://parlour//lib/parlour/types.rb#145
+  # pkg:gem/parlour#lib/parlour/types.rb:145
   sig { params(other: ::Object).returns(T::Boolean) }
   def ==(other); end
 
-  # source://parlour//lib/parlour/types.rb#163
+  # pkg:gem/parlour#lib/parlour/types.rb:163
   sig { override.returns(::String) }
   def describe; end
 
-  # source://parlour//lib/parlour/types.rb#153
+  # pkg:gem/parlour#lib/parlour/types.rb:153
   sig { override.returns(::String) }
   def generate_rbi; end
 
-  # source://parlour//lib/parlour/types.rb#158
+  # pkg:gem/parlour#lib/parlour/types.rb:158
   sig { override.returns(::String) }
   def generate_rbs; end
 
-  # source://parlour//lib/parlour/types.rb#150
+  # pkg:gem/parlour#lib/parlour/types.rb:150
   sig { returns(T::Array[::Parlour::Types::Type]) }
   def types; end
 end
 
 # A type which can be either the wrapped type, or nil.
 #
-# source://parlour//lib/parlour/types.rb#76
+# pkg:gem/parlour#lib/parlour/types.rb:76
 class Parlour::Types::Nilable < ::Parlour::Types::Type
-  # source://parlour//lib/parlour/types.rb#78
+  # pkg:gem/parlour#lib/parlour/types.rb:78
   sig { params(type: T.any(::Parlour::Types::Type, ::String)).void }
   def initialize(type); end
 
-  # source://parlour//lib/parlour/types.rb#83
+  # pkg:gem/parlour#lib/parlour/types.rb:83
   sig { params(other: ::Object).returns(T::Boolean) }
   def ==(other); end
 
-  # source://parlour//lib/parlour/types.rb#101
+  # pkg:gem/parlour#lib/parlour/types.rb:101
   sig { override.returns(::String) }
   def describe; end
 
-  # source://parlour//lib/parlour/types.rb#91
+  # pkg:gem/parlour#lib/parlour/types.rb:91
   sig { override.returns(::String) }
   def generate_rbi; end
 
-  # source://parlour//lib/parlour/types.rb#96
+  # pkg:gem/parlour#lib/parlour/types.rb:96
   sig { override.returns(::String) }
   def generate_rbs; end
 
-  # source://parlour//lib/parlour/types.rb#88
+  # pkg:gem/parlour#lib/parlour/types.rb:88
   sig { returns(::Parlour::Types::Type) }
   def type; end
 end
 
 # A type which can be called as a function.
 #
-# source://parlour//lib/parlour/types.rb#504
+# pkg:gem/parlour#lib/parlour/types.rb:504
 class Parlour::Types::Proc < ::Parlour::Types::Type
-  # source://parlour//lib/parlour/types.rb#533
+  # pkg:gem/parlour#lib/parlour/types.rb:533
   sig do
     params(
       parameters: T::Array[::Parlour::Types::Proc::Parameter],
@@ -2822,221 +4740,217 @@ class Parlour::Types::Proc < ::Parlour::Types::Type
   end
   def initialize(parameters, return_type); end
 
-  # source://parlour//lib/parlour/types.rb#539
+  # pkg:gem/parlour#lib/parlour/types.rb:539
   sig { params(other: ::Object).returns(T::Boolean) }
   def ==(other); end
 
-  # source://parlour//lib/parlour/types.rb#568
+  # pkg:gem/parlour#lib/parlour/types.rb:568
   sig { override.returns(::String) }
   def describe; end
 
-  # source://parlour//lib/parlour/types.rb#550
+  # pkg:gem/parlour#lib/parlour/types.rb:550
   sig { override.returns(::String) }
   def generate_rbi; end
 
-  # source://parlour//lib/parlour/types.rb#560
+  # pkg:gem/parlour#lib/parlour/types.rb:560
   sig { override.returns(::String) }
   def generate_rbs; end
 
-  # source://parlour//lib/parlour/types.rb#544
+  # pkg:gem/parlour#lib/parlour/types.rb:544
   sig { returns(T::Array[::Parlour::Types::Proc::Parameter]) }
   def parameters; end
 
-  # source://parlour//lib/parlour/types.rb#547
+  # pkg:gem/parlour#lib/parlour/types.rb:547
   sig { returns(T.nilable(::Parlour::Types::Type)) }
   def return_type; end
 end
 
 # A parameter to a proc.
 #
-# source://parlour//lib/parlour/types.rb#506
+# pkg:gem/parlour#lib/parlour/types.rb:506
 class Parlour::Types::Proc::Parameter
   extend T::Sig
 
-  # source://parlour//lib/parlour/types.rb#510
+  # pkg:gem/parlour#lib/parlour/types.rb:510
   sig { params(name: ::String, type: T.any(::Parlour::Types::Type, ::String), default: T.nilable(::String)).void }
   def initialize(name, type, default = T.unsafe(nil)); end
 
-  # source://parlour//lib/parlour/types.rb#526
+  # pkg:gem/parlour#lib/parlour/types.rb:526
   sig { params(other: ::Object).returns(T::Boolean) }
   def ==(other); end
 
-  # source://parlour//lib/parlour/types.rb#523
+  # pkg:gem/parlour#lib/parlour/types.rb:523
   sig { returns(T.nilable(::String)) }
   def default; end
 
-  # source://parlour//lib/parlour/types.rb#517
+  # pkg:gem/parlour#lib/parlour/types.rb:517
   sig { returns(::String) }
   def name; end
 
-  # source://parlour//lib/parlour/types.rb#520
+  # pkg:gem/parlour#lib/parlour/types.rb:520
   sig { returns(::Parlour::Types::Type) }
   def type; end
 end
 
 # A range with known element types.
 #
-# source://parlour//lib/parlour/types.rb#295
+# pkg:gem/parlour#lib/parlour/types.rb:295
 class Parlour::Types::Range < ::Parlour::Types::SingleElementCollection
-  # source://parlour//lib/parlour/types.rb#302
+  # pkg:gem/parlour#lib/parlour/types.rb:302
   sig { params(other: ::Object).returns(T::Boolean) }
   def ==(other); end
 
-  # source://parlour//lib/parlour/types.rb#297
+  # pkg:gem/parlour#lib/parlour/types.rb:297
   sig { override.returns(::String) }
   def collection_name; end
 end
 
 # A basic type as a raw string.
 #
-# source://parlour//lib/parlour/types.rb#45
+# pkg:gem/parlour#lib/parlour/types.rb:45
 class Parlour::Types::Raw < ::Parlour::Types::Type
-  # source://parlour//lib/parlour/types.rb#47
+  # pkg:gem/parlour#lib/parlour/types.rb:47
   sig { params(str: ::String).void }
   def initialize(str); end
 
-  # source://parlour//lib/parlour/types.rb#55
+  # pkg:gem/parlour#lib/parlour/types.rb:55
   sig { params(other: ::Object).returns(T::Boolean) }
   def ==(other); end
 
-  # source://parlour//lib/parlour/types.rb#70
+  # pkg:gem/parlour#lib/parlour/types.rb:70
   sig { override.returns(::String) }
   def describe; end
 
-  # source://parlour//lib/parlour/types.rb#60
+  # pkg:gem/parlour#lib/parlour/types.rb:60
   sig { override.returns(::String) }
   def generate_rbi; end
 
-  # source://parlour//lib/parlour/types.rb#65
+  # pkg:gem/parlour#lib/parlour/types.rb:65
   sig { override.returns(::String) }
   def generate_rbs; end
 
-  # source://parlour//lib/parlour/types.rb#52
+  # pkg:gem/parlour#lib/parlour/types.rb:52
   sig { returns(::String) }
   def str; end
 end
 
 # A record/shape; a hash with a fixed set of keys with given types.
 #
-# source://parlour//lib/parlour/types.rb#369
+# pkg:gem/parlour#lib/parlour/types.rb:369
 class Parlour::Types::Record < ::Parlour::Types::Type
-  # source://parlour//lib/parlour/types.rb#371
+  # pkg:gem/parlour#lib/parlour/types.rb:371
   sig { params(keys_to_types: T::Hash[::Symbol, T.any(::Parlour::Types::Type, ::String)]).void }
   def initialize(keys_to_types); end
 
-  # source://parlour//lib/parlour/types.rb#378
+  # pkg:gem/parlour#lib/parlour/types.rb:378
   sig { params(other: ::Object).returns(T::Boolean) }
   def ==(other); end
 
-  # source://parlour//lib/parlour/types.rb#396
+  # pkg:gem/parlour#lib/parlour/types.rb:396
   sig { override.returns(::String) }
   def describe; end
 
-  # source://parlour//lib/parlour/types.rb#386
+  # pkg:gem/parlour#lib/parlour/types.rb:386
   sig { override.returns(::String) }
   def generate_rbi; end
 
-  # source://parlour//lib/parlour/types.rb#391
+  # pkg:gem/parlour#lib/parlour/types.rb:391
   sig { override.returns(::String) }
   def generate_rbs; end
 
-  # source://parlour//lib/parlour/types.rb#383
+  # pkg:gem/parlour#lib/parlour/types.rb:383
   sig { returns(T::Hash[::Symbol, ::Parlour::Types::Type]) }
   def keys_to_types; end
 end
 
 # Type equivalent to the receiver.
 #
-# source://parlour//lib/parlour/types.rb#458
+# pkg:gem/parlour#lib/parlour/types.rb:458
 class Parlour::Types::Self < ::Parlour::Types::Type
-  # source://parlour//lib/parlour/types.rb#460
+  # pkg:gem/parlour#lib/parlour/types.rb:460
   sig { params(other: ::Object).returns(T::Boolean) }
   def ==(other); end
 
-  # source://parlour//lib/parlour/types.rb#475
+  # pkg:gem/parlour#lib/parlour/types.rb:475
   sig { override.returns(::String) }
   def describe; end
 
-  # source://parlour//lib/parlour/types.rb#465
+  # pkg:gem/parlour#lib/parlour/types.rb:465
   sig { override.returns(::String) }
   def generate_rbi; end
 
-  # source://parlour//lib/parlour/types.rb#470
+  # pkg:gem/parlour#lib/parlour/types.rb:470
   sig { override.returns(::String) }
   def generate_rbs; end
 end
 
 # A set with known element types.
 #
-# source://parlour//lib/parlour/types.rb#282
+# pkg:gem/parlour#lib/parlour/types.rb:282
 class Parlour::Types::Set < ::Parlour::Types::SingleElementCollection
-  # source://parlour//lib/parlour/types.rb#289
+  # pkg:gem/parlour#lib/parlour/types.rb:289
   sig { params(other: ::Object).returns(T::Boolean) }
   def ==(other); end
 
-  # source://parlour//lib/parlour/types.rb#284
+  # pkg:gem/parlour#lib/parlour/types.rb:284
   sig { override.returns(::String) }
   def collection_name; end
 end
 
-# @abstract It cannot be directly instantiated. Subclasses must implement the `abstract` methods below.
-#
-# source://parlour//lib/parlour/types.rb#238
+# pkg:gem/parlour#lib/parlour/types.rb:238
 class Parlour::Types::SingleElementCollection < ::Parlour::Types::Type
   abstract!
 
-  # source://parlour//lib/parlour/types.rb#242
+  # pkg:gem/parlour#lib/parlour/types.rb:242
   sig { params(element: T.any(::Parlour::Types::Type, ::String)).void }
   def initialize(element); end
 
-  # @abstract
-  #
-  # source://parlour//lib/parlour/types.rb#250
+  # pkg:gem/parlour#lib/parlour/types.rb:250
   sig { abstract.returns(::String) }
   def collection_name; end
 
-  # source://parlour//lib/parlour/types.rb#263
+  # pkg:gem/parlour#lib/parlour/types.rb:263
   sig { override.returns(::String) }
   def describe; end
 
-  # source://parlour//lib/parlour/types.rb#247
+  # pkg:gem/parlour#lib/parlour/types.rb:247
   sig { returns(::Parlour::Types::Type) }
   def element; end
 
-  # source://parlour//lib/parlour/types.rb#253
+  # pkg:gem/parlour#lib/parlour/types.rb:253
   sig { override.returns(::String) }
   def generate_rbi; end
 
-  # source://parlour//lib/parlour/types.rb#258
+  # pkg:gem/parlour#lib/parlour/types.rb:258
   sig { override.returns(::String) }
   def generate_rbs; end
 end
 
 # A fixed-length array of items, each with a known type.
 #
-# source://parlour//lib/parlour/types.rb#169
+# pkg:gem/parlour#lib/parlour/types.rb:169
 class Parlour::Types::Tuple < ::Parlour::Types::Type
-  # source://parlour//lib/parlour/types.rb#171
+  # pkg:gem/parlour#lib/parlour/types.rb:171
   sig { params(types: T::Array[T.any(::Parlour::Types::Type, ::String)]).void }
   def initialize(types); end
 
-  # source://parlour//lib/parlour/types.rb#176
+  # pkg:gem/parlour#lib/parlour/types.rb:176
   sig { params(other: ::Object).returns(T::Boolean) }
   def ==(other); end
 
-  # source://parlour//lib/parlour/types.rb#194
+  # pkg:gem/parlour#lib/parlour/types.rb:194
   sig { override.returns(::String) }
   def describe; end
 
-  # source://parlour//lib/parlour/types.rb#184
+  # pkg:gem/parlour#lib/parlour/types.rb:184
   sig { override.returns(::String) }
   def generate_rbi; end
 
-  # source://parlour//lib/parlour/types.rb#189
+  # pkg:gem/parlour#lib/parlour/types.rb:189
   sig { override.returns(::String) }
   def generate_rbs; end
 
-  # source://parlour//lib/parlour/types.rb#181
+  # pkg:gem/parlour#lib/parlour/types.rb:181
   sig { returns(T::Array[::Parlour::Types::Type]) }
   def types; end
 end
@@ -3044,102 +4958,94 @@ end
 # The top-level, abstract class for a generalised type. All of the other
 # types inherit from this. Do not instantiate.
 #
-# @abstract It cannot be directly instantiated. Subclasses must implement the `abstract` methods below.
-#
-# source://parlour//lib/parlour/types.rb#10
+# pkg:gem/parlour#lib/parlour/types.rb:10
 class Parlour::Types::Type
   extend T::Sig
   extend T::Helpers
 
   abstract!
 
-  # @abstract
-  #
-  # source://parlour//lib/parlour/types.rb#41
+  # pkg:gem/parlour#lib/parlour/types.rb:41
   sig { abstract.returns(::String) }
   def describe; end
 
-  # @abstract
-  #
-  # source://parlour//lib/parlour/types.rb#17
+  # pkg:gem/parlour#lib/parlour/types.rb:17
   sig { abstract.returns(::String) }
   def generate_rbi; end
 
-  # @abstract
-  #
-  # source://parlour//lib/parlour/types.rb#20
+  # pkg:gem/parlour#lib/parlour/types.rb:20
   sig { abstract.returns(::String) }
   def generate_rbs; end
 
-  # source://parlour//lib/parlour/types.rb#36
+  # pkg:gem/parlour#lib/parlour/types.rb:36
   sig { returns(T.untyped) }
   def hash; end
 
-  # source://parlour//lib/parlour/types.rb#32
+  # pkg:gem/parlour#lib/parlour/types.rb:32
   sig { params(type_like: T.any(::Parlour::Types::Type, ::String)).returns(::Parlour::Types::Type) }
   def to_type(type_like); end
 
   class << self
-    # source://parlour//lib/parlour/types.rb#23
+    # pkg:gem/parlour#lib/parlour/types.rb:23
     sig { params(type_like: T.any(::Parlour::Types::Type, ::String)).returns(::Parlour::Types::Type) }
     def to_type(type_like); end
   end
 end
 
-# source://parlour//lib/parlour/types.rb#6
+# pkg:gem/parlour#lib/parlour/types.rb:6
 Parlour::Types::TypeLike = T.type_alias { T.any(::Parlour::Types::Type, ::String) }
 
 # A type which is (at least) one of the wrapped types.
 #
-# source://parlour//lib/parlour/types.rb#107
+# pkg:gem/parlour#lib/parlour/types.rb:107
 class Parlour::Types::Union < ::Parlour::Types::Type
-  # source://parlour//lib/parlour/types.rb#109
+  # pkg:gem/parlour#lib/parlour/types.rb:109
   sig { params(types: T::Array[T.any(::Parlour::Types::Type, ::String)]).void }
   def initialize(types); end
 
-  # source://parlour//lib/parlour/types.rb#114
+  # pkg:gem/parlour#lib/parlour/types.rb:114
   sig { params(other: ::Object).returns(T::Boolean) }
   def ==(other); end
 
-  # source://parlour//lib/parlour/types.rb#132
+  # pkg:gem/parlour#lib/parlour/types.rb:132
   sig { override.returns(::String) }
   def describe; end
 
-  # source://parlour//lib/parlour/types.rb#122
+  # pkg:gem/parlour#lib/parlour/types.rb:122
   sig { override.returns(::String) }
   def generate_rbi; end
 
-  # source://parlour//lib/parlour/types.rb#127
+  # pkg:gem/parlour#lib/parlour/types.rb:127
   sig { override.returns(::String) }
   def generate_rbs; end
 
-  # source://parlour//lib/parlour/types.rb#119
+  # pkg:gem/parlour#lib/parlour/types.rb:119
   sig { returns(T::Array[::Parlour::Types::Type]) }
   def types; end
 end
 
 # The explicit lack of a type.
 #
-# source://parlour//lib/parlour/types.rb#481
+# pkg:gem/parlour#lib/parlour/types.rb:481
 class Parlour::Types::Untyped < ::Parlour::Types::Type
-  # source://parlour//lib/parlour/types.rb#483
+  # pkg:gem/parlour#lib/parlour/types.rb:483
   sig { params(other: ::Object).returns(T::Boolean) }
   def ==(other); end
 
-  # source://parlour//lib/parlour/types.rb#498
+  # pkg:gem/parlour#lib/parlour/types.rb:498
   sig { override.returns(::String) }
   def describe; end
 
-  # source://parlour//lib/parlour/types.rb#488
+  # pkg:gem/parlour#lib/parlour/types.rb:488
   sig { override.returns(::String) }
   def generate_rbi; end
 
-  # source://parlour//lib/parlour/types.rb#493
+  # pkg:gem/parlour#lib/parlour/types.rb:493
   sig { override.returns(::String) }
   def generate_rbs; end
 end
 
 # The library version.
 #
-# source://parlour//lib/parlour/version.rb#4
+# pkg:gem/parlour#lib/parlour/version.rb:4
 Parlour::VERSION = T.let(T.unsafe(nil), String)
