@@ -46,8 +46,8 @@ YARD_PLUGIN_OPTS = --plugin yard-sorbet --plugin yard-solargraph --plugin yard-a
 YARD_OPTS = $(YARD_PLUGIN_OPTS) -c .yardoc --output-dir yardoc --backtrace --exclude '^config/' '{lib,app,test}/**/*.rb' 'ext/**/*.{c,rb}'
 
 types.installed: tapioca.installed Gemfile.lock Gemfile.lock.installed rbi/checkoff.rbi sorbet/tapioca/require.rb sorbet/config ## Ensure typechecking dependencies are in place
-	bin/solargraph gems
 	bin/yard gems $(YARD_PLUGIN_OPTS) 2>&1 || bin/yard gems --safe $(YARD_PLUGIN_OPTS) 2>&1 || bin/yard gems $(YARD_PLUGIN_OPTS) 2>&1
+	bin/solargraph gems
 	# bin/solargraph scan 2>&1
 	bin/spoom srb bump || true
 	# spoom rudely updates timestamps on files, so let's keep up by
@@ -80,7 +80,7 @@ rbs_collection.yaml: Gemfile.lock.installed
 	touch .gem_rbs_collection/.keepme
 
 ci-build-typecheck: ## Ensure cache is filled for CI to save regardless of actions run
-	@if [ -n "$${CIRCLECI:-}" ]; then rm -f types.installed yardoc.installed; rm -rf "$${HOME}/.cache/solargraph"; fi
+	@if [ -n "$${CIRCLECI:-}" ]; then rm -f types.installed yardoc.installed; rm -rf "$${HOME}/.cache/solargraph" .yardoc yardoc; fi
 	$(MAKE) build-typecheck
 	bin/solargraph gems
 
