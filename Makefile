@@ -35,6 +35,11 @@ rbi/checkoff.rbi: tapioca.installed yardoc.installed sorbet/config .gem_rbs_coll
 	rm -f rbi/checkoff-sord.rbi rbi/checkoff-parlour.rbi
 	sed -i.bak -e 's/^# typed: strong/# typed: ignore/' rbi/checkoff.rbi
 	rm -f rbi/checkoff.rbi.bak
+	# Sord re-emits TIME_BY_PERIOD on BaseAsana test subclasses; module TestDate keeps the canonical copy.
+	@for _klass in TestTasks TestProjects TestSections TestWorkspaces; do \
+	  sed -i.bak2 -e '/^class '"$$_klass"' < BaseAsana$$/,/^class /{ /^  TIME_BY_PERIOD = T\.let({/,/^  }\.freeze, T\.untyped)$$/d; }' rbi/checkoff.rbi; \
+	done
+	@rm -f rbi/checkoff.rbi.bak2
 	touch rbi/checkoff.rbi
 
 sig/checkoff.rbs: yardoc.installed .gem_rbs_collection/.keepme ## Generate RBS file
