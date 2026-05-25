@@ -124,10 +124,6 @@ commands:
             bin/overcommit --sign pre-commit
             bin/overcommit --sign pre-push
 
-            git checkout -- rbs_collection.lock.yaml || true
-            rm -rf .gem_rbs_collection
-            mkdir -p .gem_rbs_collection
-            printf '*\n!.gitignore\n' > .gem_rbs_collection/.gitignore
             make ci-build-typecheck
             # bundle exec overcommit --diff # if full run takes too long in this repo
             bin/overcommit --run
@@ -234,13 +230,6 @@ jobs:
             - update_dependencies:
                 gems: checkoff
       - run:
-          label: Reset cache-overwritten tracked files
-          command: |
-            git checkout -- rbs_collection.lock.yaml || true
-            rm -rf .gem_rbs_collection
-            mkdir -p .gem_rbs_collection
-            printf '*\n!.gitignore\n' > .gem_rbs_collection/.gitignore
-      - run:
           label: Verify deltas
           command: |
             if [ -n "$(git status --porcelain)" ]
@@ -258,7 +247,7 @@ jobs:
           path: rbi/checkoff.rbi
       - save_cache:
           name: 'Save ruby-types cache'
-          key: ruby-types-v7-{{ checksum "checkoff.gemspec" }}-{{ checksum "Gemfile" }}-{{ checksum "Gemfile.lock" }}-{{ checksum "Makefile" }}-{{ checksum ".circleci/config.yml" }}-{{ checksum ".ruby-version" }}-{{ checksum "rbi/checkoff.rbi" }}  # yamllint disable-line rule:line-length
+          key: ruby-types-v7-{{ checksum "checkoff.gemspec" }}-{{ checksum "Gemfile" }}-{{ checksum "Gemfile.lock" }}-{{ checksum "rbs_collection.lock.yaml" }}-{{ checksum "Makefile" }}-{{ checksum ".circleci/config.yml" }}-{{ checksum ".ruby-version" }}-{{ checksum "rbi/checkoff.rbi" }}  # yamllint disable-line rule:line-length
           paths:
             - ".yardoc"
             - "yardoc"
