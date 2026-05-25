@@ -35,6 +35,7 @@ rbi/checkoff.rbi: tapioca.installed yardoc.installed sorbet/config .gem_rbs_coll
 	rm -f rbi/checkoff-sord.rbi rbi/checkoff-parlour.rbi
 	sed -i.bak -e 's/^# typed: strong/# typed: ignore/' rbi/checkoff.rbi
 	rm -f rbi/checkoff.rbi.bak
+	bin/prune_checkoff_rbi_test_constants.rb rbi/checkoff.rbi
 	touch rbi/checkoff.rbi
 
 sig/checkoff.rbs: yardoc.installed .gem_rbs_collection/.keepme ## Generate RBS file
