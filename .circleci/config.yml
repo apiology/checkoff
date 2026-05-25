@@ -124,6 +124,8 @@ commands:
             bin/overcommit --sign pre-commit
             bin/overcommit --sign pre-push
 
+            git checkout -- rbs_collection.lock.yaml || true
+            rm -rf .gem_rbs_collection
             make ci-build-typecheck
             # bundle exec overcommit --diff # if full run takes too long in this repo
             bin/overcommit --run
