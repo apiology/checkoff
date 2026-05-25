@@ -299,10 +299,8 @@ module Checkoff
       task.memberships.any? do |membership|
         m = T.cast(membership, T::Hash[String, T.untyped])
         project_gid = T.cast(m.fetch('project'), T::Hash[String, T.untyped]).fetch('gid')
-        portfolio_projects.any? do |portfolio_project|
-          portfolio_project.gid == project_gid
-        end
-      end
+        portfolio_projects.any? { |portfolio_project| portfolio_project.gid == project_gid }
+      end == true
     end
 
     # True if the task is in a project which is in the given portfolio
