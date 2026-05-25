@@ -80,7 +80,7 @@ rbs_collection.yaml: Gemfile.lock.installed
 	touch .gem_rbs_collection/.keepme
 
 ci-build-typecheck: ## Ensure cache is filled for CI to save regardless of actions run
-	@if [ -n "$${CIRCLECI:-}" ]; then rm -f types.installed yardoc.installed; fi
+	@if [ -n "$${CIRCLECI:-}" ]; then rm -f types.installed yardoc.installed; rm -rf "$${HOME}/.cache/solargraph"; fi
 	$(MAKE) build-typecheck
 	bin/solargraph gems
 
@@ -144,6 +144,7 @@ typecheck: build-typecheck srb solargraph  ## validate types in code and configu
 citypecheck: ci-build-typecheck srb ci-solargraph ## Run type check from CircleCI
 
 ci-solargraph: ## Run Solargraph typechecker in CI
+	@if [ -n "$${CIRCLECI:-}" ]; then rm -rf "$${HOME}/.cache/solargraph"; fi
 	bin/yard gems $(YARD_PLUGIN_OPTS) 2>&1 || bin/yard gems --safe $(YARD_PLUGIN_OPTS) 2>&1 || bin/yard gems $(YARD_PLUGIN_OPTS) 2>&1
 	bin/solargraph gems
 	bin/solargraph typecheck --level strong
