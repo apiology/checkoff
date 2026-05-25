@@ -233,7 +233,9 @@ ensure_bundle() {
   #
   # This affects nokogiri, which will try to reinstall itself in
   # Docker builds where it's already installed if this is not run.
-  make Gemfile.lock
+  if [ "${CIRCLECI:-}" != "true" ]; then
+    make Gemfile.lock
+  fi
   make bundle_install
 }
 
@@ -476,7 +478,9 @@ ensure_hooks_path
 
 ensure_ruby_versions
 
-set_ruby_local_version
+if [ "${CIRCLECI:-}" != "true" ]; then
+  set_ruby_local_version
+fi
 
 ensure_rugged_packages_installed
 
