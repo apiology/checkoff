@@ -8,7 +8,7 @@
 # source://mdl//lib/mdl/kramdown_parser.rb#6
 module Kramdown
   class << self
-    # source://kramdown/2.5.1/lib/kramdown/document.rb#49
+    # source://kramdown/2.5.2/lib/kramdown/document.rb#49
     def data_dir; end
   end
 end

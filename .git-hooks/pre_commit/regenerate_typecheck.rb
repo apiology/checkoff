@@ -29,9 +29,7 @@ module Overcommit
           execute(['rm', '-f', *STAMP_FILES])
           # @type [Overcommit::Subprocess::Result]
           result = execute(%w[make build-typecheck])
-          unless result.success?
-            return [:fail, result.stdout + result.stderr]
-          end
+          return [:fail, result.stdout + result.stderr] unless result.success?
 
           # @type [Overcommit::Subprocess::Result]
           stage_result = execute(['git', 'add', '-A', '--', *BUILD_TYPECHECK_PATHS])

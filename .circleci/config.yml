@@ -15,6 +15,7 @@ commands:
     steps:
       - run:
           name: <<parameters.label>>
+          no_output_timeout: 30m
           command: |
             export PATH="${HOME}/.pyenv/bin:${PATH}"
             export PATH="${HOME}/.rbenv/bin:${HOME}/.rbenv/shims:${PATH}"
@@ -32,72 +33,8 @@ commands:
   set_up_environment:
     description: "Install source environment"
     steps:
-      - run:
-          name: Checkout
-          command: |
-            #!/bin/bash
-
-            # 2025-12 default checkout doesn't seem compatible with
-            # undercover - let's use this one I guess
-            # https://gist.github.com/jschaf/31d88678cbf733e9bb749ec0afdcc418
-
-            set -ex
-
-            # Workaround old docker images with incorrect $HOME
-            # check https://github.com/docker/docker/issues/2968 for details
-            if [ "${HOME}" = "/" ]
-            then
-              export HOME=$(getent passwd $(id -un) | cut -d: -f6)
-            fi
-
-            mkdir -p ~/.ssh
-
-            echo 'github.com ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABgQCj7ndNxQowgcQnjshcLrqPEiiphnt+VTTvDP6mHBL9j1aNUkY4Ue1gvwnGLVlOhGeYrnZaMgRK6+PKCUXaDbC7qtbW8gIkhL7aGCsOr/C56SJMy/BCZfxd1nWzAOxSDPgVsmerOBYfNqltV9/hWCqBywINIR+5dIg6JTJ72pcEpEjcYgXkE2YEFXV1JHnsKgbLWNlhScqb2UmyRkQyytRLtL+38TGxkxCflmO+5Z8CSSNY7GidjMIZ7Q4zMjA2n1nGrlTDkzwDCsw+wqFPGQA179cnfGWOWRVruj16z6XyvxvjJwbz0wQZ75XK5tKSb7FNyeIEs4TT4jk+S4dhPeAUC5y+bDYirYgM4GC7uEnztnZyaVWQ7B381AK4Qdrwt51ZqExKbQpTUNn+EjqoTwvqNj4kqx5QUCI0ThS/YkOxJCXmPUWZbhjpCg56i+2aB6CmK2JGhn57K5mj0MNdBXA4/WnwH6XoPWJzK5Nyu2zB3nAZp+S5hpQs+p1vN1/wsjk=
-            bitbucket.org ssh-rsa AAAAB3NzaC1yc2EAAAABIwAAAQEAubiN81eDcafrgMeLzaFPsw2kNvEcqTKl/VqLat/MaB33pZy0y3rJZtnqwR2qOOvbwKZYKiEO1O6VqNEBxKvJJelCq0dTXWT5pbO2gDXC6h6QDXCaHo6pOHGPUy+YBaGQRGuSusMEASYiWunYN0vCAI8QaXnWMXNMdFP3jHAJH0eDsoiGnLPBlBp4TNm6rYI74nMzgz3B9IikW4WVK+dc8KZJZWYjAuORU3jc1c/NPskD2ASinf8v3xnfXeukU0sJ5N6m5E8VLjObPEO+mN2t/FZTMZLiFqPWc/ALSqnMnnhwrNi2rbfg/rd/IpL8Le3pSBne8+seeFVBoGqzHM9yXw==
-            ' >> ~/.ssh/known_hosts
-            cat ~/.ssh/known_hosts
-
-            (umask 077; touch ~/.ssh/id_rsa)
-            chmod 0600 ~/.ssh/id_rsa
-            (cat \<<EOF > ~/.ssh/id_rsa
-            $CHECKOUT_KEY
-            EOF
-            )
-
-            # use git+ssh instead of https
-            git config --global url."ssh://git@github.com".insteadOf "https://github.com" || true
-            git config --global gc.auto 0 || true
-
-            if [ -e /home/circleci/checkoff/.git ]
-            then
-              cd /home/circleci/checkoff
-              git remote set-url origin "$CIRCLE_REPOSITORY_URL" || true
-            else
-              mkdir -p /home/circleci/checkoff
-              cd /home/circleci/checkoff
-              git clone "$CIRCLE_REPOSITORY_URL" .
-            fi
-
-            if [ -n "$CIRCLE_TAG" ]
-            then
-              git fetch --force origin "refs/tags/${CIRCLE_TAG}"
-            else
-            #  git fetch --force origin ":remotes/origin/"
-               git fetch origin
-            fi
-
-
-            if [ -n "$CIRCLE_TAG" ]
-            then
-              git reset --hard "$CIRCLE_SHA1"
-              git checkout -q "$CIRCLE_TAG"
-            elif [ -n "$CIRCLE_BRANCH" ]
-            then
-              git reset --hard "$CIRCLE_SHA1"
-              git checkout -q -B "$CIRCLE_BRANCH"
-            fi
-
-            git reset --hard "$CIRCLE_SHA1"
+      - checkout:
+          method: full
       - run:
           name: Update timestamps to original commit time
           command: |
@@ -119,12 +56,12 @@ commands:
       - restore_cache:
           name: Restore ruby-types cache
           keys:
-            - ruby-types-v3-{{ checksum "checkoff.gemspec" }}-{{ checksum "Gemfile" }}-{{ checksum "Gemfile.lock" }}-{{ checksum "Makefile" }}-{{ checksum ".circleci/config.yml" }}- # yamllint disable-line rule:line-length
-            - ruby-types-v3-{{ checksum "checkoff.gemspec" }}-{{ checksum "Gemfile" }}-{{ checksum "Gemfile.lock" }}-{{ checksum "Makefile" }}- # yamllint disable-line rule:line-length
-            - ruby-types-v3-{{ checksum "checkoff.gemspec" }}-{{ checksum "Gemfile" }}-{{ checksum "Gemfile.lock" }}- # yamllint disable-line rule:line-length
-            - ruby-types-v3-{{ checksum "checkoff.gemspec" }}-{{ checksum "Gemfile" }}-
-            - ruby-types-v3-{{ checksum "checkoff.gemspec" }}-
-            - ruby-types-v3-
+            - ruby-types-v7-{{ checksum "checkoff.gemspec" }}-{{ checksum "Gemfile" }}-{{ checksum "Gemfile.lock" }}-{{ checksum "Makefile" }}-{{ checksum ".circleci/config.yml" }}- # yamllint disable-line rule:line-length
+            - ruby-types-v7-{{ checksum "checkoff.gemspec" }}-{{ checksum "Gemfile" }}-{{ checksum "Gemfile.lock" }}-{{ checksum "Makefile" }}- # yamllint disable-line rule:line-length
+            - ruby-types-v7-{{ checksum "checkoff.gemspec" }}-{{ checksum "Gemfile" }}-{{ checksum "Gemfile.lock" }}- # yamllint disable-line rule:line-length
+            - ruby-types-v7-{{ checksum "checkoff.gemspec" }}-{{ checksum "Gemfile" }}-
+            - ruby-types-v7-{{ checksum "checkoff.gemspec" }}-
+            - ruby-types-v7-
       - restore_cache:
           name: Restore pyenv cache
           keys:
@@ -133,6 +70,7 @@ commands:
             - pyenv-
       - run:
           name: Initialize packages
+          no_output_timeout: 30m
           command: |
             # measuring slows down the script - only enable when you
             # want to debug where this is spending time
@@ -186,7 +124,8 @@ commands:
             bin/overcommit --sign pre-commit
             bin/overcommit --sign pre-push
 
-            bundle exec overcommit --diff
+            # bundle exec overcommit --diff # if full run takes too long in this repo
+            bin/overcommit --run
       - run_with_languages:
           label: Run brakeman
           command: |
@@ -283,6 +222,12 @@ jobs:
       - image: cimg/base:current
     steps:
       - set_up_environment
+      - when:
+          condition:
+            equal: [<< pipeline.git.branch >>, "main"]
+          steps:
+            - update_dependencies:
+                gems: checkoff
       - run:
           label: Verify deltas
           command: |
@@ -301,10 +246,10 @@ jobs:
           path: rbi/checkoff.rbi
       - save_cache:
           name: 'Save ruby-types cache'
-          key: ruby-types-v3-{{ checksum "checkoff.gemspec" }}-{{ checksum "Gemfile" }}-{{ checksum "Gemfile.lock" }}-{{ checksum "Makefile" }}-{{ checksum ".circleci/config.yml" }}-{{ checksum ".ruby-version" }}-{{ checksum "rbi/checkoff.rbi" }}  # yamllint disable-line rule:line-length
+          key: ruby-types-v7-{{ checksum "checkoff.gemspec" }}-{{ checksum "Gemfile" }}-{{ checksum "Gemfile.lock" }}-{{ checksum "Makefile" }}-{{ checksum ".circleci/config.yml" }}-{{ checksum ".ruby-version" }}-{{ checksum "rbi/checkoff.rbi" }}  # yamllint disable-line rule:line-length
           paths:
             - ".yardoc"
-            - 'yarddoc'
+            - "yardoc"
             - "/home/circleci/.cache/solargraph"
             - "/home/circleci/.sorbet-cache"
             - "/home/circleci/.cache/sorbet"
@@ -313,6 +258,8 @@ jobs:
             - "tapioca.installed"
             - "sorbet/machine_specific_config"
             - "rbi/checkoff.rbi"
+            - ".gem_rbs_collection"
+            - "rbs_collection.lock.yaml"
       - run_with_languages:
           label: Test
           command: |
@@ -338,8 +285,9 @@ jobs:
           command: |
             set -x
 
-            git config --global user.email "vince@broz.cc"
-            git config --global user.name "CI build"
+            # Coax overcommit into working
+            git config --global user.email "test@test.test"
+            git config --global user.name "Test Test"
             # bump runs 'bundle' after excluding env vars, but doesn't
             # use --conservative or exclude env vars when running 'git
             # commit', which might need an updated gem.  This results
@@ -359,7 +307,7 @@ jobs:
             # includes a read-write 'user key':
             SKIP=RakeTarget bundle exec git push --set-upstream origin "${CIRCLE_BRANCH:?}"
             git status
-            make --debug release
+            make release
             bundle exec rake trigger_next_builds
 
 workflows:

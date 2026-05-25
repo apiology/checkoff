@@ -5,22 +5,124 @@
 # Please instead update this file by running `bin/tapioca gem rugged`.
 
 
-# source://rugged//lib/rugged/index.rb#6
+# Copyright (C) the Rugged contributors.  All rights reserved.
+#
+# This file is part of Rugged, distributed under the MIT license.
+# For full terms see the included LICENSE file.
+# Copyright (C) the Rugged contributors.  All rights reserved.
+#
+# This file is part of Rugged, distributed under the MIT license.
+# For full terms see the included LICENSE file.
+# Copyright (C) the Rugged contributors.  All rights reserved.
+#
+# This file is part of Rugged, distributed under the MIT license.
+# For full terms see the included LICENSE file.
+# Copyright (C) the Rugged contributors.  All rights reserved.
+#
+# This file is part of Rugged, distributed under the MIT license.
+# For full terms see the included LICENSE file.
+# Copyright (C) the Rugged contributors.  All rights reserved.
+#
+# This file is part of Rugged, distributed under the MIT license.
+# For full terms see the included LICENSE file.
+# Copyright (C) the Rugged contributors.  All rights reserved.
+#
+# This file is part of Rugged, distributed under the MIT license.
+# For full terms see the included LICENSE file.
+# Copyright (C) the Rugged contributors.  All rights reserved.
+#
+# This file is part of Rugged, distributed under the MIT license.
+# For full terms see the included LICENSE file.
+# Copyright (C) the Rugged contributors.  All rights reserved.
+#
+# This file is part of Rugged, distributed under the MIT license.
+# For full terms see the included LICENSE file.
+# Copyright (C) the Rugged contributors.  All rights reserved.
+#
+# This file is part of Rugged, distributed under the MIT license.
+# For full terms see the included LICENSE file.
+# Copyright (C) the Rugged contributors.  All rights reserved.
+#
+# This file is part of Rugged, distributed under the MIT license.
+# For full terms see the included LICENSE file.
+# Copyright (C) the Rugged contributors.  All rights reserved.
+#
+# This file is part of Rugged, distributed under the MIT license.
+# For full terms see the included LICENSE file.
+# Copyright (C) the Rugged contributors.  All rights reserved.
+#
+# This file is part of Rugged, distributed under the MIT license.
+# For full terms see the included LICENSE file.
+# Copyright (C) the Rugged contributors.  All rights reserved.
+#
+# This file is part of Rugged, distributed under the MIT license.
+# For full terms see the included LICENSE file.
+# Copyright (C) the Rugged contributors.  All rights reserved.
+#
+# This file is part of Rugged, distributed under the MIT license.
+# For full terms see the included LICENSE file.
+# Copyright (C) the Rugged contributors.  All rights reserved.
+#
+# This file is part of Rugged, distributed under the MIT license.
+# For full terms see the included LICENSE file.
+# Copyright (C) the Rugged contributors.  All rights reserved.
+#
+# This file is part of Rugged, distributed under the MIT license.
+# For full terms see the included LICENSE file.
+# Copyright (C) the Rugged contributors.  All rights reserved.
+#
+# This file is part of Rugged, distributed under the MIT license.
+# For full terms see the included LICENSE file.
+# Copyright (C) the Rugged contributors.  All rights reserved.
+#
+# This file is part of Rugged, distributed under the MIT license.
+# For full terms see the included LICENSE file.
+# Copyright (C) the Rugged contributors.  All rights reserved.
+#
+# This file is part of Rugged, distributed under the MIT license.
+# For full terms see the included LICENSE file.
+#
+# pkg:gem/rugged#lib/rugged/index.rb:6
 module Rugged
   private
 
+  # pkg:gem/rugged#lib/rugged.rb:10
   def __cache_usage__; end
+
+  # pkg:gem/rugged#lib/rugged.rb:10
   def dotgit_attributes?(_arg0); end
+
+  # pkg:gem/rugged#lib/rugged.rb:10
   def dotgit_ignore?(_arg0); end
+
+  # pkg:gem/rugged#lib/rugged.rb:10
   def dotgit_modules?(_arg0); end
+
+  # pkg:gem/rugged#lib/rugged.rb:10
   def features; end
+
+  # pkg:gem/rugged#lib/rugged.rb:10
   def hex_to_raw(_arg0); end
+
+  # pkg:gem/rugged#lib/rugged.rb:10
   def libgit2_prerelease; end
+
+  # pkg:gem/rugged#lib/rugged.rb:10
   def libgit2_version; end
+
+  # pkg:gem/rugged#lib/rugged.rb:10
   def minimize_oid(*_arg0); end
+
+  # pkg:gem/rugged#lib/rugged.rb:10
   def prettify_message(*_arg0); end
+
+  # pkg:gem/rugged#lib/rugged.rb:10
   def raw_to_hex(_arg0); end
+
+  # pkg:gem/rugged#lib/rugged.rb:10
   def signature_from_buffer(*_arg0); end
+
+  # pkg:gem/rugged#lib/rugged.rb:10
   def valid_full_oid?(_arg0); end
 
   class << self
@@ -45,10 +147,19 @@ class Rugged::Backend; end
 class Rugged::Blame
   include ::Enumerable
 
+  # pkg:gem/rugged#lib/rugged.rb:10
   def [](_arg0); end
+
+  # pkg:gem/rugged#lib/rugged.rb:10
   def count; end
+
+  # pkg:gem/rugged#lib/rugged.rb:10
   def each; end
+
+  # pkg:gem/rugged#lib/rugged.rb:10
   def for_line(_arg0); end
+
+  # pkg:gem/rugged#lib/rugged.rb:10
   def size; end
 
   class << self
@@ -56,22 +167,33 @@ class Rugged::Blame
   end
 end
 
-# source://rugged//lib/rugged/blob.rb#7
+# pkg:gem/rugged#lib/rugged/blob.rb:7
 class Rugged::Blob < ::Rugged::Object
+  # pkg:gem/rugged#lib/rugged.rb:10
   def binary?; end
+
+  # pkg:gem/rugged#lib/rugged.rb:10
   def content(*_arg0); end
+
+  # pkg:gem/rugged#lib/rugged.rb:10
   def diff(*_arg0); end
 
-  # source://rugged//lib/rugged/blob.rb#14
+  # pkg:gem/rugged#lib/rugged/blob.rb:14
   def hashsig(options = T.unsafe(nil)); end
 
+  # pkg:gem/rugged#lib/rugged.rb:10
   def loc; end
 
-  # source://rugged//lib/rugged/blob.rb#18
+  # pkg:gem/rugged#lib/rugged/blob.rb:18
   def similarity(other); end
 
+  # pkg:gem/rugged#lib/rugged.rb:10
   def size; end
+
+  # pkg:gem/rugged#lib/rugged.rb:10
   def sloc; end
+
+  # pkg:gem/rugged#lib/rugged.rb:10
   def text(*_arg0); end
 
   class << self
@@ -84,7 +206,7 @@ class Rugged::Blob < ::Rugged::Object
   end
 end
 
-# source://rugged//lib/rugged/blob.rb#8
+# pkg:gem/rugged#lib/rugged/blob.rb:8
 class Rugged::Blob::HashSignature
   class << self
     def compare(_arg0, _arg1); end
@@ -92,21 +214,24 @@ class Rugged::Blob::HashSignature
   end
 end
 
-# source://rugged//lib/rugged/blob.rb#9
+# pkg:gem/rugged#lib/rugged/blob.rb:9
 Rugged::Blob::HashSignature::WHITESPACE_DEFAULT = T.let(T.unsafe(nil), Integer)
 
-# source://rugged//lib/rugged/blob.rb#10
+# pkg:gem/rugged#lib/rugged/blob.rb:10
 Rugged::Blob::HashSignature::WHITESPACE_IGNORE = T.let(T.unsafe(nil), Integer)
 
-# source://rugged//lib/rugged/blob.rb#11
+# pkg:gem/rugged#lib/rugged/blob.rb:11
 Rugged::Blob::HashSignature::WHITESPACE_SMART = T.let(T.unsafe(nil), Integer)
 
-# source://rugged//lib/rugged/branch.rb#7
+# pkg:gem/rugged#lib/rugged/branch.rb:7
 class Rugged::Branch < ::Rugged::Reference
-  # source://rugged//lib/rugged/branch.rb#8
+  # pkg:gem/rugged#lib/rugged/branch.rb:8
   def ==(other); end
 
+  # pkg:gem/rugged#lib/rugged.rb:10
   def head?; end
+
+  # pkg:gem/rugged#lib/rugged.rb:10
   def name; end
 
   # Get the remote the branch belongs to.
@@ -115,27 +240,50 @@ class Rugged::Branch < ::Rugged::Reference
   # In case of local branch, it returns the remote of the branch
   # it tracks or nil if there is no tracking branch.
   #
-  # source://rugged//lib/rugged/branch.rb#19
+  # pkg:gem/rugged#lib/rugged/branch.rb:19
   def remote; end
 
+  # pkg:gem/rugged#lib/rugged.rb:10
   def remote_name; end
+
+  # pkg:gem/rugged#lib/rugged.rb:10
   def upstream; end
+
+  # pkg:gem/rugged#lib/rugged.rb:10
   def upstream=(_arg0); end
 end
 
 class Rugged::BranchCollection
   include ::Enumerable
 
+  # pkg:gem/rugged#lib/rugged.rb:10
   def initialize(_arg0); end
 
+  # pkg:gem/rugged#lib/rugged.rb:10
   def [](_arg0); end
+
+  # pkg:gem/rugged#lib/rugged.rb:10
   def create(*_arg0); end
+
+  # pkg:gem/rugged#lib/rugged.rb:10
   def delete(_arg0); end
+
+  # pkg:gem/rugged#lib/rugged.rb:10
   def each(*_arg0); end
+
+  # pkg:gem/rugged#lib/rugged.rb:10
   def each_name(*_arg0); end
+
+  # pkg:gem/rugged#lib/rugged.rb:10
   def exist?(_arg0); end
+
+  # pkg:gem/rugged#lib/rugged.rb:10
   def exists?(_arg0); end
+
+  # pkg:gem/rugged#lib/rugged.rb:10
   def move(*_arg0); end
+
+  # pkg:gem/rugged#lib/rugged.rb:10
   def rename(*_arg0); end
 end
 
@@ -143,10 +291,15 @@ class Rugged::CallbackError < ::Rugged::Error; end
 class Rugged::CheckoutError < ::Rugged::Error; end
 class Rugged::CherrypickError < ::Rugged::Error; end
 
-# source://rugged//lib/rugged/commit.rb#7
+# pkg:gem/rugged#lib/rugged/commit.rb:7
 class Rugged::Commit < ::Rugged::Object
+  # pkg:gem/rugged#lib/rugged.rb:10
   def amend(_arg0); end
+
+  # pkg:gem/rugged#lib/rugged.rb:10
   def author; end
+
+  # pkg:gem/rugged#lib/rugged.rb:10
   def committer; end
 
   # Return a diff between this commit and its first parent or another commit or tree.
@@ -155,36 +308,47 @@ class Rugged::Commit < ::Rugged::Object
   #
   # See Rugged::Tree#diff for more details.
   #
-  # source://rugged//lib/rugged/commit.rb#25
+  # pkg:gem/rugged#lib/rugged/commit.rb:25
   def diff(*args); end
 
   # Return a diff between this commit and the workdir.
   #
   # See Rugged::Tree#diff_workdir for more details.
   #
-  # source://rugged//lib/rugged/commit.rb#45
+  # pkg:gem/rugged#lib/rugged/commit.rb:45
   def diff_workdir(options = T.unsafe(nil)); end
 
+  # pkg:gem/rugged#lib/rugged.rb:10
   def epoch_time; end
+
+  # pkg:gem/rugged#lib/rugged.rb:10
   def header; end
+
+  # pkg:gem/rugged#lib/rugged.rb:10
   def header_field(_arg0); end
 
-  # @return [Boolean]
-  #
-  # source://rugged//lib/rugged/commit.rb#16
+  # pkg:gem/rugged#lib/rugged/commit.rb:16
   def header_field?(field); end
 
-  # source://rugged//lib/rugged/commit.rb#12
+  # pkg:gem/rugged#lib/rugged/commit.rb:12
   def inspect; end
 
+  # pkg:gem/rugged#lib/rugged.rb:10
   def message; end
 
-  # source://rugged//lib/rugged/commit.rb#67
+  # pkg:gem/rugged#lib/rugged/commit.rb:67
   def modify(new_args, update_ref = T.unsafe(nil)); end
 
+  # pkg:gem/rugged#lib/rugged.rb:10
   def parent_ids; end
+
+  # pkg:gem/rugged#lib/rugged.rb:10
   def parent_oids; end
+
+  # pkg:gem/rugged#lib/rugged.rb:10
   def parents; end
+
+  # pkg:gem/rugged#lib/rugged.rb:10
   def summary; end
 
   # The time when this commit was made effective. This is the same value
@@ -192,16 +356,25 @@ class Rugged::Commit < ::Rugged::Object
   #
   # Returns a Time object
   #
-  # source://rugged//lib/rugged/commit.rb#53
+  # pkg:gem/rugged#lib/rugged/commit.rb:53
   def time; end
 
-  # source://rugged//lib/rugged/commit.rb#57
+  # pkg:gem/rugged#lib/rugged/commit.rb:57
   def to_hash; end
 
+  # pkg:gem/rugged#lib/rugged.rb:10
   def to_mbox(*_arg0); end
+
+  # pkg:gem/rugged#lib/rugged.rb:10
   def trailers; end
+
+  # pkg:gem/rugged#lib/rugged.rb:10
   def tree; end
+
+  # pkg:gem/rugged#lib/rugged.rb:10
   def tree_id; end
+
+  # pkg:gem/rugged#lib/rugged.rb:10
   def tree_oid; end
 
   class << self
@@ -210,23 +383,46 @@ class Rugged::Commit < ::Rugged::Object
     def create_with_signature(*_arg0); end
     def extract_signature(*_arg0); end
 
-    # source://rugged//lib/rugged/commit.rb#8
+    # pkg:gem/rugged#lib/rugged/commit.rb:8
     def prettify_message(msg, strip_comments = T.unsafe(nil)); end
   end
 end
 
 class Rugged::Config
+  # pkg:gem/rugged#lib/rugged.rb:10
   def [](_arg0); end
+
+  # pkg:gem/rugged#lib/rugged.rb:10
   def []=(_arg0, _arg1); end
+
+  # pkg:gem/rugged#lib/rugged.rb:10
   def delete(_arg0); end
+
+  # pkg:gem/rugged#lib/rugged.rb:10
   def each; end
+
+  # pkg:gem/rugged#lib/rugged.rb:10
   def each_key; end
+
+  # pkg:gem/rugged#lib/rugged.rb:10
   def each_pair; end
+
+  # pkg:gem/rugged#lib/rugged.rb:10
   def get(_arg0); end
+
+  # pkg:gem/rugged#lib/rugged.rb:10
   def get_all(_arg0); end
+
+  # pkg:gem/rugged#lib/rugged.rb:10
   def snapshot; end
+
+  # pkg:gem/rugged#lib/rugged.rb:10
   def store(_arg0, _arg1); end
+
+  # pkg:gem/rugged#lib/rugged.rb:10
   def to_hash; end
+
+  # pkg:gem/rugged#lib/rugged.rb:10
   def transaction; end
 
   class << self
@@ -238,282 +434,249 @@ end
 
 class Rugged::ConfigError < ::Rugged::Error; end
 
-# source://rugged//lib/rugged/credentials.rb#7
+# pkg:gem/rugged#lib/rugged/credentials.rb:7
 module Rugged::Credentials; end
 
 # A "default" credential usable for Negotiate mechanisms like NTLM or
 # Kerberos authentication
 #
-# source://rugged//lib/rugged/credentials.rb#42
+# pkg:gem/rugged#lib/rugged/credentials.rb:42
 class Rugged::Credentials::Default
-  # source://rugged//lib/rugged/credentials.rb#43
+  # pkg:gem/rugged#lib/rugged/credentials.rb:43
   def call(url, username_from_url, allowed_types); end
 end
 
 # A ssh key credential object that can optionally be passphrase-protected
 #
-# source://rugged//lib/rugged/credentials.rb#20
+# pkg:gem/rugged#lib/rugged/credentials.rb:20
 class Rugged::Credentials::SshKey
-  # @return [SshKey] a new instance of SshKey
-  #
-  # source://rugged//lib/rugged/credentials.rb#21
+  # pkg:gem/rugged#lib/rugged/credentials.rb:21
   def initialize(options); end
 
-  # source://rugged//lib/rugged/credentials.rb#25
+  # pkg:gem/rugged#lib/rugged/credentials.rb:25
   def call(url, username_from_url, allowed_types); end
 end
 
-# source://rugged//lib/rugged/credentials.rb#30
+# pkg:gem/rugged#lib/rugged/credentials.rb:30
 class Rugged::Credentials::SshKeyFromAgent
-  # @return [SshKeyFromAgent] a new instance of SshKeyFromAgent
-  #
-  # source://rugged//lib/rugged/credentials.rb#31
+  # pkg:gem/rugged#lib/rugged/credentials.rb:31
   def initialize(options); end
 
-  # source://rugged//lib/rugged/credentials.rb#35
+  # pkg:gem/rugged#lib/rugged/credentials.rb:35
   def call(url, username_from_url, allowed_types); end
 end
 
 # A plain-text username and password credential object.
 #
-# source://rugged//lib/rugged/credentials.rb#9
+# pkg:gem/rugged#lib/rugged/credentials.rb:9
 class Rugged::Credentials::UserPassword
-  # @return [UserPassword] a new instance of UserPassword
-  #
-  # source://rugged//lib/rugged/credentials.rb#10
+  # pkg:gem/rugged#lib/rugged/credentials.rb:10
   def initialize(options); end
 
-  # source://rugged//lib/rugged/credentials.rb#14
+  # pkg:gem/rugged#lib/rugged/credentials.rb:14
   def call(url, username_from_url, allowed_types); end
 end
 
 class Rugged::DescribeError < ::Rugged::Error; end
 
-# source://rugged//lib/rugged/diff/hunk.rb#7
+# pkg:gem/rugged#lib/rugged/diff/hunk.rb:7
 class Rugged::Diff
   include ::Enumerable
 
-  # source://rugged//lib/rugged/diff.rb#21
+  # pkg:gem/rugged#lib/rugged/diff.rb:21
   def deltas; end
 
+  # pkg:gem/rugged#lib/rugged/diff.rb:13
   def each; end
+
+  # pkg:gem/rugged#lib/rugged.rb:10
   def each_delta; end
+
+  # pkg:gem/rugged#lib/rugged.rb:10
   def each_line(*_arg0); end
+
+  # pkg:gem/rugged#lib/rugged.rb:10
   def each_patch; end
+
+  # pkg:gem/rugged#lib/rugged.rb:10
   def find_similar!(*_arg0); end
+
+  # pkg:gem/rugged#lib/rugged.rb:10
   def merge!(_arg0); end
 
-  # Returns the value of attribute owner.
-  #
-  # source://rugged//lib/rugged/diff.rb#15
+  # pkg:gem/rugged#lib/rugged/diff.rb:15
   def owner; end
 
+  # pkg:gem/rugged#lib/rugged.rb:10
   def patch(*_arg0); end
 
-  # source://rugged//lib/rugged/diff.rb#17
+  # pkg:gem/rugged#lib/rugged/diff.rb:17
   def patches; end
 
+  # pkg:gem/rugged#lib/rugged.rb:10
   def size; end
+
+  # pkg:gem/rugged#lib/rugged.rb:10
   def sorted_icase?; end
+
+  # pkg:gem/rugged#lib/rugged.rb:10
   def stat; end
+
+  # pkg:gem/rugged#lib/rugged.rb:10
   def write_patch(*_arg0); end
 end
 
-# source://rugged//lib/rugged/diff/delta.rb#8
+# pkg:gem/rugged#lib/rugged/diff/delta.rb:8
 class Rugged::Diff::Delta
-  # @return [Boolean]
-  #
-  # source://rugged//lib/rugged/diff/delta.rb#21
+  # pkg:gem/rugged#lib/rugged/diff/delta.rb:21
   def added?; end
 
-  # Returns the value of attribute binary.
-  #
-  # source://rugged//lib/rugged/diff/delta.rb#17
+  # pkg:gem/rugged#lib/rugged/diff/delta.rb:17
   def binary; end
 
-  # Returns the value of attribute binary.
-  #
-  # source://rugged//lib/rugged/diff/delta.rb#17
+  # pkg:gem/rugged#lib/rugged/diff/delta.rb:19
   def binary?; end
 
-  # @return [Boolean]
-  #
-  # source://rugged//lib/rugged/diff/delta.rb#37
+  # pkg:gem/rugged#lib/rugged/diff/delta.rb:37
   def copied?; end
 
-  # @return [Boolean]
-  #
-  # source://rugged//lib/rugged/diff/delta.rb#25
+  # pkg:gem/rugged#lib/rugged/diff/delta.rb:25
   def deleted?; end
 
-  # Returns the value of attribute owner.
-  #
-  # source://rugged//lib/rugged/diff/delta.rb#9
+  # pkg:gem/rugged#lib/rugged/diff/delta.rb:10
   def diff; end
 
-  # @return [Boolean]
-  #
-  # source://rugged//lib/rugged/diff/delta.rb#41
+  # pkg:gem/rugged#lib/rugged/diff/delta.rb:41
   def ignored?; end
 
-  # source://rugged//lib/rugged/diff/delta.rb#53
+  # pkg:gem/rugged#lib/rugged/diff/delta.rb:53
   def inspect; end
 
-  # @return [Boolean]
-  #
-  # source://rugged//lib/rugged/diff/delta.rb#29
+  # pkg:gem/rugged#lib/rugged/diff/delta.rb:29
   def modified?; end
 
-  # Returns the value of attribute new_file.
-  #
-  # source://rugged//lib/rugged/diff/delta.rb#13
+  # pkg:gem/rugged#lib/rugged/diff/delta.rb:13
   def new_file; end
 
-  # Returns the value of attribute old_file.
-  #
-  # source://rugged//lib/rugged/diff/delta.rb#12
+  # pkg:gem/rugged#lib/rugged/diff/delta.rb:12
   def old_file; end
 
-  # Returns the value of attribute owner.
-  #
-  # source://rugged//lib/rugged/diff/delta.rb#9
+  # pkg:gem/rugged#lib/rugged/diff/delta.rb:9
   def owner; end
 
-  # @return [Boolean]
-  #
-  # source://rugged//lib/rugged/diff/delta.rb#33
+  # pkg:gem/rugged#lib/rugged/diff/delta.rb:33
   def renamed?; end
 
-  # Returns the value of attribute similarity.
-  #
-  # source://rugged//lib/rugged/diff/delta.rb#14
+  # pkg:gem/rugged#lib/rugged/diff/delta.rb:14
   def similarity; end
 
-  # Returns the value of attribute status.
-  #
-  # source://rugged//lib/rugged/diff/delta.rb#15
+  # pkg:gem/rugged#lib/rugged/diff/delta.rb:15
   def status; end
 
-  # Returns the value of attribute status_char.
-  #
-  # source://rugged//lib/rugged/diff/delta.rb#16
+  # pkg:gem/rugged#lib/rugged/diff/delta.rb:16
   def status_char; end
 
-  # @return [Boolean]
-  #
-  # source://rugged//lib/rugged/diff/delta.rb#49
+  # pkg:gem/rugged#lib/rugged/diff/delta.rb:49
   def typechange?; end
 
-  # @return [Boolean]
-  #
-  # source://rugged//lib/rugged/diff/delta.rb#45
+  # pkg:gem/rugged#lib/rugged/diff/delta.rb:45
   def untracked?; end
 end
 
-# source://rugged//lib/rugged/diff/hunk.rb#8
+# pkg:gem/rugged#lib/rugged/diff/hunk.rb:8
 class Rugged::Diff::Hunk
   include ::Enumerable
 
+  # pkg:gem/rugged#lib/rugged.rb:10
   def count; end
 
-  # source://rugged//lib/rugged/diff/hunk.rb#9
+  # pkg:gem/rugged#lib/rugged/diff/hunk.rb:9
   def delta; end
 
+  # pkg:gem/rugged#lib/rugged.rb:10
   def each; end
+
+  # pkg:gem/rugged#lib/rugged.rb:10
   def each_line; end
+
+  # pkg:gem/rugged#lib/rugged.rb:10
   def header; end
+
+  # pkg:gem/rugged#lib/rugged.rb:10
   def hunk_index; end
 
-  # source://rugged//lib/rugged/diff/hunk.rb#13
+  # pkg:gem/rugged#lib/rugged/diff/hunk.rb:13
   def inspect; end
 
+  # pkg:gem/rugged#lib/rugged.rb:10
   def line_count; end
 
   # Returns an Array containing all lines of the hunk.
   #
-  # source://rugged//lib/rugged/diff/hunk.rb#18
+  # pkg:gem/rugged#lib/rugged/diff/hunk.rb:18
   def lines; end
 
+  # pkg:gem/rugged#lib/rugged.rb:10
   def new_lines; end
+
+  # pkg:gem/rugged#lib/rugged.rb:10
   def new_start; end
+
+  # pkg:gem/rugged#lib/rugged.rb:10
   def old_lines; end
+
+  # pkg:gem/rugged#lib/rugged.rb:10
   def old_start; end
+
+  # pkg:gem/rugged#lib/rugged.rb:10
   def size; end
 end
 
-# source://rugged//lib/rugged/diff/line.rb#8
+# pkg:gem/rugged#lib/rugged/diff/line.rb:8
 class Rugged::Diff::Line
-  # @return [Boolean]
-  #
-  # source://rugged//lib/rugged/diff/line.rb#15
+  # pkg:gem/rugged#lib/rugged/diff/line.rb:15
   def addition?; end
 
-  # @return [Boolean]
-  #
-  # source://rugged//lib/rugged/diff/line.rb#43
+  # pkg:gem/rugged#lib/rugged/diff/line.rb:43
   def binary?; end
 
-  # Returns the value of attribute content.
-  #
-  # source://rugged//lib/rugged/diff/line.rb#9
+  # pkg:gem/rugged#lib/rugged/diff/line.rb:9
   def content; end
 
-  # Returns the value of attribute content_offset.
-  #
-  # source://rugged//lib/rugged/diff/line.rb#9
+  # pkg:gem/rugged#lib/rugged/diff/line.rb:9
   def content_offset; end
 
-  # @return [Boolean]
-  #
-  # source://rugged//lib/rugged/diff/line.rb#11
+  # pkg:gem/rugged#lib/rugged/diff/line.rb:11
   def context?; end
 
-  # @return [Boolean]
-  #
-  # source://rugged//lib/rugged/diff/line.rb#19
+  # pkg:gem/rugged#lib/rugged/diff/line.rb:19
   def deletion?; end
 
-  # @return [Boolean]
-  #
-  # source://rugged//lib/rugged/diff/line.rb#27
+  # pkg:gem/rugged#lib/rugged/diff/line.rb:27
   def eof_newline_added?; end
 
-  # @return [Boolean]
-  #
-  # source://rugged//lib/rugged/diff/line.rb#31
+  # pkg:gem/rugged#lib/rugged/diff/line.rb:31
   def eof_newline_removed?; end
 
-  # @return [Boolean]
-  #
-  # source://rugged//lib/rugged/diff/line.rb#23
+  # pkg:gem/rugged#lib/rugged/diff/line.rb:23
   def eof_no_newline?; end
 
-  # @return [Boolean]
-  #
-  # source://rugged//lib/rugged/diff/line.rb#35
+  # pkg:gem/rugged#lib/rugged/diff/line.rb:35
   def file_header?; end
 
-  # @return [Boolean]
-  #
-  # source://rugged//lib/rugged/diff/line.rb#39
+  # pkg:gem/rugged#lib/rugged/diff/line.rb:39
   def hunk_header?; end
 
-  # source://rugged//lib/rugged/diff/line.rb#47
+  # pkg:gem/rugged#lib/rugged/diff/line.rb:47
   def inspect; end
 
-  # Returns the value of attribute line_origin.
-  #
-  # source://rugged//lib/rugged/diff/line.rb#9
+  # pkg:gem/rugged#lib/rugged/diff/line.rb:9
   def line_origin; end
 
-  # Returns the value of attribute new_lineno.
-  #
-  # source://rugged//lib/rugged/diff/line.rb#9
+  # pkg:gem/rugged#lib/rugged/diff/line.rb:9
   def new_lineno; end
 
-  # Returns the value of attribute old_lineno.
-  #
-  # source://rugged//lib/rugged/diff/line.rb#9
+  # pkg:gem/rugged#lib/rugged/diff/line.rb:9
   def old_lineno; end
 end
 
@@ -523,21 +686,44 @@ class Rugged::FilesystemError < ::Rugged::Error; end
 class Rugged::FilterError < ::Rugged::Error; end
 class Rugged::HTTPError < ::Rugged::Error; end
 
-# source://rugged//lib/rugged/index.rb#7
+# pkg:gem/rugged#lib/rugged/index.rb:7
 class Rugged::Index
   include ::Enumerable
 
+  # pkg:gem/rugged#lib/rugged.rb:10
   def <<(_arg0); end
+
+  # pkg:gem/rugged#lib/rugged.rb:10
   def [](*_arg0); end
+
+  # pkg:gem/rugged#lib/rugged.rb:10
   def add(_arg0); end
+
+  # pkg:gem/rugged#lib/rugged.rb:10
   def add_all(*_arg0); end
+
+  # pkg:gem/rugged#lib/rugged.rb:10
   def clear; end
+
+  # pkg:gem/rugged#lib/rugged.rb:10
   def conflict_add(_arg0); end
+
+  # pkg:gem/rugged#lib/rugged.rb:10
   def conflict_cleanup; end
+
+  # pkg:gem/rugged#lib/rugged.rb:10
   def conflict_get(_arg0); end
+
+  # pkg:gem/rugged#lib/rugged.rb:10
   def conflict_remove(_arg0); end
+
+  # pkg:gem/rugged#lib/rugged.rb:10
   def conflicts; end
+
+  # pkg:gem/rugged#lib/rugged.rb:10
   def conflicts?; end
+
+  # pkg:gem/rugged#lib/rugged.rb:10
   def count; end
 
   # call-seq:
@@ -639,29 +825,54 @@ class Rugged::Index
   #   marked with a single entry in the diff. If this flag is set to true,
   #   all files under ignored directories will be included in the diff, too.
   #
-  # source://rugged//lib/rugged/index.rb#109
+  # pkg:gem/rugged#lib/rugged/index.rb:109
   def diff(*args); end
 
+  # pkg:gem/rugged#lib/rugged.rb:10
   def each; end
+
+  # pkg:gem/rugged#lib/rugged.rb:10
   def get(*_arg0); end
+
+  # pkg:gem/rugged#lib/rugged.rb:10
   def merge_file(*_arg0); end
+
+  # pkg:gem/rugged#lib/rugged.rb:10
   def read_tree(_arg0); end
+
+  # pkg:gem/rugged#lib/rugged.rb:10
   def reload; end
+
+  # pkg:gem/rugged#lib/rugged.rb:10
   def remove(*_arg0); end
+
+  # pkg:gem/rugged#lib/rugged.rb:10
   def remove_all(*_arg0); end
+
+  # pkg:gem/rugged#lib/rugged.rb:10
   def remove_dir(*_arg0); end
 
-  # source://rugged//lib/rugged/index.rb#125
+  # pkg:gem/rugged#lib/rugged/index.rb:125
   def to_s; end
 
+  # pkg:gem/rugged#lib/rugged.rb:10
   def update(_arg0); end
+
+  # pkg:gem/rugged#lib/rugged.rb:10
   def update_all(*_arg0); end
+
+  # pkg:gem/rugged#lib/rugged.rb:10
   def write; end
+
+  # pkg:gem/rugged#lib/rugged.rb:10
   def write_tree(*_arg0); end
 
   private
 
+  # pkg:gem/rugged#lib/rugged.rb:10
   def diff_index_to_workdir(_arg0); end
+
+  # pkg:gem/rugged#lib/rugged.rb:10
   def diff_tree_to_index(_arg0, _arg1); end
 
   class << self
@@ -680,17 +891,30 @@ class Rugged::NetworkError < ::Rugged::Error; end
 class Rugged::NoMemError < ::NoMemoryError; end
 class Rugged::OSError < ::IOError; end
 
-# source://rugged//lib/rugged/object.rb#7
+# pkg:gem/rugged#lib/rugged/object.rb:7
 class Rugged::Object
-  # source://rugged//lib/rugged/object.rb#8
+  # pkg:gem/rugged#lib/rugged/object.rb:8
   def <=>(other); end
 
+  # pkg:gem/rugged#lib/rugged.rb:10
   def ==(_arg0); end
+
+  # pkg:gem/rugged#lib/rugged.rb:10
   def create_note(_arg0); end
+
+  # pkg:gem/rugged#lib/rugged.rb:10
   def notes(*_arg0); end
+
+  # pkg:gem/rugged#lib/rugged.rb:10
   def oid; end
+
+  # pkg:gem/rugged#lib/rugged.rb:10
   def read_raw; end
+
+  # pkg:gem/rugged#lib/rugged.rb:10
   def remove_note(*_arg0); end
+
+  # pkg:gem/rugged#lib/rugged.rb:10
   def type; end
 
   class << self
@@ -705,71 +929,86 @@ class Rugged::ObjectError < ::Rugged::Error; end
 class Rugged::OdbError < ::Rugged::Error; end
 
 class Rugged::OdbObject
+  # pkg:gem/rugged#lib/rugged.rb:10
   def data; end
+
+  # pkg:gem/rugged#lib/rugged.rb:10
   def len; end
+
+  # pkg:gem/rugged#lib/rugged.rb:10
   def oid; end
+
+  # pkg:gem/rugged#lib/rugged.rb:10
   def type; end
 end
 
-# source://rugged//lib/rugged/patch.rb#7
+# pkg:gem/rugged#lib/rugged/patch.rb:7
 class Rugged::Patch
   include ::Enumerable
 
   # Returns the number of additions in the patch.
   #
-  # source://rugged//lib/rugged/patch.rb#22
+  # pkg:gem/rugged#lib/rugged/patch.rb:22
   def additions; end
 
+  # pkg:gem/rugged#lib/rugged.rb:10
   def bytesize(*_arg0); end
 
   # Returns the number of total changes in the patch.
   #
-  # source://rugged//lib/rugged/patch.rb#32
+  # pkg:gem/rugged#lib/rugged/patch.rb:32
   def changes; end
 
+  # pkg:gem/rugged#lib/rugged/patch.rb:12
   def count; end
 
   # Returns the number of deletions in the patch.
   #
-  # source://rugged//lib/rugged/patch.rb#27
+  # pkg:gem/rugged#lib/rugged/patch.rb:27
   def deletions; end
 
+  # pkg:gem/rugged#lib/rugged.rb:10
   def delta; end
 
-  # Returns the value of attribute owner.
-  #
-  # source://rugged//lib/rugged/patch.rb#14
+  # pkg:gem/rugged#lib/rugged/patch.rb:15
   def diff; end
 
+  # pkg:gem/rugged#lib/rugged/patch.rb:9
   def each; end
+
+  # pkg:gem/rugged#lib/rugged.rb:10
   def each_hunk; end
+
+  # pkg:gem/rugged#lib/rugged.rb:10
   def header; end
+
+  # pkg:gem/rugged#lib/rugged.rb:10
   def hunk_count; end
 
   # Returns an Array containing all hunks of the patch.
   #
-  # source://rugged//lib/rugged/patch.rb#37
+  # pkg:gem/rugged#lib/rugged/patch.rb:37
   def hunks; end
 
-  # source://rugged//lib/rugged/patch.rb#17
+  # pkg:gem/rugged#lib/rugged/patch.rb:17
   def inspect; end
 
+  # pkg:gem/rugged#lib/rugged.rb:10
   def lines(*_arg0); end
 
-  # Returns the value of attribute owner.
-  #
-  # source://rugged//lib/rugged/patch.rb#14
+  # pkg:gem/rugged#lib/rugged/patch.rb:14
   def owner; end
 
-  # Sets the attribute owner
-  #
-  # @param value the value to set the attribute owner to.
-  #
-  # source://rugged//lib/rugged/patch.rb#14
+  # pkg:gem/rugged#lib/rugged/patch.rb:14
   def owner=(_arg0); end
 
+  # pkg:gem/rugged#lib/rugged/patch.rb:11
   def size; end
+
+  # pkg:gem/rugged#lib/rugged.rb:10
   def stat; end
+
+  # pkg:gem/rugged#lib/rugged.rb:10
   def to_s; end
 
   class << self
@@ -780,10 +1019,19 @@ end
 class Rugged::PathError < ::Rugged::Error; end
 
 class Rugged::Rebase
+  # pkg:gem/rugged#lib/rugged.rb:10
   def abort; end
+
+  # pkg:gem/rugged#lib/rugged.rb:10
   def commit(*_arg0); end
+
+  # pkg:gem/rugged#lib/rugged.rb:10
   def finish(_arg0); end
+
+  # pkg:gem/rugged#lib/rugged.rb:10
   def inmemory_index; end
+
+  # pkg:gem/rugged#lib/rugged.rb:10
   def next; end
 
   class << self
@@ -793,23 +1041,45 @@ end
 
 class Rugged::RebaseError < ::Rugged::Error; end
 
-# source://rugged//lib/rugged/reference.rb#7
+# pkg:gem/rugged#lib/rugged/reference.rb:7
 class Rugged::Reference
+  # pkg:gem/rugged#lib/rugged.rb:10
   def branch?; end
+
+  # pkg:gem/rugged#lib/rugged.rb:10
   def canonical_name; end
 
-  # source://rugged//lib/rugged/reference.rb#8
+  # pkg:gem/rugged#lib/rugged/reference.rb:8
   def inspect; end
 
+  # pkg:gem/rugged#lib/rugged.rb:10
   def log; end
+
+  # pkg:gem/rugged#lib/rugged.rb:10
   def log?; end
+
+  # pkg:gem/rugged#lib/rugged.rb:10
   def name; end
+
+  # pkg:gem/rugged#lib/rugged.rb:10
   def peel; end
+
+  # pkg:gem/rugged#lib/rugged.rb:10
   def remote?; end
+
+  # pkg:gem/rugged#lib/rugged.rb:10
   def resolve; end
+
+  # pkg:gem/rugged#lib/rugged.rb:10
   def tag?; end
+
+  # pkg:gem/rugged#lib/rugged.rb:10
   def target; end
+
+  # pkg:gem/rugged#lib/rugged.rb:10
   def target_id; end
+
+  # pkg:gem/rugged#lib/rugged.rb:10
   def type; end
 
   class << self
@@ -820,52 +1090,113 @@ end
 class Rugged::ReferenceCollection
   include ::Enumerable
 
+  # pkg:gem/rugged#lib/rugged.rb:10
   def initialize(_arg0); end
 
+  # pkg:gem/rugged#lib/rugged.rb:10
   def [](_arg0); end
+
+  # pkg:gem/rugged#lib/rugged.rb:10
   def create(*_arg0); end
+
+  # pkg:gem/rugged#lib/rugged.rb:10
   def delete(_arg0); end
+
+  # pkg:gem/rugged#lib/rugged.rb:10
   def each(*_arg0); end
+
+  # pkg:gem/rugged#lib/rugged.rb:10
   def each_name(*_arg0); end
+
+  # pkg:gem/rugged#lib/rugged.rb:10
   def exist?(_arg0); end
+
+  # pkg:gem/rugged#lib/rugged.rb:10
   def exists?(_arg0); end
+
+  # pkg:gem/rugged#lib/rugged.rb:10
   def move(*_arg0); end
+
+  # pkg:gem/rugged#lib/rugged.rb:10
   def rename(*_arg0); end
+
+  # pkg:gem/rugged#lib/rugged.rb:10
   def update(*_arg0); end
 end
 
 class Rugged::ReferenceError < ::Rugged::Error; end
 class Rugged::RegexError < ::Rugged::Error; end
 
-# source://rugged//lib/rugged/remote.rb#7
+# pkg:gem/rugged#lib/rugged/remote.rb:7
 class Rugged::Remote
+  # pkg:gem/rugged#lib/rugged.rb:10
   def check_connection(*_arg0); end
+
+  # pkg:gem/rugged#lib/rugged.rb:10
   def fetch(*_arg0); end
+
+  # pkg:gem/rugged#lib/rugged.rb:10
   def fetch_refspecs; end
+
+  # pkg:gem/rugged#lib/rugged.rb:10
   def ls(*_arg0); end
+
+  # pkg:gem/rugged#lib/rugged.rb:10
   def name; end
+
+  # pkg:gem/rugged#lib/rugged.rb:10
   def push(*_arg0); end
+
+  # pkg:gem/rugged#lib/rugged.rb:10
   def push_refspecs; end
+
+  # pkg:gem/rugged#lib/rugged.rb:10
   def push_url; end
+
+  # pkg:gem/rugged#lib/rugged.rb:10
   def push_url=(_arg0); end
+
+  # pkg:gem/rugged#lib/rugged.rb:10
   def url; end
 end
 
 class Rugged::RemoteCollection
   include ::Enumerable
 
+  # pkg:gem/rugged#lib/rugged.rb:10
   def initialize(_arg0); end
 
+  # pkg:gem/rugged#lib/rugged.rb:10
   def [](_arg0); end
+
+  # pkg:gem/rugged#lib/rugged.rb:10
   def add_fetch_refspec(_arg0, _arg1); end
+
+  # pkg:gem/rugged#lib/rugged.rb:10
   def add_push_refspec(_arg0, _arg1); end
+
+  # pkg:gem/rugged#lib/rugged.rb:10
   def create(_arg0, _arg1); end
+
+  # pkg:gem/rugged#lib/rugged.rb:10
   def create_anonymous(_arg0); end
+
+  # pkg:gem/rugged#lib/rugged.rb:10
   def delete(_arg0); end
+
+  # pkg:gem/rugged#lib/rugged.rb:10
   def each; end
+
+  # pkg:gem/rugged#lib/rugged.rb:10
   def each_name; end
+
+  # pkg:gem/rugged#lib/rugged.rb:10
   def rename(_arg0, _arg1); end
+
+  # pkg:gem/rugged#lib/rugged.rb:10
   def set_push_url(_arg0, _arg1); end
+
+  # pkg:gem/rugged#lib/rugged.rb:10
   def set_url(_arg0, _arg1); end
 end
 
@@ -873,14 +1204,18 @@ end
 # interface between your app and the main Git objects Rugged makes available
 # to you.
 #
-# source://rugged//lib/rugged/repository.rb#10
+# pkg:gem/rugged#lib/rugged/repository.rb:10
 class Rugged::Repository
+  # pkg:gem/rugged#lib/rugged.rb:10
   def ahead_behind(_arg0, _arg1); end
+
+  # pkg:gem/rugged#lib/rugged.rb:10
   def apply(*_arg0); end
 
-  # source://rugged//lib/rugged/attributes.rb#8
+  # pkg:gem/rugged#lib/rugged/attributes.rb:8
   def attributes(path, options = T.unsafe(nil)); end
 
+  # pkg:gem/rugged#lib/rugged.rb:10
   def bare?; end
 
   # Get the blob at a path for a specific revision.
@@ -890,14 +1225,14 @@ class Rugged::Repository
   #
   # Returns a Rugged::Blob object
   #
-  # source://rugged//lib/rugged/repository.rb#242
+  # pkg:gem/rugged#lib/rugged/repository.rb:242
   def blob_at(revision, path); end
 
   # All the branches in the repository
   #
   # Returns a BranchCollection containing Rugged::Branch objects
   #
-  # source://rugged//lib/rugged/repository.rb#207
+  # pkg:gem/rugged#lib/rugged/repository.rb:207
   def branches; end
 
   # Checkout the specified branch, reference or commit.
@@ -905,16 +1240,31 @@ class Rugged::Repository
   # target - A revparse spec for the branch, reference or commit to check out.
   # options - Options passed to #checkout_tree.
   #
-  # source://rugged//lib/rugged/repository.rb#29
+  # pkg:gem/rugged#lib/rugged/repository.rb:29
   def checkout(target, options = T.unsafe(nil)); end
 
+  # pkg:gem/rugged#lib/rugged.rb:10
   def checkout_head(*_arg0); end
+
+  # pkg:gem/rugged#lib/rugged.rb:10
   def checkout_index(*_arg0); end
+
+  # pkg:gem/rugged#lib/rugged.rb:10
   def checkout_tree(*_arg0); end
+
+  # pkg:gem/rugged#lib/rugged.rb:10
   def cherrypick(*_arg0); end
+
+  # pkg:gem/rugged#lib/rugged.rb:10
   def cherrypick_commit(*_arg0); end
+
+  # pkg:gem/rugged#lib/rugged.rb:10
   def close; end
+
+  # pkg:gem/rugged#lib/rugged.rb:10
   def config; end
+
+  # pkg:gem/rugged#lib/rugged.rb:10
   def config=(_arg0); end
 
   # Create a new branch in the repository
@@ -925,69 +1275,118 @@ class Rugged::Repository
   #
   # Returns a Rugged::Branch object
   #
-  # source://rugged//lib/rugged/repository.rb#225
+  # pkg:gem/rugged#lib/rugged/repository.rb:225
   def create_branch(name, sha_or_ref = T.unsafe(nil)); end
 
+  # pkg:gem/rugged#lib/rugged.rb:10
   def default_notes_ref; end
+
+  # pkg:gem/rugged#lib/rugged.rb:10
   def default_signature; end
+
+  # pkg:gem/rugged#lib/rugged.rb:10
   def descendant_of?(_arg0, _arg1); end
 
-  # source://rugged//lib/rugged/repository.rb#99
+  # pkg:gem/rugged#lib/rugged/repository.rb:99
   def diff(left, right, opts = T.unsafe(nil)); end
 
+  # pkg:gem/rugged#lib/rugged.rb:10
   def diff_from_buffer(_arg0); end
 
-  # source://rugged//lib/rugged/repository.rb#118
+  # pkg:gem/rugged#lib/rugged/repository.rb:118
   def diff_workdir(left, opts = T.unsafe(nil)); end
 
+  # pkg:gem/rugged#lib/rugged.rb:10
   def each_id; end
+
+  # pkg:gem/rugged#lib/rugged.rb:10
   def each_note(*_arg0); end
+
+  # pkg:gem/rugged#lib/rugged.rb:10
   def empty?; end
+
+  # pkg:gem/rugged#lib/rugged.rb:10
   def exists?(_arg0); end
+
+  # pkg:gem/rugged#lib/rugged.rb:10
   def expand_oids(*_arg0); end
 
-  # source://rugged//lib/rugged/repository.rb#253
+  # pkg:gem/rugged#lib/rugged/repository.rb:253
   def fetch(remote_or_url, *args, **kwargs); end
 
+  # pkg:gem/rugged#lib/rugged.rb:10
   def fetch_attributes(*_arg0); end
+
+  # pkg:gem/rugged#lib/rugged.rb:10
   def head; end
+
+  # pkg:gem/rugged#lib/rugged.rb:10
   def head=(_arg0); end
+
+  # pkg:gem/rugged#lib/rugged.rb:10
   def head_detached?; end
+
+  # pkg:gem/rugged#lib/rugged.rb:10
   def head_unborn?; end
+
+  # pkg:gem/rugged#lib/rugged.rb:10
   def ident; end
+
+  # pkg:gem/rugged#lib/rugged.rb:10
   def ident=(_arg0); end
+
+  # pkg:gem/rugged#lib/rugged.rb:10
   def include?(_arg0); end
+
+  # pkg:gem/rugged#lib/rugged.rb:10
   def index; end
+
+  # pkg:gem/rugged#lib/rugged.rb:10
   def index=(_arg0); end
 
   # Pretty formatting of a Repository.
   #
   # Returns a very pretty String.
   #
-  # source://rugged//lib/rugged/repository.rb#14
+  # pkg:gem/rugged#lib/rugged/repository.rb:14
   def inspect; end
 
   # Get the most recent commit from this repo.
   #
   # Returns a Rugged::Commit object.
   #
-  # source://rugged//lib/rugged/repository.rb#21
+  # pkg:gem/rugged#lib/rugged/repository.rb:21
   def last_commit; end
 
   # Look up a SHA1.
   #
   # Returns one of the four classes that inherit from Rugged::Object.
   #
-  # source://rugged//lib/rugged/repository.rb#146
+  # pkg:gem/rugged#lib/rugged/repository.rb:146
   def lookup(oid); end
 
+  # pkg:gem/rugged#lib/rugged.rb:10
   def merge_analysis(*_arg0); end
+
+  # pkg:gem/rugged#lib/rugged.rb:10
   def merge_base(*_arg0); end
+
+  # pkg:gem/rugged#lib/rugged.rb:10
   def merge_bases(*_arg0); end
+
+  # pkg:gem/rugged#lib/rugged.rb:10
   def merge_commits(*_arg0); end
+
+  # pkg:gem/rugged#lib/rugged.rb:10
   def namespace; end
+
+  # pkg:gem/rugged#lib/rugged.rb:10
   def namespace=(_arg0); end
+
+  # pkg:gem/rugged#lib/rugged.rb:10
   def path; end
+
+  # pkg:gem/rugged#lib/rugged.rb:10
   def path_ignored?(_arg0); end
 
   # Push a list of refspecs to the given remote.
@@ -997,10 +1396,13 @@ class Rugged::Repository
   # Returns a hash containing the pushed refspecs as keys and
   # any error messages or +nil+ as values.
   #
-  # source://rugged//lib/rugged/repository.rb#266
+  # pkg:gem/rugged#lib/rugged/repository.rb:266
   def push(remote_or_url, *args, **kwargs); end
 
+  # pkg:gem/rugged#lib/rugged.rb:10
   def read(_arg0); end
+
+  # pkg:gem/rugged#lib/rugged.rb:10
   def read_header(_arg0); end
 
   # Look up a single reference by name.
@@ -1013,16 +1415,16 @@ class Rugged::Repository
   #
   # Returns a Rugged::Reference.
   #
-  # source://rugged//lib/rugged/repository.rb#173
+  # pkg:gem/rugged#lib/rugged/repository.rb:173
   def ref(ref_name); end
 
-  # source://rugged//lib/rugged/repository.rb#185
+  # pkg:gem/rugged#lib/rugged/repository.rb:185
   def ref_names(glob = T.unsafe(nil)); end
 
-  # source://rugged//lib/rugged/repository.rb#181
+  # pkg:gem/rugged#lib/rugged/repository.rb:181
   def references; end
 
-  # source://rugged//lib/rugged/repository.rb#177
+  # pkg:gem/rugged#lib/rugged/repository.rb:177
   def refs(glob = T.unsafe(nil)); end
 
   # All the remotes in the repository.
@@ -1030,30 +1432,36 @@ class Rugged::Repository
   # Returns a Rugged::RemoteCollection containing all the Rugged::Remote objects
   # in the repository.
   #
-  # source://rugged//lib/rugged/repository.rb#200
+  # pkg:gem/rugged#lib/rugged/repository.rb:200
   def remotes; end
 
+  # pkg:gem/rugged#lib/rugged.rb:10
   def reset(_arg0, _arg1); end
+
+  # pkg:gem/rugged#lib/rugged.rb:10
   def reset_path(*_arg0); end
 
   # Look up an object by a revision string.
   #
   # Returns one of the four classes that inherit from Rugged::Object.
   #
-  # source://rugged//lib/rugged/repository.rb#153
+  # pkg:gem/rugged#lib/rugged/repository.rb:153
   def rev_parse(spec); end
 
   # Look up an object by a revision string.
   #
   # Returns the oid of the matched object as a String
   #
-  # source://rugged//lib/rugged/repository.rb#160
+  # pkg:gem/rugged#lib/rugged/repository.rb:160
   def rev_parse_oid(spec); end
 
+  # pkg:gem/rugged#lib/rugged.rb:10
   def revert_commit(*_arg0); end
+
+  # pkg:gem/rugged#lib/rugged.rb:10
   def shallow?; end
 
-  # call-seq:
+  #  call-seq:
   #    repo.status { |file, status_data| block }
   #    repo.status(path) -> status_data
   #
@@ -1088,21 +1496,21 @@ class Rugged::Repository
   #
   #    repo.status('src/diff.c') #=> [:index_new, :worktree_new]
   #
-  # source://rugged//lib/rugged/repository.rb#91
+  # pkg:gem/rugged#lib/rugged/repository.rb:91
   def status(file = T.unsafe(nil), &block); end
 
   # All the submodules in the repository
   #
   # Returns a SubmoduleCollection containing Rugged::Submodule objects
   #
-  # source://rugged//lib/rugged/repository.rb#214
+  # pkg:gem/rugged#lib/rugged/repository.rb:214
   def submodules; end
 
   # All the tags in the repository.
   #
   # Returns a TagCollection containing all the tags.
   #
-  # source://rugged//lib/rugged/repository.rb#192
+  # pkg:gem/rugged#lib/rugged/repository.rb:192
   def tags; end
 
   # Walks over a set of commits using Rugged::Walker.
@@ -1114,16 +1522,24 @@ class Rugged::Repository
   # Returns nothing if called with a block, otherwise returns an instance of
   # Enumerable::Enumerator containing Rugged::Commit objects.
   #
-  # source://rugged//lib/rugged/repository.rb#136
+  # pkg:gem/rugged#lib/rugged/repository.rb:136
   def walk(from, sorting = T.unsafe(nil), &block); end
 
+  # pkg:gem/rugged#lib/rugged.rb:10
   def workdir; end
+
+  # pkg:gem/rugged#lib/rugged.rb:10
   def workdir=(_arg0); end
+
+  # pkg:gem/rugged#lib/rugged.rb:10
   def write(_arg0, _arg1); end
 
   private
 
+  # pkg:gem/rugged#lib/rugged.rb:10
   def each_status; end
+
+  # pkg:gem/rugged#lib/rugged.rb:10
   def file_status(_arg0); end
 
   class << self
@@ -1137,31 +1553,29 @@ class Rugged::Repository
   end
 end
 
-# source://rugged//lib/rugged/attributes.rb#12
+# pkg:gem/rugged#lib/rugged/attributes.rb:12
 class Rugged::Repository::Attributes
   include ::Enumerable
 
-  # @return [Attributes] a new instance of Attributes
-  #
-  # source://rugged//lib/rugged/attributes.rb#27
+  # pkg:gem/rugged#lib/rugged/attributes.rb:27
   def initialize(repository, path, options = T.unsafe(nil)); end
 
-  # source://rugged//lib/rugged/attributes.rb#33
+  # pkg:gem/rugged#lib/rugged/attributes.rb:33
   def [](attribute); end
 
-  # source://rugged//lib/rugged/attributes.rb#41
+  # pkg:gem/rugged#lib/rugged/attributes.rb:41
   def each(&block); end
 
-  # source://rugged//lib/rugged/attributes.rb#37
+  # pkg:gem/rugged#lib/rugged/attributes.rb:37
   def to_h; end
 
   class << self
-    # source://rugged//lib/rugged/attributes.rb#21
+    # pkg:gem/rugged#lib/rugged/attributes.rb:21
     def parse_opts(opt); end
   end
 end
 
-# source://rugged//lib/rugged/attributes.rb#15
+# pkg:gem/rugged#lib/rugged/attributes.rb:15
 Rugged::Repository::Attributes::LOAD_PRIORITIES = T.let(T.unsafe(nil), Hash)
 
 class Rugged::RepositoryError < ::Rugged::Error; end
@@ -1175,9 +1589,16 @@ Rugged::SORT_TOPO = T.let(T.unsafe(nil), Integer)
 class Rugged::Settings
   private
 
+  # pkg:gem/rugged#lib/rugged.rb:10
   def [](_arg0); end
+
+  # pkg:gem/rugged#lib/rugged.rb:10
   def []=(_arg0, _arg1); end
+
+  # pkg:gem/rugged#lib/rugged.rb:10
   def max_cache_size; end
+
+  # pkg:gem/rugged#lib/rugged.rb:10
   def used_cache_size; end
 
   class << self
@@ -1193,46 +1614,111 @@ class Rugged::SslError < ::Rugged::Error; end
 class Rugged::StashError < ::Rugged::Error; end
 
 class Rugged::Submodule
+  # pkg:gem/rugged#lib/rugged.rb:10
   def add_to_index(*_arg0); end
+
+  # pkg:gem/rugged#lib/rugged.rb:10
   def added_to_index?; end
+
+  # pkg:gem/rugged#lib/rugged.rb:10
   def added_to_workdir?; end
+
+  # pkg:gem/rugged#lib/rugged.rb:10
   def deleted_from_index?; end
+
+  # pkg:gem/rugged#lib/rugged.rb:10
   def deleted_from_workdir?; end
+
+  # pkg:gem/rugged#lib/rugged.rb:10
   def dirty_workdir?; end
+
+  # pkg:gem/rugged#lib/rugged.rb:10
   def dirty_workdir_index?; end
+
+  # pkg:gem/rugged#lib/rugged.rb:10
   def fetch_recurse_submodules?; end
+
+  # pkg:gem/rugged#lib/rugged.rb:10
   def finalize_add; end
+
+  # pkg:gem/rugged#lib/rugged.rb:10
   def head_oid; end
+
+  # pkg:gem/rugged#lib/rugged.rb:10
   def ignore_rule; end
+
+  # pkg:gem/rugged#lib/rugged.rb:10
   def in_config?; end
+
+  # pkg:gem/rugged#lib/rugged.rb:10
   def in_head?; end
+
+  # pkg:gem/rugged#lib/rugged.rb:10
   def in_index?; end
+
+  # pkg:gem/rugged#lib/rugged.rb:10
   def in_workdir?; end
+
+  # pkg:gem/rugged#lib/rugged.rb:10
   def index_oid; end
+
+  # pkg:gem/rugged#lib/rugged.rb:10
   def init(*_arg0); end
+
+  # pkg:gem/rugged#lib/rugged.rb:10
   def modified_files_in_workdir?; end
+
+  # pkg:gem/rugged#lib/rugged.rb:10
   def modified_in_index?; end
+
+  # pkg:gem/rugged#lib/rugged.rb:10
   def modified_in_workdir?; end
+
+  # pkg:gem/rugged#lib/rugged.rb:10
   def name; end
+
+  # pkg:gem/rugged#lib/rugged.rb:10
   def path; end
+
+  # pkg:gem/rugged#lib/rugged.rb:10
   def reload; end
+
+  # pkg:gem/rugged#lib/rugged.rb:10
   def repository; end
+
+  # pkg:gem/rugged#lib/rugged.rb:10
   def status; end
+
+  # pkg:gem/rugged#lib/rugged.rb:10
   def sync; end
+
+  # pkg:gem/rugged#lib/rugged.rb:10
   def uninitialized?; end
+
+  # pkg:gem/rugged#lib/rugged.rb:10
   def unmodified?; end
+
+  # pkg:gem/rugged#lib/rugged.rb:10
   def untracked_files_in_workdir?; end
+
+  # pkg:gem/rugged#lib/rugged.rb:10
   def update_rule; end
+
+  # pkg:gem/rugged#lib/rugged.rb:10
   def url; end
+
+  # pkg:gem/rugged#lib/rugged.rb:10
   def workdir_oid; end
 end
 
-# source://rugged//lib/rugged/submodule_collection.rb#7
+# pkg:gem/rugged#lib/rugged/submodule_collection.rb:7
 class Rugged::SubmoduleCollection
   include ::Enumerable
 
+  # pkg:gem/rugged#lib/rugged.rb:10
   def initialize(_arg0); end
 
+  # pkg:gem/rugged#lib/rugged.rb:10
   def [](_arg0); end
 
   # call-seq:
@@ -1255,11 +1741,16 @@ class Rugged::SubmoduleCollection
   #
   # Returns the newly created +submodule+
   #
-  # source://rugged//lib/rugged/submodule_collection.rb#28
+  # pkg:gem/rugged#lib/rugged/submodule_collection.rb:28
   def add(url, path, options = T.unsafe(nil)); end
 
+  # pkg:gem/rugged#lib/rugged.rb:10
   def each; end
+
+  # pkg:gem/rugged#lib/rugged.rb:10
   def setup_add(*_arg0); end
+
+  # pkg:gem/rugged#lib/rugged.rb:10
   def update(_arg0, _arg1); end
 
   private
@@ -1273,129 +1764,171 @@ class Rugged::SubmoduleCollection
   # 2. sets up a master branch to be tracking origin/master
   # 3. checkouts the submodule
   #
-  # source://rugged//lib/rugged/submodule_collection.rb#43
+  # pkg:gem/rugged#lib/rugged/submodule_collection.rb:43
   def clone_submodule(repo, **fetch_options); end
 end
 
 class Rugged::SubmoduleError < ::Rugged::Error; end
 
-# source://rugged//lib/rugged/tag.rb#7
+# pkg:gem/rugged#lib/rugged/tag.rb:7
 class Rugged::Tag < ::Rugged::Reference
+  # pkg:gem/rugged#lib/rugged.rb:10
   def annotated?; end
+
+  # pkg:gem/rugged#lib/rugged.rb:10
   def annotation; end
 
-  # source://rugged//lib/rugged/tag.rb#27
+  # pkg:gem/rugged#lib/rugged/tag.rb:27
   def name; end
 
+  # pkg:gem/rugged#lib/rugged.rb:10
   def target; end
 
   class << self
-    # source://rugged//lib/rugged/tag.rb#10
+    # pkg:gem/rugged#lib/rugged/tag.rb:10
     def extract_signature(repo, oid, prefix = T.unsafe(nil)); end
   end
 end
 
-# source://rugged//lib/rugged/tag.rb#31
+# pkg:gem/rugged#lib/rugged/tag.rb:31
 class Rugged::Tag::Annotation < ::Rugged::Object
-  # source://rugged//lib/rugged/tag.rb#36
+  # pkg:gem/rugged#lib/rugged/tag.rb:36
   def inspect; end
 
+  # pkg:gem/rugged#lib/rugged.rb:10
   def message; end
 
-  # source://rugged//lib/rugged/tag.rb#49
+  # pkg:gem/rugged#lib/rugged/tag.rb:49
   def modify(new_args, force = T.unsafe(nil)); end
 
+  # pkg:gem/rugged#lib/rugged.rb:10
   def name; end
+
+  # pkg:gem/rugged#lib/rugged.rb:10
   def tagger; end
+
+  # pkg:gem/rugged#lib/rugged.rb:10
   def target; end
+
+  # pkg:gem/rugged#lib/rugged.rb:10
   def target_id; end
+
+  # pkg:gem/rugged#lib/rugged.rb:10
   def target_oid; end
+
+  # pkg:gem/rugged#lib/rugged.rb:10
   def target_type; end
 
-  # source://rugged//lib/rugged/tag.rb#40
+  # pkg:gem/rugged#lib/rugged/tag.rb:40
   def to_hash; end
 
   class << self
-    # source://rugged//lib/rugged/tag.rb#32
+    # pkg:gem/rugged#lib/rugged/tag.rb:32
     def prettify_message(msg, strip_comments = T.unsafe(nil)); end
   end
 end
 
-# source://rugged//lib/rugged/tag.rb#8
+# pkg:gem/rugged#lib/rugged/tag.rb:8
 Rugged::Tag::GPG_SIGNATURE_PREFIX = T.let(T.unsafe(nil), String)
 
 class Rugged::TagCollection
   include ::Enumerable
 
+  # pkg:gem/rugged#lib/rugged.rb:10
   def initialize(_arg0); end
 
+  # pkg:gem/rugged#lib/rugged.rb:10
   def [](_arg0); end
+
+  # pkg:gem/rugged#lib/rugged.rb:10
   def create(*_arg0); end
+
+  # pkg:gem/rugged#lib/rugged.rb:10
   def create_annotation(_arg0, _arg1, _arg2); end
+
+  # pkg:gem/rugged#lib/rugged.rb:10
   def delete(_arg0); end
+
+  # pkg:gem/rugged#lib/rugged.rb:10
   def each(*_arg0); end
+
+  # pkg:gem/rugged#lib/rugged.rb:10
   def each_name(*_arg0); end
 end
 
 class Rugged::TagError < ::Rugged::Error; end
 class Rugged::ThreadError < ::Rugged::Error; end
 
-# source://rugged//lib/rugged/tree.rb#7
+# pkg:gem/rugged#lib/rugged/tree.rb:7
 class Rugged::Tree < ::Rugged::Object
   include ::Enumerable
 
+  # pkg:gem/rugged#lib/rugged.rb:10
   def [](_arg0); end
+
+  # pkg:gem/rugged#lib/rugged.rb:10
   def count; end
+
+  # pkg:gem/rugged#lib/rugged.rb:10
   def count_recursive(*_arg0); end
 
-  # source://rugged//lib/rugged/tree.rb#163
+  # pkg:gem/rugged#lib/rugged/tree.rb:163
   def diff(other = T.unsafe(nil), options = T.unsafe(nil)); end
 
+  # pkg:gem/rugged#lib/rugged.rb:10
   def diff_workdir(*_arg0); end
+
+  # pkg:gem/rugged#lib/rugged.rb:10
   def each; end
 
   # Iterate over the blobs in this tree
   #
-  # source://rugged//lib/rugged/tree.rb#186
+  # pkg:gem/rugged#lib/rugged/tree.rb:186
   def each_blob; end
 
   # Iterate over the subtrees in this tree
   #
-  # source://rugged//lib/rugged/tree.rb#192
+  # pkg:gem/rugged#lib/rugged/tree.rb:192
   def each_tree; end
 
+  # pkg:gem/rugged#lib/rugged.rb:10
   def get_entry(_arg0); end
+
+  # pkg:gem/rugged#lib/rugged.rb:10
   def get_entry_by_oid(_arg0); end
 
-  # source://rugged//lib/rugged/tree.rb#167
+  # pkg:gem/rugged#lib/rugged/tree.rb:167
   def inspect; end
 
+  # pkg:gem/rugged#lib/rugged.rb:10
   def length; end
+
+  # pkg:gem/rugged#lib/rugged.rb:10
   def merge(*_arg0); end
 
-  # Returns the value of attribute owner.
-  #
-  # source://rugged//lib/rugged/tree.rb#160
+  # pkg:gem/rugged#lib/rugged/tree.rb:160
   def owner; end
 
+  # pkg:gem/rugged#lib/rugged.rb:10
   def path(_arg0); end
 
-  # Returns the value of attribute owner.
-  #
-  # source://rugged//lib/rugged/tree.rb#160
+  # pkg:gem/rugged#lib/rugged/tree.rb:161
   def repo; end
 
+  # pkg:gem/rugged#lib/rugged.rb:10
   def update(_arg0); end
+
+  # pkg:gem/rugged#lib/rugged.rb:10
   def walk(_arg0); end
 
   # Walks the tree but only yields blobs
   #
-  # source://rugged//lib/rugged/tree.rb#174
+  # pkg:gem/rugged#lib/rugged/tree.rb:174
   def walk_blobs(mode = T.unsafe(nil)); end
 
   # Walks the tree but only yields subtrees
   #
-  # source://rugged//lib/rugged/tree.rb#180
+  # pkg:gem/rugged#lib/rugged/tree.rb:180
   def walk_trees(mode = T.unsafe(nil)); end
 
   class << self
@@ -1518,7 +2051,7 @@ class Rugged::Tree < ::Rugged::Object
     #   other_tree = Rugged::Tree.lookup(repo, "7a9e0b02e63179929fed24f0a3e0f19168114d10")
     #   diff = tree.diff(other_tree)
     #
-    # source://rugged//lib/rugged/tree.rb#129
+    # pkg:gem/rugged#lib/rugged/tree.rb:129
     def diff(repo, tree, other_tree = T.unsafe(nil), options = T.unsafe(nil)); end
 
     def empty(_arg0); end
@@ -1531,12 +2064,25 @@ class Rugged::Tree < ::Rugged::Object
 end
 
 class Rugged::Tree::Builder
+  # pkg:gem/rugged#lib/rugged.rb:10
   def <<(_arg0); end
+
+  # pkg:gem/rugged#lib/rugged.rb:10
   def [](_arg0); end
+
+  # pkg:gem/rugged#lib/rugged.rb:10
   def clear; end
+
+  # pkg:gem/rugged#lib/rugged.rb:10
   def insert(_arg0); end
+
+  # pkg:gem/rugged#lib/rugged.rb:10
   def reject!; end
+
+  # pkg:gem/rugged#lib/rugged.rb:10
   def remove(_arg0); end
+
+  # pkg:gem/rugged#lib/rugged.rb:10
   def write; end
 
   class << self
@@ -1546,25 +2092,44 @@ end
 
 class Rugged::TreeError < ::Rugged::Error; end
 
-# source://rugged//lib/rugged/version.rb#7
+# pkg:gem/rugged#lib/rugged/version.rb:7
 Rugged::VERSION = T.let(T.unsafe(nil), String)
 
-# source://rugged//lib/rugged/version.rb#7
+# pkg:gem/rugged#lib/rugged/version.rb:7
 Rugged::Version = T.let(T.unsafe(nil), String)
 
-# source://rugged//lib/rugged/walker.rb#7
+# pkg:gem/rugged#lib/rugged/walker.rb:7
 class Rugged::Walker
   include ::Enumerable
 
+  # pkg:gem/rugged#lib/rugged.rb:10
   def count(*_arg0); end
+
+  # pkg:gem/rugged#lib/rugged.rb:10
   def each(*_arg0); end
+
+  # pkg:gem/rugged#lib/rugged.rb:10
   def each_oid(*_arg0); end
+
+  # pkg:gem/rugged#lib/rugged.rb:10
   def hide(_arg0); end
+
+  # pkg:gem/rugged#lib/rugged.rb:10
   def push(_arg0); end
+
+  # pkg:gem/rugged#lib/rugged.rb:10
   def push_range(_arg0); end
+
+  # pkg:gem/rugged#lib/rugged.rb:10
   def reset; end
+
+  # pkg:gem/rugged#lib/rugged.rb:10
   def simplify_first_parent; end
+
+  # pkg:gem/rugged#lib/rugged.rb:10
   def sorting(_arg0); end
+
+  # pkg:gem/rugged#lib/rugged.rb:10
   def walk(*_arg0); end
 
   class << self

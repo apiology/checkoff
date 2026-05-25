@@ -8,58 +8,38 @@
 # Provides a handler for interrupt signals (SIGINT), allowing the application to
 # finish what it's currently working on.
 #
-# source://overcommit//lib/overcommit/interrupt_handler.rb#7
+# pkg:gem/overcommit#lib/overcommit/interrupt_handler.rb:7
 class InterruptHandler
   include ::Singleton
   extend ::Singleton::SingletonClassMethods
 
   # Initialize safe interrupt signal handling.
   #
-  # @return [InterruptHandler] a new instance of InterruptHandler
-  #
-  # source://overcommit//lib/overcommit/interrupt_handler.rb#13
+  # pkg:gem/overcommit#lib/overcommit/interrupt_handler.rb:13
   def initialize; end
 
-  # Returns the value of attribute isolate_signals.
-  #
-  # source://overcommit//lib/overcommit/interrupt_handler.rb#10
+  # pkg:gem/overcommit#lib/overcommit/interrupt_handler.rb:10
   def isolate_signals; end
 
-  # Sets the attribute isolate_signals
-  #
-  # @param value the value to set the attribute isolate_signals to.
-  #
-  # source://overcommit//lib/overcommit/interrupt_handler.rb#10
+  # pkg:gem/overcommit#lib/overcommit/interrupt_handler.rb:10
   def isolate_signals=(_arg0); end
 
-  # Returns the value of attribute reenable_on_interrupt.
-  #
-  # source://overcommit//lib/overcommit/interrupt_handler.rb#10
+  # pkg:gem/overcommit#lib/overcommit/interrupt_handler.rb:10
   def reenable_on_interrupt; end
 
-  # Sets the attribute reenable_on_interrupt
-  #
-  # @param value the value to set the attribute reenable_on_interrupt to.
-  #
-  # source://overcommit//lib/overcommit/interrupt_handler.rb#10
+  # pkg:gem/overcommit#lib/overcommit/interrupt_handler.rb:10
   def reenable_on_interrupt=(_arg0); end
 
-  # Returns the value of attribute signal_received.
-  #
-  # source://overcommit//lib/overcommit/interrupt_handler.rb#10
+  # pkg:gem/overcommit#lib/overcommit/interrupt_handler.rb:10
   def signal_received; end
 
-  # Sets the attribute signal_received
-  #
-  # @param value the value to set the attribute signal_received to.
-  #
-  # source://overcommit//lib/overcommit/interrupt_handler.rb#10
+  # pkg:gem/overcommit#lib/overcommit/interrupt_handler.rb:10
   def signal_received=(_arg0); end
 
   class << self
     # Disable interrupt isolation.
     #
-    # source://overcommit//lib/overcommit/interrupt_handler.rb#71
+    # pkg:gem/overcommit#lib/overcommit/interrupt_handler.rb:71
     def disable!; end
 
     # Provide a way to allow a single Ctrl-C interrupt to happen and atomically
@@ -92,37 +72,50 @@ class InterruptHandler
     #    ... handle any other exceptions ...
     #  end
     #
-    # source://overcommit//lib/overcommit/interrupt_handler.rb#62
+    # pkg:gem/overcommit#lib/overcommit/interrupt_handler.rb:62
     def disable_until_finished_or_interrupted; end
 
     # Enable interrupt isolation.
     #
-    # source://overcommit//lib/overcommit/interrupt_handler.rb#76
+    # pkg:gem/overcommit#lib/overcommit/interrupt_handler.rb:76
     def enable!; end
 
     # Enable interrupt isolation while executing the provided block.
     #
     # @yield block to execute with interrupt isolation
     #
-    # source://overcommit//lib/overcommit/interrupt_handler.rb#83
+    # pkg:gem/overcommit#lib/overcommit/interrupt_handler.rb:83
     def isolate_from_interrupts; end
 
     private
 
+    # pkg:gem/overcommit#lib/overcommit/interrupt_handler.rb:8
     def allocate; end
+
+    # pkg:gem/overcommit#lib/overcommit/interrupt_handler.rb:8
     def new(*_arg0); end
   end
 end
 
+# Global application constants.
+# Returns the version of the available git binary.
+#
+# This is intended to be used to conveniently execute code based on a specific
+# git version. Simply compare to a version string:
+#
+# @example
+#   if GIT_VERSION <= '1.8.5'
+#     ...
+#   end
 # Defines the gem version.
 #
-# source://overcommit//lib/overcommit/os.rb#5
+# pkg:gem/overcommit#lib/overcommit/os.rb:5
 module Overcommit; end
 
-# source://overcommit//lib/overcommit/constants.rb#12
+# pkg:gem/overcommit#lib/overcommit/constants.rb:12
 Overcommit::BUG_REPORT_URL = T.let(T.unsafe(nil), String)
 
-# source://overcommit//lib/overcommit/constants.rb#6
+# pkg:gem/overcommit#lib/overcommit/constants.rb:6
 Overcommit::CONFIG_FILE_NAME = T.let(T.unsafe(nil), String)
 
 # Distributes a list of arguments over multiple invocations of a command.
@@ -139,24 +132,24 @@ Overcommit::CONFIG_FILE_NAME = T.let(T.unsafe(nil), String)
 # standard `status`, `stdout`, and `stderr` will still work but be a
 # aggregation/concatenation of all statuses/outputs.
 #
-# source://overcommit//lib/overcommit/command_splitter.rb#17
+# pkg:gem/overcommit#lib/overcommit/command_splitter.rb:17
 class Overcommit::CommandSplitter
   class << self
-    # source://overcommit//lib/overcommit/command_splitter.rb#56
+    # pkg:gem/overcommit#lib/overcommit/command_splitter.rb:56
     def execute(initial_args, options); end
 
     private
 
     # @return [Array<Array<String>, Integer>] tuple of arguments and new index
     #
-    # source://overcommit//lib/overcommit/command_splitter.rb#104
+    # pkg:gem/overcommit#lib/overcommit/command_splitter.rb:104
     def arguments_under_limit(splittable_args, start_index, byte_limit); end
 
     # Given a list of prefix arguments and suffix arguments that can be split,
     # returns a list of argument lists that are executable on the current OS
     # without exceeding command line limitations.
     #
-    # source://overcommit//lib/overcommit/command_splitter.rb#79
+    # pkg:gem/overcommit#lib/overcommit/command_splitter.rb:79
     def extract_argument_lists(args, splittable_args); end
 
     # Returns the maximum number of arguments allowed in a single command on
@@ -164,7 +157,7 @@ class Overcommit::CommandSplitter
     #
     # @return [Integer]
     #
-    # source://overcommit//lib/overcommit/command_splitter.rb#132
+    # pkg:gem/overcommit#lib/overcommit/command_splitter.rb:132
     def max_command_length; end
   end
 end
@@ -175,228 +168,201 @@ end
 # @attr_reader stdouts [Array<String>] standard outputs from invocations
 # @attr_reader stderrs [Array<String>] standard error outputs from invocations
 #
-# source://overcommit//lib/overcommit/command_splitter.rb#23
+# pkg:gem/overcommit#lib/overcommit/command_splitter.rb:23
 class Overcommit::CommandSplitter::Result < ::Struct
-  # Returns `0` if all invocations returned `0`; `1` otherwise.
-  #
-  # @return [true, false]
-  #
-  # source://overcommit//lib/overcommit/command_splitter.rb#34
+  # pkg:gem/overcommit#lib/overcommit/command_splitter.rb:34
   def status; end
 
-  # status codes for invocations
-  #
-  # @return [Array<Integer>] the current value of statuses
+  # pkg:gem/overcommit#lib/overcommit/command_splitter.rb:23
   def statuses; end
 
+  # pkg:gem/overcommit#lib/overcommit/command_splitter.rb:23
   def statuses=(_); end
 
-  # Returns concatenated standard error streams of all invocations in the
-  # order they were executed.
-  #
-  # @return [String]
-  #
-  # source://overcommit//lib/overcommit/command_splitter.rb#50
+  # pkg:gem/overcommit#lib/overcommit/command_splitter.rb:50
   def stderr; end
 
-  # standard error outputs from invocations
-  #
-  # @return [Array<String>] the current value of stderrs
+  # pkg:gem/overcommit#lib/overcommit/command_splitter.rb:23
   def stderrs; end
 
+  # pkg:gem/overcommit#lib/overcommit/command_splitter.rb:23
   def stderrs=(_); end
 
-  # Returns concatenated standard output streams of all invocations in the
-  # order they were executed.
-  #
-  # @return [String]
-  #
-  # source://overcommit//lib/overcommit/command_splitter.rb#42
+  # pkg:gem/overcommit#lib/overcommit/command_splitter.rb:42
   def stdout; end
 
-  # standard outputs from invocations
-  #
-  # @return [Array<String>] the current value of stdouts
+  # pkg:gem/overcommit#lib/overcommit/command_splitter.rb:23
   def stdouts; end
 
+  # pkg:gem/overcommit#lib/overcommit/command_splitter.rb:23
   def stdouts=(_); end
 
-  # Returns whether all invocations were successful.
-  #
-  # @return [true, false]
-  #
-  # source://overcommit//lib/overcommit/command_splitter.rb#27
+  # pkg:gem/overcommit#lib/overcommit/command_splitter.rb:27
   def success?; end
 
   class << self
+    # pkg:gem/overcommit#lib/overcommit/command_splitter.rb:23
     def [](*_arg0); end
+
+    # pkg:gem/overcommit#lib/overcommit/command_splitter.rb:23
     def inspect; end
+
+    # pkg:gem/overcommit#lib/overcommit/command_splitter.rb:23
     def keyword_init?; end
+
+    # pkg:gem/overcommit#lib/overcommit/command_splitter.rb:23
     def members; end
+
+    # pkg:gem/overcommit#lib/overcommit/command_splitter.rb:23
     def new(*_arg0); end
   end
 end
 
 # Stores configuration for Overcommit and the hooks it runs.
 #
-# source://overcommit//lib/overcommit/configuration.rb#8
+# pkg:gem/overcommit#lib/overcommit/configuration.rb:8
 class Overcommit::Configuration
   # Creates a configuration from the given hash.
   #
-  # @option default
-  # @option logger
   # @param hash [Hash] loaded YAML config file as a hash
   # @param options [Hash]
-  # @param default [Hash] a customizable set of options
-  # @param logger [Hash] a customizable set of options
-  # @return [Configuration] a new instance of Configuration
+  # @option default [Boolean] whether this is the default built-in configuration
+  # @option logger [Overcommit::Logger]
   #
-  # source://overcommit//lib/overcommit/configuration.rb#15
+  # pkg:gem/overcommit#lib/overcommit/configuration.rb:15
   def initialize(hash, options = T.unsafe(nil)); end
 
-  # source://overcommit//lib/overcommit/configuration.rb#24
+  # pkg:gem/overcommit#lib/overcommit/configuration.rb:24
   def ==(other); end
 
   # Access the configuration as if it were a hash.
   #
   # @param key [String]
-  # @return [Array, Hash, Number, String]
+  # @return [Array,Hash,Number,String]
   #
-  # source://overcommit//lib/overcommit/configuration.rb#32
+  # pkg:gem/overcommit#lib/overcommit/configuration.rb:32
   def [](key); end
 
   # Returns configuration for all built-in hooks in each hook type.
   #
   # @return [Hash]
   #
-  # source://overcommit//lib/overcommit/configuration.rb#72
+  # pkg:gem/overcommit#lib/overcommit/configuration.rb:72
   def all_builtin_hook_configs; end
 
   # Returns configuration for all hooks in each hook type.
   #
   # @return [Hash]
   #
-  # source://overcommit//lib/overcommit/configuration.rb#65
+  # pkg:gem/overcommit#lib/overcommit/configuration.rb:65
   def all_hook_configs; end
 
   # Returns configuration for all plugin hooks in each hook type.
   #
   # @return [Hash]
   #
-  # source://overcommit//lib/overcommit/configuration.rb#91
+  # pkg:gem/overcommit#lib/overcommit/configuration.rb:91
   def all_plugin_hook_configs; end
 
   # Applies additional configuration settings based on the provided
   # environment variables.
   #
-  # source://overcommit//lib/overcommit/configuration.rb#157
+  # pkg:gem/overcommit#lib/overcommit/configuration.rb:157
   def apply_environment!(hook_context, env); end
 
-  # source://overcommit//lib/overcommit/configuration.rb#42
+  # pkg:gem/overcommit#lib/overcommit/configuration.rb:42
   def concurrency; end
 
   # Returns the ad hoc hooks that have been enabled for a hook type.
   #
-  # source://overcommit//lib/overcommit/configuration.rb#123
+  # pkg:gem/overcommit#lib/overcommit/configuration.rb:123
   def enabled_ad_hoc_hooks(hook_context); end
 
   # Returns the built-in hooks that have been enabled for a hook type.
   #
-  # source://overcommit//lib/overcommit/configuration.rb#115
+  # pkg:gem/overcommit#lib/overcommit/configuration.rb:115
   def enabled_builtin_hooks(hook_context); end
 
   # Returns a non-modifiable configuration for a hook.
   #
-  # source://overcommit//lib/overcommit/configuration.rb#131
+  # pkg:gem/overcommit#lib/overcommit/configuration.rb:131
   def for_hook(hook, hook_type = T.unsafe(nil)); end
 
   # Merges the given configuration with this one, returning a new
   # {Configuration}. The provided configuration will either add to or replace
   # any options defined in this configuration.
   #
-  # source://overcommit//lib/overcommit/configuration.rb#151
+  # pkg:gem/overcommit#lib/overcommit/configuration.rb:151
   def merge(config); end
 
   # Returns absolute path to the directory that external hook plugins should
   # be loaded from.
   #
-  # source://overcommit//lib/overcommit/configuration.rb#38
+  # pkg:gem/overcommit#lib/overcommit/configuration.rb:38
   def plugin_directory; end
 
-  # @return [Boolean]
-  #
-  # source://overcommit//lib/overcommit/configuration.rb#181
+  # pkg:gem/overcommit#lib/overcommit/configuration.rb:181
   def plugin_hook?(hook_context_or_type, hook_name); end
 
   # Return whether a previous signature has been recorded for this
   # configuration.
   #
-  # @return [true, false]
+  # @return [true,false]
   #
-  # source://overcommit//lib/overcommit/configuration.rb#205
+  # pkg:gem/overcommit#lib/overcommit/configuration.rb:205
   def previous_signature?; end
 
   # Return whether the signature for this configuration has changed since it
   # was last calculated.
   #
-  # @return [true, false]
+  # @return [true,false]
   #
-  # source://overcommit//lib/overcommit/configuration.rb#197
+  # pkg:gem/overcommit#lib/overcommit/configuration.rb:197
   def signature_changed?; end
 
   # Update the currently stored signature for this hook.
   #
-  # source://overcommit//lib/overcommit/configuration.rb#234
+  # pkg:gem/overcommit#lib/overcommit/configuration.rb:234
   def update_signature!; end
 
   # Returns whether this configuration should verify itself by checking the
   # stored configuration for the repo.
   #
-  # @return [true, false]
+  # @return [true,false]
   #
-  # source://overcommit//lib/overcommit/configuration.rb#213
+  # pkg:gem/overcommit#lib/overcommit/configuration.rb:213
   def verify_signatures?; end
 
   protected
 
-  # Returns the value of attribute hash.
-  #
-  # source://overcommit//lib/overcommit/configuration.rb#252
+  # pkg:gem/overcommit#lib/overcommit/configuration.rb:252
   def hash; end
 
   private
 
-  # @return [Boolean]
-  #
-  # source://overcommit//lib/overcommit/configuration.rb#256
+  # pkg:gem/overcommit#lib/overcommit/configuration.rb:256
   def ad_hoc_hook?(hook_context, hook_name); end
 
-  # @return [Boolean]
-  #
-  # source://overcommit//lib/overcommit/configuration.rb#266
+  # pkg:gem/overcommit#lib/overcommit/configuration.rb:266
   def built_in_hook?(hook_context, hook_name); end
 
-  # @return [Boolean]
-  #
-  # source://overcommit//lib/overcommit/configuration.rb#279
+  # pkg:gem/overcommit#lib/overcommit/configuration.rb:279
   def hook_enabled?(hook_context_or_type, hook_name); end
 
-  # @return [Boolean]
-  #
-  # source://overcommit//lib/overcommit/configuration.rb#273
+  # pkg:gem/overcommit#lib/overcommit/configuration.rb:273
   def hook_exists?(hook_context, hook_name); end
 
   # Returns the unique signature of this configuration.
   #
   # @return [String]
   #
-  # source://overcommit//lib/overcommit/configuration.rb#317
+  # pkg:gem/overcommit#lib/overcommit/configuration.rb:317
   def signature; end
 
-  # source://overcommit//lib/overcommit/configuration.rb#342
+  # pkg:gem/overcommit#lib/overcommit/configuration.rb:342
   def signature_config_key; end
 
-  # source://overcommit//lib/overcommit/configuration.rb#296
+  # pkg:gem/overcommit#lib/overcommit/configuration.rb:296
   def smart_merge(parent, child); end
 
   # Returns the stored signature of this repo's Overcommit configuration.
@@ -406,44 +372,42 @@ class Overcommit::Configuration
   #
   # @return [String]
   #
-  # source://overcommit//lib/overcommit/configuration.rb#327
+  # pkg:gem/overcommit#lib/overcommit/configuration.rb:327
   def stored_signature; end
 
-  # source://overcommit//lib/overcommit/configuration.rb#346
+  # pkg:gem/overcommit#lib/overcommit/configuration.rb:346
   def verify_signature_config_key; end
 end
 
 # Manages configuration file loading.
 #
-# source://overcommit//lib/overcommit/configuration_loader.rb#7
+# pkg:gem/overcommit#lib/overcommit/configuration_loader.rb:7
 class Overcommit::ConfigurationLoader
   # Create a configuration loader which writes warnings/errors to the given
   # {Overcommit::Logger} instance.
   #
-  # @option verify
   # @param logger [Overcommit::Logger]
   # @param options [Hash]
-  # @param verify [Hash] a customizable set of options
-  # @return [ConfigurationLoader] a new instance of ConfigurationLoader
+  # @option verify [Boolean] whether to verify signatures
   #
-  # source://overcommit//lib/overcommit/configuration_loader.rb#47
+  # pkg:gem/overcommit#lib/overcommit/configuration_loader.rb:47
   def initialize(logger, options = T.unsafe(nil)); end
 
   # Loads a configuration, ensuring it extends the default configuration.
   #
-  # source://overcommit//lib/overcommit/configuration_loader.rb#71
+  # pkg:gem/overcommit#lib/overcommit/configuration_loader.rb:71
   def load_file(file, local_file = T.unsafe(nil)); end
 
   # Loads and returns the configuration for the repository we're running in.
   #
   # @return [Overcommit::Configuration]
   #
-  # source://overcommit//lib/overcommit/configuration_loader.rb#55
+  # pkg:gem/overcommit#lib/overcommit/configuration_loader.rb:55
   def load_repo_config; end
 
   private
 
-  # source://overcommit//lib/overcommit/configuration_loader.rb#92
+  # pkg:gem/overcommit#lib/overcommit/configuration_loader.rb:92
   def verify_signatures(config); end
 
   class << self
@@ -451,45 +415,40 @@ class Overcommit::ConfigurationLoader
     #
     # @return [Overcommit::Configuration]
     #
-    # source://overcommit//lib/overcommit/configuration_loader.rb#14
+    # pkg:gem/overcommit#lib/overcommit/configuration_loader.rb:14
     def default_configuration; end
 
     # Loads configuration from file.
     #
-    # @option logger
-    # @option verify
-    # @option default
-    # @param verify [Hash] a customizable set of options
-    # @param logger [Hash] a customizable set of options
-    # @param options [Hash]
     # @param file [String] path to file
-    # @param default [Hash] a customizable set of options
+    # @param options [Hash]
+    # @option default [Boolean] whether this is the default built-in configuration
+    # @option verify [Boolean] whether to verify the signature of the configuration
+    # @option logger [Overcommit::Logger]
     # @return [Overcommit::Configuration]
     #
-    # source://overcommit//lib/overcommit/configuration_loader.rb#26
+    # pkg:gem/overcommit#lib/overcommit/configuration_loader.rb:26
     def load_from_file(file, options = T.unsafe(nil)); end
   end
 end
 
-# source://overcommit//lib/overcommit/configuration_loader.rb#8
+# pkg:gem/overcommit#lib/overcommit/configuration_loader.rb:8
 Overcommit::ConfigurationLoader::DEFAULT_CONFIG_PATH = T.let(T.unsafe(nil), String)
 
 # Validates and normalizes a configuration.
 #
-# source://overcommit//lib/overcommit/configuration_validator.rb#6
+# pkg:gem/overcommit#lib/overcommit/configuration_validator.rb:6
 class Overcommit::ConfigurationValidator
   # Validates hash for any invalid options, normalizing where possible.
   #
-  # @option logger
-  # @option default
-  # @param hash [Hash] hash representation of YAML config
-  # @param default [Hash] a customizable set of options
-  # @param logger [Hash] a customizable set of options
-  # @param options [Hash]
   # @param config [Overcommit::Configuration]
+  # @param hash [Hash] hash representation of YAML config
+  # @param options[Hash]
+  # @option default [Boolean] whether hash represents the default built-in config
+  # @option logger [Overcommit::Logger] logger to output warnings to
   # @return [Hash] validated hash (potentially modified)
   #
-  # source://overcommit//lib/overcommit/configuration_validator.rb#15
+  # pkg:gem/overcommit#lib/overcommit/configuration_validator.rb:15
   def validate(config, hash, options); end
 
   private
@@ -497,28 +456,28 @@ class Overcommit::ConfigurationValidator
   # Prints a warning if there are any hooks listed in the configuration
   # without `enabled` explicitly set.
   #
-  # source://overcommit//lib/overcommit/configuration_validator.rb#125
+  # pkg:gem/overcommit#lib/overcommit/configuration_validator.rb:125
   def check_for_missing_enabled_option(hash); end
 
   # Prints a warning if any hook has a number of processors larger than the
   # global `concurrency` setting.
   #
-  # source://overcommit//lib/overcommit/configuration_validator.rb#147
+  # pkg:gem/overcommit#lib/overcommit/configuration_validator.rb:147
   def check_for_too_many_processors(config, hash); end
 
   # Prints a warning if the `verify_plugin_signatures` option is used instead
   # of the new `verify_signatures` option.
   #
-  # source://overcommit//lib/overcommit/configuration_validator.rb#174
+  # pkg:gem/overcommit#lib/overcommit/configuration_validator.rb:174
   def check_for_verify_plugin_signatures_option(hash); end
 
-  # source://overcommit//lib/overcommit/configuration_validator.rb#58
+  # pkg:gem/overcommit#lib/overcommit/configuration_validator.rb:58
   def check_hook_env(hash); end
 
   # Prints an error message and raises an exception if a hook has an
   # invalid name, since this can result in strange errors elsewhere.
   #
-  # source://overcommit//lib/overcommit/configuration_validator.rb#98
+  # pkg:gem/overcommit#lib/overcommit/configuration_validator.rb:98
   def check_hook_name_format(hash); end
 
   # Normalizes `nil` values to empty hashes.
@@ -527,132 +486,132 @@ class Overcommit::ConfigurationValidator
   # together, since it's easier to merge two hashes than to have to check if
   # one of the values is nil.
   #
-  # source://overcommit//lib/overcommit/configuration_validator.rb#46
+  # pkg:gem/overcommit#lib/overcommit/configuration_validator.rb:46
   def convert_nils_to_empty_hashes(hash); end
 
   # Ensures that keys for all supported hook types exist (PreCommit,
   # CommitMsg, etc.)
   #
-  # source://overcommit//lib/overcommit/configuration_validator.rb#34
+  # pkg:gem/overcommit#lib/overcommit/configuration_validator.rb:34
   def ensure_hook_type_sections_exist(hash); end
 end
 
-# source://overcommit//lib/overcommit/exceptions.rb#3
+# pkg:gem/overcommit#lib/overcommit/exceptions.rb:3
 module Overcommit::Exceptions; end
 
 # Raised when a {Configuration} could not be loaded from a file.
 #
-# source://overcommit//lib/overcommit/exceptions.rb#8
+# pkg:gem/overcommit#lib/overcommit/exceptions.rb:8
 class Overcommit::Exceptions::ConfigurationError < ::Overcommit::Exceptions::Error; end
 
 # Raised when the Overcommit configuration file signature has changed.
 #
-# source://overcommit//lib/overcommit/exceptions.rb#11
+# pkg:gem/overcommit#lib/overcommit/exceptions.rb:11
 class Overcommit::Exceptions::ConfigurationSignatureChanged < ::Overcommit::Exceptions::Error; end
 
 # Base error class.
 #
-# source://overcommit//lib/overcommit/exceptions.rb#5
+# pkg:gem/overcommit#lib/overcommit/exceptions.rb:5
 class Overcommit::Exceptions::Error < ::StandardError; end
 
 # Raised when trying to read/write to/from the local repo git config fails.
 #
-# source://overcommit//lib/overcommit/exceptions.rb#14
+# pkg:gem/overcommit#lib/overcommit/exceptions.rb:14
 class Overcommit::Exceptions::GitConfigError < ::Overcommit::Exceptions::Error; end
 
 # Raised when there was a problem reading git revision information with `rev-list`.
 #
-# source://overcommit//lib/overcommit/exceptions.rb#20
+# pkg:gem/overcommit#lib/overcommit/exceptions.rb:20
 class Overcommit::Exceptions::GitRevListError < ::Overcommit::Exceptions::Error; end
 
 # Raised when there was a problem reading submodule information for a repo.
 #
-# source://overcommit//lib/overcommit/exceptions.rb#17
+# pkg:gem/overcommit#lib/overcommit/exceptions.rb:17
 class Overcommit::Exceptions::GitSubmoduleError < ::Overcommit::Exceptions::Error; end
 
 # Raised when a hook run was cancelled by the user.
 #
-# source://overcommit//lib/overcommit/exceptions.rb#29
+# pkg:gem/overcommit#lib/overcommit/exceptions.rb:29
 class Overcommit::Exceptions::HookCancelled < ::Overcommit::Exceptions::Error; end
 
 # Raised when a {HookContext} is unable to clean the environment after a run.
 #
-# source://overcommit//lib/overcommit/exceptions.rb#26
+# pkg:gem/overcommit#lib/overcommit/exceptions.rb:26
 class Overcommit::Exceptions::HookCleanupFailed < ::Overcommit::Exceptions::Error; end
 
 # Raised when a {HookRunner} could not be loaded.
 #
-# source://overcommit//lib/overcommit/exceptions.rb#35
+# pkg:gem/overcommit#lib/overcommit/exceptions.rb:35
 class Overcommit::Exceptions::HookContextLoadError < ::Overcommit::Exceptions::Error; end
 
 # Raised when a hook could not be loaded by a {HookRunner}.
 #
-# source://overcommit//lib/overcommit/exceptions.rb#32
+# pkg:gem/overcommit#lib/overcommit/exceptions.rb:32
 class Overcommit::Exceptions::HookLoadError < ::Overcommit::Exceptions::Error; end
 
 # Raised when a {HookContext} is unable to setup the environment before a run.
 #
-# source://overcommit//lib/overcommit/exceptions.rb#23
+# pkg:gem/overcommit#lib/overcommit/exceptions.rb:23
 class Overcommit::Exceptions::HookSetupFailed < ::Overcommit::Exceptions::Error; end
 
 # Raised when a pipe character is used in the `execute` helper, as this was
 # likely used in error.
 #
-# source://overcommit//lib/overcommit/exceptions.rb#39
+# pkg:gem/overcommit#lib/overcommit/exceptions.rb:39
 class Overcommit::Exceptions::InvalidCommandArgs < ::Overcommit::Exceptions::Error; end
 
 # Raised when an installation target is not a valid git repository.
 #
-# source://overcommit//lib/overcommit/exceptions.rb#42
+# pkg:gem/overcommit#lib/overcommit/exceptions.rb:42
 class Overcommit::Exceptions::InvalidGitRepo < ::Overcommit::Exceptions::Error; end
 
 # Raised when a hook was defined incorrectly.
 #
-# source://overcommit//lib/overcommit/exceptions.rb#45
+# pkg:gem/overcommit#lib/overcommit/exceptions.rb:45
 class Overcommit::Exceptions::InvalidHookDefinition < ::Overcommit::Exceptions::Error; end
 
 # Raised when one or more hook plugin signatures have changed.
 #
-# source://overcommit//lib/overcommit/exceptions.rb#48
+# pkg:gem/overcommit#lib/overcommit/exceptions.rb:48
 class Overcommit::Exceptions::InvalidHookSignature < ::Overcommit::Exceptions::Error; end
 
 # Raised when there is a problem processing output into {Hook::Messages}s.
 #
-# source://overcommit//lib/overcommit/exceptions.rb#51
+# pkg:gem/overcommit#lib/overcommit/exceptions.rb:51
 class Overcommit::Exceptions::MessageProcessingError < ::Overcommit::Exceptions::Error; end
 
 # Raised when an installation target already contains non-Overcommit hooks.
 #
-# source://overcommit//lib/overcommit/exceptions.rb#54
+# pkg:gem/overcommit#lib/overcommit/exceptions.rb:54
 class Overcommit::Exceptions::PreExistingHooks < ::Overcommit::Exceptions::Error; end
 
-# source://overcommit//lib/overcommit/git_version.rb#13
+# pkg:gem/overcommit#lib/overcommit/git_version.rb:13
 Overcommit::GIT_VERSION = T.let(T.unsafe(nil), Overcommit::Utils::Version)
 
 # Get configuration options from git
 #
-# source://overcommit//lib/overcommit/git_config.rb#7
+# pkg:gem/overcommit#lib/overcommit/git_config.rb:7
 module Overcommit::GitConfig
   private
 
-  # source://overcommit//lib/overcommit/git_config.rb#10
+  # pkg:gem/overcommit#lib/overcommit/git_config.rb:10
   def comment_character; end
 
-  # source://overcommit//lib/overcommit/git_config.rb#16
+  # pkg:gem/overcommit#lib/overcommit/git_config.rb:16
   def hooks_path; end
 
   class << self
-    # source://overcommit//lib/overcommit/git_config.rb#10
+    # pkg:gem/overcommit#lib/overcommit/git_config.rb:10
     def comment_character; end
 
-    # source://overcommit//lib/overcommit/git_config.rb#16
+    # pkg:gem/overcommit#lib/overcommit/git_config.rb:16
     def hooks_path; end
   end
 end
 
 # Provide a set of utilities for certain interactions with `git`.
 #
-# source://overcommit//lib/overcommit/git_repo.rb#8
+# pkg:gem/overcommit#lib/overcommit/git_repo.rb:8
 module Overcommit::GitRepo
   private
 
@@ -660,7 +619,7 @@ module Overcommit::GitRepo
   #
   # @return [Array<String>] list of absolute file paths
   #
-  # source://overcommit//lib/overcommit/git_repo.rb#137
+  # pkg:gem/overcommit#lib/overcommit/git_repo.rb:137
   def all_files; end
 
   # Returns the names of all branches containing the given commit.
@@ -668,14 +627,13 @@ module Overcommit::GitRepo
   # @param commit_ref [String] git tree ref that resolves to a commit
   # @return [Array<String>] list of branches containing the given commit
   #
-  # source://overcommit//lib/overcommit/git_repo.rb#274
+  # pkg:gem/overcommit#lib/overcommit/git_repo.rb:274
   def branches_containing_commit(commit_ref); end
 
   # Returns the name of the currently checked out branch.
-  #
   # @return [String]
   #
-  # source://overcommit//lib/overcommit/git_repo.rb#283
+  # pkg:gem/overcommit#lib/overcommit/git_repo.rb:283
   def current_branch; end
 
   # Extract the set of modified lines from a given file.
@@ -684,23 +642,22 @@ module Overcommit::GitRepo
   # @param options [Hash]
   # @return [Set] line numbers that have been modified in file
   #
-  # source://overcommit//lib/overcommit/git_repo.rb#68
+  # pkg:gem/overcommit#lib/overcommit/git_repo.rb:68
   def extract_modified_lines(file_path, options); end
 
   # Returns whether the current git branch is empty (has no commits).
+  # @return [true,false]
   #
-  # @return [true, false]
-  #
-  # source://overcommit//lib/overcommit/git_repo.rb#146
+  # pkg:gem/overcommit#lib/overcommit/git_repo.rb:146
   def initial_commit?; end
 
   # Returns the names of files in the given paths that are tracked by git.
   #
-  # @option options
   # @param paths [Array<String>] list of paths to check
+  # @option options [String] ref ('HEAD') Git ref to check
   # @return [Array<String>] list of absolute file paths
   #
-  # source://overcommit//lib/overcommit/git_repo.rb#110
+  # pkg:gem/overcommit#lib/overcommit/git_repo.rb:110
   def list_files(paths = T.unsafe(nil), options = T.unsafe(nil)); end
 
   # Returns the names of all files that have been modified compared to HEAD.
@@ -708,19 +665,19 @@ module Overcommit::GitRepo
   # @param options [Hash]
   # @return [Array<String>] list of absolute file paths
   #
-  # source://overcommit//lib/overcommit/git_repo.rb#93
+  # pkg:gem/overcommit#lib/overcommit/git_repo.rb:93
   def modified_files(options); end
 
   # Restore any relevant files that were present when repo was in the middle
   # of a cherry-pick.
   #
-  # source://overcommit//lib/overcommit/git_repo.rb#203
+  # pkg:gem/overcommit#lib/overcommit/git_repo.rb:203
   def restore_cherry_pick_state; end
 
   # Restore any relevant files that were present when repo was in the middle
   # of a merge.
   #
-  # source://overcommit//lib/overcommit/git_repo.rb#183
+  # pkg:gem/overcommit#lib/overcommit/git_repo.rb:183
   def restore_merge_state; end
 
   # Returns the submodules that have been staged for removal.
@@ -739,7 +696,7 @@ module Overcommit::GitRepo
   #
   # @raise [Overcommit::Exceptions::GitSubmoduleError] when
   #
-  # source://overcommit//lib/overcommit/git_repo.rb#231
+  # pkg:gem/overcommit#lib/overcommit/git_repo.rb:231
   def staged_submodule_removals; end
 
   # Store any relevant files that are present when repo is in the middle of a
@@ -747,7 +704,7 @@ module Overcommit::GitRepo
   #
   # Restored via [#restore_cherry_pick_state].
   #
-  # source://overcommit//lib/overcommit/git_repo.rb#171
+  # pkg:gem/overcommit#lib/overcommit/git_repo.rb:171
   def store_cherry_pick_state; end
 
   # Store any relevant files that are present when repo is in the middle of a
@@ -755,16 +712,16 @@ module Overcommit::GitRepo
   #
   # Restored via [#restore_merge_state].
   #
-  # source://overcommit//lib/overcommit/git_repo.rb#154
+  # pkg:gem/overcommit#lib/overcommit/git_repo.rb:154
   def store_merge_state; end
 
   # Returns a list of SubmoduleStatus objects, one for each submodule in the
   # parent repository.
   #
-  # @option options
+  # @option options [Boolean] recursive check submodules recursively
   # @return [Array<SubmoduleStatus>]
   #
-  # source://overcommit//lib/overcommit/git_repo.rb#53
+  # pkg:gem/overcommit#lib/overcommit/git_repo.rb:53
   def submodule_statuses(options = T.unsafe(nil)); end
 
   # Returns the current set of registered submodules.
@@ -772,15 +729,15 @@ module Overcommit::GitRepo
   # @param options [Hash]
   # @return [Array<Overcommit::GitRepo::Submodule>]
   #
-  # source://overcommit//lib/overcommit/git_repo.rb#245
+  # pkg:gem/overcommit#lib/overcommit/git_repo.rb:245
   def submodules(options = T.unsafe(nil)); end
 
   # Returns whether the specified file/path is tracked by this repository.
   #
   # @param path [String]
-  # @return [true, false]
+  # @return [true,false]
   #
-  # source://overcommit//lib/overcommit/git_repo.rb#130
+  # pkg:gem/overcommit#lib/overcommit/git_repo.rb:130
   def tracked?(path); end
 
   class << self
@@ -788,7 +745,7 @@ module Overcommit::GitRepo
     #
     # @return [Array<String>] list of absolute file paths
     #
-    # source://overcommit//lib/overcommit/git_repo.rb#137
+    # pkg:gem/overcommit#lib/overcommit/git_repo.rb:137
     def all_files; end
 
     # Returns the names of all branches containing the given commit.
@@ -796,14 +753,13 @@ module Overcommit::GitRepo
     # @param commit_ref [String] git tree ref that resolves to a commit
     # @return [Array<String>] list of branches containing the given commit
     #
-    # source://overcommit//lib/overcommit/git_repo.rb#274
+    # pkg:gem/overcommit#lib/overcommit/git_repo.rb:274
     def branches_containing_commit(commit_ref); end
 
     # Returns the name of the currently checked out branch.
-    #
     # @return [String]
     #
-    # source://overcommit//lib/overcommit/git_repo.rb#283
+    # pkg:gem/overcommit#lib/overcommit/git_repo.rb:283
     def current_branch; end
 
     # Extract the set of modified lines from a given file.
@@ -812,24 +768,22 @@ module Overcommit::GitRepo
     # @param options [Hash]
     # @return [Set] line numbers that have been modified in file
     #
-    # source://overcommit//lib/overcommit/git_repo.rb#68
+    # pkg:gem/overcommit#lib/overcommit/git_repo.rb:68
     def extract_modified_lines(file_path, options); end
 
     # Returns whether the current git branch is empty (has no commits).
+    # @return [true,false]
     #
-    # @return [true, false]
-    #
-    # source://overcommit//lib/overcommit/git_repo.rb#146
+    # pkg:gem/overcommit#lib/overcommit/git_repo.rb:146
     def initial_commit?; end
 
     # Returns the names of files in the given paths that are tracked by git.
     #
-    # @option options
     # @param paths [Array<String>] list of paths to check
-    # @param options [Hash] a customizable set of options
+    # @option options [String] ref ('HEAD') Git ref to check
     # @return [Array<String>] list of absolute file paths
     #
-    # source://overcommit//lib/overcommit/git_repo.rb#110
+    # pkg:gem/overcommit#lib/overcommit/git_repo.rb:110
     def list_files(paths = T.unsafe(nil), options = T.unsafe(nil)); end
 
     # Returns the names of all files that have been modified compared to HEAD.
@@ -837,19 +791,19 @@ module Overcommit::GitRepo
     # @param options [Hash]
     # @return [Array<String>] list of absolute file paths
     #
-    # source://overcommit//lib/overcommit/git_repo.rb#93
+    # pkg:gem/overcommit#lib/overcommit/git_repo.rb:93
     def modified_files(options); end
 
     # Restore any relevant files that were present when repo was in the middle
     # of a cherry-pick.
     #
-    # source://overcommit//lib/overcommit/git_repo.rb#203
+    # pkg:gem/overcommit#lib/overcommit/git_repo.rb:203
     def restore_cherry_pick_state; end
 
     # Restore any relevant files that were present when repo was in the middle
     # of a merge.
     #
-    # source://overcommit//lib/overcommit/git_repo.rb#183
+    # pkg:gem/overcommit#lib/overcommit/git_repo.rb:183
     def restore_merge_state; end
 
     # Returns the submodules that have been staged for removal.
@@ -868,7 +822,7 @@ module Overcommit::GitRepo
     #
     # @raise [Overcommit::Exceptions::GitSubmoduleError] when
     #
-    # source://overcommit//lib/overcommit/git_repo.rb#231
+    # pkg:gem/overcommit#lib/overcommit/git_repo.rb:231
     def staged_submodule_removals; end
 
     # Store any relevant files that are present when repo is in the middle of a
@@ -876,7 +830,7 @@ module Overcommit::GitRepo
     #
     # Restored via [#restore_cherry_pick_state].
     #
-    # source://overcommit//lib/overcommit/git_repo.rb#171
+    # pkg:gem/overcommit#lib/overcommit/git_repo.rb:171
     def store_cherry_pick_state; end
 
     # Store any relevant files that are present when repo is in the middle of a
@@ -884,17 +838,16 @@ module Overcommit::GitRepo
     #
     # Restored via [#restore_merge_state].
     #
-    # source://overcommit//lib/overcommit/git_repo.rb#154
+    # pkg:gem/overcommit#lib/overcommit/git_repo.rb:154
     def store_merge_state; end
 
     # Returns a list of SubmoduleStatus objects, one for each submodule in the
     # parent repository.
     #
-    # @option options
-    # @param options [Hash] a customizable set of options
+    # @option options [Boolean] recursive check submodules recursively
     # @return [Array<SubmoduleStatus>]
     #
-    # source://overcommit//lib/overcommit/git_repo.rb#53
+    # pkg:gem/overcommit#lib/overcommit/git_repo.rb:53
     def submodule_statuses(options = T.unsafe(nil)); end
 
     # Returns the current set of registered submodules.
@@ -902,61 +855,60 @@ module Overcommit::GitRepo
     # @param options [Hash]
     # @return [Array<Overcommit::GitRepo::Submodule>]
     #
-    # source://overcommit//lib/overcommit/git_repo.rb#245
+    # pkg:gem/overcommit#lib/overcommit/git_repo.rb:245
     def submodules(options = T.unsafe(nil)); end
 
     # Returns whether the specified file/path is tracked by this repository.
     #
     # @param path [String]
-    # @return [true, false]
+    # @return [true,false]
     #
-    # source://overcommit//lib/overcommit/git_repo.rb#130
+    # pkg:gem/overcommit#lib/overcommit/git_repo.rb:130
     def tracked?(path); end
   end
 end
 
 # Regular expression used to extract diff ranges from hunks of diff output.
 #
-# source://overcommit//lib/overcommit/git_repo.rb#12
+# pkg:gem/overcommit#lib/overcommit/git_repo.rb:12
 Overcommit::GitRepo::DIFF_HUNK_REGEX = T.let(T.unsafe(nil), Regexp)
 
 # Regular expression used to extract information from lines of
 # `git submodule status` output
 #
-# source://overcommit//lib/overcommit/git_repo.rb#21
+# pkg:gem/overcommit#lib/overcommit/git_repo.rb:21
 Overcommit::GitRepo::SUBMODULE_STATUS_REGEX = T.let(T.unsafe(nil), Regexp)
 
 # Contains information about a registered submodule.
 #
-# source://overcommit//lib/overcommit/git_repo.rb#214
+# pkg:gem/overcommit#lib/overcommit/git_repo.rb:214
 class Overcommit::GitRepo::Submodule < ::Struct
-  # Returns the value of attribute path
-  #
-  # @return [Object] the current value of path
+  # pkg:gem/overcommit#lib/overcommit/git_repo.rb:214
   def path; end
 
-  # Sets the attribute path
-  #
-  # @param value [Object] the value to set the attribute path to.
-  # @return [Object] the newly set value
+  # pkg:gem/overcommit#lib/overcommit/git_repo.rb:214
   def path=(_); end
 
-  # Returns the value of attribute url
-  #
-  # @return [Object] the current value of url
+  # pkg:gem/overcommit#lib/overcommit/git_repo.rb:214
   def url; end
 
-  # Sets the attribute url
-  #
-  # @param value [Object] the value to set the attribute url to.
-  # @return [Object] the newly set value
+  # pkg:gem/overcommit#lib/overcommit/git_repo.rb:214
   def url=(_); end
 
   class << self
+    # pkg:gem/overcommit#lib/overcommit/git_repo.rb:214
     def [](*_arg0); end
+
+    # pkg:gem/overcommit#lib/overcommit/git_repo.rb:214
     def inspect; end
+
+    # pkg:gem/overcommit#lib/overcommit/git_repo.rb:214
     def keyword_init?; end
+
+    # pkg:gem/overcommit#lib/overcommit/git_repo.rb:214
     def members; end
+
+    # pkg:gem/overcommit#lib/overcommit/git_repo.rb:214
     def new(*_arg0); end
   end
 end
@@ -964,115 +916,89 @@ end
 # Struct encapsulating submodule information extracted from the
 # output of `git submodule status`
 #
-# source://overcommit//lib/overcommit/git_repo.rb#29
+# pkg:gem/overcommit#lib/overcommit/git_repo.rb:29
 class Overcommit::GitRepo::SubmoduleStatus < ::Struct
-  # Returns the value of attribute describe
-  #
-  # @return [Object] the current value of describe
+  # pkg:gem/overcommit#lib/overcommit/git_repo.rb:29
   def describe; end
 
-  # Sets the attribute describe
-  #
-  # @param value [Object] the value to set the attribute describe to.
-  # @return [Object] the newly set value
+  # pkg:gem/overcommit#lib/overcommit/git_repo.rb:29
   def describe=(_); end
 
-  # Returns whether the submodule reference has a merge conflict
-  #
-  # @return [Boolean]
-  #
-  # source://overcommit//lib/overcommit/git_repo.rb#43
+  # pkg:gem/overcommit#lib/overcommit/git_repo.rb:43
   def merge_conflict?; end
 
-  # Returns whether the submodule is out of date with the current
-  # index, i.e. its checked-out commit differs from that stored in
-  # the index of the parent repo
-  #
-  # @return [Boolean]
-  #
-  # source://overcommit//lib/overcommit/git_repo.rb#38
+  # pkg:gem/overcommit#lib/overcommit/git_repo.rb:38
   def outdated?; end
 
-  # Returns the value of attribute path
-  #
-  # @return [Object] the current value of path
+  # pkg:gem/overcommit#lib/overcommit/git_repo.rb:29
   def path; end
 
-  # Sets the attribute path
-  #
-  # @param value [Object] the value to set the attribute path to.
-  # @return [Object] the newly set value
+  # pkg:gem/overcommit#lib/overcommit/git_repo.rb:29
   def path=(_); end
 
-  # Returns the value of attribute prefix
-  #
-  # @return [Object] the current value of prefix
+  # pkg:gem/overcommit#lib/overcommit/git_repo.rb:29
   def prefix; end
 
-  # Sets the attribute prefix
-  #
-  # @param value [Object] the value to set the attribute prefix to.
-  # @return [Object] the newly set value
+  # pkg:gem/overcommit#lib/overcommit/git_repo.rb:29
   def prefix=(_); end
 
-  # Returns the value of attribute sha1
-  #
-  # @return [Object] the current value of sha1
+  # pkg:gem/overcommit#lib/overcommit/git_repo.rb:29
   def sha1; end
 
-  # Sets the attribute sha1
-  #
-  # @param value [Object] the value to set the attribute sha1 to.
-  # @return [Object] the newly set value
+  # pkg:gem/overcommit#lib/overcommit/git_repo.rb:29
   def sha1=(_); end
 
-  # Returns whether the submodule has not been initialized
-  #
-  # @return [Boolean]
-  #
-  # source://overcommit//lib/overcommit/git_repo.rb#31
+  # pkg:gem/overcommit#lib/overcommit/git_repo.rb:31
   def uninitialized?; end
 
   class << self
+    # pkg:gem/overcommit#lib/overcommit/git_repo.rb:29
     def [](*_arg0); end
+
+    # pkg:gem/overcommit#lib/overcommit/git_repo.rb:29
     def inspect; end
+
+    # pkg:gem/overcommit#lib/overcommit/git_repo.rb:29
     def keyword_init?; end
+
+    # pkg:gem/overcommit#lib/overcommit/git_repo.rb:29
     def members; end
+
+    # pkg:gem/overcommit#lib/overcommit/git_repo.rb:29
     def new(*_arg0); end
   end
 end
 
-# source://overcommit//lib/overcommit/constants.rb#5
+# pkg:gem/overcommit#lib/overcommit/constants.rb:5
 Overcommit::HOME = T.let(T.unsafe(nil), String)
 
-# source://overcommit//lib/overcommit/constants.rb#9
+# pkg:gem/overcommit#lib/overcommit/constants.rb:9
 Overcommit::HOOK_DIRECTORY = T.let(T.unsafe(nil), String)
 
 # Container for top-level hook-related classes and constants.
 #
-# source://overcommit//lib/overcommit/hook/base.rb#7
+# pkg:gem/overcommit#lib/overcommit/hook/base.rb:7
 module Overcommit::Hook; end
 
 # Functionality common to all hooks.
 #
-# source://overcommit//lib/overcommit/hook/base.rb#19
+# pkg:gem/overcommit#lib/overcommit/hook/base.rb:19
 class Overcommit::Hook::Base
   extend ::Forwardable
 
   # @param config [Overcommit::Configuration]
   # @param context [Overcommit::HookContext]
-  # @return [Base] a new instance of Base
   #
-  # source://overcommit//lib/overcommit/hook/base.rb#27
+  # pkg:gem/overcommit#lib/overcommit/hook/base.rb:27
   def initialize(config, context); end
 
-  # source://forwardable/1.3.3/forwardable.rb#231
+  # pkg:gem/overcommit#lib/overcommit/hook/base.rb:22
   def all_files(*args, **_arg1, &block); end
 
   # Gets a list of staged files that apply to this hook based on its
   # configured `include` and `exclude` lists.
   #
-  # source://overcommit//lib/overcommit/hook/base.rb#165
+  # pkg:gem/overcommit#lib/overcommit/hook/base.rb:165
   def applicable_files; end
 
   # Return command to execute for this hook.
@@ -1086,25 +1012,19 @@ class Overcommit::Hook::Base
   #
   # @return [Array<String>]
   #
-  # source://overcommit//lib/overcommit/hook/base.rb#141
+  # pkg:gem/overcommit#lib/overcommit/hook/base.rb:141
   def command; end
 
-  # Returns the value of attribute config.
-  #
-  # source://overcommit//lib/overcommit/hook/base.rb#23
+  # pkg:gem/overcommit#lib/overcommit/hook/base.rb:23
   def config; end
 
-  # source://overcommit//lib/overcommit/hook/base.rb#58
+  # pkg:gem/overcommit#lib/overcommit/hook/base.rb:58
   def description; end
 
-  # @return [Boolean]
-  #
-  # source://overcommit//lib/overcommit/hook/base.rb#78
+  # pkg:gem/overcommit#lib/overcommit/hook/base.rb:78
   def enabled?; end
 
-  # @return [Boolean]
-  #
-  # source://overcommit//lib/overcommit/hook/base.rb#82
+  # pkg:gem/overcommit#lib/overcommit/hook/base.rb:82
   def excluded?; end
 
   # Execute a command in a separate process.
@@ -1114,16 +1034,18 @@ class Overcommit::Hook::Base
   # operating system's maximum command length is not exceeded. This is useful
   # for splitting up long file lists.
   #
-  # @option options
-  # @option options
   # @param cmd [Array<String>] command arguments
   # @param options [Hash]
-  # @return [#status, #stdout, #stderr] struct containing result of invocation
+  # @option options [Array<String>] :args arguments that can be split up over
+  #   multiple invocations (usually a list of files)
+  # @option options [String] :input string to pass to process' standard input
+  #   stream
+  # @return [#status,#stdout,#stderr] struct containing result of invocation
   #
-  # source://overcommit//lib/overcommit/hook/base.rb#115
+  # pkg:gem/overcommit#lib/overcommit/hook/base.rb:115
   def execute(cmd, options = T.unsafe(nil)); end
 
-  # source://overcommit//lib/overcommit/hook/base.rb#119
+  # pkg:gem/overcommit#lib/overcommit/hook/base.rb:119
   def execute_in_background(cmd); end
 
   # Return command line flags to be passed to the command.
@@ -1141,60 +1063,48 @@ class Overcommit::Hook::Base
   #
   # @return [Array<String>]
   #
-  # source://overcommit//lib/overcommit/hook/base.rb#159
+  # pkg:gem/overcommit#lib/overcommit/hook/base.rb:159
   def flags; end
 
-  # @return [Boolean]
-  #
-  # source://overcommit//lib/overcommit/hook/base.rb#97
+  # pkg:gem/overcommit#lib/overcommit/hook/base.rb:97
   def in_path?(cmd); end
 
   # Gets a list of all files that apply to this hook based on its
   # configured `include` and `exclude` lists.
   #
-  # source://overcommit//lib/overcommit/hook/base.rb#171
+  # pkg:gem/overcommit#lib/overcommit/hook/base.rb:171
   def included_files; end
 
-  # source://forwardable/1.3.3/forwardable.rb#231
+  # pkg:gem/overcommit#lib/overcommit/hook/base.rb:22
   def modified_files(*args, **_arg1, &block); end
 
-  # source://overcommit//lib/overcommit/hook/base.rb#54
+  # pkg:gem/overcommit#lib/overcommit/hook/base.rb:54
   def name; end
 
-  # @return [Boolean]
-  #
-  # source://overcommit//lib/overcommit/hook/base.rb#66
+  # pkg:gem/overcommit#lib/overcommit/hook/base.rb:66
   def parallelize?; end
 
-  # source://overcommit//lib/overcommit/hook/base.rb#70
+  # pkg:gem/overcommit#lib/overcommit/hook/base.rb:70
   def processors; end
 
-  # @return [Boolean]
-  #
-  # source://overcommit//lib/overcommit/hook/base.rb#74
+  # pkg:gem/overcommit#lib/overcommit/hook/base.rb:74
   def quiet?; end
 
-  # @return [Boolean]
-  #
-  # source://overcommit//lib/overcommit/hook/base.rb#62
+  # pkg:gem/overcommit#lib/overcommit/hook/base.rb:62
   def required?; end
 
-  # source://overcommit//lib/overcommit/hook/base.rb#123
+  # pkg:gem/overcommit#lib/overcommit/hook/base.rb:123
   def required_executable; end
 
-  # source://overcommit//lib/overcommit/hook/base.rb#127
+  # pkg:gem/overcommit#lib/overcommit/hook/base.rb:127
   def required_libraries; end
 
   # Runs the hook.
   #
-  # @raise [NotImplementedError]
-  #
-  # source://overcommit//lib/overcommit/hook/base.rb#33
+  # pkg:gem/overcommit#lib/overcommit/hook/base.rb:33
   def run; end
 
-  # @return [Boolean]
-  #
-  # source://overcommit//lib/overcommit/hook/base.rb#91
+  # pkg:gem/overcommit#lib/overcommit/hook/base.rb:91
   def run?; end
 
   # Runs the hook and transforms the status returned based on the hook's
@@ -1204,47 +1114,43 @@ class Overcommit::Hook::Base
   # implement `#run`, and we needed a wrapper step to transform the status
   # based on any custom configuration.
   #
-  # source://overcommit//lib/overcommit/hook/base.rb#43
+  # pkg:gem/overcommit#lib/overcommit/hook/base.rb:43
   def run_and_transform; end
 
-  # @return [Boolean]
-  #
-  # source://overcommit//lib/overcommit/hook/base.rb#86
+  # pkg:gem/overcommit#lib/overcommit/hook/base.rb:86
   def skip?; end
 
   private
 
-  # @return [Boolean]
-  #
-  # source://overcommit//lib/overcommit/hook/base.rb#181
+  # pkg:gem/overcommit#lib/overcommit/hook/base.rb:181
   def applicable_file?(file); end
 
   # If the hook defines a required executable, check if it's in the path and
   # display the install command if one exists.
   #
-  # source://overcommit//lib/overcommit/hook/base.rb#210
+  # pkg:gem/overcommit#lib/overcommit/hook/base.rb:210
   def check_for_executable; end
 
   # If the hook defines required library paths that it wants to load, attempt
   # to load them.
   #
-  # source://overcommit//lib/overcommit/hook/base.rb#227
+  # pkg:gem/overcommit#lib/overcommit/hook/base.rb:227
   def check_for_libraries; end
 
   # Check for any required executables or libraries.
   #
   # Returns output if any requirements are not met.
   #
-  # source://overcommit//lib/overcommit/hook/base.rb#204
+  # pkg:gem/overcommit#lib/overcommit/hook/base.rb:204
   def check_for_requirements; end
 
-  # source://overcommit//lib/overcommit/hook/base.rb#288
+  # pkg:gem/overcommit#lib/overcommit/hook/base.rb:288
   def current_branch; end
 
-  # source://overcommit//lib/overcommit/hook/base.rb#284
+  # pkg:gem/overcommit#lib/overcommit/hook/base.rb:284
   def exclude_branches; end
 
-  # source://overcommit//lib/overcommit/hook/base.rb#217
+  # pkg:gem/overcommit#lib/overcommit/hook/base.rb:217
   def install_command_prompt; end
 
   # Converts the hook's return value into a canonical form of a tuple
@@ -1260,91 +1166,80 @@ class Overcommit::Hook::Base
   # @param hook_return_value [Symbol, Array<Symbol,String>, Array<Message>]
   # @return [Array<Symbol,String>] tuple of status and output
   #
-  # source://overcommit//lib/overcommit/hook/base.rb#256
+  # pkg:gem/overcommit#lib/overcommit/hook/base.rb:256
   def process_hook_return_value(hook_return_value); end
 
-  # source://overcommit//lib/overcommit/hook/base.rb#177
+  # pkg:gem/overcommit#lib/overcommit/hook/base.rb:177
   def select_applicable(list); end
 
   # Transforms the hook's status based on custom configuration.
   #
   # This allows users to change failures into warnings, or vice versa.
   #
-  # source://overcommit//lib/overcommit/hook/base.rb#273
+  # pkg:gem/overcommit#lib/overcommit/hook/base.rb:273
   def transform_status(status); end
 end
 
 # Possible types of messages.
 #
-# source://overcommit//lib/overcommit/hook/base.rb#16
+# pkg:gem/overcommit#lib/overcommit/hook/base.rb:16
 Overcommit::Hook::MESSAGE_TYPES = T.let(T.unsafe(nil), Array)
 
 # Helper containing metadata about error/warning messages returned by hooks.
 #
-# source://overcommit//lib/overcommit/hook/base.rb#9
+# pkg:gem/overcommit#lib/overcommit/hook/base.rb:9
 class Overcommit::Hook::Message < ::Struct
-  # Returns the value of attribute content
-  #
-  # @return [Object] the current value of content
+  # pkg:gem/overcommit#lib/overcommit/hook/base.rb:9
   def content; end
 
-  # Sets the attribute content
-  #
-  # @param value [Object] the value to set the attribute content to.
-  # @return [Object] the newly set value
+  # pkg:gem/overcommit#lib/overcommit/hook/base.rb:9
   def content=(_); end
 
-  # Returns the value of attribute file
-  #
-  # @return [Object] the current value of file
+  # pkg:gem/overcommit#lib/overcommit/hook/base.rb:9
   def file; end
 
-  # Sets the attribute file
-  #
-  # @param value [Object] the value to set the attribute file to.
-  # @return [Object] the newly set value
+  # pkg:gem/overcommit#lib/overcommit/hook/base.rb:9
   def file=(_); end
 
-  # Returns the value of attribute line
-  #
-  # @return [Object] the current value of line
+  # pkg:gem/overcommit#lib/overcommit/hook/base.rb:9
   def line; end
 
-  # Sets the attribute line
-  #
-  # @param value [Object] the value to set the attribute line to.
-  # @return [Object] the newly set value
+  # pkg:gem/overcommit#lib/overcommit/hook/base.rb:9
   def line=(_); end
 
-  # source://overcommit//lib/overcommit/hook/base.rb#10
+  # pkg:gem/overcommit#lib/overcommit/hook/base.rb:10
   def to_s; end
 
-  # Returns the value of attribute type
-  #
-  # @return [Object] the current value of type
+  # pkg:gem/overcommit#lib/overcommit/hook/base.rb:9
   def type; end
 
-  # Sets the attribute type
-  #
-  # @param value [Object] the value to set the attribute type to.
-  # @return [Object] the newly set value
+  # pkg:gem/overcommit#lib/overcommit/hook/base.rb:9
   def type=(_); end
 
   class << self
+    # pkg:gem/overcommit#lib/overcommit/hook/base.rb:9
     def [](*_arg0); end
+
+    # pkg:gem/overcommit#lib/overcommit/hook/base.rb:9
     def inspect; end
+
+    # pkg:gem/overcommit#lib/overcommit/hook/base.rb:9
     def keyword_init?; end
+
+    # pkg:gem/overcommit#lib/overcommit/hook/base.rb:9
     def members; end
+
+    # pkg:gem/overcommit#lib/overcommit/hook/base.rb:9
     def new(*_arg0); end
   end
 end
 
 # Utility module which manages the creation of {HookContext}s.
 #
-# source://overcommit//lib/overcommit/hook_context/base.rb#3
+# pkg:gem/overcommit#lib/overcommit/hook_context/base.rb:3
 module Overcommit::HookContext
   class << self
-    # source://overcommit//lib/overcommit/hook_context.rb#5
+    # pkg:gem/overcommit#lib/overcommit/hook_context.rb:5
     def create(hook_type, config, args, input, **cli_options); end
   end
 end
@@ -1361,7 +1256,7 @@ end
 #
 # @abstract
 #
-# source://overcommit//lib/overcommit/hook_context/base.rb#15
+# pkg:gem/overcommit#lib/overcommit/hook_context/base.rb:15
 class Overcommit::HookContext::Base
   # Creates a hook context from the given configuration and input options.
   #
@@ -1369,16 +1264,15 @@ class Overcommit::HookContext::Base
   # @param args [Array<String>]
   # @param input [IO] standard input stream
   # @param options [Hash] cli options
-  # @return [Base] a new instance of Base
   #
-  # source://overcommit//lib/overcommit/hook_context/base.rb#22
+  # pkg:gem/overcommit#lib/overcommit/hook_context/base.rb:22
   def initialize(config, args, input, **options); end
 
   # Returns the full list of files tracked by git
   #
   # @return [Array<String>]
   #
-  # source://overcommit//lib/overcommit/hook_context/base.rb#89
+  # pkg:gem/overcommit#lib/overcommit/hook_context/base.rb:89
   def all_files; end
 
   # Resets the environment to an appropriate state.
@@ -1387,7 +1281,7 @@ class Overcommit::HookContext::Base
   # Different hook types can perform different cleanup operations, which are
   # intended to "undo" the results of the call to {#setup_environment}.
   #
-  # source://overcommit//lib/overcommit/hook_context/base.rb#72
+  # pkg:gem/overcommit#lib/overcommit/hook_context/base.rb:72
   def cleanup_environment; end
 
   # Executes a command as if it were a regular git hook, passing all
@@ -1396,28 +1290,28 @@ class Overcommit::HookContext::Base
   # This is intended to be used by ad hoc hooks so developers can link up
   # their existing git hooks with Overcommit.
   #
-  # source://overcommit//lib/overcommit/hook_context/base.rb#34
+  # pkg:gem/overcommit#lib/overcommit/hook_context/base.rb:34
   def execute_hook(command); end
 
   # Returns the camel-cased type of this hook (e.g. PreCommit)
   #
   # @return [String]
   #
-  # source://overcommit//lib/overcommit/hook_context/base.rb#41
+  # pkg:gem/overcommit#lib/overcommit/hook_context/base.rb:41
   def hook_class_name; end
 
   # Returns the actual name of the hook script being run (e.g. pre-commit).
   #
   # @return [String]
   #
-  # source://overcommit//lib/overcommit/hook_context/base.rb#55
+  # pkg:gem/overcommit#lib/overcommit/hook_context/base.rb:55
   def hook_script_name; end
 
   # Returns the snake-cased type of this hook (e.g. pre_commit)
   #
   # @return [String]
   #
-  # source://overcommit//lib/overcommit/hook_context/base.rb#48
+  # pkg:gem/overcommit#lib/overcommit/hook_context/base.rb:48
   def hook_type_name; end
 
   # Returns an array of lines passed to the hook via the standard input
@@ -1425,7 +1319,7 @@ class Overcommit::HookContext::Base
   #
   # @return [Array<String>]
   #
-  # source://overcommit//lib/overcommit/hook_context/base.rb#105
+  # pkg:gem/overcommit#lib/overcommit/hook_context/base.rb:105
   def input_lines; end
 
   # Returns the contents of the entire standard input stream that were passed
@@ -1433,7 +1327,7 @@ class Overcommit::HookContext::Base
   #
   # @return [String]
   #
-  # source://overcommit//lib/overcommit/hook_context/base.rb#97
+  # pkg:gem/overcommit#lib/overcommit/hook_context/base.rb:97
   def input_string; end
 
   # Returns a list of files that have been modified.
@@ -1443,14 +1337,14 @@ class Overcommit::HookContext::Base
   #
   # @return [Array<String>]
   #
-  # source://overcommit//lib/overcommit/hook_context/base.rb#82
+  # pkg:gem/overcommit#lib/overcommit/hook_context/base.rb:82
   def modified_files; end
 
   # Returns a message to display on failure.
   #
   # @return [String]
   #
-  # source://overcommit//lib/overcommit/hook_context/base.rb#112
+  # pkg:gem/overcommit#lib/overcommit/hook_context/base.rb:112
   def post_fail_message; end
 
   # Initializes anything related to the environment.
@@ -1458,7 +1352,7 @@ class Overcommit::HookContext::Base
   # This is called before the hooks are run by the [HookRunner]. Different
   # hook types can perform different setup.
   #
-  # source://overcommit//lib/overcommit/hook_context/base.rb#63
+  # pkg:gem/overcommit#lib/overcommit/hook_context/base.rb:63
   def setup_environment; end
 
   private
@@ -1467,10 +1361,10 @@ class Overcommit::HookContext::Base
   # directory as part of an amendment, since the symlink will still appear as
   # a file, but the actual working tree will have a directory.
   #
-  # source://overcommit//lib/overcommit/hook_context/base.rb#135
+  # pkg:gem/overcommit#lib/overcommit/hook_context/base.rb:135
   def filter_directories(modified_files); end
 
-  # source://overcommit//lib/overcommit/hook_context/base.rb#118
+  # pkg:gem/overcommit#lib/overcommit/hook_context/base.rb:118
   def filter_modified_files(modified_files); end
 
   # Filter out non-existent files (unless it's a broken symlink, in which case
@@ -1478,160 +1372,146 @@ class Overcommit::HookContext::Base
   # file was renamed as part of an amendment, leading to the old file no
   # longer existing.
   #
-  # source://overcommit//lib/overcommit/hook_context/base.rb#126
+  # pkg:gem/overcommit#lib/overcommit/hook_context/base.rb:126
   def filter_nonexistent(modified_files); end
 end
 
-# source://overcommit//lib/overcommit/hook_loader/base.rb#3
+# pkg:gem/overcommit#lib/overcommit/hook_loader/base.rb:3
 module Overcommit::HookLoader; end
 
 # Responsible for loading hooks from a file.
 #
-# source://overcommit//lib/overcommit/hook_loader/base.rb#5
+# pkg:gem/overcommit#lib/overcommit/hook_loader/base.rb:5
 class Overcommit::HookLoader::Base
   # @param config [Overcommit::Configuration]
   # @param context [Overcommit::HookContext]
   # @param logger [Overcommit::Logger]
-  # @return [Base] a new instance of Base
   #
-  # source://overcommit//lib/overcommit/hook_loader/base.rb#9
+  # pkg:gem/overcommit#lib/overcommit/hook_loader/base.rb:9
   def initialize(config, context, logger); end
 
   # When implemented in subclasses, loads the hooks for which that subclass is
   # responsible.
   #
-  # @raise [NotImplementedError]
   # @return [Array<Hook>]
   #
-  # source://overcommit//lib/overcommit/hook_loader/base.rb#19
+  # pkg:gem/overcommit#lib/overcommit/hook_loader/base.rb:19
   def load_hooks; end
 
   private
 
   # Load and return a {Hook} from a CamelCase hook name.
   #
-  # source://overcommit//lib/overcommit/hook_loader/base.rb#28
+  # pkg:gem/overcommit#lib/overcommit/hook_loader/base.rb:28
   def create_hook(hook_name); end
 
-  # Returns the value of attribute log.
-  #
-  # source://overcommit//lib/overcommit/hook_loader/base.rb#25
+  # pkg:gem/overcommit#lib/overcommit/hook_loader/base.rb:25
   def log; end
 end
 
 # Responsible for loading hooks that ship with Overcommit.
 #
-# source://overcommit//lib/overcommit/hook_loader/built_in_hook_loader.rb#5
+# pkg:gem/overcommit#lib/overcommit/hook_loader/built_in_hook_loader.rb:5
 class Overcommit::HookLoader::BuiltInHookLoader < ::Overcommit::HookLoader::Base
-  # source://overcommit//lib/overcommit/hook_loader/built_in_hook_loader.rb#6
+  # pkg:gem/overcommit#lib/overcommit/hook_loader/built_in_hook_loader.rb:6
   def load_hooks; end
 end
 
 # Responsible for loading hooks that are specific to the repository Overcommit
 # is running in.
 #
-# source://overcommit//lib/overcommit/hook_loader/plugin_hook_loader.rb#8
+# pkg:gem/overcommit#lib/overcommit/hook_loader/plugin_hook_loader.rb:8
 class Overcommit::HookLoader::PluginHookLoader < ::Overcommit::HookLoader::Base
-  # source://overcommit//lib/overcommit/hook_loader/plugin_hook_loader.rb#9
+  # pkg:gem/overcommit#lib/overcommit/hook_loader/plugin_hook_loader.rb:9
   def load_hooks; end
 
-  # source://overcommit//lib/overcommit/hook_loader/plugin_hook_loader.rb#24
+  # pkg:gem/overcommit#lib/overcommit/hook_loader/plugin_hook_loader.rb:24
   def update_signatures; end
 
   private
 
-  # source://overcommit//lib/overcommit/hook_loader/plugin_hook_loader.rb#46
+  # pkg:gem/overcommit#lib/overcommit/hook_loader/plugin_hook_loader.rb:46
   def ad_hoc_hook_names; end
 
-  # @raise [Overcommit::Exceptions::InvalidHookSignature]
-  #
-  # source://overcommit//lib/overcommit/hook_loader/plugin_hook_loader.rb#56
+  # pkg:gem/overcommit#lib/overcommit/hook_loader/plugin_hook_loader.rb:56
   def check_for_modified_plugins; end
 
-  # source://overcommit//lib/overcommit/hook_loader/plugin_hook_loader.rb#77
+  # pkg:gem/overcommit#lib/overcommit/hook_loader/plugin_hook_loader.rb:77
   def create_ad_hoc_hook(hook_name); end
 
-  # source://overcommit//lib/overcommit/hook_loader/plugin_hook_loader.rb#50
+  # pkg:gem/overcommit#lib/overcommit/hook_loader/plugin_hook_loader.rb:50
   def modified_plugins; end
 
-  # source://overcommit//lib/overcommit/hook_loader/plugin_hook_loader.rb#40
+  # pkg:gem/overcommit#lib/overcommit/hook_loader/plugin_hook_loader.rb:40
   def plugin_hook_names; end
 
-  # source://overcommit//lib/overcommit/hook_loader/plugin_hook_loader.rb#35
+  # pkg:gem/overcommit#lib/overcommit/hook_loader/plugin_hook_loader.rb:35
   def plugin_paths; end
 end
 
 # Responsible for loading the hooks the repository has configured and running
 # them, collecting and displaying the results.
 #
-# source://overcommit//lib/overcommit/hook_runner.rb#6
+# pkg:gem/overcommit#lib/overcommit/hook_runner.rb:6
 class Overcommit::HookRunner
   # @param config [Overcommit::Configuration]
   # @param logger [Overcommit::Logger]
   # @param context [Overcommit::HookContext]
   # @param printer [Overcommit::Printer]
-  # @return [HookRunner] a new instance of HookRunner
   #
-  # source://overcommit//lib/overcommit/hook_runner.rb#11
+  # pkg:gem/overcommit#lib/overcommit/hook_runner.rb:11
   def initialize(config, logger, context, printer); end
 
   # Loads and runs the hooks registered for this {HookRunner}.
   #
-  # source://overcommit//lib/overcommit/hook_runner.rb#24
+  # pkg:gem/overcommit#lib/overcommit/hook_runner.rb:24
   def run; end
 
   private
 
-  # source://overcommit//lib/overcommit/hook_runner.rb#93
+  # pkg:gem/overcommit#lib/overcommit/hook_runner.rb:93
   def consume; end
 
-  # source://overcommit//lib/overcommit/hook_runner.rb#199
+  # pkg:gem/overcommit#lib/overcommit/hook_runner.rb:199
   def load_hooks; end
 
-  # Returns the value of attribute log.
-  #
-  # source://overcommit//lib/overcommit/hook_runner.rb#54
+  # pkg:gem/overcommit#lib/overcommit/hook_runner.rb:54
   def log; end
 
-  # source://overcommit//lib/overcommit/hook_runner.rb#143
+  # pkg:gem/overcommit#lib/overcommit/hook_runner.rb:143
   def print_results; end
 
-  # source://overcommit//lib/overcommit/hook_runner.rb#139
+  # pkg:gem/overcommit#lib/overcommit/hook_runner.rb:139
   def processors_for_hook(hook); end
 
-  # source://overcommit//lib/overcommit/hook_runner.rb#128
+  # pkg:gem/overcommit#lib/overcommit/hook_runner.rb:128
   def release_slot(hook); end
 
-  # source://overcommit//lib/overcommit/hook_runner.rb#155
+  # pkg:gem/overcommit#lib/overcommit/hook_runner.rb:155
   def run_hook(hook); end
 
-  # source://overcommit//lib/overcommit/hook_runner.rb#56
+  # pkg:gem/overcommit#lib/overcommit/hook_runner.rb:56
   def run_hooks; end
 
-  # @return [Boolean]
-  #
-  # source://overcommit//lib/overcommit/hook_runner.rb#183
+  # pkg:gem/overcommit#lib/overcommit/hook_runner.rb:183
   def should_skip?(hook); end
 
-  # source://overcommit//lib/overcommit/hook_runner.rb#102
+  # pkg:gem/overcommit#lib/overcommit/hook_runner.rb:102
   def wait_for_slot(hook); end
 end
 
 # Calculates, stores, and retrieves stored signatures of hook plugins.
 #
-# source://overcommit//lib/overcommit/hook_signer.rb#5
+# pkg:gem/overcommit#lib/overcommit/hook_signer.rb:5
 class Overcommit::HookSigner
   # @param hook_name [String] name of the hook
   # @param config [Overcommit::Configuration]
   # @param context [Overcommit::HookContext]
-  # @return [HookSigner] a new instance of HookSigner
   #
-  # source://overcommit//lib/overcommit/hook_signer.rb#15
+  # pkg:gem/overcommit#lib/overcommit/hook_signer.rb:15
   def initialize(hook_name, config, context); end
 
-  # Returns the value of attribute hook_name.
-  #
-  # source://overcommit//lib/overcommit/hook_signer.rb#6
+  # pkg:gem/overcommit#lib/overcommit/hook_signer.rb:6
   def hook_name; end
 
   # Returns the path of the file that should be incorporated into this hooks
@@ -1639,30 +1519,28 @@ class Overcommit::HookSigner
   #
   # @return [String]
   #
-  # source://overcommit//lib/overcommit/hook_signer.rb#25
+  # pkg:gem/overcommit#lib/overcommit/hook_signer.rb:25
   def hook_path; end
 
-  # @return [Boolean]
-  #
-  # source://overcommit//lib/overcommit/hook_signer.rb#53
+  # pkg:gem/overcommit#lib/overcommit/hook_signer.rb:53
   def signable_file?(file); end
 
   # Return whether the signature for this hook has changed since it was last
   # calculated.
   #
-  # @return [true, false]
+  # @return [true,false]
   #
-  # source://overcommit//lib/overcommit/hook_signer.rb#65
+  # pkg:gem/overcommit#lib/overcommit/hook_signer.rb:65
   def signature_changed?; end
 
   # Update the current stored signature for this hook.
   #
-  # source://overcommit//lib/overcommit/hook_signer.rb#70
+  # pkg:gem/overcommit#lib/overcommit/hook_signer.rb:70
   def update_signature!; end
 
   private
 
-  # source://overcommit//lib/overcommit/hook_signer.rb#101
+  # pkg:gem/overcommit#lib/overcommit/hook_signer.rb:101
   def hook_contents; end
 
   # Calculates a hash of a hook using a combination of its configuration and
@@ -1671,183 +1549,174 @@ class Overcommit::HookSigner
   # This way, if either the plugin code changes or its configuration changes,
   # the hash will change and we can alert the user to this change.
   #
-  # source://overcommit//lib/overcommit/hook_signer.rb#88
+  # pkg:gem/overcommit#lib/overcommit/hook_signer.rb:88
   def signature; end
 
-  # source://overcommit//lib/overcommit/hook_signer.rb#120
+  # pkg:gem/overcommit#lib/overcommit/hook_signer.rb:120
   def signature_config_key; end
 
-  # source://overcommit//lib/overcommit/hook_signer.rb#105
+  # pkg:gem/overcommit#lib/overcommit/hook_signer.rb:105
   def stored_signature; end
 end
 
 # We don't want to include the skip setting as it is set by Overcommit
 # itself
 #
-# source://overcommit//lib/overcommit/hook_signer.rb#10
+# pkg:gem/overcommit#lib/overcommit/hook_signer.rb:10
 Overcommit::HookSigner::IGNORED_CONFIG_KEYS = T.let(T.unsafe(nil), Array)
 
 # Manages the installation of Overcommit hooks in a git repository.
 #
-# source://overcommit//lib/overcommit/installer.rb#7
+# pkg:gem/overcommit#lib/overcommit/installer.rb:7
 class Overcommit::Installer
-  # @return [Installer] a new instance of Installer
-  #
-  # source://overcommit//lib/overcommit/installer.rb#11
+  # pkg:gem/overcommit#lib/overcommit/installer.rb:11
   def initialize(logger); end
 
-  # source://overcommit//lib/overcommit/installer.rb#15
+  # pkg:gem/overcommit#lib/overcommit/installer.rb:15
   def run(target, options); end
 
   private
 
-  # @return [Boolean]
-  #
-  # source://overcommit//lib/overcommit/installer.rb#125
+  # pkg:gem/overcommit#lib/overcommit/installer.rb:125
   def can_replace_file?(file); end
 
   # Returns the configuration for this repository.
   #
-  # source://overcommit//lib/overcommit/installer.rb#190
+  # pkg:gem/overcommit#lib/overcommit/installer.rb:190
   def config(options = T.unsafe(nil)); end
 
-  # source://overcommit//lib/overcommit/installer.rb#81
+  # pkg:gem/overcommit#lib/overcommit/installer.rb:81
   def ensure_directory(path); end
 
-  # source://overcommit//lib/overcommit/installer.rb#69
+  # pkg:gem/overcommit#lib/overcommit/installer.rb:69
   def hooks_path; end
 
-  # source://overcommit//lib/overcommit/installer.rb#32
+  # pkg:gem/overcommit#lib/overcommit/installer.rb:32
   def install; end
 
-  # source://overcommit//lib/overcommit/installer.rb#110
+  # pkg:gem/overcommit#lib/overcommit/installer.rb:110
   def install_hook_files; end
 
-  # source://overcommit//lib/overcommit/installer.rb#101
+  # pkg:gem/overcommit#lib/overcommit/installer.rb:101
   def install_master_hook; end
 
-  # source://overcommit//lib/overcommit/installer.rb#173
+  # pkg:gem/overcommit#lib/overcommit/installer.rb:173
   def install_starter_config; end
 
-  # Returns the value of attribute log.
-  #
-  # source://overcommit//lib/overcommit/installer.rb#30
+  # pkg:gem/overcommit#lib/overcommit/installer.rb:30
   def log; end
 
-  # source://overcommit//lib/overcommit/installer.rb#77
+  # pkg:gem/overcommit#lib/overcommit/installer.rb:77
   def master_hook_install_path; end
 
-  # source://overcommit//lib/overcommit/installer.rb#73
+  # pkg:gem/overcommit#lib/overcommit/installer.rb:73
   def old_hooks_path; end
 
-  # @return [Boolean]
-  #
-  # source://overcommit//lib/overcommit/installer.rb#181
+  # pkg:gem/overcommit#lib/overcommit/installer.rb:181
   def overcommit_hook?(file); end
 
-  # source://overcommit//lib/overcommit/installer.rb#131
+  # pkg:gem/overcommit#lib/overcommit/installer.rb:131
   def preserve_old_hooks; end
 
-  # source://overcommit//lib/overcommit/installer.rb#147
+  # pkg:gem/overcommit#lib/overcommit/installer.rb:147
   def restore_old_hooks; end
 
-  # source://overcommit//lib/overcommit/installer.rb#47
+  # pkg:gem/overcommit#lib/overcommit/installer.rb:47
   def uninstall; end
 
-  # source://overcommit//lib/overcommit/installer.rb#163
+  # pkg:gem/overcommit#lib/overcommit/installer.rb:163
   def uninstall_hook_files; end
 
-  # source://overcommit//lib/overcommit/installer.rb#106
+  # pkg:gem/overcommit#lib/overcommit/installer.rb:106
   def uninstall_master_hook; end
 
-  # @return [true, false] whether the hooks were updated
+  # @return [true,false] whether the hooks were updated
   #
-  # source://overcommit//lib/overcommit/installer.rb#58
+  # pkg:gem/overcommit#lib/overcommit/installer.rb:58
   def update; end
 
-  # source://overcommit//lib/overcommit/installer.rb#85
+  # pkg:gem/overcommit#lib/overcommit/installer.rb:85
   def validate_target; end
 end
 
-# source://overcommit//lib/overcommit/installer.rb#9
+# pkg:gem/overcommit#lib/overcommit/installer.rb:9
 Overcommit::Installer::MASTER_HOOK = T.let(T.unsafe(nil), String)
 
-# source://overcommit//lib/overcommit/installer.rb#8
+# pkg:gem/overcommit#lib/overcommit/installer.rb:8
 Overcommit::Installer::TEMPLATE_DIRECTORY = T.let(T.unsafe(nil), String)
 
-# source://overcommit//lib/overcommit/constants.rb#7
+# pkg:gem/overcommit#lib/overcommit/constants.rb:7
 Overcommit::LOCAL_CONFIG_FILE_NAME = T.let(T.unsafe(nil), String)
 
 # Encapsulates all communication to an output source.
 #
-# source://overcommit//lib/overcommit/logger.rb#5
+# pkg:gem/overcommit#lib/overcommit/logger.rb:5
 class Overcommit::Logger
   # Creates a logger that will write to the given output stream.
   #
   # @param out [IO]
-  # @return [Logger] a new instance of Logger
   #
-  # source://overcommit//lib/overcommit/logger.rb#14
+  # pkg:gem/overcommit#lib/overcommit/logger.rb:14
   def initialize(out); end
 
   # Write a line of output that is intended to be emphasized.
   #
-  # source://overcommit//lib/overcommit/logger.rb#52
+  # pkg:gem/overcommit#lib/overcommit/logger.rb:52
   def bold(*args); end
 
   # Write a line of output indicating a problem or error which is emphasized
   # over a regular problem or error.
   #
-  # source://overcommit//lib/overcommit/logger.rb#63
+  # pkg:gem/overcommit#lib/overcommit/logger.rb:63
   def bold_error(*args); end
 
   # Write a line of output indicating a potential cause for concern, but with
   # greater emphasize compared to other warnings.
   #
-  # source://overcommit//lib/overcommit/logger.rb#80
+  # pkg:gem/overcommit#lib/overcommit/logger.rb:80
   def bold_warning(*args); end
 
   # Write a line of output if debug mode is enabled.
   #
-  # source://overcommit//lib/overcommit/logger.rb#47
+  # pkg:gem/overcommit#lib/overcommit/logger.rb:47
   def debug(*args); end
 
   # Write a line of output indicating a problem or error.
   #
-  # source://overcommit//lib/overcommit/logger.rb#57
+  # pkg:gem/overcommit#lib/overcommit/logger.rb:57
   def error(*args); end
 
   # Flushes the [IO] object for partial lines
   #
-  # source://overcommit//lib/overcommit/logger.rb#35
+  # pkg:gem/overcommit#lib/overcommit/logger.rb:35
   def flush; end
 
   # Write a line of output.
   #
   # A newline character will always be appended.
   #
-  # source://overcommit//lib/overcommit/logger.rb#42
+  # pkg:gem/overcommit#lib/overcommit/logger.rb:42
   def log(*args); end
 
   # Prints a newline character (alias for readability).
   #
-  # source://overcommit//lib/overcommit/logger.rb#30
+  # pkg:gem/overcommit#lib/overcommit/logger.rb:30
   def newline; end
 
   # Write output without a trailing newline.
   #
-  # source://overcommit//lib/overcommit/logger.rb#25
+  # pkg:gem/overcommit#lib/overcommit/logger.rb:25
   def partial(*args); end
 
   # Write a line of output indicating a successful or noteworthy event.
   #
-  # source://overcommit//lib/overcommit/logger.rb#68
+  # pkg:gem/overcommit#lib/overcommit/logger.rb:68
   def success(*args); end
 
   # Write a line of output indicating a potential cause for concern, but not
   # an actual error.
   #
-  # source://overcommit//lib/overcommit/logger.rb#74
+  # pkg:gem/overcommit#lib/overcommit/logger.rb:74
   def warning(*args); end
 
   private
@@ -1857,15 +1726,15 @@ class Overcommit::Logger
   #
   # @param code [String] ANSI escape code, e.g. '1;33' for "bold yellow"
   # @param str [String] string to wrap
-  # @param partial [true, false] whether to omit a newline
+  # @param partial [true,false] whether to omit a newline
   #
-  # source://overcommit//lib/overcommit/logger.rb#92
+  # pkg:gem/overcommit#lib/overcommit/logger.rb:92
   def color(code, str, partial = T.unsafe(nil)); end
 
   class << self
     # Helper for creating a logger which outputs nothing.
     #
-    # source://overcommit//lib/overcommit/logger.rb#7
+    # pkg:gem/overcommit#lib/overcommit/logger.rb:7
     def silent; end
   end
 end
@@ -1877,14 +1746,13 @@ end
 # output tuple from an array of {Overcommit::Hook::Message}s, respecting the
 # configuration settings for the given hook.
 #
-# source://overcommit//lib/overcommit/message_processor.rb#10
+# pkg:gem/overcommit#lib/overcommit/message_processor.rb:10
 class Overcommit::MessageProcessor
   # @param hook [Overcommit::Hook::Base]
   # @param unmodified_lines_setting [String] how to treat messages on
   #   unmodified lines
-  # @return [MessageProcessor] a new instance of MessageProcessor
   #
-  # source://overcommit//lib/overcommit/message_processor.rb#21
+  # pkg:gem/overcommit#lib/overcommit/message_processor.rb:21
   def initialize(hook, unmodified_lines_setting); end
 
   # Returns a hook status/output tuple from the messages this processor was
@@ -1892,7 +1760,7 @@ class Overcommit::MessageProcessor
   #
   # @return [Array<Symbol,String>]
   #
-  # source://overcommit//lib/overcommit/message_processor.rb#30
+  # pkg:gem/overcommit#lib/overcommit/message_processor.rb:30
   def hook_result(messages); end
 
   private
@@ -1900,201 +1768,181 @@ class Overcommit::MessageProcessor
   # Returns status and output for messages assuming no special treatment of
   # messages occurring on unmodified lines.
   #
-  # source://overcommit//lib/overcommit/message_processor.rb#101
+  # pkg:gem/overcommit#lib/overcommit/message_processor.rb:101
   def basic_status_and_output(messages); end
 
-  # @return [Boolean]
-  #
-  # source://overcommit//lib/overcommit/message_processor.rb#95
+  # pkg:gem/overcommit#lib/overcommit/message_processor.rb:95
   def can_upgrade_to_passing?(status, warning_messages); end
 
-  # @return [Boolean]
-  #
-  # source://overcommit//lib/overcommit/message_processor.rb#91
+  # pkg:gem/overcommit#lib/overcommit/message_processor.rb:91
   def can_upgrade_to_warning?(status, error_messages); end
 
-  # source://overcommit//lib/overcommit/message_processor.rb#44
+  # pkg:gem/overcommit#lib/overcommit/message_processor.rb:44
   def handle_modified_lines(messages, status); end
 
-  # @return [Boolean]
-  #
-  # source://overcommit//lib/overcommit/message_processor.rb#141
+  # pkg:gem/overcommit#lib/overcommit/message_processor.rb:141
   def message_on_modified_line?(message); end
 
-  # source://overcommit//lib/overcommit/message_processor.rb#119
+  # pkg:gem/overcommit#lib/overcommit/message_processor.rb:119
   def print_messages(messages, error_heading, warning_heading); end
 
-  # source://overcommit//lib/overcommit/message_processor.rb#134
+  # pkg:gem/overcommit#lib/overcommit/message_processor.rb:134
   def remove_ignored_messages(messages); end
 
-  # source://overcommit//lib/overcommit/message_processor.rb#73
+  # pkg:gem/overcommit#lib/overcommit/message_processor.rb:73
   def transform_status(status, messages_on_modified_lines); end
 end
 
-# source://overcommit//lib/overcommit/message_processor.rb#15
+# pkg:gem/overcommit#lib/overcommit/message_processor.rb:15
 Overcommit::MessageProcessor::ERRORS_GENERIC_HEADER = T.let(T.unsafe(nil), String)
 
-# source://overcommit//lib/overcommit/message_processor.rb#11
+# pkg:gem/overcommit#lib/overcommit/message_processor.rb:11
 Overcommit::MessageProcessor::ERRORS_MODIFIED_HEADER = T.let(T.unsafe(nil), String)
 
-# source://overcommit//lib/overcommit/message_processor.rb#13
+# pkg:gem/overcommit#lib/overcommit/message_processor.rb:13
 Overcommit::MessageProcessor::ERRORS_UNMODIFIED_HEADER = T.let(T.unsafe(nil), String)
 
-# source://overcommit//lib/overcommit/message_processor.rb#16
+# pkg:gem/overcommit#lib/overcommit/message_processor.rb:16
 Overcommit::MessageProcessor::WARNINGS_GENERIC_HEADER = T.let(T.unsafe(nil), String)
 
-# source://overcommit//lib/overcommit/message_processor.rb#12
+# pkg:gem/overcommit#lib/overcommit/message_processor.rb:12
 Overcommit::MessageProcessor::WARNINGS_MODIFIED_HEADER = T.let(T.unsafe(nil), String)
 
-# source://overcommit//lib/overcommit/message_processor.rb#14
+# pkg:gem/overcommit#lib/overcommit/message_processor.rb:14
 Overcommit::MessageProcessor::WARNINGS_UNMODIFIED_HEADER = T.let(T.unsafe(nil), String)
 
 # Methods relating to the current operating system
 #
-# source://overcommit//lib/overcommit/os.rb#7
+# pkg:gem/overcommit#lib/overcommit/os.rb:7
 module Overcommit::OS
   class << self
-    # @return [Boolean]
-    #
-    # source://overcommit//lib/overcommit/os.rb#13
+    # pkg:gem/overcommit#lib/overcommit/os.rb:13
     def cygwin?; end
 
-    # @return [Boolean]
-    #
-    # source://overcommit//lib/overcommit/os.rb#25
+    # pkg:gem/overcommit#lib/overcommit/os.rb:25
     def linux?; end
 
-    # @return [Boolean]
-    #
-    # source://overcommit//lib/overcommit/os.rb#17
+    # pkg:gem/overcommit#lib/overcommit/os.rb:17
     def mac?; end
 
-    # @return [Boolean]
-    #
-    # source://overcommit//lib/overcommit/os.rb#21
+    # pkg:gem/overcommit#lib/overcommit/os.rb:21
     def unix?; end
 
-    # @return [Boolean]
-    #
-    # source://overcommit//lib/overcommit/os.rb#9
+    # pkg:gem/overcommit#lib/overcommit/os.rb:9
     def windows?; end
 
     private
 
-    # source://overcommit//lib/overcommit/os.rb#31
+    # pkg:gem/overcommit#lib/overcommit/os.rb:31
     def host_os; end
   end
 end
 
-# source://overcommit//lib/overcommit/os.rb#36
+# pkg:gem/overcommit#lib/overcommit/os.rb:36
 Overcommit::OS::SEPARATOR = T.let(T.unsafe(nil), String)
 
 # Provide a set of callbacks which can be executed as events occur during the
 # course of {HookRunner#run}.
 #
-# source://overcommit//lib/overcommit/printer.rb#8
+# pkg:gem/overcommit#lib/overcommit/printer.rb:8
 class Overcommit::Printer
-  # @return [Printer] a new instance of Printer
-  #
-  # source://overcommit//lib/overcommit/printer.rb#11
+  # pkg:gem/overcommit#lib/overcommit/printer.rb:11
   def initialize(config, logger, context); end
 
   # Executed at the end of an individual hook run.
   #
-  # source://overcommit//lib/overcommit/printer.rb#37
+  # pkg:gem/overcommit#lib/overcommit/printer.rb:37
   def end_hook(hook, status, output); end
 
-  # source://overcommit//lib/overcommit/printer.rb#79
+  # pkg:gem/overcommit#lib/overcommit/printer.rb:79
   def hook_run_failed(message); end
 
-  # source://overcommit//lib/overcommit/printer.rb#28
+  # pkg:gem/overcommit#lib/overcommit/printer.rb:28
   def hook_skipped(hook); end
 
-  # source://overcommit//lib/overcommit/printer.rb#45
+  # pkg:gem/overcommit#lib/overcommit/printer.rb:45
   def interrupt_triggered; end
 
-  # Returns the value of attribute log.
-  #
-  # source://overcommit//lib/overcommit/printer.rb#9
+  # pkg:gem/overcommit#lib/overcommit/printer.rb:9
   def log; end
 
-  # source://overcommit//lib/overcommit/printer.rb#24
+  # pkg:gem/overcommit#lib/overcommit/printer.rb:24
   def nothing_to_run; end
 
-  # source://overcommit//lib/overcommit/printer.rb#32
+  # pkg:gem/overcommit#lib/overcommit/printer.rb:32
   def required_hook_not_skipped(hook); end
 
   # Executed when one or more hooks by the end of the run.
   #
-  # source://overcommit//lib/overcommit/printer.rb#57
+  # pkg:gem/overcommit#lib/overcommit/printer.rb:57
   def run_failed; end
 
   # Executed when a hook run was interrupted/cancelled by user.
   #
-  # source://overcommit//lib/overcommit/printer.rb#50
+  # pkg:gem/overcommit#lib/overcommit/printer.rb:50
   def run_interrupted; end
 
   # Executed when no hooks failed by the end of the run.
   #
-  # source://overcommit//lib/overcommit/printer.rb#71
+  # pkg:gem/overcommit#lib/overcommit/printer.rb:71
   def run_succeeded; end
 
   # Executed when no hooks failed by the end of the run, but some warned.
   #
-  # source://overcommit//lib/overcommit/printer.rb#64
+  # pkg:gem/overcommit#lib/overcommit/printer.rb:64
   def run_warned; end
 
   # Executed at the very beginning of running the collection of hooks.
   #
-  # source://overcommit//lib/overcommit/printer.rb#20
+  # pkg:gem/overcommit#lib/overcommit/printer.rb:20
   def start_run; end
 
   private
 
-  # source://overcommit//lib/overcommit/printer.rb#119
+  # pkg:gem/overcommit#lib/overcommit/printer.rb:119
   def hook_script_name; end
 
-  # source://overcommit//lib/overcommit/printer.rb#87
+  # pkg:gem/overcommit#lib/overcommit/printer.rb:87
   def print_header(hook); end
 
-  # source://overcommit//lib/overcommit/printer.rb#115
+  # pkg:gem/overcommit#lib/overcommit/printer.rb:115
   def print_report(output, format = T.unsafe(nil)); end
 
-  # source://overcommit//lib/overcommit/printer.rb#95
+  # pkg:gem/overcommit#lib/overcommit/printer.rb:95
   def print_result(hook, status, output); end
 
   # Get all public methods that were defined on this class and wrap them with
   # synchronization locks so we ensure the output isn't interleaved amongst
   # the various threads.
   #
-  # source://overcommit//lib/overcommit/printer.rb#126
+  # pkg:gem/overcommit#lib/overcommit/printer.rb:126
   def synchronize_all_methods; end
 end
 
-# source://overcommit//lib/overcommit/constants.rb#11
+# pkg:gem/overcommit#lib/overcommit/constants.rb:11
 Overcommit::REPO_URL = T.let(T.unsafe(nil), String)
 
 # Manages execution of a child process, collecting the exit status and
 # standard out/error output.
 #
-# source://overcommit//lib/overcommit/subprocess.rb#10
+# pkg:gem/overcommit#lib/overcommit/subprocess.rb:10
 class Overcommit::Subprocess
   class << self
     # Spawns a new process using the given array of arguments (the first
     # element is the command).
     #
-    # @option options
     # @param args [Array<String>]
     # @param options [Hash]
+    # @option options [String] input string to pass via standard input stream
     # @return [Result]
     #
-    # source://overcommit//lib/overcommit/subprocess.rb#30
+    # pkg:gem/overcommit#lib/overcommit/subprocess.rb:30
     def spawn(args, options = T.unsafe(nil)); end
 
     # Spawns a new process in the background using the given array of
     # arguments (the first element is the command).
     #
-    # source://overcommit//lib/overcommit/subprocess.rb#60
+    # pkg:gem/overcommit#lib/overcommit/subprocess.rb:60
     def spawn_detached(args); end
 
     private
@@ -2102,13 +1950,13 @@ class Overcommit::Subprocess
     # @param process [ChildProcess]
     # @return [Array<IO>]
     #
-    # source://overcommit//lib/overcommit/subprocess.rb#89
+    # pkg:gem/overcommit#lib/overcommit/subprocess.rb:89
     def assign_output_streams(process); end
 
     # Necessary to run commands in the cmd.exe context.
     # Args are joined to properly handle quotes and special characters.
     #
-    # source://overcommit//lib/overcommit/subprocess.rb#75
+    # pkg:gem/overcommit#lib/overcommit/subprocess.rb:75
     def win32_prepare_args(args); end
   end
 end
@@ -2119,58 +1967,62 @@ end
 # @attr_reader stdout [String] standard output stream output
 # @attr_reader stderr [String] standard error stream output
 #
-# source://overcommit//lib/overcommit/subprocess.rb#16
+# pkg:gem/overcommit#lib/overcommit/subprocess.rb:16
 class Overcommit::Subprocess::Result < ::Struct
-  # exit status code returned by process
-  #
-  # @return [Integer] the current value of status
+  # pkg:gem/overcommit#lib/overcommit/subprocess.rb:16
   def status; end
 
+  # pkg:gem/overcommit#lib/overcommit/subprocess.rb:16
   def status=(_); end
 
-  # standard error stream output
-  #
-  # @return [String] the current value of stderr
+  # pkg:gem/overcommit#lib/overcommit/subprocess.rb:16
   def stderr; end
 
+  # pkg:gem/overcommit#lib/overcommit/subprocess.rb:16
   def stderr=(_); end
 
-  # standard output stream output
-  #
-  # @return [String] the current value of stdout
+  # pkg:gem/overcommit#lib/overcommit/subprocess.rb:16
   def stdout; end
 
+  # pkg:gem/overcommit#lib/overcommit/subprocess.rb:16
   def stdout=(_); end
 
-  # @return [Boolean]
-  #
-  # source://overcommit//lib/overcommit/subprocess.rb#17
+  # pkg:gem/overcommit#lib/overcommit/subprocess.rb:17
   def success?; end
 
   class << self
+    # pkg:gem/overcommit#lib/overcommit/subprocess.rb:16
     def [](*_arg0); end
+
+    # pkg:gem/overcommit#lib/overcommit/subprocess.rb:16
     def inspect; end
+
+    # pkg:gem/overcommit#lib/overcommit/subprocess.rb:16
     def keyword_init?; end
+
+    # pkg:gem/overcommit#lib/overcommit/subprocess.rb:16
     def members; end
+
+    # pkg:gem/overcommit#lib/overcommit/subprocess.rb:16
     def new(*_arg0); end
   end
 end
 
 # Utility functions for general use.
 #
-# source://overcommit//lib/overcommit/utils/file_utils.rb#6
+# pkg:gem/overcommit#lib/overcommit/utils/file_utils.rb:6
 module Overcommit::Utils
   class << self
     # Returns whether a file is a broken symlink.
     #
-    # @return [true, false]
+    # @return [true,false]
     #
-    # source://overcommit//lib/overcommit/utils.rb#240
+    # pkg:gem/overcommit#lib/overcommit/utils.rb:240
     def broken_symlink?(file); end
 
     # Converts a string containing underscores/hyphens/spaces into CamelCase.
     #
-    # source://overcommit//lib/overcommit/utils.rb#98
+    # pkg:gem/overcommit#lib/overcommit/utils.rb:98
     def camel_case(str); end
 
     # Convert a glob pattern to an absolute path glob pattern rooted from the
@@ -2179,7 +2031,7 @@ module Overcommit::Utils
     # @param glob [String]
     # @return [String]
     #
-    # source://overcommit//lib/overcommit/utils.rb#251
+    # pkg:gem/overcommit#lib/overcommit/utils.rb:251
     def convert_glob_to_absolute(glob); end
 
     # Execute a command in a subprocess, capturing exit status and output from
@@ -2198,12 +2050,12 @@ module Overcommit::Utils
     # work split up in this way and still produce the same resultant output
     # when outputs of the individual commands are concatenated back together.
     #
-    # @option options
     # @param initial_args [Array<String>]
     # @param options [Hash]
+    # @option options [Array<String>] :args long list of arguments to split up
     # @return [Overcommit::Subprocess::Result] status, stdout, and stderr
     #
-    # source://overcommit//lib/overcommit/utils.rb#179
+    # pkg:gem/overcommit#lib/overcommit/utils.rb:179
     def execute(initial_args, options = T.unsafe(nil)); end
 
     # Execute a command in a subprocess, returning immediately.
@@ -2214,52 +2066,51 @@ module Overcommit::Utils
     # @param args [Array<String>]
     # @return [ChildProcess] detached process spawned in the background
     #
-    # source://overcommit//lib/overcommit/utils.rb#208
+    # pkg:gem/overcommit#lib/overcommit/utils.rb:208
     def execute_in_background(args); end
 
     # Returns an absolute path to the .git directory for a repo.
     #
     # @return [String]
     #
-    # source://overcommit//lib/overcommit/utils.rb#62
+    # pkg:gem/overcommit#lib/overcommit/utils.rb:62
     def git_dir; end
 
     # @param cmd [String]
-    # @return [true, false] whether a command can be found given the current
+    # @return [true,false] whether a command can be found given the current
     #   environment path.
     #
-    # source://overcommit//lib/overcommit/utils.rb#120
+    # pkg:gem/overcommit#lib/overcommit/utils.rb:120
     def in_path?(cmd); end
 
     # @return [Overcommit::Logger] logger with which to send debug output
     #
-    # source://overcommit//lib/overcommit/utils.rb#33
+    # pkg:gem/overcommit#lib/overcommit/utils.rb:33
     def log; end
 
     # @return [Overcommit::Logger] logger with which to send debug output
     #
-    # source://overcommit//lib/overcommit/utils.rb#33
+    # pkg:gem/overcommit#lib/overcommit/utils.rb:33
     def log=(_arg0); end
 
     # Return whether a pattern matches the given path.
     #
     # @param pattern [String]
     # @param path [String]
-    # @return [Boolean]
     #
-    # source://overcommit//lib/overcommit/utils.rb#259
+    # pkg:gem/overcommit#lib/overcommit/utils.rb:259
     def matches_path?(pattern, path); end
 
     # Return the parent command that triggered this hook run
     #
-    # @return [String, nil] the command as a string, if a parent exists.
+    # @return [String,nil] the command as a string, if a parent exists.
     #
-    # source://overcommit//lib/overcommit/utils.rb#139
+    # pkg:gem/overcommit#lib/overcommit/utils.rb:139
     def parent_command; end
 
     # Return the number of processors used by the OS for process scheduling.
     #
-    # source://overcommit//lib/overcommit/utils.rb#219
+    # pkg:gem/overcommit#lib/overcommit/utils.rb:219
     def processor_count; end
 
     # Returns an absolute path to the root of the repository.
@@ -2270,16 +2121,16 @@ module Overcommit::Utils
     #
     # @return [String]
     #
-    # source://overcommit//lib/overcommit/utils.rb#46
+    # pkg:gem/overcommit#lib/overcommit/utils.rb:46
     def repo_root; end
 
-    # source://overcommit//lib/overcommit/utils.rb#35
+    # pkg:gem/overcommit#lib/overcommit/utils.rb:35
     def script_path(script); end
 
     # Shamelessly stolen from:
     # stackoverflow.com/questions/1509915/converting-camel-case-to-underscore-case-in-ruby
     #
-    # source://overcommit//lib/overcommit/utils.rb#89
+    # pkg:gem/overcommit#lib/overcommit/utils.rb:89
     def snake_case(str); end
 
     # Remove ANSI escape sequences from a string.
@@ -2289,23 +2140,23 @@ module Overcommit::Utils
     # @param text [String]
     # @return [String]
     #
-    # source://overcommit//lib/overcommit/utils.rb#83
+    # pkg:gem/overcommit#lib/overcommit/utils.rb:83
     def strip_color_codes(text); end
 
     # Returns a list of supported hook classes (PreCommit, CommitMsg, etc.)
     #
-    # source://overcommit//lib/overcommit/utils.rb#111
+    # pkg:gem/overcommit#lib/overcommit/utils.rb:111
     def supported_hook_type_classes; end
 
     # Returns a list of supported hook types (pre-commit, commit-msg, etc.)
     #
-    # source://overcommit//lib/overcommit/utils.rb#103
+    # pkg:gem/overcommit#lib/overcommit/utils.rb:103
     def supported_hook_types; end
 
     # Calls a block of code with a modified set of environment variables,
     # restoring them once the code has executed.
     #
-    # source://overcommit//lib/overcommit/utils.rb#225
+    # pkg:gem/overcommit#lib/overcommit/utils.rb:225
     def with_environment(env); end
 
     private
@@ -2318,14 +2169,14 @@ module Overcommit::Utils
     #
     # @param args [Array<String>]
     #
-    # source://overcommit//lib/overcommit/utils.rb#276
+    # pkg:gem/overcommit#lib/overcommit/utils.rb:276
     def debug(*args); end
   end
 end
 
 # Utility functions for file IO.
 #
-# source://overcommit//lib/overcommit/utils/file_utils.rb#8
+# pkg:gem/overcommit#lib/overcommit/utils/file_utils.rb:8
 module Overcommit::Utils::FileUtils
   class << self
     # When the host OS is Windows, uses the `dir` command to check whether
@@ -2333,39 +2184,35 @@ module Overcommit::Utils::FileUtils
     # the command output. Otherwise raises an `ArgumentError`. Delegates to
     # `File.readlink` if the host OS is not Windows.
     #
-    # source://overcommit//lib/overcommit/utils/file_utils.rb#34
+    # pkg:gem/overcommit#lib/overcommit/utils/file_utils.rb:34
     def readlink(link_name); end
 
     # When the host OS is Windows, uses the `mklink` command to create an
     # NTFS symbolic link from `new_name` to `old_name`. Otherwise delegates
     # to `File.symlink`
     #
-    # source://overcommit//lib/overcommit/utils/file_utils.rb#13
+    # pkg:gem/overcommit#lib/overcommit/utils/file_utils.rb:13
     def symlink(old_name, new_name); end
 
     # When the host OS is Windows, uses the `dir` command to check whether
     # `file_name` is an NTFS symbolic link. Otherwise delegates to
     # `File.symlink`.
     #
-    # @return [Boolean]
-    #
-    # source://overcommit//lib/overcommit/utils/file_utils.rb#23
+    # pkg:gem/overcommit#lib/overcommit/utils/file_utils.rb:23
     def symlink?(file_name); end
 
     private
 
-    # source://overcommit//lib/overcommit/utils/file_utils.rb#50
+    # pkg:gem/overcommit#lib/overcommit/utils/file_utils.rb:50
     def win32_dir_cmd(file_name); end
 
-    # source://overcommit//lib/overcommit/utils/file_utils.rb#62
+    # pkg:gem/overcommit#lib/overcommit/utils/file_utils.rb:62
     def win32_fix_pathsep(path); end
 
-    # source://overcommit//lib/overcommit/utils/file_utils.rb#56
+    # pkg:gem/overcommit#lib/overcommit/utils/file_utils.rb:56
     def win32_mklink_cmd(old_name, new_name); end
 
-    # @return [Boolean]
-    #
-    # source://overcommit//lib/overcommit/utils/file_utils.rb#66
+    # pkg:gem/overcommit#lib/overcommit/utils/file_utils.rb:66
     def win32_symlink?(dir_output); end
   end
 end
@@ -2374,26 +2221,26 @@ end
 #
 # This allows us to execute code based on the git version.
 #
-# source://overcommit//lib/overcommit/utils.rb#16
+# pkg:gem/overcommit#lib/overcommit/utils.rb:16
 class Overcommit::Utils::Version < ::Gem::Version
-  # source://overcommit//lib/overcommit/utils.rb#20
+  # pkg:gem/overcommit#lib/overcommit/utils.rb:20
   def !=(version); end
 
-  # source://overcommit//lib/overcommit/utils.rb#20
+  # pkg:gem/overcommit#lib/overcommit/utils.rb:20
   def <(version); end
 
-  # source://overcommit//lib/overcommit/utils.rb#20
+  # pkg:gem/overcommit#lib/overcommit/utils.rb:20
   def <=(version); end
 
-  # source://overcommit//lib/overcommit/utils.rb#20
+  # pkg:gem/overcommit#lib/overcommit/utils.rb:20
   def ==(version); end
 
-  # source://overcommit//lib/overcommit/utils.rb#20
+  # pkg:gem/overcommit#lib/overcommit/utils.rb:20
   def >(version); end
 
-  # source://overcommit//lib/overcommit/utils.rb#20
+  # pkg:gem/overcommit#lib/overcommit/utils.rb:20
   def >=(version); end
 end
 
-# source://overcommit//lib/overcommit/version.rb#5
+# pkg:gem/overcommit#lib/overcommit/version.rb:5
 Overcommit::VERSION = T.let(T.unsafe(nil), String)

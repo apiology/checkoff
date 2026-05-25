@@ -183,13 +183,13 @@ class Spoom::Cli::Main < ::Thor
   # source://spoom//lib/spoom/cli.rb#64
   def coverage(*args); end
 
-  # source://thor/1.3.2/lib/thor.rb#334
+  # source://thor/1.5.0/lib/thor.rb#334
   def deadcode(*args); end
 
   # source://spoom//lib/spoom/cli.rb#74
   def lsp(*args); end
 
-  # source://thor/1.3.2/lib/thor.rb#334
+  # source://thor/1.5.0/lib/thor.rb#334
   def srb(*args); end
 
   # source://spoom//lib/spoom/cli.rb#93
@@ -343,24 +343,24 @@ end
 
 # source://spoom//lib/spoom/cli/srb.rb#14
 class Spoom::Cli::Srb::Main < ::Thor
-  # source://thor/1.3.2/lib/thor.rb#334
+  # source://thor/1.5.0/lib/thor.rb#334
   def assertions(*args); end
 
-  # source://thor/1.3.2/lib/thor.rb#334
+  # source://thor/1.5.0/lib/thor.rb#334
   def bump(*args); end
 
-  # source://thor/1.3.2/lib/thor.rb#334
+  # source://thor/1.5.0/lib/thor.rb#334
   def coverage(*args); end
 
   def help(command = T.unsafe(nil), subcommand = T.unsafe(nil)); end
 
-  # source://thor/1.3.2/lib/thor.rb#334
+  # source://thor/1.5.0/lib/thor.rb#334
   def lsp(*args); end
 
-  # source://thor/1.3.2/lib/thor.rb#334
+  # source://thor/1.5.0/lib/thor.rb#334
   def sigs(*args); end
 
-  # source://thor/1.3.2/lib/thor.rb#334
+  # source://thor/1.5.0/lib/thor.rb#334
   def tc(*args); end
 end
 
