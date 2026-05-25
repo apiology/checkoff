@@ -434,6 +434,11 @@ EOF
 }
 
 ensure_overcommit() {
+  # Quality job runs overcommit --install/--run explicitly; skip here on CI so
+  # fix.sh does not rewrite tracked .githooks/* before verify deltas.
+  if [ "${CIRCLECI:-}" = "true" ]; then
+    return 0
+  fi
   # don't run if we're in the middle of a cookiecutter child project
   # test, or otherwise don't have a Git repo to install hooks into...
   if [ -d .git ]
