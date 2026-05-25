@@ -190,6 +190,7 @@ module Checkoff
 
         # @param task [Asana::Resources::Task]
         # @return [Boolean]
+        # @sg-ignore
         def evaluate(task)
           task.assignee.nil? == true
         end
@@ -205,6 +206,7 @@ module Checkoff
 
         # @param task [Asana::Resources::Task]
         # @return [Boolean]
+        # @sg-ignore
         def evaluate(task)
           !(task.due_at.nil? && task.due_on.nil?)
         end
