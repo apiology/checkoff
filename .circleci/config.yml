@@ -124,6 +124,7 @@ commands:
             bin/overcommit --sign pre-commit
             bin/overcommit --sign pre-push
 
+            make ci-build-typecheck
             # bundle exec overcommit --diff # if full run takes too long in this repo
             bin/overcommit --run
       - run_with_languages:
