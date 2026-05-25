@@ -56,7 +56,7 @@ commands:
       - restore_cache:
           name: Restore ruby-types cache
           keys:
-            - ruby-types-v7-{{ checksum "checkoff.gemspec" }}-{{ checksum "Gemfile" }}-{{ checksum "Gemfile.lock" }}-{{ checksum "Makefile" }}-{{ checksum ".circleci/config.yml" }}- # yamllint disable-line rule:line-length
+            - ruby-types-v7-{{ checksum "checkoff.gemspec" }}-{{ checksum "Gemfile" }}-{{ checksum "Gemfile.lock" }}-{{ checksum "rbs_collection.lock.yaml" }}-{{ checksum "Makefile" }}-{{ checksum ".circleci/config.yml" }}- # yamllint disable-line rule:line-length
             - ruby-types-v7-{{ checksum "checkoff.gemspec" }}-{{ checksum "Gemfile" }}-{{ checksum "Gemfile.lock" }}-{{ checksum "Makefile" }}- # yamllint disable-line rule:line-length
             - ruby-types-v7-{{ checksum "checkoff.gemspec" }}-{{ checksum "Gemfile" }}-{{ checksum "Gemfile.lock" }}- # yamllint disable-line rule:line-length
             - ruby-types-v7-{{ checksum "checkoff.gemspec" }}-{{ checksum "Gemfile" }}-
@@ -124,7 +124,6 @@ commands:
             bin/overcommit --sign pre-commit
             bin/overcommit --sign pre-push
 
-            make ci-build-typecheck
             # bundle exec overcommit --diff # if full run takes too long in this repo
             bin/overcommit --run
       - run_with_languages:
@@ -259,6 +258,8 @@ jobs:
             - "tapioca.installed"
             - "sorbet/machine_specific_config"
             - "rbi/checkoff.rbi"
+            - ".gem_rbs_collection"
+            - "rbs_collection.lock.yaml"
       - run_with_languages:
           label: Test
           command: |

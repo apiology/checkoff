@@ -471,8 +471,7 @@ ensure_rbenv
 
 ensure_types_built() {
   # CircleCI build job checks a clean tree after fix.sh; build-typecheck can
-  # refresh tracked rbs_collection.lock.yaml / sorbet/rbi/todo.rbi. Quality
-  # runs make ci-build-typecheck before overcommit instead.
+  # refresh tracked rbs_collection.lock.yaml / sorbet/rbi/todo.rbi.
   if [ "${CIRCLECI:-}" = "true" ]; then
     return 0
   fi
