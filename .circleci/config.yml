@@ -233,6 +233,7 @@ jobs:
           label: Reset cache-overwritten tracked files
           command: |
             git checkout -- rbs_collection.lock.yaml || true
+            rm -rf .gem_rbs_collection
       - run:
           label: Verify deltas
           command: |
@@ -263,7 +264,6 @@ jobs:
             - "tapioca.installed"
             - "sorbet/machine_specific_config"
             - "rbi/checkoff.rbi"
-            - ".gem_rbs_collection"
       - run_with_languages:
           label: Test
           command: |
