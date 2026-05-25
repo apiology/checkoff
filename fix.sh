@@ -233,9 +233,7 @@ ensure_bundle() {
   #
   # This affects nokogiri, which will try to reinstall itself in
   # Docker builds where it's already installed if this is not run.
-  if [ "${CIRCLECI:-}" != "true" ]; then
-    make Gemfile.lock
-  fi
+  make Gemfile.lock
   make bundle_install
 }
 
@@ -434,11 +432,6 @@ EOF
 }
 
 ensure_overcommit() {
-  # Quality job runs overcommit --install/--run explicitly; skip here on CI so
-  # fix.sh does not rewrite tracked .githooks/* before verify deltas.
-  if [ "${CIRCLECI:-}" = "true" ]; then
-    return 0
-  fi
   # don't run if we're in the middle of a cookiecutter child project
   # test, or otherwise don't have a Git repo to install hooks into...
   if [ -d .git ]
@@ -446,12 +439,7 @@ ensure_overcommit() {
     bundle exec overcommit --install
     bundle exec overcommit --sign
     bundle exec overcommit --sign pre-commit
-    # overcommit --install writes .githooks/post-checkout; bootstrap would
-    # replace it and fail CircleCI "Verify deltas".
-    if ! grep -q 'Overcommit' .githooks/post-checkout 2>/dev/null
-    then
-      install_bootstrap_post_checkout_hook
-    fi
+    install_bootstrap_post_checkout_hook
   else
     >&2 echo 'Not in a git repo; not installing git hooks'
   fi
@@ -470,11 +458,6 @@ ensure_rugged_packages_installed() {
 ensure_rbenv
 
 ensure_types_built() {
-  # CircleCI build job checks a clean tree after fix.sh; build-typecheck can
-  # refresh tracked rbs_collection.lock.yaml / sorbet/rbi/todo.rbi.
-  if [ "${CIRCLECI:-}" = "true" ]; then
-    return 0
-  fi
   make build-typecheck
 }
 
@@ -482,9 +465,7 @@ ensure_hooks_path
 
 ensure_ruby_versions
 
-if [ "${CIRCLECI:-}" != "true" ]; then
-  set_ruby_local_version
-fi
+set_ruby_local_version
 
 ensure_rugged_packages_installed
 
