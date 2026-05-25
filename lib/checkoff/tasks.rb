@@ -292,7 +292,6 @@ module Checkoff
     # @param portfolio_name [String]
     # @param workspace_name [String]
     # @return [Boolean]
-    # @sg-ignore
     def in_portfolio_named?(task,
                             portfolio_name,
                             workspace_name: @workspaces.default_workspace.name)
