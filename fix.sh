@@ -439,7 +439,12 @@ ensure_overcommit() {
     bundle exec overcommit --install
     bundle exec overcommit --sign
     bundle exec overcommit --sign pre-commit
-    install_bootstrap_post_checkout_hook
+    # overcommit --install writes .githooks/post-checkout; bootstrap would
+    # replace it and fail CircleCI "Verify deltas".
+    if ! grep -q 'Overcommit' .githooks/post-checkout 2>/dev/null
+    then
+      install_bootstrap_post_checkout_hook
+    fi
   else
     >&2 echo 'Not in a git repo; not installing git hooks'
   fi
