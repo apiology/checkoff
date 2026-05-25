@@ -126,7 +126,8 @@ commands:
 
             git checkout -- rbs_collection.lock.yaml || true
             rm -rf .gem_rbs_collection
-            git checkout HEAD -- .gem_rbs_collection/.gitignore
+            mkdir -p .gem_rbs_collection
+            printf '*\n!.gitignore\n' > .gem_rbs_collection/.gitignore
             make ci-build-typecheck
             # bundle exec overcommit --diff # if full run takes too long in this repo
             bin/overcommit --run
@@ -237,7 +238,8 @@ jobs:
           command: |
             git checkout -- rbs_collection.lock.yaml || true
             rm -rf .gem_rbs_collection
-            git checkout HEAD -- .gem_rbs_collection/.gitignore
+            mkdir -p .gem_rbs_collection
+            printf '*\n!.gitignore\n' > .gem_rbs_collection/.gitignore
       - run:
           label: Verify deltas
           command: |
