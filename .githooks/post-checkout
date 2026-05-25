@@ -1,8 +1,5 @@
 #!/bin/bash
-# Bootstrap hook (not Overcommit's generated post-checkout). CI quality failed when this
-# file was only the Overcommit Ruby hook without .githooks/overcommit-hook present
-# (pipeline 1905: "No such file or directory .../.githooks/overcommit-hook", exit 70).
-# fix.sh skips overcommit --install on CircleCI; quality runs overcommit explicitly.
+
 set -euo pipefail
 
 exec ./bin/git-post-checkout-fix "$@"
