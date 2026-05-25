@@ -234,28 +234,4 @@ update_apt: .make/apt_updated
 cicoverage: citest coverage ## check code coverage
 
 update_from_cookiecutter: ## Bring in changes from template project used to create this repo
-	bin/overcommit --uninstall
-	# cookiecutter_project_upgrader does its work in
-	# .git/cookiecutter/checkoff, but RuboCop wants to inherit
-	# config from all directories above it - avoid config
-	# mismatches by moving this out of the way
-	mv .rubocop.yml .rubocop-renamed.yml || true
-	cookiecutter_project_upgrader --help >/dev/null
-	IN_COOKIECUTTER_PROJECT_UPGRADER=1 cookiecutter_project_upgrader || true
-	mv .rubocop-renamed.yml .rubocop.yml
-	git checkout cookiecutter-template && git push --no-verify
-	git checkout main; overcommit --sign && overcommit --sign pre-commit && overcommit --sign pre-push && git checkout main && git pull && git checkout -b update-from-cookiecutter-$$(date +%Y-%m-%d-%H%M)
-	git merge cookiecutter-template || true
-	git checkout --ours Gemfile.lock || true
-	git checkout --theirs sorbet/rbi/gems || true
-	# update frequently security-flagged gems while we're here
-	bundle update --conservative json nokogiri rack rexml yard brakeman || true
-	( make build && git add Gemfile.lock ) || true
-	bin/spoom srb bump || true
-	bin/overcommit --install || true
-	@echo
-	@echo "Please resolve any merge conflicts below and push up a PR with:"
-	@echo
-	@echo '   gh pr create --title "Update from cookiecutter" --body "Automated PR to update from cookiecutter boilerplate"'
-	@echo
-	@echo
+	bin/cookiecutter_project_upgrader.sh
