@@ -56,12 +56,25 @@ commands:
       - restore_cache:
           name: Restore ruby-types cache
           keys:
-            - ruby-types-v8-{{ checksum "checkoff.gemspec" }}-{{ checksum "Gemfile" }}-{{ checksum "Gemfile.lock" }}-{{ checksum "rbs_collection.lock.yaml" }}-{{ checksum "Makefile" }}-{{ checksum ".circleci/config.yml" }}- # yamllint disable-line rule:line-length
-            - ruby-types-v8-{{ checksum "checkoff.gemspec" }}-{{ checksum "Gemfile" }}-{{ checksum "Gemfile.lock" }}-{{ checksum "Makefile" }}- # yamllint disable-line rule:line-length
-            - ruby-types-v8-{{ checksum "checkoff.gemspec" }}-{{ checksum "Gemfile" }}-{{ checksum "Gemfile.lock" }}- # yamllint disable-line rule:line-length
-            - ruby-types-v8-{{ checksum "checkoff.gemspec" }}-{{ checksum "Gemfile" }}-
-            - ruby-types-v8-{{ checksum "checkoff.gemspec" }}-
-            - ruby-types-v8-
+            - ruby-types-v9-{{ checksum "checkoff.gemspec" }}-{{ checksum "Gemfile" }}-{{ checksum "Gemfile.lock" }}-{{ checksum "rbs_collection.lock.yaml" }}-{{ checksum "Makefile" }}-{{ checksum ".circleci/config.yml" }}- # yamllint disable-line rule:line-length
+            - ruby-types-v9-{{ checksum "checkoff.gemspec" }}-{{ checksum "Gemfile" }}-{{ checksum "Gemfile.lock" }}-{{ checksum "Makefile" }}- # yamllint disable-line rule:line-length
+      - run:
+          name: Normalize ruby-types cache stamp mtimes
+          command: |
+            # Cache restore runs after git timestamp normalization; align stamp
+            # files so make compares them with the same clock as sources.
+            if [ -f yardoc.installed ]; then
+              unixtime=$(git log -1 --format="%at" -- Makefile)
+              touchtime=$(date -d @$unixtime +'%Y%m%d%H%M.%S')
+              touch -ht ${touchtime} yardoc.installed
+            fi
+            for stamp in types.installed tapioca.installed; do
+              if [ -f "${stamp}" ]; then
+                unixtime=$(git log -1 --format="%at")
+                touchtime=$(date -d @$unixtime +'%Y%m%d%H%M.%S')
+                touch -ht ${touchtime} "${stamp}"
+              fi
+            done
       - restore_cache:
           name: Restore pyenv cache
           keys:
@@ -246,7 +259,7 @@ jobs:
           path: rbi/checkoff.rbi
       - save_cache:
           name: 'Save ruby-types cache'
-          key: ruby-types-v8-{{ checksum "checkoff.gemspec" }}-{{ checksum "Gemfile" }}-{{ checksum "Gemfile.lock" }}-{{ checksum "rbs_collection.lock.yaml" }}-{{ checksum "Makefile" }}-{{ checksum ".circleci/config.yml" }}-{{ checksum ".ruby-version" }}-{{ checksum "rbi/checkoff.rbi" }}  # yamllint disable-line rule:line-length
+          key: ruby-types-v9-{{ checksum "checkoff.gemspec" }}-{{ checksum "Gemfile" }}-{{ checksum "Gemfile.lock" }}-{{ checksum "rbs_collection.lock.yaml" }}-{{ checksum "Makefile" }}-{{ checksum ".circleci/config.yml" }}-{{ checksum ".ruby-version" }}-{{ checksum "rbi/checkoff.rbi" }}  # yamllint disable-line rule:line-length
           paths:
             - ".yardoc"
             - "yardoc"
@@ -255,7 +268,6 @@ jobs:
             - "/home/circleci/.cache/sorbet"
             - "types.installed"
             - "yardoc.installed"
-            - ".yard-deps.sha256"
             - "tapioca.installed"
             - "sorbet/machine_specific_config"
             - "rbi/checkoff.rbi"
