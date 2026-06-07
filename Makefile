@@ -43,8 +43,13 @@ rbi/checkoff.rbi: tapioca.installed yardoc.installed sorbet/config .gem_rbs_coll
 	touch rbi/checkoff.rbi
 
 sig/checkoff.rbs: yardoc.installed .gem_rbs_collection/.keepme ## Generate RBS file
-	rm -f rbi/checkoff.rbs
+	rm -f sig/checkoff.rbs
 	bin/sord gen $(SORD_GEN_OPTIONS) sig/checkoff.rbs # YARD to RBS
+	# Sord re-emits TIME_BY_PERIOD on BaseAsana test subclasses; module TestDate keeps the canonical copy.
+	@for _klass in TestTasks TestProjects TestSections TestWorkspaces; do \
+	  sed -i.bak2 -e '/^class '"$$_klass"' < BaseAsana$$/,/^class /{ /^  TIME_BY_PERIOD: untyped$$/d; }' sig/checkoff.rbs; \
+	done
+	@rm -f sig/checkoff.rbs.bak2
 
 YARD_PLUGIN_OPTS = --plugin yard-sorbet --plugin yard-solargraph
 
