@@ -1,4 +1,4 @@
-.PHONY: build build-typecheck bundle_install cicoverage citypecheck citest citypecoverage ci-verify-gem-rbs clean clean-coverage clean-typecheck clean-typecoverage coverage default docs gem_dependencies help overcommit quality repl report-coverage release-types rubocop rubocop-ratchet test typecheck typecoverage update_from_cookiecutter verify-gem-rbs yard
+.PHONY: _yard-docs-sync build build-typecheck bundle_install cicoverage citypecheck citest citypecoverage clean clean-coverage clean-typecheck clean-typecoverage coverage default docs gem_dependencies help overcommit quality repl report-coverage rubocop rubocop-ratchet test typecheck typecoverage update_from_cookiecutter verify-gem-rbs yard
 
 .DEFAULT_GOAL := default
 
@@ -21,6 +21,10 @@ default: clean-typecoverage build typecheck typecoverage clean-coverage test cov
 SOURCE_FILE_GLOBS = ['{config,lib,app,script,spec,feature}/**/*.rb', 'ext/**/*.{c,rb}']
 
 SOURCE_FILES := $(shell ruby -e "puts Dir.glob($(SOURCE_FILE_GLOBS))")
+
+YARD_SOURCE_FILE_GLOBS = ['{lib,app}/**/*.rb', 'ext/**/*.{c,rb}']
+
+YARD_DEPS_STAMP = .yard-deps.sha256
 
 start: ## run code continously and watch files for changes
 	echo "Teach me how to 'make start'"
@@ -89,9 +93,29 @@ tapioca.installed: sorbet/tapioca/require.rb Gemfile.lock.installed ## Install T
 #	bin/tapioca dsl
 	touch tapioca.installed
 
-yardoc.installed: Makefile $(SOURCE_FILES) ## Generate YARD documentation
-	bin/yard doc $(YARD_OPTS)
-	touch yardoc.installed
+.PHONY: _yard-docs-sync
+_yard-docs-sync:
+	@current=$$(YARD_OPTS='$(YARD_OPTS)' YARD_SOURCE_FILE_GLOBS='$(YARD_SOURCE_FILE_GLOBS)' ruby -r digest -e ' \
+	  require "digest"; \
+	  globs = eval(ENV.fetch("YARD_SOURCE_FILE_GLOBS")); \
+	  h = Digest::SHA256.new; \
+	  h << File.read("Makefile"); \
+	  h << ENV.fetch("YARD_OPTS"); \
+	  globs.each { |g| Dir.glob(g).sort.each { |f| h << f << File.read(f) } }; \
+	  puts h.hexdigest \
+	'); \
+	if [ -f yardoc.installed ] && [ -f $(YARD_DEPS_STAMP) ] && [ -d .yardoc ] && \
+	   [ "$$current" = "$$(cat $(YARD_DEPS_STAMP))" ]; then \
+	  :; \
+	else \
+	  rm -rf .yardoc; \
+	  bin/yard doc $(YARD_OPTS); \
+	  echo "$$current" > $(YARD_DEPS_STAMP); \
+	  touch yardoc.installed; \
+	fi
+
+yardoc.installed: _yard-docs-sync ## Generate YARD documentation
+	@test -f yardoc.installed || touch yardoc.installed
 
 yard: yardoc.installed ## Generate YARD documentation
 
@@ -99,7 +123,7 @@ docs: ## Generate YARD documentation
 	@rake doc
 
 clean-typecheck: ## Refresh the easily-regenerated information that type checking depends on
-	rm -fr .yardoc/ rbi/checkoff.rbi types.installed yardoc.installed sig/checkoff.rbs || true
+	rm -fr .yardoc/ rbi/checkoff.rbi types.installed yardoc.installed $(YARD_DEPS_STAMP) sig/checkoff.rbs || true
 	echo all clear
 
 realclean-typecheck: clean-typecheck ## Remove all type checking artifacts
@@ -134,12 +158,10 @@ solargraph-strong: build-typecheck ## Run Solargraph typechecker
 
 typecheck: build-typecheck srb solargraph  ## validate types in code and configuration
 
-citypecheck: ci-build-typecheck srb ci-solargraph ci-verify-gem-rbs ## Run type check from CircleCI
+citypecheck: ci-build-typecheck srb ci-solargraph verify-gem-rbs ## Run type check from CircleCI
 
 ci-solargraph: ## Run Solargraph typechecker in CI
 	  bin/solargraph typecheck --level strong
-
-ci-verify-gem-rbs: clean-typecheck sig/checkoff.rbs verify-gem-rbs ## Regenerate gem RBS from clean YARD and reject test/ types
 
 verify-gem-rbs: sig/checkoff.rbs ## Fail if published RBS would include test-only types
 	@if grep -E '^(class Test|module TestDate)' sig/checkoff.rbs; then \
@@ -223,9 +245,7 @@ clean-coverage: clear_metrics ## Clean out previous output of test coverage to a
 coverage: test report-coverage ## check code coverage
 	@bin/rake undercover
 
-release-types: clean-typecheck build-typecheck sig/checkoff.rbs verify-gem-rbs ## Fresh RBI/RBS artifacts for gem release
-
-release: release-types ## Create a new release
+release: sig/checkoff.rbs verify-gem-rbs ## Create a new release
 	bin/rake release
 
 report-coverage: test ## Report summary of coverage to stdout, and generate HTML, XML coverage report

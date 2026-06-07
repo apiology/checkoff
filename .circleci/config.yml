@@ -58,6 +58,9 @@ commands:
           keys:
             - ruby-types-v8-{{ checksum "checkoff.gemspec" }}-{{ checksum "Gemfile" }}-{{ checksum "Gemfile.lock" }}-{{ checksum "rbs_collection.lock.yaml" }}-{{ checksum "Makefile" }}-{{ checksum ".circleci/config.yml" }}- # yamllint disable-line rule:line-length
             - ruby-types-v8-{{ checksum "checkoff.gemspec" }}-{{ checksum "Gemfile" }}-{{ checksum "Gemfile.lock" }}-{{ checksum "Makefile" }}- # yamllint disable-line rule:line-length
+            - ruby-types-v8-{{ checksum "checkoff.gemspec" }}-{{ checksum "Gemfile" }}-{{ checksum "Gemfile.lock" }}- # yamllint disable-line rule:line-length
+            - ruby-types-v8-{{ checksum "checkoff.gemspec" }}-{{ checksum "Gemfile" }}-
+            - ruby-types-v8-{{ checksum "checkoff.gemspec" }}-
             - ruby-types-v8-
       - restore_cache:
           name: Restore pyenv cache
@@ -245,10 +248,14 @@ jobs:
           name: 'Save ruby-types cache'
           key: ruby-types-v8-{{ checksum "checkoff.gemspec" }}-{{ checksum "Gemfile" }}-{{ checksum "Gemfile.lock" }}-{{ checksum "rbs_collection.lock.yaml" }}-{{ checksum "Makefile" }}-{{ checksum ".circleci/config.yml" }}-{{ checksum ".ruby-version" }}-{{ checksum "rbi/checkoff.rbi" }}  # yamllint disable-line rule:line-length
           paths:
+            - ".yardoc"
+            - "yardoc"
             - "/home/circleci/.cache/solargraph"
             - "/home/circleci/.sorbet-cache"
             - "/home/circleci/.cache/sorbet"
             - "types.installed"
+            - "yardoc.installed"
+            - ".yard-deps.sha256"
             - "tapioca.installed"
             - "sorbet/machine_specific_config"
             - "rbi/checkoff.rbi"
