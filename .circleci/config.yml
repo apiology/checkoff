@@ -54,14 +54,16 @@ commands:
             - rbenv-v5-
             - rbenv-
       - restore_cache:
+          # NOTE: bump the ruby-types-vN- prefix when YARD_OPTS changes in
+          # the Makefile (see the comment there for why).
           name: Restore ruby-types cache
           keys:
-            - ruby-types-v7-{{ checksum "checkoff.gemspec" }}-{{ checksum "Gemfile" }}-{{ checksum "Gemfile.lock" }}-{{ checksum "rbs_collection.lock.yaml" }}-{{ checksum "Makefile" }}-{{ checksum ".circleci/config.yml" }}- # yamllint disable-line rule:line-length
-            - ruby-types-v7-{{ checksum "checkoff.gemspec" }}-{{ checksum "Gemfile" }}-{{ checksum "Gemfile.lock" }}-{{ checksum "Makefile" }}- # yamllint disable-line rule:line-length
-            - ruby-types-v7-{{ checksum "checkoff.gemspec" }}-{{ checksum "Gemfile" }}-{{ checksum "Gemfile.lock" }}- # yamllint disable-line rule:line-length
-            - ruby-types-v7-{{ checksum "checkoff.gemspec" }}-{{ checksum "Gemfile" }}-
-            - ruby-types-v7-{{ checksum "checkoff.gemspec" }}-
-            - ruby-types-v7-
+            - ruby-types-v8-{{ checksum "checkoff.gemspec" }}-{{ checksum "Gemfile" }}-{{ checksum "Gemfile.lock" }}-{{ checksum "rbs_collection.lock.yaml" }}-{{ checksum "Makefile" }}-{{ checksum ".circleci/config.yml" }}- # yamllint disable-line rule:line-length
+            - ruby-types-v8-{{ checksum "checkoff.gemspec" }}-{{ checksum "Gemfile" }}-{{ checksum "Gemfile.lock" }}-{{ checksum "Makefile" }}- # yamllint disable-line rule:line-length
+            - ruby-types-v8-{{ checksum "checkoff.gemspec" }}-{{ checksum "Gemfile" }}-{{ checksum "Gemfile.lock" }}- # yamllint disable-line rule:line-length
+            - ruby-types-v8-{{ checksum "checkoff.gemspec" }}-{{ checksum "Gemfile" }}-
+            - ruby-types-v8-{{ checksum "checkoff.gemspec" }}-
+            - ruby-types-v8-
       - restore_cache:
           name: Restore pyenv cache
           keys:
@@ -246,7 +248,7 @@ jobs:
           path: rbi/checkoff.rbi
       - save_cache:
           name: 'Save ruby-types cache'
-          key: ruby-types-v7-{{ checksum "checkoff.gemspec" }}-{{ checksum "Gemfile" }}-{{ checksum "Gemfile.lock" }}-{{ checksum "rbs_collection.lock.yaml" }}-{{ checksum "Makefile" }}-{{ checksum ".circleci/config.yml" }}-{{ checksum ".ruby-version" }}-{{ checksum "rbi/checkoff.rbi" }}  # yamllint disable-line rule:line-length
+          key: ruby-types-v8-{{ checksum "checkoff.gemspec" }}-{{ checksum "Gemfile" }}-{{ checksum "Gemfile.lock" }}-{{ checksum "rbs_collection.lock.yaml" }}-{{ checksum "Makefile" }}-{{ checksum ".circleci/config.yml" }}-{{ checksum ".ruby-version" }}-{{ checksum "rbi/checkoff.rbi" }}  # yamllint disable-line rule:line-length
           paths:
             - ".yardoc"
             - "yardoc"
