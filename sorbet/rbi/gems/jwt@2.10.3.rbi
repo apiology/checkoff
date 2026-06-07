@@ -1384,15 +1384,18 @@ class JWT::JWA::Hmac
   # source://jwt//lib/jwt/jwa/hmac.rb#18
   def sign(data:, signing_key:); end
 
-  # source://jwt//lib/jwt/jwa/hmac.rb#29
+  # source://jwt//lib/jwt/jwa/hmac.rb#24
   def verify(data:, signature:, verification_key:); end
 
   private
 
   # Returns the value of attribute digest.
   #
-  # source://jwt//lib/jwt/jwa/hmac.rb#39
+  # source://jwt//lib/jwt/jwa/hmac.rb#36
   def digest; end
+
+  # source://jwt//lib/jwt/jwa/hmac.rb#38
+  def ensure_valid_key!(key); end
 
   class << self
     # source://jwt//lib/jwt/jwa/hmac.rb#9
@@ -1402,7 +1405,7 @@ end
 
 # Copy of https://github.com/rails/rails/blob/v7.0.3.1/activesupport/lib/active_support/security_utils.rb
 #
-# source://jwt//lib/jwt/jwa/hmac.rb#43
+# source://jwt//lib/jwt/jwa/hmac.rb#45
 module JWT::JWA::Hmac::SecurityUtils
   private
 
@@ -1410,7 +1413,7 @@ module JWT::JWA::Hmac::SecurityUtils
   #
   # @raise [ArgumentError]
   #
-  # source://jwt//lib/jwt/jwa/hmac.rb#50
+  # source://jwt//lib/jwt/jwa/hmac.rb#52
   def fixed_length_secure_compare(a, b); end
 
   # Secure string comparison for strings of variable length.
@@ -1420,7 +1423,7 @@ module JWT::JWA::Hmac::SecurityUtils
   # the secret length. This should be considered when using secure_compare
   # to compare weak, short secrets to user input.
   #
-  # source://jwt//lib/jwt/jwa/hmac.rb#74
+  # source://jwt//lib/jwt/jwa/hmac.rb#76
   def secure_compare(a, b); end
 
   class << self
@@ -1428,7 +1431,7 @@ module JWT::JWA::Hmac::SecurityUtils
     #
     # @raise [ArgumentError]
     #
-    # source://jwt//lib/jwt/jwa/hmac.rb#50
+    # source://jwt//lib/jwt/jwa/hmac.rb#52
     def fixed_length_secure_compare(a, b); end
 
     # Secure string comparison for strings of variable length.
@@ -1438,7 +1441,7 @@ module JWT::JWA::Hmac::SecurityUtils
     # the secret length. This should be considered when using secure_compare
     # to compare weak, short secrets to user input.
     #
-    # source://jwt//lib/jwt/jwa/hmac.rb#74
+    # source://jwt//lib/jwt/jwa/hmac.rb#76
     def secure_compare(a, b); end
   end
 end
