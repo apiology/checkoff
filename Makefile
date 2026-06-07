@@ -35,25 +35,15 @@ rbi/checkoff.rbi: tapioca.installed yardoc.installed sorbet/config .gem_rbs_coll
 	rm -f rbi/checkoff-sord.rbi rbi/checkoff-parlour.rbi
 	sed -i.bak -e 's/^# typed: strong/# typed: ignore/' rbi/checkoff.rbi
 	rm -f rbi/checkoff.rbi.bak
-	# Sord re-emits TIME_BY_PERIOD on BaseAsana test subclasses; module TestDate keeps the canonical copy.
-	@for _klass in TestTasks TestProjects TestSections TestWorkspaces; do \
-	  sed -i.bak2 -e '/^class '"$$_klass"' < BaseAsana$$/,/^class /{ /^  TIME_BY_PERIOD = T\.let({/,/^  }\.freeze, T\.untyped)$$/d; }' rbi/checkoff.rbi; \
-	done
-	@rm -f rbi/checkoff.rbi.bak2
 	touch rbi/checkoff.rbi
 
 sig/checkoff.rbs: yardoc.installed .gem_rbs_collection/.keepme ## Generate RBS file
 	rm -f sig/checkoff.rbs
 	bin/sord gen $(SORD_GEN_OPTIONS) sig/checkoff.rbs # YARD to RBS
-	# Sord re-emits TIME_BY_PERIOD on BaseAsana test subclasses; module TestDate keeps the canonical copy.
-	@for _klass in TestTasks TestProjects TestSections TestWorkspaces; do \
-	  sed -i.bak2 -e '/^class '"$$_klass"' < BaseAsana$$/,/^class /{ /^  TIME_BY_PERIOD: untyped$$/d; }' sig/checkoff.rbs; \
-	done
-	@rm -f sig/checkoff.rbs.bak2
 
 YARD_PLUGIN_OPTS = --plugin yard-sorbet --plugin yard-solargraph
 
-YARD_OPTS = $(YARD_PLUGIN_OPTS) -c .yardoc --output-dir yardoc --backtrace --exclude '^config/' '{lib,app,test}/**/*.rb' 'ext/**/*.{c,rb}'
+YARD_OPTS = $(YARD_PLUGIN_OPTS) -c .yardoc --output-dir yardoc --backtrace --exclude '^config/' --exclude '^test/' '{lib,app}/**/*.rb' 'ext/**/*.{c,rb}'
 
 types.installed: tapioca.installed Gemfile.lock Gemfile.lock.installed rbi/checkoff.rbi sorbet/tapioca/require.rb sorbet/config ## Ensure typechecking dependencies are in place
 	bin/solargraph gems
