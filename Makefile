@@ -1,4 +1,4 @@
-.PHONY: build build-typecheck bundle_install cicoverage citypecheck citest citypecoverage clean clean-coverage clean-typecheck clean-typecoverage coverage default docs gem_dependencies help overcommit quality repl report-coverage rubocop rubocop-ratchet test typecheck typecoverage update_from_cookiecutter yard
+.PHONY: build build-typecheck bundle_install cicoverage citypecheck citest citypecoverage ci-verify-gem-rbs clean clean-coverage clean-typecheck clean-typecoverage coverage default docs gem_dependencies help overcommit quality repl report-coverage release-types rubocop rubocop-ratchet test typecheck typecoverage update_from_cookiecutter verify-gem-rbs yard
 
 .DEFAULT_GOAL := default
 
@@ -50,11 +50,6 @@ types.installed: tapioca.installed Gemfile.lock Gemfile.lock.installed rbi/check
 	bin/yard gems $(YARD_PLUGIN_OPTS) 2>&1 || bin/yard gems --safe $(YARD_PLUGIN_OPTS) 2>&1 || bin/yard gems $(YARD_PLUGIN_OPTS) 2>&1
 	# bin/solargraph scan 2>&1
 	bin/spoom srb bump || true
-	# spoom rudely updates timestamps on files, so let's keep up by
-	# touching yardoc.installed so we dont' end up in a vicious
-	# cycle
-	touch yardoc.installed rbi/checkoff.rbi
-	# bin/solargraph scan 2>&1
 	touch types.installed
 
 build: bundle_install pip_install build-typecheck ## Update 3rd party packages as well and produce any artifacts needed from code
@@ -139,10 +134,18 @@ solargraph-strong: build-typecheck ## Run Solargraph typechecker
 
 typecheck: build-typecheck srb solargraph  ## validate types in code and configuration
 
-citypecheck: ci-build-typecheck srb ci-solargraph ## Run type check from CircleCI
+citypecheck: ci-build-typecheck srb ci-solargraph ci-verify-gem-rbs ## Run type check from CircleCI
 
 ci-solargraph: ## Run Solargraph typechecker in CI
 	  bin/solargraph typecheck --level strong
+
+ci-verify-gem-rbs: clean-typecheck sig/checkoff.rbs verify-gem-rbs ## Regenerate gem RBS from clean YARD and reject test/ types
+
+verify-gem-rbs: sig/checkoff.rbs ## Fail if published RBS would include test-only types
+	@if grep -E '^(class Test|module TestDate)' sig/checkoff.rbs; then \
+	  echo 'error: test/ types in sig/checkoff.rbs (stale .yardoc or YARD exclude)'; \
+	  exit 1; \
+	fi
 
 typecoverage: typecheck ## Run type checking and then ratchet coverage in metrics/
 
@@ -220,7 +223,9 @@ clean-coverage: clear_metrics ## Clean out previous output of test coverage to a
 coverage: test report-coverage ## check code coverage
 	@bin/rake undercover
 
-release: sig/checkoff.rbs rbi/checkoff.rbi ## Create a new release
+release-types: clean-typecheck build-typecheck sig/checkoff.rbs verify-gem-rbs ## Fresh RBI/RBS artifacts for gem release
+
+release: release-types ## Create a new release
 	bin/rake release
 
 report-coverage: test ## Report summary of coverage to stdout, and generate HTML, XML coverage report
