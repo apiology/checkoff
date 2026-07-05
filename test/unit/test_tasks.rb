@@ -207,6 +207,31 @@ class TestTasks < BaseAsana
   end
 
   # @return [void]
+  def expect_dependency_missing(dependency_gid)
+    expect_task_options_pulled
+    expect_asana_tasks_client_pulled
+    asana_tasks_client.expects(:find_by_id)
+      .with(dependency_gid, options: { fields: fields_including(['dependencies']) })
+      .returns(nil)
+  end
+
+  # @return [void]
+  def mock_task_ready_false_dependency_missing
+    allow_task_due(due_on: nil, due_at: nil)
+    expect_dependency_gids_pulled(task, [{ 'gid' => dependency_1_gid }])
+    expect_dependency_missing(dependency_1_gid)
+  end
+
+  # @return [void]
+  def test_task_ready_false_dependency_missing
+    tasks = get_test_object do
+      mock_task_ready_false_dependency_missing
+    end
+
+    refute(tasks.task_ready?(task))
+  end
+
+  # @return [void]
   def allow_task_due(start_on: nil, start_at: nil, due_on: nil, due_at: nil)
     allow_start_at_pulled(task, start_at)
     allow_start_on_pulled(task, start_on)
