@@ -20,7 +20,7 @@ module Checkoff
     LONG_CACHE_TIME = MINUTE * 15
     SHORT_CACHE_TIME = MINUTE
 
-    # @param config [Hash{Symbol => Object}, Checkoff::Internal::EnvFallbackConfigLoader]
+    # @param config [Hash, Checkoff::Internal::EnvFallbackConfigLoader]
     # @param workspaces [Checkoff::Workspaces]
     # @param projects [Checkoff::Projects]
     # @param custom_fields [Checkoff::CustomFields]

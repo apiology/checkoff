@@ -162,7 +162,7 @@ module Checkoff
     end
 
     # @param custom_field [Hash]
-    # @param enum_value [Hash{String => String}, nil]
+    # @param enum_value [Hash, nil]
     # @return [Array<String>]
     def find_gids(custom_field, enum_value)
       if enum_value.nil?

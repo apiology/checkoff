@@ -33,7 +33,7 @@ module Checkoff
     # @!parse
     #   extend CacheMethod::ClassMethods
 
-    # @param config [Hash{Symbol => Object}, Checkoff::Internal::EnvFallbackConfigLoader]
+    # @param config [Hash, Checkoff::Internal::EnvFallbackConfigLoader]
     # @param workspaces [Checkoff::Workspaces]
     # @param task_selectors [Checkoff::TaskSelectors]
     # @param projects [Checkoff::Projects]
