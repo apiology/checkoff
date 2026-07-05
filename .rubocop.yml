@@ -163,14 +163,6 @@ plugins:
   - rubocop-rspec
   - rubocop-yard
 
-# rubocop-yard crashes (NilClass) on Hash{K => V} inside union/tuple @return types
+# rubocop-yard 1.1.0 crashes (NilClass in styled_string) on Hash{K => V} inside unions
 YARD/CollectionStyle:
-  Exclude:
-    - 'lib/checkoff/custom_fields.rb'
-    - 'lib/checkoff/project_selectors.rb'
-    - 'lib/checkoff/section_selectors.rb'
-    - 'lib/checkoff/task_searches.rb'
-    - 'lib/checkoff/internal/search_url/custom_field_param_converter.rb'
-    - 'lib/checkoff/internal/search_url/custom_field_variant.rb'
-    - 'lib/checkoff/internal/search_url/date_param_converter.rb'
-    - 'lib/checkoff/internal/search_url/parser.rb'
+  Enabled: false
