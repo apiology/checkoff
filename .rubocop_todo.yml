@@ -89,8 +89,20 @@ Performance/InefficientHashSearch:
   Exclude:
     - 'lib/checkoff/internal/asana_event_filter.rb'
 
-# Offense count: 2
+# Offense count: 4
 YARD/TagTypeSyntax:
   Exclude:
     - 'lib/checkoff/internal/asana_event_enrichment.rb'
     - 'lib/checkoff/resources.rb'
+
+# rubocop-yard CollectionStyle crashes (NilClass) on Hash{K => V} inside union types
+YARD/CollectionStyle:
+  Exclude:
+    - 'lib/checkoff/custom_fields.rb'
+    - 'lib/checkoff/project_selectors.rb'
+    - 'lib/checkoff/section_selectors.rb'
+    - 'lib/checkoff/task_searches.rb'
+    - 'lib/checkoff/internal/search_url/custom_field_param_converter.rb'
+    - 'lib/checkoff/internal/search_url/custom_field_variant.rb'
+    - 'lib/checkoff/internal/search_url/date_param_converter.rb'
+    - 'lib/checkoff/internal/search_url/parser.rb'

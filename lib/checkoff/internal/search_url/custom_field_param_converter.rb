@@ -15,7 +15,7 @@ module Checkoff
           @custom_field_params = custom_field_params
         end
 
-        # @return [Array(Hash{String => String, Array<Symbol, Array>})]
+        # @return [Array(Hash{String => String}, Array<Symbol, Array>)]
         def convert
           # @type args [Hash{String => String}]
           args = {}
@@ -58,7 +58,7 @@ module Checkoff
 
         # @param gid [String]
         # @param single_custom_field_params [Hash{String => Array<String>}]
-        # @return [Array(Hash{String => String, Array<Symbol, Array>})]
+        # @return [Array(Hash{String => String}, Array<Symbol, Array>)]
         # @sg-ignore
         def convert_single_custom_field_params(gid, single_custom_field_params)
           variant_key = "custom_field_#{gid}.variant"

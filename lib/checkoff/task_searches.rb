@@ -33,9 +33,7 @@ module Checkoff
     # @!parse
     #   extend CacheMethod::ClassMethods
 
-    # rubocop:disable YARD/CollectionType -- Hash{K => V} in unions crashes YARD/CollectionStyle
-    # @param config [Hash(Symbol, Object), Checkoff::Internal::EnvFallbackConfigLoader]
-    # rubocop:enable YARD/CollectionType
+    # @param config [Hash{Symbol => Object}, Checkoff::Internal::EnvFallbackConfigLoader]
     # @param workspaces [Checkoff::Workspaces]
     # @param task_selectors [Checkoff::TaskSelectors]
     # @param projects [Checkoff::Projects]
