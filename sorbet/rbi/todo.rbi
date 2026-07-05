@@ -4,7 +4,6 @@
 
 # typed: false
 
-module ::Concurrent::Map; end
 module Bundler::FetchMetadata; end
 module Bundler::MatchMetadata; end
 module Parlour::RbiGenerator::Namespace::Mixin::Searchable; end
