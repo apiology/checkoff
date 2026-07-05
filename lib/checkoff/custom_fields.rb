@@ -162,7 +162,9 @@ module Checkoff
     end
 
     # @param custom_field [Hash]
-    # @param enum_value [Hash, nil]
+    # rubocop:disable YARD/CollectionType -- Hash{K => V} in unions crashes YARD/CollectionStyle
+    # @param enum_value [Hash(String, String), nil]
+    # rubocop:enable YARD/CollectionType
     # @return [Array<String>]
     def find_gids(custom_field, enum_value)
       if enum_value.nil?

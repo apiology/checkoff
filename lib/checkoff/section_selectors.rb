@@ -20,7 +20,9 @@ module Checkoff
     LONG_CACHE_TIME = MINUTE * 15
     SHORT_CACHE_TIME = MINUTE
 
-    # @param config [Hash, Checkoff::Internal::EnvFallbackConfigLoader]
+    # rubocop:disable YARD/CollectionType -- Hash{K => V} in unions crashes YARD/CollectionStyle
+    # @param config [Hash(Symbol, Object), Checkoff::Internal::EnvFallbackConfigLoader]
+    # rubocop:enable YARD/CollectionType
     # @param workspaces [Checkoff::Workspaces]
     # @param sections [Checkoff::Sections]
     # @param custom_fields [Checkoff::CustomFields]
