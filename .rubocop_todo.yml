@@ -89,7 +89,7 @@ Performance/InefficientHashSearch:
   Exclude:
     - 'lib/checkoff/internal/asana_event_filter.rb'
 
-# Offense count: 4
+# Offense count: 2
 YARD/TagTypeSyntax:
   Exclude:
     - 'lib/checkoff/internal/asana_event_enrichment.rb'
