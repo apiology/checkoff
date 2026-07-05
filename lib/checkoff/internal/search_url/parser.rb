@@ -22,7 +22,7 @@ module Checkoff
         end
 
         # @param url [String]
-        # @return [Array(Hash{String => String}, Array)]
+        # @return [Array(Hash{String => String, Array})]
         def convert_params(url)
           # @sg-ignore
           url_params = CGI.parse(URI.parse(url).query)
@@ -39,7 +39,7 @@ module Checkoff
         private
 
         # @param date_url_params [Hash{String => Array<String>}]
-        # @return [Array(Hash{String => String}, Array<Symbol, Array>)]
+        # @return [Array(Hash{String => String, Array<Symbol, Array>})]
         def convert_date_params(date_url_params)
           DateParamConverter.new(date_url_params:).convert
         end
@@ -51,13 +51,13 @@ module Checkoff
         end
 
         # @param custom_field_params [Hash{String => Array<String>}]
-        # @return [Array(Hash{String => String}, Array<Symbol, Array>)]
+        # @return [Array(Hash{String => String, Array<Symbol, Array>})]
         def convert_custom_field_params(custom_field_params)
           CustomFieldParamConverter.new(custom_field_params:).convert
         end
 
         # @param url_params [Hash{String => String}]
-        # @return [Array(Hash{String => Array<String>}, Hash{String => Array<String>}, Hash{String => Array<String>})]
+        # @return [Array(Hash{String => Array<String>, Hash{String => Array<String>, Hash{String => Array<String>}}})]
         def partition_url_params(url_params)
           groups = T.let(url_params.to_a.group_by do |key, _values|
                            # @sg-ignore

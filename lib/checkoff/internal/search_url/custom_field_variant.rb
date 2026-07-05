@@ -51,7 +51,7 @@ module Checkoff
 
         # custom_field_#{gid}.variant = 'less_than'
         class LessThan < CustomFieldVariant
-          # @return [Array(Hash{String => String}, Array<Array<String>,String>)]
+          # @return [Array(Hash{String => String, Array<Array<String>, String>})]
           def convert
             max_value = fetch_solo_param("custom_field_#{gid}.max")
             empty_task_selector = []
@@ -61,7 +61,7 @@ module Checkoff
 
         # custom_field_#{gid}.variant = 'greater_than'
         class GreaterThan < CustomFieldVariant
-          # @return [Array(Hash{String => String}, Array<Array<String>,String>)]
+          # @return [Array(Hash{String => String, Array<Array<String>, String>})]
           def convert
             max_value = fetch_solo_param("custom_field_#{gid}.min")
             empty_task_selector = []
@@ -71,7 +71,7 @@ module Checkoff
 
         # custom_field_#{gid}.variant = 'equals'
         class Equals < CustomFieldVariant
-          # @return [Array(Hash{String => String}, Array<Array<String>,String>)]
+          # @return [Array(Hash{String => String, Array<Array<String>, String>})]
           def convert
             value = fetch_solo_param("custom_field_#{gid}.value")
             empty_task_selector = []
@@ -83,7 +83,7 @@ module Checkoff
         #
         # custom_field_#{gid}.variant = 'is_not'
         class IsNot < CustomFieldVariant
-          # @return [Array(Hash{String => String}, Array<Array<String>, String, Array>)]
+          # @return [Array(Hash{String => String, Array<Array<String>, String, Array>})]
           def convert
             selected_options = fetch_solo_param("custom_field_#{gid}.selected_options").split('~')
 
@@ -100,7 +100,7 @@ module Checkoff
         #
         # custom_field_#{gid}.variant = 'doesnt_contain_any'
         class DoesntContainAny < CustomFieldVariant
-          # @return [Array(Hash{String => String}, Array<Array<String>, String, Array>)]
+          # @return [Array(Hash{String => String, Array<Array<String>, String, Array>})]
           def convert
             selected_options = fetch_solo_param("custom_field_#{gid}.selected_options").split('~')
 
@@ -116,7 +116,7 @@ module Checkoff
         #
         # custom_field_#{gid}.variant = 'contains_any'
         class ContainsAny < CustomFieldVariant
-          # @return [Array(Hash{String => String}, Array<Array<String>, String, Array>)]
+          # @return [Array(Hash{String => String, Array<Array<String>, String, Array>})]
           def convert
             selected_options = fetch_solo_param("custom_field_#{gid}.selected_options").split('~')
 
@@ -131,7 +131,7 @@ module Checkoff
         #
         # custom_field_#{gid}.variant = 'contains_all'
         class ContainsAll < CustomFieldVariant
-          # @return [Array(Hash{String => String}, Array<Array<String>, String, Array>)]
+          # @return [Array(Hash{String => String, Array<Array<String>, String, Array>})]
           def convert
             selected_options = fetch_solo_param("custom_field_#{gid}.selected_options").split('~')
 
@@ -144,7 +144,7 @@ module Checkoff
 
         # custom_field_#{gid}.variant = 'no_value'
         class NoValue < CustomFieldVariant
-          # @return [Array(Hash{String => String}, Array<Array<String>, String, Array, Symbol>)]
+          # @return [Array(Hash{String => String, Array<Array<String>, String, Array, Symbol>})]
           def convert
             ensure_no_remaining_params!
 
@@ -165,7 +165,7 @@ module Checkoff
         #
         # Not used for multi-select fields
         class AnyValue < CustomFieldVariant
-          # @return [Array(Hash{String => String}, Array<Array<String>, String, Array>)]
+          # @return [Array(Hash{String => String, Array<Array<String>, String, Array>})]
           def convert
             ensure_no_remaining_params!
 
@@ -177,7 +177,7 @@ module Checkoff
 
         # custom_field_#{gid}.variant = 'is'
         class Is < CustomFieldVariant
-          # @return [Array(Hash{String => String}, Array<Array<String>, String, Array>)]
+          # @return [Array(Hash{String => String, Array<Array<String>, String, Array>})]
           def convert
             selected_options = fetch_solo_param("custom_field_#{gid}.selected_options").split('~')
 

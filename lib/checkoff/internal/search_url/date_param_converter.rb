@@ -14,7 +14,7 @@ module Checkoff
           @date_url_params = date_url_params
         end
 
-        # @return [Array(Hash{String => String}, Array<Symbol, Array>)]
+        # @return [Array(Hash{String => String, Array<Symbol, Array>})]
         # @sg-ignore
         def convert
           return [{}, []] if date_url_params.empty?
@@ -36,7 +36,7 @@ module Checkoff
         private
 
         # @param prefix [String]
-        # @return [Array(Hash{String => String}, Array<Symbol, Array>)]
+        # @return [Array(Hash{String => String, Array<Symbol, Array>})]
         def convert_for_prefix(prefix)
           # example params:
           #   due_date.operator=through_next
@@ -72,7 +72,7 @@ module Checkoff
         private_constant :API_PREFIX
 
         # @param prefix [String]
-        # @return [Array(Hash{String => String}, Array<Symbol, Array>)] See https://developers.asana.com/docs/search-tasks-in-a-workspace
+        # @return [Array(Hash{String => String, Array<Symbol, Array>})] See https://developers.asana.com/docs/search-tasks-in-a-workspace
         def handle_through_next(prefix)
           value = get_single_param("#{prefix}.value").to_i
 
@@ -88,7 +88,7 @@ module Checkoff
         end
 
         # @param prefix [String]
-        # @return [Array(Hash{String => String}, Array<Symbol, Array>)] See https://developers.asana.com/docs/search-tasks-in-a-workspace
+        # @return [Array(Hash{String => String, Array<Symbol, Array>})] See https://developers.asana.com/docs/search-tasks-in-a-workspace
         def handle_between(prefix)
           after = get_single_param("#{prefix}.after")
           raise "Teach me how to handle #{prefix}.before" if date_url_params.key? "#{prefix}.before"
@@ -103,7 +103,7 @@ module Checkoff
         end
 
         # @param prefix [String]
-        # @return [Array(Hash{String => String}, Array<Symbol, Array>)] See https://developers.asana.com/docs/search-tasks-in-a-workspace
+        # @return [Array(Hash{String => String, Array<Symbol, Array>})] See https://developers.asana.com/docs/search-tasks-in-a-workspace
         def handle_within_last(prefix)
           value = get_single_param("#{prefix}.value").to_i
 
@@ -116,7 +116,7 @@ module Checkoff
         end
 
         # @param prefix [String]
-        # @return [Array(Hash{String => String}, Array<Symbol, Array>)] See https://developers.asana.com/docs/search-tasks-in-a-workspace
+        # @return [Array(Hash{String => String, Array<Symbol, Array>})] See https://developers.asana.com/docs/search-tasks-in-a-workspace
         def handle_within_next(prefix)
           value = get_single_param("#{prefix}.value").to_i
 
