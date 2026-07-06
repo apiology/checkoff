@@ -1,0 +1,9 @@
+
+<<<SEPARATOR>>>
+Job: build
+No steps found.
+
+<<<SEPARATOR>>>
+Job: quality
+Step: Ratchet rubocop quality
+Logs: {"output":"Inspecting 108 files\r\n............................................................................................................\r\n\r\n108 files inspected, no offenses detected\r\nPhase 1 of 2: run Layout/LineLength cop (skipped because only excludes will be generated due to `--auto-gen-only-exclude` flag)\r\nPhase 2 of 2: run all cops\r\nInspecting 108 files\r\n.......E..E.CE........EE...C..C.C.C....E..E.CECCE..ECEEE....................................C.E...E...EEE...\r\n\r\n108 files inspected, 85 offenses detected, 1 offense autocorrectable\r\nCreated .rubocop_todo.yml.\r\ndiff --git a/.rubocop_todo.yml b/.rubocop_todo.yml\r\nindex dc3312e..1c20aee 100644\r\n--- a/.rubocop_todo.yml\r\n+++ b/.rubocop_todo.yml\r\n@@ -89,7 +89,7 @@ Performance/InefficientHashSearch:\r\n   Exclude:\r\n     - 'lib/checkoff/internal/asana_event_filter.rb'\r\n \r\n-# Offense count: 4\r\n+# Offense count: 2\r\n YARD/TagTypeSyntax:\r\n   Exclude:\r\n     - 'lib/checkoff/internal/asana_event_enrichment.rb'\r\nmake: *** [Makefile:219: rubocop-ratchet] Error 1\r\n","error":"\r\nExited with code exit status 2\r\n"}

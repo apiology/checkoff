@@ -1,6 +1,6 @@
-# Solargraph issue catalog (checkoff)
+# Solargraph issue catalog
 
-Quick lookup for strong-level messages seen in this repo and the preferred response.
+Quick lookup for strong-level messages seen in Ruby gem repos and the preferred response.
 
 ## Unneeded @sg-ignore comment
 
@@ -16,7 +16,7 @@ Quick lookup for strong-level messages seen in this repo and the preferred respo
 
 ## Wrong argument type … expected String, received String, Symbol
 
-**Cause:** GLI/options pass symbols; YARD on callee only documents `String`.
+**Cause:** CLI/options pass symbols; YARD on callee only documents `String`.
 
 **Fix:** Widen `@param` to `[String, Symbol]` on the method definition (and upstream if the error moves).
 
@@ -24,7 +24,7 @@ Quick lookup for strong-level messages seen in this repo and the preferred respo
 
 **Cause:** Subclass uses ivars; Solargraph only knows documented accessors.
 
-**Fix:** Add `attr_reader` with `@return` types on the base evaluator class; call `tasks` not `@tasks`.
+**Fix:** Add `attr_reader` with `@return` types on the base class; call `tasks` not `@tasks`.
 
 ## Unresolved call to flag / action (GLI)
 
@@ -36,7 +36,7 @@ Quick lookup for strong-level messages seen in this repo and the preferred respo
 
 **Cause:** `Gem::Specification` dynamic API.
 
-**Fix:** One `# @sg-ignore` per assignment line in `checkoff.gemspec`.
+**Fix:** One `# @sg-ignore` per assignment line in `*.gemspec`.
 
 ## Not enough arguments to Date.new
 
@@ -68,12 +68,36 @@ Quick lookup for strong-level messages seen in this repo and the preferred respo
 
 **Fix:** Usually ignorable on the `ENV['BUNDLE_GEMFILE']` line; binstubs are often excluded or get a single ignore.
 
-## Wrong argument type for Checkoff::TaskSelectors#filter_via_task_selector: … Mocha::Mock
+## Unresolved call to fetch on RBS::Unnamed::ENVClass
 
-**Cause:** Test mocks (tests should stay excluded from strong).
+**Cause:** Strong-level RBS typing for `ENV` may not expose `fetch` in all contexts.
 
-**Fix:** Do not strong-typecheck `test/`; keep `test/**/*` in `.solargraph.yml` exclude.
+**Fix:** Add a targeted `# @sg-ignore` immediately above `ENV.fetch(...)` when a cleaner type annotation does not resolve it.
+
+## Unresolved constant WARN
+
+**Cause:** Bare severity constants in logger subclasses are not always resolved.
+
+**Fix:** Use `Logger::WARN` (or explicit `Logger::Severity::<LEVEL>`).
+
+## Wrong argument type for Float#/: arg_0 expected BigDecimal, received Integer
+
+**Cause:** Numeric division in duration math can be inferred through strict numeric signatures.
+
+**Fix:** Prefer `fdiv` (`seconds.fdiv(60)`) or make the divisor/value explicit float where appropriate.
+
+## Unresolved call to join on Array<String>, nil
+
+**Cause:** Exception backtrace is nullable (`nil` when missing).
+
+**Fix:** Wrap with `Array(...)`: `Array(error.backtrace).join("\n")`.
+
+## Wrong argument type … Mocha::Mock
+
+**Cause:** Test mocks in spec/feature/test files.
+
+**Fix:** Exclude mock-heavy test paths in `.solargraph.yml` (`spec/**/*`, `feature/**/*`, or `test/**/*`); do not strong-typecheck tests.
 
 ## Performance note
 
-Do not loop `apply_solargraph_typecheck.rb` dozens of times — ignores only cover the next line, so automated passes can add/remove in oscillation. Triage by file, fix lib/ properly, exclude tests, then use targeted ignores.
+Do not loop `.cursor/skills/solargraph-typecheck/scripts/apply_solargraph_typecheck.rb` dozens of times — ignores only cover the next line, so automated passes can add/remove in oscillation. Triage by file, fix `lib/` properly, exclude tests, then use targeted ignores.

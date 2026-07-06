@@ -127,7 +127,7 @@ end
 
 # pkg:gem/rubocop-yard#lib/rubocop/cop/yard/helper.rb:6
 module RuboCop::Cop::YARD::Helper
-  # pkg:gem/rubocop-yard#lib/rubocop/cop/yard/helper.rb:79
+  # pkg:gem/rubocop-yard#lib/rubocop/cop/yard/helper.rb:81
   def build_docstring(preceding_lines); end
 
   # pkg:gem/rubocop-yard#lib/rubocop/cop/yard/helper.rb:22
@@ -136,13 +136,13 @@ module RuboCop::Cop::YARD::Helper
   # pkg:gem/rubocop-yard#lib/rubocop/cop/yard/helper.rb:7
   def extract_tag_types(tag); end
 
-  # pkg:gem/rubocop-yard#lib/rubocop/cop/yard/helper.rb:75
+  # pkg:gem/rubocop-yard#lib/rubocop/cop/yard/helper.rb:77
   def inline_comment?(comment); end
 
   # pkg:gem/rubocop-yard#lib/rubocop/cop/yard/helper.rb:18
   def parse_type(type); end
 
-  # pkg:gem/rubocop-yard#lib/rubocop/cop/yard/helper.rb:36
+  # pkg:gem/rubocop-yard#lib/rubocop/cop/yard/helper.rb:38
   def styled_string(types_explainer); end
 end
 
@@ -163,24 +163,32 @@ end
 #   # good
 #   CONST = 1
 #
-# pkg:gem/rubocop-yard#lib/rubocop/cop/yard/meaningless_tag.rb:22
+#   # good (Struct/Data constant assignments accept @param)
+#   # @param name [String]
+#   # @param age [Integer]
+#   Person = Struct.new(:name, :age, keyword_init: true)
+#
+# pkg:gem/rubocop-yard#lib/rubocop/cop/yard/meaningless_tag.rb:27
 class RuboCop::Cop::YARD::MeaninglessTag < ::RuboCop::Cop::Base
   include ::RuboCop::Cop::YARD::Helper
   include ::RuboCop::Cop::RangeHelp
   include ::RuboCop::Cop::DocumentationComment
   extend ::RuboCop::Cop::AutoCorrector
 
-  # pkg:gem/rubocop-yard#lib/rubocop/cop/yard/meaningless_tag.rb:34
+  # pkg:gem/rubocop-yard#lib/rubocop/cop/yard/meaningless_tag.rb:48
   def check(node); end
 
-  # pkg:gem/rubocop-yard#lib/rubocop/cop/yard/meaningless_tag.rb:32
+  # pkg:gem/rubocop-yard#lib/rubocop/cop/yard/meaningless_tag.rb:46
   def on_casgn(node); end
 
-  # pkg:gem/rubocop-yard#lib/rubocop/cop/yard/meaningless_tag.rb:28
+  # pkg:gem/rubocop-yard#lib/rubocop/cop/yard/meaningless_tag.rb:42
   def on_class(node); end
 
-  # pkg:gem/rubocop-yard#lib/rubocop/cop/yard/meaningless_tag.rb:31
+  # pkg:gem/rubocop-yard#lib/rubocop/cop/yard/meaningless_tag.rb:45
   def on_module(node); end
+
+  # pkg:gem/rubocop-yard#lib/rubocop/cop/yard/meaningless_tag.rb:35
+  def struct_or_data_definition?(param0 = T.unsafe(nil)); end
 end
 
 # @example mismatch name

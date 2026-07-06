@@ -5,48 +5,46 @@
 # Please instead update this file by running `bin/tapioca gem brakeman`.
 
 
-# source://brakeman//lib/brakeman/logger.rb#1
+# pkg:gem/brakeman#lib/brakeman/logger.rb:1
 module Brakeman
   class << self
-    # source://brakeman//lib/brakeman.rb#644
+    # pkg:gem/brakeman#lib/brakeman.rb:644
     def add_external_checks(options); end
 
-    # source://brakeman//lib/brakeman.rb#544
+    # pkg:gem/brakeman#lib/brakeman.rb:544
     def alert(message); end
 
-    # source://brakeman//lib/brakeman.rb#540
+    # pkg:gem/brakeman#lib/brakeman.rb:540
     def announce(message); end
 
-    # source://brakeman//lib/brakeman.rb#650
+    # pkg:gem/brakeman#lib/brakeman.rb:650
     def check_for_missing_checks(included_checks, excluded_checks, enabled_checks); end
 
-    # source://brakeman//lib/brakeman.rb#122
+    # pkg:gem/brakeman#lib/brakeman.rb:122
     def cleanup(newline = T.unsafe(nil)); end
 
     # Compare JSON output from a previous scan and return the diff of the two scans
     #
-    # @raise [ArgumentError]
-    #
-    # source://brakeman//lib/brakeman.rb#553
+    # pkg:gem/brakeman#lib/brakeman.rb:553
     def compare(options); end
 
-    # source://brakeman//lib/brakeman.rb#218
+    # pkg:gem/brakeman#lib/brakeman.rb:218
     def config_file(custom_location, app_path); end
 
-    # source://brakeman//lib/brakeman.rb#548
+    # pkg:gem/brakeman#lib/brakeman.rb:548
     def debug(message); end
 
-    # source://brakeman//lib/brakeman.rb#660
+    # pkg:gem/brakeman#lib/brakeman.rb:660
     def debug=(val); end
 
     # Default set of options
     #
-    # source://brakeman//lib/brakeman.rb#225
+    # pkg:gem/brakeman#lib/brakeman.rb:225
     def default_options; end
 
     # Output configuration to YAML
     #
-    # source://brakeman//lib/brakeman.rb#384
+    # pkg:gem/brakeman#lib/brakeman.rb:384
     def dump_config(options); end
 
     # Returns quit message unless the latest version
@@ -55,47 +53,47 @@ module Brakeman
     # Optionally checks that the latest version is at least
     # the specified number of days old.
     #
-    # source://brakeman//lib/brakeman.rb#422
+    # pkg:gem/brakeman#lib/brakeman.rb:422
     def ensure_latest(days_old: T.unsafe(nil)); end
 
-    # source://brakeman//lib/brakeman.rb#614
+    # pkg:gem/brakeman#lib/brakeman.rb:614
     def filter_warnings(tracker, options); end
 
     # Determine output formats based on options[:output_formats]
     # or options[:output_files]
     #
-    # source://brakeman//lib/brakeman.rb#256
+    # pkg:gem/brakeman#lib/brakeman.rb:256
     def get_output_formats(options); end
 
     # Returns an array of alert fingerprints for any ignored warnings without
     # notes found in the specified ignore file (if it exists).
     #
-    # source://brakeman//lib/brakeman.rb#604
+    # pkg:gem/brakeman#lib/brakeman.rb:604
     def ignore_file_entries_with_empty_notes(file); end
 
     # Output list of checks (for `-k` option)
     #
-    # source://brakeman//lib/brakeman.rb#362
+    # pkg:gem/brakeman#lib/brakeman.rb:362
     def list_checks(options); end
 
-    # source://brakeman//lib/brakeman.rb#576
+    # pkg:gem/brakeman#lib/brakeman.rb:576
     def load_brakeman_dependency(name, allow_fail = T.unsafe(nil)); end
 
     # Load options from YAML file
     #
-    # source://brakeman//lib/brakeman.rb#168
+    # pkg:gem/brakeman#lib/brakeman.rb:168
     def load_options(line_options); end
 
-    # source://brakeman//lib/brakeman.rb#110
+    # pkg:gem/brakeman#lib/brakeman.rb:110
     def logger; end
 
-    # source://brakeman//lib/brakeman.rb#114
+    # pkg:gem/brakeman#lib/brakeman.rb:114
     def logger=(log); end
 
-    # source://brakeman//lib/brakeman.rb#668
+    # pkg:gem/brakeman#lib/brakeman.rb:668
     def process_step(description, &_arg1); end
 
-    # source://brakeman//lib/brakeman.rb#664
+    # pkg:gem/brakeman#lib/brakeman.rb:664
     def quiet=(val); end
 
     # Rescan a subset of files in a Rails application.
@@ -110,7 +108,7 @@ module Brakeman
     # This method returns a RescanReport object with information about the scan.
     # However, the Tracker object will also be modified as the scan is run.
     #
-    # source://brakeman//lib/brakeman.rb#529
+    # pkg:gem/brakeman#lib/brakeman.rb:529
     def rescan(tracker, files, options = T.unsafe(nil)); end
 
     # Run Brakeman scan. Returns Tracker object.
@@ -157,273 +155,256 @@ module Brakeman
     #
     # Alternatively, just supply a path as a string.
     #
-    # source://brakeman//lib/brakeman.rb#81
+    # pkg:gem/brakeman#lib/brakeman.rb:81
     def run(options); end
 
     # Run a scan. Generally called from Brakeman.run instead of directly.
     #
-    # source://brakeman//lib/brakeman.rb#442
+    # pkg:gem/brakeman#lib/brakeman.rb:442
     def scan(options); end
 
-    # source://brakeman//lib/brakeman.rb#118
+    # pkg:gem/brakeman#lib/brakeman.rb:118
     def set_default_logger(options = T.unsafe(nil)); end
 
     # Sets up options for run, checks given application path
     #
-    # source://brakeman//lib/brakeman.rb#127
+    # pkg:gem/brakeman#lib/brakeman.rb:127
     def set_options(options); end
 
     private
 
-    # source://brakeman//lib/brakeman.rb#309
+    # pkg:gem/brakeman#lib/brakeman.rb:309
     def get_formats_from_output_files(output_files); end
 
-    # source://brakeman//lib/brakeman.rb#275
+    # pkg:gem/brakeman#lib/brakeman.rb:275
     def get_formats_from_output_format(output_format); end
 
-    # source://brakeman//lib/brakeman.rb#345
+    # pkg:gem/brakeman#lib/brakeman.rb:345
     def get_github_url(options); end
 
-    # source://brakeman//lib/brakeman.rb#482
+    # pkg:gem/brakeman#lib/brakeman.rb:482
     def write_report_to_files(tracker, output_files); end
 
-    # source://brakeman//lib/brakeman.rb#501
+    # pkg:gem/brakeman#lib/brakeman.rb:501
     def write_report_to_formats(tracker, output_formats); end
   end
 end
 
-# source://brakeman//lib/brakeman.rb#206
+# pkg:gem/brakeman#lib/brakeman.rb:206
 Brakeman::CONFIG_FILES = T.let(T.unsafe(nil), Array)
 
-# source://brakeman//lib/brakeman.rb#672
+# pkg:gem/brakeman#lib/brakeman.rb:672
 class Brakeman::DependencyError < ::RuntimeError; end
 
 # Exit code returned when an ignored warning has no note and
 # --ensure-ignore-notes is set
 #
-# source://brakeman//lib/brakeman.rb#26
+# pkg:gem/brakeman#lib/brakeman.rb:26
 Brakeman::Empty_Ignore_Note_Exit_Code = T.let(T.unsafe(nil), Integer)
 
 # Exit code returned when errors were found and the --exit-on-error
 # option is set
 #
-# source://brakeman//lib/brakeman.rb#22
+# pkg:gem/brakeman#lib/brakeman.rb:22
 Brakeman::Errors_Found_Exit_Code = T.let(T.unsafe(nil), Integer)
 
-# source://brakeman//lib/brakeman/logger.rb#2
+# pkg:gem/brakeman#lib/brakeman/logger.rb:2
 module Brakeman::Logger
   class << self
-    # source://brakeman//lib/brakeman/logger.rb#3
+    # pkg:gem/brakeman#lib/brakeman/logger.rb:3
     def get_logger(options, dest = T.unsafe(nil)); end
   end
 end
 
-# source://brakeman//lib/brakeman/logger.rb#18
+# pkg:gem/brakeman#lib/brakeman/logger.rb:18
 class Brakeman::Logger::Base
-  # @return [Base] a new instance of Base
-  #
-  # source://brakeman//lib/brakeman/logger.rb#19
+  # pkg:gem/brakeman#lib/brakeman/logger.rb:19
   def initialize(options, log_destination = T.unsafe(nil)); end
 
   # Notify regarding errors - use sparingly
   #
-  # source://brakeman//lib/brakeman/logger.rb#38
+  # pkg:gem/brakeman#lib/brakeman/logger.rb:38
   def alert(message); end
 
   # Notify about important information - use sparingly
   #
-  # source://brakeman//lib/brakeman/logger.rb#35
+  # pkg:gem/brakeman#lib/brakeman/logger.rb:35
   def announce(message); end
 
   # Called on exit
   #
-  # source://brakeman//lib/brakeman/logger.rb#60
+  # pkg:gem/brakeman#lib/brakeman/logger.rb:60
   def cleanup(newline = T.unsafe(nil)); end
 
   # Use ANSI codes to color a string
   #
-  # source://brakeman//lib/brakeman/logger.rb#65
+  # pkg:gem/brakeman#lib/brakeman/logger.rb:65
   def color(message, *_arg1); end
 
-  # @return [Boolean]
-  #
-  # source://brakeman//lib/brakeman/logger.rb#73
+  # pkg:gem/brakeman#lib/brakeman/logger.rb:73
   def color?; end
 
   # Wraps a step in the scanning process
   #
-  # @yield [_self]
-  # @yieldparam _self [Brakeman::Logger::Base] the object that the method was called on
-  #
-  # source://brakeman//lib/brakeman/logger.rb#44
+  # pkg:gem/brakeman#lib/brakeman/logger.rb:44
   def context(description, &_arg1); end
 
   # Output debug information
   #
-  # source://brakeman//lib/brakeman/logger.rb#41
+  # pkg:gem/brakeman#lib/brakeman/logger.rb:41
   def debug(message); end
 
   # Output a message to the log.
   # If newline is `false`, does not output a newline after message.
   #
-  # source://brakeman//lib/brakeman/logger.rb#26
+  # pkg:gem/brakeman#lib/brakeman/logger.rb:26
   def log(message, newline: T.unsafe(nil)); end
 
-  # @return [Boolean]
-  #
-  # source://brakeman//lib/brakeman/logger.rb#62
+  # pkg:gem/brakeman#lib/brakeman/logger.rb:62
   def show_timing?; end
 
   # Wraps a substep (e.g. processing one file)
   #
-  # source://brakeman//lib/brakeman/logger.rb#49
+  # pkg:gem/brakeman#lib/brakeman/logger.rb:49
   def single_context(description, &_arg1); end
 
   # Show a spinner
   #
-  # source://brakeman//lib/brakeman/logger.rb#57
+  # pkg:gem/brakeman#lib/brakeman/logger.rb:57
   def spin; end
 
   # Update progress towards a known total
   #
-  # source://brakeman//lib/brakeman/logger.rb#54
+  # pkg:gem/brakeman#lib/brakeman/logger.rb:54
   def update_progress(current, total, type = T.unsafe(nil)); end
 
   private
 
-  # source://brakeman//lib/brakeman/logger.rb#79
+  # pkg:gem/brakeman#lib/brakeman/logger.rb:79
   def load_highline(output_color); end
 end
 
-# source://brakeman//lib/brakeman/logger.rb#153
+# pkg:gem/brakeman#lib/brakeman/logger.rb:153
 class Brakeman::Logger::Console < ::Brakeman::Logger::Base
-  # @return [Console] a new instance of Console
-  #
-  # source://brakeman//lib/brakeman/logger.rb#156
+  # pkg:gem/brakeman#lib/brakeman/logger.rb:156
   def initialize(options, *_arg1); end
 
-  # source://brakeman//lib/brakeman/logger.rb#181
+  # pkg:gem/brakeman#lib/brakeman/logger.rb:181
   def alert(message); end
 
-  # source://brakeman//lib/brakeman/logger.rb#175
+  # pkg:gem/brakeman#lib/brakeman/logger.rb:175
   def announce(message); end
 
-  # source://brakeman//lib/brakeman/logger.rb#259
+  # pkg:gem/brakeman#lib/brakeman/logger.rb:259
   def cleanup(newline = T.unsafe(nil)); end
 
-  # source://brakeman//lib/brakeman/logger.rb#246
+  # pkg:gem/brakeman#lib/brakeman/logger.rb:246
   def clear_line; end
 
-  # source://brakeman//lib/brakeman/logger.rb#240
+  # pkg:gem/brakeman#lib/brakeman/logger.rb:240
   def clear_prefix; end
 
-  # source://brakeman//lib/brakeman/logger.rb#187
+  # pkg:gem/brakeman#lib/brakeman/logger.rb:187
   def context(description, &_arg1); end
 
-  # Returns the value of attribute prefix.
-  #
-  # source://brakeman//lib/brakeman/logger.rb#154
+  # pkg:gem/brakeman#lib/brakeman/logger.rb:154
   def prefix; end
 
   # If an alert was written, redo prefix on next line
   #
-  # source://brakeman//lib/brakeman/logger.rb#224
+  # pkg:gem/brakeman#lib/brakeman/logger.rb:224
   def rewrite_prefix; end
 
-  # source://brakeman//lib/brakeman/logger.rb#235
+  # pkg:gem/brakeman#lib/brakeman/logger.rb:235
   def set_prefix(message); end
 
-  # source://brakeman//lib/brakeman/logger.rb#251
+  # pkg:gem/brakeman#lib/brakeman/logger.rb:251
   def spin; end
 
-  # source://brakeman//lib/brakeman/logger.rb#195
+  # pkg:gem/brakeman#lib/brakeman/logger.rb:195
   def time_step(description, &_arg1); end
 
-  # source://brakeman//lib/brakeman/logger.rb#208
+  # pkg:gem/brakeman#lib/brakeman/logger.rb:208
   def update_progress(current, total, type = T.unsafe(nil)); end
 
-  # source://brakeman//lib/brakeman/logger.rb#229
+  # pkg:gem/brakeman#lib/brakeman/logger.rb:229
   def write_after(message); end
 
-  # source://brakeman//lib/brakeman/logger.rb#218
+  # pkg:gem/brakeman#lib/brakeman/logger.rb:218
   def write_prefix(pref); end
 end
 
-# source://brakeman//lib/brakeman/logger.rb#130
+# pkg:gem/brakeman#lib/brakeman/logger.rb:130
 class Brakeman::Logger::Debug < ::Brakeman::Logger::Plain
-  # source://brakeman//lib/brakeman/logger.rb#135
+  # pkg:gem/brakeman#lib/brakeman/logger.rb:135
   def context(description, &_arg1); end
 
-  # source://brakeman//lib/brakeman/logger.rb#131
+  # pkg:gem/brakeman#lib/brakeman/logger.rb:131
   def debug(message); end
 
-  # source://brakeman//lib/brakeman/logger.rb#141
+  # pkg:gem/brakeman#lib/brakeman/logger.rb:141
   def single_context(description, &_arg1); end
 end
 
-# source://brakeman//lib/brakeman/logger.rb#90
+# pkg:gem/brakeman#lib/brakeman/logger.rb:90
 class Brakeman::Logger::Plain < ::Brakeman::Logger::Base
-  # @return [Plain] a new instance of Plain
-  #
-  # source://brakeman//lib/brakeman/logger.rb#91
+  # pkg:gem/brakeman#lib/brakeman/logger.rb:91
   def initialize(options, *_arg1); end
 
-  # source://brakeman//lib/brakeman/logger.rb#101
+  # pkg:gem/brakeman#lib/brakeman/logger.rb:101
   def alert(message); end
 
-  # source://brakeman//lib/brakeman/logger.rb#97
+  # pkg:gem/brakeman#lib/brakeman/logger.rb:97
   def announce(message); end
 
-  # source://brakeman//lib/brakeman/logger.rb#105
+  # pkg:gem/brakeman#lib/brakeman/logger.rb:105
   def context(description, &_arg1); end
 
-  # source://brakeman//lib/brakeman/logger.rb#115
+  # pkg:gem/brakeman#lib/brakeman/logger.rb:115
   def time_step(description, &_arg1); end
 end
 
-# source://brakeman//lib/brakeman/logger.rb#124
+# pkg:gem/brakeman#lib/brakeman/logger.rb:124
 class Brakeman::Logger::Quiet < ::Brakeman::Logger::Base
-  # @return [Quiet] a new instance of Quiet
-  #
-  # source://brakeman//lib/brakeman/logger.rb#125
+  # pkg:gem/brakeman#lib/brakeman/logger.rb:125
   def initialize(*_arg0); end
 end
 
-# source://brakeman//lib/brakeman.rb#675
+# pkg:gem/brakeman#lib/brakeman.rb:675
 class Brakeman::MissingChecksError < ::RuntimeError; end
 
 # Exit code returned when user requests non-existent checks
 #
-# source://brakeman//lib/brakeman.rb#18
+# pkg:gem/brakeman#lib/brakeman.rb:18
 Brakeman::Missing_Checks_Exit_Code = T.let(T.unsafe(nil), Integer)
 
-# source://brakeman//lib/brakeman.rb#674
+# pkg:gem/brakeman#lib/brakeman.rb:674
 class Brakeman::NoApplication < ::RuntimeError; end
 
-# source://brakeman//lib/brakeman.rb#673
+# pkg:gem/brakeman#lib/brakeman.rb:673
 class Brakeman::NoBrakemanError < ::RuntimeError; end
 
 # Exit code returned when no Rails application is detected
 #
-# source://brakeman//lib/brakeman.rb#12
+# pkg:gem/brakeman#lib/brakeman.rb:12
 Brakeman::No_App_Found_Exit_Code = T.let(T.unsafe(nil), Integer)
 
 # Exit code returned when brakeman was outdated
 #
-# source://brakeman//lib/brakeman.rb#15
+# pkg:gem/brakeman#lib/brakeman.rb:15
 Brakeman::Not_Latest_Version_Exit_Code = T.let(T.unsafe(nil), Integer)
 
 # Exit code returned when at least one obsolete ignore entry is present
 # and `--ensure-no-obsolete-ignore-entries` is set.
 #
-# source://brakeman//lib/brakeman.rb#30
+# pkg:gem/brakeman#lib/brakeman.rb:30
 Brakeman::Obsolete_Ignore_Entries_Exit_Code = T.let(T.unsafe(nil), Integer)
 
-# source://brakeman//lib/brakeman/version.rb#2
+# pkg:gem/brakeman#lib/brakeman/version.rb:2
 Brakeman::Version = T.let(T.unsafe(nil), String)
 
 # This exit code is used when warnings are found and the --exit-on-warn
 # option is set
 #
-# source://brakeman//lib/brakeman.rb#9
+# pkg:gem/brakeman#lib/brakeman.rb:9
 Brakeman::Warnings_Found_Exit_Code = T.let(T.unsafe(nil), Integer)
