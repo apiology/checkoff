@@ -175,6 +175,14 @@ ensure_bundle() {
   # https://app.circleci.com/pipelines/github/apiology/source_finder/21/workflows/88db659f-a4f4-4751-abc0-46f5929d8e58/jobs/107
   set_rbenv_env_variables
 
+  # Compile deps before bundle install: ensure_dev_library probes yaml.h
+  # (libyaml-dev headers), not a separate runtime package — psych's C ext
+  # links libyaml when the default gem rebuilds on Linux CI.
+  # https://github.com/ruby/psych/blob/master/ext/psych/extconf.rb
+  # Called here (not only from ensure_ruby_versions) because cached rbenv
+  # rubies skip ensure_ruby_build_requirements during rbenv install.
+  ensure_ruby_build_requirements
+
   bundler_version=$(ruby -e 'require "rubygems/bundler_version_finder"; puts Gem::BundlerVersionFinder.bundler_version')
   # if bundler_version is empty
   if [ -z "${bundler_version}" ]
@@ -191,9 +199,7 @@ ensure_bundle() {
   bundler_version_major=$(cut -d. -f1 <<< "${bundler_version}")
   bundler_version_minor=$(cut -d. -f2 <<< "${bundler_version}")
   bundler_version_patch=$(cut -d. -f3 <<< "${bundler_version}")
-  # Version <2.2.22 of bundler isn't compatible with Ruby 3.3:
-  #
-  # https://stackoverflow.com/questions/70800753/rails-calling-didyoumeanspell-checkers-mergeerror-name-spell-checker-h
+  # Install bundler >=2.6.9 when older versions fail `bundle lock` on git-branch deps (aff6a48).
   need_better_bundler=false
   if [ "${bundler_version_major}" -lt 2 ]
   then
@@ -235,6 +241,10 @@ ensure_bundle() {
   # Docker builds where it's already installed if this is not run.
   make Gemfile.lock
   make bundle_install
+  for platform in x86_64-linux x86_64-linux-musl
+  do
+    grep "${platform:?}" Gemfile.lock >/dev/null 2>&1 || bundle lock --add-platform "${platform:?}"
+  done
 }
 
 set_ruby_local_version() {
@@ -431,6 +441,34 @@ EOF
   chmod +x .githooks/post-checkout
 }
 
+patch_overcommit_hooks() {
+  # Inject bootstrap so Cursor worktrees inherit .local-overcommit.yml before
+  # Overcommit loads config (gitignored file is absent on fresh worktree checkout).
+  # Do NOT patch overcommit-hook: it must match the gem template or Overcommit
+  # self-update will reinstall all hooks and strip these patches.
+  local hook hooks_dir bootstrap_line
+  hooks_dir="$(git config --get core.hooksPath 2>/dev/null || echo .git/hooks)"
+  bootstrap_line="repo_root = String(\`git rev-parse --show-toplevel 2>/dev/null\`).strip; load File.join(repo_root, '.git-hooks', 'bootstrap_local_overcommit.rb') rescue nil if repo_root != '' # OVERCOMMIT_REPO_BOOTSTRAP"
+
+  for hook in "${hooks_dir}"/*
+  do
+    [ -f "$hook" ] || continue
+    [[ "$(basename "$hook")" == "overcommit-hook" ]] && continue
+    grep -q 'OVERCOMMIT_REPO_BOOTSTRAP' "$hook" && continue
+    grep -q 'Entrypoint for Overcommit hook integration' "$hook" || continue
+    ruby - "$hook" "$bootstrap_line" <<'RUBY'
+hook_path = ARGV[0]
+bootstrap_line = ARGV[1]
+contents = File.read(hook_path)
+marker = "if ENV['OVERCOMMIT_DISABLE'].to_i != 0 || ENV['OVERCOMMIT_DISABLED'].to_i != 0\n  exit\nend\n"
+unless contents.include?('OVERCOMMIT_REPO_BOOTSTRAP')
+  raise "bootstrap insertion point not found in #{hook_path}" unless contents.include?(marker)
+  File.write(hook_path, contents.sub(marker, "#{marker}\n#{bootstrap_line}\n"))
+end
+RUBY
+  done
+}
+
 ensure_overcommit() {
   # don't run if we're in the middle of a cookiecutter child project
   # test, or otherwise don't have a Git repo to install hooks into...
@@ -439,6 +477,7 @@ ensure_overcommit() {
     bundle exec overcommit --install
     bundle exec overcommit --sign
     bundle exec overcommit --sign pre-commit
+    patch_overcommit_hooks
     install_bootstrap_post_checkout_hook
   else
     >&2 echo 'Not in a git repo; not installing git hooks'

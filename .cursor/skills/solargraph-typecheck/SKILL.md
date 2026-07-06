@@ -45,6 +45,14 @@ See `.solargraph.yml` for include/exclude paths and reporter settings. Mock-heav
 4. Re-run until zero problems.
 5. Run `direnv exec . bin/rubocop` — bulk `@return [void]` or layout fixes often need `rubocop -A`.
 
+If the goal is "get N more files passing" rather than "zero errors everywhere", rank files by failure count and clear the smallest buckets first:
+
+```bash
+ruby -e 'h=Hash.new(0); File.foreach("/tmp/sg-typecheck.txt"){|l| if l =~ %r{^(/[^:]+\.rb):\d+\s-\s}; h[$1]+=1; end}; h.select{|_,c| c<=8}.sort_by{|f,c| [c,f]}.each{|f,c| puts "%3d #{f}" % c }'
+```
+
+Then compare before/after runs to count files that moved from `>0` errors to `0`.
+
 Optional helpers (use after manual triage, not as a blind hammer):
 
 ```bash
@@ -56,6 +64,9 @@ ruby .cursor/skills/solargraph-typecheck/scripts/strip_sg_ignore.rb path/to/file
 ## `@sg-ignore` rules (Solargraph 0.59+)
 
 - Applies to the **next AST node only** — one ignore per statement (or put ignore immediately before the failing line).
+- Long raw Solargraph messages: start on the `# @sg-ignore` line; when you run out of space,
+  word-wrap the remainder on the next comment line (indented), e.g. `# @sg-ignore Foo#bar` then
+  `#   return type could not be inferred`.
 - **Unneeded @sg-ignore** means remove that comment; Solargraph 0.59 reports stale ignores after upgrades.
 - Do **not** write the literal text `@sg-ignore` in normal comments or file headers — Solargraph treats it as a directive (`Unneeded @sg-ignore` on unrelated lines). Say "ignore comment" in prose instead.
 - Prefer **fixes** over ignores when cheap (YARD `@param`, `String(...)`, `attr_reader`, nil guards).
@@ -95,7 +106,7 @@ Date.parse('2029-01-04')
 
 - HTTP response bodies: `@param response [#read_body]`
 - `$LOAD_PATH`: one `# @sg-ignore` on the bootstrap line (special RBS typing)
-- Bundler binstub `ENV['BUNDLE_GEMFILE'] ||= ...`: YARD stubs in `config/annotations_misc.rb` do not override RBS `ENVClass` at strong level — keep `# @sg-ignore` on each binstub line
+- `ENV[...]` / `ENV.fetch(...)` on `ENVClass` at strong level: YARD stubs in `config/annotations_misc.rb` often do not override RBS — put `# @sg-ignore` with the raw Solargraph message on the line above the call (binstubs and app code)
 
 ### GLI command blocks
 
@@ -118,6 +129,13 @@ result = execute(...)
 
 Methods that return `true`/`false` but mutate state may trigger RuboCop `Naming/PredicateMethod` if named `fix_*!`. For maintenance scripts, use a scoped `# rubocop:disable` block rather than renaming call sites.
 
+### Common one-line strong fixes
+
+- `Unresolved constant WARN` in logger wrappers: prefer `Logger::WARN` over bare `WARN`
+- `Wrong argument type for Float#/: ... received Integer` in duration math: prefer `value.fdiv(60)` (or explicit float literal) when dividing numeric durations
+- `Unresolved call to join on Array<String>, nil` for backtraces: use `Array(error.backtrace).join("\n")`
+- Missing test method docs (`Missing @return tag for Test...#test_*`): add `# @return [void]`
+
 ## When to ignore
 
 Use `@sg-ignore` for:
@@ -139,6 +157,10 @@ Scripts under `script/` should be **typed** (`# typed: true`) when typechecked:
 - Use a small class instead of `Struct` for YARD clarity.
 - Document all methods with `@param` / `@return`.
 - Avoid `@sg-ignore` in comments that are not actual directives.
+
+## Sorbet (gradual typing, lib or test)
+
+When Sorbet reports **Changing the type of a variable is not permitted in loops and blocks** on a local updated inside a block (callback, `yield`, etc.), initialize with an explicit type—e.g. `flag = T.let(false, T::Boolean)` before `flag = true` in the block.
 
 ## Rubocop fallout
 

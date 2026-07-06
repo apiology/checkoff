@@ -56,19 +56,19 @@ Quick lookup for strong-level messages seen in this repo and the preferred respo
 
 **Fix:** Add explicit `return`, cast with `@type`, or `# @sg-ignore` on the `def` line if `@return [Boolean]` is already documented.
 
-## Unresolved call to success? / stdout (Overcommit)
-
-**Cause:** `execute` return type unknown.
-
-**Fix:** `# @type [Overcommit::Subprocess::Result]` on the assignment line.
-
 ## Unresolved call to [] on RBS::Unnamed::ENVClass (binstubs)
 
 **Cause:** `$LOAD_PATH`-style special typing in binstubs.
 
 **Fix:** Usually ignorable on the `ENV['BUNDLE_GEMFILE']` line; binstubs are often excluded or get a single ignore.
 
-## Wrong argument type for Checkoff::TaskSelectors#filter_via_task_selector: … Mocha::Mock
+## Unresolved call to fetch on RBS::Unnamed::ENVClass
+
+**Cause:** Strong-level RBS typing for `ENV` may not expose `fetch` in all contexts.
+
+**Fix:** Add a targeted `# @sg-ignore` immediately above `ENV.fetch(...)` when a cleaner type annotation does not resolve it.
+
+## Wrong argument type … Mocha::Mock
 
 **Cause:** Test mocks (tests should stay excluded from strong).
 

@@ -61,7 +61,7 @@ types.installed: tapioca.installed Gemfile.lock Gemfile.lock.installed rbi/check
 	# bin/solargraph scan 2>&1
 	bin/spoom srb bump || true
 	# spoom rudely updates timestamps on files, so let's keep up by
-	# touching yardoc.installed so we dont' end up in a vicious
+	# touching yardoc.installed so we don't end up in a vicious
 	# cycle
 	touch yardoc.installed rbi/checkoff.rbi
 	# bin/solargraph scan 2>&1
@@ -81,8 +81,8 @@ rbs_collection.lock.yaml: Gemfile.lock rbs_collection.yaml
 	bin/rbs collection update
 	touch rbs_collection.lock.yaml
 
-rbs_collection.yaml:
-	bin/rbs collection init
+rbs_collection.yaml: Gemfile.lock.installed
+	@if [ ! -f rbs_collection.yaml ]; then bin/rbs collection init; fi
 
 .gem_rbs_collection/.keepme: rbs_collection.lock.yaml
 	# Ensure that the gem rbs collection is installed
@@ -104,7 +104,7 @@ tapioca.installed: sorbet/tapioca/require.rb Gemfile.lock.installed ## Install T
 #	bin/tapioca dsl
 	touch tapioca.installed
 
-yardoc.installed: Makefile $(SOURCE_FILES) ## Generate YARD documentation
+yardoc.installed: Makefile $(wildcard config/annotations_*.rb) $(SOURCE_FILES) ## Generate YARD documentation
 	bin/yard doc $(YARD_OPTS)
 	touch yardoc.installed
 
@@ -147,12 +147,12 @@ solargraph-strict: build-typecheck ## Run Solargraph typechecker
 solargraph-strong: build-typecheck ## Run Solargraph typechecker
 	bin/solargraph typecheck --level strong
 
-typecheck: build-typecheck srb solargraph  ## validate types in code and configuration
+typecheck: build-typecheck srb solargraph ## validate types in code and configuration
 
 citypecheck: ci-build-typecheck srb ci-solargraph ## Run type check from CircleCI
 
 ci-solargraph: ## Run Solargraph typechecker in CI
-	  bin/solargraph typecheck --level strong
+	bin/solargraph typecheck --level strong
 
 typecoverage: typecheck ## Run type checking and then ratchet coverage in metrics/
 
@@ -184,6 +184,7 @@ gem_dependencies: .bundle/config
 # Ensure any Gemfile.lock changes, even pulled from git, ensure a
 # bundle is installed.
 Gemfile.lock.installed: Gemfile checkoff.gemspec vendor/.keep
+	bundle install
 	touch Gemfile.lock.installed
 
 vendor/.keep: Gemfile.lock .ruby-version

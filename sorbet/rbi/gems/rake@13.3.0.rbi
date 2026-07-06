@@ -1468,6 +1468,12 @@ class Rake::FileList
   def to_ary; end
 
   # source://rake//lib/rake/file_list.rb#77
+  def to_formatted_s(*args, &block); end
+
+  # source://rake//lib/rake/file_list.rb#77
+  def to_fs(*args, &block); end
+
+  # source://rake//lib/rake/file_list.rb#77
   def to_h(*args, &block); end
 
   # Convert a FileList to a string by joining all elements with a space.
@@ -1476,7 +1482,13 @@ class Rake::FileList
   def to_s; end
 
   # source://rake//lib/rake/file_list.rb#77
+  def to_sentence(*args, &block); end
+
+  # source://rake//lib/rake/file_list.rb#77
   def to_set(*args, &block); end
+
+  # source://rake//lib/rake/file_list.rb#77
+  def to_xml(*args, &block); end
 
   # source://rake//lib/rake/file_list.rb#77
   def transpose(*args, &block); end

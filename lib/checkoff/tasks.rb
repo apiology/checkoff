@@ -296,8 +296,7 @@ module Checkoff
     # @param portfolio_name [String]
     # @param workspace_name [String]
     # @return [Boolean]
-    # CI quality (pipeline 1902): "in_portfolio_named? return type could not be inferred".
-    # @sg-ignore
+    # @sg-ignore Checkoff::Tasks#in_portfolio_named? return type could not be inferred
     def in_portfolio_named?(task,
                             portfolio_name,
                             workspace_name: @workspaces.default_workspace.name)
