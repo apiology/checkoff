@@ -90,12 +90,12 @@ module Faraday
     # @example With an URL argument
     #   Faraday.new 'http://faraday.com'
     #   # => Faraday::Connection to http://faraday.com
-    # @example With an URL argument and an options hash
-    #   Faraday.new 'http://faraday.com', params: { page: 1 }
-    #   # => Faraday::Connection to http://faraday.com?page=1
     # @example With everything in an options hash
     #   Faraday.new url: 'http://faraday.com',
     #   params: { page: 1 }
+    #   # => Faraday::Connection to http://faraday.com?page=1
+    # @example With an URL argument and an options hash
+    #   Faraday.new 'http://faraday.com', params: { page: 1 }
     #   # => Faraday::Connection to http://faraday.com?page=1
     # @option options
     # @option options
@@ -935,7 +935,7 @@ module Faraday::DecodeMethods
 
   protected
 
-  # source://faraday//lib/faraday/encoders/nested_params_encoder.rb#138
+  # source://faraday//lib/faraday/encoders/nested_params_encoder.rb#140
   def add_to_context(is_array, context, value, subkey); end
 
   # source://faraday//lib/faraday/encoders/nested_params_encoder.rb#101
@@ -944,17 +944,22 @@ module Faraday::DecodeMethods
   # Internal: convert a nested hash with purely numeric keys into an array.
   # FIXME: this is not compatible with Rack::Utils.parse_nested_query
   #
-  # source://faraday//lib/faraday/encoders/nested_params_encoder.rb#145
+  # source://faraday//lib/faraday/encoders/nested_params_encoder.rb#153
   def dehash(hash, depth); end
 
-  # source://faraday//lib/faraday/encoders/nested_params_encoder.rb#133
+  # source://faraday//lib/faraday/encoders/nested_params_encoder.rb#135
   def match_context(context, subkey); end
 
-  # source://faraday//lib/faraday/encoders/nested_params_encoder.rb#123
+  # source://faraday//lib/faraday/encoders/nested_params_encoder.rb#125
   def new_context(subkey, is_array, context); end
 
-  # source://faraday//lib/faraday/encoders/nested_params_encoder.rb#113
+  # source://faraday//lib/faraday/encoders/nested_params_encoder.rb#115
   def prepare_context(context, subkey, is_array, last_subkey); end
+
+  # @raise [Faraday::Error]
+  #
+  # source://faraday//lib/faraday/encoders/nested_params_encoder.rb#144
+  def validate_params_depth!(depth); end
 end
 
 # source://faraday//lib/faraday/encoders/nested_params_encoder.rb#99
@@ -1536,7 +1541,7 @@ end
 # so you can send objects such as Arrays or Hashes as parameters
 # for your requests.
 #
-# source://faraday//lib/faraday/encoders/nested_params_encoder.rb#162
+# source://faraday//lib/faraday/encoders/nested_params_encoder.rb#170
 module Faraday::NestedParamsEncoder
   extend ::Faraday::EncodeMethods
   extend ::Faraday::DecodeMethods
@@ -1545,16 +1550,28 @@ module Faraday::NestedParamsEncoder
     # source://forwardable/1.3.3/forwardable.rb#231
     def escape(*args, **_arg1, &block); end
 
+    # Returns the value of attribute param_depth_limit.
+    #
+    # source://faraday//lib/faraday/encoders/nested_params_encoder.rb#172
+    def param_depth_limit; end
+
+    # Sets the attribute param_depth_limit
+    #
+    # @param value the value to set the attribute param_depth_limit to.
+    #
+    # source://faraday//lib/faraday/encoders/nested_params_encoder.rb#172
+    def param_depth_limit=(_arg0); end
+
     # Returns the value of attribute sort_params.
     #
-    # source://faraday//lib/faraday/encoders/nested_params_encoder.rb#164
+    # source://faraday//lib/faraday/encoders/nested_params_encoder.rb#172
     def sort_params; end
 
     # Sets the attribute sort_params
     #
     # @param value the value to set the attribute sort_params to.
     #
-    # source://faraday//lib/faraday/encoders/nested_params_encoder.rb#164
+    # source://faraday//lib/faraday/encoders/nested_params_encoder.rb#172
     def sort_params=(_arg0); end
 
     # source://forwardable/1.3.3/forwardable.rb#231
@@ -2189,7 +2206,7 @@ class Faraday::Request::Json < ::Faraday::Middleware
   # source://faraday//lib/faraday/request/json.rb#26
   def encode(data); end
 
-  # @yield []
+  # @yield [env[:body]]
   #
   # source://faraday//lib/faraday/request/json.rb#30
   def match_content_type(env); end
