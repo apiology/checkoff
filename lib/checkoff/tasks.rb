@@ -296,17 +296,17 @@ module Checkoff
     # @param portfolio_name [String]
     # @param workspace_name [String]
     # @return [Boolean]
-    # CI quality (pipeline 1902): "in_portfolio_named? return type could not be inferred".
-    # @sg-ignore
     def in_portfolio_named?(task,
                             portfolio_name,
                             workspace_name: @workspaces.default_workspace.name)
       portfolio_projects = @portfolios.projects_in_portfolio(workspace_name, portfolio_name)
-      task.memberships.any? do |membership|
+      # @type [Boolean]
+      result = task.memberships.any? do |membership|
         m = T.cast(membership, T::Hash[String, T.untyped])
         project_gid = T.cast(m.fetch('project'), T::Hash[String, T.untyped]).fetch('gid')
         portfolio_projects.any? { |portfolio_project| portfolio_project.gid == project_gid }
-      end == true
+      end
+      return result
     end
 
     # True if the task is in a project which is in the given portfolio
