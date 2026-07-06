@@ -205,6 +205,8 @@ module Checkoff
 
         # @param task [Asana::Resources::Task]
         # @return [Boolean]
+        # Same CI/local Solargraph drift as UnassignedPFunctionEvaluator#evaluate (pipeline 1902).
+        # @sg-ignore
         def evaluate(task)
           !(task.due_at.nil? && task.due_on.nil?)
         end
