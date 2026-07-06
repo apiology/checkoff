@@ -115,7 +115,6 @@ docs: ## Generate YARD documentation
 
 clean-typecheck: ## Refresh the easily-regenerated information that type checking depends on
 	rm -fr .yardoc/ rbi/checkoff.rbi types.installed yardoc.installed sig/checkoff.rbs || true
-	rm -fr ../checkoff/.yardoc || true
 	echo all clear
 
 realclean-typecheck: clean-typecheck ## Remove all type checking artifacts

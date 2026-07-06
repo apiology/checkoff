@@ -1,0 +1,9 @@
+
+<<<SEPARATOR>>>
+Job: build
+Step: Typecheck
+Logs: {"output":"bin/solargraph gems\r\nDocumentation cached for all 198 gems.\r\nbin/srb tc --suppress-error-code 4010 \r\nNo errors! Great job.\r\nbin/solargraph typecheck --level strong\r\n/home/circleci/checkoff/spec/spec_helper.rb:27 - Unneeded @sg-ignore comment\r\nTypecheck finished in 31.62799503199858 seconds.\r\n1 problem found in 1 of 87 files.\r\nmake: *** [Makefile:156: ci-solargraph] Error 1\r\n","error":"\r\nExited with code exit status 2\r\n"}
+
+<<<SEPARATOR>>>
+Job: quality
+No steps found.
