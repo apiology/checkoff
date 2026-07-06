@@ -56,12 +56,6 @@ Quick lookup for strong-level messages seen in this repo and the preferred respo
 
 **Fix:** Add explicit `return`, cast with `@type`, or `# @sg-ignore` on the `def` line if `@return [Boolean]` is already documented.
 
-## Unresolved call to success? / stdout (Overcommit)
-
-**Cause:** `execute` return type unknown.
-
-**Fix:** `config/annotations_overcommit.rb` types `Overcommit::Hook::Base#execute`; avoid per-call `# @type` in hooks.
-
 ## Unresolved call to [] on RBS::Unnamed::ENVClass (binstubs)
 
 **Cause:** `$LOAD_PATH`-style special typing in binstubs.
