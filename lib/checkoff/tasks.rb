@@ -296,9 +296,7 @@ module Checkoff
     # @param portfolio_name [String]
     # @param workspace_name [String]
     # @return [Boolean]
-    # Strong typecheck: "return type could not be inferred" on block-ending .any? despite @return [Boolean].
-    # @sg-ignore Checkoff::Tasks#in_portfolio_named?
-    #   return type could not be inferred
+    # @sg-ignore Checkoff::Tasks#in_portfolio_named? return type could not be inferred
     def in_portfolio_named?(task,
                             portfolio_name,
                             workspace_name: @workspaces.default_workspace.name)
