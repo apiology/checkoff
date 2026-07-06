@@ -301,11 +301,12 @@ module Checkoff
                             workspace_name: @workspaces.default_workspace.name)
       portfolio_projects = @portfolios.projects_in_portfolio(workspace_name, portfolio_name)
       # @type [Boolean]
-      task.memberships.any? do |membership|
+      result = task.memberships.any? do |membership|
         m = T.cast(membership, T::Hash[String, T.untyped])
         project_gid = T.cast(m.fetch('project'), T::Hash[String, T.untyped]).fetch('gid')
         portfolio_projects.any? { |portfolio_project| portfolio_project.gid == project_gid }
       end
+      return result # rubocop:disable Style/RedundantReturn -- CI solargraph needs explicit return
     end
 
     # True if the task is in a project which is in the given portfolio
