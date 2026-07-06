@@ -190,10 +190,11 @@ module Checkoff
 
         # @param task [Asana::Resources::Task]
         # @return [Boolean]
+        # Strong typecheck reports "return type could not be inferred" despite @return [Boolean].
+        # Local overcommit may report "Unneeded @sg-ignore"; keep the ignore for CI citypecheck.
+        # @sg-ignore Checkoff::SelectorClasses::Task::UnassignedPFunctionEvaluator#evaluate return type could not be inferred
         def evaluate(task)
-          # @type [Boolean]
-          result = task.assignee.nil?
-          return result # rubocop:disable Style/RedundantReturn -- CI solargraph needs explicit return
+          task.assignee.nil? == true
         end
       end
 
@@ -207,10 +208,10 @@ module Checkoff
 
         # @param task [Asana::Resources::Task]
         # @return [Boolean]
+        # Same strong-level "return type could not be inferred" as UnassignedPFunctionEvaluator#evaluate.
+        # @sg-ignore Checkoff::SelectorClasses::Task::DueDateSetPFunctionEvaluator#evaluate return type could not be inferred
         def evaluate(task)
-          # @type [Boolean]
-          result = !(task.due_at.nil? && task.due_on.nil?)
-          return result # rubocop:disable Style/RedundantReturn -- CI solargraph needs explicit return
+          !(task.due_at.nil? && task.due_on.nil?)
         end
       end
 
