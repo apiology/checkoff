@@ -190,9 +190,12 @@ module Checkoff
 
         # @param task [Asana::Resources::Task]
         # @return [Boolean]
+        # CI quality (pipeline 1902): "return type could not be inferred" on modified lines
+        # after 7eeb5b1 removed @sg-ignore. Local overcommit may report "Unneeded @sg-ignore";
+        # `== true` alone did not satisfy the CI overcommit Solargraph hook.
+        # @sg-ignore
         def evaluate(task)
-          result = task.assignee.nil?
-          return result
+          task.assignee.nil? == true
         end
       end
 
@@ -206,9 +209,10 @@ module Checkoff
 
         # @param task [Asana::Resources::Task]
         # @return [Boolean]
+        # Same CI/local Solargraph drift as UnassignedPFunctionEvaluator#evaluate (pipeline 1902).
+        # @sg-ignore
         def evaluate(task)
-          result = !(task.due_at.nil? && task.due_on.nil?)
-          return result
+          !(task.due_at.nil? && task.due_on.nil?)
         end
       end
 
