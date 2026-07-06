@@ -21,6 +21,9 @@ SimpleCov.start do
   add_filter(%r{^/vendor/bundle})
   add_filter(%r{^/spec})
   track_files 'lib/**/*.rb'
+  # rubocop:todo Layout/LineLength
+  # @sg-ignore Wrong argument type for SimpleCov::Configuration#enable_coverage: criterion expected :line, :branch, received Symbol
+  # rubocop:enable Layout/LineLength
   enable_coverage(:branch) # Report branch coverage to trigger branch-level undercover warnings
 end
 

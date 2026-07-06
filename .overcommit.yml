@@ -90,6 +90,7 @@ PreCommit:
     enabled: true
   Solargraph:
     enabled: true
+    command: ['bin/solargraph']
     problem_on_unmodified_line: warn
     include:
       # process first

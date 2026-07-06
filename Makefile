@@ -38,12 +38,22 @@ rbi/checkoff.rbi: tapioca.installed yardoc.installed sorbet/config .gem_rbs_coll
 	touch rbi/checkoff.rbi
 
 sig/checkoff.rbs: yardoc.installed .gem_rbs_collection/.keepme ## Generate RBS file
-	rm -f rbi/checkoff.rbs
+	rm -f sig/checkoff.rbs
 	bin/sord gen $(SORD_GEN_OPTIONS) sig/checkoff.rbs # YARD to RBS
 
 YARD_PLUGIN_OPTS = --plugin yard-sorbet --plugin yard-solargraph
 
-YARD_OPTS = $(YARD_PLUGIN_OPTS) -c .yardoc --output-dir yardoc --backtrace --exclude '^config/' '{lib,app,spec,feature}/**/*.rb' 'ext/**/*.{c,rb}'
+# IMPORTANT: if you change the source globs/excludes below, bump the
+# ruby-types-vN- cache prefix in .circleci/config.yml.
+#
+# YARD's .yardoc database (cached in CI) is incremental and additive: it
+# never drops objects for files that leave the source set, so a database
+# built under one set of YARD_OPTS stays contaminated for those files
+# forever once restored.  CI fallback cache keys omit the Makefile
+# checksum, so a Makefile change alone will still restore the old
+# .yardoc.  Bumping the cache prefix forces a clean rebuild and avoids
+# shipping stale types (e.g. test-only TestDate/TestTasks) in sig/rbi.
+YARD_OPTS = $(YARD_PLUGIN_OPTS) -c .yardoc --output-dir yardoc --backtrace --exclude '^config/' --exclude '^spec/' --exclude '^feature/' '{lib,app}/**/*.rb' 'ext/**/*.{c,rb}'
 
 types.installed: tapioca.installed Gemfile.lock Gemfile.lock.installed rbi/checkoff.rbi sorbet/tapioca/require.rb sorbet/config ## Ensure typechecking dependencies are in place
 	bin/solargraph gems
@@ -138,7 +148,7 @@ solargraph-strict: build-typecheck ## Run Solargraph typechecker
 solargraph-strong: build-typecheck ## Run Solargraph typechecker
 	bin/solargraph typecheck --level strong
 
-typecheck: build-typecheck srb solargraph  ## validate types in code and configuration
+typecheck: build-typecheck srb solargraph ## validate types in code and configuration
 
 citypecheck: ci-build-typecheck srb ci-solargraph ## Run type check from CircleCI
 
@@ -228,7 +238,7 @@ coverage: test report-coverage ## check code coverage
 	@bin/rake undercover
 
 release: sig/checkoff.rbs rbi/checkoff.rbi ## Create a new release
-	bundle exec rake release
+	bin/rake release
 
 report-coverage: test ## Report summary of coverage to stdout, and generate HTML, XML coverage report
 

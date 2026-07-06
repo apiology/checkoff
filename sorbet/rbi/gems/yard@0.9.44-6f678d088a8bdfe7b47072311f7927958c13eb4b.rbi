@@ -12023,8 +12023,10 @@ module YARD::Server::Commands; end
 # @abstract
 # @see #run
 #
-# pkg:gem/yard#lib/yard/server/commands/base.rb:34
+# pkg:gem/yard#lib/yard/server/commands/base.rb:32
 class YARD::Server::Commands::Base
+  include ::YARD::Server::StaticCaching
+
   # Creates a new command object, setting attributes named by keys
   # in the options hash. After initialization, the options hash
   # is saved in {#command_options} for further inspection.
@@ -12170,14 +12172,14 @@ class YARD::Server::Commands::Base
   #
   # @return [void]
   #
-  # pkg:gem/yard#lib/yard/server/commands/base.rb:180
+  # pkg:gem/yard#lib/yard/server/commands/base.rb:174
   def not_found; end
 
   # Sets the headers and status code for a redirection to a given URL
   # @param [String] url the URL to redirect to
   # @raise [FinishRequest] causes the request to terminate.
   #
-  # pkg:gem/yard#lib/yard/server/commands/base.rb:192
+  # pkg:gem/yard#lib/yard/server/commands/base.rb:186
   def redirect(url); end
 
   # Renders a specific object if provided, or a regular template rendering
@@ -12197,7 +12199,7 @@ class YARD::Server::Commands::Base
   # Add a conservative cache control policy to reduce load on
   # requests served with "?1234567890" style timestamp query strings.
   #
-  # pkg:gem/yard#lib/yard/server/commands/base.rb:202
+  # pkg:gem/yard#lib/yard/server/commands/base.rb:196
   def add_cache_control; end
 end
 
@@ -13425,16 +13427,24 @@ end
 #
 # @see Router Router documentation for "Caching"
 #
-# pkg:gem/yard#lib/yard/server/static_caching.rb:7
+# pkg:gem/yard#lib/yard/server/static_caching.rb:9
 module YARD::Server::StaticCaching
+  # Caches rendered HTML response data to disk.
+  #
+  # @param [String] data the data to cache
+  # @return [void]
+  # @since 0.9.44
+  #
+  # pkg:gem/yard#lib/yard/server/static_caching.rb:52
+  def cache(data); end
+
   # Called by a router to return the cached object. By default, this
   # method performs disk-based caching. To perform other forms of caching,
   # implement your own +#check_static_cache+ method and mix the module into
   # the Router class.
   #
-  # Note that caching does not occur here. This method simply checks for
-  # the existence of cached data. To actually cache a response, see
-  # {Commands::Base#cache}.
+  # This method checks for the existence of cached data. To actually cache
+  # a response, see {#cache}.
   #
   # @example Implementing In-Memory Cache Checking
   #   module MemoryCaching
@@ -13454,8 +13464,13 @@ module YARD::Server::StaticCaching
   # @return [nil] if no cache is available and routing should continue
   # @see Commands::Base#cache
   #
-  # pkg:gem/yard#lib/yard/server/static_caching.rb:34
+  # pkg:gem/yard#lib/yard/server/static_caching.rb:35
   def check_static_cache; end
+
+  private
+
+  # pkg:gem/yard#lib/yard/server/static_caching.rb:65
+  def cache_path(request_path); end
 end
 
 # Stubs marshal dumps and acts a delegate class for an object by path
@@ -14649,110 +14664,154 @@ class YARD::Tags::TypesExplainer
     # (see Tag#explain_types)
     # @param types [Array<String>] a list of types to parse and summarize
     #
-    # pkg:gem/yard#lib/yard/tags/types_explainer.rb:9
+    # pkg:gem/yard#lib/yard/tags/types_explainer.rb:12
     def explain(*types); end
 
     # (see explain)
     # @raise [SyntaxError] if the types are not parsable
     #
-    # pkg:gem/yard#lib/yard/tags/types_explainer.rb:17
+    # pkg:gem/yard#lib/yard/tags/types_explainer.rb:20
     def explain!(*types); end
 
     private
 
-    # pkg:gem/yard#lib/yard/tags/types_explainer.rb:22
+    # pkg:gem/yard#lib/yard/tags/types_explainer.rb:25
     def new(*_arg0); end
   end
 end
 
 # @private
 #
-# pkg:gem/yard#lib/yard/tags/types_explainer.rb:58
+# pkg:gem/yard#lib/yard/tags/types_explainer.rb:73
 class YARD::Tags::TypesExplainer::CollectionType < ::YARD::Tags::TypesExplainer::Type
-  # pkg:gem/yard#lib/yard/tags/types_explainer.rb:61
+  # pkg:gem/yard#lib/yard/tags/types_explainer.rb:76
   def initialize(name, types); end
 
-  # pkg:gem/yard#lib/yard/tags/types_explainer.rb:66
+  # pkg:gem/yard#lib/yard/tags/types_explainer.rb:81
   def to_s(_singular = T.unsafe(nil)); end
 
-  # pkg:gem/yard#lib/yard/tags/types_explainer.rb:59
+  # pkg:gem/yard#lib/yard/tags/types_explainer.rb:74
   def types; end
 
-  # pkg:gem/yard#lib/yard/tags/types_explainer.rb:59
+  # pkg:gem/yard#lib/yard/tags/types_explainer.rb:74
   def types=(_arg0); end
 end
 
 # @private
 #
-# pkg:gem/yard#lib/yard/tags/types_explainer.rb:72
-class YARD::Tags::TypesExplainer::FixedCollectionType < ::YARD::Tags::TypesExplainer::CollectionType
-  # pkg:gem/yard#lib/yard/tags/types_explainer.rb:73
-  def to_s(_singular = T.unsafe(nil)); end
+# pkg:gem/yard#lib/yard/tags/types_explainer.rb:66
+class YARD::Tags::TypesExplainer::DuckType < ::YARD::Tags::TypesExplainer::Type
+  # pkg:gem/yard#lib/yard/tags/types_explainer.rb:67
+  def to_s(singular = T.unsafe(nil)); end
 end
 
 # @private
 #
-# pkg:gem/yard#lib/yard/tags/types_explainer.rb:79
-class YARD::Tags::TypesExplainer::HashCollectionType < ::YARD::Tags::TypesExplainer::Type
-  # pkg:gem/yard#lib/yard/tags/types_explainer.rb:82
-  def initialize(name, key_types, value_types); end
-
-  # pkg:gem/yard#lib/yard/tags/types_explainer.rb:80
-  def key_types; end
-
-  # pkg:gem/yard#lib/yard/tags/types_explainer.rb:80
-  def key_types=(_arg0); end
-
+# pkg:gem/yard#lib/yard/tags/types_explainer.rb:87
+class YARD::Tags::TypesExplainer::FixedCollectionType < ::YARD::Tags::TypesExplainer::CollectionType
   # pkg:gem/yard#lib/yard/tags/types_explainer.rb:88
   def to_s(_singular = T.unsafe(nil)); end
-
-  # pkg:gem/yard#lib/yard/tags/types_explainer.rb:80
-  def value_types; end
-
-  # pkg:gem/yard#lib/yard/tags/types_explainer.rb:80
-  def value_types=(_arg0); end
 end
 
 # @private
 #
-# pkg:gem/yard#lib/yard/tags/types_explainer.rb:96
+# pkg:gem/yard#lib/yard/tags/types_explainer.rb:94
+class YARD::Tags::TypesExplainer::HashCollectionType < ::YARD::Tags::TypesExplainer::Type
+  # pkg:gem/yard#lib/yard/tags/types_explainer.rb:97
+  def initialize(name, key_types_or_pairs, value_types = T.unsafe(nil)); end
+
+  # Backward compatibility accessors
+  #
+  # pkg:gem/yard#lib/yard/tags/types_explainer.rb:110
+  def key_types; end
+
+  # pkg:gem/yard#lib/yard/tags/types_explainer.rb:115
+  def key_types=(types); end
+
+  # pkg:gem/yard#lib/yard/tags/types_explainer.rb:95
+  def key_value_pairs; end
+
+  # pkg:gem/yard#lib/yard/tags/types_explainer.rb:95
+  def key_value_pairs=(_arg0); end
+
+  # pkg:gem/yard#lib/yard/tags/types_explainer.rb:136
+  def to_s(_singular = T.unsafe(nil)); end
+
+  # pkg:gem/yard#lib/yard/tags/types_explainer.rb:123
+  def value_types; end
+
+  # pkg:gem/yard#lib/yard/tags/types_explainer.rb:128
+  def value_types=(types); end
+end
+
+# Regular expression to match symbol and string literals
+#
+# pkg:gem/yard#lib/yard/tags/types_explainer.rb:8
+YARD::Tags::TypesExplainer::LITERALMATCH = T.let(T.unsafe(nil), Regexp)
+
+# @private
+#
+# pkg:gem/yard#lib/yard/tags/types_explainer.rb:59
+class YARD::Tags::TypesExplainer::LiteralType < ::YARD::Tags::TypesExplainer::Type
+  # pkg:gem/yard#lib/yard/tags/types_explainer.rb:60
+  def to_s(_singular = T.unsafe(nil)); end
+end
+
+# @private
+#
+# pkg:gem/yard#lib/yard/tags/types_explainer.rb:149
 class YARD::Tags::TypesExplainer::Parser
   include ::YARD::CodeObjects
 
-  # pkg:gem/yard#lib/yard/tags/types_explainer.rb:118
+  # pkg:gem/yard#lib/yard/tags/types_explainer.rb:173
   def initialize(string); end
 
-  # pkg:gem/yard#lib/yard/tags/types_explainer.rb:122
-  def parse; end
+  # @return [Array(Boolean, Array<Type>)] - finished, types
+  #
+  # pkg:gem/yard#lib/yard/tags/types_explainer.rb:178
+  def parse(until_tokens: T.unsafe(nil)); end
+
+  private
+
+  # pkg:gem/yard#lib/yard/tags/types_explainer.rb:264
+  def create_type(name); end
+
+  # pkg:gem/yard#lib/yard/tags/types_explainer.rb:233
+  def parse_hash_collection(name); end
+
+  # @return [Array<Type>]
+  #
+  # pkg:gem/yard#lib/yard/tags/types_explainer.rb:215
+  def parse_with_handlers; end
 
   class << self
-    # pkg:gem/yard#lib/yard/tags/types_explainer.rb:114
+    # pkg:gem/yard#lib/yard/tags/types_explainer.rb:169
     def parse(string); end
   end
 end
 
-# pkg:gem/yard#lib/yard/tags/types_explainer.rb:99
+# pkg:gem/yard#lib/yard/tags/types_explainer.rb:152
 YARD::Tags::TypesExplainer::Parser::TOKENS = T.let(T.unsafe(nil), Hash)
 
 # @private
 #
-# pkg:gem/yard#lib/yard/tags/types_explainer.rb:26
+# pkg:gem/yard#lib/yard/tags/types_explainer.rb:29
 class YARD::Tags::TypesExplainer::Type
-  # pkg:gem/yard#lib/yard/tags/types_explainer.rb:29
+  # pkg:gem/yard#lib/yard/tags/types_explainer.rb:32
   def initialize(name); end
 
-  # pkg:gem/yard#lib/yard/tags/types_explainer.rb:27
+  # pkg:gem/yard#lib/yard/tags/types_explainer.rb:30
   def name; end
 
-  # pkg:gem/yard#lib/yard/tags/types_explainer.rb:27
+  # pkg:gem/yard#lib/yard/tags/types_explainer.rb:30
   def name=(_arg0); end
 
-  # pkg:gem/yard#lib/yard/tags/types_explainer.rb:33
+  # pkg:gem/yard#lib/yard/tags/types_explainer.rb:36
   def to_s(singular = T.unsafe(nil)); end
 
-  private
+  protected
 
-  # pkg:gem/yard#lib/yard/tags/types_explainer.rb:45
+  # pkg:gem/yard#lib/yard/tags/types_explainer.rb:46
   def list_join(list, with: T.unsafe(nil)); end
 end
 

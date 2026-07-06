@@ -6572,6 +6572,13 @@ module RSpec::Core::MemoizedHelpers
     # pkg:gem/rspec-core#lib/rspec/core/memoized_helpers.rb:542
     def define_helpers_on(example_group); end
 
+    # for 1.8
+    # @private
+    #
+    # Gets the named constant or yields.
+    # On 1.8, const_defined? / const_get do not take into
+    # account the inheritance hierarchy.
+    # :nocov:
     # @private
     #
     # Gets the named constant or yields.
@@ -6580,13 +6587,6 @@ module RSpec::Core::MemoizedHelpers
     # disable this behavior. It's important that we don't
     # consider inheritance here; each example group level that
     # uses a `let` should get its own `LetDefinitions` module.
-    # for 1.8
-    # @private
-    #
-    # Gets the named constant or yields.
-    # On 1.8, const_defined? / const_get do not take into
-    # account the inheritance hierarchy.
-    # :nocov:
     #
     # pkg:gem/rspec-core#lib/rspec/core/memoized_helpers.rb:570
     def get_constant_or_yield(example_group, name); end
