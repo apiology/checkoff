@@ -192,7 +192,8 @@ module Checkoff
         # @return [Boolean]
         def evaluate(task)
           # @type [Boolean]
-          return task.assignee.nil? # rubocop:disable Style/RedundantReturn -- CI solargraph needs explicit return
+          result = task.assignee.nil?
+          return result # rubocop:disable Style/RedundantReturn -- CI solargraph needs explicit return
         end
       end
 
@@ -208,7 +209,8 @@ module Checkoff
         # @return [Boolean]
         def evaluate(task)
           # @type [Boolean]
-          return !(task.due_at.nil? && task.due_on.nil?) # rubocop:disable Style/RedundantReturn -- CI solargraph needs explicit return
+          result = !(task.due_at.nil? && task.due_on.nil?)
+          return result # rubocop:disable Style/RedundantReturn -- CI solargraph needs explicit return
         end
       end
 
