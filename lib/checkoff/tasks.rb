@@ -225,6 +225,8 @@ module Checkoff
         parent_task_gid = parent_task_info.fetch('gid')
 
         parent_task = task_by_gid(parent_task_gid, only_uncompleted: false)
+        # Embedded dependency GIDs can outlive the parent fetch (timing) or disagree
+        # with cache_method TTL/coherency; treat unfetchable as incomplete.
         next true if parent_task.nil?
 
         parent_task.completed_at.nil?
