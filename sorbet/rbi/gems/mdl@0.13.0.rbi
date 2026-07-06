@@ -5,131 +5,133 @@
 # Please instead update this file by running `bin/tapioca gem mdl`.
 
 
-# pkg:gem/mdl#lib/mdl/kramdown_parser.rb:6
-module Kramdown; end
+# source://mdl//lib/mdl/kramdown_parser.rb#6
+module Kramdown
+  class << self
+    # source://kramdown/2.5.2/lib/kramdown/document.rb#49
+    def data_dir; end
+  end
+end
 
-# pkg:gem/mdl#lib/mdl/kramdown_parser.rb:7
+# source://mdl//lib/mdl/kramdown_parser.rb#7
 module Kramdown::Parser; end
 
 # modified parser class - see comment above
 #
-# pkg:gem/mdl#lib/mdl/kramdown_parser.rb:9
+# source://mdl//lib/mdl/kramdown_parser.rb#9
 class Kramdown::Parser::MarkdownLint < ::Kramdown::Parser::Kramdown
-  # pkg:gem/mdl#lib/mdl/kramdown_parser.rb:10
+  # @return [MarkdownLint] a new instance of MarkdownLint
+  #
+  # source://mdl//lib/mdl/kramdown_parser.rb#10
   def initialize(source, options); end
 end
 
 # Regular kramdown parser, but with GFM style fenced code blocks
 #
-# pkg:gem/mdl#lib/mdl/kramdown_parser.rb:18
+# source://mdl//lib/mdl/kramdown_parser.rb#18
 Kramdown::Parser::MarkdownLint::FENCED_CODEBLOCK_MATCH = T.let(T.unsafe(nil), Regexp)
-
-# End paragraphs when a fenced code block starts, matching GFM
-# behavior. Without this, fenced code blocks without a preceding
-# blank line are swallowed into the paragraph.
-#
-# pkg:gem/mdl#lib/mdl/kramdown_parser.rb:23
-Kramdown::Parser::MarkdownLint::PARAGRAPH_END = T.let(T.unsafe(nil), Regexp)
 
 # Primary MDL container
 #
-# pkg:gem/mdl#lib/mdl/formatters/sarif.rb:3
+# source://mdl//lib/mdl/formatters/sarif.rb#3
 module MarkdownLint
   class << self
     # Creates hyperlinks in terminal emulators, if available: https://gist.github.com/egmontkob/eb114294efbcd5adb1944c9f3cb5feda
     #
-    # pkg:gem/mdl#lib/mdl.rb:179
+    # source://mdl//lib/mdl.rb#155
     def linkify(text, url); end
 
-    # pkg:gem/mdl#lib/mdl.rb:172
+    # source://mdl//lib/mdl.rb#148
     def printable_id(rule); end
 
-    # pkg:gem/mdl#lib/mdl.rb:15
+    # source://mdl//lib/mdl.rb#15
     def run(argv = T.unsafe(nil)); end
   end
 end
 
 # Our Mixlib::CLI class
 #
-# pkg:gem/mdl#lib/mdl/cli.rb:6
+# source://mdl//lib/mdl/cli.rb#6
 class MarkdownLint::CLI
   include ::Mixlib::CLI
   extend ::Mixlib::CLI::ClassMethods
   extend ::Mixlib::CLI::InheritMethods
 
-  # pkg:gem/mdl#lib/mdl/cli.rb:122
+  # source://mdl//lib/mdl/cli.rb#116
   def run(argv = T.unsafe(nil)); end
 
   class << self
-    # pkg:gem/mdl#lib/mdl/cli.rb:179
+    # source://mdl//lib/mdl/cli.rb#170
     def probe_config_file(path); end
 
-    # pkg:gem/mdl#lib/mdl/cli.rb:162
+    # source://mdl//lib/mdl/cli.rb#153
     def toggle_list(parts, to_sym = T.unsafe(nil)); end
   end
 end
 
-# pkg:gem/mdl#lib/mdl/cli.rb:9
+# source://mdl//lib/mdl/cli.rb#9
 MarkdownLint::CLI::CONFIG_FILE = T.let(T.unsafe(nil), String)
 
 # our Mixlib::Config class
 #
-# pkg:gem/mdl#lib/mdl/config.rb:5
+# source://mdl//lib/mdl/config.rb#5
 module MarkdownLint::Config
   extend ::Mixlib::Config
 
   class << self
-    # pkg:gem/mdl#lib/mdl/config.rb:6
+    # source://mixlib-config/3.0.27/lib/mixlib/config.rb#34
     def config_context_hashes; end
 
-    # pkg:gem/mdl#lib/mdl/config.rb:6
+    # source://mixlib-config/3.0.27/lib/mixlib/config.rb#34
     def config_context_hashes=(_arg0); end
 
-    # pkg:gem/mdl#lib/mdl/config.rb:6
+    # source://mixlib-config/3.0.27/lib/mixlib/config.rb#33
     def config_context_lists; end
 
-    # pkg:gem/mdl#lib/mdl/config.rb:6
+    # source://mixlib-config/3.0.27/lib/mixlib/config.rb#33
     def config_context_lists=(_arg0); end
 
-    # pkg:gem/mdl#lib/mdl/config.rb:6
+    # source://mixlib-config/3.0.27/lib/mixlib/config.rb#32
     def config_contexts; end
 
-    # pkg:gem/mdl#lib/mdl/config.rb:6
+    # source://mixlib-config/3.0.27/lib/mixlib/config.rb#32
     def config_contexts=(_arg0); end
 
-    # pkg:gem/mdl#lib/mdl/config.rb:6
+    # source://mixlib-config/3.0.27/lib/mixlib/config.rb#35
     def config_parent; end
 
-    # pkg:gem/mdl#lib/mdl/config.rb:6
+    # source://mixlib-config/3.0.27/lib/mixlib/config.rb#35
     def config_parent=(_arg0); end
 
-    # pkg:gem/mdl#lib/mdl/config.rb:6
+    # source://mixlib-config/3.0.27/lib/mixlib/config.rb#31
     def configurables; end
 
-    # pkg:gem/mdl#lib/mdl/config.rb:6
+    # source://mixlib-config/3.0.27/lib/mixlib/config.rb#31
     def configurables=(_arg0); end
 
-    # pkg:gem/mdl#lib/mdl/config.rb:6
+    # source://mixlib-config/3.0.27/lib/mixlib/config.rb#30
     def configuration; end
 
-    # pkg:gem/mdl#lib/mdl/config.rb:6
+    # source://mixlib-config/3.0.27/lib/mixlib/config.rb#30
     def configuration=(_arg0); end
 
-    # pkg:gem/mdl#lib/mdl/config.rb:8
+    # source://mixlib-config/3.0.27/lib/mixlib/config.rb#667
     def style(*args, &block); end
 
-    # pkg:gem/mdl#lib/mdl/config.rb:8
+    # source://mixlib-config/3.0.27/lib/mixlib/config.rb#663
     def style=(value); end
   end
 end
 
 # Representation of the markdown document passed to rule checks
 #
-# pkg:gem/mdl#lib/mdl/doc.rb:7
+# source://mdl//lib/mdl/doc.rb#7
 class MarkdownLint::Doc
   # Create a new document given a string containing the markdown source
   #
-  # pkg:gem/mdl#lib/mdl/doc.rb:29
+  # @return [Doc] a new instance of Doc
+  #
+  # source://mdl//lib/mdl/doc.rb#29
   def initialize(text, ignore_front_matter = T.unsafe(nil)); end
 
   # Returns the actual source line for a given element. You can pass in an
@@ -137,25 +139,25 @@ class MarkdownLint::Doc
   # examine the source line directly for your rule to make use of
   # information that isn't present in the parsed document.
   #
-  # pkg:gem/mdl#lib/mdl/doc.rb:140
+  # source://mdl//lib/mdl/doc.rb#135
   def element_line(element); end
 
   # Returns the line number a given element is located on in the source
   # file. You can pass in either an element object or an options hash here.
   #
-  # pkg:gem/mdl#lib/mdl/doc.rb:129
+  # source://mdl//lib/mdl/doc.rb#124
   def element_linenumber(element); end
 
   # Returns a list of line numbers for all elements passed in. You can pass
   # in a list of element objects or a list of options hashes here.
   #
-  # pkg:gem/mdl#lib/mdl/doc.rb:148
+  # source://mdl//lib/mdl/doc.rb#143
   def element_linenumbers(elements); end
 
   # Returns the actual source lines for a list of elements. You can pass in
   # a list of elements objects or a list of options hashes here.
   #
-  # pkg:gem/mdl#lib/mdl/doc.rb:156
+  # source://mdl//lib/mdl/doc.rb#151
   def element_lines(elements); end
 
   # A list of raw markdown source lines. Note that the list is 0-indexed,
@@ -163,18 +165,18 @@ class MarkdownLint::Doc
   # subtract 1 from a line number to get the correct line. The element_line*
   # methods take care of this for you.
   #
-  # pkg:gem/mdl#lib/mdl/doc.rb:14
+  # source://mdl//lib/mdl/doc.rb#14
   def elements; end
 
   # Returns the element as plaintext
   #
-  # pkg:gem/mdl#lib/mdl/doc.rb:280
+  # source://mdl//lib/mdl/doc.rb#274
   def extract_as_text(element); end
 
   # Extracts the text from an element whose children consist of text
   # elements and other things
   #
-  # pkg:gem/mdl#lib/mdl/doc.rb:251
+  # source://mdl//lib/mdl/doc.rb#245
   def extract_text(element, prefix = T.unsafe(nil), restore_whitespace = T.unsafe(nil)); end
 
   # Find all elements of a given type, returning their options hash. The
@@ -187,7 +189,7 @@ class MarkdownLint::Doc
   # If +nested+ is set to false, this returns only top level elements of a
   # given type.
   #
-  # pkg:gem/mdl#lib/mdl/doc.rb:72
+  # source://mdl//lib/mdl/doc.rb#67
   def find_type(type, nested = T.unsafe(nil)); end
 
   # Find all elements of a given type, returning a list of the element
@@ -199,7 +201,7 @@ class MarkdownLint::Doc
   # If +nested+ is set to false, this returns only top level elements of a
   # given type.
   #
-  # pkg:gem/mdl#lib/mdl/doc.rb:86
+  # source://mdl//lib/mdl/doc.rb#81
   def find_type_elements(type, nested = T.unsafe(nil), elements = T.unsafe(nil)); end
 
   # A variation on find_type_elements that allows you to skip drilling down
@@ -211,29 +213,21 @@ class MarkdownLint::Doc
   # Unlike find_type_elements, this method will always search for nested
   # elements, and skip the element types given to nested_except.
   #
-  # pkg:gem/mdl#lib/mdl/doc.rb:108
+  # source://mdl//lib/mdl/doc.rb#103
   def find_type_elements_except(type, nested_except = T.unsafe(nil), elements = T.unsafe(nil)); end
-
-  # A list of raw markdown source lines. Note that the list is 0-indexed,
-  # while line numbers in the parsed source are 1-indexed, so you need to
-  # subtract 1 from a line number to get the correct line. The element_line*
-  # methods take care of this for you.
-  #
-  # pkg:gem/mdl#lib/mdl/doc.rb:14
-  def front_matter; end
 
   # Returns the header 'style' - :atx (hashes at the beginning), :atx_closed
   # (atx header style, but with hashes at the end of the line also), :setext
   # (underlined). You can pass in the element object or an options hash
   # here.
   #
-  # pkg:gem/mdl#lib/mdl/doc.rb:166
+  # source://mdl//lib/mdl/doc.rb#161
   def header_style(header); end
 
   # Returns how much a given line is indented. Hard tabs are treated as an
   # indent of 8 spaces. You need to pass in the raw string here.
   #
-  # pkg:gem/mdl#lib/mdl/doc.rb:211
+  # source://mdl//lib/mdl/doc.rb#206
   def indent_for(line); end
 
   # A list of raw markdown source lines. Note that the list is 0-indexed,
@@ -241,26 +235,26 @@ class MarkdownLint::Doc
   # subtract 1 from a line number to get the correct line. The element_line*
   # methods take care of this for you.
   #
-  # pkg:gem/mdl#lib/mdl/doc.rb:14
+  # source://mdl//lib/mdl/doc.rb#14
   def lines; end
 
   # Returns the list style for a list: :asterisk, :plus, :dash, :ordered or
   # :ordered_paren depending on which symbol is used to denote the list
   # item. You can pass in either the element itself or an options hash here.
   #
-  # pkg:gem/mdl#lib/mdl/doc.rb:188
+  # source://mdl//lib/mdl/doc.rb#183
   def list_style(item); end
 
   # Returns line numbers for lines that match the given regular expression
   #
-  # pkg:gem/mdl#lib/mdl/doc.rb:218
+  # source://mdl//lib/mdl/doc.rb#213
   def matching_lines(regex); end
 
   # Returns line numbers for lines that match the given regular expression.
   # Only considers text inside of 'text' elements (i.e. regular markdown
   # text and not code/links or other elements).
   #
-  # pkg:gem/mdl#lib/mdl/doc.rb:230
+  # source://mdl//lib/mdl/doc.rb#224
   def matching_text_element_lines(regex, exclude_nested = T.unsafe(nil)); end
 
   # A list of raw markdown source lines. Note that the list is 0-indexed,
@@ -268,7 +262,7 @@ class MarkdownLint::Doc
   # subtract 1 from a line number to get the correct line. The element_line*
   # methods take care of this for you.
   #
-  # pkg:gem/mdl#lib/mdl/doc.rb:14
+  # source://mdl//lib/mdl/doc.rb#14
   def offset; end
 
   # A list of raw markdown source lines. Note that the list is 0-indexed,
@@ -276,91 +270,118 @@ class MarkdownLint::Doc
   # subtract 1 from a line number to get the correct line. The element_line*
   # methods take care of this for you.
   #
-  # pkg:gem/mdl#lib/mdl/doc.rb:14
+  # source://mdl//lib/mdl/doc.rb#14
   def parsed; end
-
-  # Reconstruct the full file content from front matter and lines
-  #
-  # pkg:gem/mdl#lib/mdl/doc.rb:303
-  def to_s; end
 
   private
 
   # Adds a 'level' and 'parent' option to all elements to show how nested they
   # are
   #
-  # pkg:gem/mdl#lib/mdl/doc.rb:313
+  # source://mdl//lib/mdl/doc.rb#301
   def add_annotations(elements, level = T.unsafe(nil), parent = T.unsafe(nil)); end
 
   class << self
     # Alternate 'constructor' passing in a filename
     #
-    # pkg:gem/mdl#lib/mdl/doc.rb:50
+    # source://mdl//lib/mdl/doc.rb#48
     def new_from_file(filename, ignore_front_matter = T.unsafe(nil)); end
   end
 end
 
 # defines a single rule
 #
-# pkg:gem/mdl#lib/mdl/ruleset.rb:3
+# source://mdl//lib/mdl/ruleset.rb#3
 class MarkdownLint::Rule
-  # pkg:gem/mdl#lib/mdl/ruleset.rb:6
-  def initialize(id, description, fallback_docs: T.unsafe(nil), &_arg3); end
+  # @return [Rule] a new instance of Rule
+  #
+  # source://mdl//lib/mdl/ruleset.rb#6
+  def initialize(id, description, fallback_docs: T.unsafe(nil), &block); end
 
-  # pkg:gem/mdl#lib/mdl/ruleset.rb:32
+  # source://mdl//lib/mdl/ruleset.rb#27
   def aliases(*aliases); end
 
-  # pkg:gem/mdl#lib/mdl/ruleset.rb:17
+  # source://mdl//lib/mdl/ruleset.rb#17
   def check(&block); end
 
-  # pkg:gem/mdl#lib/mdl/ruleset.rb:4
+  # Returns the value of attribute description.
+  #
+  # source://mdl//lib/mdl/ruleset.rb#4
   def description; end
 
-  # pkg:gem/mdl#lib/mdl/ruleset.rb:4
+  # Sets the attribute description
+  #
+  # @param value the value to set the attribute description to.
+  #
+  # source://mdl//lib/mdl/ruleset.rb#4
   def description=(_arg0); end
 
-  # pkg:gem/mdl#lib/mdl/ruleset.rb:56
+  # source://mdl//lib/mdl/ruleset.rb#37
   def docs(url = T.unsafe(nil), &block); end
 
-  # pkg:gem/mdl#lib/mdl/ruleset.rb:67
+  # source://mdl//lib/mdl/ruleset.rb#48
   def docs_url; end
 
-  # pkg:gem/mdl#lib/mdl/ruleset.rb:22
-  def fix(&block); end
+  # This method returns all the rows of a table
+  #
+  # @param lines [Array<String>] Lines of a doc as an array
+  # @param pos [Numeric] Position/index of the table in the array
+  # @return [Array<String>] Rows of the table in an array
+  #
+  # source://mdl//lib/mdl/ruleset.rb#89
+  def get_table_rows(lines, pos); end
 
-  # pkg:gem/mdl#lib/mdl/ruleset.rb:4
+  # Returns the value of attribute id.
+  #
+  # source://mdl//lib/mdl/ruleset.rb#4
   def id; end
 
-  # pkg:gem/mdl#lib/mdl/ruleset.rb:4
+  # Sets the attribute id
+  #
+  # @param value the value to set the attribute id to.
+  #
+  # source://mdl//lib/mdl/ruleset.rb#4
   def id=(_arg0); end
 
-  # pkg:gem/mdl#lib/mdl/ruleset.rb:37
+  # This method calculates the number of columns in a table row
+  #
+  # @param table_row [String] A row of the table in question.
+  # @return [Numeric] Number of columns in the row
+  #
+  # source://mdl//lib/mdl/ruleset.rb#56
+  def number_of_columns_in_a_table_row(table_row); end
+
+  # source://mdl//lib/mdl/ruleset.rb#32
   def params(params = T.unsafe(nil)); end
 
-  # pkg:gem/mdl#lib/mdl/ruleset.rb:27
+  # source://mdl//lib/mdl/ruleset.rb#22
   def tags(*tags); end
 end
 
 # defines a ruleset
 #
-# pkg:gem/mdl#lib/mdl/ruleset.rb:73
+# source://mdl//lib/mdl/ruleset.rb#115
 class MarkdownLint::RuleSet
-  # pkg:gem/mdl#lib/mdl/ruleset.rb:76
+  # @return [RuleSet] a new instance of RuleSet
+  #
+  # source://mdl//lib/mdl/ruleset.rb#118
   def initialize; end
 
-  # pkg:gem/mdl#lib/mdl/ruleset.rb:90
+  # source://mdl//lib/mdl/ruleset.rb#132
   def docs(url = T.unsafe(nil), &block); end
 
-  # pkg:gem/mdl#lib/mdl/ruleset.rb:85
+  # source://mdl//lib/mdl/ruleset.rb#127
   def load(rules_file); end
 
-  # pkg:gem/mdl#lib/mdl/ruleset.rb:98
+  # source://mdl//lib/mdl/ruleset.rb#140
   def load_default; end
 
-  # pkg:gem/mdl#lib/mdl/ruleset.rb:80
-  def rule(id, description, &_arg2); end
+  # source://mdl//lib/mdl/ruleset.rb#122
+  def rule(id, description, &block); end
 
-  # pkg:gem/mdl#lib/mdl/ruleset.rb:74
+  # Returns the value of attribute rules.
+  #
+  # source://mdl//lib/mdl/ruleset.rb#116
   def rules; end
 end
 
@@ -368,53 +389,57 @@ end
 #
 # @see https://docs.oasis-open.org/sarif/sarif/v2.1.0/sarif-v2.1.0.html
 #
-# pkg:gem/mdl#lib/mdl/formatters/sarif.rb:7
+# source://mdl//lib/mdl/formatters/sarif.rb#7
 class MarkdownLint::SarifFormatter
   class << self
-    # pkg:gem/mdl#lib/mdl/formatters/sarif.rb:9
+    # source://mdl//lib/mdl/formatters/sarif.rb#9
     def generate(rules, results); end
 
-    # pkg:gem/mdl#lib/mdl/formatters/sarif.rb:15
+    # source://mdl//lib/mdl/formatters/sarif.rb#15
     def generate_sarif(rules, results); end
 
-    # pkg:gem/mdl#lib/mdl/formatters/sarif.rb:63
+    # source://mdl//lib/mdl/formatters/sarif.rb#63
     def generate_sarif_results(rules, results); end
 
-    # pkg:gem/mdl#lib/mdl/formatters/sarif.rb:35
+    # source://mdl//lib/mdl/formatters/sarif.rb#35
     def generate_sarif_rules(rules); end
   end
 end
 
 # defines a style
 #
-# pkg:gem/mdl#lib/mdl/style.rb:3
+# source://mdl//lib/mdl/style.rb#5
 class MarkdownLint::Style
-  # pkg:gem/mdl#lib/mdl/style.rb:6
+  # @return [Style] a new instance of Style
+  #
+  # source://mdl//lib/mdl/style.rb#8
   def initialize(all_rules); end
 
-  # pkg:gem/mdl#lib/mdl/style.rb:22
+  # source://mdl//lib/mdl/style.rb#24
   def all; end
 
-  # pkg:gem/mdl#lib/mdl/style.rb:39
+  # source://mdl//lib/mdl/style.rb#41
   def exclude_rule(id); end
 
-  # pkg:gem/mdl#lib/mdl/style.rb:49
+  # source://mdl//lib/mdl/style.rb#50
   def exclude_tag(tag); end
 
-  # pkg:gem/mdl#lib/mdl/style.rb:26
+  # source://mdl//lib/mdl/style.rb#28
   def rule(id, params = T.unsafe(nil)); end
 
-  # pkg:gem/mdl#lib/mdl/style.rb:4
+  # Returns the value of attribute rules.
+  #
+  # source://mdl//lib/mdl/style.rb#6
   def rules; end
 
-  # pkg:gem/mdl#lib/mdl/style.rb:45
+  # source://mdl//lib/mdl/style.rb#46
   def tag(tag); end
 
   class << self
-    # pkg:gem/mdl#lib/mdl/style.rb:54
+    # source://mdl//lib/mdl/style.rb#54
     def load(style_file, rules); end
   end
 end
 
-# pkg:gem/mdl#lib/mdl/version.rb:2
+# source://mdl//lib/mdl/version.rb#2
 MarkdownLint::VERSION = T.let(T.unsafe(nil), String)

@@ -4,7 +4,10 @@
 
 # typed: false
 
+module ::Concurrent::Map; end
+module Asana::ProxiedResourceClasses::Project; end
 module Bundler::FetchMetadata; end
 module Bundler::MatchMetadata; end
 module Parlour::RbiGenerator::Namespace::Mixin::Searchable; end
 module Parlour::RbsGenerator::Namespace::Mixin::Searchable; end
+module SimpleCov::Formatter::Undercover; end
