@@ -14,9 +14,6 @@ SimpleCov.formatters = SimpleCov::Formatter::MultiFormatter.new(
   ]
 )
 SimpleCov.start do
-  # @!parse
-  #   extend SimpleCov::Configuration
-
   # this dir used by CircleCI
   add_filter(%r{^/vendor/bundle})
   add_filter(%r{^/spec})
