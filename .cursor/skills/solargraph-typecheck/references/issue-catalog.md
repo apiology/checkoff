@@ -60,7 +60,7 @@ Quick lookup for strong-level messages seen in this repo and the preferred respo
 
 **Cause:** `execute` return type unknown.
 
-**Fix:** `# @type [Overcommit::Subprocess::Result]` on the assignment line.
+**Fix:** `config/annotations_overcommit.rb` types `Overcommit::Hook::Base#execute`; avoid per-call `# @type` in hooks.
 
 ## Unresolved call to [] on RBS::Unnamed::ENVClass (binstubs)
 
@@ -68,7 +68,13 @@ Quick lookup for strong-level messages seen in this repo and the preferred respo
 
 **Fix:** Usually ignorable on the `ENV['BUNDLE_GEMFILE']` line; binstubs are often excluded or get a single ignore.
 
-## Wrong argument type for Checkoff::TaskSelectors#filter_via_task_selector: … Mocha::Mock
+## Unresolved call to fetch on RBS::Unnamed::ENVClass
+
+**Cause:** Strong-level RBS typing for `ENV` may not expose `fetch` in all contexts.
+
+**Fix:** Add a targeted `# @sg-ignore` immediately above `ENV.fetch(...)` when a cleaner type annotation does not resolve it.
+
+## Wrong argument type … Mocha::Mock
 
 **Cause:** Test mocks (tests should stay excluded from strong).
 

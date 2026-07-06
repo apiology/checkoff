@@ -12,7 +12,7 @@ module Overcommit
       class Punchlist < Base
         # @param stdout [String]
         # @return [Array<Overcommit::Hook::Message>]
-        # @sg-ignore Message.new inferred as Punchlist in this hook class
+        # @sg-ignore Declared return type ::Array<::Overcommit::Hook::Message> does not match inferred type ::Array<::Overcommit::Hook::PreCommit::Punchlist> for Overcommit::Hook::PreCommit::Punchlist#parse_output
         def parse_output(stdout)
           stdout.split("\n").map do |line|
             file, line_no, _message = line.split(':', 3)
@@ -29,7 +29,6 @@ module Overcommit
 
         # @return [Symbol, Array<Overcommit::Hook::Message>]
         def run
-          # @type [Overcommit::Subprocess::Result]
           result = execute([*command, '-g', files_glob])
 
           warn result.stderr

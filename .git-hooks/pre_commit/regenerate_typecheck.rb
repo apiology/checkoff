@@ -28,7 +28,6 @@ module Overcommit
         # @return [Symbol, Array<Symbol, String>]
         def run
           execute(['rm', '-f', *STAMP_FILES])
-          # @type [Overcommit::Subprocess::Result]
           result = execute(%w[make build-typecheck])
           return [:fail, result.stdout + result.stderr] unless result.success?
 
