@@ -28,12 +28,14 @@ module Overcommit
         # @return [Symbol, Array<Symbol, String>]
         def run
           execute(['rm', '-f', *STAMP_FILES])
+          # @type [Overcommit::Subprocess::Result]
           result = execute(%w[make build-typecheck])
           return [:fail, result.stdout + result.stderr] unless result.success?
 
           paths_to_stage = BUILD_TYPECHECK_PATHS.select { |path| File.exist?(path) }
           return :pass if paths_to_stage.empty?
 
+          # @type [Overcommit::Subprocess::Result]
           stage_result = execute(['git', 'add', '-A', '--', *paths_to_stage])
           return :pass if stage_result.success?
 
