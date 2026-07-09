@@ -155,7 +155,7 @@ GEM
       diff-lcs (>= 1.2.0, < 2.0)
       rspec-support (~> 3.13.0)
     rspec-support (3.13.7)
-    rubocop (1.88.1)
+    rubocop (1.88.2)
       json (~> 2.3)
       language_server-protocol (~> 3.17.0.2)
       lint_roller (~> 1.1.0)
@@ -188,10 +188,10 @@ GEM
     ruby_parser (3.22.0)
       racc (~> 1.5)
       sexp_processor (~> 4.16)
-    rubydex (0.2.7-aarch64-linux)
-    rubydex (0.2.7-arm64-darwin)
-    rubydex (0.2.7-x86_64-darwin)
-    rubydex (0.2.7-x86_64-linux)
+    rubydex (0.2.8-aarch64-linux)
+    rubydex (0.2.8-arm64-darwin)
+    rubydex (0.2.8-x86_64-darwin)
+    rubydex (0.2.8-x86_64-linux)
     rugged (1.9.4)
     sexp_processor (4.17.5)
     simplecov (0.22.0)
@@ -226,17 +226,17 @@ GEM
       yard (~> 0.9, >= 0.9.24)
       yard-activesupport-concern (~> 0.0)
       yard-solargraph (~> 0.1)
-    sorbet (0.6.13323)
-      sorbet-static (= 0.6.13323)
-    sorbet-runtime (0.6.13323)
-    sorbet-static (0.6.13323-aarch64-linux)
-    sorbet-static (0.6.13323-universal-darwin)
-    sorbet-static (0.6.13323-x86_64-linux)
-    sorbet-static-and-runtime (0.6.13323)
-      sorbet (= 0.6.13323)
-      sorbet-runtime (= 0.6.13323)
+    sorbet (0.6.13329)
+      sorbet-static (= 0.6.13329)
+    sorbet-runtime (0.6.13329)
+    sorbet-static (0.6.13329-aarch64-linux)
+    sorbet-static (0.6.13329-universal-darwin)
+    sorbet-static (0.6.13329-x86_64-linux)
+    sorbet-static-and-runtime (0.6.13329)
+      sorbet (= 0.6.13329)
+      sorbet-runtime (= 0.6.13329)
     source_finder (3.2.1)
-    spoom (1.8.2)
+    spoom (1.8.3)
       erubi (>= 1.10.0)
       prism (>= 0.28.0)
       rbi (>= 0.3.14)
@@ -258,7 +258,7 @@ GEM
       thor (>= 1.2.0)
       tsort
     thor (1.5.0)
-    tilt (2.7.0)
+    tilt (2.8.0)
     tomlrb (2.0.4)
     tsort (0.2.0)
     undercover (0.8.5)
@@ -398,7 +398,7 @@ CHECKSUMS
   rspec-expectations (3.13.5) sha256=33a4d3a1d95060aea4c94e9f237030a8f9eae5615e9bd85718fe3a09e4b58836
   rspec-mocks (3.13.8) sha256=086ad3d3d17533f4237643de0b5c42f04b66348c28bf6b9c2d3f4a3b01af1d47
   rspec-support (3.13.7) sha256=0640e5570872aafefd79867901deeeeb40b0c9875a36b983d85f54fb7381c47c
-  rubocop (1.88.1) sha256=726af773d6bc169ed3ff852f3ca020b7c58d39c34e7a8d879a8e0147cc994f26
+  rubocop (1.88.2) sha256=8def251c90cd955feb4daa3edc0ab56893250c4ce90ef81e6c80c03f9a939bbf
   rubocop-ast (1.50.0) sha256=b9ca88300da0803ee222ad20cdb30494c0a784eed06fdc35d254b06d662788db
   rubocop-performance (1.26.1) sha256=cd19b936ff196df85829d264b522fd4f98b6c89ad271fa52744a8c11b8f71834
   rubocop-rake (0.7.1) sha256=3797f2b6810c3e9df7376c26d5f44f3475eda59eb1adc38e6f62ecf027cbae4d
@@ -406,10 +406,10 @@ CHECKSUMS
   rubocop-yard (1.3.0) sha256=29bc44274e0b10d7db60655e84089328c0aceadd246d24f8e963c67949a60269
   ruby-progressbar (1.13.0) sha256=80fc9c47a9b640d6834e0dc7b3c94c9df37f08cb072b7761e4a71e22cff29b33
   ruby_parser (3.22.0) sha256=1eb4937cd9eb220aa2d194e352a24dba90aef00751e24c8dfffdb14000f15d23
-  rubydex (0.2.7-aarch64-linux) sha256=9a016039f7e94e55cd812e073d310de7effcce4cac560edd1185e1ce6b5b4eb0
-  rubydex (0.2.7-arm64-darwin) sha256=f0d28bbf4153568be79b671642424750053e0bea971b60ddf5cec19bf4563990
-  rubydex (0.2.7-x86_64-darwin) sha256=b002b259d118ac69de44470eff1597143318402c45630c47371f9542631447dc
-  rubydex (0.2.7-x86_64-linux) sha256=dacfade9fa42ce4469618da6dac07e69d5f3ac6a313b4caced5234c8f052419a
+  rubydex (0.2.8-aarch64-linux) sha256=bdb46fa66b6de425d986c5b404bdab6372e4b8a3c3bf15504dcfa7defabc64d2
+  rubydex (0.2.8-arm64-darwin) sha256=bb3da6bdc4848909142c259d8d128dc3223386fc3cd3f98c72381e54d67ba0e2
+  rubydex (0.2.8-x86_64-darwin) sha256=971bb17e42150e534e444a244bf471285049da938d6d48fd30e21809d735de7e
+  rubydex (0.2.8-x86_64-linux) sha256=6d17a41f5b40f9dd117aa59f93e0421978517ec1f3d49c3c6d6513fd6d7cd18c
   rugged (1.9.4) sha256=5876152be06568b413eb7eaccf3932a5b011a139fcf9330a680abdf16859dcd3
   sexp_processor (4.17.5) sha256=ae2b48ba98353d5d465ce8759836b7a05f2e12c5879fcd14d7815b026de32f0e
   simplecov (0.22.0) sha256=fe2622c7834ff23b98066bb0a854284b2729a569ac659f82621fc22ef36213a5
@@ -417,19 +417,19 @@ CHECKSUMS
   simplecov-lcov (0.9.0) sha256=7a77a31e200a595ed4b0249493056efd0c920601f53d2ef135ca34ee796346cd
   simplecov_json_formatter (0.1.4) sha256=529418fbe8de1713ac2b2d612aa3daa56d316975d307244399fa4838c601b428
   solargraph (0.60.2) sha256=35c8fb31fcdbe8ccd0e0e84862a65b8deb319f86210c5966e41e2fc011e52538
-  sorbet (0.6.13323) sha256=78b2d4b17fe171b2facd636033ce6e0be8544aa776b7713216209ba015d911d3
-  sorbet-runtime (0.6.13323) sha256=cf9c4e6793e1a9ef69bd96e3a006e0fd1fead429f4e4370163460bf569a23518
-  sorbet-static (0.6.13323-aarch64-linux) sha256=33d428073b491970b1b2528d6a89c4f104fdaf7f8752c6489f120040faafc5c4
-  sorbet-static (0.6.13323-universal-darwin) sha256=35ea7cca7011adea28fd7aa18002aff7f242365d829ca31219ad5e723fe28270
-  sorbet-static (0.6.13323-x86_64-linux) sha256=8ce81180e0e91394a87bf39722ff797f90315d71e29559f015716b3512347373
-  sorbet-static-and-runtime (0.6.13323) sha256=04b636933a28c8adedc81ad469f25d3a59b8a3eceaeef9accd6a92e2066d461d
+  sorbet (0.6.13329) sha256=27a81f1ff64e3f9618e2f68f92ca24d7cb9f3eb282f1231f617d1ee844dfdc84
+  sorbet-runtime (0.6.13329) sha256=478343b51b0119aabe1570884081294525a92878152afa43fede4862c9c0663c
+  sorbet-static (0.6.13329-aarch64-linux) sha256=7870fb5be0c9ff170ab96806a661be4e64b4eb8714b598dc42af7002c80e1d16
+  sorbet-static (0.6.13329-universal-darwin) sha256=bb0c6d6d103362c313a6dda81c9634835d7c5d557eb8a63be773decf4381e811
+  sorbet-static (0.6.13329-x86_64-linux) sha256=9e697521893d67fe74b8bf7c5759479a1d800e70ab9aea99afa6e4ffad68d57f
+  sorbet-static-and-runtime (0.6.13329) sha256=3037e7ba0451cf976688b9c0716310e6480abca4a7771447402f346eadd35c17
   sord (7.0.0)
   source_finder (3.2.1) sha256=7c9bf6f108e7e895940989f089e4d9011c175ec9da203d5de5f56402a73bfb0b
-  spoom (1.8.2) sha256=1253232b9d85ed140c9d5337ad2c74f03af89a70e3c602f2b2438eba34d0bd2f
+  spoom (1.8.3) sha256=32871fa189bbfa49cf557a50f819f23cc9a6ceefd0346caa7a6adc193becd5dd
   stringio (3.2.0) sha256=c37cb2e58b4ffbd33fe5cd948c05934af997b36e0b6ca6fdf43afa234cf222e1
   tapioca (0.19.2) sha256=938731b07811aee8d23871b1aee8861d464fbaf2cfffbf79a62b0c869a5120ec
   thor (1.5.0) sha256=e3a9e55fe857e44859ce104a84675ab6e8cd59c650a49106a05f55f136425e73
-  tilt (2.7.0) sha256=0d5b9ba69f6a36490c64b0eee9f6e9aad517e20dcc848800a06eb116f08c6ab3
+  tilt (2.8.0) sha256=ba472eb2716fe1e04112d6d219a9dae938ec09a6a1e2ad3ecc7922e79bde3721
   tomlrb (2.0.4) sha256=262f77947ac3ac9b3366a0a5940ecd238300c553e2e14f22009e2afcd2181b99
   tsort (0.2.0) sha256=9650a793f6859a43b6641671278f79cfead60ac714148aabe4e3f0060480089f
   undercover (0.8.5) sha256=054a3c77ef3a08a2e8ebcc272a383b7e187fb30b55c2a164ff1643dc2999aaa9

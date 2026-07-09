@@ -5315,9 +5315,6 @@ RuboCop::AST::NodePattern::Sets::SET_GSUB_GSUB_SUB_SUB = T.let(T.unsafe(nil), Se
 RuboCop::AST::NodePattern::Sets::SET_INCLUDE_EXTEND_PREPEND = T.let(T.unsafe(nil), Set)
 
 # pkg:gem/rubocop-ast#lib/rubocop/ast/node_pattern/sets.rb:10
-RuboCop::AST::NodePattern::Sets::SET_INCLUDE_MEMBER = T.let(T.unsafe(nil), Set)
-
-# pkg:gem/rubocop-ast#lib/rubocop/ast/node_pattern/sets.rb:10
 RuboCop::AST::NodePattern::Sets::SET_INSTANCE_EVAL_CLASS_EVAL_MODULE_EVAL = T.let(T.unsafe(nil), Set)
 
 # pkg:gem/rubocop-ast#lib/rubocop/ast/node_pattern/sets.rb:10
@@ -5367,6 +5364,9 @@ RuboCop::AST::NodePattern::Sets::SET_MATCH___MATCH = T.let(T.unsafe(nil), Set)
 
 # pkg:gem/rubocop-ast#lib/rubocop/ast/node_pattern/sets.rb:10
 RuboCop::AST::NodePattern::Sets::SET_MAX_BY_MIN_BY_MINMAX_BY = T.let(T.unsafe(nil), Set)
+
+# pkg:gem/rubocop-ast#lib/rubocop/ast/node_pattern/sets.rb:10
+RuboCop::AST::NodePattern::Sets::SET_MEMBER_INCLUDE = T.let(T.unsafe(nil), Set)
 
 # pkg:gem/rubocop-ast#lib/rubocop/ast/node_pattern/sets.rb:10
 RuboCop::AST::NodePattern::Sets::SET_MODULE_FUNCTION_RUBY2_KEYWORDS = T.let(T.unsafe(nil), Set)

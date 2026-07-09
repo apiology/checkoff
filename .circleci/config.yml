@@ -33,6 +33,8 @@ commands:
   set_up_environment:
     description: "Install source environment"
     steps:
+      # Blobless default checkout lacks objects for tools that diff against origin/main
+      # (e.g. undercover Rugged::OdbError). CircleCI uses method: full.
       - checkout:
           method: full
       - run:
@@ -275,7 +277,7 @@ jobs:
 
             make citest cicoverage
     # This seemed to shave 5ish% of the build time off when added
-    resource_class: large
+    resource_class: large.gen2
   publish_gem:
     working_directory: ~/checkoff
     docker:

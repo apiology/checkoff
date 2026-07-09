@@ -5,6 +5,9 @@
 # Please instead update this file by running `bin/tapioca gem yard`.
 
 
+# Keep track of Ruby version for compatibility code
+# @deprecated Use {YARD.ruby18?} or {YARD.ruby19?} instead.
+#
 # pkg:gem/yard#lib/yard.rb:61
 ::RUBY18 = T.let(T.unsafe(nil), FalseClass)
 
