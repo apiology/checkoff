@@ -1,6 +1,6 @@
 {
     "_checkout": null,
-    "_output_dir": "/Users/broz/src/checkoff/.git/cookiecutter",
+    "_output_dir": "/Users/broz/.cursor/worktrees/checkoff/cascade-checkoff-1783596745564/.git/cookiecutter",
     "_repo_dir": "/Users/broz/.cookiecutters/cookiecutter-gem",
     "_template": "https://github.com/apiology/cookiecutter-gem",
     "email": "vince@broz.cc",
