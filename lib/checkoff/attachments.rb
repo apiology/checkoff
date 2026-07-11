@@ -34,7 +34,7 @@ module Checkoff
     private_constant :HOUR
     DAY = 24 * HOUR
     private_constant :DAY
-    REALLY_LONG_CACHE_TIME = HOUR * 1
+    REALLY_LONG_CACHE_TIME = HOUR
     private_constant :REALLY_LONG_CACHE_TIME
     LONG_CACHE_TIME = MINUTE * 15
     private_constant :LONG_CACHE_TIME
@@ -104,20 +104,19 @@ module Checkoff
     #
     # @yields [IO]
     #
-    # @return [Object]
+    # @return [void]
     def write_tempfile_from_response(response)
       Tempfile.create('checkoff') do |tempfile|
-        # @sg-ignore
         tempfile.binmode
-        # @sg-ignore
+        # @sg-ignore Unresolved call to read_body on #read_body
         response.read_body do |chunk|
           tempfile.write(chunk)
         end
-        # @sg-ignore
         tempfile.rewind
 
         yield tempfile
       end
+      nil
     end
 
     # @param url [String]

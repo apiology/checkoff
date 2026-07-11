@@ -8,6 +8,7 @@
 # inserts ignore comments before remaining reported lines (unless already ignored).
 
 require 'pathname'
+require 'sorbet-runtime'
 
 ROOT = Pathname(File.expand_path('..', __dir__))
 
@@ -181,7 +182,7 @@ def fix_date_new!(issue)
   true
 end
 
-issues_path = ARGV.fetch(0) { abort("usage: #{$PROGRAM_NAME} TYPECHECK_OUTPUT_FILE") }
+issues_path = T.cast(ARGV.fetch(0) { abort("usage: #{$PROGRAM_NAME} TYPECHECK_OUTPUT_FILE") }, String)
 issues = parse_issues(issues_path)
 
 unneeded = issues.select { |i| i.message == 'Unneeded @sg-ignore comment' }

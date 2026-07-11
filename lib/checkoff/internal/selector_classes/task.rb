@@ -193,7 +193,7 @@ module Checkoff
         # @sg-ignore Checkoff::SelectorClasses::Task::UnassignedPFunctionEvaluator#evaluate
         #   return type could not be inferred
         def evaluate(task)
-          task.assignee.nil? == true
+          T.cast(task.assignee.nil? == true, T::Boolean)
         end
       end
 
@@ -210,7 +210,7 @@ module Checkoff
         # @sg-ignore Checkoff::SelectorClasses::Task::DueDateSetPFunctionEvaluator#evaluate
         #   return type could not be inferred
         def evaluate(task)
-          !(task.due_at.nil? && task.due_on.nil?)
+          T.cast(!(task.due_at.nil? && task.due_on.nil?), T::Boolean)
         end
       end
 

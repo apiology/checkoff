@@ -97,7 +97,7 @@ sorbet/tapioca/require.rb:
 	make sorbet/machine_specific_config vendor/.keep
 	bin/tapioca init
 
-tapioca.installed: sorbet/tapioca/require.rb Gemfile.lock.installed ## Install Tapioca-generated type information
+tapioca.installed: sorbet/tapioca/require.rb Gemfile.lock Gemfile.lock.installed ## Install Tapioca-generated type information
 	make sorbet/machine_specific_config
 	bin/tapioca gems
 	bin/tapioca annotations
@@ -183,7 +183,7 @@ gem_dependencies: .bundle/config
 
 # Ensure any Gemfile.lock changes, even pulled from git, ensure a
 # bundle is installed.
-Gemfile.lock.installed: Gemfile checkoff.gemspec vendor/.keep
+Gemfile.lock.installed: Gemfile Gemfile.lock checkoff.gemspec vendor/.keep
 	bundle install
 	touch Gemfile.lock.installed
 
