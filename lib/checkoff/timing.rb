@@ -178,6 +178,7 @@ module Checkoff
     # @param num_days [Integer]
     #
     # @return [Date]
+    # @sg-ignore Checkoff::Timing#n_days_from_today return type could not be inferred
     def n_days_from_today(num_days)
       T.cast(@today_getter.today + num_days, Date)
     end

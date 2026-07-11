@@ -190,6 +190,8 @@ module Checkoff
 
         # @param task [Asana::Resources::Task]
         # @return [Boolean]
+        # @sg-ignore Checkoff::SelectorClasses::Task::UnassignedPFunctionEvaluator#evaluate
+        #   return type could not be inferred
         def evaluate(task)
           T.cast(task.assignee.nil? == true, T::Boolean)
         end
@@ -205,6 +207,8 @@ module Checkoff
 
         # @param task [Asana::Resources::Task]
         # @return [Boolean]
+        # @sg-ignore Checkoff::SelectorClasses::Task::DueDateSetPFunctionEvaluator#evaluate
+        #   return type could not be inferred
         def evaluate(task)
           T.cast(!(task.due_at.nil? && task.due_on.nil?), T::Boolean)
         end
