@@ -33,7 +33,7 @@ rbi/checkoff.rbi: tapioca.installed yardoc.installed sorbet/config .gem_rbs_coll
 	bin/sord gen $(SORD_GEN_OPTIONS) rbi/checkoff-sord.rbi # YARD to RBI
 	cat rbi/checkoff-parlour.rbi rbi/checkoff-sord.rbi > rbi/checkoff.rbi
 	rm -f rbi/checkoff-sord.rbi rbi/checkoff-parlour.rbi
-#	sed -i.bak -e 's/^# typed: strong/# typed: ignore/' rbi/checkoff.rbi
+	sed -i.bak -e 's/^# typed: strong/# typed: ignore/' rbi/checkoff.rbi
 	rm -f rbi/checkoff.rbi.bak
 	touch rbi/checkoff.rbi
 

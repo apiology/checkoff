@@ -104,20 +104,19 @@ module Checkoff
     #
     # @yields [IO]
     #
-    # @return [Object]
+    # @return [void]
     def write_tempfile_from_response(response)
       Tempfile.create('checkoff') do |tempfile|
-        # @sg-ignore
         tempfile.binmode
-        # @sg-ignore
+        # @sg-ignore Unresolved call to read_body on #read_body
         response.read_body do |chunk|
           tempfile.write(chunk)
         end
-        # @sg-ignore
         tempfile.rewind
 
         yield tempfile
       end
+      nil
     end
 
     # @param url [String]

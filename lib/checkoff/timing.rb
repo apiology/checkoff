@@ -178,7 +178,6 @@ module Checkoff
     # @param num_days [Integer]
     #
     # @return [Date]
-    # @sg-ignore
     def n_days_from_today(num_days)
       @today_getter.today + num_days
     end
