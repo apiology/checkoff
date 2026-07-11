@@ -53,7 +53,7 @@ YARD_PLUGIN_OPTS = --plugin yard-sorbet --plugin yard-solargraph
 # checksum, so a Makefile change alone will still restore the old
 # .yardoc.  Bumping the cache prefix forces a clean rebuild and avoids
 # shipping stale types (e.g. test-only TestDate/TestTasks) in sig/rbi.
-	YARD_OPTS = $(YARD_PLUGIN_OPTS) -c .yardoc --output-dir yardoc --backtrace --exclude '^config/' --exclude '^test/' '{lib,app}/**/*.rb' 'ext/**/*.{c,rb}'
+YARD_OPTS = $(YARD_PLUGIN_OPTS) -c .yardoc --output-dir yardoc --backtrace --exclude '^config/' --exclude '^test/' '{lib,app}/**/*.rb' 'ext/**/*.{c,rb}'
 
 types.installed: tapioca.installed Gemfile.lock Gemfile.lock.installed rbi/checkoff.rbi sorbet/tapioca/require.rb sorbet/config ## Ensure typechecking dependencies are in place
 	bin/solargraph gems
