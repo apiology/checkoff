@@ -355,12 +355,12 @@ class Rubydex::Graph
   def encoding=(encoding); end
 
   # pkg:gem/rubydex#lib/rubydex.rb:11
-  sig { params(paths: T::Array[String]).void }
-  def exclude_paths(paths); end
+  sig { params(patterns: T::Array[String]).void }
+  def exclude_patterns(patterns); end
 
   # pkg:gem/rubydex#lib/rubydex.rb:11
   sig { returns(T::Array[String]) }
-  def excluded_paths; end
+  def excluded_patterns; end
 
   # pkg:gem/rubydex#lib/rubydex.rb:11
   sig { params(queries: String).returns(T::Enumerable[Rubydex::Declaration]) }

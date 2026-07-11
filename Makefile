@@ -1,4 +1,4 @@
-.PHONY: build build-typecheck bundle_install cicoverage citypecheck citest citypecoverage clean clean-coverage clean-typecheck clean-typecoverage coverage default docs feature gem_dependencies help overcommit quality repl report-coverage rubocop rubocop-ratchet spec test typecheck typecoverage update_from_cookiecutter yard
+.PHONY: build build-typecheck bundle_install cicoverage citypecheck citest citypecoverage clean clean-coverage clean-typecheck clean-typecoverage coverage default docs feature gem_dependencies help overcommit quality repl report-coverage rubocop rubocop-ratchet spec test typecheck typecoverage post_cookiecutter_sync update_from_cookiecutter yard
 
 .DEFAULT_GOAL := default
 
@@ -97,7 +97,7 @@ sorbet/tapioca/require.rb:
 	make sorbet/machine_specific_config vendor/.keep
 	bin/tapioca init
 
-tapioca.installed: sorbet/tapioca/require.rb Gemfile.lock.installed ## Install Tapioca-generated type information
+tapioca.installed: sorbet/tapioca/require.rb Gemfile.lock Gemfile.lock.installed ## Install Tapioca-generated type information
 	make sorbet/machine_specific_config
 	bin/tapioca gems
 	bin/tapioca annotations
@@ -184,7 +184,7 @@ gem_dependencies: .bundle/config
 
 # Ensure any Gemfile.lock changes, even pulled from git, ensure a
 # bundle is installed.
-Gemfile.lock.installed: Gemfile checkoff.gemspec vendor/.keep
+Gemfile.lock.installed: Gemfile Gemfile.lock checkoff.gemspec vendor/.keep
 	bundle install
 	touch Gemfile.lock.installed
 
@@ -252,3 +252,11 @@ cicoverage: citest coverage ## check code coverage
 
 update_from_cookiecutter: ## Bring in changes from template project used to create this repo
 	bin/cookiecutter_project_upgrader.sh
+	@$(MAKE) post_cookiecutter_sync
+
+post_cookiecutter_sync: ## Ecosystem-specific steps after template sync
+	git checkout --theirs sorbet/rbi/gems || true
+	bundle update --conservative json nokogiri rack rexml yard brakeman || true
+	( make build && git add Gemfile.lock ) || true
+	bin/spoom srb bump || true
+
