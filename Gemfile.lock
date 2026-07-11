@@ -43,7 +43,7 @@ GIT
 PATH
   remote: .
   specs:
-    checkoff (0.254.0)
+    checkoff (0.255.0)
       activesupport
       asana (> 0.10.0)
       cache_method
@@ -481,7 +481,7 @@ CHECKSUMS
   bundler-audit (0.9.3) sha256=81c8766c71e47d0d28a0f98c7eed028539f21a6ea3cd8f685eb6f42333c9b4e9
   cache (0.4.1) sha256=d73c092f754d673b3b4ca5a16d678d0c8b73a0d660a3af3c0fce6ff1c9ae5a1c
   cache_method (0.2.7) sha256=744b80305fa97451b903035a71be305c1d1fc55995d4f5cebd161da8f3c9e705
-  checkoff (0.254.0)
+  checkoff (0.255.0)
   chef-utils (19.3.15) sha256=1c537a9c85b55b6d897de8e8af6b66b017a6dfae2b5e7b25e0bf320637e0b86a
   childprocess (5.1.0) sha256=9a8d484be2fd4096a0e90a0cd3e449a05bc3aa33f8ac9e4d6dcef6ac1455b6ec
   coderay (1.1.3) sha256=dc530018a4684512f8f38143cd2a096c9f02a1fc2459edcfe534787a7fc77d4b
