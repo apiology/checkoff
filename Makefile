@@ -1,4 +1,4 @@
-.PHONY: build build-typecheck bundle_install cicoverage citypecheck citest citypecoverage clean clean-coverage clean-typecheck clean-typecoverage coverage default docs gem_dependencies help overcommit quality repl report-coverage rubocop rubocop-ratchet test typecheck typecoverage post_cookiecutter_sync update_from_cookiecutter yard
+.PHONY: build build-typecheck bundle_install cicoverage citypecheck citest citypecoverage clean clean-coverage clean-typecheck clean-typecoverage coverage default docs feature gem_dependencies help overcommit quality repl report-coverage rubocop rubocop-ratchet spec test typecheck typecoverage post_cookiecutter_sync update_from_cookiecutter yard
 
 .DEFAULT_GOAL := default
 
@@ -33,7 +33,7 @@ rbi/checkoff.rbi: tapioca.installed yardoc.installed sorbet/config .gem_rbs_coll
 	bin/sord gen $(SORD_GEN_OPTIONS) rbi/checkoff-sord.rbi # YARD to RBI
 	cat rbi/checkoff-parlour.rbi rbi/checkoff-sord.rbi > rbi/checkoff.rbi
 	rm -f rbi/checkoff-sord.rbi rbi/checkoff-parlour.rbi
-	sed -i.bak -e 's/^# typed: strong/# typed: ignore/' rbi/checkoff.rbi
+#	sed -i.bak -e 's/^# typed: strong/# typed: ignore/' rbi/checkoff.rbi
 	rm -f rbi/checkoff.rbi.bak
 	touch rbi/checkoff.rbi
 
@@ -53,7 +53,7 @@ YARD_PLUGIN_OPTS = --plugin yard-sorbet --plugin yard-solargraph
 # checksum, so a Makefile change alone will still restore the old
 # .yardoc.  Bumping the cache prefix forces a clean rebuild and avoids
 # shipping stale types (e.g. test-only TestDate/TestTasks) in sig/rbi.
-YARD_OPTS = $(YARD_PLUGIN_OPTS) -c .yardoc --output-dir yardoc --backtrace --exclude '^config/' --exclude '^test/' '{lib,app}/**/*.rb' 'ext/**/*.{c,rb}'
+YARD_OPTS = $(YARD_PLUGIN_OPTS) -c .yardoc --output-dir yardoc --backtrace --exclude '^config/' --exclude '^spec/' --exclude '^feature/' '{lib,app}/**/*.rb' 'ext/**/*.{c,rb}'
 
 types.installed: tapioca.installed Gemfile.lock Gemfile.lock.installed rbi/checkoff.rbi sorbet/tapioca/require.rb sorbet/config ## Ensure typechecking dependencies are in place
 	bin/solargraph gems
@@ -97,7 +97,7 @@ sorbet/tapioca/require.rb:
 	make sorbet/machine_specific_config vendor/.keep
 	bin/tapioca init
 
-tapioca.installed: sorbet/tapioca/require.rb Gemfile.lock.installed ## Install Tapioca-generated type information
+tapioca.installed: sorbet/tapioca/require.rb Gemfile.lock Gemfile.lock.installed ## Install Tapioca-generated type information
 	make sorbet/machine_specific_config
 	bin/tapioca gems
 	bin/tapioca annotations
@@ -115,6 +115,7 @@ docs: ## Generate YARD documentation
 
 clean-typecheck: ## Refresh the easily-regenerated information that type checking depends on
 	rm -fr .yardoc/ rbi/checkoff.rbi types.installed yardoc.installed sig/checkoff.rbs || true
+	rm -fr ../checkoff/.yardoc || true
 	echo all clear
 
 realclean-typecheck: clean-typecheck ## Remove all type checking artifacts
@@ -183,7 +184,7 @@ gem_dependencies: .bundle/config
 
 # Ensure any Gemfile.lock changes, even pulled from git, ensure a
 # bundle is installed.
-Gemfile.lock.installed: Gemfile checkoff.gemspec vendor/.keep
+Gemfile.lock.installed: Gemfile Gemfile.lock checkoff.gemspec vendor/.keep
 	bundle install
 	touch Gemfile.lock.installed
 
@@ -199,6 +200,8 @@ clear_metrics: ## remove or reset result artifacts created by tests and quality 
 
 clean: clear_metrics clean-typecoverage clean-typecheck clean-coverage ## remove all built artifacts
 
+test: spec feature ## run tests quickly
+
 citest: test ## Run unit tests from CircleCI
 
 overcommit: ## run precommit quality checks
@@ -208,9 +211,6 @@ overcommit_branch: ## run precommit quality checks only on changed files
 	bin/overcommit --run --diff origin/main
 
 quality: overcommit ## run precommit quality checks
-
-test: ## Run lower-level tests
-	@bin/rake test
 
 rubocop: ## Run rubocop
 	@bin/rubocop
@@ -222,6 +222,12 @@ rubocop-ratchet: rubocop ## Run rubocop and then ratchet numbers of errors in to
 	    git diff --exit-code .rubocop.yml; \
 	    git diff --exit-code .rubocop_todo.yml; \
 	fi
+
+spec: ## Run lower-level tests
+	@bin/rake spec
+
+feature: ## Run higher-level tests
+	@bin/rake feature
 
 repl: bundle_install ## Launch an interactive development shell
 	@bin/rake repl

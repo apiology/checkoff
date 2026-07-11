@@ -74,7 +74,7 @@ test_tier() {
 
 script_dir="$(cd "$(dirname "$0")" && pwd)"
 meta_root="$(cd "${script_dir}/.." && pwd)"
-nested_slug='cookiecutter-ruby'
+nested_slug='cookiecutter-gem'
 deep_nested="${meta_root}/${nested_slug}/checkoff"
 
 if [ "${1:-}" = "--all-tiers" ]; then
