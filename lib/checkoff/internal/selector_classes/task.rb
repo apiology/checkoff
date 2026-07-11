@@ -191,7 +191,7 @@ module Checkoff
         # @param task [Asana::Resources::Task]
         # @return [Boolean]
         def evaluate(task)
-          task.assignee.nil? == true
+          T.cast(task.assignee.nil? == true, T::Boolean)
         end
       end
 
@@ -206,7 +206,7 @@ module Checkoff
         # @param task [Asana::Resources::Task]
         # @return [Boolean]
         def evaluate(task)
-          !(task.due_at.nil? && task.due_on.nil?)
+          T.cast(!(task.due_at.nil? && task.due_on.nil?), T::Boolean)
         end
       end
 

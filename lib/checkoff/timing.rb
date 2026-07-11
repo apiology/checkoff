@@ -21,7 +21,7 @@ module Checkoff
     MINUTE = 60
     HOUR = MINUTE * 60
     DAY = 24 * HOUR
-    REALLY_LONG_CACHE_TIME = HOUR * 1
+    REALLY_LONG_CACHE_TIME = HOUR
     LONG_CACHE_TIME = MINUTE * 15
     SHORT_CACHE_TIME = MINUTE
 
@@ -179,7 +179,7 @@ module Checkoff
     #
     # @return [Date]
     def n_days_from_today(num_days)
-      @today_getter.today + num_days
+      T.cast(@today_getter.today + num_days, Date)
     end
 
     # @param date_or_time [Date,Time,nil]

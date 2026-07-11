@@ -163,9 +163,7 @@ module Checkoff
                                                                                                       custom_field_gid)
 
           # @sg-ignore
-          actual_custom_field_values_gids.any? do |custom_field_value|
-            custom_field_values_gids.include?(custom_field_value)
-          end
+          actual_custom_field_values_gids.intersect?(custom_field_values_gids)
         end
       end
 
@@ -194,9 +192,7 @@ module Checkoff
                                                                       custom_field_name)
 
           # @sg-ignore
-          actual_custom_field_values_names.any? do |custom_field_value|
-            custom_field_value_names.include?(custom_field_value)
-          end
+          actual_custom_field_values_names.intersect?(custom_field_value_names)
         end
       end
 

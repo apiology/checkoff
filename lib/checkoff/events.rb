@@ -26,7 +26,7 @@ module Checkoff
     private_constant :HOUR
     DAY = 24 * HOUR
     private_constant :DAY
-    REALLY_LONG_CACHE_TIME = HOUR * 1
+    REALLY_LONG_CACHE_TIME = HOUR
     private_constant :REALLY_LONG_CACHE_TIME
     LONG_CACHE_TIME = MINUTE * 15
     private_constant :LONG_CACHE_TIME

@@ -24,7 +24,7 @@ module Checkoff
     MINUTE = 60
     HOUR = T.let(MINUTE * 60, Numeric)
     DAY = T.let(24 * HOUR, Numeric)
-    REALLY_LONG_CACHE_TIME = T.let(HOUR * 1, Numeric)
+    REALLY_LONG_CACHE_TIME = T.let(HOUR, Numeric)
     LONG_CACHE_TIME = T.let(MINUTE * 15, Numeric)
     SHORT_CACHE_TIME = T.let(MINUTE, Numeric)
 
