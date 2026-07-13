@@ -26,16 +26,8 @@ exclude:
   - vendor/**/*
   - ".bundle/**/*"
   - ".markdownlint_style.rb"
-  # Minitest/Mocha mocks are not strong-typecheckable; CI uses strong level
-  # Keep failing tests listed individually while we clear them in batches.
-  # Files omitted from this list are typechecked.
+  # Mocha-heavy test helper stays excluded from strong typecheck.
   - test/unit/test_helper.rb
-  - test/unit/test_projects.rb
-  - test/unit/test_sections.rb
-  - test/unit/test_task_searches.rb
-  - test/unit/test_task_selectors.rb
-  - test/unit/test_tasks.rb
-  - test/unit/test_timing.rb
 require: []
 domains: []
 reporters:

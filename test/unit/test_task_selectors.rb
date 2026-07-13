@@ -36,11 +36,14 @@ class TestTaskSelectors < ClassTest
       'resource_subtype' => 'enum',
     }
     task_selectors = get_test_object do
+      # @sg-ignore Unresolved call to @mocks
       @mocks[:custom_fields] = Checkoff::CustomFields.new(client:)
       custom_fields = [custom_field]
       task.expects(:custom_fields).returns(custom_fields)
     end
 
+    # @sg-ignore Wrong argument type for Checkoff::TaskSelectors#filter_via_task_selector: task
+    #   expected Asana::Resources::Task, received Mocha::Mock
     refute(task_selectors.filter_via_task_selector(task,
                                                    ['custom_field_gid_value_contains_any_gid?',
                                                     custom_field_gid,
@@ -58,11 +61,14 @@ class TestTaskSelectors < ClassTest
       'resource_subtype' => 'multi_enum',
     }
     task_selectors = get_test_object do
+      # @sg-ignore Unresolved call to @mocks
       @mocks[:custom_fields] = Checkoff::CustomFields.new(client:)
       custom_fields = [custom_field]
       task.expects(:custom_fields).returns(custom_fields)
     end
 
+    # @sg-ignore Wrong argument type for Checkoff::TaskSelectors#filter_via_task_selector: task
+    #   expected Asana::Resources::Task, received Mocha::Mock
     refute(task_selectors.filter_via_task_selector(task,
                                                    ['custom_field_gid_value_contains_any_gid?',
                                                     custom_field_gid,
@@ -80,12 +86,15 @@ class TestTaskSelectors < ClassTest
       'resource_subtype' => 'something_unknown',
     }
     task_selectors = get_test_object do
+      # @sg-ignore Unresolved call to @mocks
       @mocks[:custom_fields] = Checkoff::CustomFields.new(client:)
       custom_fields = [custom_field]
       task.expects(:custom_fields).returns(custom_fields).at_least(1)
       task.expects(:gid).returns(123)
     end
     e = assert_raises(RuntimeError) do
+      # @sg-ignore Wrong argument type for Checkoff::TaskSelectors#filter_via_task_selector: task
+      #   expected Asana::Resources::Task, received Mocha::Mock
       task_selectors.filter_via_task_selector(task,
                                               ['custom_field_gid_value_contains_any_gid?',
                                                custom_field_gid,
@@ -111,10 +120,13 @@ class TestTaskSelectors < ClassTest
       'resource_subtype' => 'enum',
     }
     task_selectors = get_test_object do
+      # @sg-ignore Unresolved call to @mocks
       @mocks[:custom_fields] = Checkoff::CustomFields.new(client:)
       task.expects(:custom_fields).returns([custom_field])
     end
     # should not raise
+    # @sg-ignore Wrong argument type for Checkoff::TaskSelectors#filter_via_task_selector: task
+    #   expected Asana::Resources::Task, received Mocha::Mock
     result = task_selectors.filter_via_task_selector(task,
                                                      ['custom_field_gid_value_contains_any_gid?',
                                                       custom_field_gid,
@@ -128,11 +140,14 @@ class TestTaskSelectors < ClassTest
     custom_field_gid = '123'
     enum_value_gid = '456'
     task_selectors = get_test_object do
+      # @sg-ignore Unresolved call to @mocks
       @mocks[:custom_fields] = Checkoff::CustomFields.new(client:)
       task.expects(:custom_fields).returns([]).at_least(1)
       task.expects(:gid).returns(123).at_least(1)
     end
     e = assert_raises(RuntimeError) do
+      # @sg-ignore Wrong argument type for Checkoff::TaskSelectors#filter_via_task_selector: task
+      #   expected Asana::Resources::Task, received Mocha::Mock
       task_selectors.filter_via_task_selector(task,
                                               ['custom_field_gid_value_contains_any_gid?',
                                                custom_field_gid,
@@ -147,11 +162,14 @@ class TestTaskSelectors < ClassTest
     custom_field_gid = '123'
     enum_value_gid = '456'
     task_selectors = get_test_object do
+      # @sg-ignore Unresolved call to @mocks
       @mocks[:custom_fields] = Checkoff::CustomFields.new(client:)
       task.expects(:custom_fields).returns(nil).at_least(1)
       task.expects(:gid).returns(123)
     end
     e = assert_raises(RuntimeError) do
+      # @sg-ignore Wrong argument type for Checkoff::TaskSelectors#filter_via_task_selector: task
+      #   expected Asana::Resources::Task, received Mocha::Mock
       task_selectors.filter_via_task_selector(task,
                                               ['custom_field_gid_value_contains_any_gid?',
                                                custom_field_gid,
@@ -175,11 +193,14 @@ class TestTaskSelectors < ClassTest
       'resource_subtype' => 'enum',
     }
     task_selectors = get_test_object do
+      # @sg-ignore Unresolved call to @mocks
       @mocks[:custom_fields] = Checkoff::CustomFields.new(client:)
       custom_fields = [custom_field]
       task.expects(:custom_fields).returns(custom_fields)
     end
 
+    # @sg-ignore Wrong argument type for Checkoff::TaskSelectors#filter_via_task_selector: task
+    #   expected Asana::Resources::Task, received Mocha::Mock
     assert(task_selectors.filter_via_task_selector(task,
                                                    ['custom_field_gid_value_contains_any_gid?',
                                                     custom_field_gid,
@@ -190,6 +211,8 @@ class TestTaskSelectors < ClassTest
   def test_filter_via_invalid_syntax
     task_selectors = get_test_object
     e = assert_raises(RuntimeError) do
+      # @sg-ignore Wrong argument type for Checkoff::TaskSelectors#filter_via_task_selector: task
+      #   expected Asana::Resources::Task, received Mocha::Mock
       task_selectors.filter_via_task_selector(task,
                                               [:bad_predicate?, [:custom_field_value,
                                                                  'custom_field_name']])
@@ -201,13 +224,19 @@ class TestTaskSelectors < ClassTest
   # @return [void]
   def test_filter_via_custom_field_value_nil_false_found
     task_selectors = get_test_object do
+      # @sg-ignore Unresolved call to @mocks
       @mocks[:custom_fields] = Checkoff::CustomFields.new(client:)
+      # @sg-ignore Unresolved call to custom_field
       custom_fields = [custom_field]
+      # @sg-ignore Unresolved call to custom_field
       custom_field.expects(:fetch).with('name').returns('custom_field_name')
+      # @sg-ignore Unresolved call to custom_field
       custom_field.expects(:[]).with('display_value').returns('some value')
       task.expects(:custom_fields).returns(custom_fields)
     end
 
+    # @sg-ignore Wrong argument type for Checkoff::TaskSelectors#filter_via_task_selector: task
+    #   expected Asana::Resources::Task, received Mocha::Mock
     refute(task_selectors.filter_via_task_selector(task,
                                                    [:nil?, [:custom_field_value,
                                                             'custom_field_name']]))
@@ -215,31 +244,41 @@ class TestTaskSelectors < ClassTest
 
   # @return [void]
   def mock_filter_via_custom_field_gid_value_gid_nil
+    # @sg-ignore Unresolved call to custom_field
     custom_fields = [custom_field]
+    # @sg-ignore Unresolved call to custom_field
     custom_field.expects(:fetch).with('gid').returns(custom_field_gid)
     task.expects(:custom_fields).returns(custom_fields)
+    # @sg-ignore Unresolved call to custom_field
     custom_field.expects(:[]).with('display_value').returns(nil)
   end
 
   # @return [void]
   def test_filter_via_custom_field_gid_value_gid_nil
     task_selectors = get_test_object do
+      # @sg-ignore Unresolved call to @mocks
       @mocks[:custom_fields] = Checkoff::CustomFields.new(client:)
       mock_filter_via_custom_field_gid_value_gid_nil
     end
 
+    # @sg-ignore Wrong argument type for Checkoff::TaskSelectors#filter_via_task_selector: task
+    #   expected Asana::Resources::Task, received Mocha::Mock
     assert(task_selectors.filter_via_task_selector(task,
                                                    [:nil?, [:custom_field_gid_value,
+                                                            # @sg-ignore Unresolved call to custom_field_gid
                                                             custom_field_gid]]))
   end
 
   # @return [void]
   def test_filter_via_custom_field_value_custom_fields_not_provided
     task_selectors = get_test_object do
+      # @sg-ignore Unresolved call to @mocks
       @mocks[:custom_fields] = Checkoff::CustomFields.new(client:)
       task.expects(:custom_fields).returns(nil)
     end
     e = assert_raises(RuntimeError) do
+      # @sg-ignore Wrong argument type for Checkoff::TaskSelectors#filter_via_task_selector: task
+      #   expected Asana::Resources::Task, received Mocha::Mock
       task_selectors.filter_via_task_selector(task,
                                               [:nil?, [:custom_field_value,
                                                        'custom_field_name']])
@@ -251,11 +290,14 @@ class TestTaskSelectors < ClassTest
   # @return [void]
   def test_filter_via_custom_field_value_nil_none_found
     task_selectors = get_test_object do
+      # @sg-ignore Unresolved call to @mocks
       @mocks[:custom_fields] = Checkoff::CustomFields.new(client:)
       custom_fields = []
       task.expects(:custom_fields).returns(custom_fields)
     end
 
+    # @sg-ignore Wrong argument type for Checkoff::TaskSelectors#filter_via_task_selector: task
+    #   expected Asana::Resources::Task, received Mocha::Mock
     assert(task_selectors.filter_via_task_selector(task,
                                                    [:nil?, [:custom_field_value,
                                                             'custom_field_name']]))
@@ -264,14 +306,18 @@ class TestTaskSelectors < ClassTest
   # @return [void]
   def test_filter_via_custom_field_value_gid_nil_none_found
     task_selectors = get_test_object do
+      # @sg-ignore Unresolved call to @mocks
       @mocks[:custom_fields] = Checkoff::CustomFields.new(client:)
       custom_fields = []
       task.expects(:gid).returns('task_gid')
       task.expects(:custom_fields).returns(custom_fields)
     end
     e = assert_raises(RuntimeError) do
+      # @sg-ignore Wrong argument type for Checkoff::TaskSelectors#filter_via_task_selector: task
+      #   expected Asana::Resources::Task, received Mocha::Mock
       task_selectors.filter_via_task_selector(task,
                                               [:nil?, [:custom_field_gid_value,
+                                                       # @sg-ignore Unresolved call to custom_field_gid
                                                        custom_field_gid]])
     end
 
@@ -284,6 +330,8 @@ class TestTaskSelectors < ClassTest
       task.expects(:tags).returns([])
     end
 
+    # @sg-ignore Wrong argument type for Checkoff::TaskSelectors#filter_via_task_selector: task
+    #   expected Asana::Resources::Task, received Mocha::Mock
     refute(task_selectors.filter_via_task_selector(task, [:tag?, 'tag_name']))
   end
 
@@ -291,6 +339,8 @@ class TestTaskSelectors < ClassTest
   def test_filter_via_task_selector_not
     task_selectors = get_test_object
 
+    # @sg-ignore Wrong argument type for Checkoff::TaskSelectors#filter_via_task_selector: task
+    #   expected Asana::Resources::Task, received Mocha::Mock
     refute(task_selectors.filter_via_task_selector(task, [:not, []]))
   end
 
@@ -298,6 +348,8 @@ class TestTaskSelectors < ClassTest
   def test_filter_via_task_selector_and
     task_selectors = get_test_object
 
+    # @sg-ignore Wrong argument type for Checkoff::TaskSelectors#filter_via_task_selector: task
+    #   expected Asana::Resources::Task, received Mocha::Mock
     assert(task_selectors.filter_via_task_selector(task, [:and, [], []]))
   end
 
@@ -305,6 +357,8 @@ class TestTaskSelectors < ClassTest
   def test_filter_via_task_selector_or
     task_selectors = get_test_object
 
+    # @sg-ignore Wrong argument type for Checkoff::TaskSelectors#filter_via_task_selector: task
+    #   expected Asana::Resources::Task, received Mocha::Mock
     assert(task_selectors.filter_via_task_selector(task, [:or, [], []]))
   end
 
@@ -312,15 +366,20 @@ class TestTaskSelectors < ClassTest
   def test_filter_via_task_selector_simple
     task_selectors = get_test_object
 
+    # @sg-ignore Wrong argument type for Checkoff::TaskSelectors#filter_via_task_selector: task
+    #   expected Asana::Resources::Task, received Mocha::Mock
     assert(task_selectors.filter_via_task_selector(task, []))
   end
 
   # @return [void]
   def test_filter_via_task_selector_ready
     task_selectors = get_test_object do
+      # @sg-ignore Unresolved call to tasks
       tasks.expects(:task_ready?).with(task, period: :now_or_before, ignore_dependencies: false).returns(true)
     end
 
+    # @sg-ignore Wrong argument type for Checkoff::TaskSelectors#filter_via_task_selector: task
+    #   expected Asana::Resources::Task, received Mocha::Mock
     assert(task_selectors.filter_via_task_selector(task, [:ready?]))
   end
 
@@ -336,9 +395,11 @@ class TestTaskSelectors < ClassTest
 
   # @return [void]
   def expect_no_incomplete_dependencies
+    # @sg-ignore Unresolved call to tasks
     tasks.expects(:incomplete_dependencies?).with(task).returns(false)
   end
 
+  # @return [void]
   def mock_filter_via_task_selector_ready_between_relative_starts_no
     expect_tasks_not_mocked
     expect_now_jan_1_2019
@@ -351,6 +412,8 @@ class TestTaskSelectors < ClassTest
       mock_filter_via_task_selector_ready_between_relative_starts_no
     end
 
+    # @sg-ignore Wrong argument type for Checkoff::TaskSelectors#filter_via_task_selector: task
+    #   expected Asana::Resources::Task, received Mocha::Mock
     assert(task_selectors.filter_via_task_selector(task, [:in_period?, :ready, [:between_relative_days, nil, 2]]))
   end
 
@@ -364,10 +427,13 @@ class TestTaskSelectors < ClassTest
   # @return [void]
   def test_filter_via_task_selector_ready_between_relative_starts_today
     task_selectors = get_test_object do
+      # @sg-ignore Unresolved call to @mocks
       @mocks[:tasks] = Checkoff::Tasks.new(client:)
       mock_filter_via_task_selector_ready_between_relative_starts_today
     end
 
+    # @sg-ignore Wrong argument type for Checkoff::TaskSelectors#filter_via_task_selector: task
+    #   expected Asana::Resources::Task, received Mocha::Mock
     assert(task_selectors.filter_via_task_selector(task, [:in_period?, :ready, [:between_relative_days, nil, 2]]))
   end
 
@@ -382,13 +448,17 @@ class TestTaskSelectors < ClassTest
   # @return [void]
   def test_filter_via_task_selector_ready_between_relative_due_now
     task_selectors = get_test_object do
+      # @sg-ignore Unresolved call to @mocks
       @mocks[:tasks] = Checkoff::Tasks.new(client:)
       mock_filter_via_task_selector_ready_between_relative_due_now
     end
 
+    # @sg-ignore Wrong argument type for Checkoff::TaskSelectors#filter_via_task_selector: task
+    #   expected Asana::Resources::Task, received Mocha::Mock
     assert(task_selectors.filter_via_task_selector(task, [:in_period?, :ready, [:between_relative_days, nil, 2]]))
   end
 
+  # @return [void]
   def mock_due_on_jan_1_2019
     task.expects(:due_at).returns(nil).at_least(0)
     task.expects(:due_on).returns('2019-01-01').at_least(1)
@@ -400,6 +470,7 @@ class TestTaskSelectors < ClassTest
     task.expects(:start_on).returns(nil)
   end
 
+  # @return [void]
   def mock_filter_via_task_selector_ready_between_relative_due_today
     expect_tasks_not_mocked
     expect_now_jan_1_2019
@@ -407,60 +478,79 @@ class TestTaskSelectors < ClassTest
     mock_due_on_jan_1_2019
   end
 
+  # @return [void]
   def test_filter_via_task_selector_ready_between_relative_due_today
     task_selectors = get_test_object do
       mock_filter_via_task_selector_ready_between_relative_due_today
     end
 
+    # @sg-ignore Wrong argument type for Checkoff::TaskSelectors#filter_via_task_selector: task
+    #   expected Asana::Resources::Task, received Mocha::Mock
     assert(task_selectors.filter_via_task_selector(task, [:in_period?, :ready, [:between_relative_days, nil, 2]]))
   end
 
+  # @return [void]
   def expect_no_due
     task.expects(:due_at).returns(nil).at_least(0)
     task.expects(:due_on).returns(nil).at_least(1)
   end
 
+  # @return [void]
   def mock_filter_via_task_selector_ready_between_relative_no_due
     expect_now_jan_1_2019
     expect_no_start
     expect_no_due
   end
 
+  # @return [void]
   def test_filter_via_task_selector_ready_between_relative_no_due
     task_selectors = get_test_object do
+      # @sg-ignore Unresolved call to @mocks
       @mocks[:tasks] = Checkoff::Tasks.new(client:)
       mock_filter_via_task_selector_ready_between_relative_no_due
     end
 
+    # @sg-ignore Wrong argument type for Checkoff::TaskSelectors#filter_via_task_selector: task
+    #   expected Asana::Resources::Task, received Mocha::Mock
     refute(task_selectors.filter_via_task_selector(task, [:in_period?, :ready, [:between_relative_days, nil, 2]]))
   end
 
+  # @return [void]
   def expect_due_jan_1_2099
     task.expects(:due_at).returns(nil).at_least(1)
     task.expects(:due_on).returns('2099-01-01').at_least(1)
   end
 
+  # @return [void]
   def mock_filter_via_task_selector_ready_between_relative_due_far_future
     expect_now_jan_1_2019
     expect_no_start
     expect_due_jan_1_2099
+    # @sg-ignore Unresolved call to at_least on void
     expect_no_incomplete_dependencies.at_least(0)
   end
 
+  # @return [void]
   def test_filter_via_task_selector_ready_between_relative_due_far_future
     task_selectors = get_test_object do
       expect_tasks_not_mocked
       mock_filter_via_task_selector_ready_between_relative_due_far_future
     end
 
+    # @sg-ignore Wrong argument type for Checkoff::TaskSelectors#filter_via_task_selector: task
+    #   expected Asana::Resources::Task, received Mocha::Mock
     refute(task_selectors.filter_via_task_selector(task, [:in_period?, :ready, [:between_relative_days, nil, 2]]))
   end
 
+  # @return [void]
   def expect_incomplete_dependencies
+    # @sg-ignore Unresolved call to tasks
     tasks.expects(:incomplete_dependencies?).with(task).returns(true)
   end
 
+  # @return [void]
   def expect_tasks_not_mocked
+    # @sg-ignore Unresolved call to @mocks
     @mocks[:tasks] = Checkoff::Tasks.new(client:)
   end
 
@@ -470,6 +560,8 @@ class TestTaskSelectors < ClassTest
       task.expects(:assignee).returns(nil)
     end
 
+    # @sg-ignore Wrong argument type for Checkoff::TaskSelectors#filter_via_task_selector: task
+    #   expected Asana::Resources::Task, received Mocha::Mock
     assert(task_selectors.filter_via_task_selector(task, [:unassigned?]))
   end
 
@@ -487,11 +579,14 @@ class TestTaskSelectors < ClassTest
       'resource_subtype' => 'enum',
     }
     task_selectors = get_test_object do
+      # @sg-ignore Unresolved call to @mocks
       @mocks[:custom_fields] = Checkoff::CustomFields.new(client:)
       custom_fields = [custom_field]
       task.expects(:custom_fields).returns(custom_fields)
     end
 
+    # @sg-ignore Wrong argument type for Checkoff::TaskSelectors#filter_via_task_selector: task
+    #   expected Asana::Resources::Task, received Mocha::Mock
     assert(task_selectors.filter_via_task_selector(task,
                                                    ['custom_field_gid_value_contains_all_gids?',
                                                     custom_field_gid,
@@ -504,12 +599,15 @@ class TestTaskSelectors < ClassTest
       expect_no_due
     end
 
+    # @sg-ignore Wrong argument type for Checkoff::TaskSelectors#filter_via_task_selector: task
+    #   expected Asana::Resources::Task, received Mocha::Mock
     refute(task_selectors.filter_via_task_selector(task, [:due_date_set?]))
   end
 
   # @return [void]
   def test_filter_via_task_selector_custom_field_less_than_n_days_from_now
     task_selectors = get_test_object do
+      # @sg-ignore Unresolved call to @mocks
       @mocks[:custom_fields] = Checkoff::CustomFields.new(client:)
       expect_tasks_not_mocked
       Time.expects(:now).returns(Time.new(2000, 1, 1, 0, 0, 0, '+00:00')).at_least(1)
@@ -517,19 +615,25 @@ class TestTaskSelectors < ClassTest
                                               'display_value' => '2000-01-15' }]).at_least(1)
     end
 
+    # @sg-ignore Wrong argument type for Checkoff::TaskSelectors#filter_via_task_selector: task
+    #   expected Asana::Resources::Task, received Mocha::Mock
     assert(task_selectors.filter_via_task_selector(task,
                                                    [:in_period?, [:custom_field, 'start date'],
                                                     [:less_than_n_days_from_now, 90]]))
   end
 
+  # @return [void]
   def test_filter_via_task_selector_custom_field_less_than_n_days_from_now_not_set
     task_selectors = get_test_object do
+      # @sg-ignore Unresolved call to @mocks
       @mocks[:custom_fields] = Checkoff::CustomFields.new(client:)
       expect_tasks_not_mocked
       task.expects(:custom_fields).returns([{ 'name' => 'start date',
                                               'display_value' => nil }]).at_least(1)
     end
 
+    # @sg-ignore Wrong argument type for Checkoff::TaskSelectors#filter_via_task_selector: task
+    #   expected Asana::Resources::Task, received Mocha::Mock
     refute(task_selectors.filter_via_task_selector(task,
                                                    [:in_period?, [:custom_field, 'start date'],
                                                     [:less_than_n_days_from_now, 90]]))
@@ -538,6 +642,7 @@ class TestTaskSelectors < ClassTest
   # @return [void]
   def test_filter_via_task_selector_custom_field_less_than_n_days_from_now_custom_field_not_found
     task_selectors = get_test_object do
+      # @sg-ignore Unresolved call to @mocks
       @mocks[:custom_fields] = Checkoff::CustomFields.new(client:)
       expect_tasks_not_mocked
       task.expects(:gid).returns('123')
@@ -546,6 +651,8 @@ class TestTaskSelectors < ClassTest
     end
 
     e = assert_raises(RuntimeError) do
+      # @sg-ignore Wrong argument type for Checkoff::TaskSelectors#filter_via_task_selector: task
+      #   expected Asana::Resources::Task, received Mocha::Mock
       task_selectors.filter_via_task_selector(task,
                                               [:in_period?, [:custom_field, 'start date'],
                                                [:less_than_n_days_from_now, 90]])
@@ -558,6 +665,7 @@ class TestTaskSelectors < ClassTest
   # @return [void]
   def test_filter_via_task_selector_custom_field_greater_than_or_equal_to_n_days_from_now
     task_selectors = get_test_object do
+      # @sg-ignore Unresolved call to @mocks
       @mocks[:custom_fields] = Checkoff::CustomFields.new(client:)
       expect_tasks_not_mocked
       Time.expects(:now).returns(Time.new(2000, 1, 1, 0, 0, 0, '+00:00')).at_least(1)
@@ -565,6 +673,8 @@ class TestTaskSelectors < ClassTest
                                               'display_value' => '2000-01-15' }]).at_least(1)
     end
 
+    # @sg-ignore Wrong argument type for Checkoff::TaskSelectors#filter_via_task_selector: task
+    #   expected Asana::Resources::Task, received Mocha::Mock
     refute(task_selectors.filter_via_task_selector(task,
                                                    [:in_period?,
                                                     [:custom_field, 'start date'],
@@ -575,12 +685,15 @@ class TestTaskSelectors < ClassTest
   # @return [void]
   def test_filter_via_task_selector_custom_field_greater_than_or_equal_to_n_days_from_now_nil
     task_selectors = get_test_object do
+      # @sg-ignore Unresolved call to @mocks
       @mocks[:custom_fields] = Checkoff::CustomFields.new(client:)
       expect_tasks_not_mocked
       task.expects(:custom_fields).returns([{ 'name' => 'start date',
                                               'display_value' => nil }]).at_least(1)
     end
 
+    # @sg-ignore Wrong argument type for Checkoff::TaskSelectors#filter_via_task_selector: task
+    #   expected Asana::Resources::Task, received Mocha::Mock
     refute(task_selectors.filter_via_task_selector(task,
                                                    [:in_period?, [:custom_field, 'start date'],
                                                     [:greater_than_or_equal_to_n_days_from_now, 90]]))
@@ -590,6 +703,7 @@ class TestTaskSelectors < ClassTest
   def test_filter_via_task_selector_custom_field_greater_than_or_equal_to_n_days_from_now_custom_field_not_found
     task_selectors = get_test_object do
       expect_tasks_not_mocked
+      # @sg-ignore Unresolved call to @mocks
       @mocks[:custom_fields] = Checkoff::CustomFields.new(client:)
       task.expects(:gid).returns('123')
       task.expects(:custom_fields).returns([{ 'name' => 'end date',
@@ -597,6 +711,8 @@ class TestTaskSelectors < ClassTest
     end
 
     e = assert_raises(RuntimeError) do
+      # @sg-ignore Wrong argument type for Checkoff::TaskSelectors#filter_via_task_selector: task
+      #   expected Asana::Resources::Task, received Mocha::Mock
       task_selectors.filter_via_task_selector(task,
                                               [:in_period?, [:custom_field, 'start date'],
                                                [:greater_than_or_equal_to_n_days_from_now, 90]])
@@ -606,6 +722,7 @@ class TestTaskSelectors < ClassTest
                  e.message)
   end
 
+  # @return [void]
   def mock_filter_via_task_selector_modified_less_than_n_days_ago
     expect_tasks_not_mocked
     Time.expects(:now).returns(Time.new(2000, 1, 1, 0, 0, 0, '+00:00')).at_least(1)
@@ -618,6 +735,8 @@ class TestTaskSelectors < ClassTest
       mock_filter_via_task_selector_modified_less_than_n_days_ago
     end
 
+    # @sg-ignore Wrong argument type for Checkoff::TaskSelectors#filter_via_task_selector: task
+    #   expected Asana::Resources::Task, received Mocha::Mock
     assert(task_selectors.filter_via_task_selector(task,
                                                    [:in_period?, :modified,
                                                     [:less_than_n_days_ago, 7]]))
@@ -626,6 +745,7 @@ class TestTaskSelectors < ClassTest
   # @return [void]
   def test_estimate_exceeds_duration_true
     task_selectors = get_test_object do
+      # @sg-ignore Unresolved call to @mocks
       @mocks[:custom_fields] = Checkoff::CustomFields.new(client:)
       task.expects(:custom_fields).returns([{ 'name' => 'Estimated time',
                                               'number_value' => 960 }]).at_least(1)
@@ -633,6 +753,8 @@ class TestTaskSelectors < ClassTest
       task.expects(:due_on).returns('2000-01-01').at_least(1)
     end
 
+    # @sg-ignore Wrong argument type for Checkoff::TaskSelectors#filter_via_task_selector: task
+    #   expected Asana::Resources::Task, received Mocha::Mock
     assert(task_selectors.filter_via_task_selector(task,
                                                    [:estimate_exceeds_duration?]))
   end
@@ -640,11 +762,14 @@ class TestTaskSelectors < ClassTest
   # @return [void]
   def test_estimate_exceeds_duration_false_no_estimate_set
     task_selectors = get_test_object do
+      # @sg-ignore Unresolved call to @mocks
       @mocks[:custom_fields] = Checkoff::CustomFields.new(client:)
       task.expects(:custom_fields).returns([{ 'name' => 'Estimated time',
                                               'number_value' => nil }]).at_least(1)
     end
 
+    # @sg-ignore Wrong argument type for Checkoff::TaskSelectors#filter_via_task_selector: task
+    #   expected Asana::Resources::Task, received Mocha::Mock
     refute(task_selectors.filter_via_task_selector(task,
                                                    [:estimate_exceeds_duration?]))
   end
@@ -652,6 +777,7 @@ class TestTaskSelectors < ClassTest
   # @return [void]
   def test_estimate_exceeds_duration_true_only_due_set
     task_selectors = get_test_object do
+      # @sg-ignore Unresolved call to @mocks
       @mocks[:custom_fields] = Checkoff::CustomFields.new(client:)
       task.expects(:custom_fields).returns([{ 'name' => 'Estimated time',
                                               'number_value' => 960 }]).at_least(1)
@@ -659,6 +785,8 @@ class TestTaskSelectors < ClassTest
       task.expects(:due_on).returns('2000-01-01').at_least(1)
     end
 
+    # @sg-ignore Wrong argument type for Checkoff::TaskSelectors#filter_via_task_selector: task
+    #   expected Asana::Resources::Task, received Mocha::Mock
     assert(task_selectors.filter_via_task_selector(task,
                                                    [:estimate_exceeds_duration?]))
   end
@@ -666,6 +794,7 @@ class TestTaskSelectors < ClassTest
   # @return [void]
   def test_estimate_exceeds_duration_true_no_dates_set
     task_selectors = get_test_object do
+      # @sg-ignore Unresolved call to @mocks
       @mocks[:custom_fields] = Checkoff::CustomFields.new(client:)
       task.expects(:custom_fields).returns([{ 'name' => 'Estimated time',
                                               'number_value' => 960 }]).at_least(1)
@@ -673,6 +802,8 @@ class TestTaskSelectors < ClassTest
       task.expects(:due_on).returns(nil).at_least(1)
     end
 
+    # @sg-ignore Wrong argument type for Checkoff::TaskSelectors#filter_via_task_selector: task
+    #   expected Asana::Resources::Task, received Mocha::Mock
     assert(task_selectors.filter_via_task_selector(task,
                                                    [:estimate_exceeds_duration?]))
   end
@@ -680,10 +811,13 @@ class TestTaskSelectors < ClassTest
   # @return [void]
   def test_estimate_exceeds_duration_no_estimate_field
     task_selectors = get_test_object do
+      # @sg-ignore Unresolved call to @mocks
       @mocks[:custom_fields] = Checkoff::CustomFields.new(client:)
       task.expects(:custom_fields).returns([]).at_least(1)
     end
 
+    # @sg-ignore Wrong argument type for Checkoff::TaskSelectors#filter_via_task_selector: task
+    #   expected Asana::Resources::Task, received Mocha::Mock
     refute(task_selectors.filter_via_task_selector(task,
                                                    [:estimate_exceeds_duration?]))
   end
@@ -696,6 +830,8 @@ class TestTaskSelectors < ClassTest
       task.expects(:modified_at).returns(nil).at_least(1)
     end
 
+    # @sg-ignore Wrong argument type for Checkoff::TaskSelectors#filter_via_task_selector: task
+    #   expected Asana::Resources::Task, received Mocha::Mock
     refute(task_selectors.filter_via_task_selector(task,
                                                    [:in_period?, :modified,
                                                     [:less_than_n_days_ago, 7]]))
@@ -708,6 +844,8 @@ class TestTaskSelectors < ClassTest
     end
 
     e = assert_raises(RuntimeError) do
+      # @sg-ignore Wrong argument type for Checkoff::TaskSelectors#filter_via_task_selector: task
+      #   expected Asana::Resources::Task, received Mocha::Mock
       task_selectors.filter_via_task_selector(task,
                                               [:in_period?, :bogus_at,
                                                [:less_than_n_days_ago, 7]])
@@ -723,6 +861,8 @@ class TestTaskSelectors < ClassTest
     end
 
     e = assert_raises(RuntimeError) do
+      # @sg-ignore Wrong argument type for Checkoff::TaskSelectors#filter_via_task_selector: task
+      #   expected Asana::Resources::Task, received Mocha::Mock
       task_selectors.filter_via_task_selector(task,
                                               [:in_period?, [:bogus_compound_at],
                                                [:less_than_n_days_ago, 7]])
@@ -733,8 +873,10 @@ class TestTaskSelectors < ClassTest
 
   # @return [void]
   def mock_filter_via_task_selector_field_greater_than_or_equal_to_n_days_from_today_due_on
+    # @sg-ignore Not enough arguments to Date.new
     Date.expects(:today).returns(Date.new(2000, 1, 1)).at_least(1)
     task.expects(:due_at).returns(nil)
+    # @sg-ignore Not enough arguments to Date.new
     task.expects(:due_on).returns(Date.new(2000, 1, 8).to_s).at_least(1)
   end
 
@@ -745,6 +887,8 @@ class TestTaskSelectors < ClassTest
       mock_filter_via_task_selector_field_greater_than_or_equal_to_n_days_from_today_due_on
     end
 
+    # @sg-ignore Wrong argument type for Checkoff::TaskSelectors#filter_via_task_selector: task
+    #   expected Asana::Resources::Task, received Mocha::Mock
     assert(task_selectors.filter_via_task_selector(task,
                                                    [:in_period?, :due,
                                                     [:greater_than_or_equal_to_n_days_from_today, 7]]))
@@ -753,6 +897,7 @@ class TestTaskSelectors < ClassTest
   # @return [void]
   def mock_filter_via_task_selector_field_greater_than_or_equal_to_n_days_from_today_due_at
     expect_tasks_not_mocked
+    # @sg-ignore Not enough arguments to Date.new
     Date.expects(:today).returns(Date.new(2000, 1, 1)).at_least(0)
     task.expects(:due_at).returns(Time.new(1999, 12, 1, 0, 0, 0, '+00:00').to_s).at_least(1)
   end
@@ -763,6 +908,8 @@ class TestTaskSelectors < ClassTest
       mock_filter_via_task_selector_field_greater_than_or_equal_to_n_days_from_today_due_at
     end
 
+    # @sg-ignore Wrong argument type for Checkoff::TaskSelectors#filter_via_task_selector: task
+    #   expected Asana::Resources::Task, received Mocha::Mock
     refute(task_selectors.filter_via_task_selector(task,
                                                    [:in_period?, :due,
                                                     [:greater_than_or_equal_to_n_days_from_today, 7]]))
@@ -782,6 +929,8 @@ class TestTaskSelectors < ClassTest
       mock_filter_via_task_selector_field_greater_than_or_equal_to_n_days_from_today_due_nil
     end
 
+    # @sg-ignore Wrong argument type for Checkoff::TaskSelectors#filter_via_task_selector: task
+    #   expected Asana::Resources::Task, received Mocha::Mock
     refute(task_selectors.filter_via_task_selector(task,
                                                    [:in_period?, :due,
                                                     [:greater_than_or_equal_to_n_days_from_today, 7]]))
@@ -790,11 +939,14 @@ class TestTaskSelectors < ClassTest
   # @return [void]
   def test_filter_via_task_selector_custom_field_equal_to_date
     task_selectors = get_test_object do
+      # @sg-ignore Unresolved call to @mocks
       @mocks[:custom_fields] = Checkoff::CustomFields.new(client:)
       task.expects(:custom_fields).returns([{ 'name' => 'end date',
                                               'display_value' => '2000-01-15' }]).at_least(1)
     end
 
+    # @sg-ignore Wrong argument type for Checkoff::TaskSelectors#filter_via_task_selector: task
+    #   expected Asana::Resources::Task, received Mocha::Mock
     assert(task_selectors.filter_via_task_selector(task,
                                                    [:equals?, [:custom_field_value, 'end date'], '2000-01-15']))
   end
@@ -802,11 +954,14 @@ class TestTaskSelectors < ClassTest
   # @return [void]
   def test_filter_via_task_selector_custom_field_not_equal_to_date
     task_selectors = get_test_object do
+      # @sg-ignore Unresolved call to @mocks
       @mocks[:custom_fields] = Checkoff::CustomFields.new(client:)
       task.expects(:custom_fields).returns([{ 'name' => 'end date',
                                               'display_value' => '2000-01-15' }]).at_least(1)
     end
 
+    # @sg-ignore Wrong argument type for Checkoff::TaskSelectors#filter_via_task_selector: task
+    #   expected Asana::Resources::Task, received Mocha::Mock
     refute(task_selectors.filter_via_task_selector(task,
                                                    [:equals?, [:custom_field_value, 'end date'], '2001-01-15']))
   end
@@ -817,15 +972,20 @@ class TestTaskSelectors < ClassTest
       task.expects(:stories).returns([])
     end
 
+    # @sg-ignore Wrong argument type for Checkoff::TaskSelectors#filter_via_task_selector: task
+    #   expected Asana::Resources::Task, received Mocha::Mock
     assert(task_selectors.filter_via_task_selector(task,
                                                    [:last_story_created_less_than_n_days_ago?, 7, []]))
   end
 
   # @return [void]
   def mock_filter_via_task_selector_last_story_created_less_than_n_days_ago_ancient
+    # @sg-ignore Unresolved call to story
     task.expects(:stories).returns([story])
+    # @sg-ignore Unresolved call to story
     story.expects(:resource_subtype).returns('blah')
     Time.expects(:now).returns(Time.new(2000, 1, 1, 0, 0, 0, '+00:00')).at_least(1)
+    # @sg-ignore Unresolved call to story
     story.expects(:created_at).returns(Time.new(1950, 1, 1, 0, 0, 0, '+00:00').to_s)
   end
 
@@ -835,15 +995,20 @@ class TestTaskSelectors < ClassTest
       mock_filter_via_task_selector_last_story_created_less_than_n_days_ago_ancient
     end
 
+    # @sg-ignore Wrong argument type for Checkoff::TaskSelectors#filter_via_task_selector: task
+    #   expected Asana::Resources::Task, received Mocha::Mock
     assert(task_selectors.filter_via_task_selector(task,
                                                    [:last_story_created_less_than_n_days_ago?, 7, []]))
   end
 
   # @return [void]
   def mock_filter_via_task_selector_last_story_created_less_than_n_days_ago_recent
+    # @sg-ignore Unresolved call to story
     task.expects(:stories).returns([story])
+    # @sg-ignore Unresolved call to story
     story.expects(:resource_subtype).returns('blah')
     Time.expects(:now).returns(Time.new(2000, 1, 1, 0, 0, 0, '+00:00')).at_least(1)
+    # @sg-ignore Unresolved call to story
     story.expects(:created_at).returns(Time.new(1999, 12, 31, 0, 0, 0, '+00:00').to_s)
   end
 
@@ -853,76 +1018,104 @@ class TestTaskSelectors < ClassTest
       mock_filter_via_task_selector_last_story_created_less_than_n_days_ago_recent
     end
 
+    # @sg-ignore Wrong argument type for Checkoff::TaskSelectors#filter_via_task_selector: task
+    #   expected Asana::Resources::Task, received Mocha::Mock
     refute(task_selectors.filter_via_task_selector(task,
                                                    [:last_story_created_less_than_n_days_ago?, 7, []]))
   end
 
+  # @return [void]
   def test_filter_via_task_selector_in_project_named_false
     task_selectors = get_test_object do
       task.expects(:memberships).returns([])
     end
 
+    # @sg-ignore Wrong argument type for Checkoff::TaskSelectors#filter_via_task_selector: task
+    #   expected Asana::Resources::Task, received Mocha::Mock
     refute(task_selectors.filter_via_task_selector(task,
                                                    [:in_project_named?, 'foo']))
   end
 
+  # @return [void]
   def test_filter_via_task_selector_in_project_named_true
     task_selectors = get_test_object do
       task.expects(:memberships).returns([{ 'project' => { 'name' => 'foo' } }])
     end
 
+    # @sg-ignore Wrong argument type for Checkoff::TaskSelectors#filter_via_task_selector: task
+    #   expected Asana::Resources::Task, received Mocha::Mock
     assert(task_selectors.filter_via_task_selector(task,
                                                    [:in_project_named?, 'foo']))
   end
 
+  # @return [void]
   def test_filter_via_task_selector_in_section_named_false
     task_selectors = get_test_object do
+      # @sg-ignore Unresolved call to tasks
       tasks.expects(:task_to_h).with(task).returns(
         'unwrapped' => { 'membership_by_section_name' => {} }
       )
     end
 
+    # @sg-ignore Wrong argument type for Checkoff::TaskSelectors#filter_via_task_selector: task
+    #   expected Asana::Resources::Task, received Mocha::Mock
     refute(task_selectors.filter_via_task_selector(task,
                                                    [:in_section_named?, 'foo']))
   end
 
+  # @return [void]
   def test_filter_via_task_selector_in_section_named_true
     task_selectors = get_test_object do
+      # @sg-ignore Unresolved call to tasks
       tasks.expects(:task_to_h).with(task).returns(
         'unwrapped' => { 'membership_by_section_name' => { 'foo' => {}, 'bar' => {} } }
       )
     end
 
+    # @sg-ignore Wrong argument type for Checkoff::TaskSelectors#filter_via_task_selector: task
+    #   expected Asana::Resources::Task, received Mocha::Mock
     assert(task_selectors.filter_via_task_selector(task,
                                                    [:in_section_named?, 'foo']))
   end
 
+  # @return [void]
   def test_dependent_on_previous_section_last_milestone
     task_selectors = get_test_object do
+      # @sg-ignore Unresolved call to timelines
       timelines
         .expects(:task_dependent_on_previous_section_last_milestone?)
         .with(task,
               limit_to_portfolio_gid: nil).returns(true)
     end
 
+    # @sg-ignore Wrong argument type for Checkoff::TaskSelectors#filter_via_task_selector: task
+    #   expected Asana::Resources::Task, received Mocha::Mock
     assert(task_selectors.filter_via_task_selector(task,
                                                    [:dependent_on_previous_section_last_milestone?]))
   end
 
+  # @return [void]
   def test_in_portfolio_named_true
     task_selectors = get_test_object do
+      # @sg-ignore Unresolved call to tasks
       tasks.expects(:in_portfolio_named?).with(task, 'foo').returns(true)
     end
 
+    # @sg-ignore Wrong argument type for Checkoff::TaskSelectors#filter_via_task_selector: task
+    #   expected Asana::Resources::Task, received Mocha::Mock
     assert(task_selectors.filter_via_task_selector(task,
                                                    [:in_portfolio_named?, 'foo']))
   end
 
+  # @return [void]
   def test_in_portfolio_named_false
     task_selectors = get_test_object do
+      # @sg-ignore Unresolved call to tasks
       tasks.expects(:in_portfolio_named?).with(task, 'foo').returns(false)
     end
 
+    # @sg-ignore Wrong argument type for Checkoff::TaskSelectors#filter_via_task_selector: task
+    #   expected Asana::Resources::Task, received Mocha::Mock
     refute(task_selectors.filter_via_task_selector(task,
                                                    [:in_portfolio_named?, 'foo']))
   end
@@ -930,9 +1123,11 @@ class TestTaskSelectors < ClassTest
   # @return [void]
   def test_custom_field_gid_value_contains_any_gid_false_multi_enum
     task_selectors = get_test_object do
+      # @sg-ignore Unresolved call to @mocks
       @mocks[:custom_fields] = Checkoff::CustomFields.new(client:)
       custom_fields = [
         {
+          # @sg-ignore Unresolved call to custom_field_gid
           'gid' => custom_field_gid,
           'resource_subtype' => 'multi_enum',
           'multi_enum_values' => [],
@@ -941,17 +1136,24 @@ class TestTaskSelectors < ClassTest
       task.expects(:custom_fields).returns(custom_fields)
     end
 
+    # @sg-ignore Wrong argument type for Checkoff::TaskSelectors#filter_via_task_selector: task
+    #   expected Asana::Resources::Task, received Mocha::Mock
     refute(task_selectors.filter_via_task_selector(task,
                                                    [:custom_field_gid_value_contains_any_gid?,
+                                                    # @sg-ignore Unresolved call to custom_field_gid
+                                                    # @sg-ignore Unresolved call to custom_field_value_gid_1
                                                     custom_field_gid, [custom_field_value_gid_1]]))
   end
 
   # @return [void]
   def test_last_task_milestone_does_not_depend_on_this_task
     task_selectors = get_test_object do
+      # @sg-ignore Unresolved call to timelines
       timelines.expects(:last_task_milestone_depends_on_this_task?).returns(true)
     end
 
+    # @sg-ignore Wrong argument type for Checkoff::TaskSelectors#filter_via_task_selector: task
+    #   expected Asana::Resources::Task, received Mocha::Mock
     refute(task_selectors.filter_via_task_selector(task,
                                                    [:last_task_milestone_does_not_depend_on_this_task?]))
   end
@@ -959,85 +1161,109 @@ class TestTaskSelectors < ClassTest
   # @return [void]
   def test_in_a_real_project_true
     task_selectors = get_test_object do
+      # @sg-ignore Unresolved call to tasks
       tasks.expects(:task_to_h).with(task).returns(
         'unwrapped' => { 'membership_by_project_name' => { 'Real Project' => {} } }
       )
     end
 
+    # @sg-ignore Wrong argument type for Checkoff::TaskSelectors#filter_via_task_selector: task
+    #   expected Asana::Resources::Task, received Mocha::Mock
     assert(task_selectors.filter_via_task_selector(task, [:in_a_real_project?]))
   end
 
   # @return [void]
   def test_in_a_real_project_false_only_my_tasks
     task_selectors = get_test_object do
+      # @sg-ignore Unresolved call to tasks
       tasks.expects(:task_to_h).with(task).returns(
         'unwrapped' => { 'membership_by_project_name' => { my_tasks: {} } }
       )
     end
 
+    # @sg-ignore Wrong argument type for Checkoff::TaskSelectors#filter_via_task_selector: task
+    #   expected Asana::Resources::Task, received Mocha::Mock
     refute(task_selectors.filter_via_task_selector(task, [:in_a_real_project?]))
   end
 
   # @return [void]
   def test_section_name_starts_with_true
     task_selectors = get_test_object do
+      # @sg-ignore Unresolved call to tasks
       tasks.expects(:task_to_h).with(task).returns(
         'unwrapped' => { 'membership_by_section_name' => { 'Done items' => {} } }
       )
     end
 
+    # @sg-ignore Wrong argument type for Checkoff::TaskSelectors#filter_via_task_selector: task
+    #   expected Asana::Resources::Task, received Mocha::Mock
     assert(task_selectors.filter_via_task_selector(task, [:section_name_starts_with?, 'Done']))
   end
 
   # @return [void]
   def test_section_name_starts_with_false
     task_selectors = get_test_object do
+      # @sg-ignore Unresolved call to tasks
       tasks.expects(:task_to_h).with(task).returns(
         'unwrapped' => { 'membership_by_section_name' => { 'Inbox' => {} } }
       )
     end
 
+    # @sg-ignore Wrong argument type for Checkoff::TaskSelectors#filter_via_task_selector: task
+    #   expected Asana::Resources::Task, received Mocha::Mock
     refute(task_selectors.filter_via_task_selector(task, [:section_name_starts_with?, 'Done']))
   end
 
   # @return [void]
   def test_in_section_named_true
     task_selectors = get_test_object do
+      # @sg-ignore Unresolved call to tasks
       tasks.expects(:task_to_h).with(task).returns(
         'unwrapped' => { 'membership_by_section_name' => { 'Today' => {} } }
       )
     end
 
+    # @sg-ignore Wrong argument type for Checkoff::TaskSelectors#filter_via_task_selector: task
+    #   expected Asana::Resources::Task, received Mocha::Mock
     assert(task_selectors.filter_via_task_selector(task, [:in_section_named?, 'Today']))
   end
 
   # @return [void]
   def test_in_section_named_false
     task_selectors = get_test_object do
+      # @sg-ignore Unresolved call to tasks
       tasks.expects(:task_to_h).with(task).returns(
         'unwrapped' => { 'membership_by_section_name' => { 'Today' => {} } }
       )
     end
 
+    # @sg-ignore Wrong argument type for Checkoff::TaskSelectors#filter_via_task_selector: task
+    #   expected Asana::Resources::Task, received Mocha::Mock
     refute(task_selectors.filter_via_task_selector(task, [:in_section_named?, 'Tomorrow']))
   end
 
   # @return [void]
   def test_in_portfolio_more_than_once_true
     task_selectors = get_test_object do
+      # @sg-ignore Unresolved call to tasks
       tasks.expects(:in_portfolio_more_than_once?).with(task, 'portfolio').returns(true)
     end
 
+    # @sg-ignore Wrong argument type for Checkoff::TaskSelectors#filter_via_task_selector: task
+    #   expected Asana::Resources::Task, received Mocha::Mock
     assert(task_selectors.filter_via_task_selector(task, [:in_portfolio_more_than_once?, 'portfolio']))
   end
 
   # @return [void]
   def test_no_milestone_depends_on_this_task_true
     task_selectors = get_test_object do
+      # @sg-ignore Unresolved call to timelines
       timelines.expects(:any_milestone_depends_on_this_task?)
         .with(task, limit_to_portfolio_name: nil).returns(false)
     end
 
+    # @sg-ignore Wrong argument type for Checkoff::TaskSelectors#filter_via_task_selector: task
+    #   expected Asana::Resources::Task, received Mocha::Mock
     assert(task_selectors.filter_via_task_selector(task, [:no_milestone_depends_on_this_task?]))
   end
 
