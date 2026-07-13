@@ -32,7 +32,7 @@ class BaseAsana < ClassTest
     }
   end
 
-  # @return [void]
+  # @return [Hash{Symbol => Object}]
   def task_options_with_completed
     {
       per_page: 100,
