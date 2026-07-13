@@ -2,13 +2,19 @@
 # frozen_string_literal: true
 
 require 'stringio'
+require 'checkoff/internal/logging'
 require_relative '../test_helper'
 
 class TestLogging < Minitest::Test
+  # Named owner so Solargraph can resolve Logging#logger (Class.new blocks are opaque).
+  class LoggerOwner
+    include Logging
+  end
+
   # @return [void]
   def test_logger_defaults_without_rails
     with_removed_rails do
-      logger_owner = build_logger_owner
+      logger_owner = LoggerOwner.new
 
       logger = logger_owner.logger
 
@@ -24,7 +30,7 @@ class TestLogging < Minitest::Test
     rails_module.define_singleton_method(:logger) { rails_logger }
 
     with_temporary_rails(rails_module) do
-      logger_owner = build_logger_owner
+      logger_owner = LoggerOwner.new
 
       assert_same(rails_logger, logger_owner.logger)
     end
@@ -33,20 +39,13 @@ class TestLogging < Minitest::Test
   # @return [void]
   def test_logger_falls_back_when_rails_has_no_logger
     with_temporary_rails(Module.new) do
-      logger_owner = build_logger_owner
+      logger_owner = LoggerOwner.new
 
       assert_instance_of(Logger, logger_owner.logger)
     end
   end
 
   private
-
-  # @return [void]
-  def build_logger_owner
-    Class.new do
-      include Logging
-    end.new
-  end
 
   # @return [void]
   def with_removed_rails
@@ -59,6 +58,7 @@ class TestLogging < Minitest::Test
     Object.const_set(:Rails, original_rails) if had_rails
   end
 
+  # @param rails_const [Module]
   # @return [void]
   def with_temporary_rails(rails_const)
     with_removed_rails do
