@@ -15,7 +15,9 @@ class TestEvents < ClassTest
 
   # @return [void]
   def mock_filter_asana_events_true
+    # @sg-ignore asana_event_filter_class from def_delegators; asana_event_filter/event from let_mock
     asana_event_filter_class.expects(:new).with(filters:).returns(asana_event_filter)
+    # @sg-ignore asana_event_filter/event from let_mock
     asana_event_filter.expects(:matches?).with(event).returns(true)
   end
 
@@ -25,24 +27,29 @@ class TestEvents < ClassTest
       mock_filter_asana_events_true
     end
 
+    # @sg-ignore event from let_mock
     assert_equal([event], events.filter_asana_events(filters, [event]))
   end
 
   # @return [void]
   def test_filter_asana_events_false
     events = get_test_object do
+      # @sg-ignore asana_event_filter_class from def_delegators
       asana_event_filter_class.expects(:new).with(filters:).returns(asana_event_filter)
+      # @sg-ignore asana_event_filter/event from let_mock
       asana_event_filter.expects(:matches?).with(event).returns(false)
     end
 
+    # @sg-ignore filters/event from let_mock
     assert_empty(events.filter_asana_events(filters, [event]))
   end
 
-  # @return [void]
+  # @return [Class]
   def class_under_test
     Checkoff::Events
   end
 
+  # @return [Hash{Symbol => Class}]
   def respond_like_instance_of
     {
       config: Checkoff::Internal::EnvFallbackConfigLoader,
@@ -56,6 +63,7 @@ class TestEvents < ClassTest
     }
   end
 
+  # @return [Hash{Symbol => Class}]
   def respond_like
     {
       asana_event_filter_class: Checkoff::Internal::AsanaEventFilter,

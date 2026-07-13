@@ -27,7 +27,34 @@ exclude:
   - ".bundle/**/*"
   - ".markdownlint_style.rb"
   # Minitest/Mocha mocks are not strong-typecheckable; CI uses strong level
-  - test/**/*
+  # Keep failing tests listed individually while we clear them in batches.
+  # Files omitted from this list are typechecked.
+  - test/unit/test_helper.rb
+  - test/unit/test_attachments.rb
+  - test/unit/test_cli_help.rb
+  - test/unit/test_cli_mv.rb
+  - test/unit/test_cli_quickadd.rb
+  - test/unit/test_cli_view.rb
+  - test/unit/test_custom_fields.rb
+  - test/unit/test_mv_subcommand.rb
+  - test/unit/test_project_selectors.rb
+  - test/unit/test_projects.rb
+  - test/unit/test_section_selectors.rb
+  - test/unit/test_sections.rb
+  - test/unit/test_task_searches.rb
+  - test/unit/test_task_selectors.rb
+  - test/unit/test_tasks.rb
+  - test/unit/test_timing.rb
+  - test/unit/test_view_subcommand.rb
+  - test/unit/test_workspaces.rb
+  - test/unit/test_portfolios.rb
+  - test/unit/test_subtasks.rb
+  - test/unit/test_tags.rb
+  - test/unit/test_timelines.rb
+  - test/unit/internal/test_asana_event_filter.rb
+  - test/unit/internal/test_project_timing.rb
+  - test/unit/internal/test_search_url_parser.rb
+  - test/unit/internal/test_task_timing.rb
 require: []
 domains: []
 reporters:

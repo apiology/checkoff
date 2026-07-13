@@ -6,17 +6,17 @@
 module TestDate
   attr_writer :time_period, :mock_date_str
 
-  # @return [void]
+  # @return [Symbol]
   def time_period
     @time_period ||= :afternoon
   end
 
-  # @return [void]
+  # @return [String]
   def mock_date_str
     @mock_date_str ||= '2013-05-24'
   end
 
-  # @return [void]
+  # @return [Date]
   def mock_date
     @mock_date ||= Date.parse(mock_date_str)
   end
@@ -42,6 +42,8 @@ module TestDate
     late_late_evening: '22:33:20',
   }.freeze
 
+  # @param zone [String]
+  # @return [Hash{Symbol => Time}]
   def time_by_period(zone)
     times = TIME_BY_PERIOD.map do |sym, time|
       [sym, Time.parse("#{mock_date_str} #{time} #{zone}")]
@@ -49,10 +51,12 @@ module TestDate
     times.to_h
   end
 
-  # @return [void]
+  # @param zone [String, nil]
+  # @return [Time]
+  # @sg-ignore nil check above is not flow-sensitive for Hash#[] result
   def mock_now_with_zone(zone)
-    time = time_by_period(zone)[time_period]
-    raise if time.nil?
+    time = time_by_period(zone.to_s)[time_period]
+    raise 'mock time missing' if time.nil?
 
     time
   end

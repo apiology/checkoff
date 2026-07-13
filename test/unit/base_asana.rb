@@ -18,7 +18,8 @@ class BaseAsana < ClassTest
 
   let_mock :a_completed_at, :b_completed_at, :section_one
 
-  # @return [void]
+  # @param extra_fields [Array<String>]
+  # @return [Hash{Symbol => Object}]
   def task_options(extra_fields: [])
     {
       per_page: 100,
