@@ -13,20 +13,26 @@ class TestAttachments < ClassTest
   let_mock :attachment_name, :resource, :parent_gid, :response
 
   # @return [void]
+  # @param url [Object]
   def mock_create_attachment_from_url(url)
+    # @sg-ignore Unresolved call to resource
     resource.expects(:gid).returns(parent_gid)
     body = {
+      # @sg-ignore Unresolved call to parent_gid
       'parent' => parent_gid,
       'url' => url,
       'resource_subtype' => 'external',
+      # @sg-ignore Unresolved call to attachment_name
       'name' => attachment_name,
     }
+    # @sg-ignore Unresolved call to client
     client.expects(:post).with('/attachments', body:, options: {}).returns(response)
     attachment_body = {
       'data' => {
         'foo' => 'bar',
       },
     }
+    # @sg-ignore Unresolved call to response
     response.expects(:body).returns(attachment_body).at_least(1)
   end
 
@@ -36,8 +42,10 @@ class TestAttachments < ClassTest
     attachments = get_test_object do
       mock_create_attachment_from_url(url)
     end
+    # @sg-ignore Unresolved call to create_attachment_from_url!
     attachment = attachments.create_attachment_from_url!(url, resource, attachment_name:, just_the_url: true)
 
+    # @sg-ignore Unresolved call to foo
     assert_equal('bar', attachment.foo)
   end
 
@@ -59,10 +67,12 @@ class TestAttachments < ClassTest
   end
 
   # @return [String]
+  # @sg-ignore TestAttachments#capture_attachments_run return type could not be inferred
   def capture_attachments_run
     old_stdout = $stdout
     $stdout = StringIO.new
     Checkoff::Attachments.run
+    # @sg-ignore Unresolved call to string
     $stdout.string
   ensure
     $stdout = old_stdout if old_stdout

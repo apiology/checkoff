@@ -11,29 +11,38 @@ class TestCLIHelp < Minitest::Test
 
   # @return [void]
   def expect_workspaces_created
+    # @sg-ignore Unresolved call to workspaces
     Checkoff::Workspaces.expects(:new).returns(workspaces).at_least(0)
   end
 
   # @return [void]
   def expect_config_loaded
+    # @sg-ignore Unresolved call to config
     Checkoff::Internal::ConfigLoader.expects(:load).returns(config).at_least(0)
   end
 
   # @return [void]
   def expect_sections_created
+    # @sg-ignore Unresolved call to sections
     Checkoff::Sections.expects(:new).returns(sections).at_least(0)
   end
 
   # @return [void]
   def expect_tasks_created
+    # @sg-ignore Unresolved call to tasks
     Checkoff::Tasks.expects(:new).returns(tasks).at_least(0)
   end
 
+  # @return [void]
   def set_mocks
     @mocks = {
+      # @sg-ignore Unresolved call to config
       config:,
+      # @sg-ignore Unresolved call to workspaces
       workspaces:,
+      # @sg-ignore Unresolved call to sections
       sections:,
+      # @sg-ignore Unresolved call to tasks
       tasks:,
       stderr: $stderr,
       stdout: $stdout,
@@ -58,6 +67,7 @@ class TestCLIHelp < Minitest::Test
       @mocks[:stdout].expects(:puts).at_least(1)
     end
 
+    # @sg-ignore Unresolved call to run
     assert_equal(0, cli.run(['--help']))
   end
 end

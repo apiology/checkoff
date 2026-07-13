@@ -16,28 +16,38 @@ class TestCLIQuickadd < Minitest::Test
 
   # @return [void]
   def expect_workspaces_created
+    # @sg-ignore Unresolved call to workspaces
     Checkoff::Workspaces.expects(:new).returns(workspaces).at_least(0)
   end
 
   # @return [void]
   def expect_config_loaded
+    # @sg-ignore Unresolved call to config
     Checkoff::Internal::ConfigLoader.expects(:load).returns(config).at_least(0)
   end
 
   # @return [void]
   def expect_sections_created
+    # @sg-ignore Unresolved call to sections
     Checkoff::Sections.expects(:new).returns(sections).at_least(0)
   end
 
+  # @return [void]
   def expect_tasks_created
+    # @sg-ignore Unresolved call to tasks
     Checkoff::Tasks.expects(:new).returns(tasks).at_least(0)
   end
 
+  # @return [void]
   def set_mocks
     @mocks = {
+      # @sg-ignore Unresolved call to config
       config:,
+      # @sg-ignore Unresolved call to workspaces
       workspaces:,
+      # @sg-ignore Unresolved call to sections
       sections:,
+      # @sg-ignore Unresolved call to tasks
       tasks:,
       stderr: $stderr,
       stdout: $stdout,
@@ -58,10 +68,13 @@ class TestCLIQuickadd < Minitest::Test
 
   # @return [void]
   def mock_quickadd
+    # @sg-ignore Unresolved call to workspace
     @mocks[:workspaces].expects(:workspace_or_raise).with(workspace_name).returns(workspace)
 
+    # @sg-ignore Unresolved call to workspace
     workspace.expects(:gid).returns(workspace_gid)
     @mocks[:tasks].expects(:add_task).with('my task name',
+                                           # @sg-ignore Unresolved call to workspace_gid
                                            workspace_gid:)
   end
 
@@ -70,6 +83,7 @@ class TestCLIQuickadd < Minitest::Test
     cli = get_test_object do
       mock_quickadd
     end
+    # @sg-ignore Unresolved call to run
     cli.run(['quickadd', workspace_name, 'my task name'])
   end
 end

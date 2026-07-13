@@ -14,53 +14,66 @@ class TestAsanaEventFilter < ClassTest
   # @return [void]
   def test_matches_nil_filters_true
     asana_event_filter = get_test_object do
+      # @sg-ignore Unresolved call to @mocks
       @mocks[:filters] = nil
     end
 
+    # @sg-ignore Unresolved call to matches?
     assert(asana_event_filter.matches?([{}]))
   end
 
   # @return [void]
   def test_matches_zero_filters_false
     asana_event_filter = get_test_object do
+      # @sg-ignore Unresolved call to @mocks
       @mocks[:filters] = []
     end
 
+    # @sg-ignore Unresolved call to matches?
     refute(asana_event_filter.matches?({}))
   end
 
   # @return [void]
   def test_matches_on_resource_type_true
     asana_event_filter = get_test_object do
+      # @sg-ignore Unresolved call to @mocks
       @mocks[:filters] = [{ 'resource_type' => 'task' }]
     end
 
+    # @sg-ignore Unresolved call to matches?
     assert(asana_event_filter.matches?({ 'resource' => { 'resource_type' => 'task' } }))
   end
 
   # @return [void]
   def test_matches_on_resource_subtype_true
     asana_event_filter = get_test_object do
+      # @sg-ignore Unresolved call to @mocks
       @mocks[:filters] = [{ 'resource_subtype' => 'milestone' }]
     end
 
+    # @sg-ignore Unresolved call to matches?
     assert(asana_event_filter.matches?({ 'resource' => { 'resource_subtype' => 'milestone' } }))
   end
 
   # @return [void]
   def test_matches_on_action_true
     asana_event_filter = get_test_object do
+      # @sg-ignore Unresolved call to @mocks
       @mocks[:filters] = [{ 'action' => 'deleted' }]
     end
 
+    # @sg-ignore Unresolved call to matches?
     assert(asana_event_filter.matches?({ 'action' => 'deleted' }))
   end
 
+  # @return [void]
   def test_matches_on_action_false
     asana_event_filter = get_test_object do
+      # @sg-ignore Unresolved call to @mocks
       @mocks[:filters] = [{ 'action' => 'deleted' }]
     end
 
+    # @sg-ignore Unresolved call to matches?
     refute(asana_event_filter.matches?({ 'action' => 'completed' }))
   end
 
@@ -164,10 +177,12 @@ class TestAsanaEventFilter < ClassTest
   # @return [void]
   def test_fetched_section_gid
     asana_event_filter = get_test_object do
+      # @sg-ignore Unresolved call to @mocks
       @mocks[:filters] = [{ 'checkoff:fetched.section.gid' => '123' }]
       expect_task_fetched('456',
                           ['memberships.project.gid', 'memberships.project.name',
                            'memberships.section.name', 'assignee', 'assignee_section'],
+                          # @sg-ignore Unresolved call to task
                           task)
       task_data = {
         'unwrapped' => {
@@ -176,24 +191,33 @@ class TestAsanaEventFilter < ClassTest
           },
         },
       }
+      # @sg-ignore Unresolved call to tasks
       tasks.expects(:task_to_h).with(task).returns(task_data)
     end
 
+    # @sg-ignore Unresolved call to matches?
     assert(asana_event_filter.matches?(TASK_NAME_CHANGED_EVENT))
   end
 
   # @return [void]
   def test_matches_on_fields_true
     asana_event_filter = get_test_object do
+      # @sg-ignore Unresolved call to @mocks
       @mocks[:filters] = [{ 'fields' => ['custom_fields'] }]
     end
 
+    # @sg-ignore Unresolved call to matches?
     assert(asana_event_filter.matches?(CUSTOM_FIELD_CHANGED_EVENT))
   end
 
   # @return [void]
+  # @param gid [Object]
+  # @param task_obj [Object]
+  # @param fields [Object]
   def expect_task_fetched(gid, fields, task_obj)
+    # @sg-ignore Unresolved call to client
     client.expects(:tasks).returns(asana_tasks)
+    # @sg-ignore Unresolved call to asana_tasks
     asana_tasks
       .expects(:find_by_id)
       .with(gid,
@@ -204,6 +228,7 @@ class TestAsanaEventFilter < ClassTest
   # @return [void]
   def test_task_completed_event_true
     asana_event_filter = get_test_object do
+      # @sg-ignore Unresolved call to @mocks
       @mocks[:filters] = [
         {
           'action' => 'changed',
@@ -213,28 +238,35 @@ class TestAsanaEventFilter < ClassTest
           'checkoff:fetched.completed' => true,
         },
       ]
+      # @sg-ignore Unresolved call to task
       expect_task_fetched('456', ['completed_at'], task)
+      # @sg-ignore Unresolved call to task
       task.expects(:completed_at).returns(Time.now)
     end
 
+    # @sg-ignore Unresolved call to matches?
     assert(asana_event_filter.matches?(TASK_COMPLETED_EVENT))
   end
 
   # @return [void]
   def test_matches_on_parent_gid_true
     asana_event_filter = get_test_object do
+      # @sg-ignore Unresolved call to @mocks
       @mocks[:filters] = [{ 'checkoff:parent.gid' => '90' }]
     end
 
+    # @sg-ignore Unresolved call to matches?
     assert(asana_event_filter.matches?(TASK_REMOVED_FROM_SECTION_EVENT))
   end
 
   # @return [void]
   def test_matches_on_bad_key_raises
     asana_event_filter = get_test_object do
+      # @sg-ignore Unresolved call to @mocks
       @mocks[:filters] = [{ 'checkoff:bogus' => '90' }]
     end
     e = assert_raises(RuntimeError) do
+      # @sg-ignore Unresolved call to matches?
       asana_event_filter.matches?(TASK_REMOVED_FROM_SECTION_EVENT)
     end
 
