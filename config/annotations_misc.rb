@@ -77,3 +77,71 @@
 #       def start; end
 #     end
 #   end
+#   module Mocha
+#     class Expectation
+#       # @param value [Object]
+#       # @return [Mocha::Expectation]
+#       def returns(value = nil); end
+#       # @param args [Object]
+#       # @return [Mocha::Expectation]
+#       def with(*args); end
+#       # @return [Mocha::Expectation]
+#       def yields(*args); end
+#       # @param count [Integer]
+#       # @return [Mocha::Expectation]
+#       def at_least(count); end
+#       # @param count [Integer]
+#       # @return [Mocha::Expectation]
+#       def times(count); end
+#     end
+#     class Mock
+#       # @param method_name [Symbol, String]
+#       # @return [Mocha::Expectation]
+#       def expects(method_name); end
+#       # @param method_name [Symbol, String]
+#       # @return [Mocha::Expectation]
+#       def stubs(method_name); end
+#       # @param type [Class]
+#       # @return [void]
+#       def responds_like_instance_of(type); end
+#       # @param type [Class, Module]
+#       # @return [void]
+#       def responds_like(type); end
+#     end
+#   end
+#   class Object
+#     # @param method_name [Symbol, String]
+#     # @return [Mocha::Expectation]
+#     def expects(method_name); end
+#     # @param method_name [Symbol, String]
+#     # @return [Mocha::Expectation]
+#     def stubs(method_name); end
+#     # @param name [String]
+#     # @return [Mocha::Mock]
+#     def mock(name = nil); end
+#     # @param mocks [Symbol]
+#     # @return [void]
+#     def let_mock(*mocks); end
+#     # @param mock_sym [Symbol]
+#     # @return [void]
+#     def let_single_mock(mock_sym); end
+#     # @param clazz [Class]
+#     # @param respond_like_instance_of [Hash, nil]
+#     # @param respond_like [Hash, nil]
+#     # @param skip_these_keys [Array<Symbol>]
+#     # @return [MyOpenStruct]
+#     def get_initializer_mocks(clazz, respond_like_instance_of:, respond_like:, skip_these_keys: []); end
+#     # @param mock_syms [Array<Symbol>]
+#     # @return [Hash{Symbol => Mocha::Mock}]
+#     def create_hash_of_mocks(mock_syms); end
+#   end
+#   # Test helper DSLs (defined in test/unit/test_helper.rb; that file stays
+#   # excluded from strong typecheck because of Mocha-heavy internals).
+#   class MyOpenStruct < OpenStruct
+#     # @param sym [Symbol]
+#     # @return [void]
+#     def delete(sym); end
+#     # @param hash [Hash]
+#     # @return [self]
+#     def merge!(hash); end
+#   end

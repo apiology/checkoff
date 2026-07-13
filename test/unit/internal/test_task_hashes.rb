@@ -93,24 +93,30 @@ class TestTaskHashes < ClassTest
   # @return [void]
   def test_task_a_to_h
     task_hashes = get_test_object do
+      # @sg-ignore task from let_mock
       task.expects(:to_h).returns(TASK_A_RAW_HASH.dup)
+      # @sg-ignore task from let_mock
       task.expects(:name).returns('a')
     end
 
+    # @sg-ignore task from let_mock
     assert_equal(TASK_A_HASH, task_hashes.task_to_h(task))
   end
 
   # @return [void]
   def test_task_b_to_h
     task_hashes = get_test_object do
+      # @sg-ignore task from let_mock
       task.expects(:to_h).returns(TASK_B_RAW_HASH.dup)
+      # @sg-ignore task from let_mock
       task.expects(:name).returns('b')
     end
 
+    # @sg-ignore task from let_mock
     assert_equal(TASK_B_HASH, task_hashes.task_to_h(task))
   end
 
-  # @return [void]
+  # @return [Class]
   def class_under_test
     Checkoff::Internal::TaskHashes
   end
