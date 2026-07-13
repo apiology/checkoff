@@ -23,23 +23,29 @@ class TestSectionSelectors < ClassTest
   # @return [void]
   def test_filter_via_ends_with_milestone_empty
     section_selectors = get_test_object do
+      # @sg-ignore Unresolved call to client
       client.expects(:tasks).returns(tasks)
+      # @sg-ignore Unresolved call to section
       section.expects(:gid).returns('1234')
+      # @sg-ignore Unresolved call to tasks
       tasks.expects(:get_tasks).with(section: '1234', per_page: 100,
                                      options: { fields: ['resource_subtype'] }).returns([])
     end
 
+    # @sg-ignore Unresolved call to section
     refute(section_selectors.filter_via_section_selector(section,
                                                          [:ends_with_milestone]))
   end
 
   # @return [void]
   def expect_client_tasks_pulled
+    # @sg-ignore Unresolved call to client
     client.expects(:tasks).returns(tasks)
   end
 
   # @return [void]
   def expect_section_gid_pulled
+    # @sg-ignore Unresolved call to section
     section.expects(:gid).returns('1234')
   end
 
@@ -47,8 +53,10 @@ class TestSectionSelectors < ClassTest
   def mock_filter_via_ends_with_milestone_true
     expect_client_tasks_pulled
     expect_section_gid_pulled
+    # @sg-ignore Unresolved call to tasks
     tasks.expects(:get_tasks).with(section: '1234', per_page: 100,
                                    options: { fields: ['resource_subtype'] }).returns([milestone])
+    # @sg-ignore Unresolved call to milestone
     milestone.expects(:resource_subtype).returns('milestone')
   end
 
@@ -58,6 +66,7 @@ class TestSectionSelectors < ClassTest
       mock_filter_via_ends_with_milestone_true
     end
 
+    # @sg-ignore Unresolved call to section
     assert(section_selectors.filter_via_section_selector(section,
                                                          [:ends_with_milestone]))
   end
@@ -66,6 +75,7 @@ class TestSectionSelectors < ClassTest
   def test_bogus_raises
     section_selectors = get_test_object
 
+    # @sg-ignore Unresolved call to section
     e = assert_raises(RuntimeError) { section_selectors.filter_via_section_selector(section, [:bogus]) }
 
     assert_match(/Syntax issue trying to handle/, e.message)
@@ -75,9 +85,11 @@ class TestSectionSelectors < ClassTest
   def test_filter_via_has_tasks_false
     section_selectors = get_test_object do
       expect_section_gid_pulled
+      # @sg-ignore Unresolved call to sections
       sections.expects(:tasks_by_section_gid).with('1234').returns([])
     end
 
+    # @sg-ignore Unresolved call to section
     refute(section_selectors.filter_via_section_selector(section,
                                                          [:has_tasks?]))
   end

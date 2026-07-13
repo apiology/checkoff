@@ -25,13 +25,17 @@ class TestViewSubcommand < ClassTest
 
   # @return [void]
   def expect_task_lookup
+    # @sg-ignore Unresolved call to tasks
     tasks.expects(:task).with('workspace', :project, task_name, section_name: nil).returns(task)
   end
 
   # @return [void]
   def stub_task_due_fields
+    # @sg-ignore Unresolved call to task
     task.expects(:name).returns(task_name).at_least(0)
+    # @sg-ignore Unresolved call to task
     task.expects(:due_on).returns(nil).at_least(0)
+    # @sg-ignore Unresolved call to task
     task.expects(:due_at).returns(due_at_value).at_least(0)
   end
 
@@ -51,6 +55,7 @@ class TestViewSubcommand < ClassTest
   # @return [void]
   def test_run_on_task_not_found
     view = get_test_object do
+      # @sg-ignore Unresolved call to tasks
       tasks.expects(:task).with('workspace', :project, task_name, section_name: nil).returns(nil)
     end
 
@@ -62,7 +67,10 @@ class TestViewSubcommand < ClassTest
   end
 
   # @return [Checkoff::ViewSubcommand]
+  # @sg-ignore TestViewSubcommand#create_object return type could not be inferred
   def create_object(clazz = class_under_test)
+    # @sg-ignore Unresolved call to @mocks
+    # @sg-ignore Too many arguments to Class#initialize
     clazz.new('workspace', :project, nil, task_name, **@mocks.to_h)
   end
 
