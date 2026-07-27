@@ -6,5 +6,4 @@
 
 module Parlour::RbiGenerator::Namespace::Mixin::Searchable; end
 module Parlour::RbsGenerator::Namespace::Mixin::Searchable; end
-module SimpleCov::Formatter::Base; end
 module Tapioca::SourceURI; end
