@@ -12,7 +12,7 @@ module SimpleCov; end
 module SimpleCov::Formatter; end
 
 # pkg:gem/simplecov_json_formatter#lib/simplecov_json_formatter.rb:9
-class SimpleCov::Formatter::JSONFormatter
+class SimpleCov::Formatter::JSONFormatter < ::SimpleCov::Formatter::Base
   # pkg:gem/simplecov_json_formatter#lib/simplecov_json_formatter.rb:10
   def format(result); end
 
