@@ -104,6 +104,10 @@ class Rubydex::ConstantReference < ::Rubydex::Reference
   def initialize(_arg0, _arg1); end
 
   # pkg:gem/rubydex#lib/rubydex.rb:11
+  sig { returns(Rubydex::Document) }
+  def document; end
+
+  # pkg:gem/rubydex#lib/rubydex.rb:11
   sig { returns(Rubydex::Location) }
   def location; end
 
@@ -147,7 +151,7 @@ class Rubydex::Declaration
     private
 
     # pkg:gem/rubydex#lib/rubydex.rb:11
-    def new(*args); end
+    def new(*_arg0); end
   end
 end
 
@@ -168,6 +172,10 @@ class Rubydex::Definition
   # pkg:gem/rubydex#lib/rubydex.rb:11
   sig { returns(T::Boolean) }
   def deprecated?; end
+
+  # pkg:gem/rubydex#lib/rubydex.rb:11
+  sig { returns(Rubydex::Document) }
+  def document; end
 
   # pkg:gem/rubydex#lib/rubydex.rb:11
   sig { returns(T::Array[Rubydex::Definition]) }
@@ -193,7 +201,7 @@ class Rubydex::Definition
     private
 
     # pkg:gem/rubydex#lib/rubydex.rb:11
-    def new(*args); end
+    def new(*_arg0); end
   end
 end
 
@@ -264,7 +272,7 @@ class Rubydex::Document
     private
 
     # pkg:gem/rubydex#lib/rubydex.rb:11
-    def new(*args); end
+    def new(*_arg0); end
   end
 end
 
@@ -384,7 +392,12 @@ class Rubydex::Graph
   def keyword(_arg0); end
 
   # pkg:gem/rubydex#lib/rubydex.rb:11
-  def load_config(*_arg0); end
+  # Loads configuration, merging its exclusion patterns into the graph's configuration (the workspace path is never
+  # overridden). With `config_path` (resolved relative to the workspace path), an explicitly named file that does not
+  # exist raises `Rubydex::ConfigError`. With no argument, the default `.rubydex` is loaded if present and ignored if
+  # missing. Raises `Rubydex::ConfigError` if a file cannot be read or is malformed.
+  sig { params(config_path: T.nilable(String)).void }
+  def load_config(config_path = nil); end
 
   # pkg:gem/rubydex#lib/rubydex.rb:11
   sig { returns(T::Enumerable[Rubydex::MethodReference]) }
@@ -439,6 +452,12 @@ class Rubydex::Graph
   # pkg:gem/rubydex#lib/rubydex/graph.rb:46
   sig { params(paths: T::Array[String]).void }
   def add_workspace_dependency_paths(paths); end
+
+  # pkg:gem/rubydex#lib/rubydex.rb:11
+  def initialize_clone(_arg0); end
+
+  # pkg:gem/rubydex#lib/rubydex.rb:11
+  def initialize_copy(_arg0); end
 end
 
 # pkg:gem/rubydex#lib/rubydex/graph.rb:8
@@ -580,6 +599,10 @@ class Rubydex::MethodReference < ::Rubydex::Reference
   def initialize(_arg0, _arg1); end
 
   # pkg:gem/rubydex#lib/rubydex.rb:11
+  sig { returns(Rubydex::Document) }
+  def document; end
+
+  # pkg:gem/rubydex#lib/rubydex.rb:11
   sig { returns(Rubydex::Location) }
   def location; end
 
@@ -661,6 +684,19 @@ end
 # pkg:gem/rubydex#lib/rubydex/mixin.rb:18
 class Rubydex::Prepend < ::Rubydex::Mixin; end
 
+class Rubydex::Query
+  # pkg:gem/rubydex#lib/rubydex.rb:11
+  def render(*_arg0); end
+
+  class << self
+    sig { params(query: String).returns(Rubydex::Query) }
+    def parse(query); end
+
+    sig { params(format: T.any(String, Symbol)).returns(String) }
+    def schema(format = :table); end
+  end
+end
+
 # pkg:gem/rubydex#lib/rubydex/reference.rb:4
 class Rubydex::Reference
   abstract!
@@ -675,7 +711,7 @@ class Rubydex::Reference
     private
 
     # pkg:gem/rubydex#lib/rubydex.rb:11
-    def new(*args); end
+    def new(*_arg0); end
   end
 end
 

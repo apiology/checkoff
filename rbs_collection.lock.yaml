@@ -186,13 +186,9 @@ gems:
   source:
     type: rubygems
 - name: simplecov
-  version: '0.22'
+  version: 1.0.3
   source:
-    type: git
-    name: ruby/gem_rbs_collection
-    revision: ea56a88d1c0ac98e79f8ea5bb19a139da768ba10
-    remote: https://github.com/ruby/gem_rbs_collection.git
-    repo_dir: gems
+    type: rubygems
 - name: thor
   version: '1.2'
   source:

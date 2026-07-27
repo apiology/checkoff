@@ -18,8 +18,6 @@ end
 # pkg:gem/rspec-support#lib/rspec/support/caller_filter.rb:10
 class RSpec::CallerFilter
   class << self
-    # Earlier rubies do not support the two argument form of `caller`. This
-    # fallback is logically the same, but slower.
     # This supports args because it's more efficient when the caller specifies
     # these. It allows us to skip frames the caller knows are part of RSpec,
     # and to decrease the increment size if the caller is confident the line will
@@ -36,6 +34,8 @@ class RSpec::CallerFilter
     # such a way that would return the wrong stack frame, a test will fail to tell you.
     #
     # See benchmarks/skip_frames_for_caller_filter.rb for measurements.
+    # Earlier rubies do not support the two argument form of `caller`. This
+    # fallback is logically the same, but slower.
     #
     # pkg:gem/rspec-support#lib/rspec/support/caller_filter.rb:49
     def first_non_rspec_line(skip_frames = T.unsafe(nil), increment = T.unsafe(nil)); end
