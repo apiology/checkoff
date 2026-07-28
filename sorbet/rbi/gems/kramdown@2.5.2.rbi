@@ -3264,8 +3264,6 @@ module Kramdown::Utils::Entities
   def entity(point_or_name); end
 
   class << self
-    # Return the entity for the given code point or name +point_or_name+.
-    #
     # pkg:gem/kramdown#lib/kramdown/utils/entities.rb:994
     def entity(point_or_name); end
   end

@@ -1697,6 +1697,7 @@ class Spoom::Deadcode::ERB < ::Erubi::Engine
   # @override
   #
   # pkg:gem/spoom#lib/spoom/deadcode/erb.rb:91
+  sig { override.params(_: T.untyped).void }
   def add_postamble(_); end
 
   # @override
