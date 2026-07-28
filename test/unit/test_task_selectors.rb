@@ -36,8 +36,8 @@ class TestTaskSelectors < ClassTest
       'resource_subtype' => 'enum',
     }
     task_selectors = get_test_object do
-      # @sg-ignore Unresolved call to @mocks
-      @mocks[:custom_fields] = Checkoff::CustomFields.new(client:)
+      # @sg-ignore Wrong argument type for Checkoff::CustomFields.new: client expected Asana::Client, received Mocha::Mock
+      mocks[:custom_fields] = Checkoff::CustomFields.new(client:)
       custom_fields = [custom_field]
       task.expects(:custom_fields).returns(custom_fields)
     end
@@ -61,8 +61,8 @@ class TestTaskSelectors < ClassTest
       'resource_subtype' => 'multi_enum',
     }
     task_selectors = get_test_object do
-      # @sg-ignore Unresolved call to @mocks
-      @mocks[:custom_fields] = Checkoff::CustomFields.new(client:)
+      # @sg-ignore Wrong argument type for Checkoff::CustomFields.new: client expected Asana::Client, received Mocha::Mock
+      mocks[:custom_fields] = Checkoff::CustomFields.new(client:)
       custom_fields = [custom_field]
       task.expects(:custom_fields).returns(custom_fields)
     end
@@ -86,8 +86,8 @@ class TestTaskSelectors < ClassTest
       'resource_subtype' => 'something_unknown',
     }
     task_selectors = get_test_object do
-      # @sg-ignore Unresolved call to @mocks
-      @mocks[:custom_fields] = Checkoff::CustomFields.new(client:)
+      # @sg-ignore Wrong argument type for Checkoff::CustomFields.new: client expected Asana::Client, received Mocha::Mock
+      mocks[:custom_fields] = Checkoff::CustomFields.new(client:)
       custom_fields = [custom_field]
       task.expects(:custom_fields).returns(custom_fields).at_least(1)
       task.expects(:gid).returns(123)
@@ -120,8 +120,8 @@ class TestTaskSelectors < ClassTest
       'resource_subtype' => 'enum',
     }
     task_selectors = get_test_object do
-      # @sg-ignore Unresolved call to @mocks
-      @mocks[:custom_fields] = Checkoff::CustomFields.new(client:)
+      # @sg-ignore Wrong argument type for Checkoff::CustomFields.new: client expected Asana::Client, received Mocha::Mock
+      mocks[:custom_fields] = Checkoff::CustomFields.new(client:)
       task.expects(:custom_fields).returns([custom_field])
     end
     # should not raise
@@ -140,8 +140,8 @@ class TestTaskSelectors < ClassTest
     custom_field_gid = '123'
     enum_value_gid = '456'
     task_selectors = get_test_object do
-      # @sg-ignore Unresolved call to @mocks
-      @mocks[:custom_fields] = Checkoff::CustomFields.new(client:)
+      # @sg-ignore Wrong argument type for Checkoff::CustomFields.new: client expected Asana::Client, received Mocha::Mock
+      mocks[:custom_fields] = Checkoff::CustomFields.new(client:)
       task.expects(:custom_fields).returns([]).at_least(1)
       task.expects(:gid).returns(123).at_least(1)
     end
@@ -162,8 +162,8 @@ class TestTaskSelectors < ClassTest
     custom_field_gid = '123'
     enum_value_gid = '456'
     task_selectors = get_test_object do
-      # @sg-ignore Unresolved call to @mocks
-      @mocks[:custom_fields] = Checkoff::CustomFields.new(client:)
+      # @sg-ignore Wrong argument type for Checkoff::CustomFields.new: client expected Asana::Client, received Mocha::Mock
+      mocks[:custom_fields] = Checkoff::CustomFields.new(client:)
       task.expects(:custom_fields).returns(nil).at_least(1)
       task.expects(:gid).returns(123)
     end
@@ -193,8 +193,8 @@ class TestTaskSelectors < ClassTest
       'resource_subtype' => 'enum',
     }
     task_selectors = get_test_object do
-      # @sg-ignore Unresolved call to @mocks
-      @mocks[:custom_fields] = Checkoff::CustomFields.new(client:)
+      # @sg-ignore Wrong argument type for Checkoff::CustomFields.new: client expected Asana::Client, received Mocha::Mock
+      mocks[:custom_fields] = Checkoff::CustomFields.new(client:)
       custom_fields = [custom_field]
       task.expects(:custom_fields).returns(custom_fields)
     end
@@ -224,13 +224,10 @@ class TestTaskSelectors < ClassTest
   # @return [void]
   def test_filter_via_custom_field_value_nil_false_found
     task_selectors = get_test_object do
-      # @sg-ignore Unresolved call to @mocks
-      @mocks[:custom_fields] = Checkoff::CustomFields.new(client:)
-      # @sg-ignore Unresolved call to custom_field
+      # @sg-ignore Wrong argument type for Checkoff::CustomFields.new: client expected Asana::Client, received Mocha::Mock
+      mocks[:custom_fields] = Checkoff::CustomFields.new(client:)
       custom_fields = [custom_field]
-      # @sg-ignore Unresolved call to custom_field
       custom_field.expects(:fetch).with('name').returns('custom_field_name')
-      # @sg-ignore Unresolved call to custom_field
       custom_field.expects(:[]).with('display_value').returns('some value')
       task.expects(:custom_fields).returns(custom_fields)
     end
@@ -244,20 +241,17 @@ class TestTaskSelectors < ClassTest
 
   # @return [void]
   def mock_filter_via_custom_field_gid_value_gid_nil
-    # @sg-ignore Unresolved call to custom_field
     custom_fields = [custom_field]
-    # @sg-ignore Unresolved call to custom_field
     custom_field.expects(:fetch).with('gid').returns(custom_field_gid)
     task.expects(:custom_fields).returns(custom_fields)
-    # @sg-ignore Unresolved call to custom_field
     custom_field.expects(:[]).with('display_value').returns(nil)
   end
 
   # @return [void]
   def test_filter_via_custom_field_gid_value_gid_nil
     task_selectors = get_test_object do
-      # @sg-ignore Unresolved call to @mocks
-      @mocks[:custom_fields] = Checkoff::CustomFields.new(client:)
+      # @sg-ignore Wrong argument type for Checkoff::CustomFields.new: client expected Asana::Client, received Mocha::Mock
+      mocks[:custom_fields] = Checkoff::CustomFields.new(client:)
       mock_filter_via_custom_field_gid_value_gid_nil
     end
 
@@ -265,15 +259,14 @@ class TestTaskSelectors < ClassTest
     #   expected Asana::Resources::Task, received Mocha::Mock
     assert(task_selectors.filter_via_task_selector(task,
                                                    [:nil?, [:custom_field_gid_value,
-                                                            # @sg-ignore Unresolved call to custom_field_gid
                                                             custom_field_gid]]))
   end
 
   # @return [void]
   def test_filter_via_custom_field_value_custom_fields_not_provided
     task_selectors = get_test_object do
-      # @sg-ignore Unresolved call to @mocks
-      @mocks[:custom_fields] = Checkoff::CustomFields.new(client:)
+      # @sg-ignore Wrong argument type for Checkoff::CustomFields.new: client expected Asana::Client, received Mocha::Mock
+      mocks[:custom_fields] = Checkoff::CustomFields.new(client:)
       task.expects(:custom_fields).returns(nil)
     end
     e = assert_raises(RuntimeError) do
@@ -290,8 +283,8 @@ class TestTaskSelectors < ClassTest
   # @return [void]
   def test_filter_via_custom_field_value_nil_none_found
     task_selectors = get_test_object do
-      # @sg-ignore Unresolved call to @mocks
-      @mocks[:custom_fields] = Checkoff::CustomFields.new(client:)
+      # @sg-ignore Wrong argument type for Checkoff::CustomFields.new: client expected Asana::Client, received Mocha::Mock
+      mocks[:custom_fields] = Checkoff::CustomFields.new(client:)
       custom_fields = []
       task.expects(:custom_fields).returns(custom_fields)
     end
@@ -306,8 +299,8 @@ class TestTaskSelectors < ClassTest
   # @return [void]
   def test_filter_via_custom_field_value_gid_nil_none_found
     task_selectors = get_test_object do
-      # @sg-ignore Unresolved call to @mocks
-      @mocks[:custom_fields] = Checkoff::CustomFields.new(client:)
+      # @sg-ignore Wrong argument type for Checkoff::CustomFields.new: client expected Asana::Client, received Mocha::Mock
+      mocks[:custom_fields] = Checkoff::CustomFields.new(client:)
       custom_fields = []
       task.expects(:gid).returns('task_gid')
       task.expects(:custom_fields).returns(custom_fields)
@@ -317,7 +310,6 @@ class TestTaskSelectors < ClassTest
       #   expected Asana::Resources::Task, received Mocha::Mock
       task_selectors.filter_via_task_selector(task,
                                               [:nil?, [:custom_field_gid_value,
-                                                       # @sg-ignore Unresolved call to custom_field_gid
                                                        custom_field_gid]])
     end
 
@@ -374,7 +366,6 @@ class TestTaskSelectors < ClassTest
   # @return [void]
   def test_filter_via_task_selector_ready
     task_selectors = get_test_object do
-      # @sg-ignore Unresolved call to tasks
       tasks.expects(:task_ready?).with(task, period: :now_or_before, ignore_dependencies: false).returns(true)
     end
 
@@ -395,7 +386,6 @@ class TestTaskSelectors < ClassTest
 
   # @return [void]
   def expect_no_incomplete_dependencies
-    # @sg-ignore Unresolved call to tasks
     tasks.expects(:incomplete_dependencies?).with(task).returns(false)
   end
 
@@ -427,8 +417,8 @@ class TestTaskSelectors < ClassTest
   # @return [void]
   def test_filter_via_task_selector_ready_between_relative_starts_today
     task_selectors = get_test_object do
-      # @sg-ignore Unresolved call to @mocks
-      @mocks[:tasks] = Checkoff::Tasks.new(client:)
+      # @sg-ignore Wrong argument type for Checkoff::Tasks.new: client expected Asana::Client, received Mocha::Mock
+      mocks[:tasks] = Checkoff::Tasks.new(client:)
       mock_filter_via_task_selector_ready_between_relative_starts_today
     end
 
@@ -448,8 +438,8 @@ class TestTaskSelectors < ClassTest
   # @return [void]
   def test_filter_via_task_selector_ready_between_relative_due_now
     task_selectors = get_test_object do
-      # @sg-ignore Unresolved call to @mocks
-      @mocks[:tasks] = Checkoff::Tasks.new(client:)
+      # @sg-ignore Wrong argument type for Checkoff::Tasks.new: client expected Asana::Client, received Mocha::Mock
+      mocks[:tasks] = Checkoff::Tasks.new(client:)
       mock_filter_via_task_selector_ready_between_relative_due_now
     end
 
@@ -505,8 +495,8 @@ class TestTaskSelectors < ClassTest
   # @return [void]
   def test_filter_via_task_selector_ready_between_relative_no_due
     task_selectors = get_test_object do
-      # @sg-ignore Unresolved call to @mocks
-      @mocks[:tasks] = Checkoff::Tasks.new(client:)
+      # @sg-ignore Wrong argument type for Checkoff::Tasks.new: client expected Asana::Client, received Mocha::Mock
+      mocks[:tasks] = Checkoff::Tasks.new(client:)
       mock_filter_via_task_selector_ready_between_relative_no_due
     end
 
@@ -544,14 +534,13 @@ class TestTaskSelectors < ClassTest
 
   # @return [void]
   def expect_incomplete_dependencies
-    # @sg-ignore Unresolved call to tasks
     tasks.expects(:incomplete_dependencies?).with(task).returns(true)
   end
 
   # @return [void]
   def expect_tasks_not_mocked
-    # @sg-ignore Unresolved call to @mocks
-    @mocks[:tasks] = Checkoff::Tasks.new(client:)
+    # @sg-ignore Wrong argument type for Checkoff::Tasks.new: client expected Asana::Client, received Mocha::Mock
+    mocks[:tasks] = Checkoff::Tasks.new(client:)
   end
 
   # @return [void]
@@ -579,8 +568,8 @@ class TestTaskSelectors < ClassTest
       'resource_subtype' => 'enum',
     }
     task_selectors = get_test_object do
-      # @sg-ignore Unresolved call to @mocks
-      @mocks[:custom_fields] = Checkoff::CustomFields.new(client:)
+      # @sg-ignore Wrong argument type for Checkoff::CustomFields.new: client expected Asana::Client, received Mocha::Mock
+      mocks[:custom_fields] = Checkoff::CustomFields.new(client:)
       custom_fields = [custom_field]
       task.expects(:custom_fields).returns(custom_fields)
     end
@@ -607,8 +596,8 @@ class TestTaskSelectors < ClassTest
   # @return [void]
   def test_filter_via_task_selector_custom_field_less_than_n_days_from_now
     task_selectors = get_test_object do
-      # @sg-ignore Unresolved call to @mocks
-      @mocks[:custom_fields] = Checkoff::CustomFields.new(client:)
+      # @sg-ignore Wrong argument type for Checkoff::CustomFields.new: client expected Asana::Client, received Mocha::Mock
+      mocks[:custom_fields] = Checkoff::CustomFields.new(client:)
       expect_tasks_not_mocked
       Time.expects(:now).returns(Time.new(2000, 1, 1, 0, 0, 0, '+00:00')).at_least(1)
       task.expects(:custom_fields).returns([{ 'name' => 'start date',
@@ -625,8 +614,8 @@ class TestTaskSelectors < ClassTest
   # @return [void]
   def test_filter_via_task_selector_custom_field_less_than_n_days_from_now_not_set
     task_selectors = get_test_object do
-      # @sg-ignore Unresolved call to @mocks
-      @mocks[:custom_fields] = Checkoff::CustomFields.new(client:)
+      # @sg-ignore Wrong argument type for Checkoff::CustomFields.new: client expected Asana::Client, received Mocha::Mock
+      mocks[:custom_fields] = Checkoff::CustomFields.new(client:)
       expect_tasks_not_mocked
       task.expects(:custom_fields).returns([{ 'name' => 'start date',
                                               'display_value' => nil }]).at_least(1)
@@ -642,8 +631,8 @@ class TestTaskSelectors < ClassTest
   # @return [void]
   def test_filter_via_task_selector_custom_field_less_than_n_days_from_now_custom_field_not_found
     task_selectors = get_test_object do
-      # @sg-ignore Unresolved call to @mocks
-      @mocks[:custom_fields] = Checkoff::CustomFields.new(client:)
+      # @sg-ignore Wrong argument type for Checkoff::CustomFields.new: client expected Asana::Client, received Mocha::Mock
+      mocks[:custom_fields] = Checkoff::CustomFields.new(client:)
       expect_tasks_not_mocked
       task.expects(:gid).returns('123')
       task.expects(:custom_fields).returns([{ 'name' => 'end date',
@@ -665,8 +654,8 @@ class TestTaskSelectors < ClassTest
   # @return [void]
   def test_filter_via_task_selector_custom_field_greater_than_or_equal_to_n_days_from_now
     task_selectors = get_test_object do
-      # @sg-ignore Unresolved call to @mocks
-      @mocks[:custom_fields] = Checkoff::CustomFields.new(client:)
+      # @sg-ignore Wrong argument type for Checkoff::CustomFields.new: client expected Asana::Client, received Mocha::Mock
+      mocks[:custom_fields] = Checkoff::CustomFields.new(client:)
       expect_tasks_not_mocked
       Time.expects(:now).returns(Time.new(2000, 1, 1, 0, 0, 0, '+00:00')).at_least(1)
       task.expects(:custom_fields).returns([{ 'name' => 'start date',
@@ -685,8 +674,8 @@ class TestTaskSelectors < ClassTest
   # @return [void]
   def test_filter_via_task_selector_custom_field_greater_than_or_equal_to_n_days_from_now_nil
     task_selectors = get_test_object do
-      # @sg-ignore Unresolved call to @mocks
-      @mocks[:custom_fields] = Checkoff::CustomFields.new(client:)
+      # @sg-ignore Wrong argument type for Checkoff::CustomFields.new: client expected Asana::Client, received Mocha::Mock
+      mocks[:custom_fields] = Checkoff::CustomFields.new(client:)
       expect_tasks_not_mocked
       task.expects(:custom_fields).returns([{ 'name' => 'start date',
                                               'display_value' => nil }]).at_least(1)
@@ -703,8 +692,8 @@ class TestTaskSelectors < ClassTest
   def test_filter_via_task_selector_custom_field_greater_than_or_equal_to_n_days_from_now_custom_field_not_found
     task_selectors = get_test_object do
       expect_tasks_not_mocked
-      # @sg-ignore Unresolved call to @mocks
-      @mocks[:custom_fields] = Checkoff::CustomFields.new(client:)
+      # @sg-ignore Wrong argument type for Checkoff::CustomFields.new: client expected Asana::Client, received Mocha::Mock
+      mocks[:custom_fields] = Checkoff::CustomFields.new(client:)
       task.expects(:gid).returns('123')
       task.expects(:custom_fields).returns([{ 'name' => 'end date',
                                               'display_value' => '2000-01-15' }]).at_least(1)
@@ -745,8 +734,8 @@ class TestTaskSelectors < ClassTest
   # @return [void]
   def test_estimate_exceeds_duration_true
     task_selectors = get_test_object do
-      # @sg-ignore Unresolved call to @mocks
-      @mocks[:custom_fields] = Checkoff::CustomFields.new(client:)
+      # @sg-ignore Wrong argument type for Checkoff::CustomFields.new: client expected Asana::Client, received Mocha::Mock
+      mocks[:custom_fields] = Checkoff::CustomFields.new(client:)
       task.expects(:custom_fields).returns([{ 'name' => 'Estimated time',
                                               'number_value' => 960 }]).at_least(1)
       task.expects(:start_on).returns('2000-01-01').at_least(1)
@@ -762,8 +751,8 @@ class TestTaskSelectors < ClassTest
   # @return [void]
   def test_estimate_exceeds_duration_false_no_estimate_set
     task_selectors = get_test_object do
-      # @sg-ignore Unresolved call to @mocks
-      @mocks[:custom_fields] = Checkoff::CustomFields.new(client:)
+      # @sg-ignore Wrong argument type for Checkoff::CustomFields.new: client expected Asana::Client, received Mocha::Mock
+      mocks[:custom_fields] = Checkoff::CustomFields.new(client:)
       task.expects(:custom_fields).returns([{ 'name' => 'Estimated time',
                                               'number_value' => nil }]).at_least(1)
     end
@@ -777,8 +766,8 @@ class TestTaskSelectors < ClassTest
   # @return [void]
   def test_estimate_exceeds_duration_true_only_due_set
     task_selectors = get_test_object do
-      # @sg-ignore Unresolved call to @mocks
-      @mocks[:custom_fields] = Checkoff::CustomFields.new(client:)
+      # @sg-ignore Wrong argument type for Checkoff::CustomFields.new: client expected Asana::Client, received Mocha::Mock
+      mocks[:custom_fields] = Checkoff::CustomFields.new(client:)
       task.expects(:custom_fields).returns([{ 'name' => 'Estimated time',
                                               'number_value' => 960 }]).at_least(1)
       task.expects(:start_on).returns(nil).at_least(1)
@@ -794,8 +783,8 @@ class TestTaskSelectors < ClassTest
   # @return [void]
   def test_estimate_exceeds_duration_true_no_dates_set
     task_selectors = get_test_object do
-      # @sg-ignore Unresolved call to @mocks
-      @mocks[:custom_fields] = Checkoff::CustomFields.new(client:)
+      # @sg-ignore Wrong argument type for Checkoff::CustomFields.new: client expected Asana::Client, received Mocha::Mock
+      mocks[:custom_fields] = Checkoff::CustomFields.new(client:)
       task.expects(:custom_fields).returns([{ 'name' => 'Estimated time',
                                               'number_value' => 960 }]).at_least(1)
       task.expects(:start_on).returns(nil).at_least(1)
@@ -811,8 +800,8 @@ class TestTaskSelectors < ClassTest
   # @return [void]
   def test_estimate_exceeds_duration_no_estimate_field
     task_selectors = get_test_object do
-      # @sg-ignore Unresolved call to @mocks
-      @mocks[:custom_fields] = Checkoff::CustomFields.new(client:)
+      # @sg-ignore Wrong argument type for Checkoff::CustomFields.new: client expected Asana::Client, received Mocha::Mock
+      mocks[:custom_fields] = Checkoff::CustomFields.new(client:)
       task.expects(:custom_fields).returns([]).at_least(1)
     end
 
@@ -939,8 +928,8 @@ class TestTaskSelectors < ClassTest
   # @return [void]
   def test_filter_via_task_selector_custom_field_equal_to_date
     task_selectors = get_test_object do
-      # @sg-ignore Unresolved call to @mocks
-      @mocks[:custom_fields] = Checkoff::CustomFields.new(client:)
+      # @sg-ignore Wrong argument type for Checkoff::CustomFields.new: client expected Asana::Client, received Mocha::Mock
+      mocks[:custom_fields] = Checkoff::CustomFields.new(client:)
       task.expects(:custom_fields).returns([{ 'name' => 'end date',
                                               'display_value' => '2000-01-15' }]).at_least(1)
     end
@@ -954,8 +943,8 @@ class TestTaskSelectors < ClassTest
   # @return [void]
   def test_filter_via_task_selector_custom_field_not_equal_to_date
     task_selectors = get_test_object do
-      # @sg-ignore Unresolved call to @mocks
-      @mocks[:custom_fields] = Checkoff::CustomFields.new(client:)
+      # @sg-ignore Wrong argument type for Checkoff::CustomFields.new: client expected Asana::Client, received Mocha::Mock
+      mocks[:custom_fields] = Checkoff::CustomFields.new(client:)
       task.expects(:custom_fields).returns([{ 'name' => 'end date',
                                               'display_value' => '2000-01-15' }]).at_least(1)
     end
@@ -980,12 +969,9 @@ class TestTaskSelectors < ClassTest
 
   # @return [void]
   def mock_filter_via_task_selector_last_story_created_less_than_n_days_ago_ancient
-    # @sg-ignore Unresolved call to story
     task.expects(:stories).returns([story])
-    # @sg-ignore Unresolved call to story
     story.expects(:resource_subtype).returns('blah')
     Time.expects(:now).returns(Time.new(2000, 1, 1, 0, 0, 0, '+00:00')).at_least(1)
-    # @sg-ignore Unresolved call to story
     story.expects(:created_at).returns(Time.new(1950, 1, 1, 0, 0, 0, '+00:00').to_s)
   end
 
@@ -1003,12 +989,9 @@ class TestTaskSelectors < ClassTest
 
   # @return [void]
   def mock_filter_via_task_selector_last_story_created_less_than_n_days_ago_recent
-    # @sg-ignore Unresolved call to story
     task.expects(:stories).returns([story])
-    # @sg-ignore Unresolved call to story
     story.expects(:resource_subtype).returns('blah')
     Time.expects(:now).returns(Time.new(2000, 1, 1, 0, 0, 0, '+00:00')).at_least(1)
-    # @sg-ignore Unresolved call to story
     story.expects(:created_at).returns(Time.new(1999, 12, 31, 0, 0, 0, '+00:00').to_s)
   end
 
@@ -1051,7 +1034,6 @@ class TestTaskSelectors < ClassTest
   # @return [void]
   def test_filter_via_task_selector_in_section_named_false
     task_selectors = get_test_object do
-      # @sg-ignore Unresolved call to tasks
       tasks.expects(:task_to_h).with(task).returns(
         'unwrapped' => { 'membership_by_section_name' => {} }
       )
@@ -1066,7 +1048,6 @@ class TestTaskSelectors < ClassTest
   # @return [void]
   def test_filter_via_task_selector_in_section_named_true
     task_selectors = get_test_object do
-      # @sg-ignore Unresolved call to tasks
       tasks.expects(:task_to_h).with(task).returns(
         'unwrapped' => { 'membership_by_section_name' => { 'foo' => {}, 'bar' => {} } }
       )
@@ -1081,7 +1062,6 @@ class TestTaskSelectors < ClassTest
   # @return [void]
   def test_dependent_on_previous_section_last_milestone
     task_selectors = get_test_object do
-      # @sg-ignore Unresolved call to timelines
       timelines
         .expects(:task_dependent_on_previous_section_last_milestone?)
         .with(task,
@@ -1097,7 +1077,6 @@ class TestTaskSelectors < ClassTest
   # @return [void]
   def test_in_portfolio_named_true
     task_selectors = get_test_object do
-      # @sg-ignore Unresolved call to tasks
       tasks.expects(:in_portfolio_named?).with(task, 'foo').returns(true)
     end
 
@@ -1110,7 +1089,6 @@ class TestTaskSelectors < ClassTest
   # @return [void]
   def test_in_portfolio_named_false
     task_selectors = get_test_object do
-      # @sg-ignore Unresolved call to tasks
       tasks.expects(:in_portfolio_named?).with(task, 'foo').returns(false)
     end
 
@@ -1123,11 +1101,10 @@ class TestTaskSelectors < ClassTest
   # @return [void]
   def test_custom_field_gid_value_contains_any_gid_false_multi_enum
     task_selectors = get_test_object do
-      # @sg-ignore Unresolved call to @mocks
-      @mocks[:custom_fields] = Checkoff::CustomFields.new(client:)
+      # @sg-ignore Wrong argument type for Checkoff::CustomFields.new: client expected Asana::Client, received Mocha::Mock
+      mocks[:custom_fields] = Checkoff::CustomFields.new(client:)
       custom_fields = [
         {
-          # @sg-ignore Unresolved call to custom_field_gid
           'gid' => custom_field_gid,
           'resource_subtype' => 'multi_enum',
           'multi_enum_values' => [],
@@ -1140,15 +1117,12 @@ class TestTaskSelectors < ClassTest
     #   expected Asana::Resources::Task, received Mocha::Mock
     refute(task_selectors.filter_via_task_selector(task,
                                                    [:custom_field_gid_value_contains_any_gid?,
-                                                    # @sg-ignore Unresolved call to custom_field_gid
-                                                    # @sg-ignore Unresolved call to custom_field_value_gid_1
                                                     custom_field_gid, [custom_field_value_gid_1]]))
   end
 
   # @return [void]
   def test_last_task_milestone_does_not_depend_on_this_task
     task_selectors = get_test_object do
-      # @sg-ignore Unresolved call to timelines
       timelines.expects(:last_task_milestone_depends_on_this_task?).returns(true)
     end
 
@@ -1161,7 +1135,6 @@ class TestTaskSelectors < ClassTest
   # @return [void]
   def test_in_a_real_project_true
     task_selectors = get_test_object do
-      # @sg-ignore Unresolved call to tasks
       tasks.expects(:task_to_h).with(task).returns(
         'unwrapped' => { 'membership_by_project_name' => { 'Real Project' => {} } }
       )
@@ -1175,7 +1148,6 @@ class TestTaskSelectors < ClassTest
   # @return [void]
   def test_in_a_real_project_false_only_my_tasks
     task_selectors = get_test_object do
-      # @sg-ignore Unresolved call to tasks
       tasks.expects(:task_to_h).with(task).returns(
         'unwrapped' => { 'membership_by_project_name' => { my_tasks: {} } }
       )
@@ -1189,7 +1161,6 @@ class TestTaskSelectors < ClassTest
   # @return [void]
   def test_section_name_starts_with_true
     task_selectors = get_test_object do
-      # @sg-ignore Unresolved call to tasks
       tasks.expects(:task_to_h).with(task).returns(
         'unwrapped' => { 'membership_by_section_name' => { 'Done items' => {} } }
       )
@@ -1203,7 +1174,6 @@ class TestTaskSelectors < ClassTest
   # @return [void]
   def test_section_name_starts_with_false
     task_selectors = get_test_object do
-      # @sg-ignore Unresolved call to tasks
       tasks.expects(:task_to_h).with(task).returns(
         'unwrapped' => { 'membership_by_section_name' => { 'Inbox' => {} } }
       )
@@ -1217,7 +1187,6 @@ class TestTaskSelectors < ClassTest
   # @return [void]
   def test_in_section_named_true
     task_selectors = get_test_object do
-      # @sg-ignore Unresolved call to tasks
       tasks.expects(:task_to_h).with(task).returns(
         'unwrapped' => { 'membership_by_section_name' => { 'Today' => {} } }
       )
@@ -1231,7 +1200,6 @@ class TestTaskSelectors < ClassTest
   # @return [void]
   def test_in_section_named_false
     task_selectors = get_test_object do
-      # @sg-ignore Unresolved call to tasks
       tasks.expects(:task_to_h).with(task).returns(
         'unwrapped' => { 'membership_by_section_name' => { 'Today' => {} } }
       )
@@ -1245,7 +1213,6 @@ class TestTaskSelectors < ClassTest
   # @return [void]
   def test_in_portfolio_more_than_once_true
     task_selectors = get_test_object do
-      # @sg-ignore Unresolved call to tasks
       tasks.expects(:in_portfolio_more_than_once?).with(task, 'portfolio').returns(true)
     end
 
@@ -1257,7 +1224,6 @@ class TestTaskSelectors < ClassTest
   # @return [void]
   def test_no_milestone_depends_on_this_task_true
     task_selectors = get_test_object do
-      # @sg-ignore Unresolved call to timelines
       timelines.expects(:any_milestone_depends_on_this_task?)
         .with(task, limit_to_portfolio_name: nil).returns(false)
     end

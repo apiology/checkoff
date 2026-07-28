@@ -77,6 +77,36 @@
 #       def start; end
 #     end
 #   end
+#   # Test files use `extend Forwardable; def_delegators(:@mocks, :a, :b, ...)`
+#   # to expose let_mock'd entries as bare methods. Forwardable defines these
+#   # dynamically, so give Solargraph a macro to synthesize the pins.
+#   module Forwardable
+#     # @!macro [new] def_delegators
+#     #   @!method $2
+#     #     @return [Mocha::Mock]
+#     #   @!method $3
+#     #     @return [Mocha::Mock]
+#     #   @!method $4
+#     #     @return [Mocha::Mock]
+#     #   @!method $5
+#     #     @return [Mocha::Mock]
+#     #   @!method $6
+#     #     @return [Mocha::Mock]
+#     #   @!method $7
+#     #     @return [Mocha::Mock]
+#     #   @!method $8
+#     #     @return [Mocha::Mock]
+#     #   @!method $9
+#     #     @return [Mocha::Mock]
+#     #   @!method $10
+#     #     @return [Mocha::Mock]
+#     #   @!method $11
+#     #     @return [Mocha::Mock]
+#     # @param accessor [Symbol]
+#     # @param methods [Symbol]
+#     # @return [void]
+#     def def_delegators(accessor, *methods); end
+#   end
 #   module Mocha
 #     class Expectation
 #       # @param value [Object]
@@ -119,9 +149,63 @@
 #     # @param name [String]
 #     # @return [Mocha::Mock]
 #     def mock(name = nil); end
+#     # @!macro [new] let_mock
+#     #   @!method $1
+#     #     @return [Mocha::Mock]
+#     #   @!method $2
+#     #     @return [Mocha::Mock]
+#     #   @!method $3
+#     #     @return [Mocha::Mock]
+#     #   @!method $4
+#     #     @return [Mocha::Mock]
+#     #   @!method $5
+#     #     @return [Mocha::Mock]
+#     #   @!method $6
+#     #     @return [Mocha::Mock]
+#     #   @!method $7
+#     #     @return [Mocha::Mock]
+#     #   @!method $8
+#     #     @return [Mocha::Mock]
+#     #   @!method $9
+#     #     @return [Mocha::Mock]
+#     #   @!method $10
+#     #     @return [Mocha::Mock]
+#     #   @!method $11
+#     #     @return [Mocha::Mock]
+#     #   @!method $12
+#     #     @return [Mocha::Mock]
+#     #   @!method $13
+#     #     @return [Mocha::Mock]
+#     #   @!method $14
+#     #     @return [Mocha::Mock]
+#     #   @!method $15
+#     #     @return [Mocha::Mock]
+#     #   @!method $16
+#     #     @return [Mocha::Mock]
+#     #   @!method $17
+#     #     @return [Mocha::Mock]
+#     #   @!method $18
+#     #     @return [Mocha::Mock]
+#     #   @!method $19
+#     #     @return [Mocha::Mock]
+#     #   @!method $20
+#     #     @return [Mocha::Mock]
+#     #   @!method $21
+#     #     @return [Mocha::Mock]
+#     #   @!method $22
+#     #     @return [Mocha::Mock]
+#     #   @!method $23
+#     #     @return [Mocha::Mock]
+#     #   @!method $24
+#     #     @return [Mocha::Mock]
+#     #   @!method $25
+#     #     @return [Mocha::Mock]
 #     # @param mocks [Symbol]
 #     # @return [void]
 #     def let_mock(*mocks); end
+#     # @!macro [new] let_single_mock
+#     #   @!method $1
+#     #     @return [Mocha::Mock]
 #     # @param mock_sym [Symbol]
 #     # @return [void]
 #     def let_single_mock(mock_sym); end

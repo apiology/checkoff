@@ -54,23 +54,16 @@ class TestSubtasks < ClassTest
   # @param active_subtasks [Object]
   # @return [void]
   def expect_active_subtasks_pulled(active_subtasks)
-    # @sg-ignore Unresolved call to projects
     projects.expects(:active_tasks).with(raw_subtasks).returns(active_subtasks)
   end
 
   # @return [void]
   def allow_all_section_status_queried
-    # @sg-ignore Unresolved call to subtask_section_1
     allow_subtask_section_status_queried(subtask_section_1, true)
-    # @sg-ignore Unresolved call to subtask_section_2
     allow_subtask_section_status_queried(subtask_section_2, true)
-    # @sg-ignore Unresolved call to subtask_section_3
     allow_subtask_section_status_queried(subtask_section_3, true)
-    # @sg-ignore Unresolved call to subtask_1a
     allow_subtask_section_status_queried(subtask_1a, false)
-    # @sg-ignore Unresolved call to subtask_1b
     allow_subtask_section_status_queried(subtask_1b, false)
-    # @sg-ignore Unresolved call to subtask_3a
     allow_subtask_section_status_queried(subtask_3a, false)
   end
 
@@ -104,25 +97,19 @@ class TestSubtasks < ClassTest
 
   # @return [void]
   def allow_subtask_section_1_named
-    # @sg-ignore Unresolved call to subtask_section_1
     subtask_section_1.expects(:name).returns('1:').at_least(0)
-    # @sg-ignore Unresolved call to subtask_1a
     subtask_1a.expects(:name).returns('1a').at_least(0)
-    # @sg-ignore Unresolved call to subtask_1b
     subtask_1b.expects(:name).returns('1b').at_least(0)
   end
 
   # @return [void]
   def allow_subtask_section_2_named
-    # @sg-ignore Unresolved call to subtask_section_2
     subtask_section_2.expects(:name).returns('2:').at_least(0)
   end
 
   # @return [void]
   def allow_subtask_section_3_named
-    # @sg-ignore Unresolved call to subtask_section_3
     subtask_section_3.expects(:name).returns('3:').at_least(0)
-    # @sg-ignore Unresolved call to subtask_3a
     subtask_3a.expects(:name).returns('3a').at_least(0)
   end
 
@@ -168,7 +155,6 @@ class TestSubtasks < ClassTest
 
   # @return [void]
   def expect_raw_subtasks_pulled
-    # @sg-ignore Unresolved call to task
     task.expects(:subtasks).with(**subtask_options).returns(raw_subtasks)
   end
 

@@ -8,6 +8,10 @@ require 'checkoff/timing'
 class TestTiming < ClassTest
   extend Forwardable
 
+  # @!parse
+  #  # @return [Checkoff::Timing]
+  #  def get_test_object; end
+
   def_delegators(:@mocks, :today_getter)
 
   # @return [void]
@@ -18,7 +22,6 @@ class TestTiming < ClassTest
       today_getter.expects(:today).returns(Date.new(2019, 1, 1)) # Tuesday
     end
 
-    # @sg-ignore Unresolved call to in_period?
     assert(timing.in_period?(date, :this_week))
   end
 
@@ -46,7 +49,6 @@ class TestTiming < ClassTest
       today_getter.expects(:today).returns(Date.new(2019, 1, 1)) # Tuesday
     end
 
-    # @sg-ignore Unresolved call to in_period?
     refute(timing.in_period?(date, :saturday))
   end
 
@@ -55,7 +57,6 @@ class TestTiming < ClassTest
     date = Date.parse('2099-01-04')
     timing = get_test_object
 
-    # @sg-ignore Unresolved call to in_period?
     assert(timing.in_period?(date, :indefinite))
   end
 
@@ -63,7 +64,6 @@ class TestTiming < ClassTest
   def test_in_period_bad_period
     date = Date.parse('2019-01-04') # Friday
     timing = get_test_object
-    # @sg-ignore Unresolved call to in_period?
     e = assert_raises(RuntimeError) { timing.in_period?(date, :invalid) }
 
     assert_equal('Teach me how to handle period :invalid', e.message)
@@ -73,7 +73,6 @@ class TestTiming < ClassTest
   def test_in_period_bad_compound_period
     date = Date.parse('2019-01-04') # Friday
     timing = get_test_object
-    # @sg-ignore Unresolved call to in_period?
     e = assert_raises(RuntimeError) { timing.in_period?(date, [:invalid, 123]) }
 
     assert_equal('Teach me how to handle period [:invalid, 123]', e.message)

@@ -15,7 +15,6 @@ class TestCustomFields < ClassTest
   # @return [void]
   def test_custom_field_or_raise_raises
     custom_fields = get_test_object do
-      # @sg-ignore Unresolved call to wrong_custom_field
       custom_field_arr = [wrong_custom_field]
       expect_custom_fields_pulled(custom_field_arr)
     end
@@ -28,8 +27,6 @@ class TestCustomFields < ClassTest
   # @return [void]
   def test_custom_field_or_raise
     custom_fields = get_test_object do
-      # @sg-ignore Unresolved call to wrong_custom_field
-      # @sg-ignore Unresolved call to custom_field
       custom_field_arr = [wrong_custom_field, custom_field]
       expect_custom_fields_pulled(custom_field_arr)
     end
@@ -42,17 +39,13 @@ class TestCustomFields < ClassTest
 
   # @return [void]
   def expect_workspace_pulled
-    # @sg-ignore Unresolved call to workspaces
     workspaces.expects(:workspace_or_raise).with(workspace_name).returns(workspace)
-    # @sg-ignore Unresolved call to workspace
     workspace.expects(:gid).returns(workspace_gid)
   end
 
   # @return [void]
   def allow_custom_fields_named
-    # @sg-ignore Unresolved call to wrong_custom_field
     wrong_custom_field.expects(:name).returns(wrong_custom_field_name).at_least(0)
-    # @sg-ignore Unresolved call to custom_field
     custom_field.expects(:name).returns(custom_field_name).at_least(0)
   end
 
@@ -60,9 +53,7 @@ class TestCustomFields < ClassTest
   # @param custom_field_arr [Object]
   def expect_custom_fields_pulled(custom_field_arr)
     expect_workspace_pulled
-    # @sg-ignore Unresolved call to client
     client.expects(:custom_fields).returns(custom_fields_api)
-    # @sg-ignore Unresolved call to custom_fields_api
     custom_fields_api.expects(:get_custom_fields_for_workspace).returns(custom_field_arr)
     allow_custom_fields_named
   end
@@ -70,8 +61,6 @@ class TestCustomFields < ClassTest
   # @return [void]
   def test_custom_field
     custom_fields = get_test_object do
-      # @sg-ignore Unresolved call to wrong_custom_field
-      # @sg-ignore Unresolved call to custom_field
       custom_field_arr = [wrong_custom_field, custom_field]
       expect_custom_fields_pulled(custom_field_arr)
     end

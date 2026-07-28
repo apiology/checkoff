@@ -93,9 +93,7 @@ class TestTaskHashes < ClassTest
   # @return [void]
   def test_task_a_to_h
     task_hashes = get_test_object do
-      # @sg-ignore task from let_mock
       task.expects(:to_h).returns(TASK_A_RAW_HASH.dup)
-      # @sg-ignore task from let_mock
       task.expects(:name).returns('a')
     end
 
@@ -106,9 +104,7 @@ class TestTaskHashes < ClassTest
   # @return [void]
   def test_task_b_to_h
     task_hashes = get_test_object do
-      # @sg-ignore task from let_mock
       task.expects(:to_h).returns(TASK_B_RAW_HASH.dup)
-      # @sg-ignore task from let_mock
       task.expects(:name).returns('b')
     end
 

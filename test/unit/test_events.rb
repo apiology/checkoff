@@ -15,9 +15,7 @@ class TestEvents < ClassTest
 
   # @return [void]
   def mock_filter_asana_events_true
-    # @sg-ignore asana_event_filter_class from def_delegators; asana_event_filter/event from let_mock
     asana_event_filter_class.expects(:new).with(filters:).returns(asana_event_filter)
-    # @sg-ignore asana_event_filter/event from let_mock
     asana_event_filter.expects(:matches?).with(event).returns(true)
   end
 
@@ -34,9 +32,7 @@ class TestEvents < ClassTest
   # @return [void]
   def test_filter_asana_events_false
     events = get_test_object do
-      # @sg-ignore asana_event_filter_class from def_delegators
       asana_event_filter_class.expects(:new).with(filters:).returns(asana_event_filter)
-      # @sg-ignore asana_event_filter/event from let_mock
       asana_event_filter.expects(:matches?).with(event).returns(false)
     end
 

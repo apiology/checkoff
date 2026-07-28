@@ -9,6 +9,10 @@ require 'checkoff/cli'
 class TestTasks < BaseAsana
   extend Forwardable
 
+  # @!parse
+  #  # @return [Checkoff::Tasks]
+  #  def get_test_object; end
+
   def_delegators :@mocks, :sections, :asana_task, :time_class, :date_class, :client, :workspaces,
                  :portfolios
 
@@ -39,46 +43,33 @@ class TestTasks < BaseAsana
   # @return [void]
   # @param less_than_now [Object]
   def expect_due_on_parsed(less_than_now:)
-    # @sg-ignore Unresolved call to date_class
     date_class.expects(:parse).with(due_on_string).returns(due_on_date_obj).at_least(0)
-    # @sg-ignore Unresolved call to due_on_date_obj
     due_on_date_obj.expects(:to_time).returns(due_on_time_obj).at_least(0)
-    # @sg-ignore Unresolved call to due_on_time_obj
     due_on_time_obj.expects(:<).with(now).returns(less_than_now).at_least(0)
   end
 
   # @return [void]
   # @param less_than_now [Object]
   def expect_start_on_parsed(less_than_now:)
-    # @sg-ignore Unresolved call to date_class
     date_class.expects(:parse).with(start_on_string).returns(start_on_date_obj)
-    # @sg-ignore Unresolved call to start_on_date_obj
     start_on_date_obj.expects(:to_time).returns(start_on_time_obj).at_least(1)
-    # @sg-ignore Unresolved call to start_on_time_obj
     start_on_time_obj.expects(:to_time).returns(start_on_time_obj).at_least(0)
-    # @sg-ignore Unresolved call to start_on_time_obj
     start_on_time_obj.expects(:<).with(now).returns(less_than_now)
   end
 
   # @return [void]
   # @param less_than_now [Object]
   def expect_start_at_parsed(less_than_now:)
-    # @sg-ignore Unresolved call to time_class
     time_class.expects(:parse).with(start_at_string).returns(start_at_time_obj)
-    # @sg-ignore Unresolved call to start_at_time_obj
     start_at_time_obj.expects(:localtime).returns(start_at_time_obj)
-    # @sg-ignore Unresolved call to start_at_time_obj
     start_at_time_obj.expects(:to_time).returns(start_at_time_obj).at_least(0)
-    # @sg-ignore Unresolved call to start_at_time_obj
     start_at_time_obj.expects(:<).with(now).returns(less_than_now)
   end
 
   # @return [void]
   def mock_task_ready_false_due_in_future_on_date
-    # @sg-ignore Unresolved call to task
     expect_dependency_gids_pulled(task, [])
     expect_now_pulled
-    # @sg-ignore Unresolved call to due_on_string
     allow_task_due(due_on: due_on_string, due_at: nil)
     expect_due_on_parsed(less_than_now: false)
   end
@@ -95,10 +86,7 @@ class TestTasks < BaseAsana
 
   # @return [void]
   def mock_task_ready_true_start_in_past
-    # @sg-ignore Unresolved call to task
     expect_dependency_gids_pulled(task, [])
-    # @sg-ignore Unresolved call to start_on_string
-    # @sg-ignore Unresolved call to due_on_string
     allow_task_due(start_on: start_on_string, due_on: due_on_string, due_at: nil)
     expect_now_pulled
     expect_start_on_parsed(less_than_now: true)
@@ -117,10 +105,7 @@ class TestTasks < BaseAsana
 
   # @return [void]
   def mock_task_ready_true_start_in_past_time
-    # @sg-ignore Unresolved call to task
     expect_dependency_gids_pulled(task, [])
-    # @sg-ignore Unresolved call to start_at_string
-    # @sg-ignore Unresolved call to due_on_string
     allow_task_due(start_at: start_at_string, due_on: due_on_string, due_at: nil)
     expect_now_pulled
     expect_start_at_parsed(less_than_now: true)
@@ -140,23 +125,16 @@ class TestTasks < BaseAsana
   # @return [void]
   # @param less_than_now [Object]
   def expect_due_at_parsed(less_than_now:)
-    # @sg-ignore Unresolved call to time_class
     time_class.expects(:parse).with(due_at_string).returns(due_at_time_obj)
-    # @sg-ignore Unresolved call to due_at_time_obj
     due_at_time_obj.expects(:localtime).returns(due_at_time_obj)
-    # @sg-ignore Unresolved call to due_at_time_obj
     due_at_time_obj.expects(:to_time).returns(due_at_time_obj).at_least(0)
-    # @sg-ignore Unresolved call to time_class
     time_class.expects(:now).returns(now)
-    # @sg-ignore Unresolved call to due_at_time_obj
     due_at_time_obj.expects(:<).with(now).returns(less_than_now)
   end
 
   # @return [void]
   def mock_task_ready_false_due_in_future_at_time
-    # @sg-ignore Unresolved call to task
     expect_dependency_gids_pulled(task, [])
-    # @sg-ignore Unresolved call to due_at_string
     allow_task_due(due_on: nil, due_at: due_at_string)
     expect_due_at_parsed(less_than_now: false)
   end
@@ -181,7 +159,6 @@ class TestTasks < BaseAsana
   # @return [void]
   def test_task_ready_true_no_due_anything
     tasks = get_test_object do
-      # @sg-ignore Unresolved call to task
       expect_dependency_gids_pulled(task, [])
       allow_task_due(due_on: nil, due_at: nil)
     end
@@ -192,7 +169,6 @@ class TestTasks < BaseAsana
 
   # @return [void]
   def expect_asana_tasks_client_pulled
-    # @sg-ignore Unresolved call to client
     client.expects(:tasks).returns(asana_tasks_client)
   end
 
@@ -217,7 +193,6 @@ class TestTasks < BaseAsana
                                           completed)
     expect_task_options_pulled
     expect_asana_tasks_client_pulled
-    # @sg-ignore Unresolved call to asana_tasks_client
     asana_tasks_client.expects(:find_by_id)
       .with(dependency_gid, options: { fields: fields_including(['dependencies']) })
       .returns(dependency_full_task)
@@ -227,11 +202,7 @@ class TestTasks < BaseAsana
   # @return [void]
   def mock_task_ready_false_dependency
     allow_task_due(due_on: nil, due_at: nil)
-    # @sg-ignore Unresolved call to task
-    # @sg-ignore Unresolved call to dependency_1_gid
     expect_dependency_gids_pulled(task, [{ 'gid' => dependency_1_gid }])
-    # @sg-ignore Unresolved call to dependency_1_gid
-    # @sg-ignore Unresolved call to dependency_1_full_task
     expect_dependency_completion_pulled(dependency_1_gid, dependency_1_full_task,
                                         false)
   end
@@ -250,11 +221,8 @@ class TestTasks < BaseAsana
   def test_task_ready_false_dependency_cached
     tasks = get_test_object do
       allow_task_due(due_on: nil, due_at: nil)
-      # @sg-ignore Unresolved call to task
       task.expects(:instance_variable_get).with(:@dependencies)
         .returns([{ 'gid' => dependency_1_gid }])
-      # @sg-ignore Unresolved call to dependency_1_full_task
-      # @sg-ignore Unresolved call to dependency_1_gid
       expect_dependency_completion_pulled(dependency_1_gid, dependency_1_full_task,
                                           false)
     end
@@ -268,7 +236,6 @@ class TestTasks < BaseAsana
   def expect_dependency_missing(dependency_gid)
     expect_task_options_pulled
     expect_asana_tasks_client_pulled
-    # @sg-ignore Unresolved call to asana_tasks_client
     asana_tasks_client.expects(:find_by_id)
       .with(dependency_gid, options: { fields: fields_including(['dependencies']) })
       .returns(nil)
@@ -277,10 +244,7 @@ class TestTasks < BaseAsana
   # @return [void]
   def mock_task_ready_false_dependency_missing
     allow_task_due(due_on: nil, due_at: nil)
-    # @sg-ignore Unresolved call to dependency_1_gid
-    # @sg-ignore Unresolved call to task
     expect_dependency_gids_pulled(task, [{ 'gid' => dependency_1_gid }])
-    # @sg-ignore Unresolved call to dependency_1_gid
     expect_dependency_missing(dependency_1_gid)
   end
 
@@ -300,13 +264,9 @@ class TestTasks < BaseAsana
   # @param start_at [Object]
   # @param start_on [Object]
   def allow_task_due(start_on: nil, start_at: nil, due_on: nil, due_at: nil)
-    # @sg-ignore Unresolved call to task
     allow_start_at_pulled(task, start_at)
-    # @sg-ignore Unresolved call to task
     allow_start_on_pulled(task, start_on)
-    # @sg-ignore Unresolved call to task
     allow_due_at_pulled(task, due_at)
-    # @sg-ignore Unresolved call to task
     allow_due_on_pulled(task, due_on)
   end
 
@@ -341,7 +301,6 @@ class TestTasks < BaseAsana
   # @return [void]
   def test_url_of_task
     tasks = get_test_object do
-      # @sg-ignore Unresolved call to task
       task.expects(:gid).returns('my_gid')
     end
 
@@ -351,17 +310,15 @@ class TestTasks < BaseAsana
 
   # @return [void]
   def expect_task_created
-    # @sg-ignore Unresolved call to @mocks
-    @mocks[:asana_task].expects(:create).with(client,
-                                              assignee: default_assignee_gid,
-                                              workspace: workspace_gid,
-                                              name: task_name)
+    mocks[:asana_task].expects(:create).with(client,
+                                             assignee: default_assignee_gid,
+                                             workspace: workspace_gid,
+                                             name: task_name)
   end
 
   # @return [void]
   def mock_add_task
-    # @sg-ignore Unresolved call to @mocks
-    @mocks[:config].expects(:fetch).with(:default_assignee_gid)
+    mocks[:config].expects(:fetch).with(:default_assignee_gid)
       .returns(default_assignee_gid)
     expect_task_created
   end
@@ -371,8 +328,6 @@ class TestTasks < BaseAsana
     tasks = get_test_object do
       mock_add_task
     end
-    # @sg-ignore Unresolved call to task_name
-    # @sg-ignore Unresolved call to workspace_gid
     tasks.send(:add_task, task_name, workspace_gid:)
   end
 
@@ -381,33 +336,25 @@ class TestTasks < BaseAsana
   # @return [void]
   def expect_tasks_from_project_pulled
     projects.expects(:tasks_from_project)
-      # @sg-ignore Unresolved call to project
       .with(project,
             only_uncompleted: false,
             extra_fields: [])
-      # @sg-ignore Unresolved call to task
       .returns([task])
-    # @sg-ignore Unresolved call to task
     task.expects(:name).returns(task_name)
   end
 
   # @return [void]
   def expect_project_pulled
-    # @sg-ignore Unresolved call to project_name
-    # @sg-ignore Unresolved call to workspace_name
     projects.expects(:project_or_raise).with(workspace_name, project_name)
-      # @sg-ignore Unresolved call to project
       .returns(project)
   end
 
   # @param extra_fields [Object]
   # @return [void]
   def expect_task_by_gid_pulled(extra_fields: [])
-    # @sg-ignore Unresolved call to task
     task.expects(:gid).returns(task_gid)
     expect_task_options_pulled
     expect_asana_tasks_client_pulled
-    # @sg-ignore Unresolved call to asana_tasks_client
     asana_tasks_client.expects(:find_by_id).with(task_gid,
                                                  options: {
                                                    fields: fields_including(extra_fields),
@@ -418,11 +365,9 @@ class TestTasks < BaseAsana
 
   # @return [void]
   def expect_tasks_from_section_pulled
-    # @sg-ignore Unresolved call to sections
     sections.expects(:tasks).with(workspace_name, project_name, section_name,
                                   only_uncompleted: false,
                                   extra_fields: []).returns([task])
-    # @sg-ignore Unresolved call to task
     task.expects(:name).returns(task_name)
     expect_task_by_gid_pulled(extra_fields: ['dependencies'])
   end
@@ -431,13 +376,11 @@ class TestTasks < BaseAsana
   def projects
     # @sg-ignore Unresolved call to client
     @projects ||= Checkoff::Projects.new(client:,
-                                         # @sg-ignore Unresolved call to workspaces
                                          workspaces:)
   end
 
   # @return [void]
   def expect_task_options_pulled
-    # @sg-ignore Unresolved call to sections
     sections.expects(:projects).returns(projects).at_least(0)
   end
 
@@ -454,7 +397,6 @@ class TestTasks < BaseAsana
     returned_task = tasks.task(workspace_name, project_name, task_name,
                                only_uncompleted: true, section_name:)
 
-    # @sg-ignore Unresolved call to task
     assert_equal(task, returned_task)
   end
 
@@ -472,17 +414,14 @@ class TestTasks < BaseAsana
     returned_task = tasks.task(workspace_name, project_name, task_name,
                                only_uncompleted: true)
 
-    # @sg-ignore Unresolved call to task
     assert_equal(task, returned_task)
   end
 
   # @return [void]
   def test_in_portfolio_more_than_once
     tasks = get_test_object do
-      # @sg-ignore Unresolved call to portfolios
       portfolios.expects(:projects_in_portfolio).with('workspace_name', 'portfolio name')
         .returns([])
-      # @sg-ignore Unresolved call to task
       task.expects(:memberships).returns([])
     end
 
@@ -495,18 +434,13 @@ class TestTasks < BaseAsana
   def test_in_portfolio_more_than_once_true
     tasks = get_test_object do
       portfolio_project = mock('portfolio_project')
-      # @sg-ignore Unresolved call to project_gid
       portfolio_project.expects(:gid).returns(project_gid)
-      # @sg-ignore Unresolved call to portfolios
       portfolios.expects(:projects_in_portfolio).with('workspace_name', 'portfolio name')
         .returns([portfolio_project])
       memberships = [
-        # @sg-ignore Unresolved call to project_gid
         { 'project' => { 'gid' => project_gid } },
-        # @sg-ignore Unresolved call to project_gid
         { 'project' => { 'gid' => project_gid } },
       ]
-      # @sg-ignore Unresolved call to task
       task.expects(:memberships).returns(memberships)
     end
 
@@ -522,22 +456,14 @@ class TestTasks < BaseAsana
       projects_instance = Checkoff::Projects.new(client:)
       # @sg-ignore Unresolved call to sections
       sections.expects(:projects).returns(projects_instance).at_least_once
-      # @sg-ignore Unresolved call to workspace_name
-      # @sg-ignore Unresolved call to project_name
-      # @sg-ignore Unresolved call to project
       projects_instance.expects(:project_or_raise).with(workspace_name, project_name).returns(project)
       projects_instance.expects(:tasks_from_project)
-        # @sg-ignore Unresolved call to project
         .with(project, only_uncompleted: false, extra_fields: [])
-        # @sg-ignore Unresolved call to task
         .returns([task])
-      # @sg-ignore Unresolved call to task
       task.expects(:name).returns(task_name)
-      # @sg-ignore Unresolved call to task
       task.expects(:gid).returns(task_gid)
     end
 
-    # @sg-ignore Unresolved call to task_gid
     assert_equal(task_gid,
                  # @sg-ignore Unresolved call to gid_for_task
                  tasks.gid_for_task(workspace_name, project_name, :unspecified, task_name))
@@ -550,12 +476,8 @@ class TestTasks < BaseAsana
       projects_instance = Checkoff::Projects.new(client:)
       # @sg-ignore Unresolved call to sections
       sections.expects(:projects).returns(projects_instance).at_least_once
-      # @sg-ignore Unresolved call to workspace_name
-      # @sg-ignore Unresolved call to project_name
-      # @sg-ignore Unresolved call to project
       projects_instance.expects(:project_or_raise).with(workspace_name, project_name).returns(project)
       projects_instance.expects(:tasks_from_project)
-        # @sg-ignore Unresolved call to project
         .with(project, only_uncompleted: false, extra_fields: [])
         .returns([])
     end
@@ -567,9 +489,7 @@ class TestTasks < BaseAsana
   # @return [void]
   def test_task_to_h_delegates
     tasks = get_test_object do
-      # @sg-ignore Unresolved call to task_hashes
       Checkoff::Internal::TaskHashes.expects(:new).returns(task_hashes)
-      # @sg-ignore Unresolved call to task_hashes
       task_hashes.expects(:task_to_h).with(task).returns(123)
     end
 
@@ -579,19 +499,15 @@ class TestTasks < BaseAsana
 
   # @return [void]
   def expect_default_workspace_name_pulled
-    # @sg-ignore Unresolved call to workspaces
     workspaces.expects(:default_workspace).returns(default_workspace)
-    # @sg-ignore Unresolved call to default_workspace
     default_workspace.expects(:name).returns('default workspace')
   end
 
   # @return [void]
   def mock_in_portfolio_named_false_no_projects_no_memberships
     expect_default_workspace_name_pulled
-    # @sg-ignore Unresolved call to portfolios
     portfolios.expects(:projects_in_portfolio).with('default workspace', 'portfolio name')
       .returns([])
-    # @sg-ignore Unresolved call to task
     task.expects(:memberships).returns([])
   end
 
@@ -608,12 +524,9 @@ class TestTasks < BaseAsana
   # @return [void]
   def mock_in_portfolio_named_false_no_projects_but_memberships
     expect_default_workspace_name_pulled
-    # @sg-ignore Unresolved call to portfolios
     portfolios.expects(:projects_in_portfolio).with('default workspace', 'portfolio name')
       .returns([])
-    # @sg-ignore Unresolved call to project_gid
     memberships = [{ 'project' => { 'gid' => project_gid } }]
-    # @sg-ignore Unresolved call to task
     task.expects(:memberships).returns(memberships)
   end
 
@@ -630,14 +543,10 @@ class TestTasks < BaseAsana
   # @return [void]
   def mock_in_portfolio_named_false_projects_wrong_memberships
     expect_default_workspace_name_pulled
-    # @sg-ignore Unresolved call to portfolios
     portfolios.expects(:projects_in_portfolio).with('default workspace', 'portfolio name')
       .returns([wrong_project])
-    # @sg-ignore Unresolved call to wrong_project
     wrong_project.expects(:gid).returns(wrong_project_gid)
-    # @sg-ignore Unresolved call to project_gid
     memberships = [{ 'project' => { 'gid' => project_gid } }]
-    # @sg-ignore Unresolved call to task
     task.expects(:memberships).returns(memberships)
   end
 
@@ -654,11 +563,8 @@ class TestTasks < BaseAsana
   # @return [void]
   def test_date_or_time_field_by_name
     tasks = get_test_object do
-      # @sg-ignore Unresolved call to task
       task.expects(:due_at).returns(due_at_string).at_least(1)
-      # @sg-ignore Unresolved call to time_class
       time_class.expects(:parse).with(due_at_string).returns(due_at_time_obj)
-      # @sg-ignore Unresolved call to due_at_time_obj
       due_at_time_obj.expects(:localtime).returns(due_at_time_obj)
     end
 
@@ -670,17 +576,14 @@ class TestTasks < BaseAsana
   # @return [void]
   def test_h_to_task
     tasks = get_test_object
-    # @sg-ignore Unresolved call to h_to_task
     task = tasks.h_to_task({ 'name' => 'foo' })
 
-    # @sg-ignore Unresolved call to name
     assert_equal('foo', task.name)
   end
 
   # @return [void]
   def test_all_dependent_tasks_empty
     tasks = get_test_object do
-      # @sg-ignore Unresolved call to task
       task.expects(:instance_variable_get).with(:@dependents).returns(nil)
     end
 
@@ -691,17 +594,14 @@ class TestTasks < BaseAsana
   # @return [void]
   def test_all_dependent_tasks_one
     tasks = get_test_object do
-      # @sg-ignore Unresolved call to task
       task.expects(:instance_variable_get).with(:@dependents).returns([{ 'gid' => dependent_1_gid }])
 
       expect_task_options_pulled
       expect_asana_tasks_client_pulled
-      # @sg-ignore Unresolved call to asana_tasks_client
       asana_tasks_client.expects(:find_by_id).with(dependent_1_gid,
                                                    options: { fields: fields_including(%w[dependencies dependents]),
                                                               completed_since: '9999-12-01' })
         .returns(dependent_1)
-      # @sg-ignore Unresolved call to dependent_1
       dependent_1.expects(:instance_variable_get).with(:@dependents).returns([])
     end
 
@@ -714,7 +614,6 @@ class TestTasks < BaseAsana
   def test_as_cache_key
     tasks = get_test_object
 
-    # @sg-ignore Unresolved call to as_cache_key
     assert_empty(tasks.as_cache_key)
   end
 

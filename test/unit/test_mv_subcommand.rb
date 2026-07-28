@@ -9,6 +9,10 @@ require_relative 'class_test'
 class TestMvSubcommand < ClassTest
   extend Forwardable
 
+  # @!parse
+  #  # @return [Checkoff::MvSubcommand]
+  #  def get_test_object; end
+
   def_delegators(:@mocks, :projects, :sections,
                  :logger)
 
@@ -39,7 +43,6 @@ class TestMvSubcommand < ClassTest
   # @param project_name [Object]
   # @param workspace_name [Object]
   def expect_project_pulled(workspace_name, project_name, project)
-    # @sg-ignore Unresolved call to projects
     projects.expects(:project_or_raise)
       .with(workspace_name, project_name)
       .returns(project)
@@ -51,7 +54,6 @@ class TestMvSubcommand < ClassTest
   # @param section [Object]
   # @param section_name [Object]
   def expect_section_pulled(workspace_name, project_name, section_name, section)
-    # @sg-ignore Unresolved call to sections
     sections.expects(:section_or_raise).with(workspace_name, project_name, section_name)
       .returns(section)
   end
@@ -64,7 +66,6 @@ class TestMvSubcommand < ClassTest
   def expect_tasks_pulled(workspace_name, project_name, section_name, tasks)
     return if section_name == :all_sections # not implemented yet
 
-    # @sg-ignore Unresolved call to sections
     sections.expects(:tasks).with(workspace_name, project_name, section_name)
       .returns(tasks)
   end
@@ -107,25 +108,20 @@ class TestMvSubcommand < ClassTest
 
   # @return [void]
   def allow_logger_used
-    # @sg-ignore Unresolved call to logger
     logger.expects(:puts).at_least(0)
   end
 
   # @return [void]
+  # rubocop:disable Metrics/AbcSize
   def set_initializer_arguments
-    # @sg-ignore Unresolved call to @mocks
-    @mocks[:from_workspace_arg] = from_workspace_arg
-    # @sg-ignore Unresolved call to @mocks
-    @mocks[:from_project_arg] = from_project_arg
-    # @sg-ignore Unresolved call to @mocks
-    @mocks[:from_section_arg] = from_section_arg
-    # @sg-ignore Unresolved call to @mocks
-    @mocks[:to_workspace_arg] = to_workspace_arg
-    # @sg-ignore Unresolved call to @mocks
-    @mocks[:to_project_arg] = to_project_arg
-    # @sg-ignore Unresolved call to @mocks
-    @mocks[:to_section_arg] = to_section_arg
+    mocks[:from_workspace_arg] = from_workspace_arg
+    mocks[:from_project_arg] = from_project_arg
+    mocks[:from_section_arg] = from_section_arg
+    mocks[:to_workspace_arg] = to_workspace_arg
+    mocks[:to_project_arg] = to_project_arg
+    mocks[:to_section_arg] = to_section_arg
   end
+  # rubocop:enable Metrics/AbcSize
 
   # @return [void]
   # @param from_workspace_arg [Object]
@@ -167,16 +163,9 @@ class TestMvSubcommand < ClassTest
     return if from_section_name == :all_sections # not implemented yet
 
     expect_task_named(task, task_name)
-    # @sg-ignore Unresolved call to to_section
     expect_section_named(to_section, to_section_name)
-    # @sg-ignore Unresolved call to to_project
-    # @sg-ignore Unresolved call to to_project_gid
     expect_project_gid_pulled(to_project, to_project_gid)
-    # @sg-ignore Unresolved call to to_section
-    # @sg-ignore Unresolved call to to_section_gid
     expect_section_gid_pulled(to_section, to_section_gid)
-    # @sg-ignore Unresolved call to to_project_gid
-    # @sg-ignore Unresolved call to to_section_gid
     expect_task_added_to_project(task, to_project_gid, to_section_gid)
   end
 
@@ -192,9 +181,7 @@ class TestMvSubcommand < ClassTest
 
   # @return [void]
   def expect_to_objects_pulled
-    # @sg-ignore Unresolved call to to_project
     expect_project_pulled(to_workspace_name, to_project_name, to_project)
-    # @sg-ignore Unresolved call to to_section
     expect_section_pulled(to_workspace_name, to_project_name, to_section_name, to_section)
   end
 
@@ -206,10 +193,7 @@ class TestMvSubcommand < ClassTest
     return if from_workspace_name != to_workspace_name # not implemented yet
 
     expect_to_objects_pulled
-    # @sg-ignore Unresolved call to task_a
     expect_tasks_pulled(from_workspace_name, from_project_name, from_section_name, [task_a])
-    # @sg-ignore Unresolved call to task_a
-    # @sg-ignore Unresolved call to task_a_name
     expect_task_added_to_section(task_a, task_a_name)
     allow_logger_used
   end
@@ -253,7 +237,6 @@ class TestMvSubcommand < ClassTest
       mock_run_from_all_sections
     end
     assert_raises(NotImplementedError) do
-      # @sg-ignore Unresolved call to run
       mv_subcommand.run
     end
   end
@@ -275,7 +258,6 @@ class TestMvSubcommand < ClassTest
     mv_subcommand = get_test_object do
       mock_run_from_regular_project
     end
-    # @sg-ignore Unresolved call to run
     mv_subcommand.run
   end
 
@@ -296,7 +278,6 @@ class TestMvSubcommand < ClassTest
     mv_subcommand = get_test_object do
       mock_run_to_same_section_different_project
     end
-    # @sg-ignore Unresolved call to run
     mv_subcommand.run
   end
 
@@ -317,7 +298,6 @@ class TestMvSubcommand < ClassTest
     mv_subcommand = get_test_object do
       mock_run_with_explicit_to_project
     end
-    # @sg-ignore Unresolved call to run
     mv_subcommand.run
   end
 
@@ -338,7 +318,6 @@ class TestMvSubcommand < ClassTest
     mv_subcommand = get_test_object do
       mock_run_from_my_tasks
     end
-    # @sg-ignore Unresolved call to run
     mv_subcommand.run
   end
 

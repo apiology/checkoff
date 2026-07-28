@@ -15,24 +15,19 @@ class TestAttachments < ClassTest
   # @return [void]
   # @param url [Object]
   def mock_create_attachment_from_url(url)
-    # @sg-ignore Unresolved call to resource
     resource.expects(:gid).returns(parent_gid)
     body = {
-      # @sg-ignore Unresolved call to parent_gid
       'parent' => parent_gid,
       'url' => url,
       'resource_subtype' => 'external',
-      # @sg-ignore Unresolved call to attachment_name
       'name' => attachment_name,
     }
-    # @sg-ignore Unresolved call to client
     client.expects(:post).with('/attachments', body:, options: {}).returns(response)
     attachment_body = {
       'data' => {
         'foo' => 'bar',
       },
     }
-    # @sg-ignore Unresolved call to response
     response.expects(:body).returns(attachment_body).at_least(1)
   end
 

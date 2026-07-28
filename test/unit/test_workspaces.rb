@@ -16,11 +16,8 @@ class TestWorkspaces < BaseAsana
 
   # @return [void]
   def mock_workspace_or_raise_nil
-    # @sg-ignore Unresolved call to client
     client.expects(:workspaces).returns(workspaces)
-    # @sg-ignore Unresolved call to workspaces
     workspaces.expects(:find_all).returns([workspace_b])
-    # @sg-ignore Unresolved call to workspace_b
     workspace_b.expects(:name).returns(workspace_b_name)
   end
 
@@ -35,11 +32,8 @@ class TestWorkspaces < BaseAsana
 
   # @return [void]
   def mock_workspace_or_raise
-    # @sg-ignore Unresolved call to client
     client.expects(:workspaces).returns(workspaces)
-    # @sg-ignore Unresolved call to workspaces
     workspaces.expects(:find_all).returns([workspace_a, workspace_b])
-    # @sg-ignore Unresolved call to workspace_a
     workspace_a.expects(:name).returns(workspace_a_name)
   end
 
@@ -54,8 +48,7 @@ class TestWorkspaces < BaseAsana
 
   # @return [void]
   def expect_default_workspace_gid_config_fetched
-    # @sg-ignore Unresolved call to @mocks
-    @mocks[:config].expects(:fetch).with(:default_workspace_gid)
+    mocks[:config].expects(:fetch).with(:default_workspace_gid)
       .returns(workspace_a_gid)
   end
 
@@ -65,7 +58,6 @@ class TestWorkspaces < BaseAsana
       expect_default_workspace_gid_config_fetched
     end
 
-    # @sg-ignore Unresolved call to workspace_a_gid
     assert_equal(workspace_a_gid, asana.send(:default_workspace_gid))
   end
 
@@ -73,7 +65,6 @@ class TestWorkspaces < BaseAsana
   def test_default_workspace
     asana = get_test_object do
       expect_default_workspace_gid_config_fetched
-      # @sg-ignore Unresolved call to asana_workspace
       asana_workspace.expects(:find_by_id).with(client, workspace_a_gid).returns(workspace_a)
     end
 

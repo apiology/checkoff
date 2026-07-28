@@ -13,6 +13,9 @@ class ClassTest < Minitest::Test
   #    @mocks[:some_constructor_arg] = 123
   # end
   #
+  # @return [MyOpenStruct]
+  attr_reader :mocks
+
   # @param clazz [Class]
   # @return [Object]
   # @sg-ignore default class_under_test is implemented by subclasses

@@ -25,10 +25,9 @@ class TestProjectSelectors < ClassTest
       'display_value' => 'something else',
     }
     project_selectors = get_test_object do
-      # @sg-ignore Unresolved call to @mocks
-      @mocks[:custom_fields] = Checkoff::CustomFields.new(client:)
+      # @sg-ignore Wrong argument type for Checkoff::CustomFields.new: client expected Asana::Client, received Mocha::Mock
+      mocks[:custom_fields] = Checkoff::CustomFields.new(client:)
       custom_fields = [custom_field]
-      # @sg-ignore Unresolved call to project
       project.expects(:custom_fields).returns(custom_fields)
     end
 
@@ -47,10 +46,9 @@ class TestProjectSelectors < ClassTest
       'display_value' => 'timeline',
     }
     project_selectors = get_test_object do
-      # @sg-ignore Unresolved call to @mocks
-      @mocks[:custom_fields] = Checkoff::CustomFields.new(client:)
+      # @sg-ignore Wrong argument type for Checkoff::CustomFields.new: client expected Asana::Client, received Mocha::Mock
+      mocks[:custom_fields] = Checkoff::CustomFields.new(client:)
       custom_fields = [custom_field]
-      # @sg-ignore Unresolved call to project
       project.expects(:custom_fields).returns(custom_fields)
     end
 
@@ -70,10 +68,9 @@ class TestProjectSelectors < ClassTest
       'display_value' => 'timeline',
     }
     project_selectors = get_test_object do
-      # @sg-ignore Unresolved call to @mocks
-      @mocks[:custom_fields] = Checkoff::CustomFields.new(client:)
+      # @sg-ignore Wrong argument type for Checkoff::CustomFields.new: client expected Asana::Client, received Mocha::Mock
+      mocks[:custom_fields] = Checkoff::CustomFields.new(client:)
       custom_fields = [custom_field]
-      # @sg-ignore Unresolved call to project
       project.expects(:custom_fields).returns(custom_fields)
     end
 
@@ -95,10 +92,9 @@ class TestProjectSelectors < ClassTest
       'display_value' => 'timeline,something else',
     }
     project_selectors = get_test_object do
-      # @sg-ignore Unresolved call to @mocks
-      @mocks[:custom_fields] = Checkoff::CustomFields.new(client:)
+      # @sg-ignore Wrong argument type for Checkoff::CustomFields.new: client expected Asana::Client, received Mocha::Mock
+      mocks[:custom_fields] = Checkoff::CustomFields.new(client:)
       custom_fields = [custom_field]
-      # @sg-ignore Unresolved call to project
       project.expects(:custom_fields).returns(custom_fields)
     end
 
@@ -117,10 +113,9 @@ class TestProjectSelectors < ClassTest
       'display_value' => 'timeline,something else',
     }
     project_selectors = get_test_object do
-      # @sg-ignore Unresolved call to @mocks
-      @mocks[:custom_fields] = Checkoff::CustomFields.new(client:)
+      # @sg-ignore Wrong argument type for Checkoff::CustomFields.new: client expected Asana::Client, received Mocha::Mock
+      mocks[:custom_fields] = Checkoff::CustomFields.new(client:)
       custom_fields = [custom_field]
-      # @sg-ignore Unresolved call to project
       project.expects(:custom_fields).returns(custom_fields)
     end
 
@@ -133,10 +128,9 @@ class TestProjectSelectors < ClassTest
   # @return [void]
   def test_filter_via_custom_field_value_contains_any_value_no_custom_field_false
     project_selectors = get_test_object do
-      # @sg-ignore Unresolved call to @mocks
-      @mocks[:custom_fields] = Checkoff::CustomFields.new(client:)
+      # @sg-ignore Wrong argument type for Checkoff::CustomFields.new: client expected Asana::Client, received Mocha::Mock
+      mocks[:custom_fields] = Checkoff::CustomFields.new(client:)
       custom_fields = []
-      # @sg-ignore Unresolved call to project
       project.expects(:custom_fields).returns(custom_fields).at_least(1)
     end
 
@@ -149,7 +143,6 @@ class TestProjectSelectors < ClassTest
   # @return [void]
   def test_filter_via_due_date_false
     project_selectors = get_test_object do
-      # @sg-ignore Unresolved call to project
       project.expects(:due_date).returns('2099-01-01').at_least(1)
     end
 
@@ -161,7 +154,6 @@ class TestProjectSelectors < ClassTest
   # @return [void]
   def test_filter_via_ready_false
     project_selectors = get_test_object do
-      # @sg-ignore Unresolved call to projects
       projects.expects(:project_ready?).with(project, period: :now_or_before)
     end
 

@@ -16,7 +16,6 @@ class TestTags < ClassTest
   # @return [void]
   def test_tag_or_raise_raises
     tags = get_test_object do
-      # @sg-ignore Unresolved call to wrong_tag
       tag_arr = [wrong_tag]
       expect_tags_pulled(tag_arr)
     end
@@ -29,8 +28,6 @@ class TestTags < ClassTest
   # @return [void]
   def test_tag_or_raise
     tags = get_test_object do
-      # @sg-ignore Unresolved call to tag
-      # @sg-ignore Unresolved call to wrong_tag
       tag_arr = [wrong_tag, tag]
       expect_tags_pulled(tag_arr)
     end
@@ -42,17 +39,13 @@ class TestTags < ClassTest
 
   # @return [void]
   def expect_workspace_pulled
-    # @sg-ignore Unresolved call to workspaces
     workspaces.expects(:workspace_or_raise).with(workspace_name).returns(workspace)
-    # @sg-ignore Unresolved call to workspace
     workspace.expects(:gid).returns(workspace_gid)
   end
 
   # @return [void]
   def allow_tags_named
-    # @sg-ignore Unresolved call to wrong_tag
     wrong_tag.expects(:name).returns(wrong_tag_name).at_least(0)
-    # @sg-ignore Unresolved call to tag
     tag.expects(:name).returns(tag_name).at_least(0)
   end
 
@@ -60,9 +53,7 @@ class TestTags < ClassTest
   # @param tag_arr [Object]
   def expect_tags_pulled(tag_arr)
     expect_workspace_pulled
-    # @sg-ignore Unresolved call to client
     client.expects(:tags).returns(tags_api)
-    # @sg-ignore Unresolved call to tags_api
     tags_api.expects(:get_tags_for_workspace).returns(tag_arr)
     allow_tags_named
   end
@@ -70,8 +61,6 @@ class TestTags < ClassTest
   # @return [void]
   def test_tag
     tags = get_test_object do
-      # @sg-ignore Unresolved call to wrong_tag
-      # @sg-ignore Unresolved call to tag
       tag_arr = [wrong_tag, tag]
       expect_tags_pulled(tag_arr)
     end
@@ -105,7 +94,6 @@ class TestTags < ClassTest
   # @return [Hash{String => Object}]
   def build_response_body
     {
-      # @sg-ignore Unresolved call to response_body_data
       'data' => response_body_data,
     }
   end
@@ -115,25 +103,20 @@ class TestTags < ClassTest
   # @param task_endpoint [Object]
   # @param task_params [Object]
   def setup_client_expects(task_endpoint, task_params, merged_task_options)
-    # @sg-ignore Unresolved call to client
     client.expects(:get).with(task_endpoint, params: task_params, options: merged_task_options).returns(response)
   end
 
   # @return [void]
   # @param response_body [Object]
   def setup_response_expects(response_body)
-    # @sg-ignore Unresolved call to response
     response.expects(:body).returns(response_body).at_least(1)
   end
 
   # @return [void]
   def setup_collection_expects
-    # @sg-ignore Unresolved call to response_body_data
     Asana::Resources::Collection.expects(:new).with([response_body_data, {}],
                                                     type: Asana::Resources::Task,
-                                                    # @sg-ignore Unresolved call to client
                                                     client:)
-      # @sg-ignore Unresolved call to task_collection
       .returns(task_collection)
   end
 
@@ -161,7 +144,6 @@ class TestTags < ClassTest
 
   # @return [String]
   def generate_task_endpoint
-    # @sg-ignore Unresolved call to tag
     tag.expects(:gid).returns('tag_gid').at_least(1)
     # @sg-ignore Unresolved call to tag
     "/tags/#{tag.gid}/tasks"
@@ -176,13 +158,11 @@ class TestTags < ClassTest
   # @return [void]
   def test_tasks
     tags = get_test_object do
-      # @sg-ignore Unresolved call to @mocks
-      @mocks[:projects] = projects
+      mocks[:projects] = projects
       mock_tasks(only_uncompleted: true)
     end
 
     # Stub the tag_or_raise method to return the tag mock object
-    # @sg-ignore Unresolved call to tag
     tags.stubs(:tag_or_raise).returns(tag)
 
     # Call the tasks method with the necessary arguments
@@ -190,20 +170,17 @@ class TestTags < ClassTest
     result = tags.tasks(workspace_name, tag_name, only_uncompleted: true, extra_fields: %w[field1 field2])
 
     # Check that the tasks method returned the expected result
-    # @sg-ignore Unresolved call to task_collection
     assert_equal(task_collection, result)
   end
 
   # @return [void]
   def test_tasks_with_completed
     tags = get_test_object do
-      # @sg-ignore Unresolved call to @mocks
-      @mocks[:projects] = projects
+      mocks[:projects] = projects
       mock_tasks(only_uncompleted: false)
     end
 
     # Stub the tag_or_raise method to return the tag mock object
-    # @sg-ignore Unresolved call to tag
     tags.stubs(:tag_or_raise).returns(tag)
 
     # Call the tasks method with the necessary arguments and only_uncompleted set to false
@@ -211,7 +188,6 @@ class TestTags < ClassTest
     result = tags.tasks(workspace_name, tag_name, only_uncompleted: false, extra_fields: %w[field1 field2])
 
     # Check that the tasks method returned the expected result
-    # @sg-ignore Unresolved call to task_collection
     assert_equal(task_collection, result)
   end
 
