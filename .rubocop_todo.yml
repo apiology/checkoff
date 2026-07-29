@@ -6,7 +6,7 @@
 # Note that changes in the inspected code, or installation of new
 # versions of RuboCop, may require this file to be generated again.
 
-# Offense count: 30
+# Offense count: 18
 # Configuration parameters: AllowedMethods, AllowedPatterns, CountRepeatedAttributes, Max.
 Metrics/AbcSize:
   Exclude:
@@ -16,7 +16,6 @@ Metrics/AbcSize:
     - 'lib/checkoff/tasks.rb'
     - 'lib/checkoff/timelines.rb'
     - 'test/unit/test_portfolios.rb'
-    - 'test/unit/test_task_selectors.rb'
     - 'test/unit/test_tasks.rb'
     - 'test/unit/test_timelines.rb'
 

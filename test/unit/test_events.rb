@@ -8,6 +8,10 @@ require 'checkoff/events'
 class TestEvents < ClassTest
   extend Forwardable
 
+  # @!parse
+  #  # @return [Checkoff::Events]
+  #  def get_test_object; end
+
   def_delegators(:@mocks, :asana_event_filter_class)
 
   let_mock :filters, :event,
@@ -25,7 +29,8 @@ class TestEvents < ClassTest
       mock_filter_asana_events_true
     end
 
-    # @sg-ignore event from let_mock
+    # @sg-ignore Wrong argument type for Checkoff::Events#filter_asana_events: filters
+    #   expected Array<Hash>, nil, received Mocha::Mock
     assert_equal([event], events.filter_asana_events(filters, [event]))
   end
 
@@ -36,7 +41,8 @@ class TestEvents < ClassTest
       asana_event_filter.expects(:matches?).with(event).returns(false)
     end
 
-    # @sg-ignore filters/event from let_mock
+    # @sg-ignore Wrong argument type for Checkoff::Events#filter_asana_events: filters
+    #   expected Array<Hash>, nil, received Mocha::Mock
     assert_empty(events.filter_asana_events(filters, [event]))
   end
 

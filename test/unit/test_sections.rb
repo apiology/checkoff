@@ -41,7 +41,7 @@ class TestSections < BaseAsana
 
   # @return [void]
   def projects
-    # @sg-ignore Unresolved call to client
+    # @sg-ignore Wrong argument type for Checkoff::Projects.new: client expected Asana::Client, received Mocha::Mock
     @projects ||= Checkoff::Projects.new(client:)
   end
 

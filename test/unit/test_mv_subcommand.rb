@@ -20,18 +20,20 @@ class TestMvSubcommand < ClassTest
            :to_section, :to_section_gid,
            :task_a, :task_a_name
 
-  # @return [Object]
-  attr_reader :from_workspace_arg, :from_project_arg, :from_section_arg,
+  # @return [String]
+  attr_reader :from_project_arg
+
+  # @return [String, Symbol]
+  attr_reader :from_workspace_arg, :from_section_arg,
               :to_workspace_arg, :to_project_arg, :to_section_arg,
               :from_workspace_name, :from_project_name, :from_section_name,
               :to_workspace_name, :to_project_name, :to_section_name
 
-  # @return [Object]
-  # @param arg [Object]
+  # @param arg [String]
+  # @return [String, Symbol]
   def argument_to_name(arg)
-    # @sg-ignore Unresolved call to start_with?
     if arg.start_with? ':'
-      # @sg-ignore Unresolved call to []
+      # @sg-ignore Unresolved call to to_sym on String, nil
       arg[1..].to_sym
     else
       arg
@@ -39,9 +41,9 @@ class TestMvSubcommand < ClassTest
   end
 
   # @return [void]
-  # @param project [Object]
-  # @param project_name [Object]
-  # @param workspace_name [Object]
+  # @param project [Mocha::Mock]
+  # @param project_name [String, Symbol]
+  # @param workspace_name [String, Symbol]
   def expect_project_pulled(workspace_name, project_name, project)
     projects.expects(:project_or_raise)
       .with(workspace_name, project_name)
@@ -49,20 +51,20 @@ class TestMvSubcommand < ClassTest
   end
 
   # @return [void]
-  # @param project_name [Object]
-  # @param workspace_name [Object]
-  # @param section [Object]
-  # @param section_name [Object]
+  # @param project_name [String, Symbol]
+  # @param workspace_name [String, Symbol]
+  # @param section [Mocha::Mock]
+  # @param section_name [String, Symbol]
   def expect_section_pulled(workspace_name, project_name, section_name, section)
     sections.expects(:section_or_raise).with(workspace_name, project_name, section_name)
       .returns(section)
   end
 
   # @return [void]
-  # @param workspace_name [Object]
-  # @param tasks [Object]
-  # @param section_name [Object]
-  # @param project_name [Object]
+  # @param workspace_name [String, Symbol]
+  # @param tasks [Array<Mocha::Mock>]
+  # @param section_name [String, Symbol]
+  # @param project_name [String, Symbol]
   def expect_tasks_pulled(workspace_name, project_name, section_name, tasks)
     return if section_name == :all_sections # not implemented yet
 
@@ -71,37 +73,37 @@ class TestMvSubcommand < ClassTest
   end
 
   # @return [void]
-  # @param task [Object]
-  # @param task_name [Object]
+  # @param task [Mocha::Mock]
+  # @param task_name [Mocha::Mock]
   def expect_task_named(task, task_name)
     task.expects(:name).returns(task_name)
   end
 
   # @return [void]
-  # @param section_name [Object]
-  # @param section [Object]
+  # @param section_name [String, Symbol]
+  # @param section [Mocha::Mock]
   def expect_section_named(section, section_name)
     section.expects(:name).returns(section_name)
   end
 
   # @return [void]
-  # @param project_gid [Object]
-  # @param project [Object]
+  # @param project_gid [Mocha::Mock]
+  # @param project [Mocha::Mock]
   def expect_project_gid_pulled(project, project_gid)
     project.expects(:gid).returns(project_gid)
   end
 
   # @return [void]
-  # @param section [Object]
-  # @param section_gid [Object]
+  # @param section [Mocha::Mock]
+  # @param section_gid [Mocha::Mock]
   def expect_section_gid_pulled(section, section_gid)
     section.expects(:gid).returns(section_gid)
   end
 
   # @return [void]
-  # @param section_gid [Object]
-  # @param project_gid [Object]
-  # @param task [Object]
+  # @param section_gid [Mocha::Mock]
+  # @param project_gid [Mocha::Mock]
+  # @param task [Mocha::Mock]
   def expect_task_added_to_project(task, project_gid, section_gid)
     task.expects(:add_project).with(project: project_gid, section: section_gid)
   end
@@ -123,9 +125,9 @@ class TestMvSubcommand < ClassTest
   end
   # rubocop:enable Metrics/AbcSize
 
-  # @return [void]
-  # @param from_workspace_arg [Object]
-  # @param to_workspace_arg [Object]
+  # @param from_workspace_arg [String, Symbol]
+  # @param to_workspace_arg [String, Symbol]
+  # @return [String, Symbol]
   def determine_to_workspace_name(from_workspace_arg, to_workspace_arg)
     if to_workspace_arg == :source_workspace
       from_workspace_arg
@@ -134,9 +136,9 @@ class TestMvSubcommand < ClassTest
     end
   end
 
-  # @return [void]
-  # @param to_project_arg [Object]
-  # @param from_project_name [Object]
+  # @param to_project_arg [String, Symbol]
+  # @param from_project_name [String, Symbol]
+  # @return [String, Symbol]
   def determine_to_project_name(from_project_name, to_project_arg)
     if to_project_arg == :source_project
       from_project_name
@@ -145,9 +147,9 @@ class TestMvSubcommand < ClassTest
     end
   end
 
-  # @return [void]
-  # @param from_section_name [Object]
-  # @param to_section_arg [Object]
+  # @param from_section_name [String, Symbol]
+  # @param to_section_arg [String, Symbol]
+  # @return [String, Symbol]
   def determine_to_section_name(from_section_name, to_section_arg)
     if to_section_arg == :source_section
       from_section_name
@@ -157,8 +159,8 @@ class TestMvSubcommand < ClassTest
   end
 
   # @return [void]
-  # @param task_name [Object]
-  # @param task [Object]
+  # @param task_name [Mocha::Mock]
+  # @param task [Mocha::Mock]
   def expect_task_added_to_section(task, task_name)
     return if from_section_name == :all_sections # not implemented yet
 

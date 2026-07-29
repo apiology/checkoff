@@ -6,6 +6,10 @@ require_relative '../class_test'
 require 'checkoff/internal/project_hashes'
 
 class TestProjectHashes < ClassTest
+  # @!parse
+  #  # @return [Checkoff::Internal::ProjectHashes]
+  #  def get_test_object; end
+
   let_mock :project
 
   PROJECT_A_RAW_HASH = {
@@ -64,7 +68,8 @@ class TestProjectHashes < ClassTest
       project.expects(:name).returns('a')
     end
 
-    # @sg-ignore project from let_mock; project_to_h return is opaque here
+    # @sg-ignore Wrong argument type for Checkoff::Internal::ProjectHashes#project_to_h: project_obj
+    #   expected Asana::Resources::Project, received Mocha::Mock
     assert_equal(PROJECT_A_HASH, project_hashes.project_to_h(project))
   end
 
@@ -75,7 +80,8 @@ class TestProjectHashes < ClassTest
       project.expects(:name).returns('b')
     end
 
-    # @sg-ignore project from let_mock
+    # @sg-ignore Wrong argument type for Checkoff::Internal::ProjectHashes#project_to_h: project_obj
+    #   expected Asana::Resources::Project, received Mocha::Mock
     assert_equal(PROJECT_B_HASH, project_hashes.project_to_h(project))
   end
 
@@ -85,10 +91,10 @@ class TestProjectHashes < ClassTest
       project.expects(:to_h).returns(PROJECT_B_RAW_HASH.dup)
     end
 
-    # @sg-ignore project from let_mock
+    # @sg-ignore Wrong argument type for Checkoff::Internal::ProjectHashes#project_to_h: project_obj
+    #   expected Asana::Resources::Project, received Mocha::Mock
     project_data = project_hashes.project_to_h(project, project: :my_tasks)
 
-    # @sg-ignore project_to_h hash value access
     assert_equal(:my_tasks, project_data['project'])
   end
 

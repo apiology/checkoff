@@ -7,6 +7,10 @@ require_relative 'class_test'
 class TestClients < ClassTest
   extend Forwardable
 
+  # @!parse
+  #  # @return [Checkoff::Clients]
+  #  def get_test_object; end
+
   def_delegators(:@mocks, :asana_client_class, :config)
 
   let_mock :client, :personal_access_token
@@ -31,7 +35,6 @@ class TestClients < ClassTest
       mock_client
     end
 
-    # @sg-ignore client from let_mock
     assert_equal(client, clients.client)
   end
 

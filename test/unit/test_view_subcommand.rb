@@ -61,10 +61,11 @@ class TestViewSubcommand < ClassTest
     assert_match(/Task not found/, e.message)
   end
 
+  # @param clazz [Class<Checkoff::ViewSubcommand>]
   # @return [Checkoff::ViewSubcommand]
-  # @sg-ignore TestViewSubcommand#create_object return type could not be inferred
   def create_object(clazz = class_under_test)
-    # @sg-ignore Too many arguments to Class#initialize
+    # @sg-ignore Wrong argument type for Checkoff::ViewSubcommand.new: section_name
+    #   expected String, Symbol, nil, received NilClass
     clazz.new('workspace', :project, nil, task_name, **mocks.to_h)
   end
 

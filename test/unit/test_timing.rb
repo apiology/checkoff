@@ -18,7 +18,7 @@ class TestTiming < ClassTest
   def test_in_period_this_week_date_true
     date = Date.parse('2019-01-04') # Friday
     timing = get_test_object do
-      # @sg-ignore Unresolved call to today_getter
+      # @sg-ignore Not enough arguments to Date.new
       today_getter.expects(:today).returns(Date.new(2019, 1, 1)) # Tuesday
     end
 
@@ -45,7 +45,7 @@ class TestTiming < ClassTest
   def test_in_period_day_of_week_saturday_false
     date = Date.parse('2099-01-04')
     timing = get_test_object do
-      # @sg-ignore Unresolved call to today_getter
+      # @sg-ignore Not enough arguments to Date.new
       today_getter.expects(:today).returns(Date.new(2019, 1, 1)) # Tuesday
     end
 
