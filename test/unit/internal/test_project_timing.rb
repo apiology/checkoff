@@ -14,7 +14,9 @@ class TestProjectTiming < ClassTest
 
   def_delegators(:@mocks, :custom_fields)
 
-  let_mock :project, :custom_field_name
+  typed_let_mock :project, Asana::Resources::Project
+
+  let_mock :custom_field_name
 
   # @return [void]
   def test_date_or_time_field_by_name_due
@@ -23,9 +25,6 @@ class TestProjectTiming < ClassTest
       project.expects(:due_on).returns('2020-01-23').at_least_once
     end
 
-    # @sg-ignore Wrong argument type for Checkoff::Internal::ProjectTiming#date_or_time_field_by_name: project
-    #   expected Asana::Resources::Project, received Mocha::Mock
-    # https://github.com/castwide/solargraph/issues/1229
     assert_equal(Date.parse('2020-01-23'), project_timing.date_or_time_field_by_name(project, :due))
   end
 
@@ -36,9 +35,6 @@ class TestProjectTiming < ClassTest
       project.expects(:due_on).returns(nil).at_least_once
     end
 
-    # @sg-ignore Wrong argument type for Checkoff::Internal::ProjectTiming#date_or_time_field_by_name: project
-    #   expected Asana::Resources::Project, received Mocha::Mock
-    # https://github.com/castwide/solargraph/issues/1229
     assert_nil(project_timing.date_or_time_field_by_name(project, :due))
   end
 
@@ -49,9 +45,6 @@ class TestProjectTiming < ClassTest
       project.expects(:start_on).returns('2020-01-23').at_least_once
     end
 
-    # @sg-ignore Wrong argument type for Checkoff::Internal::ProjectTiming#date_or_time_field_by_name: project
-    #   expected Asana::Resources::Project, received Mocha::Mock
-    # https://github.com/castwide/solargraph/issues/1229
     assert_equal(Date.parse('2020-01-23'), project_timing.date_or_time_field_by_name(project, :start))
   end
 
@@ -62,9 +55,6 @@ class TestProjectTiming < ClassTest
       project.expects(:start_on).returns(nil).at_least_once
     end
 
-    # @sg-ignore Wrong argument type for Checkoff::Internal::ProjectTiming#date_or_time_field_by_name: project
-    #   expected Asana::Resources::Project, received Mocha::Mock
-    # https://github.com/castwide/solargraph/issues/1229
     assert_nil(project_timing.date_or_time_field_by_name(project, :start))
   end
 
@@ -75,9 +65,6 @@ class TestProjectTiming < ClassTest
       project.expects(:start_on).returns('2020-01-23').at_least_once
     end
 
-    # @sg-ignore Wrong argument type for Checkoff::Internal::ProjectTiming#date_or_time_field_by_name: project
-    #   expected Asana::Resources::Project, received Mocha::Mock
-    # https://github.com/castwide/solargraph/issues/1229
     assert_equal(Date.parse('2020-01-23'), project_timing.date_or_time_field_by_name(project, :ready))
   end
 
@@ -94,10 +81,6 @@ class TestProjectTiming < ClassTest
     end
 
     assert_equal(Time.parse('2020-01-23 01:23:00 -0500'),
-                 # @sg-ignore Wrong argument type for
-                 #   Checkoff::Internal::ProjectTiming#date_or_time_field_by_name: project
-                 #   expected Asana::Resources::Project, received Mocha::Mock
-                 # https://github.com/castwide/solargraph/issues/1229
                  project_timing.date_or_time_field_by_name(project,
                                                            [:custom_field,
                                                             custom_field_name]))
@@ -115,9 +98,6 @@ class TestProjectTiming < ClassTest
         .returns(resource_custom_field)
     end
 
-    # @sg-ignore Wrong argument type for Checkoff::Internal::ProjectTiming#date_or_time_field_by_name: project
-    #   expected Asana::Resources::Project, received Mocha::Mock
-    # https://github.com/castwide/solargraph/issues/1229
     assert_nil(project_timing.date_or_time_field_by_name(project,
                                                          [:custom_field,
                                                           custom_field_name]))
@@ -126,9 +106,6 @@ class TestProjectTiming < ClassTest
   # @return [void]
   def test_date_or_time_field_by_name_raises_if_unknown_field
     project_timing = get_test_object
-    # @sg-ignore Wrong argument type for Checkoff::Internal::ProjectTiming#date_or_time_field_by_name: project
-    #   expected Asana::Resources::Project, received Mocha::Mock
-    # https://github.com/castwide/solargraph/issues/1229
     e = assert_raises(RuntimeError) { project_timing.date_or_time_field_by_name(project, :blah) }
 
     assert_equal 'Teach me how to handle field :blah', e.message
@@ -137,9 +114,6 @@ class TestProjectTiming < ClassTest
   # @return [void]
   def test_date_or_time_field_by_name_raises_if_unknown_array_field
     project_timing = get_test_object
-    # @sg-ignore Wrong argument type for Checkoff::Internal::ProjectTiming#date_or_time_field_by_name: project
-    #   expected Asana::Resources::Project, received Mocha::Mock
-    # https://github.com/castwide/solargraph/issues/1229
     e = assert_raises(RuntimeError) { project_timing.date_or_time_field_by_name(project, [:blah]) }
 
     assert_equal 'Teach me how to handle field [:blah]', e.message

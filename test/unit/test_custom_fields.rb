@@ -13,7 +13,10 @@ class TestCustomFields < ClassTest
 
   def_delegators(:@mocks, :workspaces, :client)
 
-  let_mock :workspace_name, :custom_field_name, :custom_field, :workspace, :workspace_gid,
+  typed_let_mock :workspace_name, String
+  typed_let_mock :custom_field_name, String
+
+  let_mock :custom_field, :workspace, :workspace_gid,
            :custom_fields_api, :wrong_custom_field, :wrong_custom_field_name
 
   # @return [void]
@@ -23,9 +26,6 @@ class TestCustomFields < ClassTest
       expect_custom_fields_pulled(custom_field_arr)
     end
     assert_raises(RuntimeError) do
-      # @sg-ignore Wrong argument type for Checkoff::CustomFields#custom_field_or_raise: workspace_name
-      #   expected String, received Mocha::Mock
-      # https://github.com/castwide/solargraph/issues/1229
       custom_fields.custom_field_or_raise(workspace_name, custom_field_name)
     end
   end
@@ -37,9 +37,6 @@ class TestCustomFields < ClassTest
       expect_custom_fields_pulled(custom_field_arr)
     end
 
-    # @sg-ignore Wrong argument type for Checkoff::CustomFields#custom_field_or_raise: workspace_name
-    #   expected String, received Mocha::Mock
-    # https://github.com/castwide/solargraph/issues/1229
     assert_equal(custom_field, custom_fields.custom_field_or_raise(workspace_name,
                                                                    custom_field_name))
   end
@@ -72,8 +69,6 @@ class TestCustomFields < ClassTest
       expect_custom_fields_pulled(custom_field_arr)
     end
 
-    # @sg-ignore Wrong argument type for Checkoff::CustomFields#custom_field: workspace_name expected String, received Mocha::Mock
-    # https://github.com/castwide/solargraph/issues/1229
     assert_equal(custom_field, custom_fields.custom_field(workspace_name, custom_field_name))
   end
 

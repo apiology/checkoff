@@ -15,7 +15,10 @@ class TestTaskSearches < ClassTest
   def_delegators(:@mocks, :workspaces, :client, :search_url_parser,
                  :asana_resources_collection_class, :task_selectors)
 
-  let_mock :url, :workspace_name, :workspace, :workspace_gid, :api_params,
+  typed_let_mock :workspace_name, String
+  typed_let_mock :url, String
+
+  let_mock :workspace, :workspace_gid, :api_params,
            :task_selector, :search_response, :body, :data, :something_else,
            :good_task, :bad_task
 
@@ -114,8 +117,6 @@ class TestTaskSearches < ClassTest
       mock_task_search
     end
 
-    # @sg-ignore Wrong argument type for Checkoff::TaskSearches#task_search: workspace_name expected String, received Mocha::Mock
-    # https://github.com/castwide/solargraph/issues/1229
     assert_equal([good_task], task_searches.task_search(workspace_name, url))
   end
 

@@ -24,11 +24,13 @@ class TestProjects < BaseAsana
     client.expects(:projects).returns(projects).at_least(1)
   end
 
+  typed_let_mock :project, Asana::Resources::Project
+
   let_mock :workspaces, :workspace_workspace, :some_other_workspace,
            :workspace_one, :workspace_one_gid, :my_workspace_gid, :n,
            :workspace_name, :all_workspaces, :my_tasks_project, :tasks,
            :task_a, :task_b, :user_task_lists, :user_task_list, :project_a_hash,
-           :project, :project_gid, :client_projects, :field_name, :period,
+           :project_gid, :client_projects, :field_name, :period,
            :returned_date
 
   # @return [Hash{Mocha::Mock => Mocha::Mock}]
@@ -205,8 +207,7 @@ class TestProjects < BaseAsana
       mock_test_in_period
     end
 
-    # @sg-ignore Wrong argument type for Checkoff::Projects#in_period?: project
-    #   expected Asana::Resources::Project, received Mocha::Mock
+    # @sg-ignore Wrong argument type for Checkoff::Projects#in_period?: field_name expected Symbol, Array, received Mocha::Mock
     # https://github.com/castwide/solargraph/issues/1229
     assert(projects.in_period?(project, field_name, period))
   end
@@ -225,8 +226,8 @@ class TestProjects < BaseAsana
       mock_project_ready
     end
 
-    # @sg-ignore Wrong argument type for Checkoff::Projects#project_ready?: project
-    #   expected Asana::Resources::Project, received Mocha::Mock
+    # @sg-ignore Wrong argument type for Checkoff::Projects#project_ready?: period
+    #   expected Symbol, Array(Symbol, Integer), received Mocha::Mock
     # https://github.com/castwide/solargraph/issues/1229
     assert(projects.project_ready?(project, period:))
   end

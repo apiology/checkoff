@@ -14,7 +14,10 @@ class TestAttachments < ClassTest
 
   def_delegators(:@mocks, :client)
 
-  let_mock :attachment_name, :resource, :parent_gid, :response
+  typed_let_mock :resource, Asana::Resources::Resource
+  typed_let_mock :attachment_name, String
+
+  let_mock :parent_gid, :response
 
   # @return [void]
   # @param url [String]
@@ -41,9 +44,6 @@ class TestAttachments < ClassTest
     attachments = get_test_object do
       mock_create_attachment_from_url(url)
     end
-    # @sg-ignore Wrong argument type for Checkoff::Attachments#create_attachment_from_url!: resource
-    #   expected Asana::Resources::Resource, received Mocha::Mock
-    # https://github.com/castwide/solargraph/issues/1229
     attachment = attachments.create_attachment_from_url!(url, resource, attachment_name:, just_the_url: true)
 
     # @sg-ignore Unresolved call to foo

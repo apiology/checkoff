@@ -14,7 +14,9 @@ class TestWorkspaces < BaseAsana
 
   def_delegators(:@mocks, :client, :asana_workspace)
 
-  let_mock :workspace_a_name, :workspace_a, :workspace_a_gid,
+  typed_let_mock :workspace_a_name, String
+
+  let_mock :workspace_a, :workspace_a_gid,
            :workspace_b_name, :workspace_b, :workspace_b_gid,
            :workspaces, :workspace_a
 
@@ -29,9 +31,6 @@ class TestWorkspaces < BaseAsana
   def test_workspace_or_raise_nil
     asana = get_test_object { mock_workspace_or_raise_nil }
     assert_raises(RuntimeError) do
-      # @sg-ignore Wrong argument type for Checkoff::Workspaces#workspace_or_raise: workspace_name
-      #   expected String, Symbol, received Mocha::Mock
-      # https://github.com/castwide/solargraph/issues/1229
       asana.workspace_or_raise(workspace_a_name)
     end
   end
@@ -47,9 +46,6 @@ class TestWorkspaces < BaseAsana
   def test_workspace_or_raise
     asana = get_test_object { mock_workspace_or_raise }
 
-    # @sg-ignore Wrong argument type for Checkoff::Workspaces#workspace_or_raise: workspace_name
-    #   expected String, Symbol, received Mocha::Mock
-    # https://github.com/castwide/solargraph/issues/1229
     assert_equal(workspace_a, asana.workspace_or_raise(workspace_a_name))
   end
 

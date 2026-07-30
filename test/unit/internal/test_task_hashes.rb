@@ -10,7 +10,7 @@ class TestTaskHashes < ClassTest
   #  # @return [Checkoff::Internal::TaskHashes]
   #  def get_test_object; end
 
-  let_mock :task
+  typed_let_mock :task, Asana::Resources::Task
 
   MEMBER_OF_SECTION_A_IN_PROJECT_1 = {
     'section' => {
@@ -101,9 +101,6 @@ class TestTaskHashes < ClassTest
       task.expects(:name).returns('a')
     end
 
-    # @sg-ignore Wrong argument type for Checkoff::Internal::TaskHashes#task_to_h: task
-    #   expected Asana::Resources::Task, received Mocha::Mock
-    # https://github.com/castwide/solargraph/issues/1229
     assert_equal(TASK_A_HASH, task_hashes.task_to_h(task))
   end
 
@@ -114,9 +111,6 @@ class TestTaskHashes < ClassTest
       task.expects(:name).returns('b')
     end
 
-    # @sg-ignore Wrong argument type for Checkoff::Internal::TaskHashes#task_to_h: task
-    #   expected Asana::Resources::Task, received Mocha::Mock
-    # https://github.com/castwide/solargraph/issues/1229
     assert_equal(TASK_B_HASH, task_hashes.task_to_h(task))
   end
 

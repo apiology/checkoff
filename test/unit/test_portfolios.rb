@@ -14,9 +14,13 @@ class TestPortfolios < ClassTest
 
   def_delegators(:@mocks, :workspaces, :client)
 
-  let_mock :workspace_name, :portfolio_name, :portfolio, :workspace, :workspace_gid,
+  typed_let_mock :workspace_name, String
+  typed_let_mock :portfolio_gid, String
+  typed_let_mock :portfolio_name, String
+
+  let_mock :portfolio, :workspace, :workspace_gid,
            :portfolios_api, :wrong_portfolio, :wrong_portfolio_name, :users_api, :me, :me_gid,
-           :portfolio_gid, :project_a
+           :project_a
 
   # @return [void]
   def test_portfolio_or_raise_raises
@@ -25,9 +29,6 @@ class TestPortfolios < ClassTest
       expect_portfolios_pulled(portfolio_arr)
     end
     assert_raises(RuntimeError) do
-      # @sg-ignore Wrong argument type for Checkoff::Portfolios#portfolio_or_raise: workspace_name
-      #   expected String, received Mocha::Mock
-      # https://github.com/castwide/solargraph/issues/1229
       portfolios.portfolio_or_raise(workspace_name, portfolio_name)
     end
   end
@@ -39,9 +40,6 @@ class TestPortfolios < ClassTest
       expect_portfolios_pulled(portfolio_arr)
     end
 
-    # @sg-ignore Wrong argument type for Checkoff::Portfolios#portfolio_or_raise: workspace_name
-    #   expected String, received Mocha::Mock
-    # https://github.com/castwide/solargraph/issues/1229
     assert_equal(portfolio, portfolios.portfolio_or_raise(workspace_name, portfolio_name))
   end
 
@@ -87,8 +85,6 @@ class TestPortfolios < ClassTest
       expect_portfolios_pulled(portfolio_arr)
     end
 
-    # @sg-ignore Wrong argument type for Checkoff::Portfolios#portfolio: workspace_name expected String, received Mocha::Mock
-    # https://github.com/castwide/solargraph/issues/1229
     assert_equal(portfolio, portfolios.portfolio(workspace_name, portfolio_name))
   end
 
@@ -100,9 +96,6 @@ class TestPortfolios < ClassTest
                                                options: { fields: ['name'] }).returns(portfolio)
     end
 
-    # @sg-ignore Wrong argument type for Checkoff::Portfolios#portfolio_by_gid: portfolio_gid
-    #   expected String, received Mocha::Mock
-    # https://github.com/castwide/solargraph/issues/1229
     assert_equal(portfolio, portfolios.portfolio_by_gid(portfolio_gid))
   end
 
@@ -121,9 +114,6 @@ class TestPortfolios < ClassTest
                                                                                   name] }).returns([project_a])
     end
 
-    # @sg-ignore Wrong argument type for Checkoff::Portfolios#projects_in_portfolio: workspace_name
-    #   expected String, received Mocha::Mock
-    # https://github.com/castwide/solargraph/issues/1229
     assert_equal([project_a], portfolios.projects_in_portfolio(workspace_name, portfolio_name))
   end
 
