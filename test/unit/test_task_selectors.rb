@@ -7,13 +7,32 @@ require 'checkoff/task_selectors'
 
 # rubocop:disable Metrics/ClassLength
 class TestTaskSelectors < ClassTest
-  extend Forwardable
-
   # @!parse
   #  # @return [Checkoff::TaskSelectors]
   #  def get_test_object; end
 
-  def_delegators(:@mocks, :tasks, :timelines, :client)
+  # rubocop:disable YARD/TagTypeSyntax
+  # @return [Mocha::Mock & Checkoff::Tasks]
+  # @sg-ignore TestTaskSelectors#tasks return type could not be inferred
+  def tasks
+    # @sg-ignore Unresolved call to tasks on MyOpenStruct
+    mocks.tasks
+  end
+
+  # @return [Mocha::Mock & Checkoff::Timelines]
+  # @sg-ignore TestTaskSelectors#timelines return type could not be inferred
+  def timelines
+    # @sg-ignore Unresolved call to timelines on MyOpenStruct
+    mocks.timelines
+  end
+
+  # @return [Mocha::Mock & Asana::Client]
+  # @sg-ignore TestTaskSelectors#client return type could not be inferred
+  def client
+    # @sg-ignore Unresolved call to client on MyOpenStruct
+    mocks.client
+  end
+  # rubocop:enable YARD/TagTypeSyntax
 
   let_mock :custom_field
   typed_let_mock :task, Asana::Resources::Task
@@ -24,15 +43,11 @@ class TestTaskSelectors < ClassTest
 
   # @return [void]
   def stub_custom_fields
-    # @sg-ignore Wrong argument type for Checkoff::CustomFields.new: client expected Asana::Client, received Mocha::Mock
-    # https://github.com/castwide/solargraph/issues/1229
     mocks[:custom_fields] = Checkoff::CustomFields.new(client:)
   end
 
   # @return [void]
   def stub_tasks
-    # @sg-ignore Wrong argument type for Checkoff::Tasks.new: client expected Asana::Client, received Mocha::Mock
-    # https://github.com/castwide/solargraph/issues/1229
     mocks[:tasks] = Checkoff::Tasks.new(client:)
   end
 

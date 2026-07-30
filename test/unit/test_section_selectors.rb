@@ -14,7 +14,7 @@ class TestSectionSelectors < ClassTest
 
   def_delegators(:@mocks, :client, :sections)
 
-  let_mock :section
+  typed_let_mock :section, Asana::Resources::Section
 
   let_mock :tasks
 
@@ -29,7 +29,6 @@ class TestSectionSelectors < ClassTest
                                      options: { fields: ['resource_subtype'] }).returns([])
     end
 
-    # @sg-ignore Unresolved call to section
     refute(section_selectors.filter_via_section_selector(section,
                                                          [:ends_with_milestone]))
   end
@@ -59,7 +58,6 @@ class TestSectionSelectors < ClassTest
       mock_filter_via_ends_with_milestone_true
     end
 
-    # @sg-ignore Unresolved call to section
     assert(section_selectors.filter_via_section_selector(section,
                                                          [:ends_with_milestone]))
   end
@@ -68,7 +66,6 @@ class TestSectionSelectors < ClassTest
   def test_bogus_raises
     section_selectors = get_test_object
 
-    # @sg-ignore Unresolved call to section
     e = assert_raises(RuntimeError) { section_selectors.filter_via_section_selector(section, [:bogus]) }
 
     assert_match(/Syntax issue trying to handle/, e.message)
@@ -81,7 +78,6 @@ class TestSectionSelectors < ClassTest
       sections.expects(:tasks_by_section_gid).with('1234').returns([])
     end
 
-    # @sg-ignore Unresolved call to section
     refute(section_selectors.filter_via_section_selector(section,
                                                          [:has_tasks?]))
   end

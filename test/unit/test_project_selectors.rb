@@ -8,13 +8,22 @@ require 'checkoff/project_selectors'
 class TestProjectSelectors < ClassTest
   extend Forwardable
 
-  def_delegators(:@mocks, :client, :projects)
+  def_delegators(:@mocks, :projects)
 
   # @!parse
   #  # @return [Checkoff::ProjectSelectors]
   #  def get_test_object; end
 
-  typed_mock :project, Asana::Resources::Project
+  # rubocop:disable YARD/TagTypeSyntax
+  # @return [Mocha::Mock & Asana::Client]
+  # @sg-ignore TestProjectSelectors#client return type could not be inferred
+  def client
+    # @sg-ignore Unresolved call to client on MyOpenStruct
+    mocks.client
+  end
+  # rubocop:enable YARD/TagTypeSyntax
+
+  typed_let_mock :project, Asana::Resources::Project
 
   # @return [void]
   def test_filter_via_custom_field_value_contain_any_value_false
@@ -25,8 +34,6 @@ class TestProjectSelectors < ClassTest
       'display_value' => 'something else',
     }
     project_selectors = get_test_object do
-      # @sg-ignore Wrong argument type for Checkoff::CustomFields.new: client expected Asana::Client, received Mocha::Mock
-      # https://github.com/castwide/solargraph/issues/1229
       mocks[:custom_fields] = Checkoff::CustomFields.new(client:)
       custom_fields = [custom_field]
       project.expects(:custom_fields).returns(custom_fields)
@@ -46,8 +53,6 @@ class TestProjectSelectors < ClassTest
       'display_value' => 'timeline',
     }
     project_selectors = get_test_object do
-      # @sg-ignore Wrong argument type for Checkoff::CustomFields.new: client expected Asana::Client, received Mocha::Mock
-      # https://github.com/castwide/solargraph/issues/1229
       mocks[:custom_fields] = Checkoff::CustomFields.new(client:)
       custom_fields = [custom_field]
       project.expects(:custom_fields).returns(custom_fields)
@@ -68,8 +73,6 @@ class TestProjectSelectors < ClassTest
       'display_value' => 'timeline',
     }
     project_selectors = get_test_object do
-      # @sg-ignore Wrong argument type for Checkoff::CustomFields.new: client expected Asana::Client, received Mocha::Mock
-      # https://github.com/castwide/solargraph/issues/1229
       mocks[:custom_fields] = Checkoff::CustomFields.new(client:)
       custom_fields = [custom_field]
       project.expects(:custom_fields).returns(custom_fields)
@@ -92,8 +95,6 @@ class TestProjectSelectors < ClassTest
       'display_value' => 'timeline,something else',
     }
     project_selectors = get_test_object do
-      # @sg-ignore Wrong argument type for Checkoff::CustomFields.new: client expected Asana::Client, received Mocha::Mock
-      # https://github.com/castwide/solargraph/issues/1229
       mocks[:custom_fields] = Checkoff::CustomFields.new(client:)
       custom_fields = [custom_field]
       project.expects(:custom_fields).returns(custom_fields)
@@ -113,8 +114,6 @@ class TestProjectSelectors < ClassTest
       'display_value' => 'timeline,something else',
     }
     project_selectors = get_test_object do
-      # @sg-ignore Wrong argument type for Checkoff::CustomFields.new: client expected Asana::Client, received Mocha::Mock
-      # https://github.com/castwide/solargraph/issues/1229
       mocks[:custom_fields] = Checkoff::CustomFields.new(client:)
       custom_fields = [custom_field]
       project.expects(:custom_fields).returns(custom_fields)
@@ -128,8 +127,6 @@ class TestProjectSelectors < ClassTest
   # @return [void]
   def test_filter_via_custom_field_value_contains_any_value_no_custom_field_false
     project_selectors = get_test_object do
-      # @sg-ignore Wrong argument type for Checkoff::CustomFields.new: client expected Asana::Client, received Mocha::Mock
-      # https://github.com/castwide/solargraph/issues/1229
       mocks[:custom_fields] = Checkoff::CustomFields.new(client:)
       custom_fields = []
       project.expects(:custom_fields).returns(custom_fields).at_least(1)

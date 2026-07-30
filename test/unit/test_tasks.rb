@@ -13,16 +13,25 @@ class TestTasks < BaseAsana
   #  # @return [Checkoff::Tasks]
   #  def get_test_object; end
 
-  def_delegators :@mocks, :sections, :asana_task, :time_class, :date_class, :client, :workspaces,
+  def_delegators :@mocks, :sections, :asana_task, :time_class, :date_class, :workspaces,
                  :portfolios
+
+  typed_let_mock :task, Asana::Resources::Task
+
+  # rubocop:disable YARD/TagTypeSyntax
+  # @return [Mocha::Mock & Asana::Client]
+  # @sg-ignore TestTasks#client return type could not be inferred
+  def client
+    # @sg-ignore Unresolved call to client on MyOpenStruct
+    mocks.client
+  end
+  # rubocop:enable YARD/TagTypeSyntax
 
   let_mock :mock_tasks, :modified_mock_tasks, :tasks_by_section,
            :unflattened_modified_mock_tasks, :task_hashes, :project_gid, :wrong_project,
            :wrong_project_gid, :asana_tasks_client, :task_gid
 
   let_mock :default_workspace, :workspace_gid, :task_name, :default_assignee_gid
-
-  typed_let_mock :task, Asana::Resources::Task
 
   let_mock :start_on_string, :start_on_date_obj,
            :start_on_time_obj,
@@ -449,8 +458,6 @@ class TestTasks < BaseAsana
   # @return [void]
   def test_gid_for_task
     tasks = get_test_object do
-      # @sg-ignore Wrong argument type for Checkoff::Projects.new: client expected Asana::Client, received Mocha::Mock
-      # https://github.com/castwide/solargraph/issues/1229
       projects_instance = Checkoff::Projects.new(client:)
       sections.expects(:projects).returns(projects_instance).at_least_once
       projects_instance.expects(:project_or_raise).with(workspace_name, project_name).returns(project)
@@ -471,8 +478,6 @@ class TestTasks < BaseAsana
   # @return [void]
   def test_gid_for_task_not_found
     tasks = get_test_object do
-      # @sg-ignore Wrong argument type for Checkoff::Projects.new: client expected Asana::Client, received Mocha::Mock
-      # https://github.com/castwide/solargraph/issues/1229
       projects_instance = Checkoff::Projects.new(client:)
       sections.expects(:projects).returns(projects_instance).at_least_once
       projects_instance.expects(:project_or_raise).with(workspace_name, project_name).returns(project)

@@ -29,7 +29,8 @@ class TestTiming < ClassTest
   def test_in_period_this_week_nil_true
     timing = get_test_object
 
-    # @sg-ignore Unresolved call to in_period?
+    # @sg-ignore Wrong argument type for Checkoff::Timing#in_period?: date_or_time
+    #   expected Date, Time, nil, received NilClass
     assert(timing.in_period?(nil, :this_week))
   end
 
@@ -37,7 +38,8 @@ class TestTiming < ClassTest
   def test_in_period_day_of_week_nil_false
     timing = get_test_object
 
-    # @sg-ignore Unresolved call to in_period?
+    # @sg-ignore Wrong argument type for Checkoff::Timing#in_period?: date_or_time
+    #   expected Date, Time, nil, received NilClass
     refute(timing.in_period?(nil, :saturday))
   end
 

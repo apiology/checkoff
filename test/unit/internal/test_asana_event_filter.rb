@@ -21,8 +21,7 @@ class TestAsanaEventFilter < ClassTest
       mocks[:filters] = nil
     end
 
-    # @sg-ignore Unresolved call to matches?
-    assert(asana_event_filter.matches?([{}]))
+    assert(asana_event_filter.matches?({}))
   end
 
   # @return [void]
