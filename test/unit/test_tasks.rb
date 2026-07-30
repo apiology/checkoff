@@ -36,12 +36,11 @@ class TestTasks < BaseAsana
 
   # @return [void]
   def expect_now_pulled
-    # @sg-ignore Unresolved call to time_class
     time_class.expects(:now).returns(now).at_least_once
   end
 
   # @return [void]
-  # @param less_than_now [Object]
+  # @param less_than_now [Boolean]
   def expect_due_on_parsed(less_than_now:)
     date_class.expects(:parse).with(due_on_string).returns(due_on_date_obj).at_least(0)
     due_on_date_obj.expects(:to_time).returns(due_on_time_obj).at_least(0)
@@ -49,7 +48,7 @@ class TestTasks < BaseAsana
   end
 
   # @return [void]
-  # @param less_than_now [Object]
+  # @param less_than_now [Boolean]
   def expect_start_on_parsed(less_than_now:)
     date_class.expects(:parse).with(start_on_string).returns(start_on_date_obj)
     start_on_date_obj.expects(:to_time).returns(start_on_time_obj).at_least(1)
@@ -58,7 +57,7 @@ class TestTasks < BaseAsana
   end
 
   # @return [void]
-  # @param less_than_now [Object]
+  # @param less_than_now [Boolean]
   def expect_start_at_parsed(less_than_now:)
     time_class.expects(:parse).with(start_at_string).returns(start_at_time_obj)
     start_at_time_obj.expects(:localtime).returns(start_at_time_obj)
@@ -80,7 +79,7 @@ class TestTasks < BaseAsana
       mock_task_ready_false_due_in_future_on_date
     end
 
-    # @sg-ignore Unresolved call to task_ready?
+    # @sg-ignore Wrong argument type for Checkoff::Tasks#task_ready?: task expected Asana::Resources::Task, received Mocha::Mock
     refute(tasks.task_ready?(task))
   end
 
@@ -99,7 +98,7 @@ class TestTasks < BaseAsana
       mock_task_ready_true_start_in_past
     end
 
-    # @sg-ignore Unresolved call to task_ready?
+    # @sg-ignore Wrong argument type for Checkoff::Tasks#task_ready?: task expected Asana::Resources::Task, received Mocha::Mock
     assert(tasks.task_ready?(task))
   end
 
@@ -118,12 +117,12 @@ class TestTasks < BaseAsana
       mock_task_ready_true_start_in_past_time
     end
 
-    # @sg-ignore Unresolved call to task_ready?
+    # @sg-ignore Wrong argument type for Checkoff::Tasks#task_ready?: task expected Asana::Resources::Task, received Mocha::Mock
     assert(tasks.task_ready?(task))
   end
 
   # @return [void]
-  # @param less_than_now [Object]
+  # @param less_than_now [Boolean]
   def expect_due_at_parsed(less_than_now:)
     time_class.expects(:parse).with(due_at_string).returns(due_at_time_obj)
     due_at_time_obj.expects(:localtime).returns(due_at_time_obj)
@@ -145,13 +144,13 @@ class TestTasks < BaseAsana
       mock_task_ready_false_due_in_future_at_time
     end
 
-    # @sg-ignore Unresolved call to task_ready?
+    # @sg-ignore Wrong argument type for Checkoff::Tasks#task_ready?: task expected Asana::Resources::Task, received Mocha::Mock
     refute(tasks.task_ready?(task))
   end
 
   # @return [void]
-  # @param dependency_gids [Object]
-  # @param task [Object]
+  # @param dependency_gids [Array<Hash>]
+  # @param task [Mocha::Mock]
   def expect_dependency_gids_pulled(task, dependency_gids)
     task.expects(:instance_variable_get).with(:@dependencies).returns(dependency_gids)
   end
@@ -163,7 +162,7 @@ class TestTasks < BaseAsana
       allow_task_due(due_on: nil, due_at: nil)
     end
 
-    # @sg-ignore Unresolved call to task_ready?
+    # @sg-ignore Wrong argument type for Checkoff::Tasks#task_ready?: task expected Asana::Resources::Task, received Mocha::Mock
     assert(tasks.task_ready?(task))
   end
 
@@ -172,23 +171,22 @@ class TestTasks < BaseAsana
     client.expects(:tasks).returns(asana_tasks_client)
   end
 
-  # @return [void]
+  # @return [Array<String>]
   def default_fields
     ['completed_at', 'due_at', 'due_on', 'memberships.project.gid', 'memberships.project.name',
      'memberships.section.name', 'name', 'start_at', 'start_on', 'tags']
   end
 
-  # @return [void]
-  # @param extra_fields [Object]
+  # @return [Array<String>]
+  # @param extra_fields [Array<String>]
   def fields_including(extra_fields)
-    # @sg-ignore Unresolved call to + on void
     (default_fields + extra_fields).sort.uniq
   end
 
   # @return [void]
-  # @param dependency_full_task [Object]
-  # @param dependency_gid [Object]
-  # @param completed [Object]
+  # @param dependency_full_task [Mocha::Mock]
+  # @param dependency_gid [Mocha::Mock]
+  # @param completed [Boolean]
   def expect_dependency_completion_pulled(dependency_gid, dependency_full_task,
                                           completed)
     expect_task_options_pulled
@@ -213,7 +211,7 @@ class TestTasks < BaseAsana
       mock_task_ready_false_dependency
     end
 
-    # @sg-ignore Unresolved call to task_ready?
+    # @sg-ignore Wrong argument type for Checkoff::Tasks#task_ready?: task expected Asana::Resources::Task, received Mocha::Mock
     refute(tasks.task_ready?(task))
   end
 
@@ -227,12 +225,12 @@ class TestTasks < BaseAsana
                                           false)
     end
 
-    # @sg-ignore Unresolved call to task_ready?
+    # @sg-ignore Wrong argument type for Checkoff::Tasks#task_ready?: task expected Asana::Resources::Task, received Mocha::Mock
     refute(tasks.task_ready?(task))
   end
 
   # @return [void]
-  # @param dependency_gid [Object]
+  # @param dependency_gid [Mocha::Mock]
   def expect_dependency_missing(dependency_gid)
     expect_task_options_pulled
     expect_asana_tasks_client_pulled
@@ -254,15 +252,19 @@ class TestTasks < BaseAsana
       mock_task_ready_false_dependency_missing
     end
 
-    # @sg-ignore Unresolved call to task_ready?
+    # @sg-ignore Wrong argument type for Checkoff::Tasks#task_ready?: task expected Asana::Resources::Task, received Mocha::Mock
     refute(tasks.task_ready?(task))
   end
 
   # @return [void]
-  # @param due_at [Object]
-  # @param due_on [Object]
-  # @param start_at [Object]
-  # @param start_on [Object]
+  # @param due_at [Mocha::Mock, NilClass]
+  # @param due_on [Mocha::Mock, NilClass]
+  # @param start_at [Mocha::Mock, NilClass]
+  # @param start_on [Mocha::Mock, NilClass]
+  # @sg-ignore Declared type Mocha::Mock, NilClass does not match inferred type nil for variable due_at
+  # @sg-ignore Declared type Mocha::Mock, NilClass does not match inferred type nil for variable due_on
+  # @sg-ignore Declared type Mocha::Mock, NilClass does not match inferred type nil for variable start_at
+  # @sg-ignore Declared type Mocha::Mock, NilClass does not match inferred type nil for variable start_on
   def allow_task_due(start_on: nil, start_at: nil, due_on: nil, due_at: nil)
     allow_start_at_pulled(task, start_at)
     allow_start_on_pulled(task, start_on)
@@ -271,28 +273,28 @@ class TestTasks < BaseAsana
   end
 
   # @return [void]
-  # @param start_at [Object]
-  # @param task [Object]
+  # @param start_at [Mocha::Mock, NilClass]
+  # @param task [Mocha::Mock]
   def allow_start_at_pulled(task, start_at)
     task.expects(:start_at).returns(start_at).at_least(0)
   end
 
-  # @param start_on [Object]
+  # @param start_on [Mocha::Mock, NilClass]
   # @return [void]
-  # @param task [Object]
+  # @param task [Mocha::Mock]
   def allow_start_on_pulled(task, start_on)
     task.expects(:start_on).returns(start_on).at_least(0)
   end
 
   # @return [void]
-  # @param due_at [Object]
-  # @param task [Object]
+  # @param due_at [Mocha::Mock, NilClass]
+  # @param task [Mocha::Mock]
   def allow_due_at_pulled(task, due_at)
     task.expects(:due_at).returns(due_at).at_least(0)
   end
 
-  # @param due_on [Object]
-  # @param task [Object]
+  # @param due_on [Mocha::Mock, NilClass]
+  # @param task [Mocha::Mock]
   # @return [void]
   def allow_due_on_pulled(task, due_on)
     task.expects(:due_on).returns(due_on).at_least(0)
@@ -304,7 +306,7 @@ class TestTasks < BaseAsana
       task.expects(:gid).returns('my_gid')
     end
 
-    # @sg-ignore Unresolved call to url_of_task
+    # @sg-ignore Wrong argument type for Checkoff::Tasks#url_of_task: task expected Asana::Resources::Task, received Mocha::Mock
     assert_equal('https://app.asana.com/0/0/my_gid/f', tasks.url_of_task(task))
   end
 
@@ -349,7 +351,7 @@ class TestTasks < BaseAsana
       .returns(project)
   end
 
-  # @param extra_fields [Object]
+  # @param extra_fields [Array<String>]
   # @return [void]
   def expect_task_by_gid_pulled(extra_fields: [])
     task.expects(:gid).returns(task_gid)
@@ -374,7 +376,8 @@ class TestTasks < BaseAsana
 
   # @return [void]
   def projects
-    # @sg-ignore Unresolved call to client
+    # @sg-ignore Wrong argument type for Checkoff::Projects.new: client expected Asana::Client, received Mocha::Mock
+    # @sg-ignore Wrong argument type for Checkoff::Projects.new: workspaces expected Checkoff::Workspaces, received Mocha::Mock
     @projects ||= Checkoff::Projects.new(client:,
                                          workspaces:)
   end
@@ -393,7 +396,7 @@ class TestTasks < BaseAsana
   # @return [void]
   def test_task_with_section
     tasks = get_test_object { mock_task_with_section }
-    # @sg-ignore Unresolved call to task
+    # @sg-ignore Wrong argument type for Checkoff::Tasks#task: workspace_name expected String, Symbol, received Mocha::Mock
     returned_task = tasks.task(workspace_name, project_name, task_name,
                                only_uncompleted: true, section_name:)
 
@@ -410,7 +413,7 @@ class TestTasks < BaseAsana
   # @return [void]
   def test_task
     tasks = get_test_object { mock_task }
-    # @sg-ignore Unresolved call to task
+    # @sg-ignore Wrong argument type for Checkoff::Tasks#task: workspace_name expected String, Symbol, received Mocha::Mock
     returned_task = tasks.task(workspace_name, project_name, task_name,
                                only_uncompleted: true)
 
@@ -425,7 +428,8 @@ class TestTasks < BaseAsana
       task.expects(:memberships).returns([])
     end
 
-    # @sg-ignore Unresolved call to in_portfolio_more_than_once?
+    # @sg-ignore Wrong argument type for Checkoff::Tasks#in_portfolio_more_than_once?: task
+    #   expected Asana::Resources::Task, received Mocha::Mock
     refute(tasks.in_portfolio_more_than_once?(task, 'portfolio name',
                                               workspace_name: 'workspace_name'))
   end
@@ -444,7 +448,8 @@ class TestTasks < BaseAsana
       task.expects(:memberships).returns(memberships)
     end
 
-    # @sg-ignore Unresolved call to in_portfolio_more_than_once?
+    # @sg-ignore Wrong argument type for Checkoff::Tasks#in_portfolio_more_than_once?: task
+    #   expected Asana::Resources::Task, received Mocha::Mock
     assert(tasks.in_portfolio_more_than_once?(task, 'portfolio name',
                                               workspace_name: 'workspace_name'))
   end
@@ -452,9 +457,8 @@ class TestTasks < BaseAsana
   # @return [void]
   def test_gid_for_task
     tasks = get_test_object do
-      # @sg-ignore Unresolved call to client
+      # @sg-ignore Wrong argument type for Checkoff::Projects.new: client expected Asana::Client, received Mocha::Mock
       projects_instance = Checkoff::Projects.new(client:)
-      # @sg-ignore Unresolved call to sections
       sections.expects(:projects).returns(projects_instance).at_least_once
       projects_instance.expects(:project_or_raise).with(workspace_name, project_name).returns(project)
       projects_instance.expects(:tasks_from_project)
@@ -465,16 +469,16 @@ class TestTasks < BaseAsana
     end
 
     assert_equal(task_gid,
-                 # @sg-ignore Unresolved call to gid_for_task
+                 # @sg-ignore Wrong argument type for Checkoff::Tasks#gid_for_task: workspace_name
+                 #   expected String, Symbol, received Mocha::Mock
                  tasks.gid_for_task(workspace_name, project_name, :unspecified, task_name))
   end
 
   # @return [void]
   def test_gid_for_task_not_found
     tasks = get_test_object do
-      # @sg-ignore Unresolved call to client
+      # @sg-ignore Wrong argument type for Checkoff::Projects.new: client expected Asana::Client, received Mocha::Mock
       projects_instance = Checkoff::Projects.new(client:)
-      # @sg-ignore Unresolved call to sections
       sections.expects(:projects).returns(projects_instance).at_least_once
       projects_instance.expects(:project_or_raise).with(workspace_name, project_name).returns(project)
       projects_instance.expects(:tasks_from_project)
@@ -482,7 +486,8 @@ class TestTasks < BaseAsana
         .returns([])
     end
 
-    # @sg-ignore Unresolved call to gid_for_task
+    # @sg-ignore Wrong argument type for Checkoff::Tasks#gid_for_task: workspace_name
+    #   expected String, Symbol, received Mocha::Mock
     assert_nil(tasks.gid_for_task(workspace_name, project_name, :unspecified, task_name))
   end
 
@@ -493,7 +498,7 @@ class TestTasks < BaseAsana
       task_hashes.expects(:task_to_h).with(task).returns(123)
     end
 
-    # @sg-ignore Unresolved call to task_to_h
+    # @sg-ignore Wrong argument type for Checkoff::Tasks#task_to_h: task expected Asana::Resources::Task, received Mocha::Mock
     assert_equal(123, tasks.task_to_h(task))
   end
 
@@ -517,7 +522,8 @@ class TestTasks < BaseAsana
       mock_in_portfolio_named_false_no_projects_no_memberships
     end
 
-    # @sg-ignore Unresolved call to in_portfolio_named?
+    # @sg-ignore Wrong argument type for Checkoff::Tasks#in_portfolio_named?: task
+    #   expected Asana::Resources::Task, received Mocha::Mock
     refute(tasks.in_portfolio_named?(task, 'portfolio name'))
   end
 
@@ -536,7 +542,8 @@ class TestTasks < BaseAsana
       mock_in_portfolio_named_false_no_projects_but_memberships
     end
 
-    # @sg-ignore Unresolved call to in_portfolio_named?
+    # @sg-ignore Wrong argument type for Checkoff::Tasks#in_portfolio_named?: task
+    #   expected Asana::Resources::Task, received Mocha::Mock
     refute(tasks.in_portfolio_named?(task, 'portfolio name'))
   end
 
@@ -556,7 +563,8 @@ class TestTasks < BaseAsana
       mock_in_portfolio_named_false_projects_wrong_memberships
     end
 
-    # @sg-ignore Unresolved call to in_portfolio_named?
+    # @sg-ignore Wrong argument type for Checkoff::Tasks#in_portfolio_named?: task
+    #   expected Asana::Resources::Task, received Mocha::Mock
     refute(tasks.in_portfolio_named?(task, 'portfolio name'))
   end
 
@@ -568,8 +576,8 @@ class TestTasks < BaseAsana
       due_at_time_obj.expects(:localtime).returns(due_at_time_obj)
     end
 
-    # @sg-ignore Unresolved call to due_at_time_obj
-    # @sg-ignore Unresolved call to date_or_time_field_by_name
+    # @sg-ignore Wrong argument type for Checkoff::Tasks#date_or_time_field_by_name: task
+    #   expected Asana::Resources::Task, received Mocha::Mock
     assert_equal(due_at_time_obj, tasks.date_or_time_field_by_name(task, :due))
   end
 
@@ -587,7 +595,8 @@ class TestTasks < BaseAsana
       task.expects(:instance_variable_get).with(:@dependents).returns(nil)
     end
 
-    # @sg-ignore Unresolved call to all_dependent_tasks
+    # @sg-ignore Wrong argument type for Checkoff::Tasks#all_dependent_tasks: task
+    #   expected Asana::Resources::Task, received Mocha::Mock
     assert_empty(tasks.all_dependent_tasks(task))
   end
 
@@ -605,8 +614,8 @@ class TestTasks < BaseAsana
       dependent_1.expects(:instance_variable_get).with(:@dependents).returns([])
     end
 
-    # @sg-ignore Unresolved call to dependent_1
-    # @sg-ignore Unresolved call to all_dependent_tasks
+    # @sg-ignore Wrong argument type for Checkoff::Tasks#all_dependent_tasks: task
+    #   expected Asana::Resources::Task, received Mocha::Mock
     assert_equal([dependent_1], tasks.all_dependent_tasks(task))
   end
 

@@ -11,6 +11,10 @@ require 'active_support'
 class TestSections < BaseAsana
   extend Forwardable
 
+  # @!parse
+  #  # @return [Checkoff::Sections]
+  #  def get_test_object; end
+
   def_delegators(:@mocks, :workspaces, :client)
 
   # @sg-ignore Unresolved call to typed_mock
@@ -86,9 +90,9 @@ class TestSections < BaseAsana
   end
 
   # @return [void]
-  # @param project [Object]
-  # @param active_tasks_arr [Object]
-  # @param tasks_arr [Object]
+  # @param project [Mocha::Mock]
+  # @param active_tasks_arr [Array<Mocha::Mock>]
+  # @param tasks_arr [Array<Mocha::Mock>]
   def expect_my_tasks_pulled(project, tasks_arr, active_tasks_arr)
     mocks[:projects]
       .expects(:tasks_from_project).with(project,
@@ -103,15 +107,15 @@ class TestSections < BaseAsana
   end
 
   # @return [void]
-  # @param name [Object]
-  # @param section [Object]
+  # @param name [String, Mocha::Mock]
+  # @param section [Mocha::Mock]
   def expect_section_named(section, name)
     section.expects(:name).returns(name).at_least(1)
   end
 
   # @return [void]
-  # @param section [Object]
-  # @param task [Object]
+  # @param section [Mocha::Mock]
+  # @param task [Mocha::Mock]
   def expect_assignee_section_pulled(task, section)
     task.expects(:assignee_section).returns(section).at_least(0)
   end
@@ -147,7 +151,6 @@ class TestSections < BaseAsana
     end
 
     assert_equal({ nil => [], assignee_section_name => [task_c] },
-                 # @sg-ignore Unresolved call to tasks_by_section
                  sections.tasks_by_section('Workspace 1', :my_tasks))
   end
 
@@ -202,16 +205,16 @@ class TestSections < BaseAsana
   end
 
   # @return [void]
-  # @param task [Object]
-  # @param name [Object]
+  # @param task [Mocha::Mock]
+  # @param name [String]
   def expect_named(task, name)
     task.expects(:name).returns(name).at_least(1)
   end
 
   # @return [void]
-  # @param tasks_arr [Object]
-  # @param project [Object]
-  # @param active_tasks_arr [Object]
+  # @param tasks_arr [Array<Mocha::Mock>]
+  # @param project [Mocha::Mock]
+  # @param active_tasks_arr [Array<Mocha::Mock>]
   def expect_tasks_pulled(project, tasks_arr, active_tasks_arr)
     mocks[:projects]
       .expects(:tasks_from_project).with(project,
@@ -226,9 +229,9 @@ class TestSections < BaseAsana
   end
 
   # @return [void]
-  # @param project [Object]
-  # @param project_name [Object]
-  # @param workspace [Object]
+  # @param project [Mocha::Mock]
+  # @param project_name [Mocha::Mock, Symbol]
+  # @param workspace [String]
   def expect_project_pulled(workspace, project, project_name)
     mocks[:projects]
       .expects(:project).with(workspace, project_name)
@@ -245,7 +248,7 @@ class TestSections < BaseAsana
   end
 
   # @return [void]
-  # @param section_name [Object]
+  # @param section_name [String]
   def expect_task_section_memberships_queried(section_name)
     # @sg-ignore Unresolved call to a_membership
     a_membership.expects(:[]).with('section').returns(a_membership_section)
@@ -253,7 +256,7 @@ class TestSections < BaseAsana
     a_membership_section.expects(:[]).with('name').returns(section_name)
   end
 
-  # @param section_name [Object]
+  # @param section_name [String]
   # @return [void]
   def expect_task_memberships_queried(section_name)
     task_c.expects(:memberships).returns([a_membership])
@@ -261,11 +264,11 @@ class TestSections < BaseAsana
     expect_task_section_memberships_queried(section_name)
   end
 
-  # @param project [Object]
+  # @param project [Mocha::Mock]
   # @return [void]
-  # @param workspace [Object]
-  # @param project_name [Object]
-  # @param section_name [Object]
+  # @param workspace [String]
+  # @param project_name [Mocha::Mock]
+  # @param section_name [String]
   def expect_tasks_and_sections_pulled(workspace, project, project_name, section_name)
     expect_project_pulled(workspace, project, project_name)
     expect_tasks_pulled(project, [task_a, task_b, task_c],
@@ -274,8 +277,8 @@ class TestSections < BaseAsana
   end
 
   # @return [void]
-  # @param gid [Object]
-  # @param project [Object]
+  # @param gid [Mocha::Mock]
+  # @param project [Mocha::Mock]
   def expect_project_gid_pulled(project, gid)
     project.expects(:gid).returns(gid).at_least(1)
   end
@@ -286,14 +289,14 @@ class TestSections < BaseAsana
   end
 
   # @return [void]
-  # @param sections_array [Object]
-  # @param project_gid [Object]
+  # @param sections_array [Array<Mocha::Mock>]
+  # @param project_gid [Mocha::Mock]
   def expect_project_sections_pulled(project_gid, sections_array)
     sections.expects(:get_sections_for_project).with(project_gid:, options: { fields: ['name'] })
       .returns(sections_array).at_least(1)
   end
 
-  # @return [void]
+  # @return [Hash]
   def original_task_options
     {
       per_page: 100,
@@ -304,19 +307,18 @@ class TestSections < BaseAsana
     }
   end
 
-  # @param only_uncompleted [Object]
-  # @return [void]
+  # @param only_uncompleted [Boolean]
+  # @return [Hash]
   def fixed_task_options(only_uncompleted:)
     out = original_task_options
-    # @sg-ignore Unresolved call to []=
     out[:completed_since] = '9999-12-01' if only_uncompleted
     out
   end
 
   # @return [void]
-  # @param task_list [Object]
-  # @param only_uncompleted [Object]
-  # @param section_gid [Object]
+  # @param task_list [Array<Mocha::Mock>]
+  # @param only_uncompleted [Boolean]
+  # @param section_gid [Mocha::Mock]
   def expect_tasks_api_called_for_section(section_gid, task_list, only_uncompleted:)
     options = fixed_task_options(only_uncompleted:)
     tasks.expects(:get_tasks).with(section: section_gid,
@@ -339,10 +341,10 @@ class TestSections < BaseAsana
     client.expects(:tasks).returns(tasks)
   end
 
-  # @param task_list [Object]
-  # @param only_uncompleted [Object]
-  # @param section_gid [Object]
-  # @param section [Object]
+  # @param task_list [Array<Mocha::Mock>]
+  # @param only_uncompleted [Boolean]
+  # @param section_gid [Mocha::Mock]
+  # @param section [Mocha::Mock]
   # @return [void]
   def expect_section_tasks_pulled(section, section_gid, task_list, only_uncompleted:)
     expect_client_tasks_api_pulled
@@ -379,7 +381,7 @@ class TestSections < BaseAsana
   end
 
   # @return [void]
-  # @param only_uncompleted [Object]
+  # @param only_uncompleted [Boolean]
   def mock_tasks_normal_project(only_uncompleted:)
     expect_project_pulled('Workspace 1', project_a, a_name)
     expect_sections_client_pulled
@@ -478,7 +480,6 @@ class TestSections < BaseAsana
     end
     assert_raises(RuntimeError) do
       # @todo Deal with colon at end...
-      # @sg-ignore Unresolved call to tasks
       sections.tasks('Workspace 1', 'not found', 'Section 1:')
     end
   end

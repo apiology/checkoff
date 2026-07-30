@@ -120,6 +120,8 @@
 #       # @param count [Integer]
 #       # @return [Mocha::Expectation]
 #       def at_least(count); end
+#       # @return [Mocha::Expectation]
+#       def at_least_once; end
 #       # @param count [Integer]
 #       # @return [Mocha::Expectation]
 #       def times(count); end
