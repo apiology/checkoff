@@ -80,6 +80,7 @@ class TestTasks < BaseAsana
     end
 
     # @sg-ignore Wrong argument type for Checkoff::Tasks#task_ready?: task expected Asana::Resources::Task, received Mocha::Mock
+    # https://github.com/castwide/solargraph/issues/1229
     refute(tasks.task_ready?(task))
   end
 
@@ -99,6 +100,7 @@ class TestTasks < BaseAsana
     end
 
     # @sg-ignore Wrong argument type for Checkoff::Tasks#task_ready?: task expected Asana::Resources::Task, received Mocha::Mock
+    # https://github.com/castwide/solargraph/issues/1229
     assert(tasks.task_ready?(task))
   end
 
@@ -118,6 +120,7 @@ class TestTasks < BaseAsana
     end
 
     # @sg-ignore Wrong argument type for Checkoff::Tasks#task_ready?: task expected Asana::Resources::Task, received Mocha::Mock
+    # https://github.com/castwide/solargraph/issues/1229
     assert(tasks.task_ready?(task))
   end
 
@@ -145,6 +148,7 @@ class TestTasks < BaseAsana
     end
 
     # @sg-ignore Wrong argument type for Checkoff::Tasks#task_ready?: task expected Asana::Resources::Task, received Mocha::Mock
+    # https://github.com/castwide/solargraph/issues/1229
     refute(tasks.task_ready?(task))
   end
 
@@ -163,6 +167,7 @@ class TestTasks < BaseAsana
     end
 
     # @sg-ignore Wrong argument type for Checkoff::Tasks#task_ready?: task expected Asana::Resources::Task, received Mocha::Mock
+    # https://github.com/castwide/solargraph/issues/1229
     assert(tasks.task_ready?(task))
   end
 
@@ -212,6 +217,7 @@ class TestTasks < BaseAsana
     end
 
     # @sg-ignore Wrong argument type for Checkoff::Tasks#task_ready?: task expected Asana::Resources::Task, received Mocha::Mock
+    # https://github.com/castwide/solargraph/issues/1229
     refute(tasks.task_ready?(task))
   end
 
@@ -226,6 +232,7 @@ class TestTasks < BaseAsana
     end
 
     # @sg-ignore Wrong argument type for Checkoff::Tasks#task_ready?: task expected Asana::Resources::Task, received Mocha::Mock
+    # https://github.com/castwide/solargraph/issues/1229
     refute(tasks.task_ready?(task))
   end
 
@@ -253,6 +260,7 @@ class TestTasks < BaseAsana
     end
 
     # @sg-ignore Wrong argument type for Checkoff::Tasks#task_ready?: task expected Asana::Resources::Task, received Mocha::Mock
+    # https://github.com/castwide/solargraph/issues/1229
     refute(tasks.task_ready?(task))
   end
 
@@ -307,6 +315,7 @@ class TestTasks < BaseAsana
     end
 
     # @sg-ignore Wrong argument type for Checkoff::Tasks#url_of_task: task expected Asana::Resources::Task, received Mocha::Mock
+    # https://github.com/castwide/solargraph/issues/1229
     assert_equal('https://app.asana.com/0/0/my_gid/f', tasks.url_of_task(task))
   end
 
@@ -377,7 +386,9 @@ class TestTasks < BaseAsana
   # @return [void]
   def projects
     # @sg-ignore Wrong argument type for Checkoff::Projects.new: client expected Asana::Client, received Mocha::Mock
+    # https://github.com/castwide/solargraph/issues/1229
     # @sg-ignore Wrong argument type for Checkoff::Projects.new: workspaces expected Checkoff::Workspaces, received Mocha::Mock
+    # https://github.com/castwide/solargraph/issues/1229
     @projects ||= Checkoff::Projects.new(client:,
                                          workspaces:)
   end
@@ -397,6 +408,7 @@ class TestTasks < BaseAsana
   def test_task_with_section
     tasks = get_test_object { mock_task_with_section }
     # @sg-ignore Wrong argument type for Checkoff::Tasks#task: workspace_name expected String, Symbol, received Mocha::Mock
+    # https://github.com/castwide/solargraph/issues/1229
     returned_task = tasks.task(workspace_name, project_name, task_name,
                                only_uncompleted: true, section_name:)
 
@@ -414,6 +426,7 @@ class TestTasks < BaseAsana
   def test_task
     tasks = get_test_object { mock_task }
     # @sg-ignore Wrong argument type for Checkoff::Tasks#task: workspace_name expected String, Symbol, received Mocha::Mock
+    # https://github.com/castwide/solargraph/issues/1229
     returned_task = tasks.task(workspace_name, project_name, task_name,
                                only_uncompleted: true)
 
@@ -430,6 +443,7 @@ class TestTasks < BaseAsana
 
     # @sg-ignore Wrong argument type for Checkoff::Tasks#in_portfolio_more_than_once?: task
     #   expected Asana::Resources::Task, received Mocha::Mock
+    # https://github.com/castwide/solargraph/issues/1229
     refute(tasks.in_portfolio_more_than_once?(task, 'portfolio name',
                                               workspace_name: 'workspace_name'))
   end
@@ -450,6 +464,7 @@ class TestTasks < BaseAsana
 
     # @sg-ignore Wrong argument type for Checkoff::Tasks#in_portfolio_more_than_once?: task
     #   expected Asana::Resources::Task, received Mocha::Mock
+    # https://github.com/castwide/solargraph/issues/1229
     assert(tasks.in_portfolio_more_than_once?(task, 'portfolio name',
                                               workspace_name: 'workspace_name'))
   end
@@ -458,6 +473,7 @@ class TestTasks < BaseAsana
   def test_gid_for_task
     tasks = get_test_object do
       # @sg-ignore Wrong argument type for Checkoff::Projects.new: client expected Asana::Client, received Mocha::Mock
+      # https://github.com/castwide/solargraph/issues/1229
       projects_instance = Checkoff::Projects.new(client:)
       sections.expects(:projects).returns(projects_instance).at_least_once
       projects_instance.expects(:project_or_raise).with(workspace_name, project_name).returns(project)
@@ -471,6 +487,7 @@ class TestTasks < BaseAsana
     assert_equal(task_gid,
                  # @sg-ignore Wrong argument type for Checkoff::Tasks#gid_for_task: workspace_name
                  #   expected String, Symbol, received Mocha::Mock
+                 # https://github.com/castwide/solargraph/issues/1229
                  tasks.gid_for_task(workspace_name, project_name, :unspecified, task_name))
   end
 
@@ -478,6 +495,7 @@ class TestTasks < BaseAsana
   def test_gid_for_task_not_found
     tasks = get_test_object do
       # @sg-ignore Wrong argument type for Checkoff::Projects.new: client expected Asana::Client, received Mocha::Mock
+      # https://github.com/castwide/solargraph/issues/1229
       projects_instance = Checkoff::Projects.new(client:)
       sections.expects(:projects).returns(projects_instance).at_least_once
       projects_instance.expects(:project_or_raise).with(workspace_name, project_name).returns(project)
@@ -488,6 +506,7 @@ class TestTasks < BaseAsana
 
     # @sg-ignore Wrong argument type for Checkoff::Tasks#gid_for_task: workspace_name
     #   expected String, Symbol, received Mocha::Mock
+    # https://github.com/castwide/solargraph/issues/1229
     assert_nil(tasks.gid_for_task(workspace_name, project_name, :unspecified, task_name))
   end
 
@@ -499,6 +518,7 @@ class TestTasks < BaseAsana
     end
 
     # @sg-ignore Wrong argument type for Checkoff::Tasks#task_to_h: task expected Asana::Resources::Task, received Mocha::Mock
+    # https://github.com/castwide/solargraph/issues/1229
     assert_equal(123, tasks.task_to_h(task))
   end
 
@@ -524,6 +544,7 @@ class TestTasks < BaseAsana
 
     # @sg-ignore Wrong argument type for Checkoff::Tasks#in_portfolio_named?: task
     #   expected Asana::Resources::Task, received Mocha::Mock
+    # https://github.com/castwide/solargraph/issues/1229
     refute(tasks.in_portfolio_named?(task, 'portfolio name'))
   end
 
@@ -544,6 +565,7 @@ class TestTasks < BaseAsana
 
     # @sg-ignore Wrong argument type for Checkoff::Tasks#in_portfolio_named?: task
     #   expected Asana::Resources::Task, received Mocha::Mock
+    # https://github.com/castwide/solargraph/issues/1229
     refute(tasks.in_portfolio_named?(task, 'portfolio name'))
   end
 
@@ -565,6 +587,7 @@ class TestTasks < BaseAsana
 
     # @sg-ignore Wrong argument type for Checkoff::Tasks#in_portfolio_named?: task
     #   expected Asana::Resources::Task, received Mocha::Mock
+    # https://github.com/castwide/solargraph/issues/1229
     refute(tasks.in_portfolio_named?(task, 'portfolio name'))
   end
 
@@ -578,6 +601,7 @@ class TestTasks < BaseAsana
 
     # @sg-ignore Wrong argument type for Checkoff::Tasks#date_or_time_field_by_name: task
     #   expected Asana::Resources::Task, received Mocha::Mock
+    # https://github.com/castwide/solargraph/issues/1229
     assert_equal(due_at_time_obj, tasks.date_or_time_field_by_name(task, :due))
   end
 
@@ -597,6 +621,7 @@ class TestTasks < BaseAsana
 
     # @sg-ignore Wrong argument type for Checkoff::Tasks#all_dependent_tasks: task
     #   expected Asana::Resources::Task, received Mocha::Mock
+    # https://github.com/castwide/solargraph/issues/1229
     assert_empty(tasks.all_dependent_tasks(task))
   end
 
@@ -616,6 +641,7 @@ class TestTasks < BaseAsana
 
     # @sg-ignore Wrong argument type for Checkoff::Tasks#all_dependent_tasks: task
     #   expected Asana::Resources::Task, received Mocha::Mock
+    # https://github.com/castwide/solargraph/issues/1229
     assert_equal([dependent_1], tasks.all_dependent_tasks(task))
   end
 

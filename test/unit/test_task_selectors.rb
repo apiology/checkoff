@@ -28,12 +28,14 @@ class TestTaskSelectors < ClassTest
   # @return [void]
   def stub_custom_fields
     # @sg-ignore Wrong argument type for Checkoff::CustomFields.new: client expected Asana::Client, received Mocha::Mock
+    # https://github.com/castwide/solargraph/issues/1229
     mocks[:custom_fields] = Checkoff::CustomFields.new(client:)
   end
 
   # @return [void]
   def stub_tasks
     # @sg-ignore Wrong argument type for Checkoff::Tasks.new: client expected Asana::Client, received Mocha::Mock
+    # https://github.com/castwide/solargraph/issues/1229
     mocks[:tasks] = Checkoff::Tasks.new(client:)
   end
 
@@ -70,6 +72,7 @@ class TestTaskSelectors < ClassTest
 
     # @sg-ignore Wrong argument type for Checkoff::TaskSelectors#filter_via_task_selector: task
     #   expected Asana::Resources::Task, received Mocha::Mock
+    # https://github.com/castwide/solargraph/issues/1229
     refute(task_selectors.filter_via_task_selector(task,
                                                    ['custom_field_gid_value_contains_any_gid?',
                                                     custom_field_gid,
@@ -94,6 +97,7 @@ class TestTaskSelectors < ClassTest
 
     # @sg-ignore Wrong argument type for Checkoff::TaskSelectors#filter_via_task_selector: task
     #   expected Asana::Resources::Task, received Mocha::Mock
+    # https://github.com/castwide/solargraph/issues/1229
     refute(task_selectors.filter_via_task_selector(task,
                                                    ['custom_field_gid_value_contains_any_gid?',
                                                     custom_field_gid,
@@ -119,6 +123,7 @@ class TestTaskSelectors < ClassTest
     e = assert_raises(RuntimeError) do
       # @sg-ignore Wrong argument type for Checkoff::TaskSelectors#filter_via_task_selector: task
       #   expected Asana::Resources::Task, received Mocha::Mock
+      # https://github.com/castwide/solargraph/issues/1229
       task_selectors.filter_via_task_selector(task,
                                               ['custom_field_gid_value_contains_any_gid?',
                                                custom_field_gid,
@@ -150,6 +155,7 @@ class TestTaskSelectors < ClassTest
     # should not raise
     # @sg-ignore Wrong argument type for Checkoff::TaskSelectors#filter_via_task_selector: task
     #   expected Asana::Resources::Task, received Mocha::Mock
+    # https://github.com/castwide/solargraph/issues/1229
     result = task_selectors.filter_via_task_selector(task,
                                                      ['custom_field_gid_value_contains_any_gid?',
                                                       custom_field_gid,
@@ -170,6 +176,7 @@ class TestTaskSelectors < ClassTest
     e = assert_raises(RuntimeError) do
       # @sg-ignore Wrong argument type for Checkoff::TaskSelectors#filter_via_task_selector: task
       #   expected Asana::Resources::Task, received Mocha::Mock
+      # https://github.com/castwide/solargraph/issues/1229
       task_selectors.filter_via_task_selector(task,
                                               ['custom_field_gid_value_contains_any_gid?',
                                                custom_field_gid,
@@ -191,6 +198,7 @@ class TestTaskSelectors < ClassTest
     e = assert_raises(RuntimeError) do
       # @sg-ignore Wrong argument type for Checkoff::TaskSelectors#filter_via_task_selector: task
       #   expected Asana::Resources::Task, received Mocha::Mock
+      # https://github.com/castwide/solargraph/issues/1229
       task_selectors.filter_via_task_selector(task,
                                               ['custom_field_gid_value_contains_any_gid?',
                                                custom_field_gid,
@@ -221,6 +229,7 @@ class TestTaskSelectors < ClassTest
 
     # @sg-ignore Wrong argument type for Checkoff::TaskSelectors#filter_via_task_selector: task
     #   expected Asana::Resources::Task, received Mocha::Mock
+    # https://github.com/castwide/solargraph/issues/1229
     assert(task_selectors.filter_via_task_selector(task,
                                                    ['custom_field_gid_value_contains_any_gid?',
                                                     custom_field_gid,
@@ -233,6 +242,7 @@ class TestTaskSelectors < ClassTest
     e = assert_raises(RuntimeError) do
       # @sg-ignore Wrong argument type for Checkoff::TaskSelectors#filter_via_task_selector: task
       #   expected Asana::Resources::Task, received Mocha::Mock
+      # https://github.com/castwide/solargraph/issues/1229
       task_selectors.filter_via_task_selector(task,
                                               [:bad_predicate?, [:custom_field_value,
                                                                  'custom_field_name']])
@@ -252,6 +262,7 @@ class TestTaskSelectors < ClassTest
 
     # @sg-ignore Wrong argument type for Checkoff::TaskSelectors#filter_via_task_selector: task
     #   expected Asana::Resources::Task, received Mocha::Mock
+    # https://github.com/castwide/solargraph/issues/1229
     refute(task_selectors.filter_via_task_selector(task,
                                                    [:nil?, [:custom_field_value,
                                                             'custom_field_name']]))
@@ -274,6 +285,7 @@ class TestTaskSelectors < ClassTest
 
     # @sg-ignore Wrong argument type for Checkoff::TaskSelectors#filter_via_task_selector: task
     #   expected Asana::Resources::Task, received Mocha::Mock
+    # https://github.com/castwide/solargraph/issues/1229
     assert(task_selectors.filter_via_task_selector(task,
                                                    [:nil?, [:custom_field_gid_value,
                                                             custom_field_gid]]))
@@ -288,6 +300,7 @@ class TestTaskSelectors < ClassTest
     e = assert_raises(RuntimeError) do
       # @sg-ignore Wrong argument type for Checkoff::TaskSelectors#filter_via_task_selector: task
       #   expected Asana::Resources::Task, received Mocha::Mock
+      # https://github.com/castwide/solargraph/issues/1229
       task_selectors.filter_via_task_selector(task,
                                               [:nil?, [:custom_field_value,
                                                        'custom_field_name']])
@@ -306,6 +319,7 @@ class TestTaskSelectors < ClassTest
 
     # @sg-ignore Wrong argument type for Checkoff::TaskSelectors#filter_via_task_selector: task
     #   expected Asana::Resources::Task, received Mocha::Mock
+    # https://github.com/castwide/solargraph/issues/1229
     assert(task_selectors.filter_via_task_selector(task,
                                                    [:nil?, [:custom_field_value,
                                                             'custom_field_name']]))
@@ -322,6 +336,7 @@ class TestTaskSelectors < ClassTest
     e = assert_raises(RuntimeError) do
       # @sg-ignore Wrong argument type for Checkoff::TaskSelectors#filter_via_task_selector: task
       #   expected Asana::Resources::Task, received Mocha::Mock
+      # https://github.com/castwide/solargraph/issues/1229
       task_selectors.filter_via_task_selector(task,
                                               [:nil?, [:custom_field_gid_value,
                                                        custom_field_gid]])
@@ -338,6 +353,7 @@ class TestTaskSelectors < ClassTest
 
     # @sg-ignore Wrong argument type for Checkoff::TaskSelectors#filter_via_task_selector: task
     #   expected Asana::Resources::Task, received Mocha::Mock
+    # https://github.com/castwide/solargraph/issues/1229
     refute(task_selectors.filter_via_task_selector(task, [:tag?, 'tag_name']))
   end
 
@@ -347,6 +363,7 @@ class TestTaskSelectors < ClassTest
 
     # @sg-ignore Wrong argument type for Checkoff::TaskSelectors#filter_via_task_selector: task
     #   expected Asana::Resources::Task, received Mocha::Mock
+    # https://github.com/castwide/solargraph/issues/1229
     refute(task_selectors.filter_via_task_selector(task, [:not, []]))
   end
 
@@ -356,6 +373,7 @@ class TestTaskSelectors < ClassTest
 
     # @sg-ignore Wrong argument type for Checkoff::TaskSelectors#filter_via_task_selector: task
     #   expected Asana::Resources::Task, received Mocha::Mock
+    # https://github.com/castwide/solargraph/issues/1229
     assert(task_selectors.filter_via_task_selector(task, [:and, [], []]))
   end
 
@@ -365,6 +383,7 @@ class TestTaskSelectors < ClassTest
 
     # @sg-ignore Wrong argument type for Checkoff::TaskSelectors#filter_via_task_selector: task
     #   expected Asana::Resources::Task, received Mocha::Mock
+    # https://github.com/castwide/solargraph/issues/1229
     assert(task_selectors.filter_via_task_selector(task, [:or, [], []]))
   end
 
@@ -374,6 +393,7 @@ class TestTaskSelectors < ClassTest
 
     # @sg-ignore Wrong argument type for Checkoff::TaskSelectors#filter_via_task_selector: task
     #   expected Asana::Resources::Task, received Mocha::Mock
+    # https://github.com/castwide/solargraph/issues/1229
     assert(task_selectors.filter_via_task_selector(task, []))
   end
 
@@ -385,6 +405,7 @@ class TestTaskSelectors < ClassTest
 
     # @sg-ignore Wrong argument type for Checkoff::TaskSelectors#filter_via_task_selector: task
     #   expected Asana::Resources::Task, received Mocha::Mock
+    # https://github.com/castwide/solargraph/issues/1229
     assert(task_selectors.filter_via_task_selector(task, [:ready?]))
   end
 
@@ -418,6 +439,7 @@ class TestTaskSelectors < ClassTest
 
     # @sg-ignore Wrong argument type for Checkoff::TaskSelectors#filter_via_task_selector: task
     #   expected Asana::Resources::Task, received Mocha::Mock
+    # https://github.com/castwide/solargraph/issues/1229
     assert(task_selectors.filter_via_task_selector(task, [:in_period?, :ready, [:between_relative_days, nil, 2]]))
   end
 
@@ -437,6 +459,7 @@ class TestTaskSelectors < ClassTest
 
     # @sg-ignore Wrong argument type for Checkoff::TaskSelectors#filter_via_task_selector: task
     #   expected Asana::Resources::Task, received Mocha::Mock
+    # https://github.com/castwide/solargraph/issues/1229
     assert(task_selectors.filter_via_task_selector(task, [:in_period?, :ready, [:between_relative_days, nil, 2]]))
   end
 
@@ -457,6 +480,7 @@ class TestTaskSelectors < ClassTest
 
     # @sg-ignore Wrong argument type for Checkoff::TaskSelectors#filter_via_task_selector: task
     #   expected Asana::Resources::Task, received Mocha::Mock
+    # https://github.com/castwide/solargraph/issues/1229
     assert(task_selectors.filter_via_task_selector(task, [:in_period?, :ready, [:between_relative_days, nil, 2]]))
   end
 
@@ -488,6 +512,7 @@ class TestTaskSelectors < ClassTest
 
     # @sg-ignore Wrong argument type for Checkoff::TaskSelectors#filter_via_task_selector: task
     #   expected Asana::Resources::Task, received Mocha::Mock
+    # https://github.com/castwide/solargraph/issues/1229
     assert(task_selectors.filter_via_task_selector(task, [:in_period?, :ready, [:between_relative_days, nil, 2]]))
   end
 
@@ -513,6 +538,7 @@ class TestTaskSelectors < ClassTest
 
     # @sg-ignore Wrong argument type for Checkoff::TaskSelectors#filter_via_task_selector: task
     #   expected Asana::Resources::Task, received Mocha::Mock
+    # https://github.com/castwide/solargraph/issues/1229
     refute(task_selectors.filter_via_task_selector(task, [:in_period?, :ready, [:between_relative_days, nil, 2]]))
   end
 
@@ -540,6 +566,7 @@ class TestTaskSelectors < ClassTest
 
     # @sg-ignore Wrong argument type for Checkoff::TaskSelectors#filter_via_task_selector: task
     #   expected Asana::Resources::Task, received Mocha::Mock
+    # https://github.com/castwide/solargraph/issues/1229
     refute(task_selectors.filter_via_task_selector(task, [:in_period?, :ready, [:between_relative_days, nil, 2]]))
   end
 
@@ -561,6 +588,7 @@ class TestTaskSelectors < ClassTest
 
     # @sg-ignore Wrong argument type for Checkoff::TaskSelectors#filter_via_task_selector: task
     #   expected Asana::Resources::Task, received Mocha::Mock
+    # https://github.com/castwide/solargraph/issues/1229
     assert(task_selectors.filter_via_task_selector(task, [:unassigned?]))
   end
 
@@ -585,6 +613,7 @@ class TestTaskSelectors < ClassTest
 
     # @sg-ignore Wrong argument type for Checkoff::TaskSelectors#filter_via_task_selector: task
     #   expected Asana::Resources::Task, received Mocha::Mock
+    # https://github.com/castwide/solargraph/issues/1229
     assert(task_selectors.filter_via_task_selector(task,
                                                    ['custom_field_gid_value_contains_all_gids?',
                                                     custom_field_gid,
@@ -599,6 +628,7 @@ class TestTaskSelectors < ClassTest
 
     # @sg-ignore Wrong argument type for Checkoff::TaskSelectors#filter_via_task_selector: task
     #   expected Asana::Resources::Task, received Mocha::Mock
+    # https://github.com/castwide/solargraph/issues/1229
     refute(task_selectors.filter_via_task_selector(task, [:due_date_set?]))
   end
 
@@ -614,6 +644,7 @@ class TestTaskSelectors < ClassTest
 
     # @sg-ignore Wrong argument type for Checkoff::TaskSelectors#filter_via_task_selector: task
     #   expected Asana::Resources::Task, received Mocha::Mock
+    # https://github.com/castwide/solargraph/issues/1229
     assert(task_selectors.filter_via_task_selector(task,
                                                    [:in_period?, [:custom_field, 'start date'],
                                                     [:less_than_n_days_from_now, 90]]))
@@ -630,6 +661,7 @@ class TestTaskSelectors < ClassTest
 
     # @sg-ignore Wrong argument type for Checkoff::TaskSelectors#filter_via_task_selector: task
     #   expected Asana::Resources::Task, received Mocha::Mock
+    # https://github.com/castwide/solargraph/issues/1229
     refute(task_selectors.filter_via_task_selector(task,
                                                    [:in_period?, [:custom_field, 'start date'],
                                                     [:less_than_n_days_from_now, 90]]))
@@ -648,6 +680,7 @@ class TestTaskSelectors < ClassTest
     e = assert_raises(RuntimeError) do
       # @sg-ignore Wrong argument type for Checkoff::TaskSelectors#filter_via_task_selector: task
       #   expected Asana::Resources::Task, received Mocha::Mock
+      # https://github.com/castwide/solargraph/issues/1229
       task_selectors.filter_via_task_selector(task,
                                               [:in_period?, [:custom_field, 'start date'],
                                                [:less_than_n_days_from_now, 90]])
@@ -669,6 +702,7 @@ class TestTaskSelectors < ClassTest
 
     # @sg-ignore Wrong argument type for Checkoff::TaskSelectors#filter_via_task_selector: task
     #   expected Asana::Resources::Task, received Mocha::Mock
+    # https://github.com/castwide/solargraph/issues/1229
     refute(task_selectors.filter_via_task_selector(task,
                                                    [:in_period?,
                                                     [:custom_field, 'start date'],
@@ -687,6 +721,7 @@ class TestTaskSelectors < ClassTest
 
     # @sg-ignore Wrong argument type for Checkoff::TaskSelectors#filter_via_task_selector: task
     #   expected Asana::Resources::Task, received Mocha::Mock
+    # https://github.com/castwide/solargraph/issues/1229
     refute(task_selectors.filter_via_task_selector(task,
                                                    [:in_period?, [:custom_field, 'start date'],
                                                     [:greater_than_or_equal_to_n_days_from_now, 90]]))
@@ -705,6 +740,7 @@ class TestTaskSelectors < ClassTest
     e = assert_raises(RuntimeError) do
       # @sg-ignore Wrong argument type for Checkoff::TaskSelectors#filter_via_task_selector: task
       #   expected Asana::Resources::Task, received Mocha::Mock
+      # https://github.com/castwide/solargraph/issues/1229
       task_selectors.filter_via_task_selector(task,
                                               [:in_period?, [:custom_field, 'start date'],
                                                [:greater_than_or_equal_to_n_days_from_now, 90]])
@@ -729,6 +765,7 @@ class TestTaskSelectors < ClassTest
 
     # @sg-ignore Wrong argument type for Checkoff::TaskSelectors#filter_via_task_selector: task
     #   expected Asana::Resources::Task, received Mocha::Mock
+    # https://github.com/castwide/solargraph/issues/1229
     assert(task_selectors.filter_via_task_selector(task,
                                                    [:in_period?, :modified,
                                                     [:less_than_n_days_ago, 7]]))
@@ -745,6 +782,7 @@ class TestTaskSelectors < ClassTest
 
     # @sg-ignore Wrong argument type for Checkoff::TaskSelectors#filter_via_task_selector: task
     #   expected Asana::Resources::Task, received Mocha::Mock
+    # https://github.com/castwide/solargraph/issues/1229
     assert(task_selectors.filter_via_task_selector(task,
                                                    [:estimate_exceeds_duration?]))
   end
@@ -758,6 +796,7 @@ class TestTaskSelectors < ClassTest
 
     # @sg-ignore Wrong argument type for Checkoff::TaskSelectors#filter_via_task_selector: task
     #   expected Asana::Resources::Task, received Mocha::Mock
+    # https://github.com/castwide/solargraph/issues/1229
     refute(task_selectors.filter_via_task_selector(task,
                                                    [:estimate_exceeds_duration?]))
   end
@@ -773,6 +812,7 @@ class TestTaskSelectors < ClassTest
 
     # @sg-ignore Wrong argument type for Checkoff::TaskSelectors#filter_via_task_selector: task
     #   expected Asana::Resources::Task, received Mocha::Mock
+    # https://github.com/castwide/solargraph/issues/1229
     assert(task_selectors.filter_via_task_selector(task,
                                                    [:estimate_exceeds_duration?]))
   end
@@ -788,6 +828,7 @@ class TestTaskSelectors < ClassTest
 
     # @sg-ignore Wrong argument type for Checkoff::TaskSelectors#filter_via_task_selector: task
     #   expected Asana::Resources::Task, received Mocha::Mock
+    # https://github.com/castwide/solargraph/issues/1229
     assert(task_selectors.filter_via_task_selector(task,
                                                    [:estimate_exceeds_duration?]))
   end
@@ -801,6 +842,7 @@ class TestTaskSelectors < ClassTest
 
     # @sg-ignore Wrong argument type for Checkoff::TaskSelectors#filter_via_task_selector: task
     #   expected Asana::Resources::Task, received Mocha::Mock
+    # https://github.com/castwide/solargraph/issues/1229
     refute(task_selectors.filter_via_task_selector(task,
                                                    [:estimate_exceeds_duration?]))
   end
@@ -815,6 +857,7 @@ class TestTaskSelectors < ClassTest
 
     # @sg-ignore Wrong argument type for Checkoff::TaskSelectors#filter_via_task_selector: task
     #   expected Asana::Resources::Task, received Mocha::Mock
+    # https://github.com/castwide/solargraph/issues/1229
     refute(task_selectors.filter_via_task_selector(task,
                                                    [:in_period?, :modified,
                                                     [:less_than_n_days_ago, 7]]))
@@ -829,6 +872,7 @@ class TestTaskSelectors < ClassTest
     e = assert_raises(RuntimeError) do
       # @sg-ignore Wrong argument type for Checkoff::TaskSelectors#filter_via_task_selector: task
       #   expected Asana::Resources::Task, received Mocha::Mock
+      # https://github.com/castwide/solargraph/issues/1229
       task_selectors.filter_via_task_selector(task,
                                               [:in_period?, :bogus_at,
                                                [:less_than_n_days_ago, 7]])
@@ -846,6 +890,7 @@ class TestTaskSelectors < ClassTest
     e = assert_raises(RuntimeError) do
       # @sg-ignore Wrong argument type for Checkoff::TaskSelectors#filter_via_task_selector: task
       #   expected Asana::Resources::Task, received Mocha::Mock
+      # https://github.com/castwide/solargraph/issues/1229
       task_selectors.filter_via_task_selector(task,
                                               [:in_period?, [:bogus_compound_at],
                                                [:less_than_n_days_ago, 7]])
@@ -872,6 +917,7 @@ class TestTaskSelectors < ClassTest
 
     # @sg-ignore Wrong argument type for Checkoff::TaskSelectors#filter_via_task_selector: task
     #   expected Asana::Resources::Task, received Mocha::Mock
+    # https://github.com/castwide/solargraph/issues/1229
     assert(task_selectors.filter_via_task_selector(task,
                                                    [:in_period?, :due,
                                                     [:greater_than_or_equal_to_n_days_from_today, 7]]))
@@ -893,6 +939,7 @@ class TestTaskSelectors < ClassTest
 
     # @sg-ignore Wrong argument type for Checkoff::TaskSelectors#filter_via_task_selector: task
     #   expected Asana::Resources::Task, received Mocha::Mock
+    # https://github.com/castwide/solargraph/issues/1229
     refute(task_selectors.filter_via_task_selector(task,
                                                    [:in_period?, :due,
                                                     [:greater_than_or_equal_to_n_days_from_today, 7]]))
@@ -914,6 +961,7 @@ class TestTaskSelectors < ClassTest
 
     # @sg-ignore Wrong argument type for Checkoff::TaskSelectors#filter_via_task_selector: task
     #   expected Asana::Resources::Task, received Mocha::Mock
+    # https://github.com/castwide/solargraph/issues/1229
     refute(task_selectors.filter_via_task_selector(task,
                                                    [:in_period?, :due,
                                                     [:greater_than_or_equal_to_n_days_from_today, 7]]))
@@ -929,6 +977,7 @@ class TestTaskSelectors < ClassTest
 
     # @sg-ignore Wrong argument type for Checkoff::TaskSelectors#filter_via_task_selector: task
     #   expected Asana::Resources::Task, received Mocha::Mock
+    # https://github.com/castwide/solargraph/issues/1229
     assert(task_selectors.filter_via_task_selector(task,
                                                    [:equals?, [:custom_field_value, 'end date'], '2000-01-15']))
   end
@@ -943,6 +992,7 @@ class TestTaskSelectors < ClassTest
 
     # @sg-ignore Wrong argument type for Checkoff::TaskSelectors#filter_via_task_selector: task
     #   expected Asana::Resources::Task, received Mocha::Mock
+    # https://github.com/castwide/solargraph/issues/1229
     refute(task_selectors.filter_via_task_selector(task,
                                                    [:equals?, [:custom_field_value, 'end date'], '2001-01-15']))
   end
@@ -955,6 +1005,7 @@ class TestTaskSelectors < ClassTest
 
     # @sg-ignore Wrong argument type for Checkoff::TaskSelectors#filter_via_task_selector: task
     #   expected Asana::Resources::Task, received Mocha::Mock
+    # https://github.com/castwide/solargraph/issues/1229
     assert(task_selectors.filter_via_task_selector(task,
                                                    [:last_story_created_less_than_n_days_ago?, 7, []]))
   end
@@ -975,6 +1026,7 @@ class TestTaskSelectors < ClassTest
 
     # @sg-ignore Wrong argument type for Checkoff::TaskSelectors#filter_via_task_selector: task
     #   expected Asana::Resources::Task, received Mocha::Mock
+    # https://github.com/castwide/solargraph/issues/1229
     assert(task_selectors.filter_via_task_selector(task,
                                                    [:last_story_created_less_than_n_days_ago?, 7, []]))
   end
@@ -995,6 +1047,7 @@ class TestTaskSelectors < ClassTest
 
     # @sg-ignore Wrong argument type for Checkoff::TaskSelectors#filter_via_task_selector: task
     #   expected Asana::Resources::Task, received Mocha::Mock
+    # https://github.com/castwide/solargraph/issues/1229
     refute(task_selectors.filter_via_task_selector(task,
                                                    [:last_story_created_less_than_n_days_ago?, 7, []]))
   end
@@ -1007,6 +1060,7 @@ class TestTaskSelectors < ClassTest
 
     # @sg-ignore Wrong argument type for Checkoff::TaskSelectors#filter_via_task_selector: task
     #   expected Asana::Resources::Task, received Mocha::Mock
+    # https://github.com/castwide/solargraph/issues/1229
     refute(task_selectors.filter_via_task_selector(task,
                                                    [:in_project_named?, 'foo']))
   end
@@ -1019,6 +1073,7 @@ class TestTaskSelectors < ClassTest
 
     # @sg-ignore Wrong argument type for Checkoff::TaskSelectors#filter_via_task_selector: task
     #   expected Asana::Resources::Task, received Mocha::Mock
+    # https://github.com/castwide/solargraph/issues/1229
     assert(task_selectors.filter_via_task_selector(task,
                                                    [:in_project_named?, 'foo']))
   end
@@ -1033,6 +1088,7 @@ class TestTaskSelectors < ClassTest
 
     # @sg-ignore Wrong argument type for Checkoff::TaskSelectors#filter_via_task_selector: task
     #   expected Asana::Resources::Task, received Mocha::Mock
+    # https://github.com/castwide/solargraph/issues/1229
     refute(task_selectors.filter_via_task_selector(task,
                                                    [:in_section_named?, 'foo']))
   end
@@ -1047,6 +1103,7 @@ class TestTaskSelectors < ClassTest
 
     # @sg-ignore Wrong argument type for Checkoff::TaskSelectors#filter_via_task_selector: task
     #   expected Asana::Resources::Task, received Mocha::Mock
+    # https://github.com/castwide/solargraph/issues/1229
     assert(task_selectors.filter_via_task_selector(task,
                                                    [:in_section_named?, 'foo']))
   end
@@ -1062,6 +1119,7 @@ class TestTaskSelectors < ClassTest
 
     # @sg-ignore Wrong argument type for Checkoff::TaskSelectors#filter_via_task_selector: task
     #   expected Asana::Resources::Task, received Mocha::Mock
+    # https://github.com/castwide/solargraph/issues/1229
     assert(task_selectors.filter_via_task_selector(task,
                                                    [:dependent_on_previous_section_last_milestone?]))
   end
@@ -1074,6 +1132,7 @@ class TestTaskSelectors < ClassTest
 
     # @sg-ignore Wrong argument type for Checkoff::TaskSelectors#filter_via_task_selector: task
     #   expected Asana::Resources::Task, received Mocha::Mock
+    # https://github.com/castwide/solargraph/issues/1229
     assert(task_selectors.filter_via_task_selector(task,
                                                    [:in_portfolio_named?, 'foo']))
   end
@@ -1086,6 +1145,7 @@ class TestTaskSelectors < ClassTest
 
     # @sg-ignore Wrong argument type for Checkoff::TaskSelectors#filter_via_task_selector: task
     #   expected Asana::Resources::Task, received Mocha::Mock
+    # https://github.com/castwide/solargraph/issues/1229
     refute(task_selectors.filter_via_task_selector(task,
                                                    [:in_portfolio_named?, 'foo']))
   end
@@ -1106,6 +1166,7 @@ class TestTaskSelectors < ClassTest
 
     # @sg-ignore Wrong argument type for Checkoff::TaskSelectors#filter_via_task_selector: task
     #   expected Asana::Resources::Task, received Mocha::Mock
+    # https://github.com/castwide/solargraph/issues/1229
     refute(task_selectors.filter_via_task_selector(task,
                                                    [:custom_field_gid_value_contains_any_gid?,
                                                     custom_field_gid, [custom_field_value_gid_1]]))
@@ -1119,6 +1180,7 @@ class TestTaskSelectors < ClassTest
 
     # @sg-ignore Wrong argument type for Checkoff::TaskSelectors#filter_via_task_selector: task
     #   expected Asana::Resources::Task, received Mocha::Mock
+    # https://github.com/castwide/solargraph/issues/1229
     refute(task_selectors.filter_via_task_selector(task,
                                                    [:last_task_milestone_does_not_depend_on_this_task?]))
   end
@@ -1133,6 +1195,7 @@ class TestTaskSelectors < ClassTest
 
     # @sg-ignore Wrong argument type for Checkoff::TaskSelectors#filter_via_task_selector: task
     #   expected Asana::Resources::Task, received Mocha::Mock
+    # https://github.com/castwide/solargraph/issues/1229
     assert(task_selectors.filter_via_task_selector(task, [:in_a_real_project?]))
   end
 
@@ -1146,6 +1209,7 @@ class TestTaskSelectors < ClassTest
 
     # @sg-ignore Wrong argument type for Checkoff::TaskSelectors#filter_via_task_selector: task
     #   expected Asana::Resources::Task, received Mocha::Mock
+    # https://github.com/castwide/solargraph/issues/1229
     refute(task_selectors.filter_via_task_selector(task, [:in_a_real_project?]))
   end
 
@@ -1159,6 +1223,7 @@ class TestTaskSelectors < ClassTest
 
     # @sg-ignore Wrong argument type for Checkoff::TaskSelectors#filter_via_task_selector: task
     #   expected Asana::Resources::Task, received Mocha::Mock
+    # https://github.com/castwide/solargraph/issues/1229
     assert(task_selectors.filter_via_task_selector(task, [:section_name_starts_with?, 'Done']))
   end
 
@@ -1172,6 +1237,7 @@ class TestTaskSelectors < ClassTest
 
     # @sg-ignore Wrong argument type for Checkoff::TaskSelectors#filter_via_task_selector: task
     #   expected Asana::Resources::Task, received Mocha::Mock
+    # https://github.com/castwide/solargraph/issues/1229
     refute(task_selectors.filter_via_task_selector(task, [:section_name_starts_with?, 'Done']))
   end
 
@@ -1185,6 +1251,7 @@ class TestTaskSelectors < ClassTest
 
     # @sg-ignore Wrong argument type for Checkoff::TaskSelectors#filter_via_task_selector: task
     #   expected Asana::Resources::Task, received Mocha::Mock
+    # https://github.com/castwide/solargraph/issues/1229
     assert(task_selectors.filter_via_task_selector(task, [:in_section_named?, 'Today']))
   end
 
@@ -1198,6 +1265,7 @@ class TestTaskSelectors < ClassTest
 
     # @sg-ignore Wrong argument type for Checkoff::TaskSelectors#filter_via_task_selector: task
     #   expected Asana::Resources::Task, received Mocha::Mock
+    # https://github.com/castwide/solargraph/issues/1229
     refute(task_selectors.filter_via_task_selector(task, [:in_section_named?, 'Tomorrow']))
   end
 
@@ -1209,6 +1277,7 @@ class TestTaskSelectors < ClassTest
 
     # @sg-ignore Wrong argument type for Checkoff::TaskSelectors#filter_via_task_selector: task
     #   expected Asana::Resources::Task, received Mocha::Mock
+    # https://github.com/castwide/solargraph/issues/1229
     assert(task_selectors.filter_via_task_selector(task, [:in_portfolio_more_than_once?, 'portfolio']))
   end
 
@@ -1221,6 +1290,7 @@ class TestTaskSelectors < ClassTest
 
     # @sg-ignore Wrong argument type for Checkoff::TaskSelectors#filter_via_task_selector: task
     #   expected Asana::Resources::Task, received Mocha::Mock
+    # https://github.com/castwide/solargraph/issues/1229
     assert(task_selectors.filter_via_task_selector(task, [:no_milestone_depends_on_this_task?]))
   end
 

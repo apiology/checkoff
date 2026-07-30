@@ -75,6 +75,7 @@ class TestProjects < BaseAsana
 
     # @sg-ignore Wrong argument type for Checkoff::Projects#tasks_from_project: project
     #   expected Asana::Resources::Project, received Mocha::Mock
+    # https://github.com/castwide/solargraph/issues/1229
     assert_equal(tasks, projects.tasks_from_project(project_a,
                                                     only_uncompleted: false))
   end
@@ -87,6 +88,7 @@ class TestProjects < BaseAsana
 
     # @sg-ignore Wrong argument type for Checkoff::Projects#tasks_from_project: project
     #   expected Asana::Resources::Project, received Mocha::Mock
+    # https://github.com/castwide/solargraph/issues/1229
     assert_equal(tasks, projects.tasks_from_project(project_a))
   end
 
@@ -143,6 +145,7 @@ class TestProjects < BaseAsana
     end
 
     # @sg-ignore Wrong argument type for Checkoff::Projects#project_by_gid: gid expected String, received Mocha::Mock
+    # https://github.com/castwide/solargraph/issues/1229
     assert_equal(project, projects.project_by_gid(project_gid))
   end
 
@@ -184,6 +187,7 @@ class TestProjects < BaseAsana
 
     # @sg-ignore Wrong argument type for Checkoff::Projects#project_to_h: project_obj
     #   expected Asana::Resources::Project, received Mocha::Mock
+    # https://github.com/castwide/solargraph/issues/1229
     assert_equal(project_a_hash, projects.project_to_h(project_a))
   end
 
@@ -203,6 +207,7 @@ class TestProjects < BaseAsana
 
     # @sg-ignore Wrong argument type for Checkoff::Projects#in_period?: project
     #   expected Asana::Resources::Project, received Mocha::Mock
+    # https://github.com/castwide/solargraph/issues/1229
     assert(projects.in_period?(project, field_name, period))
   end
 
@@ -222,6 +227,7 @@ class TestProjects < BaseAsana
 
     # @sg-ignore Wrong argument type for Checkoff::Projects#project_ready?: project
     #   expected Asana::Resources::Project, received Mocha::Mock
+    # https://github.com/castwide/solargraph/issues/1229
     assert(projects.project_ready?(project, period:))
   end
 

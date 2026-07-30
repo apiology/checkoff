@@ -25,6 +25,7 @@ class TestTags < ClassTest
     end
     assert_raises(RuntimeError) do
       # @sg-ignore Wrong argument type for Checkoff::Tags#tag_or_raise: workspace_name expected String, received Mocha::Mock
+      # https://github.com/castwide/solargraph/issues/1229
       tags.tag_or_raise(workspace_name, tag_name)
     end
   end
@@ -37,6 +38,7 @@ class TestTags < ClassTest
     end
 
     # @sg-ignore Wrong argument type for Checkoff::Tags#tag_or_raise: workspace_name expected String, received Mocha::Mock
+    # https://github.com/castwide/solargraph/issues/1229
     assert_equal(tag, tags.tag_or_raise(workspace_name, tag_name))
   end
 
@@ -69,6 +71,7 @@ class TestTags < ClassTest
     end
 
     # @sg-ignore Wrong argument type for Checkoff::Tags#tag: workspace_name expected String, received Mocha::Mock
+    # https://github.com/castwide/solargraph/issues/1229
     assert_equal(tag, tags.tag(workspace_name, tag_name))
   end
 
@@ -154,6 +157,7 @@ class TestTags < ClassTest
   # @return [void]
   def projects
     # @sg-ignore Wrong argument type for Checkoff::Projects.new: client expected Asana::Client, received Mocha::Mock
+    # https://github.com/castwide/solargraph/issues/1229
     Checkoff::Projects.new(client:)
   end
 
@@ -169,6 +173,7 @@ class TestTags < ClassTest
 
     # Call the tasks method with the necessary arguments
     # @sg-ignore Wrong argument type for Checkoff::Tags#tasks: workspace_name expected String, received Mocha::Mock
+    # https://github.com/castwide/solargraph/issues/1229
     result = tags.tasks(workspace_name, tag_name, only_uncompleted: true, extra_fields: %w[field1 field2])
 
     # Check that the tasks method returned the expected result
@@ -187,6 +192,7 @@ class TestTags < ClassTest
 
     # Call the tasks method with the necessary arguments and only_uncompleted set to false
     # @sg-ignore Wrong argument type for Checkoff::Tags#tasks: workspace_name expected String, received Mocha::Mock
+    # https://github.com/castwide/solargraph/issues/1229
     result = tags.tasks(workspace_name, tag_name, only_uncompleted: false, extra_fields: %w[field1 field2])
 
     # Check that the tasks method returned the expected result

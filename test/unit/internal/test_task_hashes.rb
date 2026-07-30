@@ -103,6 +103,7 @@ class TestTaskHashes < ClassTest
 
     # @sg-ignore Wrong argument type for Checkoff::Internal::TaskHashes#task_to_h: task
     #   expected Asana::Resources::Task, received Mocha::Mock
+    # https://github.com/castwide/solargraph/issues/1229
     assert_equal(TASK_A_HASH, task_hashes.task_to_h(task))
   end
 
@@ -115,6 +116,7 @@ class TestTaskHashes < ClassTest
 
     # @sg-ignore Wrong argument type for Checkoff::Internal::TaskHashes#task_to_h: task
     #   expected Asana::Resources::Task, received Mocha::Mock
+    # https://github.com/castwide/solargraph/issues/1229
     assert_equal(TASK_B_HASH, task_hashes.task_to_h(task))
   end
 

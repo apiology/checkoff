@@ -25,6 +25,7 @@ class TestCustomFields < ClassTest
     assert_raises(RuntimeError) do
       # @sg-ignore Wrong argument type for Checkoff::CustomFields#custom_field_or_raise: workspace_name
       #   expected String, received Mocha::Mock
+      # https://github.com/castwide/solargraph/issues/1229
       custom_fields.custom_field_or_raise(workspace_name, custom_field_name)
     end
   end
@@ -38,6 +39,7 @@ class TestCustomFields < ClassTest
 
     # @sg-ignore Wrong argument type for Checkoff::CustomFields#custom_field_or_raise: workspace_name
     #   expected String, received Mocha::Mock
+    # https://github.com/castwide/solargraph/issues/1229
     assert_equal(custom_field, custom_fields.custom_field_or_raise(workspace_name,
                                                                    custom_field_name))
   end
@@ -71,6 +73,7 @@ class TestCustomFields < ClassTest
     end
 
     # @sg-ignore Wrong argument type for Checkoff::CustomFields#custom_field: workspace_name expected String, received Mocha::Mock
+    # https://github.com/castwide/solargraph/issues/1229
     assert_equal(custom_field, custom_fields.custom_field(workspace_name, custom_field_name))
   end
 

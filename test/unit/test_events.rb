@@ -31,6 +31,7 @@ class TestEvents < ClassTest
 
     # @sg-ignore Wrong argument type for Checkoff::Events#filter_asana_events: filters
     #   expected Array<Hash>, nil, received Mocha::Mock
+    # https://github.com/castwide/solargraph/issues/1229
     assert_equal([event], events.filter_asana_events(filters, [event]))
   end
 
@@ -43,6 +44,7 @@ class TestEvents < ClassTest
 
     # @sg-ignore Wrong argument type for Checkoff::Events#filter_asana_events: filters
     #   expected Array<Hash>, nil, received Mocha::Mock
+    # https://github.com/castwide/solargraph/issues/1229
     assert_empty(events.filter_asana_events(filters, [event]))
   end
 

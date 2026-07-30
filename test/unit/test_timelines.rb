@@ -26,6 +26,7 @@ class TestTimelines < ClassTest
 
     # @sg-ignore Wrong argument type for Checkoff::Timelines#task_dependent_on_previous_section_last_milestone?: task
     #   expected Asana::Resources::Task, received Mocha::Mock
+    # https://github.com/castwide/solargraph/issues/1229
     assert(timelines.task_dependent_on_previous_section_last_milestone?(task, limit_to_portfolio_gid: nil))
   end
 
@@ -54,6 +55,7 @@ class TestTimelines < ClassTest
 
     # @sg-ignore Wrong argument type for Checkoff::Timelines#task_dependent_on_previous_section_last_milestone?: task
     #   expected Asana::Resources::Task, received Mocha::Mock
+    # https://github.com/castwide/solargraph/issues/1229
     refute(timelines.task_dependent_on_previous_section_last_milestone?(task, limit_to_portfolio_gid: nil))
   end
 
@@ -111,6 +113,7 @@ class TestTimelines < ClassTest
 
     # @sg-ignore Wrong argument type for Checkoff::Timelines#task_dependent_on_previous_section_last_milestone?: task
     #   expected Asana::Resources::Task, received Mocha::Mock
+    # https://github.com/castwide/solargraph/issues/1229
     assert(timelines.task_dependent_on_previous_section_last_milestone?(task, limit_to_portfolio_gid: nil))
   end
 
@@ -154,6 +157,7 @@ class TestTimelines < ClassTest
 
     # @sg-ignore Wrong argument type for Checkoff::Timelines#task_dependent_on_previous_section_last_milestone?: task
     #   expected Asana::Resources::Task, received Mocha::Mock
+    # https://github.com/castwide/solargraph/issues/1229
     assert(timelines.task_dependent_on_previous_section_last_milestone?(task, limit_to_portfolio_gid: nil))
   end
 
@@ -181,6 +185,7 @@ class TestTimelines < ClassTest
 
     # @sg-ignore Wrong argument type for Checkoff::Timelines#task_dependent_on_previous_section_last_milestone?: task
     #   expected Asana::Resources::Task, received Mocha::Mock
+    # https://github.com/castwide/solargraph/issues/1229
     refute(timelines.task_dependent_on_previous_section_last_milestone?(task, limit_to_portfolio_gid: nil))
   end
 
@@ -192,6 +197,7 @@ class TestTimelines < ClassTest
 
     # @sg-ignore Wrong argument type for Checkoff::Timelines#last_task_milestone_depends_on_this_task?: task
     #   expected Asana::Resources::Task, received Mocha::Mock
+    # https://github.com/castwide/solargraph/issues/1229
     assert(timelines.last_task_milestone_depends_on_this_task?(task))
   end
 
@@ -247,6 +253,7 @@ class TestTimelines < ClassTest
 
     # @sg-ignore Wrong argument type for Checkoff::Timelines#last_task_milestone_depends_on_this_task?: task
     #   expected Asana::Resources::Task, received Mocha::Mock
+    # https://github.com/castwide/solargraph/issues/1229
     refute(timelines.last_task_milestone_depends_on_this_task?(task))
   end
 
@@ -267,6 +274,7 @@ class TestTimelines < ClassTest
 
     # @sg-ignore Wrong argument type for Checkoff::Timelines#last_task_milestone_depends_on_this_task?: task
     #   expected Asana::Resources::Task, received Mocha::Mock
+    # https://github.com/castwide/solargraph/issues/1229
     refute(timelines.last_task_milestone_depends_on_this_task?(task))
   end
 
@@ -288,6 +296,7 @@ class TestTimelines < ClassTest
 
     # @sg-ignore Wrong argument type for Checkoff::Timelines#last_task_milestone_depends_on_this_task?: task
     #   expected Asana::Resources::Task, received Mocha::Mock
+    # https://github.com/castwide/solargraph/issues/1229
     assert(timelines.last_task_milestone_depends_on_this_task?(milestone))
   end
 
@@ -323,6 +332,7 @@ class TestTimelines < ClassTest
 
     # @sg-ignore Wrong argument type for Checkoff::Timelines#last_task_milestone_depends_on_this_task?: task
     #   expected Asana::Resources::Task, received Mocha::Mock
+    # https://github.com/castwide/solargraph/issues/1229
     assert(timelines.last_task_milestone_depends_on_this_task?(milestone,
                                                                limit_to_portfolio_name: portfolio_name))
   end
@@ -351,6 +361,7 @@ class TestTimelines < ClassTest
 
     # @sg-ignore Wrong argument type for Checkoff::Timelines#last_task_milestone_depends_on_this_task?: task
     #   expected Asana::Resources::Task, received Mocha::Mock
+    # https://github.com/castwide/solargraph/issues/1229
     assert(timelines.last_task_milestone_depends_on_this_task?(milestone,
                                                                limit_to_portfolio_name: portfolio_name))
   end
@@ -374,6 +385,7 @@ class TestTimelines < ClassTest
 
     # @sg-ignore Wrong argument type for Checkoff::Timelines#any_milestone_depends_on_this_task?: task
     #   expected Asana::Resources::Task, received Mocha::Mock
+    # https://github.com/castwide/solargraph/issues/1229
     refute(timelines.any_milestone_depends_on_this_task?(task))
   end
 
@@ -395,6 +407,7 @@ class TestTimelines < ClassTest
 
     # @sg-ignore Wrong argument type for Checkoff::Timelines#any_milestone_depends_on_this_task?: task
     #   expected Asana::Resources::Task, received Mocha::Mock
+    # https://github.com/castwide/solargraph/issues/1229
     assert(timelines.any_milestone_depends_on_this_task?(task, limit_to_portfolio_name: portfolio_name))
   end
 

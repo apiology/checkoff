@@ -70,6 +70,7 @@ class TestProjectHashes < ClassTest
 
     # @sg-ignore Wrong argument type for Checkoff::Internal::ProjectHashes#project_to_h: project_obj
     #   expected Asana::Resources::Project, received Mocha::Mock
+    # https://github.com/castwide/solargraph/issues/1229
     assert_equal(PROJECT_A_HASH, project_hashes.project_to_h(project))
   end
 
@@ -82,6 +83,7 @@ class TestProjectHashes < ClassTest
 
     # @sg-ignore Wrong argument type for Checkoff::Internal::ProjectHashes#project_to_h: project_obj
     #   expected Asana::Resources::Project, received Mocha::Mock
+    # https://github.com/castwide/solargraph/issues/1229
     assert_equal(PROJECT_B_HASH, project_hashes.project_to_h(project))
   end
 
@@ -93,6 +95,7 @@ class TestProjectHashes < ClassTest
 
     # @sg-ignore Wrong argument type for Checkoff::Internal::ProjectHashes#project_to_h: project_obj
     #   expected Asana::Resources::Project, received Mocha::Mock
+    # https://github.com/castwide/solargraph/issues/1229
     project_data = project_hashes.project_to_h(project, project: :my_tasks)
 
     assert_equal(:my_tasks, project_data['project'])
