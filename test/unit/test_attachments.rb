@@ -13,7 +13,7 @@ class TestAttachments < ClassTest
   let_mock :attachment_name, :resource, :parent_gid, :response
 
   # @return [void]
-  # @param url [Object]
+  # @param url [String]
   def mock_create_attachment_from_url(url)
     resource.expects(:gid).returns(parent_gid)
     body = {

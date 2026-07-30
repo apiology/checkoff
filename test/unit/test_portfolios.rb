@@ -63,7 +63,7 @@ class TestPortfolios < ClassTest
   end
 
   # @return [void]
-  # @param portfolio_arr [Object]
+  # @param portfolio_arr [Array<Mocha::Mock>]
   def expect_portfolios_pulled(portfolio_arr)
     expect_workspace_pulled
     expect_portfolios_api_pulled

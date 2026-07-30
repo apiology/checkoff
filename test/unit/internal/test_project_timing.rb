@@ -16,7 +16,6 @@ class TestProjectTiming < ClassTest
   def test_date_or_time_field_by_name_due
     project_timing = get_test_object do
       mocks[:date_class] = Date
-      # @sg-ignore Unresolved call to project
       project.expects(:due_on).returns('2020-01-23').at_least_once
     end
 
@@ -28,7 +27,6 @@ class TestProjectTiming < ClassTest
   def test_date_or_time_field_by_name_due_nil
     project_timing = get_test_object do
       mocks[:date_class] = Date
-      # @sg-ignore Unresolved call to project
       project.expects(:due_on).returns(nil).at_least_once
     end
 
@@ -40,7 +38,6 @@ class TestProjectTiming < ClassTest
   def test_date_or_time_field_by_name_start
     project_timing = get_test_object do
       mocks[:date_class] = Date
-      # @sg-ignore Unresolved call to project
       project.expects(:start_on).returns('2020-01-23').at_least_once
     end
 
@@ -52,7 +49,6 @@ class TestProjectTiming < ClassTest
   def test_date_or_time_field_by_name_start_nil
     project_timing = get_test_object do
       mocks[:date_class] = Date
-      # @sg-ignore Unresolved call to project
       project.expects(:start_on).returns(nil).at_least_once
     end
 
@@ -64,7 +60,6 @@ class TestProjectTiming < ClassTest
   def test_date_or_time_field_by_name_ready
     project_timing = get_test_object do
       mocks[:date_class] = Date
-      # @sg-ignore Unresolved call to project
       project.expects(:start_on).returns('2020-01-23').at_least_once
     end
 

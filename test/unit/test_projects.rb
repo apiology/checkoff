@@ -37,7 +37,7 @@ class TestProjects < BaseAsana
   end
 
   # @return [void]
-  # @param workspace_gid [Object]
+  # @param workspace_gid [Mocha::Mock]
   def setup_projects_queried(workspace_gid: my_workspace_gid)
     projects
       .expects(:find_by_workspace).with(workspace: workspace_gid,
@@ -51,16 +51,15 @@ class TestProjects < BaseAsana
   end
 
   # @return [void]
-  # @param options [Object]
+  # @param options [Hash]
   def expect_tasks_found(options:)
-    # @sg-ignore Unresolved call to []=
     options[:project] = a_gid
     tasks.expects(:find_all).with(**options).returns(tasks)
     tasks.expects(:to_a).returns(tasks)
   end
 
   # @return [void]
-  # @param options [Object]
+  # @param options [Hash]
   def mock_tasks_from_project(options:)
     setup_config
     project_a.expects(:gid).returns(a_gid)
@@ -74,8 +73,8 @@ class TestProjects < BaseAsana
       mock_tasks_from_project(options: task_options_with_completed)
     end
 
-    # @sg-ignore Unresolved call to tasks_from_project
-    # @sg-ignore Unresolved call to tasks
+    # @sg-ignore Wrong argument type for Checkoff::Projects#tasks_from_project: project
+    #   expected Asana::Resources::Project, received Mocha::Mock
     assert_equal(tasks, projects.tasks_from_project(project_a,
                                                     only_uncompleted: false))
   end
@@ -86,8 +85,8 @@ class TestProjects < BaseAsana
       mock_tasks_from_project(options: task_options(extra_fields: []))
     end
 
-    # @sg-ignore Unresolved call to tasks
-    # @sg-ignore Unresolved call to tasks_from_project
+    # @sg-ignore Wrong argument type for Checkoff::Projects#tasks_from_project: project
+    #   expected Asana::Resources::Project, received Mocha::Mock
     assert_equal(tasks, projects.tasks_from_project(project_a))
   end
 
@@ -143,8 +142,7 @@ class TestProjects < BaseAsana
                                                 options: { fields: %w[custom_fields name] }).returns(project)
     end
 
-    # @sg-ignore Unresolved call to project_by_gid
-    # @sg-ignore Unresolved call to project
+    # @sg-ignore Wrong argument type for Checkoff::Projects#project_by_gid: gid expected String, received Mocha::Mock
     assert_equal(project, projects.project_by_gid(project_gid))
   end
 
@@ -184,8 +182,8 @@ class TestProjects < BaseAsana
         .returns(project_a_hash)
     end
 
-    # @sg-ignore Unresolved call to project_a_hash
-    # @sg-ignore Unresolved call to project_to_h
+    # @sg-ignore Wrong argument type for Checkoff::Projects#project_to_h: project_obj
+    #   expected Asana::Resources::Project, received Mocha::Mock
     assert_equal(project_a_hash, projects.project_to_h(project_a))
   end
 
@@ -203,7 +201,8 @@ class TestProjects < BaseAsana
       mock_test_in_period
     end
 
-    # @sg-ignore Unresolved call to in_period?
+    # @sg-ignore Wrong argument type for Checkoff::Projects#in_period?: project
+    #   expected Asana::Resources::Project, received Mocha::Mock
     assert(projects.in_period?(project, field_name, period))
   end
 
@@ -221,7 +220,8 @@ class TestProjects < BaseAsana
       mock_project_ready
     end
 
-    # @sg-ignore Unresolved call to project_ready?
+    # @sg-ignore Wrong argument type for Checkoff::Projects#project_ready?: project
+    #   expected Asana::Resources::Project, received Mocha::Mock
     assert(projects.project_ready?(project, period:))
   end
 

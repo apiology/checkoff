@@ -7,6 +7,10 @@ require_relative 'class_test'
 class TestCustomFields < ClassTest
   extend Forwardable
 
+  # @!parse
+  #  # @return [Checkoff::CustomFields]
+  #  def get_test_object; end
+
   def_delegators(:@mocks, :workspaces, :client)
 
   let_mock :workspace_name, :custom_field_name, :custom_field, :workspace, :workspace_gid,
@@ -19,7 +23,8 @@ class TestCustomFields < ClassTest
       expect_custom_fields_pulled(custom_field_arr)
     end
     assert_raises(RuntimeError) do
-      # @sg-ignore Unresolved call to custom_field_or_raise
+      # @sg-ignore Wrong argument type for Checkoff::CustomFields#custom_field_or_raise: workspace_name
+      #   expected String, received Mocha::Mock
       custom_fields.custom_field_or_raise(workspace_name, custom_field_name)
     end
   end
@@ -31,8 +36,8 @@ class TestCustomFields < ClassTest
       expect_custom_fields_pulled(custom_field_arr)
     end
 
-    # @sg-ignore Unresolved call to custom_field_or_raise
-    # @sg-ignore Unresolved call to custom_field
+    # @sg-ignore Wrong argument type for Checkoff::CustomFields#custom_field_or_raise: workspace_name
+    #   expected String, received Mocha::Mock
     assert_equal(custom_field, custom_fields.custom_field_or_raise(workspace_name,
                                                                    custom_field_name))
   end
@@ -50,7 +55,7 @@ class TestCustomFields < ClassTest
   end
 
   # @return [void]
-  # @param custom_field_arr [Object]
+  # @param custom_field_arr [Array<Mocha::Mock>]
   def expect_custom_fields_pulled(custom_field_arr)
     expect_workspace_pulled
     client.expects(:custom_fields).returns(custom_fields_api)
@@ -65,8 +70,7 @@ class TestCustomFields < ClassTest
       expect_custom_fields_pulled(custom_field_arr)
     end
 
-    # @sg-ignore Unresolved call to custom_field
-    # @sg-ignore Unresolved call to custom_field
+    # @sg-ignore Wrong argument type for Checkoff::CustomFields#custom_field: workspace_name expected String, received Mocha::Mock
     assert_equal(custom_field, custom_fields.custom_field(workspace_name, custom_field_name))
   end
 

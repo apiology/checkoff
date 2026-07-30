@@ -56,7 +56,7 @@ class TestTaskSearches < ClassTest
     body.expects(:fetch).with('data').returns(data)
   end
 
-  # @param response_array [Object]
+  # @param response_array [Array<Mocha::Mock>]
   # @return [void]
   def expect_response_wrapped(response_array)
     asana_resources_collection_class
