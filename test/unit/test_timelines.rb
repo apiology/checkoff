@@ -24,7 +24,8 @@ class TestTimelines < ClassTest
       expect_task_data_created(task, { 'memberships' => [] })
     end
 
-    # @sg-ignore Unresolved call to task_dependent_on_previous_section_last_milestone?
+    # @sg-ignore Wrong argument type for Checkoff::Timelines#task_dependent_on_previous_section_last_milestone?: task
+    #   expected Asana::Resources::Task, received Mocha::Mock
     assert(timelines.task_dependent_on_previous_section_last_milestone?(task, limit_to_portfolio_gid: nil))
   end
 
@@ -51,13 +52,14 @@ class TestTimelines < ClassTest
       mock_task_dependent_on_previous_section_last_milestone_false_no_dependencies
     end
 
-    # @sg-ignore Unresolved call to task_dependent_on_previous_section_last_milestone?
+    # @sg-ignore Wrong argument type for Checkoff::Timelines#task_dependent_on_previous_section_last_milestone?: task
+    #   expected Asana::Resources::Task, received Mocha::Mock
     refute(timelines.task_dependent_on_previous_section_last_milestone?(task, limit_to_portfolio_gid: nil))
   end
 
   # @return [void]
-  # @param task [Object]
-  # @param task_data [Object]
+  # @param task [Mocha::Mock]
+  # @param task_data [Hash]
   def expect_task_data_created(task, task_data)
     tasks.expects(:task_to_h).with(task).returns(task_data)
   end
@@ -107,7 +109,8 @@ class TestTimelines < ClassTest
       mock_task_dependent_on_previous_section_last_milestone_true_no_tasks
     end
 
-    # @sg-ignore Unresolved call to task_dependent_on_previous_section_last_milestone?
+    # @sg-ignore Wrong argument type for Checkoff::Timelines#task_dependent_on_previous_section_last_milestone?: task
+    #   expected Asana::Resources::Task, received Mocha::Mock
     assert(timelines.task_dependent_on_previous_section_last_milestone?(task, limit_to_portfolio_gid: nil))
   end
 
@@ -149,7 +152,8 @@ class TestTimelines < ClassTest
       mock_task_dependent_on_previous_section_last_milestone_true
     end
 
-    # @sg-ignore Unresolved call to task_dependent_on_previous_section_last_milestone?
+    # @sg-ignore Wrong argument type for Checkoff::Timelines#task_dependent_on_previous_section_last_milestone?: task
+    #   expected Asana::Resources::Task, received Mocha::Mock
     assert(timelines.task_dependent_on_previous_section_last_milestone?(task, limit_to_portfolio_gid: nil))
   end
 
@@ -175,7 +179,8 @@ class TestTimelines < ClassTest
       mock_task_dependent_on_previous_section_last_milestone_false_no_previous_section
     end
 
-    # @sg-ignore Unresolved call to task_dependent_on_previous_section_last_milestone?
+    # @sg-ignore Wrong argument type for Checkoff::Timelines#task_dependent_on_previous_section_last_milestone?: task
+    #   expected Asana::Resources::Task, received Mocha::Mock
     refute(timelines.task_dependent_on_previous_section_last_milestone?(task, limit_to_portfolio_gid: nil))
   end
 
@@ -185,26 +190,27 @@ class TestTimelines < ClassTest
       task.expects(:memberships).returns([])
     end
 
-    # @sg-ignore Unresolved call to last_task_milestone_depends_on_this_task?
+    # @sg-ignore Wrong argument type for Checkoff::Timelines#last_task_milestone_depends_on_this_task?: task
+    #   expected Asana::Resources::Task, received Mocha::Mock
     assert(timelines.last_task_milestone_depends_on_this_task?(task))
   end
 
-  # @param dependents [Object]
-  # @param task [Object]
+  # @param dependents [Array<Mocha::Mock>]
+  # @param task [Mocha::Mock]
   # @return [void]
   def expect_all_dependent_tasks_pulled(task, dependents)
     tasks.expects(:all_dependent_tasks).with(task).returns(dependents)
   end
 
   # @return [void]
-  # @param memberships [Object]
-  # @param task [Object]
+  # @param memberships [Array<Hash>]
+  # @param task [Mocha::Mock]
   def expect_memberships_pulled(task, memberships)
     task.expects(:memberships).returns(memberships)
   end
 
   # @return [void]
-  # @param tasks [Object]
+  # @param tasks [Array<Mocha::Mock>]
   def expect_tasks_by_section_gid_pulled(tasks)
     sections.expects(:tasks_by_section_gid)
       .with(section_1_gid, extra_fields: ['resource_subtype'])
@@ -239,7 +245,8 @@ class TestTimelines < ClassTest
       expect_task_gid_pulled
     end
 
-    # @sg-ignore Unresolved call to last_task_milestone_depends_on_this_task?
+    # @sg-ignore Wrong argument type for Checkoff::Timelines#last_task_milestone_depends_on_this_task?: task
+    #   expected Asana::Resources::Task, received Mocha::Mock
     refute(timelines.last_task_milestone_depends_on_this_task?(task))
   end
 
@@ -258,7 +265,8 @@ class TestTimelines < ClassTest
       expect_tasks_by_section_gid_pulled([])
     end
 
-    # @sg-ignore Unresolved call to last_task_milestone_depends_on_this_task?
+    # @sg-ignore Wrong argument type for Checkoff::Timelines#last_task_milestone_depends_on_this_task?: task
+    #   expected Asana::Resources::Task, received Mocha::Mock
     refute(timelines.last_task_milestone_depends_on_this_task?(task))
   end
 
@@ -278,12 +286,13 @@ class TestTimelines < ClassTest
       expect_milestone_details_pulled
     end
 
-    # @sg-ignore Unresolved call to last_task_milestone_depends_on_this_task?
+    # @sg-ignore Wrong argument type for Checkoff::Timelines#last_task_milestone_depends_on_this_task?: task
+    #   expected Asana::Resources::Task, received Mocha::Mock
     assert(timelines.last_task_milestone_depends_on_this_task?(milestone))
   end
 
   # @return [void]
-  # @param projects [Object]
+  # @param projects [Array<Mocha::Mock>]
   def export_portfolio_projects_pulled(projects)
     workspaces.expects(:default_workspace).returns(default_workspace)
     default_workspace.expects(:name).returns(default_workspace_name)
@@ -312,7 +321,8 @@ class TestTimelines < ClassTest
       project_a.expects(:gid).returns(project_a_gid)
     end
 
-    # @sg-ignore Unresolved call to last_task_milestone_depends_on_this_task?
+    # @sg-ignore Wrong argument type for Checkoff::Timelines#last_task_milestone_depends_on_this_task?: task
+    #   expected Asana::Resources::Task, received Mocha::Mock
     assert(timelines.last_task_milestone_depends_on_this_task?(milestone,
                                                                limit_to_portfolio_name: portfolio_name))
   end
@@ -339,7 +349,8 @@ class TestTimelines < ClassTest
       mock_last_task_milestone_depends_on_this_task_is_last_milestone_limited_to_portfolio
     end
 
-    # @sg-ignore Unresolved call to last_task_milestone_depends_on_this_task?
+    # @sg-ignore Wrong argument type for Checkoff::Timelines#last_task_milestone_depends_on_this_task?: task
+    #   expected Asana::Resources::Task, received Mocha::Mock
     assert(timelines.last_task_milestone_depends_on_this_task?(milestone,
                                                                limit_to_portfolio_name: portfolio_name))
   end
@@ -361,7 +372,8 @@ class TestTimelines < ClassTest
         .returns([])
     end
 
-    # @sg-ignore Unresolved call to any_milestone_depends_on_this_task?
+    # @sg-ignore Wrong argument type for Checkoff::Timelines#any_milestone_depends_on_this_task?: task
+    #   expected Asana::Resources::Task, received Mocha::Mock
     refute(timelines.any_milestone_depends_on_this_task?(task))
   end
 
@@ -381,7 +393,8 @@ class TestTimelines < ClassTest
         .returns([dependent_milestone])
     end
 
-    # @sg-ignore Unresolved call to any_milestone_depends_on_this_task?
+    # @sg-ignore Wrong argument type for Checkoff::Timelines#any_milestone_depends_on_this_task?: task
+    #   expected Asana::Resources::Task, received Mocha::Mock
     assert(timelines.any_milestone_depends_on_this_task?(task, limit_to_portfolio_name: portfolio_name))
   end
 

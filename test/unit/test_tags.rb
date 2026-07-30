@@ -7,6 +7,10 @@ require_relative 'class_test'
 class TestTags < ClassTest
   extend Forwardable
 
+  # @!parse
+  #  # @return [Checkoff::Tags]
+  #  def get_test_object; end
+
   def_delegators(:@mocks, :workspaces, :client)
 
   let_mock :workspace_name, :tag_name, :tag, :workspace, :workspace_gid,
@@ -20,7 +24,7 @@ class TestTags < ClassTest
       expect_tags_pulled(tag_arr)
     end
     assert_raises(RuntimeError) do
-      # @sg-ignore Unresolved call to tag_or_raise
+      # @sg-ignore Wrong argument type for Checkoff::Tags#tag_or_raise: workspace_name expected String, received Mocha::Mock
       tags.tag_or_raise(workspace_name, tag_name)
     end
   end
@@ -32,8 +36,7 @@ class TestTags < ClassTest
       expect_tags_pulled(tag_arr)
     end
 
-    # @sg-ignore Unresolved call to tag_or_raise
-    # @sg-ignore Unresolved call to tag
+    # @sg-ignore Wrong argument type for Checkoff::Tags#tag_or_raise: workspace_name expected String, received Mocha::Mock
     assert_equal(tag, tags.tag_or_raise(workspace_name, tag_name))
   end
 
@@ -50,7 +53,7 @@ class TestTags < ClassTest
   end
 
   # @return [void]
-  # @param tag_arr [Object]
+  # @param tag_arr [Array<Mocha::Mock>]
   def expect_tags_pulled(tag_arr)
     expect_workspace_pulled
     client.expects(:tags).returns(tags_api)
@@ -65,13 +68,12 @@ class TestTags < ClassTest
       expect_tags_pulled(tag_arr)
     end
 
-    # @sg-ignore Unresolved call to tag
-    # @sg-ignore Unresolved call to tag
+    # @sg-ignore Wrong argument type for Checkoff::Tags#tag: workspace_name expected String, received Mocha::Mock
     assert_equal(tag, tags.tag(workspace_name, tag_name))
   end
 
   # @return [void]
-  # @param only_uncompleted [Object]
+  # @param only_uncompleted [Boolean]
   def mock_tasks(only_uncompleted: true)
     task_params = build_task_params(only_uncompleted)
     merged_task_options = generate_merged_task_options
@@ -84,7 +86,7 @@ class TestTags < ClassTest
   end
 
   # @return [Hash{Symbol => Object}]
-  # @param only_uncompleted [Object]
+  # @param only_uncompleted [Boolean]
   def build_task_params(only_uncompleted)
     task_params = { limit: 100 }
     task_params[:completed_since] = '9999-12-01' if only_uncompleted
@@ -99,15 +101,15 @@ class TestTags < ClassTest
   end
 
   # @return [void]
-  # @param merged_task_options [Object]
-  # @param task_endpoint [Object]
-  # @param task_params [Object]
+  # @param merged_task_options [Hash]
+  # @param task_endpoint [String]
+  # @param task_params [Hash{Symbol => Object}]
   def setup_client_expects(task_endpoint, task_params, merged_task_options)
     client.expects(:get).with(task_endpoint, params: task_params, options: merged_task_options).returns(response)
   end
 
   # @return [void]
-  # @param response_body [Object]
+  # @param response_body [Hash{String => Object}]
   def setup_response_expects(response_body)
     response.expects(:body).returns(response_body).at_least(1)
   end
@@ -145,7 +147,7 @@ class TestTags < ClassTest
   # @return [String]
   def generate_task_endpoint
     tag.expects(:gid).returns('tag_gid').at_least(1)
-    # @sg-ignore Unresolved call to tag
+    # @sg-ignore Unresolved call to gid on Mocha::Mock
     "/tags/#{tag.gid}/tasks"
   end
 
@@ -166,7 +168,7 @@ class TestTags < ClassTest
     tags.stubs(:tag_or_raise).returns(tag)
 
     # Call the tasks method with the necessary arguments
-    # @sg-ignore Unresolved call to tasks
+    # @sg-ignore Wrong argument type for Checkoff::Tags#tasks: workspace_name expected String, received Mocha::Mock
     result = tags.tasks(workspace_name, tag_name, only_uncompleted: true, extra_fields: %w[field1 field2])
 
     # Check that the tasks method returned the expected result
@@ -184,7 +186,7 @@ class TestTags < ClassTest
     tags.stubs(:tag_or_raise).returns(tag)
 
     # Call the tasks method with the necessary arguments and only_uncompleted set to false
-    # @sg-ignore Unresolved call to tasks
+    # @sg-ignore Wrong argument type for Checkoff::Tags#tasks: workspace_name expected String, received Mocha::Mock
     result = tags.tasks(workspace_name, tag_name, only_uncompleted: false, extra_fields: %w[field1 field2])
 
     # Check that the tasks method returned the expected result

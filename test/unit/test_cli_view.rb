@@ -48,8 +48,8 @@ class TestCLIView < Minitest::Test
   end
 
   # @return [void]
-  # @param due_on [Object]
-  # @param due_at [Object]
+  # @param due_on [String, NilClass]
+  # @param due_at [String, NilClass]
   def mock_run_with_no_section_specified_normal_project(due_on:, due_at:)
     expect_client_pulled
     expect_tasks_by_section_pulled
@@ -57,22 +57,22 @@ class TestCLIView < Minitest::Test
   end
 
   # @return [void]
-  # @param task_name [Object]
-  # @param task [Object]
+  # @param task_name [String]
+  # @param task [Mocha::Mock]
   def expect_task_named(task, task_name)
     task.expects(:name).returns(task_name).at_least(0)
   end
 
   # @return [void]
-  # @param due_on [Object]
-  # @param task [Object]
+  # @param due_on [String, NilClass]
+  # @param task [Mocha::Mock]
   def expect_task_due_on(task, due_on)
     task.expects(:due_on).returns(due_on).at_least(0)
   end
 
   # @return [void]
-  # @param task [Object]
-  # @param due_at [Object]
+  # @param task [Mocha::Mock]
+  # @param due_at [String, NilClass]
   def expect_task_due_at(task, due_at)
     task.expects(:due_at).returns(due_at).at_least(0)
   end
@@ -83,19 +83,19 @@ class TestCLIView < Minitest::Test
   end
 
   # @return [void]
-  # @param task [Object]
-  # @param due_at [Object]
-  # @param due_on [Object]
-  # @param task_name [Object]
+  # @param task [Mocha::Mock]
+  # @param due_at [String, NilClass]
+  # @param due_on [String, NilClass]
+  # @param task_name [String]
   def expect_task_queried(task, task_name, due_on, due_at)
     expect_task_named(task, task_name)
     expect_task_due_on(task, due_on)
     expect_task_due_at(task, due_at)
   end
 
-  # @param due_on [Object]
+  # @param due_on [String, NilClass]
   # @return [void]
-  # @param due_at [Object]
+  # @param due_at [String, NilClass]
   def expect_three_tasks_queried(due_on:, due_at:)
     three_tasks.each do |task, task_name|
       expect_task_queried(task, task_name, due_on, due_at)
@@ -171,10 +171,10 @@ class TestCLIView < Minitest::Test
   end
 
   # @return [void]
-  # @param section_name [String, nil, NilClass]
-  # @param due_on [Object]
+  # @param section_name [String, NilClass]
+  # @param due_on [String, NilClass]
   # @param project_name [String]
-  # @param due_at [Object]
+  # @param due_at [String, NilClass]
   def expect_three_tasks_pulled_and_queried(project_name:,
                                             section_name:,
                                             due_on:,
@@ -187,10 +187,10 @@ class TestCLIView < Minitest::Test
   end
 
   # @return [void]
-  # @param due_at [Object]
-  # @param section_name [String, nil, NilClass]
+  # @param due_at [String, NilClass]
+  # @param section_name [String, NilClass]
   # @param project_name [String]
-  # @param due_on [Object]
+  # @param due_on [String, NilClass]
   def mock_view(project_name:, section_name:,
                 due_at:, due_on:)
     expect_three_tasks_pulled_and_queried(project_name:,
@@ -200,7 +200,7 @@ class TestCLIView < Minitest::Test
   end
 
   # @return [void]
-  # @param section_name [String, nil, NilClass]
+  # @param section_name [String, NilClass]
   def mock_view_specific_task(section_name:)
     expect_client_pulled
     tasks.expects(:task).with(workspace_name, project_name, task_name,
