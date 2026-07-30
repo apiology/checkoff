@@ -17,9 +17,7 @@ class TestSections < BaseAsana
 
   def_delegators(:@mocks, :workspaces, :client)
 
-  # @sg-ignore Unresolved call to typed_mock
   typed_mock :a_membership_project, Hash
-  # @sg-ignore Unresolved call to typed_mock
   typed_mock :a_membership_section, Hash
 
   let_mock :project, :inactive_task_b, :a_membership,
@@ -242,18 +240,14 @@ class TestSections < BaseAsana
 
   # @return [void]
   def expect_task_project_memberships_queried
-    # @sg-ignore Unresolved call to a_membership
     a_membership.expects(:[]).with('project').returns(a_membership_project)
-    # @sg-ignore Unresolved call to a_membership_project
     a_membership_project.expects(:[]).with('gid').returns(a_gid)
   end
 
   # @return [void]
   # @param section_name [String]
   def expect_task_section_memberships_queried(section_name)
-    # @sg-ignore Unresolved call to a_membership
     a_membership.expects(:[]).with('section').returns(a_membership_section)
-    # @sg-ignore Unresolved call to a_membership_section
     a_membership_section.expects(:[]).with('name').returns(section_name)
   end
 

@@ -21,6 +21,37 @@ GIT
       oauth2 (>= 1.4, < 3)
 
 GIT
+  remote: https://github.com/apiology/solargraph.git
+  revision: 89664090a52743821d9c13e755f992e40ac21384
+  branch: fix-1229-intersection-types
+  specs:
+    solargraph (0.60.2)
+      ast (~> 2.4.3)
+      backport (~> 1.2)
+      benchmark (~> 0.4)
+      bundler (>= 2.0)
+      diff-lcs (~> 1.4)
+      jaro_winkler (~> 1.6, >= 1.6.1)
+      kramdown (~> 2.3)
+      kramdown-parser-gfm (~> 1.1)
+      logger (~> 1.6)
+      observer (~> 0.1)
+      open3 (~> 0.2.1)
+      ostruct (~> 0.6)
+      parser (~> 3.0)
+      prism (~> 1.4)
+      rbs (>= 3.10.0)
+      rdoc (~> 7.0)
+      reverse_markdown (~> 3.0)
+      rubocop (~> 1.76)
+      sord (~> 7.0)
+      thor (~> 1.0)
+      tilt (~> 2.0)
+      yard (~> 0.9, >= 0.9.24)
+      yard-activesupport-concern (~> 0.0)
+      yard-solargraph (~> 0.1)
+
+GIT
   remote: https://github.com/apiology/sord.git
   revision: 3f110552a33652d95c237a74897ef4a9bedfddbf
   branch: 2025-07-04
@@ -323,31 +354,6 @@ GEM
     snaky_hash (2.0.6)
       hashie (>= 0.1.0, < 6)
       version_gem (>= 1.1.8, < 3)
-    solargraph (0.60.2)
-      ast (~> 2.4.3)
-      backport (~> 1.2)
-      benchmark (~> 0.4)
-      bundler (>= 2.0)
-      diff-lcs (~> 1.4)
-      jaro_winkler (~> 1.6, >= 1.6.1)
-      kramdown (~> 2.3)
-      kramdown-parser-gfm (~> 1.1)
-      logger (~> 1.6)
-      observer (~> 0.1)
-      open3 (~> 0.2.1)
-      ostruct (~> 0.6)
-      parser (~> 3.0)
-      prism (~> 1.4)
-      rbs (>= 3.10.0)
-      rdoc (~> 7.0)
-      reverse_markdown (~> 3.0)
-      rubocop (~> 1.76)
-      sord (~> 7.0)
-      thor (~> 1.0)
-      tilt (~> 2.0)
-      yard (~> 0.9, >= 0.9.24)
-      yard-activesupport-concern (~> 0.0)
-      yard-solargraph (~> 0.1)
     sorbet (0.6.13341)
       sorbet-static (= 0.6.13341)
     sorbet-runtime (0.6.13341)
@@ -454,7 +460,7 @@ DEPENDENCIES
   simplecov (>= 0.18.0)
   simplecov-lcov
   simplecov_json_formatter
-  solargraph (>= 0.56)
+  solargraph!
   sord!
   tapioca (>= 0.16.0)
   undercover (>= 0.6.3)
@@ -598,7 +604,7 @@ CHECKSUMS
   simplecov-lcov (0.9.0) sha256=7a77a31e200a595ed4b0249493056efd0c920601f53d2ef135ca34ee796346cd
   simplecov_json_formatter (0.1.4) sha256=529418fbe8de1713ac2b2d612aa3daa56d316975d307244399fa4838c601b428
   snaky_hash (2.0.6) sha256=3663cae48cdef582b517025cf8a39d8789996eaf0b4ed89e2f0624836505654a
-  solargraph (0.60.2) sha256=35c8fb31fcdbe8ccd0e0e84862a65b8deb319f86210c5966e41e2fc011e52538
+  solargraph (0.60.2)
   sorbet (0.6.13341) sha256=c84abd590e5ca591205a986e776480ff39238af56b7bd422508b9f44921befdc
   sorbet-runtime (0.6.13341) sha256=b1dfbf0e08ba4a684b5e5e8468c486aa1fea20dfd862502f3b7f80f5da2b4c90
   sorbet-static (0.6.13341-aarch64-linux) sha256=42a53bf5f22adfbe46acf816c93a621a75a4e30cd81d04e80a9d53c7d4ac2342

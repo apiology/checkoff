@@ -14,7 +14,7 @@ class TestProjectSelectors < ClassTest
   #  # @return [Checkoff::ProjectSelectors]
   #  def get_test_object; end
 
-  let_mock :project
+  typed_mock :project, Asana::Resources::Project
 
   # @return [void]
   def test_filter_via_custom_field_value_contain_any_value_false
@@ -32,7 +32,6 @@ class TestProjectSelectors < ClassTest
       project.expects(:custom_fields).returns(custom_fields)
     end
 
-    # @sg-ignore Unresolved call to project
     refute(project_selectors.filter_via_project_selector(project,
                                                          [:custom_field_value_contains_any_value?, 'Project attributes',
                                                           ['timeline']]))
@@ -54,7 +53,6 @@ class TestProjectSelectors < ClassTest
       project.expects(:custom_fields).returns(custom_fields)
     end
 
-    # @sg-ignore Unresolved call to project
     assert(project_selectors.filter_via_project_selector(project,
                                                          [:custom_field_value_contains_any_value?, 'Project attributes',
                                                           ['timeline']]))
@@ -77,7 +75,6 @@ class TestProjectSelectors < ClassTest
       project.expects(:custom_fields).returns(custom_fields)
     end
 
-    # @sg-ignore Unresolved call to project
     assert(project_selectors.filter_via_project_selector(project,
                                                          [:custom_field_value_contains_any_value?, 'Project attributes',
                                                           ['timeline']]))
@@ -102,7 +99,6 @@ class TestProjectSelectors < ClassTest
       project.expects(:custom_fields).returns(custom_fields)
     end
 
-    # @sg-ignore Unresolved call to project
     assert(project_selectors.filter_via_project_selector(project,
                                                          [:custom_field_value_contains_any_value?, 'Project attributes',
                                                           ['timeline']]))
@@ -124,7 +120,6 @@ class TestProjectSelectors < ClassTest
       project.expects(:custom_fields).returns(custom_fields)
     end
 
-    # @sg-ignore Unresolved call to project
     refute(project_selectors.filter_via_project_selector(project,
                                                          [:custom_field_value_contains_any_value?, 'Project attributes',
                                                           ['timeline']]))
@@ -140,7 +135,6 @@ class TestProjectSelectors < ClassTest
       project.expects(:custom_fields).returns(custom_fields).at_least(1)
     end
 
-    # @sg-ignore Unresolved call to project
     refute(project_selectors.filter_via_project_selector(project,
                                                          [:custom_field_value_contains_any_value?, 'Project attributes',
                                                           ['timeline']]))
@@ -152,7 +146,6 @@ class TestProjectSelectors < ClassTest
       project.expects(:due_date).returns('2099-01-01').at_least(1)
     end
 
-    # @sg-ignore Unresolved call to project
     refute(project_selectors.filter_via_project_selector(project,
                                                          [:nil?, [:due_date]]))
   end
@@ -163,7 +156,6 @@ class TestProjectSelectors < ClassTest
       projects.expects(:project_ready?).with(project, period: :now_or_before)
     end
 
-    # @sg-ignore Unresolved call to project
     refute(project_selectors.filter_via_project_selector(project,
                                                          [:ready?]))
   end
@@ -172,7 +164,6 @@ class TestProjectSelectors < ClassTest
   def test_bogus_raises
     project_selectors = get_test_object
 
-    # @sg-ignore Unresolved call to project
     e = assert_raises(RuntimeError) { project_selectors.filter_via_project_selector(project, [:bogus]) }
 
     assert_match(/Syntax issue trying to handle/, e.message)
