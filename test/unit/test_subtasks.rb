@@ -7,6 +7,10 @@ require_relative 'class_test'
 class TestSubtasks < ClassTest
   extend Forwardable
 
+  # @!parse
+  #  # @return [Checkoff::Subtasks]
+  #  def get_test_object; end
+
   def_delegators(:@mocks, :projects)
 
   let_mock :task, :raw_subtasks,

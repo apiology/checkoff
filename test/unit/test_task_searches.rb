@@ -8,6 +8,10 @@ require 'checkoff/task_searches'
 class TestTaskSearches < ClassTest
   extend Forwardable
 
+  # @!parse
+  #  # @return [Checkoff::TaskSearches]
+  #  def get_test_object; end
+
   def_delegators(:@mocks, :workspaces, :client, :search_url_parser,
                  :asana_resources_collection_class, :task_selectors)
 
@@ -98,7 +102,8 @@ class TestTaskSearches < ClassTest
 
   # @return [void]
   def projects
-    # @sg-ignore Unresolved call to client
+    # @sg-ignore Wrong argument type for Checkoff::Projects.new: client expected Asana::Client, received Mocha::Mock
+    # https://github.com/castwide/solargraph/issues/1229
     Checkoff::Projects.new(client:)
   end
 
@@ -109,8 +114,8 @@ class TestTaskSearches < ClassTest
       mock_task_search
     end
 
-    # @sg-ignore Unresolved call to good_task
-    # @sg-ignore Unresolved call to task_search
+    # @sg-ignore Wrong argument type for Checkoff::TaskSearches#task_search: workspace_name expected String, received Mocha::Mock
+    # https://github.com/castwide/solargraph/issues/1229
     assert_equal([good_task], task_searches.task_search(workspace_name, url))
   end
 
@@ -127,7 +132,6 @@ class TestTaskSearches < ClassTest
   def test_as_cache_key
     task_searches = get_test_object
 
-    # @sg-ignore Unresolved call to as_cache_key
     assert_empty(task_searches.as_cache_key)
   end
 

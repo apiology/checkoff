@@ -8,6 +8,10 @@ require_relative 'base_asana'
 class TestWorkspaces < BaseAsana
   extend Forwardable
 
+  # @!parse
+  #  # @return [Checkoff::Workspaces]
+  #  def get_test_object; end
+
   def_delegators(:@mocks, :client, :asana_workspace)
 
   let_mock :workspace_a_name, :workspace_a, :workspace_a_gid,
@@ -25,7 +29,9 @@ class TestWorkspaces < BaseAsana
   def test_workspace_or_raise_nil
     asana = get_test_object { mock_workspace_or_raise_nil }
     assert_raises(RuntimeError) do
-      # @sg-ignore Unresolved call to workspace_or_raise
+      # @sg-ignore Wrong argument type for Checkoff::Workspaces#workspace_or_raise: workspace_name
+      #   expected String, Symbol, received Mocha::Mock
+      # https://github.com/castwide/solargraph/issues/1229
       asana.workspace_or_raise(workspace_a_name)
     end
   end
@@ -41,8 +47,9 @@ class TestWorkspaces < BaseAsana
   def test_workspace_or_raise
     asana = get_test_object { mock_workspace_or_raise }
 
-    # @sg-ignore Unresolved call to workspace_or_raise
-    # @sg-ignore Unresolved call to workspace_a
+    # @sg-ignore Wrong argument type for Checkoff::Workspaces#workspace_or_raise: workspace_name
+    #   expected String, Symbol, received Mocha::Mock
+    # https://github.com/castwide/solargraph/issues/1229
     assert_equal(workspace_a, asana.workspace_or_raise(workspace_a_name))
   end
 
@@ -68,8 +75,6 @@ class TestWorkspaces < BaseAsana
       asana_workspace.expects(:find_by_id).with(client, workspace_a_gid).returns(workspace_a)
     end
 
-    # @sg-ignore Unresolved call to default_workspace
-    # @sg-ignore Unresolved call to workspace_a
     assert_equal(workspace_a, asana.default_workspace)
   end
 

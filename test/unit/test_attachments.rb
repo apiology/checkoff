@@ -8,6 +8,10 @@ require 'stringio'
 class TestAttachments < ClassTest
   extend Forwardable
 
+  # @!parse
+  #  # @return [Checkoff::Attachments]
+  #  def get_test_object; end
+
   def_delegators(:@mocks, :client)
 
   let_mock :attachment_name, :resource, :parent_gid, :response
@@ -37,7 +41,9 @@ class TestAttachments < ClassTest
     attachments = get_test_object do
       mock_create_attachment_from_url(url)
     end
-    # @sg-ignore Unresolved call to create_attachment_from_url!
+    # @sg-ignore Wrong argument type for Checkoff::Attachments#create_attachment_from_url!: resource
+    #   expected Asana::Resources::Resource, received Mocha::Mock
+    # https://github.com/castwide/solargraph/issues/1229
     attachment = attachments.create_attachment_from_url!(url, resource, attachment_name:, just_the_url: true)
 
     # @sg-ignore Unresolved call to foo
