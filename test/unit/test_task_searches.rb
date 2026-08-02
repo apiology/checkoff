@@ -26,7 +26,7 @@ class TestTaskSearches < ClassTest
   typed_let_mock :good_task, Asana::Resources::Task
   typed_let_mock :bad_task, Asana::Resources::Task
 
-  let_mock :something_else
+  typed_let_mock :something_else, Object
 
   # @return [void]
   def expect_workspace_pulled
