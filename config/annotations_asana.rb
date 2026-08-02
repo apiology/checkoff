@@ -36,7 +36,7 @@
 #     module Resources
 #       # https://developers.asana.com/reference/gettask
 #       class Task
-#         # @return [String]
+#         # @return [String, nil]
 #         def resource_subtype; end
 #         # @return [Asana::Resources::Section, nil]
 #         def assignee_section; end
@@ -56,6 +56,12 @@
 #         def html_notes; end
 #         # @return [Array<Hash{String => Hash{String => String}}>]
 #         def memberships; end
+#         # @return [Array<Asana::Resources::Tag>]
+#         def tags; end
+#         # @param per_page [Integer] the number of records to fetch per page.
+#         # @param options [Hash] the request I/O options
+#         # @return [Enumerable<Asana::Resources::Story>]
+#         def stories(per_page: 20, options: {}); end
 #         class << self
 #           # @param client [Asana::Client]
 #           # @param assignee [String]
@@ -64,6 +70,16 @@
 #           # @return [Asana::Resources::Task]
 #           def create(client, assignee:, workspace:, name:); end
 #         end
+#       end
+#       class Tag
+#         # @return [String,nil]
+#         def name; end
+#       end
+#       class Story
+#         # @return [String,nil]
+#         def resource_subtype; end
+#         # @return [String,nil]
+#         def created_at; end
 #       end
 #       class Section
 #         # @return [String,nil]
@@ -90,6 +106,8 @@
 #         def html_notes; end
 #         # @return [String]
 #         def gid; end
+#         # @return [String, nil]
+#         def name; end
 #         class << self
 #           # @param client [Asana::Client]
 #           # @param id [String]

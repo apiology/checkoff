@@ -17,6 +17,9 @@ module Checkoff
           super()
         end
 
+        # @return [Checkoff::CustomFields]
+        attr_reader :custom_fields
+
         private
 
         # @return [Array(Symbol, Array), String]

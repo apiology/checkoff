@@ -17,7 +17,7 @@ module Checkoff
 
         # @param resource [Asana::Resources::Project]
         # @return [String, nil]
-        # @sg-ignore
+        # @sg-ignore nilable return from an @!parse-declared method isn't inferred
         def evaluate(resource)
           resource.due_date
         end
@@ -33,11 +33,9 @@ module Checkoff
 
         # @param project [Asana::Resources::Project]
         # @param period [Symbol] - :now_or_before or :this_week
-        # @sg-ignore
         # @return [Boolean]
         def evaluate(project, period = :now_or_before)
-          # @sg-ignore
-          @projects.project_ready?(project, period:)
+          projects.project_ready?(project, period:)
         end
       end
 
@@ -53,19 +51,14 @@ module Checkoff
         # @param portfolio_name [String]
         # @param workspace_name [String, nil]
         # @param extra_project_fields [Array<String>]
-        # @sg-ignore
         #
-        # @sg-ignore
         # @return [Boolean]
         def evaluate(project, portfolio_name, workspace_name: nil, extra_project_fields: [])
           workspace_name ||= project.workspace&.name
-          # @sg-ignore
-          workspace_name ||= @workspaces.default_workspace.name
-          # @sg-ignore
-          projects = @portfolios.projects_in_portfolio(workspace_name, portfolio_name,
-                                                       extra_project_fields:)
-          # @sg-ignore
-          projects.any? { |p| p.name == project.name }
+          workspace_name ||= workspaces.default_workspace.name
+          matching_projects = portfolios.projects_in_portfolio(T.must(workspace_name), portfolio_name,
+                                                               extra_project_fields:)
+          matching_projects.any? { |p| p.name == project.name }
         end
       end
     end

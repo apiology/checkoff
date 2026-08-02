@@ -18,7 +18,7 @@ module Checkoff
         # @param section [Asana::Resources::Section]
         #
         # @return [Boolean]
-        # @sg-ignore
+        # @sg-ignore String, nil safe-nav chain isn't inferred as returning Boolean
         def evaluate(section)
           tasks = client.tasks.get_tasks(section: section.gid,
                                          per_page: 100,
@@ -37,11 +37,9 @@ module Checkoff
 
         # @param section [Asana::Resources::Section]
         #
-        # @sg-ignore
         # @return [Boolean]
         def evaluate(section)
-          # @sg-ignore
-          @sections.tasks_by_section_gid(section.gid).any?
+          sections.tasks_by_section_gid(section.gid).any?
         end
       end
     end

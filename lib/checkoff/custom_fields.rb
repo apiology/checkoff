@@ -41,7 +41,7 @@ module Checkoff
     # @param custom_field_name [String]
     #
     # @return [Asana::Resources::CustomField]
-    # @sg-ignore
+    # @sg-ignore nil check below is not flow-sensitive
     def custom_field_or_raise(workspace_name, custom_field_name)
       cf = custom_field(workspace_name, custom_field_name)
       raise "Could not find custom_field #{custom_field_name} under workspace #{workspace_name}." if cf.nil?
@@ -78,8 +78,8 @@ module Checkoff
 
     # @param resource [Asana::Resources::Project,Asana::Resources::Task]
     # @param custom_field_name [String]
-    # @sg-ignore
     # @return [Array<String>]
+    # @sg-ignore Array<Hash>#flat_map with heterogeneous branch return values isn't inferred as Array<String>
     def resource_custom_field_values_names_by_name(resource, custom_field_name)
       custom_field = resource_custom_field_by_name(resource, custom_field_name)
       return [] if custom_field.nil?
@@ -108,9 +108,9 @@ module Checkoff
     end
 
     # @param resource [Asana::Resources::Task,Asana::Resources::Project]
-    # @sg-ignore
     # @param custom_field_name [String]
     # @return [Hash]
+    # @sg-ignore nil check below is not flow-sensitive
     def resource_custom_field_by_name_or_raise(resource, custom_field_name)
       custom_field = resource_custom_field_by_name(resource, custom_field_name)
       if custom_field.nil?
@@ -120,10 +120,10 @@ module Checkoff
       custom_field
     end
 
-    # @sg-ignore
     # @param resource [Asana::Resources::Project,Asana::Resources::Task]
     # @param custom_field_gid [String]
     # @return [Hash]
+    # @sg-ignore nil check below is not flow-sensitive
     def resource_custom_field_by_gid_or_raise(resource, custom_field_gid)
       # @type [Array<Hash>]
       custom_fields = resource.custom_fields
@@ -146,15 +146,15 @@ module Checkoff
     # @param custom_field [Hash{String => Hash,Array<Hash>}]
     #
     # @return [Array<Hash>]
-    # @sg-ignore
+    # @sg-ignore custom_field's Hash value type union (Hash, Array<Hash>) can't be
+    #   narrowed per-key with a static @type/T.cast without a runtime check that
+    #   would incorrectly raise on the legitimate nil/missing-key case
     def resource_custom_field_enum_values(custom_field)
       resource_subtype = custom_field.fetch('resource_subtype')
       case resource_subtype
       when 'enum'
-        # @type [Array<Hash>]
         [custom_field.fetch('enum_value')]
       when 'multi_enum'
-        # @type [Array<Hash>]
         custom_field.fetch('multi_enum_values')
       else
         raise "Teach me how to handle resource_subtype #{resource_subtype}"

@@ -105,12 +105,9 @@ module Checkoff
         # @param custom_field_name [String]
         # @return [String, nil]
         def evaluate(resource, custom_field_name)
-          # @sg-ignore
-          custom_field = @custom_fields.resource_custom_field_by_name(resource, custom_field_name)
-          # @sg-ignore
+          custom_field = custom_fields.resource_custom_field_by_name(resource, custom_field_name)
           return nil if custom_field.nil?
 
-          # @sg-ignore
           custom_field['display_value']
         end
       end
@@ -125,17 +122,13 @@ module Checkoff
           false
         end
 
-        # @sg-ignore
         # @param resource [Asana::Resources::Task,Asana::Resources::Project]
-        # @sg-ignore
         # @param custom_field_gid [String]
         # @return [String, nil]
-        # @sg-ignore
         def evaluate(resource, custom_field_gid)
-          # @sg-ignore
-          custom_field = @custom_fields.resource_custom_field_by_gid_or_raise(resource, custom_field_gid)
-          # @sg-ignore
-          custom_field['display_value']
+          custom_field = custom_fields.resource_custom_field_by_gid_or_raise(resource, custom_field_gid)
+          display_value = custom_field['display_value']
+          display_value.nil? ? nil : T.cast(display_value, String)
         end
       end
 
@@ -152,17 +145,13 @@ module Checkoff
         end
 
         # @param resource [Asana::Resources::Task,Asana::Resources::Project]
-        # @sg-ignore
         # @param custom_field_gid [String]
         # @param custom_field_values_gids [Array<String>]
         # @return [Boolean]
-        # @sg-ignore
         def evaluate(resource, custom_field_gid, custom_field_values_gids)
-          # @sg-ignore
-          actual_custom_field_values_gids = @custom_fields.resource_custom_field_values_gids_or_raise(resource,
-                                                                                                      custom_field_gid)
+          actual_custom_field_values_gids = custom_fields.resource_custom_field_values_gids_or_raise(resource,
+                                                                                                     custom_field_gid)
 
-          # @sg-ignore
           actual_custom_field_values_gids.intersect?(custom_field_values_gids)
         end
       end
@@ -181,17 +170,13 @@ module Checkoff
 
         # @param resource [Asana::Resources::Task,Asana::Resources::Project]
         # @param custom_field_name [String]
-        # @sg-ignore
         # @param custom_field_value_names [Array<String>]
-        # @sg-ignore
         # @return [Boolean]
         def evaluate(resource, custom_field_name, custom_field_value_names)
           actual_custom_field_values_names =
-            # @sg-ignore
-            @custom_fields.resource_custom_field_values_names_by_name(resource,
-                                                                      custom_field_name)
+            custom_fields.resource_custom_field_values_names_by_name(resource,
+                                                                     custom_field_name)
 
-          # @sg-ignore
           actual_custom_field_values_names.intersect?(custom_field_value_names)
         end
       end
@@ -214,12 +199,10 @@ module Checkoff
         # @return [Boolean]
         def evaluate(resource, custom_field_gid, custom_field_values_gids)
           actual_custom_field_values_gids =
-            # @sg-ignore
-            @custom_fields.resource_custom_field_values_gids_or_raise(resource,
-                                                                      custom_field_gid)
+            custom_fields.resource_custom_field_values_gids_or_raise(resource,
+                                                                     custom_field_gid)
 
           custom_field_values_gids.all? do |custom_field_value|
-            # @sg-ignore
             actual_custom_field_values_gids.include?(custom_field_value)
           end
         end
@@ -238,9 +221,9 @@ module Checkoff
         end
 
         # @param resource [Asana::Resources::Task, Asana::Resources::Project]
-        # @sg-ignore
         # @param prefix [String]
-        # @return [boolish]
+        # @return [Boolean, nil]
+        # @sg-ignore String, nil safe-nav chain isn't inferred as returning Boolean, nil
         def evaluate(resource, prefix)
           resource.name&.start_with?(prefix)
         end
@@ -254,9 +237,9 @@ module Checkoff
 
         # @param _resource [Asana::Resources::Task,Asana::Resources::Project]
         # @return [String]
-        # @sg-ignore
+        # @sg-ignore selector is only String here per matches?'s is_a?(String) check, in another method
         def evaluate(_resource)
-          T.cast(selector, String)
+          selector
         end
       end
     end

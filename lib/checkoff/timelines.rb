@@ -67,7 +67,7 @@ module Checkoff
     # @return [Boolean]
     def last_task_milestone_depends_on_this_task?(task, limit_to_portfolio_name: nil)
       unless limit_to_portfolio_name.nil?
-        limit_to_projects = @portfolios.projects_in_portfolio(@workspaces.default_workspace.name,
+        limit_to_projects = @portfolios.projects_in_portfolio(T.must(@workspaces.default_workspace.name),
                                                               limit_to_portfolio_name)
       end
 
@@ -105,7 +105,7 @@ module Checkoff
     # @return [Boolean]
     def any_milestone_depends_on_this_task?(task, limit_to_portfolio_name: nil)
       unless limit_to_portfolio_name.nil?
-        limit_to_projects = @portfolios.projects_in_portfolio(@workspaces.default_workspace.name,
+        limit_to_projects = @portfolios.projects_in_portfolio(T.must(@workspaces.default_workspace.name),
                                                               limit_to_portfolio_name)
       end
 
