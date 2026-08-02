@@ -85,7 +85,6 @@ module Checkoff
     # @return [Object]
     def download_uri(uri, verify_mode: OpenSSL::SSL::VERIFY_PEER, &block)
       out = nil
-      # @sg-ignore URI::Generic#host is nilable; this URI always has a host in practice
       Net::HTTP.start(uri.host, uri.port, use_ssl: uri.scheme == 'https', verify_mode:) do |http|
         # @sg-ignore Net::HTTP.start's block param isn't inferred as Net::HTTP
         http.request(Net::HTTP::Get.new(uri)) do |response|
