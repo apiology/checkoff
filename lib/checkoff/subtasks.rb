@@ -90,6 +90,7 @@ module Checkoff
     #
     # @param subtask [Asana::Resources::Task]
     # @return [Boolean, nil]
+    # @sg-ignore Checkoff::Subtasks#subtask_section? return type could not be inferred
     def subtask_section?(subtask)
       subtask.is_rendered_as_separator
     end

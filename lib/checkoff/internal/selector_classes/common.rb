@@ -240,6 +240,8 @@ module Checkoff
         # @param resource [Asana::Resources::Task, Asana::Resources::Project]
         # @param prefix [String]
         # @return [boolish]
+        # @sg-ignore Checkoff::SelectorClasses::Common::NameStartsWithPFunctionEvaluator#evaluate
+        #   return type could not be inferred
         def evaluate(resource, prefix)
           resource.name&.start_with?(prefix)
         end
