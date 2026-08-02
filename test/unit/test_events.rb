@@ -14,8 +14,9 @@ class TestEvents < ClassTest
 
   def_delegators(:@mocks, :asana_event_filter_class)
 
-  let_mock :filters, :event,
-           :asana_event_filter
+  typed_let_mock :filters, Array
+  typed_let_mock :event, Hash
+  typed_let_mock :asana_event_filter, Checkoff::Internal::AsanaEventFilter
 
   # @return [void]
   def mock_filter_asana_events_true
@@ -29,9 +30,6 @@ class TestEvents < ClassTest
       mock_filter_asana_events_true
     end
 
-    # @sg-ignore Wrong argument type for Checkoff::Events#filter_asana_events: filters
-    #   expected Array<Hash>, nil, received Mocha::Mock
-    # https://github.com/castwide/solargraph/issues/1229
     assert_equal([event], events.filter_asana_events(filters, [event]))
   end
 
@@ -42,9 +40,6 @@ class TestEvents < ClassTest
       asana_event_filter.expects(:matches?).with(event).returns(false)
     end
 
-    # @sg-ignore Wrong argument type for Checkoff::Events#filter_asana_events: filters
-    #   expected Array<Hash>, nil, received Mocha::Mock
-    # https://github.com/castwide/solargraph/issues/1229
     assert_empty(events.filter_asana_events(filters, [event]))
   end
 

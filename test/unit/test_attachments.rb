@@ -17,7 +17,8 @@ class TestAttachments < ClassTest
   typed_let_mock :resource, Asana::Resources::Resource
   typed_let_mock :attachment_name, String
 
-  let_mock :parent_gid, :response
+  typed_let_mock :parent_gid, String
+  typed_let_mock :response, Asana::HttpClient::Response
 
   # @return [void]
   # @param url [String]

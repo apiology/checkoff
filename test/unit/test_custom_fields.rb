@@ -16,8 +16,12 @@ class TestCustomFields < ClassTest
   typed_let_mock :workspace_name, String
   typed_let_mock :custom_field_name, String
 
-  let_mock :custom_field, :workspace, :workspace_gid,
-           :custom_fields_api, :wrong_custom_field, :wrong_custom_field_name
+  typed_let_mock :custom_field, Asana::Resources::CustomField
+  typed_let_mock :workspace, Asana::Resources::Workspace
+  typed_let_mock :workspace_gid, String
+  typed_let_mock :custom_fields_api, Asana::ProxiedResourceClasses::CustomField
+  typed_let_mock :wrong_custom_field, Asana::Resources::CustomField
+  typed_let_mock :wrong_custom_field_name, String
 
   # @return [void]
   def test_custom_field_or_raise_raises

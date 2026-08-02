@@ -10,7 +10,10 @@ class TestCLIMv < Minitest::Test
   # @return [Hash]
   attr_reader :mocks
 
-  let_mock :config, :workspaces, :sections, :tasks
+  typed_let_mock :config, Hash
+  typed_let_mock :workspaces, Checkoff::Workspaces
+  typed_let_mock :sections, Checkoff::Sections
+  typed_let_mock :tasks, Checkoff::Tasks
 
   # @return [void]
   def expect_workspaces_created
@@ -56,7 +59,7 @@ class TestCLIMv < Minitest::Test
     Checkoff::CheckoffGLIApp
   end
 
-  let_mock :mv_subcommand
+  typed_let_mock :mv_subcommand, Checkoff::MvSubcommand
 
   # @return [void]
   def mock_mv_original_use_case

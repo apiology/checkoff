@@ -9,8 +9,15 @@ class TestCLIView < Minitest::Test
   # @return [Hash]
   attr_reader :mocks
 
-  let_mock :config, :workspaces, :sections, :tasks, :clients, :client,
-           :workspace, :workspace_gid, :task_a, :task_b, :task_c
+  typed_let_mock :config, Hash
+  typed_let_mock :workspaces, Checkoff::Workspaces
+  typed_let_mock :sections, Checkoff::Sections
+  typed_let_mock :tasks, Checkoff::Tasks
+  typed_let_mock :clients, Checkoff::Clients
+  typed_let_mock :client, Asana::Client
+  typed_let_mock :task_a, Asana::Resources::Task
+  typed_let_mock :task_b, Asana::Resources::Task
+  typed_let_mock :task_c, Asana::Resources::Task
 
   # @return [String]
   def expected_json_no_section_specified

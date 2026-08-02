@@ -103,10 +103,15 @@ module Asana
   # method annotations for static typing.
   # rubocop:disable Lint/EmptyClass
   module ProxiedResourceClasses
+    class Tag; end
     class Task; end
     class Workspace; end
-    class Project; end
     class Section; end
+    class Project; end
+    class UserTaskList; end
+    class Portfolio; end
+    class User; end
+    class CustomField; end
   end
   # rubocop:enable Lint/EmptyClass
 end

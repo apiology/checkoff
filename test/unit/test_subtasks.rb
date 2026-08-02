@@ -13,12 +13,15 @@ class TestSubtasks < ClassTest
 
   def_delegators(:@mocks, :projects)
 
-  let_mock :task, :raw_subtasks,
-           :subtask,
-           :subtask_section_1, :subtask_1a, :subtask_1b,
-           :subtask_section_2,
-           :subtask_section_3, :subtask_3a,
-           :is_rendered_as_separator
+  typed_let_mock :task, Asana::Resources::Task
+  typed_let_mock :raw_subtasks, Array
+  typed_let_mock :subtask, Asana::Resources::Task
+  typed_let_mock :subtask_section_1, Asana::Resources::Task
+  typed_let_mock :subtask_1a, Asana::Resources::Task
+  typed_let_mock :subtask_1b, Asana::Resources::Task
+  typed_let_mock :subtask_section_2, Asana::Resources::Task
+  typed_let_mock :subtask_section_3, Asana::Resources::Task
+  typed_let_mock :subtask_3a, Asana::Resources::Task
 
   # @return [void]
   def task_options
