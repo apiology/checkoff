@@ -34,12 +34,12 @@ class TestTaskSelectors < ClassTest
   end
   # rubocop:enable YARD/TagTypeSyntax
 
-  let_mock :custom_field
+  typed_let_mock :custom_field, Hash
   typed_let_mock :task, Asana::Resources::Task
-  let_mock :custom_field_gid
-  let_mock :task_gid
-  let_mock :story
-  let_mock :custom_field_value_gid_1
+  typed_let_mock :custom_field_gid, String
+  typed_let_mock :task_gid, String
+  typed_let_mock :story, Asana::Resources::Story
+  typed_let_mock :custom_field_value_gid_1, String
 
   # @return [void]
   def stub_custom_fields

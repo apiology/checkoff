@@ -9,12 +9,21 @@ require_relative 'class_test'
 class BaseAsana < ClassTest
   include TestDate
 
-  let_mock :projects, :my_tasks_in_workspace_gid,
-           :my_tasks_in_workspace, :my_time, :tasks,
-           :task_a, :task_b, :task_c,
-           :personal_access_token,
-           :project_a, :project_b, :project_c,
-           :a_name, :b_name, :c_name, :a_gid, :b_gid, :c_gid
+  let_mock :projects, :my_tasks_in_workspace,
+           :my_time, :tasks, :b_gid, :c_gid
+
+  typed_let_mock :my_tasks_in_workspace_gid, String
+  typed_let_mock :task_a, Asana::Resources::Task
+  typed_let_mock :task_b, Asana::Resources::Task
+  typed_let_mock :task_c, Asana::Resources::Task
+  typed_let_mock :personal_access_token, String
+  typed_let_mock :project_a, Asana::Resources::Project
+  typed_let_mock :project_b, Asana::Resources::Project
+  typed_let_mock :project_c, Asana::Resources::Project
+  typed_let_mock :a_name, String
+  typed_let_mock :b_name, String
+  typed_let_mock :c_name, String
+  typed_let_mock :a_gid, String
 
   let_mock :a_completed_at, :b_completed_at, :section_one
 

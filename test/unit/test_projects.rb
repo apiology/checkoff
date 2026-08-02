@@ -75,9 +75,6 @@ class TestProjects < BaseAsana
       mock_tasks_from_project(options: task_options_with_completed)
     end
 
-    # @sg-ignore Wrong argument type for Checkoff::Projects#tasks_from_project: project
-    #   expected Asana::Resources::Project, received Mocha::Mock
-    # https://github.com/castwide/solargraph/issues/1229
     assert_equal(tasks, projects.tasks_from_project(project_a,
                                                     only_uncompleted: false))
   end
@@ -88,9 +85,6 @@ class TestProjects < BaseAsana
       mock_tasks_from_project(options: task_options(extra_fields: []))
     end
 
-    # @sg-ignore Wrong argument type for Checkoff::Projects#tasks_from_project: project
-    #   expected Asana::Resources::Project, received Mocha::Mock
-    # https://github.com/castwide/solargraph/issues/1229
     assert_equal(tasks, projects.tasks_from_project(project_a))
   end
 
@@ -187,9 +181,6 @@ class TestProjects < BaseAsana
         .returns(project_a_hash)
     end
 
-    # @sg-ignore Wrong argument type for Checkoff::Projects#project_to_h: project_obj
-    #   expected Asana::Resources::Project, received Mocha::Mock
-    # https://github.com/castwide/solargraph/issues/1229
     assert_equal(project_a_hash, projects.project_to_h(project_a))
   end
 

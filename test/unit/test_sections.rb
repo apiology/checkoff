@@ -37,7 +37,6 @@ class TestSections < BaseAsana
     end
 
     assert_equal(['c'],
-                 # @sg-ignore Unresolved call to section_task_names
                  sections.section_task_names('Workspace 1', a_name, 'Section 1:'))
   end
 
@@ -57,7 +56,6 @@ class TestSections < BaseAsana
     end
 
     assert_equal(['c'],
-                 # @sg-ignore Unresolved call to section_task_names
                  sections.section_task_names('Workspace 1', a_name, 'Section 1:'))
   end
 
@@ -75,9 +73,6 @@ class TestSections < BaseAsana
       mock_sections_or_raise
     end
 
-    # @sg-ignore Unresolved call to section_2
-    # @sg-ignore Unresolved call to sections_or_raise
-    # @sg-ignore Unresolved call to section_1
     assert_equal([section_1, section_2], sections.sections_or_raise('Workspace 1', a_name))
   end
 
@@ -177,8 +172,6 @@ class TestSections < BaseAsana
       allow_empty_section_name_pulled
     end
 
-    # @sg-ignore Unresolved call to tasks_by_section
-    # @sg-ignore Unresolved call to task_c
     assert_equal({ nil => [task_c] }, sections.tasks_by_section('Workspace 1', a_name))
   end
 
@@ -199,7 +192,6 @@ class TestSections < BaseAsana
     end
 
     assert_equal({ nil => [], 'Section 1' => [task_c] },
-                 # @sg-ignore Unresolved call to tasks_by_section
                  sections.tasks_by_section('Workspace 1', a_name))
   end
 
@@ -353,7 +345,6 @@ class TestSections < BaseAsana
       mocks[:projects] = projects
       mock_tasks_normal_project(only_uncompleted: false)
     end
-    # @sg-ignore Unresolved call to tasks
     out = sections.tasks('Workspace 1', a_name, 'Section 1:',
                          only_uncompleted: false)
 
@@ -396,7 +387,6 @@ class TestSections < BaseAsana
       mocks[:projects] = projects
       mock_tasks_normal_project(only_uncompleted: true)
     end
-    # @sg-ignore Unresolved call to tasks
     out = sections.tasks('Workspace 1', a_name, 'Section 1:')
 
     assert_equal([task_c], out)
@@ -461,7 +451,6 @@ class TestSections < BaseAsana
       expect_project_sections_pulled(a_gid, [])
     end
     assert_raises(RuntimeError) do
-      # @sg-ignore Unresolved call to tasks
       sections.tasks('Workspace 1', a_name, 'not found')
     end
   end

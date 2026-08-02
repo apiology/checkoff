@@ -16,9 +16,12 @@ class TestMvSubcommand < ClassTest
   def_delegators(:@mocks, :projects, :sections,
                  :logger)
 
-  let_mock :to_project, :to_project_gid,
-           :to_section, :to_section_gid,
-           :task_a, :task_a_name
+  typed_let_mock :to_project, Asana::Resources::Project
+  typed_let_mock :to_project_gid, String
+  typed_let_mock :to_section, Asana::Resources::Section
+  typed_let_mock :to_section_gid, String
+  typed_let_mock :task_a, Asana::Resources::Task
+  typed_let_mock :task_a_name, String
 
   # @return [String]
   attr_reader :from_project_arg
