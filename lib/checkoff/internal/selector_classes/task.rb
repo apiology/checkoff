@@ -362,7 +362,8 @@ module Checkoff
         # @param task [Asana::Resources::Task]
         #
         # @return [Boolean]
-        # @sg-ignore
+        # @sg-ignore Checkoff::SelectorClasses::Task::MilestonePFunctionEvaluator#evaluate
+        #   return type could not be inferred
         def evaluate(task)
           raise 'Please add resource_subtype to extra_fields' if task.resource_subtype.nil?
 

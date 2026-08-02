@@ -89,7 +89,8 @@ module Checkoff
     # as memberships with a separate API within a task.
     #
     # @param subtask [Asana::Resources::Task]
-    # @sg-ignore
+    # @return [Boolean, nil]
+    # @sg-ignore Checkoff::Subtasks#subtask_section? return type could not be inferred
     def subtask_section?(subtask)
       subtask.is_rendered_as_separator
     end

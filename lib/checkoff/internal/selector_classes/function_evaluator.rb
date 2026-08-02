@@ -15,15 +15,15 @@ module Checkoff
       end
 
       # @return [Boolean]
-      # @sg-ignore
+      # @sg-ignore return type could not be inferred — abstract method body is only `raise`
       def matches?
         raise 'Override me!'
       end
 
       # @param _task [Asana::Resources::Task]
       # @param _args [Array<Object>]
-      # @sg-ignore
       # @return [Object]
+      # @sg-ignore return type could not be inferred — abstract method body is only `raise`
       def evaluate(_task, *_args)
         raise 'Implement me!'
       end

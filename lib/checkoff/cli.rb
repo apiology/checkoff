@@ -29,7 +29,6 @@ module Checkoff
       end
 
       @from_workspace_name = from_workspace_arg
-      # @sg-ignore
       @from_project_name = project_arg_to_name(from_project_arg)
       @from_section_name = from_section_arg
     end
@@ -41,7 +40,6 @@ module Checkoff
       if to_project_arg == :source_project
         from_project_name
       else
-        # @sg-ignore
         project_arg_to_name(to_project_arg)
       end
     end
@@ -146,7 +144,7 @@ module Checkoff
                 :to_workspace_name, :to_project_name, :to_section_name,
                 :projects, :sections
 
-    # @param project_arg [String]
+    # @param project_arg [Symbol, String]
     # @return [Symbol, String]
     def project_arg_to_name(project_arg)
       arg = project_arg.to_s
@@ -218,7 +216,6 @@ module Checkoff
     # @return [String]
     def run_on_project(workspace, project)
       tasks_by_section =
-        # @sg-ignore
         sections.tasks_by_section(workspace, project)
       tasks_by_section.update(tasks_by_section) do |_key, tasks|
         tasks_to_hash(tasks)
