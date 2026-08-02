@@ -25,13 +25,21 @@ class TestProjects < BaseAsana
   end
 
   typed_let_mock :project, Asana::Resources::Project
-
-  let_mock :workspaces, :workspace_workspace, :some_other_workspace,
-           :workspace_one, :workspace_one_gid, :my_workspace_gid, :n,
-           :workspace_name, :all_workspaces, :my_tasks_project, :tasks,
-           :task_a, :task_b, :user_task_lists, :user_task_list, :project_a_hash,
-           :project_gid, :client_projects, :field_name, :period,
-           :returned_date
+  typed_let_mock :workspace_one, Asana::Resources::Workspace
+  typed_let_mock :workspace_one_gid, String
+  typed_let_mock :my_workspace_gid, String
+  typed_let_mock :my_tasks_project, Asana::Resources::Project
+  typed_let_mock :tasks, Asana::ProxiedResourceClasses::Task
+  typed_let_mock :task_a, Asana::Resources::Task
+  typed_let_mock :task_b, Asana::Resources::Task
+  typed_let_mock :user_task_lists, Asana::ProxiedResourceClasses::UserTaskList
+  typed_let_mock :user_task_list, Asana::Resources::UserTaskList
+  typed_let_mock :project_a_hash, Hash
+  typed_let_mock :project_gid, String
+  typed_let_mock :client_projects, Asana::ProxiedResourceClasses::Project
+  typed_let_mock :field_name, Symbol
+  typed_let_mock :period, Symbol
+  typed_let_mock :returned_date, Date
 
   # @return [Hash{Mocha::Mock => Mocha::Mock}]
   def sample_projects
@@ -140,8 +148,6 @@ class TestProjects < BaseAsana
                                                 options: { fields: %w[custom_fields name] }).returns(project)
     end
 
-    # @sg-ignore Wrong argument type for Checkoff::Projects#project_by_gid: gid expected String, received Mocha::Mock
-    # https://github.com/castwide/solargraph/issues/1229
     assert_equal(project, projects.project_by_gid(project_gid))
   end
 
@@ -198,8 +204,6 @@ class TestProjects < BaseAsana
       mock_test_in_period
     end
 
-    # @sg-ignore Wrong argument type for Checkoff::Projects#in_period?: field_name expected Symbol, Array, received Mocha::Mock
-    # https://github.com/castwide/solargraph/issues/1229
     assert(projects.in_period?(project, field_name, period))
   end
 
@@ -217,13 +221,8 @@ class TestProjects < BaseAsana
       mock_project_ready
     end
 
-    # @sg-ignore Wrong argument type for Checkoff::Projects#project_ready?: period
-    #   expected Symbol, Array(Symbol, Integer), received Mocha::Mock
-    # https://github.com/castwide/solargraph/issues/1229
     assert(projects.project_ready?(project, period:))
   end
-
-  let_mock :my_tasks_config
 
   # @return [void]
   def class_under_test
