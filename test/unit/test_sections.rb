@@ -20,13 +20,20 @@ class TestSections < BaseAsana
   typed_mock :a_membership_project, Hash
   typed_mock :a_membership_section, Hash
 
-  let_mock :project, :inactive_task_b, :a_membership,
-           :user_task_list_project, :workspace_one, :user_task_lists,
-           :workspace_one_gid, :user_task_list, :sections, :section_1,
-           :section_2, :tasks, :section_1_gid, :section_2_gid,
-           :recently_assigned, :assignee_section,
-           :assignee_section_name, :empty_section, :empty_section_gid,
-           :project_gid, :get_results
+  typed_let_mock :a_membership, Hash
+  typed_let_mock :sections, Asana::ProxiedResourceClasses::Section
+  typed_let_mock :section_1, Asana::Resources::Section
+  typed_let_mock :section_2, Asana::Resources::Section
+  typed_let_mock :tasks, Asana::ProxiedResourceClasses::Task
+  typed_let_mock :section_1_gid, String
+  typed_let_mock :section_2_gid, String
+  typed_let_mock :recently_assigned, Asana::Resources::Section
+  typed_let_mock :assignee_section, Asana::Resources::Section
+  typed_let_mock :assignee_section_name, String
+  typed_let_mock :empty_section, Asana::Resources::Section
+  typed_let_mock :empty_section_gid, String
+  typed_let_mock :project_gid, String
+  typed_let_mock :get_results, Asana::HttpClient::Response
 
   # @return [void]
   def test_section_task_names_no_tasks
@@ -114,7 +121,7 @@ class TestSections < BaseAsana
     task.expects(:assignee_section).returns(section).at_least(0)
   end
 
-  let_mock :my_tasks_project
+  typed_let_mock :my_tasks_project, Asana::Resources::Project
 
   # @return [void]
   def expect_my_tasks_sections_pulled
@@ -379,8 +386,6 @@ class TestSections < BaseAsana
                                 only_uncompleted:)
   end
 
-  let_mock :workspace_1_gid
-
   # @return [void]
   def test_tasks_normal_project
     sections = get_test_object do
@@ -401,7 +406,6 @@ class TestSections < BaseAsana
     end
 
     assert_equal([task_c],
-                 # @sg-ignore Unresolved call to tasks_by_section_gid
                  sections.tasks_by_section_gid(section_1_gid))
   end
 
@@ -414,7 +418,6 @@ class TestSections < BaseAsana
     end
 
     assert_equal([task_c],
-                 # @sg-ignore Unresolved call to tasks_by_section_gid
                  sections.tasks_by_section_gid(section_1_gid,
                                                only_uncompleted: false))
   end
@@ -478,8 +481,6 @@ class TestSections < BaseAsana
       expect_section_2_gid_pulled
     end
 
-    # @sg-ignore Unresolved call to section_1
-    # @sg-ignore Unresolved call to previous_section
     assert_equal(section_1, sections.previous_section(section_2))
   end
 
@@ -492,7 +493,6 @@ class TestSections < BaseAsana
       expect_section_1_gid_pulled
     end
 
-    # @sg-ignore Unresolved call to previous_section
     assert_nil(sections.previous_section(section_1))
   end
 
@@ -502,7 +502,6 @@ class TestSections < BaseAsana
       client.expects(:get).returns(get_results)
       get_results.expects(:body).returns({ 'data' => { 'gid' => 123 } }).at_least(1)
     end
-    # @sg-ignore Unresolved call to section_by_gid
     section = sections.section_by_gid(section_1_gid)
 
     # @sg-ignore Unresolved call to gid
@@ -516,13 +515,10 @@ class TestSections < BaseAsana
       get_results.expects(:body).returns({}).at_least(1)
     end
 
-    # @sg-ignore Unresolved call to section_by_gid
     e = assert_raises(RuntimeError) { sections.section_by_gid(section_1_gid) }
 
     assert_equal('Unexpected response body: {}', e.message)
   end
-
-  let_mock :subtasks
 
   def respond_like_instance_of
     {
