@@ -16,9 +16,16 @@ class TestTags < ClassTest
   typed_let_mock :workspace_name, String
   typed_let_mock :tag_name, String
 
-  let_mock :tag, :workspace, :workspace_gid,
-           :tags_api, :wrong_tag, :wrong_tag_name, :task_collection, :response,
-           :parsed_data, :response_body, :response_body_data
+  typed_let_mock :tag, Asana::Resources::Tag
+  typed_let_mock :workspace, Asana::Resources::Workspace
+  typed_let_mock :workspace_gid, String
+  typed_let_mock :tags_api, Asana::ProxiedResourceClasses::Tag
+  typed_let_mock :wrong_tag, Asana::Resources::Tag
+  typed_let_mock :wrong_tag_name, String
+  typed_let_mock :task_collection, Asana::Resources::Collection
+  typed_let_mock :response, Asana::HttpClient::Response
+  typed_let_mock :response_body, Hash
+  typed_let_mock :response_body_data, Array
 
   # @return [void]
   def test_tag_or_raise_raises

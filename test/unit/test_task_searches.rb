@@ -18,9 +18,15 @@ class TestTaskSearches < ClassTest
   typed_let_mock :workspace_name, String
   typed_let_mock :url, String
 
-  let_mock :workspace, :workspace_gid, :api_params,
-           :task_selector, :search_response, :body, :data, :something_else,
-           :good_task, :bad_task
+  typed_let_mock :workspace, Asana::Resources::Workspace
+  typed_let_mock :api_params, Hash
+  typed_let_mock :task_selector, Array
+  typed_let_mock :search_response, Asana::HttpClient::Response
+  typed_let_mock :data, Array
+  typed_let_mock :good_task, Asana::Resources::Task
+  typed_let_mock :bad_task, Asana::Resources::Task
+
+  let_mock :something_else
 
   # @return [void]
   def expect_workspace_pulled
