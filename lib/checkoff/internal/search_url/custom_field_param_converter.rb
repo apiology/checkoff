@@ -64,6 +64,8 @@ module Checkoff
           variant_key = "custom_field_#{gid}.variant"
           variant = single_custom_field_params.fetch(variant_key)
           remaining_params = single_custom_field_params.reject { |k, _v| k == variant_key }
+          # @sg-ignore Hash#fetch generic<X> leak on rbs >= 4.1.0, fix in progress upstream
+          # https://github.com/castwide/solargraph/pull/1228
           raise "Teach me how to handle #{variant_key} = #{variant}" unless variant.length == 1
 
           # @type [Class<CustomFieldVariant>, nil]

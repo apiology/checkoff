@@ -24,8 +24,12 @@ module Checkoff
           # @type [Hash{'unwrapped' => Hash}]
           task_data = tasks.task_to_h(task)
           # @type [Hash{'membership_by_project_name' => Hash}]
+          # @sg-ignore Hash#fetch generic<X> leak on rbs >= 4.1.0, fix in progress upstream
+          # https://github.com/castwide/solargraph/pull/1228
           unwrapped = task_data.fetch('unwrapped')
           # @type [Array]
+          # @sg-ignore Hash#fetch generic<X> leak on rbs >= 4.1.0, fix in progress upstream
+          # https://github.com/castwide/solargraph/pull/1228
           projects = unwrapped.fetch('membership_by_project_name').keys
           !(projects - [:my_tasks]).empty?
         end
@@ -49,8 +53,12 @@ module Checkoff
           # @type [Hash{'unwrapped' => Hash}]
           task_data = tasks.task_to_h(task)
           # @type [Hash{'membership_by_section_name' => Hash}]
+          # @sg-ignore Hash#fetch generic<X> leak on rbs >= 4.1.0, fix in progress upstream
+          # https://github.com/castwide/solargraph/pull/1228
           unwrapped = task_data.fetch('unwrapped')
           # @type [Array]
+          # @sg-ignore Hash#fetch generic<X> leak on rbs >= 4.1.0, fix in progress upstream
+          # https://github.com/castwide/solargraph/pull/1228
           section_names = unwrapped.fetch('membership_by_section_name').keys
           section_names.any? do |section_name|
             String(section_name).start_with?(section_name_prefix)
@@ -76,8 +84,12 @@ module Checkoff
           # @type [Hash{'unwrapped' => Hash}]
           task_data = tasks.task_to_h(task)
           # @type [Hash{'membership_by_section_name' => Hash}]
+          # @sg-ignore Hash#fetch generic<X> leak on rbs >= 4.1.0, fix in progress upstream
+          # https://github.com/castwide/solargraph/pull/1228
           unwrapped = task_data.fetch('unwrapped')
           # @type [Array]
+          # @sg-ignore Hash#fetch generic<X> leak on rbs >= 4.1.0, fix in progress upstream
+          # https://github.com/castwide/solargraph/pull/1228
           section_names = unwrapped.fetch('membership_by_section_name').keys
           section_names.any?(section_name)
         end

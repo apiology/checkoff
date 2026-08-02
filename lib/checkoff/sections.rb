@@ -292,7 +292,6 @@ module Checkoff
       # @type [String, nil]
       current_section = section_key(section_name)
 
-      # @sg-ignore Hash{String, nil => ...}'s key type displays as NilClass and doesn't match current_section's nil
       by_section.fetch(current_section) << task
     end
 

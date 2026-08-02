@@ -136,8 +136,12 @@ module Checkoff
 
           value = date_url_params.fetch(param_key)
 
+          # @sg-ignore Hash#fetch generic<X> leak on rbs >= 4.1.0, fix in progress upstream
+          # https://github.com/castwide/solargraph/pull/1228
           raise "Expected #{param_key} to have one value" if value.length != 1
 
+          # @sg-ignore Hash#fetch generic<X> leak on rbs >= 4.1.0, fix in progress upstream
+          # https://github.com/castwide/solargraph/pull/1228
           value[0]
         end
 
@@ -154,6 +158,8 @@ module Checkoff
         def validate_unit_is_day!(prefix)
           unit = date_url_params.fetch("#{prefix}.unit").fetch(0)
 
+          # @sg-ignore Hash#fetch generic<X> leak on rbs >= 4.1.0, fix in progress upstream
+          # https://github.com/castwide/solargraph/pull/1228
           raise "Teach me how to handle other time units: #{unit}" unless unit == 'day'
         end
 

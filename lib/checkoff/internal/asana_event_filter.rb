@@ -122,6 +122,8 @@ module Checkoff
         # @type [Hash{String => String}]
         resource = asana_event.fetch('resource')
         # @type [String]
+        # @sg-ignore Hash#fetch generic<X> leak on rbs >= 4.1.0, fix in progress upstream
+        # https://github.com/castwide/solargraph/pull/1228
         resource_type = resource.fetch('resource_type')
         unless resource_type == 'task'
           raise "Teach me how to check #{key.inspect} on resource type #{resource_type.inspect}"
@@ -131,6 +133,8 @@ module Checkoff
         options = {
           fields:,
         }
+        # @sg-ignore Hash#fetch generic<X> leak on rbs >= 4.1.0, fix in progress upstream
+        # https://github.com/castwide/solargraph/pull/1228
         @client.tasks.find_by_id(task_gid, options:)
       rescue Asana::Errors::NotFound
         nil
