@@ -22,7 +22,7 @@ GIT
 
 GIT
   remote: https://github.com/apiology/solargraph.git
-  revision: 89664090a52743821d9c13e755f992e40ac21384
+  revision: 5e6f8bac8eb5100fc30d997468d9ea1b5980a12e
   branch: fix-1229-intersection-types
   specs:
     solargraph (0.60.2)
@@ -449,7 +449,7 @@ DEPENDENCIES
   punchlist (>= 1.3.1)
   rake
   rbi
-  rbs (>= 3.8.1)
+  rbs (>= 3.8.1, < 4.1.0)
   rspec
   rubocop (~> 1.52)
   rubocop-minitest

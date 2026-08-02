@@ -391,8 +391,6 @@ class TestTasks < BaseAsana
 
   # @return [void]
   def projects
-    # @sg-ignore Wrong argument type for Checkoff::Projects.new: client expected Asana::Client, received Mocha::Mock
-    # https://github.com/castwide/solargraph/issues/1229
     # @sg-ignore Wrong argument type for Checkoff::Projects.new: workspaces expected Checkoff::Workspaces, received Mocha::Mock
     # https://github.com/castwide/solargraph/issues/1229
     @projects ||= Checkoff::Projects.new(client:,

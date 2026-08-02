@@ -21,7 +21,14 @@ group :development, :test do
       branch: 'fix_io_deadlock'
   gem 'rbi'
   # ensure recent definitions
-  gem 'rbs', ['>=3.8.1']
+  # upper bound: RBS 4.1.0 changed Hash's key/value generic params to the
+  # _Key/_Value duck-type interfaces (see castwide/solargraph#1224), which
+  # exposes a separate Solargraph bug for Hash#fetch - it returns
+  # `V, generic<X>` instead of plain `V`, breaking every declared
+  # non-nilable Hash#fetch return throughout this repo. Reproduces on
+  # plain, unforked solargraph 0.60.2 too, so it's not specific to the
+  # apiology/solargraph fork below. Confirmed clean as of 4.0.3.
+  gem 'rbs', ['>=3.8.1', '<4.1.0']
   gem 'rspec'
   gem 'sord', # ['>= 6.0.0'] # ,
       github: 'apiology/sord',
