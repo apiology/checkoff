@@ -54,7 +54,7 @@ module Checkoff
     end
 
     # @param url [String]
-    # @param resource [Asana::Resources::Resource]
+    # @param resource [Asana::Resources::Task]
     # @param attachment_name [String,nil]
     # @param just_the_url [Boolean]
     # @param verify_mode [Integer] - e.g., OpenSSL::SSL::VERIFY_NONE or OpenSSL::SSL::VERIFY_PEER
@@ -79,15 +79,15 @@ module Checkoff
     # extension as the URL using Net::HTTP, raising an exception if
     # not succesful
     #
-    # @param uri [URI]
+    # @param uri [URI::Generic]
     # @param verify_mode [Integer] - e.g., OpenSSL::SSL::VERIFY_NONE,OpenSSL::SSL::VERIFY_PEER
     #
     # @return [Object]
     def download_uri(uri, verify_mode: OpenSSL::SSL::VERIFY_PEER, &block)
       out = nil
-      # @sg-ignore
       Net::HTTP.start(uri.host, uri.port, use_ssl: uri.scheme == 'https', verify_mode:) do |http|
-        # @sg-ignore
+        # @sg-ignore Unresolved constant Net::HTTP::Get / Unresolved call to request —
+        #   stdlib RBS gap on Net::HTTP block param types
         http.request(Net::HTTP::Get.new(uri)) do |response|
           raise("Unexpected response code: #{response.code}") unless response.code == '200'
 
@@ -120,7 +120,7 @@ module Checkoff
     end
 
     # @param url [String]
-    # @param resource [Asana::Resources::Resource]
+    # @param resource [Asana::Resources::Task]
     # @param attachment_name [String,nil]
     # @param verify_mode [Integer] - e.g., OpenSSL::SSL::VERIFY_NONE,OpenSSL::SSL::VERIFY_PEER
     #
@@ -130,25 +130,25 @@ module Checkoff
       uri = URI(url)
       attachment_name ||= File.basename(uri.path)
       download_uri(uri, verify_mode:) do |tempfile|
-        # @sg-ignore
+        # @sg-ignore attachment_name reassignment above isn't narrowed from the declared
+        #   [String, nil] param type — needs a fresh typed local, deferred to a follow-up code PR
         content_type ||= content_type_from_filename(attachment_name)
-        # @sg-ignore
+        # @sg-ignore URI::Generic#path can be nil
         content_type ||= content_type_from_filename(uri.path)
 
-        # @sg-ignore
+        # @sg-ignore same attachment_name/content_type narrowing gap as above
         resource.attach(filename: attachment_name, mime: content_type,
                         io: tempfile)
       end
     end
 
     # @param url [String]
-    # @param resource [Asana::Resources::Resource]
+    # @param resource [Asana::Resources::Task]
     # @param attachment_name [String,nil]
     #
     # @return [Asana::Resources::Attachment]
     def create_attachment_from_url_alone!(url, resource, attachment_name:)
       with_params = {
-        # @sg-ignore
         'parent' => resource.gid,
         'url' => url,
         'resource_subtype' => 'external',
@@ -196,7 +196,8 @@ module Checkoff
         tasks = Checkoff::Tasks.new
         attachments = Checkoff::Attachments.new
         task = tasks.task_by_gid(gid)
-        # @sg-ignore
+        # @sg-ignore task_by_gid can return nil; needs a raise-if-nil guard, deferred to a
+        #   follow-up code PR
         attachment = attachments.create_attachment_from_url!(url, task)
         puts "Results: #{attachment.inspect}"
       end

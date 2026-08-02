@@ -238,7 +238,6 @@ module Checkoff
         end
 
         # @param resource [Asana::Resources::Task, Asana::Resources::Project]
-        # @sg-ignore
         # @param prefix [String]
         # @return [boolish]
         def evaluate(resource, prefix)

@@ -57,7 +57,9 @@ module Checkoff
         section_data = membership_data.fetch('section')
         section_gid = section_data.fetch('gid')
         section = @sections.section_by_gid(section_gid)
-        # @sg-ignore
+        # @sg-ignore section_by_gid can return nil on a gid lookup miss, and
+        #   task_data_dependent_on_previous_section_last_milestone? dereferences it immediately
+        #   without a nil guard — looks like a real gap, flagging for the follow-up code PR
         task_data_dependent_on_previous_section_last_milestone?(task_data, section)
       end
     end
@@ -95,7 +97,8 @@ module Checkoff
 
         all_dependent_task_gids ||= @tasks.all_dependent_tasks(task).map(&:gid)
 
-        # @sg-ignore
+        # @sg-ignore all_dependent_task_gids is nil-initialized then set via ||= above, but
+        #   Solargraph doesn't narrow it back to non-nil after the reassignment
         all_dependent_task_gids.include? last_milestone.gid
       end
     end
@@ -131,7 +134,8 @@ module Checkoff
             dependent_task.resource_subtype == 'milestone'
           end
 
-        # @sg-ignore
+        # @sg-ignore all_dependent_milestones is nil-initialized then set via ||= above, but
+        #   Solargraph doesn't narrow it back to non-nil after the reassignment
         all_dependent_milestones.any? do |milestone|
           milestone.memberships.any? do |milestone_membership_data|
             milestone_membership_data.fetch('project').fetch('gid') == project_gid

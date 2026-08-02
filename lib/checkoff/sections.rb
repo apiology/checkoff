@@ -80,7 +80,7 @@ module Checkoff
 
     # Given a workspace name and project name, then provide a Hash of
     # tasks with section name -> task list of the uncompleted tasks
-    # @param workspace_name [String]
+    # @param workspace_name [String, Symbol]
     # @param project_name [String, Symbol]
     # @param only_uncompleted [Boolean]
     # @param extra_fields [Array<String>]
@@ -295,7 +295,9 @@ module Checkoff
       # @type [String, nil]
       current_section = section_key(section_name)
 
-      # @sg-ignore
+      # @sg-ignore Hash#fetch arg0 expected String,NilClass received String,nil — Solargraph
+      #   treats the nil literal in a Hash{K,nil=>V} declaration and an inferred `nil` union
+      #   member as distinct types; no comment-only fix found
       by_section.fetch(current_section) << task
     end
 

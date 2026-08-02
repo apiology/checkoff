@@ -44,18 +44,15 @@ module Checkoff
 
       return next_week?(date_or_time) if period == :next_week
 
-      # @sg-ignore
-      return day_of_week?(date_or_time, period) if %i[monday tuesday wednesday thursday friday saturday
-                                                      sunday].include?(period)
+      return day_of_week?(date_or_time, T.cast(period, Symbol)) if %i[monday tuesday wednesday thursday friday
+                                                                      saturday sunday].include?(period)
 
       return true if period == :indefinite
 
       return now_or_before?(date_or_time) if period == :now_or_before
 
       if period.is_a?(Array)
-        # @sg-ignore
-        # @type [Symbol]
-        period_name = period.first
+        period_name = T.cast(period.first, Symbol)
         args = period[1..]
 
         return compound_in_period?(date_or_time, period_name, *args)
@@ -209,7 +206,7 @@ module Checkoff
 
     # @param date_or_time [Date,Time,nil]
     # @param period_name [Symbol]
-    # @param args [Object]
+    # @param args [Array<Object>]
     def compound_in_period?(date_or_time, period_name, *args)
       return less_than_n_days_ago?(date_or_time, *args) if period_name == :less_than_n_days_ago
 
@@ -225,7 +222,6 @@ module Checkoff
 
       return between_relative_days?(date_or_time, *args) if period_name == :between_relative_days
 
-      # @sg-ignore
       raise "Teach me how to handle period [#{period_name.inspect}, #{args.map(&:inspect).join(', ')}]"
     end
 

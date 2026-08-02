@@ -108,8 +108,9 @@ module Checkoff
       else
         # @type [Enumerable<Asana::Resources::Project>]
         ps = projects_by_workspace_name(workspace_name, extra_fields:)
-        # @type <Asana::Resources::Project,nil>
-        # @sg-ignore
+        # @type [Asana::Resources::Project,nil]
+        # @sg-ignore Variable type could not be inferred / Unresolved call to _1 — Solargraph
+        #   doesn't fully support numbered block parameters
         project = ps.find { _1.name == project_name }
         project_by_gid(project.gid, extra_fields:) unless project.nil?
       end
@@ -120,8 +121,8 @@ module Checkoff
     # @param project_name [String,Symbol] - :my_tasks or a project name
     # @param [Array<String>] extra_fields
     #
-    # @sg-ignore
     # @return [Asana::Resources::Project]
+    # @sg-ignore nil check above is not flow-sensitive
     def project_or_raise(workspace_name, project_name, extra_fields: [])
       p = project(workspace_name, project_name, extra_fields:)
       raise "Could not find project #{project_name.inspect} under workspace #{workspace_name}." if p.nil?

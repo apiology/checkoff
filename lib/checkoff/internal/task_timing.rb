@@ -19,14 +19,16 @@ module Checkoff
 
       # @param task [Asana::Resources::Task]
       # @return [Time, nil]
-      # @sg-ignore
+      # @sg-ignore return type could not be inferred — #to_time called via &. on a Date|Time
+      #   union receiver
       def start_time(task)
         date_or_time_field_by_name(task, :start)&.to_time
       end
 
       # @param task [Asana::Resources::Task]
-      # @sg-ignore
       # @return [Time, nil]
+      # @sg-ignore return type could not be inferred — #to_time called via &. on a Date|Time
+      #   union receiver
       def due_time(task)
         date_or_time_field_by_name(task, :due)&.to_time
       end
@@ -35,8 +37,7 @@ module Checkoff
       #
       # @return [Date, Time, nil]
       def start_date_or_time(task)
-        # @sg-ignore
-        return @time_class.parse(task.start_at).localtime unless task.start_at.nil?
+        return @time_class.parse(T.must(task.start_at)).localtime unless task.start_at.nil?
 
         return @date_class.parse(task.start_on) unless task.start_on.nil?
 
@@ -58,7 +59,7 @@ module Checkoff
       #
       # @return [Time, nil]
       def modified_time(task)
-        @time_class.parse(task.modified_at).localtime unless task.modified_at.nil?
+        @time_class.parse(T.must(task.modified_at)).localtime unless task.modified_at.nil?
       end
 
       # @param task [Asana::Resources::Task]
