@@ -8,7 +8,7 @@ require 'checkoff/project_selectors'
 class TestProjectSelectors < ClassTest
   extend Forwardable
 
-  def_delegators(:@mocks, :projects)
+  def_delegators(:@mocks, :projects, :workspaces, :portfolios)
 
   # @!parse
   #  # @return [Checkoff::ProjectSelectors]
@@ -162,7 +162,7 @@ class TestProjectSelectors < ClassTest
     workspace = mock('workspace')
     workspace.stubs(:name).returns('My Workspace')
     project.expects(:workspace).returns(nil)
-    mocks.workspaces.expects(:default_workspace).returns(workspace)
+    workspaces.expects(:default_workspace).returns(workspace)
   end
 
   # @param matching_project_name [String]
@@ -171,7 +171,7 @@ class TestProjectSelectors < ClassTest
     stub_default_workspace_lookup
     matching_project = mock('matching_project')
     matching_project.stubs(:name).returns(matching_project_name)
-    mocks.portfolios
+    portfolios
       .expects(:projects_in_portfolio)
       .with('My Workspace', 'My Portfolio', extra_project_fields: [])
       .returns([matching_project])
