@@ -15,7 +15,7 @@ module Checkoff
         end
 
         # @return [Array(Hash{String => String}, Array<Symbol, Array>)]
-        # @sg-ignore
+        # @sg-ignore out can genuinely be nil if none of the 3 known prefixes matched; relies on the raise above it
         def convert
           return [{}, []] if date_url_params.empty?
 
@@ -129,8 +129,8 @@ module Checkoff
         end
 
         # @param param_key [String]
-        # @sg-ignore
         # @return [String]
+        # @sg-ignore value.length == 1 guard above isn't inferred as narrowing value[0] to non-nil
         def get_single_param(param_key)
           raise "Expected #{param_key} to have at least one value" unless date_url_params.key? param_key
 

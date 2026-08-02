@@ -67,7 +67,7 @@ module Checkoff
       sections.each_entry { |section| by_section[section_key(section.name)] = [] }
       tasks.each do |task|
         assignee_section = task.assignee_section
-        # @sg-ignore
+        # @sg-ignore assignee_section is Hash, Asana::Resources::Section, nil - .name assumed present here
         current_section = section_key(assignee_section.name)
         by_section[current_section] ||= []
         by_section[current_section] << task

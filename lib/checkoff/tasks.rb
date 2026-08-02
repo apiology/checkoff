@@ -122,8 +122,7 @@ module Checkoff
              only_uncompleted: true,
              extra_fields: [])
       thread_local = Checkoff::Internal::ThreadLocal.new
-      # @type [String]
-      # @sg-ignore
+      # @type [String, nil]
       task_gid = thread_local.with_thread_local_variable(:suppress_asana_webhook_watch_creation,
                                                          true) do
         gid_for_task(workspace_name, project_name, section_name, task_name)
@@ -179,9 +178,9 @@ module Checkoff
     # @param name [String]
     # @param workspace_gid [String]
     # @param assignee_gid [String]
-    # @sg-ignore
     #
     # @return [Asana::Resources::Task]
+    # @sg-ignore create isn't resolved through the dynamic @asana_task class reference
     def add_task(name,
                  workspace_gid: @workspaces.default_workspace_gid,
                  assignee_gid: default_assignee_gid)
@@ -201,10 +200,10 @@ module Checkoff
 
     # True if any of the task's dependencies are marked incomplete
     #
-    # @sg-ignore
     # Include 'dependencies.gid' in extra_fields of task passed in.
     #
     # @param task [Asana::Resources::Task]
+    # @return [Boolean]
     def incomplete_dependencies?(task)
       # Avoid a redundant fetch.  Unfortunately, Ruby SDK allows
       # dependencies to be fetched along with other attributes--but
@@ -214,14 +213,13 @@ module Checkoff
       #
       # https://github.com/Asana/ruby-asana/issues/125
 
-      # @type [Enumerable<Asana::Resources::Task>, nil]
+      # @type [Array<Hash>]
       dependencies = task.instance_variable_get(:@dependencies) || []
 
       dependencies.any? do |parent_task_info|
         # the real bummer though is that asana doesn't let you fetch
         # the completion status of dependencies, so we need to do this
         # regardless:
-        # @sg-ignore
         parent_task_gid = parent_task_info.fetch('gid')
 
         parent_task = task_by_gid(parent_task_gid, only_uncompleted: false)
@@ -387,7 +385,7 @@ module Checkoff
     end
 
     # @return [String]
-    # @sg-ignore
+    # @sg-ignore config's fetch returns generic Object across its Hash/EnvFallbackConfigLoader union
     def default_assignee_gid
       @config.fetch(:default_assignee_gid)
     end

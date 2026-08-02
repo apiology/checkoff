@@ -44,7 +44,7 @@ module Checkoff
     cache_method :workspace, LONG_CACHE_TIME
 
     # @return [Asana::Resources::Workspace]
-    # @sg-ignore
+    # @sg-ignore find_by_id isn't resolved through the dynamic @asana_workspace class reference
     def default_workspace
       @asana_workspace.find_by_id(client, default_workspace_gid)
     end
@@ -61,7 +61,7 @@ module Checkoff
     end
 
     # @return [String]
-    # @sg-ignore
+    # @sg-ignore config's fetch returns generic Object across its Hash/EnvFallbackConfigLoader union
     def default_workspace_gid
       @config.fetch(:default_workspace_gid)
     end

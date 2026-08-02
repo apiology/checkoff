@@ -24,9 +24,8 @@ module Checkoff
         # @param url [String]
         # @return [Array(Hash{String => String}, Array)]
         def convert_params(url)
-          # @sg-ignore
+          # @sg-ignore URI#query is nilable; CGI.parse assumes url always has a query string here
           url_params = CGI.parse(URI.parse(url).query)
-          # @sg-ignore
           custom_field_params, date_url_params, simple_url_params = partition_url_params(url_params)
           custom_field_args, custom_field_task_selector = convert_custom_field_params(custom_field_params)
           date_url_args, date_task_selector = convert_date_params(date_url_params)
@@ -56,14 +55,14 @@ module Checkoff
           CustomFieldParamConverter.new(custom_field_params:).convert
         end
 
-        # @param url_params [Hash{String => String}]
+        # @param url_params [Hash{String => Array<String>}]
         # @return [Array(Hash{String => Array<String>}, Hash{String => Array<String>}, Hash{String => Array<String>})]
         def partition_url_params(url_params)
           groups = T.let(url_params.to_a.group_by do |key, _values|
-                           # @sg-ignore
+                           # @sg-ignore key's type isn't inferred through this tuple-destructuring block param
                            if key.start_with? 'custom_field_'
                              :custom_field
-                           # @sg-ignore
+                           # @sg-ignore key's type isn't inferred through this tuple-destructuring block param
                            elsif key.include? '_date'
                              :date
                            else

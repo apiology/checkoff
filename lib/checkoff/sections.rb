@@ -80,7 +80,7 @@ module Checkoff
 
     # Given a workspace name and project name, then provide a Hash of
     # tasks with section name -> task list of the uncompleted tasks
-    # @param workspace_name [String]
+    # @param workspace_name [String, Symbol]
     # @param project_name [String, Symbol]
     # @param only_uncompleted [Boolean]
     # @param extra_fields [Array<String>]
@@ -142,11 +142,10 @@ module Checkoff
     # @param section_name [String, nil]
     #
     # @return [Array<String>]
-    # @sg-ignore
+    # @sg-ignore Task#name is nilable; task names are assumed present here
     def section_task_names(workspace_name, project_name, section_name)
       task_array = tasks(workspace_name, project_name, section_name)
-      # @type [Array<String>]
-      T.cast(task_array.map(&:name), T::Array[String])
+      T.cast(task_array.map(&:name), Array)
     end
     cache_method :section_task_names, SHORT_CACHE_TIME
 
@@ -184,17 +183,15 @@ module Checkoff
     #
     # @return [Asana::Resources::Section, nil]
     def previous_section(section)
-      sections = sections_by_project_gid(section.project.fetch('gid'))
+      project_sections = sections_by_project_gid(section.project.fetch('gid'))
 
       # @type [Array<Asana::Resources::Section>]
-      # @sg-ignore
-      sections = sections.to_a
+      project_sections_arr = project_sections.to_a
 
-      index = sections.find_index { |s| s.gid == section.gid }
+      index = project_sections_arr.find_index { |s| s.gid == section.gid }
       return nil if index.nil? || index.zero?
 
-      # @sg-ignore
-      sections[index - 1]
+      project_sections_arr[index - 1]
     end
     cache_method :previous_section, SHORT_CACHE_TIME
 
@@ -295,7 +292,7 @@ module Checkoff
       # @type [String, nil]
       current_section = section_key(section_name)
 
-      # @sg-ignore
+      # @sg-ignore Hash{String, nil => ...}'s key type displays as NilClass and doesn't match current_section's nil
       by_section.fetch(current_section) << task
     end
 

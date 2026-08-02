@@ -154,7 +154,7 @@ class TestTags < ClassTest
   # @return [String]
   def generate_task_endpoint
     tag.expects(:gid).returns('tag_gid').at_least(1)
-    # @sg-ignore Unresolved call to gid on Mocha::Mock
+    # @sg-ignore gid isn't resolved on the Mocha::Mock & Asana::Resources::Tag intersection type here
     "/tags/#{tag.gid}/tasks"
   end
 

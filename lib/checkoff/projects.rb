@@ -108,9 +108,8 @@ module Checkoff
       else
         # @type [Enumerable<Asana::Resources::Project>]
         ps = projects_by_workspace_name(workspace_name, extra_fields:)
-        # @type <Asana::Resources::Project,nil>
-        # @sg-ignore
-        project = ps.find { _1.name == project_name }
+        # @type [Asana::Resources::Project, nil]
+        project = ps.find { |p| p.name == project_name }
         project_by_gid(project.gid, extra_fields:) unless project.nil?
       end
     end
@@ -120,8 +119,8 @@ module Checkoff
     # @param project_name [String,Symbol] - :my_tasks or a project name
     # @param [Array<String>] extra_fields
     #
-    # @sg-ignore
     # @return [Asana::Resources::Project]
+    # @sg-ignore nil check below is not flow-sensitive
     def project_or_raise(workspace_name, project_name, extra_fields: [])
       p = project(workspace_name, project_name, extra_fields:)
       raise "Could not find project #{project_name.inspect} under workspace #{workspace_name}." if p.nil?

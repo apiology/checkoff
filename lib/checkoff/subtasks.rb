@@ -89,7 +89,7 @@ module Checkoff
     # as memberships with a separate API within a task.
     #
     # @param subtask [Asana::Resources::Task]
-    # @sg-ignore
+    # @return [Boolean, nil]
     def subtask_section?(subtask)
       subtask.is_rendered_as_separator
     end

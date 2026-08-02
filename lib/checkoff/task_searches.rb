@@ -73,7 +73,7 @@ module Checkoff
       workspace = workspaces.workspace_or_raise(workspace_name)
       api_params, task_selector = @search_url_parser.convert_params(url)
       debug { "Task search params: api_params=#{api_params}, task_selector=#{task_selector}" }
-      # @sg-ignore
+      # @sg-ignore destructuring assignment from a tuple-returning method isn't inferred per-element
       raw_task_search(api_params, workspace_gid: workspace.gid, task_selector:,
                                   extra_fields:)
     end
@@ -186,8 +186,8 @@ module Checkoff
     end
 
     # @param [Array<String>] extra_fields
-    # @sg-ignore
     # @return [Hash{Symbol => undefined}]
+    # @sg-ignore `undefined` isn't a real YARD/RBS type, so bracket access off it can't be inferred
     def calculate_api_options(extra_fields)
       # @type [Hash{Symbol => undefined}]
       all_options = projects.task_options(extra_fields: ['custom_fields'] + extra_fields)

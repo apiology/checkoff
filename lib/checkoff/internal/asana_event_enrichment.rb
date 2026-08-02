@@ -74,9 +74,9 @@ module Checkoff
         end
         resource = webhook_subscription&.fetch('resource', nil)
         name, resource_type = enrich_gid(resource) if resource
-        # @sg-ignore
+        # @sg-ignore webhook_subscription is non-nil here since resource (derived from it) was truthy above
         webhook_subscription['checkoff:enriched:name'] = name if name
-        # @sg-ignore
+        # @sg-ignore webhook_subscription is non-nil here since resource (derived from it) was truthy above
         webhook_subscription['checkoff:enriched:resource_type'] = resource_type if resource_type
       end
 
@@ -96,13 +96,12 @@ module Checkoff
 
       # @param filter [Hash{String => String, Array<String>}]
       #
-      # @sg-ignore
-      # @return [String, nil]
+      # @return [void]
       def enrich_filter_parent_gid!(filter)
         parent_gid = filter['checkoff:parent.gid']
         return unless parent_gid
 
-        # @sg-ignore
+        # @sg-ignore checkoff:parent.gid is always a single String value, not the Array<String> variant
         name, resource_type = enrich_gid(parent_gid)
         filter['checkoff:enriched:parent.name'] = name if name
         filter['checkoff:enriched:parent.resource_type'] = resource_type if resource_type
@@ -116,7 +115,7 @@ module Checkoff
 
         return unless resource_gid
 
-        # @sg-ignore
+        # @sg-ignore checkoff:resource.gid is always a single String value, not the Array<String> variant
         task = tasks.task_by_gid(resource_gid)
         task_name = task&.name
         filter['checkoff:enriched:resource.name'] = task_name if task_name
@@ -139,7 +138,7 @@ module Checkoff
       # @return [void]
       def enrich_event_parent!(asana_event)
         # @type [Hash{String => String }]
-        # @sg-ignore
+        # @sg-ignore asana_event's declared type only documents its 'resource' key, not 'parent'
         parent = asana_event['parent']
 
         return unless parent

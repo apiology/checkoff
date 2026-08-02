@@ -30,9 +30,9 @@ module Checkoff
     # @return [Asana::Client]
     def client
       @client ||= @asana_client_class.new do |c|
-        # @sg-ignore
+        # @sg-ignore Configuration#authentication isn't resolved through the dynamic @asana_client_class reference
         c.authentication :access_token, @config.fetch(:personal_access_token)
-        # @sg-ignore
+        # @sg-ignore Configuration#default_headers isn't resolved through the dynamic @asana_client_class reference
         c.default_headers 'asana-enable' =>
                           'new_project_templates,new_user_task_lists,new_memberships,new_goal_memberships'
       end

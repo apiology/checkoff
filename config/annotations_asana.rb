@@ -5,6 +5,18 @@
 # @!parse
 #   module Asana
 #     class Client
+#       # @yieldparam c [Asana::Client::Configuration]
+#       # @return [void]
+#       def initialize(&block); end
+#       class Configuration
+#         # @param type [Symbol]
+#         # @param value [Object]
+#         # @return [void]
+#         def authentication(type, value); end
+#         # @param value [Hash]
+#         # @return [void]
+#         def default_headers(value); end
+#       end
 #       # @return [Asana::ProxiedResourceClasses::Tag]
 #       def tags; end
 #       # @return [Asana::ProxiedResourceClasses::Task]
@@ -34,12 +46,21 @@
 #       def get(url, **args); end
 #     end
 #     module Resources
+#       class Resource
+#         # @return [String]
+#         def gid; end
+#         # @param filename [String]
+#         # @param mime [String]
+#         # @param io [IO, nil]
+#         # @param options [Hash]
+#         # @param data [Hash]
+#         # @return [Asana::Resources::Attachment]
+#         def attach(filename:, mime:, io: nil, options: {}, **data); end
+#       end
 #       # https://developers.asana.com/reference/gettask
 #       class Task
 #         # @return [String, nil]
 #         def resource_subtype; end
-#         # @return [Asana::Resources::Section, nil]
-#         def assignee_section; end
 #         # @return [Boolean,nil]
 #         def is_rendered_as_separator; end
 #         # @return [String,nil]
@@ -47,10 +68,16 @@
 #         # @return [String,nil]
 #         def due_on; end
 #         # @return [String,nil]
+#         def start_at; end
+#         # @return [String,nil]
+#         def start_on; end
+#         # @return [String,nil]
+#         def modified_at; end
+#         # @return [String,nil]
 #         def name; end
 #         # @return [Hash<String, String>, nil]
 #         def assignee; end
-#         # @return [Hash, Asana::Resources::Section]
+#         # @return [Hash, Asana::Resources::Section, nil]
 #         def assignee_section; end
 #         # @return [String, nil]
 #         def html_notes; end
@@ -74,6 +101,8 @@
 #       class Tag
 #         # @return [String,nil]
 #         def name; end
+#         # @return [String]
+#         def gid; end
 #       end
 #       class Story
 #         # @return [String,nil]

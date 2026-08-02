@@ -57,7 +57,7 @@ module Checkoff
         section_data = membership_data.fetch('section')
         section_gid = section_data.fetch('gid')
         section = @sections.section_by_gid(section_gid)
-        # @sg-ignore
+        # @sg-ignore section_by_gid's nil case isn't handled here - section_gid comes from the task's own data
         task_data_dependent_on_previous_section_last_milestone?(task_data, section)
       end
     end
@@ -95,7 +95,7 @@ module Checkoff
 
         all_dependent_task_gids ||= @tasks.all_dependent_tasks(task).map(&:gid)
 
-        # @sg-ignore
+        # @sg-ignore ||= on a block-local var isn't inferred as narrowing away nil
         all_dependent_task_gids.include? last_milestone.gid
       end
     end
@@ -131,7 +131,7 @@ module Checkoff
             dependent_task.resource_subtype == 'milestone'
           end
 
-        # @sg-ignore
+        # @sg-ignore ||= on a block-local var isn't inferred as narrowing away nil
         all_dependent_milestones.any? do |milestone|
           milestone.memberships.any? do |milestone_membership_data|
             milestone_membership_data.fetch('project').fetch('gid') == project_gid

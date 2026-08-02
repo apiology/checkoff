@@ -16,9 +16,15 @@ class ClassTest < Minitest::Test
   # @return [MyOpenStruct]
   attr_reader :mocks
 
+  # Implemented by subclasses to return the class under test.
+  # @return [Class]
+  # @sg-ignore abstract method always raises; declared type documents the override contract, not this body
+  def class_under_test
+    raise 'Implement me!'
+  end
+
   # @param clazz [Class]
   # @return [Object]
-  # @sg-ignore default class_under_test is implemented by subclasses
   def get_test_object(clazz = class_under_test, &twiddle_mocks)
     @mocks = get_initializer_mocks(clazz,
                                    respond_like_instance_of:,
@@ -50,7 +56,7 @@ class ClassTest < Minitest::Test
 
   # @param clazz [Class]
   # @return [Object]
-  # @sg-ignore default class_under_test is implemented by subclasses
+  # @sg-ignore .new's return isn't resolved through the generic Class-typed clazz reference
   def create_object(clazz = class_under_test)
     clazz.new(**@mocks.to_h)
   end

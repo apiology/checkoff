@@ -368,7 +368,6 @@ module Checkoff
         # @param task [Asana::Resources::Task]
         #
         # @return [Boolean]
-        # @sg-ignore String, nil union's == isn't inferred as returning Boolean
         def evaluate(task)
           resource_subtype = task.resource_subtype
           raise 'Please add resource_subtype to extra_fields' if resource_subtype.nil?

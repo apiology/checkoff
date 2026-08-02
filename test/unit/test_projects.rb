@@ -55,7 +55,7 @@ class TestProjects < BaseAsana
                                         options: { fields: %w[custom_fields name] })
       .returns(sample_projects.keys)
     sample_projects.each do |project, name|
-      # @sg-ignore Block-destructured project loses its Mocha::Mock type
+      # @sg-ignore project's type isn't inferred through this Hash#each tuple-destructuring block param
       project.expects(:name).returns(name).at_least(0)
     end
   end

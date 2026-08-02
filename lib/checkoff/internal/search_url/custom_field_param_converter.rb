@@ -59,19 +59,18 @@ module Checkoff
         # @param gid [String]
         # @param single_custom_field_params [Hash{String => Array<String>}]
         # @return [Array(Hash{String => String}, Array<Symbol, Array>)]
-        # @sg-ignore
+        # @sg-ignore `unless variant_class.nil?` return value isn't inferred as the declared tuple type
         def convert_single_custom_field_params(gid, single_custom_field_params)
           variant_key = "custom_field_#{gid}.variant"
           variant = single_custom_field_params.fetch(variant_key)
           remaining_params = single_custom_field_params.reject { |k, _v| k == variant_key }
           raise "Teach me how to handle #{variant_key} = #{variant}" unless variant.length == 1
 
-          # @sg-ignore
-          # @type [Class<CustomFieldVariant>]
-          # @sg-ignore
+          # @type [Class<CustomFieldVariant>, nil]
+          # @sg-ignore variant.length == 1 guard above isn't inferred as narrowing variant[0] to non-nil
           variant_class = VARIANTS[variant[0]]
           # @type [Array(Hash{String => String}, Array<Symbol, Array>)]
-          # @sg-ignore
+          # @sg-ignore `unless variant_class.nil?` isn't inferred as narrowing the receiver in the same statement
           return variant_class.new(gid, remaining_params).convert unless variant_class.nil?
 
           raise "Teach me how to handle #{variant_key} = #{variant}"
@@ -79,9 +78,9 @@ module Checkoff
 
         # @param key [String]
         # @return [String]
-        # @sg-ignore
+        # @sg-ignore split(...)[n]'s nilable Array indexing isn't inferred as the declared String return
         def gid_from_custom_field_key(key)
-          # @sg-ignore
+          # @sg-ignore split(...)[n] is nilable Array indexing; key's shape guarantees enough parts here
           key.split('_')[2].split('.')[0]
         end
 

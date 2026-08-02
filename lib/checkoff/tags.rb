@@ -79,7 +79,7 @@ module Checkoff
     # @param tag_name [String]
     #
     # @return [Asana::Resources::Tag]
-    # @sg-ignore
+    # @sg-ignore nil check below is not flow-sensitive
     def tag_or_raise(workspace_name, tag_name)
       t = tag(workspace_name, tag_name)
 
@@ -114,7 +114,7 @@ module Checkoff
     # @return [Hash{Symbol => Object}]
     def build_params(options)
       { limit: options[:per_page], completed_since: options[:completed_since] }.reject do |_, v|
-        # @sg-ignore
+        # @sg-ignore v's type isn't inferred through this tuple-destructuring block param
         v.nil? || Array(v).empty?
       end
     end

@@ -64,19 +64,19 @@ module Checkoff
     # :nocov:
     class << self
       # @return [String]
-      # @sg-ignore
+      # @sg-ignore `x || raise(...)` isn't inferred as narrowing away the nil branch
       def project_name
         ARGV[1] || raise('Please pass project name to pull tasks from as first argument')
       end
 
-      # @sg-ignore
       # @return [String]
+      # @sg-ignore `x || raise(...)` isn't inferred as narrowing away the nil branch
       def workspace_name
         ARGV[0] || raise('Please pass workspace name as first argument')
       end
 
       # @return [Array(Symbol, Array)]
-      # @sg-ignore
+      # @sg-ignore `x || raise(...)` isn't inferred as narrowing away the nil branch
       def task_selector
         task_selector_json = ARGV[2] || raise('Please pass task_selector in JSON form as third argument')
 

@@ -17,8 +17,7 @@ module Checkoff
         end
 
         # @param task_selectors [Array<Symbol, Array>]
-        # @return [Array(Symbol, Array, Array)]
-        # @sg-ignore
+        # @return [Symbol, Array]
         def self.merge_task_selectors(*task_selectors)
           return [] if task_selectors.empty?
 

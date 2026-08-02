@@ -57,10 +57,10 @@ module Logging
   private
 
   # @return [Symbol]
-  # @sg-ignore
+  # @sg-ignore ENV.fetch isn't exposed on RBS::Unnamed::ENVClass at strong level
   def log_level
-    # @sg-ignore
     # rubocop:disable Style/RedundantFetchBlock
+    # @sg-ignore ENV.fetch isn't exposed on RBS::Unnamed::ENVClass at strong level
     ENV.fetch('LOG_LEVEL') { 'INFO' }.downcase.to_sym
     # rubocop:enable Style/RedundantFetchBlock
   end
