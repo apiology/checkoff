@@ -274,6 +274,26 @@ class TestTaskSelectors < ClassTest
   end
 
   # @return [void]
+  def mock_filter_via_custom_field_gid_value_gid_present
+    custom_fields = [custom_field]
+    custom_field.expects(:fetch).with('gid').returns(custom_field_gid)
+    task.expects(:custom_fields).returns(custom_fields)
+    custom_field.expects(:[]).with('display_value').returns('some value')
+  end
+
+  # @return [void]
+  def test_filter_via_custom_field_gid_value_gid_present
+    task_selectors = get_test_object do
+      stub_custom_fields
+      mock_filter_via_custom_field_gid_value_gid_present
+    end
+
+    refute(task_selectors.filter_via_task_selector(task,
+                                                   [:nil?, [:custom_field_gid_value,
+                                                            custom_field_gid]]))
+  end
+
+  # @return [void]
   def test_filter_via_custom_field_value_custom_fields_not_provided
     task_selectors = get_test_object do
       stub_custom_fields
@@ -986,6 +1006,35 @@ class TestTaskSelectors < ClassTest
 
     refute(task_selectors.filter_via_task_selector(task,
                                                    [:in_portfolio_named?, 'foo']))
+  end
+
+  # @return [void]
+  def test_milestone_true
+    task_selectors = get_test_object do
+      task.expects(:resource_subtype).returns('milestone')
+    end
+
+    assert(task_selectors.filter_via_task_selector(task, [:milestone?]))
+  end
+
+  # @return [void]
+  def test_milestone_false
+    task_selectors = get_test_object do
+      task.expects(:resource_subtype).returns('task')
+    end
+
+    refute(task_selectors.filter_via_task_selector(task, [:milestone?]))
+  end
+
+  # @return [void]
+  def test_milestone_raises_without_resource_subtype
+    task_selectors = get_test_object do
+      task.expects(:resource_subtype).returns(nil)
+    end
+
+    assert_raises(RuntimeError) do
+      task_selectors.filter_via_task_selector(task, [:milestone?])
+    end
   end
 
   # @return [void]

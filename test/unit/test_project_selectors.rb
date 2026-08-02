@@ -158,6 +158,47 @@ class TestProjectSelectors < ClassTest
   end
 
   # @return [void]
+  def stub_default_workspace_lookup
+    workspace = mock('workspace')
+    workspace.stubs(:name).returns('My Workspace')
+    project.expects(:workspace).returns(nil)
+    mocks.workspaces.expects(:default_workspace).returns(workspace)
+  end
+
+  # @param matching_project_name [String]
+  # @return [void]
+  def stub_in_portfolio_named(matching_project_name)
+    stub_default_workspace_lookup
+    matching_project = mock('matching_project')
+    matching_project.stubs(:name).returns(matching_project_name)
+    mocks.portfolios
+      .expects(:projects_in_portfolio)
+      .with('My Workspace', 'My Portfolio', extra_project_fields: [])
+      .returns([matching_project])
+    project.expects(:name).returns('My Project')
+  end
+
+  # @return [void]
+  def test_filter_via_in_portfolio_named_true
+    project_selectors = get_test_object do
+      stub_in_portfolio_named('My Project')
+    end
+
+    assert(project_selectors.filter_via_project_selector(project,
+                                                         [:in_portfolio_named?, 'My Portfolio']))
+  end
+
+  # @return [void]
+  def test_filter_via_in_portfolio_named_false
+    project_selectors = get_test_object do
+      stub_in_portfolio_named('Some Other Project')
+    end
+
+    refute(project_selectors.filter_via_project_selector(project,
+                                                         [:in_portfolio_named?, 'My Portfolio']))
+  end
+
+  # @return [void]
   def test_bogus_raises
     project_selectors = get_test_object
 
