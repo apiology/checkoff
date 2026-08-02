@@ -16,7 +16,7 @@ class TestProjectTiming < ClassTest
 
   typed_let_mock :project, Asana::Resources::Project
 
-  let_mock :custom_field_name
+  typed_let_mock :custom_field_name, String
 
   # @return [void]
   def test_date_or_time_field_by_name_due

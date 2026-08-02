@@ -18,9 +18,16 @@ class TestTimelines < ClassTest
   typed_let_mock :milestone, Asana::Resources::Task
   typed_let_mock :portfolio_name, String
 
-  let_mock :section_2_gid, :section_2, :section_1_gid, :section_1,
-           :milestone_gid, :task_gid, :default_workspace,
-           :default_workspace_name, :project_a_gid, :project_a
+  typed_let_mock :section_2_gid, String
+  typed_let_mock :section_2, Asana::Resources::Section
+  typed_let_mock :section_1_gid, String
+  typed_let_mock :section_1, Asana::Resources::Section
+  typed_let_mock :milestone_gid, String
+  typed_let_mock :task_gid, String
+  typed_let_mock :default_workspace, Asana::Resources::Workspace
+  typed_let_mock :default_workspace_name, String
+  typed_let_mock :project_a_gid, String
+  typed_let_mock :project_a, Asana::Resources::Project
 
   # @return [void]
   def test_task_dependent_on_previous_section_last_milestone_no_memberships
