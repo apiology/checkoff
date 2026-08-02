@@ -27,22 +27,33 @@ class TestTasks < BaseAsana
   end
   # rubocop:enable YARD/TagTypeSyntax
 
-  let_mock :mock_tasks, :modified_mock_tasks, :tasks_by_section,
-           :unflattened_modified_mock_tasks, :task_hashes, :project_gid, :wrong_project,
-           :wrong_project_gid, :asana_tasks_client, :task_gid
+  typed_let_mock :task_hashes, Checkoff::Internal::TaskHashes
+  typed_let_mock :project_gid, String
+  typed_let_mock :wrong_project, Asana::Resources::Project
+  typed_let_mock :wrong_project_gid, String
+  typed_let_mock :asana_tasks_client, Asana::ProxiedResourceClasses::Task
+  typed_let_mock :task_gid, String
 
-  let_mock :default_workspace, :workspace_gid, :task_name, :default_assignee_gid
+  typed_let_mock :default_workspace, Asana::Resources::Workspace
+  typed_let_mock :workspace_gid, String
+  typed_let_mock :task_name, String
+  typed_let_mock :default_assignee_gid, String
 
-  let_mock :start_on_string, :start_on_date_obj,
-           :start_on_time_obj,
-           :start_at_string, :start_at_time_obj,
-           :due_at_string, :due_at_time_obj,
-           :due_on_string, :due_on_date_obj,
-           :due_on_time_obj,
-           :asana_entity_project,
-           :dependency_1, :dependency_1_gid,
-           :dependency_1_full_task, :now,
-           :dependent_1, :dependent_1_gid
+  typed_let_mock :start_on_string, String
+  typed_let_mock :start_on_date_obj, Date
+  typed_let_mock :start_on_time_obj, Time
+  typed_let_mock :start_at_string, String
+  typed_let_mock :start_at_time_obj, Time
+  typed_let_mock :due_at_string, String
+  typed_let_mock :due_at_time_obj, Time
+  typed_let_mock :due_on_string, String
+  typed_let_mock :due_on_date_obj, Date
+  typed_let_mock :due_on_time_obj, Time
+  typed_let_mock :dependency_1_gid, String
+  typed_let_mock :dependency_1_full_task, Asana::Resources::Task
+  typed_let_mock :now, Time
+  typed_let_mock :dependent_1, Asana::Resources::Task
+  typed_let_mock :dependent_1_gid, String
 
   # @return [void]
   def expect_now_pulled
@@ -334,7 +345,10 @@ class TestTasks < BaseAsana
     tasks.send(:add_task, task_name, workspace_gid:)
   end
 
-  let_mock :workspace_name, :project_name, :section_name, :task_name, :task, :project
+  typed_let_mock :workspace_name, String
+  typed_let_mock :project_name, String
+  typed_let_mock :section_name, String
+  typed_let_mock :project, Asana::Resources::Project
 
   # @return [void]
   def expect_tasks_from_project_pulled
@@ -399,8 +413,6 @@ class TestTasks < BaseAsana
   # @return [void]
   def test_task_with_section
     tasks = get_test_object { mock_task_with_section }
-    # @sg-ignore Wrong argument type for Checkoff::Tasks#task: workspace_name expected String, Symbol, received Mocha::Mock
-    # https://github.com/castwide/solargraph/issues/1229
     returned_task = tasks.task(workspace_name, project_name, task_name,
                                only_uncompleted: true, section_name:)
 
@@ -417,8 +429,6 @@ class TestTasks < BaseAsana
   # @return [void]
   def test_task
     tasks = get_test_object { mock_task }
-    # @sg-ignore Wrong argument type for Checkoff::Tasks#task: workspace_name expected String, Symbol, received Mocha::Mock
-    # https://github.com/castwide/solargraph/issues/1229
     returned_task = tasks.task(workspace_name, project_name, task_name,
                                only_uncompleted: true)
 
@@ -469,9 +479,6 @@ class TestTasks < BaseAsana
     end
 
     assert_equal(task_gid,
-                 # @sg-ignore Wrong argument type for Checkoff::Tasks#gid_for_task: workspace_name
-                 #   expected String, Symbol, received Mocha::Mock
-                 # https://github.com/castwide/solargraph/issues/1229
                  tasks.gid_for_task(workspace_name, project_name, :unspecified, task_name))
   end
 
@@ -486,9 +493,6 @@ class TestTasks < BaseAsana
         .returns([])
     end
 
-    # @sg-ignore Wrong argument type for Checkoff::Tasks#gid_for_task: workspace_name
-    #   expected String, Symbol, received Mocha::Mock
-    # https://github.com/castwide/solargraph/issues/1229
     assert_nil(tasks.gid_for_task(workspace_name, project_name, :unspecified, task_name))
   end
 
