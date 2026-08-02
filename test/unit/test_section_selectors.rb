@@ -15,9 +15,7 @@ class TestSectionSelectors < ClassTest
   def_delegators(:@mocks, :client, :sections)
 
   typed_let_mock :section, Asana::Resources::Section
-
-  let_mock :tasks
-
+  typed_let_mock :tasks, Asana::ProxiedResourceClasses::Task
   typed_let_mock :milestone, Asana::Resources::Task
 
   # @return [void]

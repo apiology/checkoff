@@ -93,6 +93,24 @@ def define_singleton_method_by_proc(obj, name, block)
   metaclass.send(:define_method, name, block)
 end
 
+module Asana
+  # Real (but empty) backing classes for the per-resource collection types
+  # documented in config/annotations_asana.rb's @!parse block (e.g.
+  # Asana::Client#tasks is annotated to return Asana::ProxiedResourceClasses::Task).
+  # That block is YARD-comment-only, so it never defines these constants at
+  # runtime; typed_let_mock needs a real, loadable class to pass as its
+  # `type` argument, so it's defined here and picked up by the @!parse
+  # method annotations for static typing.
+  # rubocop:disable Lint/EmptyClass
+  module ProxiedResourceClasses
+    class Task; end
+    class Workspace; end
+    class Project; end
+    class Section; end
+  end
+  # rubocop:enable Lint/EmptyClass
+end
+
 # No security (symbold denial of servie) issue; not building
 # OpenStruct from untrusted user data.
 #

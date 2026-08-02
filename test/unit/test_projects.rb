@@ -21,7 +21,7 @@ class TestProjects < BaseAsana
 
   # @return [void]
   def setup_projects_pulled
-    client.expects(:projects).returns(projects).at_least(1)
+    client.expects(:projects).returns(asana_projects).at_least(1)
   end
 
   typed_let_mock :project, Asana::Resources::Project
@@ -41,7 +41,7 @@ class TestProjects < BaseAsana
   # @return [void]
   # @param workspace_gid [Mocha::Mock]
   def setup_projects_queried(workspace_gid: my_workspace_gid)
-    projects
+    asana_projects
       .expects(:find_by_workspace).with(workspace: workspace_gid,
                                         per_page: 100,
                                         options: { fields: %w[custom_fields name] })
@@ -160,7 +160,7 @@ class TestProjects < BaseAsana
     setup_workspace_pulled
     setup_projects_pulled
     setup_user_task_list_pulled
-    projects
+    asana_projects
       .expects(:find_by_id).with(my_tasks_in_workspace_gid)
       .returns(my_tasks_project)
   end

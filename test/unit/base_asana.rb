@@ -9,8 +9,12 @@ require_relative 'class_test'
 class BaseAsana < ClassTest
   include TestDate
 
-  let_mock :projects, :my_tasks_in_workspace,
-           :my_time, :tasks, :b_gid, :c_gid
+  # asana_projects is the raw Asana::Client#projects collection proxy
+  # (client.projects.find_by_workspace/find_by_id); it's distinct from the
+  # `projects` method some subclasses (TestSections, TestTasks) define
+  # themselves for a real Checkoff::Projects instance under test - keeping
+  # separate names avoids one silently shadowing the other.
+  typed_let_mock :asana_projects, Asana::ProxiedResourceClasses::Project
 
   typed_let_mock :my_tasks_in_workspace_gid, String
   typed_let_mock :task_a, Asana::Resources::Task
@@ -24,8 +28,6 @@ class BaseAsana < ClassTest
   typed_let_mock :b_name, String
   typed_let_mock :c_name, String
   typed_let_mock :a_gid, String
-
-  let_mock :a_completed_at, :b_completed_at, :section_one
 
   # @param extra_fields [Array<String>]
   # @return [Hash{Symbol => Object}]

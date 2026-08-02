@@ -20,8 +20,7 @@ class TestWorkspaces < BaseAsana
   typed_let_mock :workspace_b_name, String
   typed_let_mock :workspace_b, Asana::Resources::Workspace
   typed_let_mock :workspace_b_gid, String
-
-  let_mock :workspaces
+  typed_let_mock :workspaces, Asana::ProxiedResourceClasses::Workspace
 
   # @return [void]
   def mock_workspace_or_raise_nil
