@@ -214,10 +214,10 @@ GEM
     observer (0.1.2)
     open3 (0.2.1)
     ostruct (0.6.3)
-    overcommit (0.69.0)
+    overcommit (0.72.0)
       childprocess (>= 0.6.3, < 6)
       iniparse (~> 1.4)
-      rexml (>= 3.3.9)
+      rexml (>= 3.4.2)
     parallel (2.1.0)
     parser (3.3.11.1)
       ast (~> 2.4.1)
@@ -437,7 +437,7 @@ DEPENDENCIES
   minitest-profile
   minitest-reporters
   mocha (>= 2)
-  overcommit (~> 0.69.0)
+  overcommit (~> 0.72.0)
   parlour!
   pry
   punchlist (>= 1.3.1)
@@ -550,7 +550,7 @@ CHECKSUMS
   observer (0.1.2) sha256=d8a3107131ba661138d748e7be3dbafc0d82e732fffba9fccb3d7829880950ac
   open3 (0.2.1) sha256=8e2d7d2113526351201438c1aa35c8139f0141c9e8913baa007c898973bf3952
   ostruct (0.6.3) sha256=95a2ed4a4bd1d190784e666b47b2d3f078e4a9efda2fccf18f84ddc6538ed912
-  overcommit (0.69.0) sha256=1509042558eb04cb780a3e15943e2b7770298f93f55e5a286b4afeb57f4f8697
+  overcommit (0.72.0) sha256=1cb8e39639e2f203ced5a303c2ac1e24ce49824ead52fa3204f954f936a63a3e
   parallel (2.1.0) sha256=b35258865c2e31134c5ecb708beaaf6772adf9d5efae28e93e99260877b09356
   parlour (9.1.1)
   parser (3.3.11.1) sha256=d17ace7aabe3e72c3cc94043714be27cc6f852f104d81aa284c2281aecc65d54
