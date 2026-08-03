@@ -134,9 +134,11 @@ class TestAttachments < ClassTest
     gid = '123'
     url = 'http://example.com'
     tasks_client = mock('tasks_client')
+    attachments_client = mock('attachments_client')
 
     ARGV.replace([gid, url])
     Checkoff::Tasks.expects(:new).returns(tasks_client)
+    Checkoff::Attachments.expects(:new).returns(attachments_client)
     tasks_client.expects(:task_by_gid).with(gid).returns(nil)
 
     e = assert_raises(RuntimeError) { capture_attachments_run }
