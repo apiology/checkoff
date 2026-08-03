@@ -57,12 +57,8 @@ module Logging
   private
 
   # @return [Symbol]
-  # @sg-ignore upstream-type-annotation:env-class-rbs-gap
-  #   return type could not be inferred — cascades from the ENV.fetch RBS gap below
   def log_level
     # rubocop:disable Style/RedundantFetchBlock
-    # @sg-ignore upstream-type-annotation:env-class-rbs-gap
-    #   Unresolved call to fetch on RBS::Unnamed::ENVClass, Class<ENV>
     ENV.fetch('LOG_LEVEL') { 'INFO' }.downcase.to_sym
     # rubocop:enable Style/RedundantFetchBlock
   end

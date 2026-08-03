@@ -16,22 +16,6 @@
 #   @return [String>]
 #
 # @!parse
-#   class ENV
-#     # @param key [String]
-#     # @param default [Object]
-#     #
-#     # @return [String,:none,nil]
-#     def self.fetch(key, default = :none); end
-#     # @param key [String]
-#     #
-#     # @return [String,nil]
-#     def self.[](key); end
-#     # @param key [String]
-#     # @param value [String]
-#     #
-#     # @return [String]
-#     def self.[]=(key, value); end
-#   end
 #   module Bundler
 #     class << self
 #       # @param groups [Array<Symbol>]

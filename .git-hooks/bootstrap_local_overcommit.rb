@@ -48,6 +48,4 @@ raw_config = load_local_overcommit_config(local_file)
 return unless raw_config&.[]('verify_signatures') == false
 
 signed = String(`git config --local --get overcommit.configuration.verifysignatures 2>/dev/null`).strip
-# @sg-ignore upstream-type-annotation:env-class-rbs-gap
-#   Unresolved call to []= on RBS::Unnamed::ENVClass
 ENV['OVERCOMMIT_NO_VERIFY'] = '1' if signed != '0'
