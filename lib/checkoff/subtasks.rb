@@ -90,8 +90,7 @@ module Checkoff
     #
     # @param subtask [Asana::Resources::Task]
     # @return [Boolean, nil]
-    # @sg-ignore inferred return type regressed on rbs >= 4.1.0, fix in progress upstream
-    # https://github.com/castwide/solargraph/pull/1228
+    # @sg-ignore Checkoff::Subtasks#subtask_section? return type could not be inferred
     def subtask_section?(subtask)
       subtask.is_rendered_as_separator
     end

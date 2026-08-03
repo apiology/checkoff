@@ -59,8 +59,18 @@
 #       end
 #       # https://developers.asana.com/reference/gettask
 #       class Task
-#         # @return [String, nil]
+#         # @return [String]
+#         def gid; end
+#         # @return [String]
 #         def resource_subtype; end
+#         # @param filename [String]  the absolute path of the file to upload OR the desired filename when using +io+
+#         # @param mime [String]  the MIME type of the file
+#         # @param io [IO, nil]  an object which returns the file's content on +#read+, e.g. a +::StringIO+
+#         # @param options [Hash]  the request I/O options
+#         # @return [Asana::Resources::Attachment]
+#         def attach(filename:, mime:, io: nil, options: {}, **data); end
+#         # @return [Asana::Resources::Section, nil]
+#         def assignee_section; end
 #         # @return [Boolean,nil]
 #         def is_rendered_as_separator; end
 #         # @return [String,nil]
@@ -77,8 +87,6 @@
 #         def name; end
 #         # @return [Hash<String, String>, nil]
 #         def assignee; end
-#         # @return [Hash, Asana::Resources::Section, nil]
-#         def assignee_section; end
 #         # @return [String, nil]
 #         def html_notes; end
 #         # @return [Array<Hash{String => Hash{String => String}}>]

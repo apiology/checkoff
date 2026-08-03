@@ -44,19 +44,15 @@ module Checkoff
 
       return next_week?(date_or_time) if period == :next_week
 
-      # @sg-ignore the preceding include? check isn't inferred as narrowing period to Symbol
-      return day_of_week?(date_or_time, period) if %i[monday tuesday wednesday thursday friday saturday
-                                                      sunday].include?(period)
+      return day_of_week?(date_or_time, T.cast(period, Symbol)) if %i[monday tuesday wednesday thursday friday
+                                                                      saturday sunday].include?(period)
 
       return true if period == :indefinite
 
       return now_or_before?(date_or_time) if period == :now_or_before
 
       if period.is_a?(Array)
-        # @type [Symbol]
-        # @sg-ignore Array(Symbol,Integer)#first isn't inferred as just the tuple's first element type
-        period_name = period.first
-        # @type [Array, nil]
+        period_name = T.cast(period.first, Symbol)
         args = period[1..]
 
         return compound_in_period?(date_or_time, period_name, *args)

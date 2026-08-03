@@ -26,7 +26,7 @@ module Checkoff
       end
 
       # @return [Boolean]
-      # @sg-ignore abstract method always raises; declared type documents the override contract, not this body
+      # @sg-ignore return type could not be inferred — abstract method body is only `raise`
       def matches?
         raise 'Override me!'
       end
@@ -34,7 +34,7 @@ module Checkoff
       # @param _task [Asana::Resources::Task]
       # @param _args [Array<Object>]
       # @return [Object]
-      # @sg-ignore abstract method always raises; declared type documents the override contract, not this body
+      # @sg-ignore return type could not be inferred — abstract method body is only `raise`
       def evaluate(_task, *_args)
         raise 'Implement me!'
       end

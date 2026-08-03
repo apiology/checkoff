@@ -57,10 +57,10 @@ module Logging
   private
 
   # @return [Symbol]
-  # @sg-ignore ENV.fetch isn't exposed on RBS::Unnamed::ENVClass at strong level
+  # @sg-ignore return type could not be inferred — cascades from the ENV.fetch RBS gap below
   def log_level
     # rubocop:disable Style/RedundantFetchBlock
-    # @sg-ignore ENV.fetch isn't exposed on RBS::Unnamed::ENVClass at strong level
+    # @sg-ignore Unresolved call to fetch on RBS::Unnamed::ENVClass, Class<ENV>
     ENV.fetch('LOG_LEVEL') { 'INFO' }.downcase.to_sym
     # rubocop:enable Style/RedundantFetchBlock
   end

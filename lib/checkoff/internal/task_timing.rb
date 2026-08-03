@@ -19,14 +19,16 @@ module Checkoff
 
       # @param task [Asana::Resources::Task]
       # @return [Time, nil]
-      # @sg-ignore date_or_time_field_by_name's Date/Time union &.to_time chain isn't inferred as Time, nil
+      # @sg-ignore return type could not be inferred — #to_time called via &. on a Date|Time
+      #   union receiver
       def start_time(task)
         date_or_time_field_by_name(task, :start)&.to_time
       end
 
       # @param task [Asana::Resources::Task]
       # @return [Time, nil]
-      # @sg-ignore date_or_time_field_by_name's Date/Time union &.to_time chain isn't inferred as Time, nil
+      # @sg-ignore return type could not be inferred — #to_time called via &. on a Date|Time
+      #   union receiver
       def due_time(task)
         date_or_time_field_by_name(task, :due)&.to_time
       end

@@ -259,8 +259,6 @@ module Checkoff
 
           # @type [Array<Asana::Resources::Story>]
           stories = task.stories(per_page: 100).to_a.reject do |story|
-            # @sg-ignore story's inferred block param type regressed on rbs >= 4.1.0, fix in progress upstream
-            # https://github.com/castwide/solargraph/pull/1228
             excluding_resource_subtypes.include? story.resource_subtype
           end
           return true if stories.empty? # no stories == infinitely old!
@@ -386,8 +384,8 @@ module Checkoff
         # @param task [Asana::Resources::Task]
         #
         # @return [Boolean]
-        # @sg-ignore task.resource_subtype's inferred return type regressed on rbs >= 4.1.0, fix in progress upstream
-        # https://github.com/castwide/solargraph/pull/1228
+        # @sg-ignore Checkoff::SelectorClasses::Task::MilestonePFunctionEvaluator#evaluate
+        #   return type could not be inferred
         def evaluate(task)
           resource_subtype = task.resource_subtype
           raise 'Please add resource_subtype to extra_fields' if resource_subtype.nil?

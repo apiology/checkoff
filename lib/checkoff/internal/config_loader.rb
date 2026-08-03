@@ -20,12 +20,12 @@ module Checkoff
 
       # @param key [Symbol]
       # @return [Object]
-      # @sg-ignore ENV.fetch isn't exposed on RBS::Unnamed::ENVClass at strong level
+      # @sg-ignore return type could not be inferred — cascades from the ENV.fetch RBS gap below
       def [](key)
         config_value = @config[key]
         return config_value unless config_value.nil?
 
-        # @sg-ignore ENV.fetch isn't exposed on RBS::Unnamed::ENVClass at strong level
+        # @sg-ignore Unresolved call to fetch on RBS::Unnamed::ENVClass, Class<ENV>
         ENV.fetch(envvar_name(key), nil)
       end
 

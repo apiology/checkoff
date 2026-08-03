@@ -180,7 +180,8 @@ module Checkoff
     # @param assignee_gid [String]
     #
     # @return [Asana::Resources::Task]
-    # @sg-ignore create isn't resolved through the dynamic @asana_task class reference
+    # @sg-ignore @asana_task.create return type could not be inferred — calling a class method
+    #   through a Class<T>-typed ivar is a known Solargraph dispatch limitation
     def add_task(name,
                  workspace_gid: @workspaces.default_workspace_gid,
                  assignee_gid: default_assignee_gid)
@@ -385,7 +386,9 @@ module Checkoff
     end
 
     # @return [String]
-    # @sg-ignore config's fetch returns generic Object across its Hash/EnvFallbackConfigLoader union
+    # @sg-ignore @config.fetch return type could not be inferred — @config is intentionally
+    #   dual-typed [Hash, EnvFallbackConfigLoader] throughout this codebase; Solargraph can't
+    #   unify #fetch across that union
     def default_assignee_gid
       @config.fetch(:default_assignee_gid)
     end

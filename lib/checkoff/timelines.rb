@@ -61,7 +61,9 @@ module Checkoff
         # @sg-ignore Hash#fetch generic<X> leak on rbs >= 4.1.0, fix in progress upstream
         # https://github.com/castwide/solargraph/pull/1228
         section = @sections.section_by_gid(section_gid)
-        # @sg-ignore section_by_gid's nil case isn't handled here - section_gid comes from the task's own data
+        # @sg-ignore section_by_gid can return nil on a gid lookup miss, and
+        #   task_data_dependent_on_previous_section_last_milestone? dereferences it immediately
+        #   without a nil guard — looks like a real gap, flagging for the follow-up code PR
         task_data_dependent_on_previous_section_last_milestone?(task_data, section)
       end
     end
@@ -105,7 +107,8 @@ module Checkoff
 
         all_dependent_task_gids ||= @tasks.all_dependent_tasks(task).map(&:gid)
 
-        # @sg-ignore ||= on a block-local var isn't inferred as narrowing away nil
+        # @sg-ignore all_dependent_task_gids is nil-initialized then set via ||= above, but
+        #   Solargraph doesn't narrow it back to non-nil after the reassignment
         all_dependent_task_gids.include? last_milestone.gid
       end
     end
@@ -143,7 +146,8 @@ module Checkoff
             dependent_task.resource_subtype == 'milestone'
           end
 
-        # @sg-ignore ||= on a block-local var isn't inferred as narrowing away nil
+        # @sg-ignore all_dependent_milestones is nil-initialized then set via ||= above, but
+        #   Solargraph doesn't narrow it back to non-nil after the reassignment
         all_dependent_milestones.any? do |milestone|
           milestone.memberships.any? do |milestone_membership_data|
             milestone_membership_data.fetch('project').fetch('gid') == project_gid

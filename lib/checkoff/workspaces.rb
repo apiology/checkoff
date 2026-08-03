@@ -44,7 +44,8 @@ module Checkoff
     cache_method :workspace, LONG_CACHE_TIME
 
     # @return [Asana::Resources::Workspace]
-    # @sg-ignore find_by_id isn't resolved through the dynamic @asana_workspace class reference
+    # @sg-ignore @asana_workspace.find_by_id return type could not be inferred — calling a
+    #   class method through a Class<T>-typed ivar is a known Solargraph dispatch limitation
     def default_workspace
       @asana_workspace.find_by_id(client, default_workspace_gid)
     end
@@ -61,7 +62,9 @@ module Checkoff
     end
 
     # @return [String]
-    # @sg-ignore config's fetch returns generic Object across its Hash/EnvFallbackConfigLoader union
+    # @sg-ignore @config.fetch return type could not be inferred — @config is intentionally
+    #   dual-typed [Hash, EnvFallbackConfigLoader] throughout this codebase; Solargraph can't
+    #   unify #fetch across that union
     def default_workspace_gid
       @config.fetch(:default_workspace_gid)
     end

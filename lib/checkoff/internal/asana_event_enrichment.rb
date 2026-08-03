@@ -74,9 +74,11 @@ module Checkoff
         end
         resource = webhook_subscription&.fetch('resource', nil)
         name, resource_type = enrich_gid(resource) if resource
-        # @sg-ignore webhook_subscription is non-nil here since resource (derived from it) was truthy above
+        # @sg-ignore webhook_subscription is declared [Hash, nil] but this line assumes non-nil
+        #   without the &. used elsewhere in this method — looks like a real nil-safety gap, not
+        #   just a typing gap; flagging for the follow-up code PR rather than silently widening
         webhook_subscription['checkoff:enriched:name'] = name if name
-        # @sg-ignore webhook_subscription is non-nil here since resource (derived from it) was truthy above
+        # @sg-ignore same nil-safety gap as above
         webhook_subscription['checkoff:enriched:resource_type'] = resource_type if resource_type
       end
 
@@ -98,10 +100,9 @@ module Checkoff
       #
       # @return [void]
       def enrich_filter_parent_gid!(filter)
-        parent_gid = filter['checkoff:parent.gid']
+        parent_gid = T.cast(filter['checkoff:parent.gid'], T.nilable(String))
         return unless parent_gid
 
-        # @sg-ignore checkoff:parent.gid is always a single String value, not the Array<String> variant
         name, resource_type = enrich_gid(parent_gid)
         filter['checkoff:enriched:parent.name'] = name if name
         filter['checkoff:enriched:parent.resource_type'] = resource_type if resource_type
@@ -111,11 +112,10 @@ module Checkoff
       #
       # @return [void]
       def enrich_filter_resource!(filter)
-        resource_gid = filter['checkoff:resource.gid']
+        resource_gid = T.cast(filter['checkoff:resource.gid'], T.nilable(String))
 
         return unless resource_gid
 
-        # @sg-ignore checkoff:resource.gid is always a single String value, not the Array<String> variant
         task = tasks.task_by_gid(resource_gid)
         task_name = task&.name
         filter['checkoff:enriched:resource.name'] = task_name if task_name
@@ -133,12 +133,11 @@ module Checkoff
         filter['checkoff:enriched:fetched.section.name'] = name if name
       end
 
-      # @param asana_event [Hash{'resource' => Hash}]
+      # @param asana_event [Hash]
       #
       # @return [void]
       def enrich_event_parent!(asana_event)
         # @type [Hash{String => String }]
-        # @sg-ignore asana_event's declared type only documents its 'resource' key, not 'parent'
         parent = asana_event['parent']
 
         return unless parent
@@ -157,7 +156,7 @@ module Checkoff
         nil
       end
 
-      # @param asana_event [Hash{'resource' => Hash}]
+      # @param asana_event [Hash]
       #
       # @return [void]
       def enrich_event_resource!(asana_event)
