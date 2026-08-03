@@ -123,8 +123,8 @@ module Checkoff
     # @param [Array<String>] extra_fields
     #
     # @return [Asana::Resources::Project]
-    # @sg-ignore needs-type-narrowing
-    #   nil check above is not flow-sensitive
+    # @sg-ignore tool-limitation:type-narrowing
+    #   https://github.com/castwide/solargraph/issues/1254
     def project_or_raise(workspace_name, project_name, extra_fields: [])
       p = project(workspace_name, project_name, extra_fields:)
       raise "Could not find project #{project_name.inspect} under workspace #{workspace_name}." if p.nil?

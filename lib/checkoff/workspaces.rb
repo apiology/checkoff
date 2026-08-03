@@ -54,8 +54,8 @@ module Checkoff
 
     # @param [String, Symbol] workspace_name
     # @return [Asana::Resources::Workspace]
-    # @sg-ignore needs-type-narrowing
-    #   workspace() is nil-checked below
+    # @sg-ignore tool-limitation:type-narrowing
+    #   https://github.com/castwide/solargraph/issues/1254
     def workspace_or_raise(workspace_name)
       w = workspace(workspace_name)
       raise "Could not find workspace #{workspace_name}" if w.nil?

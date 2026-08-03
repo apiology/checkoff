@@ -240,7 +240,7 @@ module Checkoff
 
         # @param _resource [Asana::Resources::Task,Asana::Resources::Project]
         # @return [String]
-        # @sg-ignore needs-type-narrowing
+        # @sg-ignore tool-limitation:type-narrowing
         #   selector is only String here per matches?'s is_a?(String) check, in another method
         def evaluate(_resource)
           selector

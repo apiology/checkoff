@@ -113,9 +113,8 @@ module Checkoff
 
         all_dependent_task_gids ||= @tasks.all_dependent_tasks(task).map(&:gid)
 
-        # @sg-ignore needs-type-narrowing
-        #   all_dependent_task_gids is nil-initialized then set via ||= above, but Solargraph
-        #   doesn't narrow it back to non-nil after the reassignment
+        # @sg-ignore tool-limitation:type-narrowing
+        #   https://github.com/castwide/solargraph/issues/1250
         all_dependent_task_gids.include? last_milestone.gid
       end
     end
@@ -154,9 +153,8 @@ module Checkoff
             dependent_task.resource_subtype == 'milestone'
           end
 
-        # @sg-ignore needs-type-narrowing
-        #   all_dependent_milestones is nil-initialized then set via ||= above, but Solargraph
-        #   doesn't narrow it back to non-nil after the reassignment
+        # @sg-ignore tool-limitation:type-narrowing
+        #   https://github.com/castwide/solargraph/issues/1250
         all_dependent_milestones.any? do |milestone|
           milestone.memberships.any? do |milestone_membership_data|
             milestone_membership_data.fetch('project').fetch('gid') == project_gid

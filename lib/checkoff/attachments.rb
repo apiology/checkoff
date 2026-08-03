@@ -136,7 +136,7 @@ module Checkoff
         #   attachment_name reassignment above isn't narrowed from the declared [String, nil]
         #   param type — needs a fresh typed local, deferred to a follow-up code PR
         content_type ||= content_type_from_filename(attachment_name)
-        # @sg-ignore needs-type-narrowing
+        # @sg-ignore tool-limitation:type-narrowing
         #   URI::Generic#path can be nil
         content_type ||= content_type_from_filename(uri.path)
 

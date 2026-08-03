@@ -192,7 +192,7 @@ module Checkoff
       elsif task_name.nil?
         run_on_section(workspace_name, project_name, section_name)
       else
-        # @sg-ignore needs-type-narrowing
+        # @sg-ignore tool-limitation:type-narrowing
         #   section_name/task_name are typed [String, Symbol, nil] on the param, but reaching this
         #   branch means both nil-checks above already passed; Solargraph doesn't narrow that
         run_on_task(workspace_name, project_name, section_name, task_name)
@@ -245,8 +245,8 @@ module Checkoff
       task = tasks.task(workspace.to_s, project, task_name, section_name: section)
       raise "Task not found: #{task_name}" if task.nil?
 
-      # @sg-ignore needs-type-narrowing
-      #   nil check above is not flow-sensitive
+      # @sg-ignore tool-limitation:type-narrowing
+      #   https://github.com/castwide/solargraph/issues/1254
       task_to_hash(task).to_json
     end
 
