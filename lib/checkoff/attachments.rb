@@ -86,7 +86,7 @@ module Checkoff
     def download_uri(uri, verify_mode: OpenSSL::SSL::VERIFY_PEER, &block)
       out = nil
       Net::HTTP.start(uri.host, uri.port, use_ssl: uri.scheme == 'https', verify_mode:) do |http|
-        # @sg-ignore tool-limitation:net-http-stdlib-gap
+        # @sg-ignore upstream-type-annotation:net-http-stdlib-gap
         #   Unresolved constant Net::HTTP::Get / Unresolved call to request — stdlib RBS gap on
         #   Net::HTTP block param types
         http.request(Net::HTTP::Get.new(uri)) do |response|
@@ -109,7 +109,7 @@ module Checkoff
     def write_tempfile_from_response(response)
       Tempfile.create('checkoff') do |tempfile|
         tempfile.binmode
-        # @sg-ignore tool-limitation:net-http-stdlib-gap
+        # @sg-ignore upstream-type-annotation:net-http-stdlib-gap
         #   Unresolved call to read_body on #read_body — same Net::HTTP stdlib RBS gap
         response.read_body do |chunk|
           tempfile.write(chunk)

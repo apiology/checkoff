@@ -80,7 +80,7 @@ module Checkoff
     # @param resource [Asana::Resources::Project,Asana::Resources::Task]
     # @param custom_field_name [String]
     # @return [Array<String>]
-    # @sg-ignore tool-limitation:rbs-4-1-regression
+    # @sg-ignore upstream-type-annotation:rbs-4-1-regression
     #   Hash#fetch generic<X> leak on rbs >= 4.1.0, fix in progress upstream
     #   https://github.com/castwide/solargraph/pull/1228
     def resource_custom_field_values_names_by_name(resource, custom_field_name)
@@ -151,7 +151,7 @@ module Checkoff
     # @param custom_field [Hash{String => Hash,Array<Hash>}]
     #
     # @return [Array<Hash>]
-    # @sg-ignore tool-limitation:rbs-4-1-regression
+    # @sg-ignore upstream-type-annotation:rbs-4-1-regression
     #   Hash#fetch generic<X> leak on rbs >= 4.1.0, fix in progress upstream
     #   https://github.com/castwide/solargraph/pull/1228
     def resource_custom_field_enum_values(custom_field)

@@ -54,12 +54,12 @@ module Checkoff
       memberships_data = task_data.fetch('memberships')
       memberships_data.all? do |membership_data|
         # @type [Hash{String => String}]
-        # @sg-ignore tool-limitation:rbs-4-1-regression
+        # @sg-ignore upstream-type-annotation:rbs-4-1-regression
         #   Hash#fetch generic<X> leak on rbs >= 4.1.0, fix in progress upstream
         #   https://github.com/castwide/solargraph/pull/1228
         section_data = membership_data.fetch('section')
         section_gid = section_data.fetch('gid')
-        # @sg-ignore tool-limitation:rbs-4-1-regression
+        # @sg-ignore upstream-type-annotation:rbs-4-1-regression
         #   Hash#fetch generic<X> leak on rbs >= 4.1.0, fix in progress upstream
         #   https://github.com/castwide/solargraph/pull/1228
         section = @sections.section_by_gid(section_gid)
@@ -86,7 +86,7 @@ module Checkoff
         md = membership_data
         unless limit_to_portfolio_name.nil?
           # @type [Hash{String => Object}]
-          # @sg-ignore tool-limitation:rbs-4-1-regression
+          # @sg-ignore upstream-type-annotation:rbs-4-1-regression
           #   Hash#fetch generic<X> leak on rbs >= 4.1.0, fix in progress upstream
           #   https://github.com/castwide/solargraph/pull/1228
           project_data = md.fetch('project')
@@ -94,13 +94,13 @@ module Checkoff
           next true unless limit_to_projects.map(&:gid).include? project_gid
         end
         # @type [Hash{String => Object}]
-        # @sg-ignore tool-limitation:rbs-4-1-regression
+        # @sg-ignore upstream-type-annotation:rbs-4-1-regression
         #   Hash#fetch generic<X> leak on rbs >= 4.1.0, fix in progress upstream
         #   https://github.com/castwide/solargraph/pull/1228
         section_data = md.fetch('section')
         section_gid = section_data.fetch('gid')
 
-        # @sg-ignore tool-limitation:rbs-4-1-regression
+        # @sg-ignore upstream-type-annotation:rbs-4-1-regression
         #   Hash#fetch generic<X> leak on rbs >= 4.1.0, fix in progress upstream
         #   https://github.com/castwide/solargraph/pull/1228
         last_milestone = last_milestone_in_section(section_gid)
@@ -134,7 +134,7 @@ module Checkoff
         md = membership_data
         unless limit_to_portfolio_name.nil?
           # @type [Hash{String => Object}]
-          # @sg-ignore tool-limitation:rbs-4-1-regression
+          # @sg-ignore upstream-type-annotation:rbs-4-1-regression
           #   Hash#fetch generic<X> leak on rbs >= 4.1.0, fix in progress upstream
           #   https://github.com/castwide/solargraph/pull/1228
           project_data = md.fetch('project')
