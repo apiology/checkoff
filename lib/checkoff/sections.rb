@@ -142,10 +142,9 @@ module Checkoff
     # @param section_name [String, nil]
     #
     # @return [Array<String>]
-    # @sg-ignore Task#name is nilable; task names are assumed present here
     def section_task_names(workspace_name, project_name, section_name)
       task_array = tasks(workspace_name, project_name, section_name)
-      T.cast(task_array.map(&:name), Array)
+      task_array.filter_map(&:name)
     end
     cache_method :section_task_names, SHORT_CACHE_TIME
 
@@ -155,7 +154,8 @@ module Checkoff
     # @param extra_section_fields [Array<String>]
     #
     # @return [Asana::Resources::Section]
-    # @sg-ignore section() is nil-checked below
+    # @sg-ignore tool-limitation:type-narrowing
+    #   https://github.com/castwide/solargraph/issues/1254
     def section_or_raise(workspace_name, project_name, section_name, extra_section_fields: [])
       s = section(workspace_name, project_name, section_name,
                   extra_section_fields:)
@@ -298,7 +298,8 @@ module Checkoff
     # @param workspace_name [String, Symbol]
     # @param project_name [String, Symbol]
     # @return [Asana::Resources::Project]
-    # @sg-ignore projects.project may be nil but is raised below
+    # @sg-ignore tool-limitation:type-narrowing
+    #   https://github.com/castwide/solargraph/issues/1254
     def project_or_raise(workspace_name, project_name)
       raise ArgumentError, 'Provide nil project_name' if T.unsafe(project_name).nil?
 

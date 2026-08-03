@@ -34,7 +34,9 @@ module Checkoff
           public
 
           # @return [Array<String>]
-          # @sg-ignore abstract method always raises; declared type documents the override contract, not this body
+          # @sg-ignore tool-limitation:raise-only-body
+          #   abstract method always raises; declared type documents the override contract, not
+          #   this body
           def convert
             raise 'Implement me!'
           end
@@ -277,8 +279,8 @@ module Checkoff
         # @return [Array<String>] the converted params, as an alternating key/value flat array
         def convert_arg(key, values)
           # @type [Class<SimpleParam::SimpleParam>]
-          # @sg-ignore Hash#fetch generic<X> leak on rbs >= 4.1.0, fix in progress upstream
-          # https://github.com/castwide/solargraph/pull/1228
+          # @sg-ignore upstream-type-annotation:rbs-4-1-regression
+          #   https://github.com/castwide/solargraph/pull/1228
           clazz = ARGS.fetch(key)
           # @type [SimpleParam::SimpleParam]
           obj = clazz.new(key:, values:)

@@ -175,7 +175,10 @@ module Checkoff
     # @param num_days [Integer]
     #
     # @return [Date]
-    # @sg-ignore Checkoff::Timing#n_days_from_today return type could not be inferred
+    # @sg-ignore tool-limitation:context-dependent-return-inference
+    #   CircleCI's fresh environment finds this genuinely unresolved even though local
+    #   solargraph doesn't reproduce it (same local-vs-CI divergence as #1233) -- trusting
+    #   CI, restoring the T.cast this ignore covers.
     def n_days_from_today(num_days)
       T.cast(@today_getter.today + num_days, Date)
     end

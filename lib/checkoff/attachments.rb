@@ -85,9 +85,11 @@ module Checkoff
     # @return [Object]
     def download_uri(uri, verify_mode: OpenSSL::SSL::VERIFY_PEER, &block)
       out = nil
-      Net::HTTP.start(uri.host, uri.port, use_ssl: uri.scheme == 'https', verify_mode:) do |http|
-        # @sg-ignore Unresolved constant Net::HTTP::Get / Unresolved call to request —
-        #   stdlib RBS gap on Net::HTTP block param types
+      host = uri.host || raise("URI has no host: #{uri}")
+      Net::HTTP.start(host, uri.port, use_ssl: uri.scheme == 'https', verify_mode:) do |http|
+        # @sg-ignore tool-limitation:generic-block-yield-overload
+        #   Unresolved call to request -- Net::HTTP.start's generic block-form overload
+        #   doesn't bind T, so the yielded http param stays untyped. Not yet filed upstream.
         http.request(Net::HTTP::Get.new(uri)) do |response|
           raise("Unexpected response code: #{response.code}") unless response.code == '200'
 
@@ -108,7 +110,8 @@ module Checkoff
     def write_tempfile_from_response(response)
       Tempfile.create('checkoff') do |tempfile|
         tempfile.binmode
-        # @sg-ignore Unresolved call to read_body on #read_body
+        # @sg-ignore tool-limitation:duck-type-param-unresolved
+        #   https://github.com/castwide/solargraph/issues/1257
         response.read_body do |chunk|
           tempfile.write(chunk)
         end
@@ -128,16 +131,17 @@ module Checkoff
     def create_attachment_from_downloaded_url!(url, resource, attachment_name:,
                                                verify_mode: OpenSSL::SSL::VERIFY_PEER)
       uri = URI(url)
-      attachment_name ||= File.basename(uri.path)
+      # @type [String]
+      resolved_attachment_name = attachment_name || File.basename(uri.path)
       download_uri(uri, verify_mode:) do |tempfile|
-        # @sg-ignore attachment_name reassignment above isn't narrowed from the declared
-        #   [String, nil] param type — needs a fresh typed local, deferred to a follow-up code PR
-        content_type ||= content_type_from_filename(attachment_name)
-        # @sg-ignore URI::Generic#path can be nil
-        content_type ||= content_type_from_filename(uri.path)
+        content_type = content_type_from_filename(resolved_attachment_name)
+        content_type ||= content_type_from_filename(uri.path || '')
+        # neither the attachment name nor the URL's path has a MIME-recognizable extension
+        content_type ||= 'application/octet-stream'
 
-        # @sg-ignore same attachment_name/content_type narrowing gap as above
-        resource.attach(filename: attachment_name, mime: content_type,
+        # @sg-ignore tool-limitation:type-narrowing
+        #   https://github.com/castwide/solargraph/issues/1250
+        resource.attach(filename: resolved_attachment_name, mime: content_type,
                         io: tempfile)
       end
     end
@@ -196,8 +200,10 @@ module Checkoff
         tasks = Checkoff::Tasks.new
         attachments = Checkoff::Attachments.new
         task = tasks.task_by_gid(gid)
-        # @sg-ignore task_by_gid can return nil; needs a raise-if-nil guard, deferred to a
-        #   follow-up code PR
+        raise "Could not find task #{gid}" if task.nil?
+
+        # @sg-ignore tool-limitation:type-narrowing
+        #   https://github.com/castwide/solargraph/issues/1254
         attachment = attachments.create_attachment_from_url!(url, task)
         puts "Results: #{attachment.inspect}"
       end

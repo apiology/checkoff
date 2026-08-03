@@ -44,8 +44,9 @@ module Checkoff
     cache_method :workspace, LONG_CACHE_TIME
 
     # @return [Asana::Resources::Workspace]
-    # @sg-ignore @asana_workspace.find_by_id return type could not be inferred — calling a
-    #   class method through a Class<T>-typed ivar is a known Solargraph dispatch limitation
+    # @sg-ignore tool-limitation:class-ivar-dispatch
+    #   @asana_workspace.find_by_id return type could not be inferred — calling a class method
+    #   through a Class<T>-typed ivar is a known Solargraph dispatch limitation
     def default_workspace
       @asana_workspace.find_by_id(client, default_workspace_gid)
     end
@@ -53,7 +54,8 @@ module Checkoff
 
     # @param [String, Symbol] workspace_name
     # @return [Asana::Resources::Workspace]
-    # @sg-ignore workspace() is nil-checked below
+    # @sg-ignore tool-limitation:type-narrowing
+    #   https://github.com/castwide/solargraph/issues/1254
     def workspace_or_raise(workspace_name)
       w = workspace(workspace_name)
       raise "Could not find workspace #{workspace_name}" if w.nil?
@@ -62,9 +64,10 @@ module Checkoff
     end
 
     # @return [String]
-    # @sg-ignore @config.fetch return type could not be inferred — @config is intentionally
-    #   dual-typed [Hash, EnvFallbackConfigLoader] throughout this codebase; Solargraph can't
-    #   unify #fetch across that union
+    # @sg-ignore tool-limitation:config-fetch-union
+    #   @config.fetch return type could not be inferred — @config is intentionally dual-typed
+    #   [Hash, EnvFallbackConfigLoader] throughout this codebase; Solargraph can't unify #fetch
+    #   across that union
     def default_workspace_gid
       @config.fetch(:default_workspace_gid)
     end

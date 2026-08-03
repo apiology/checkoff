@@ -59,20 +59,23 @@ module Checkoff
         # @param gid [String]
         # @param single_custom_field_params [Hash{String => Array<String>}]
         # @return [Array(Hash{String => String}, Array<Symbol, Array>)]
-        # @sg-ignore `unless variant_class.nil?` return value isn't inferred as the declared tuple type
+        # @sg-ignore tool-limitation:type-narrowing
+        #   https://github.com/castwide/solargraph/issues/1254
         def convert_single_custom_field_params(gid, single_custom_field_params)
           variant_key = "custom_field_#{gid}.variant"
           variant = single_custom_field_params.fetch(variant_key)
           remaining_params = single_custom_field_params.reject { |k, _v| k == variant_key }
-          # @sg-ignore Hash#fetch generic<X> leak on rbs >= 4.1.0, fix in progress upstream
-          # https://github.com/castwide/solargraph/pull/1228
+          # @sg-ignore upstream-type-annotation:rbs-4-1-regression
+          #   https://github.com/castwide/solargraph/pull/1228
           raise "Teach me how to handle #{variant_key} = #{variant}" unless variant.length == 1
 
           # @type [Class<CustomFieldVariant>, nil]
-          # @sg-ignore variant.length == 1 guard above isn't inferred as narrowing variant[0] to non-nil
+          # @sg-ignore tool-limitation:type-narrowing
+          #   https://github.com/castwide/solargraph/issues/1254
           variant_class = VARIANTS[variant[0]]
           # @type [Array(Hash{String => String}, Array<Symbol, Array>)]
-          # @sg-ignore `unless variant_class.nil?` isn't inferred as narrowing the receiver in the same statement
+          # @sg-ignore tool-limitation:type-narrowing
+          #   https://github.com/castwide/solargraph/issues/1254
           return variant_class.new(gid, remaining_params).convert unless variant_class.nil?
 
           raise "Teach me how to handle #{variant_key} = #{variant}"
@@ -80,10 +83,20 @@ module Checkoff
 
         # @param key [String]
         # @return [String]
-        # @sg-ignore split(...)[n]'s nilable Array indexing isn't inferred as the declared String return
+        # @sg-ignore tool-limitation:type-narrowing
+        #   https://github.com/castwide/solargraph/issues/1254
         def gid_from_custom_field_key(key)
-          # @sg-ignore split(...)[n] is nilable Array indexing; key's shape guarantees enough parts here
-          key.split('_')[2].split('.')[0]
+          gid_and_suffix = key.split('_')[2]
+          raise "Unexpected custom field param key: #{key}" if gid_and_suffix.nil?
+
+          # @sg-ignore tool-limitation:type-narrowing
+          #   https://github.com/castwide/solargraph/issues/1254
+          gid = gid_and_suffix.split('.')[0]
+          # @sg-ignore tool-limitation:type-narrowing
+          #   https://github.com/castwide/solargraph/issues/1254
+          raise "Unexpected custom field param key: #{key}" if gid.nil?
+
+          gid
         end
 
         # @return [Hash{String => Array<String>}]

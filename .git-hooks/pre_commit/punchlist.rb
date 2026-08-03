@@ -12,7 +12,10 @@ module Overcommit
       class Punchlist < Base
         # @param stdout [String]
         # @return [Array<Overcommit::Hook::Message>]
-        # @sg-ignore Message.new is inferred as Punchlist (this hook class) instead
+        # @sg-ignore tool-limitation:other
+        #   Message.new is inferred as Punchlist (this hook class) instead of
+        #   Overcommit::Hook::Message — Solargraph misresolves the constant against this class's
+        #   own nesting
         def parse_output(stdout)
           stdout.split("\n").map do |line|
             file, line_no, _message = line.split(':', 3)

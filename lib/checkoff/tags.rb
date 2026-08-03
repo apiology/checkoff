@@ -79,7 +79,8 @@ module Checkoff
     # @param tag_name [String]
     #
     # @return [Asana::Resources::Tag]
-    # @sg-ignore nil check above is not flow-sensitive
+    # @sg-ignore tool-limitation:type-narrowing
+    #   https://github.com/castwide/solargraph/issues/1254
     def tag_or_raise(workspace_name, tag_name)
       t = tag(workspace_name, tag_name)
 
@@ -114,8 +115,9 @@ module Checkoff
     # @return [Hash{Symbol => Object}]
     def build_params(options)
       { limit: options[:per_page], completed_since: options[:completed_since] }.reject do |_, v|
-        # @sg-ignore Unresolved call to nil? on Object — Solargraph doesn't treat a Hash's
-        #   declared `Object` value type as full Object here
+        # @sg-ignore tool-limitation:hash-value-type-dispatch
+        #   Unresolved call to nil? on Object — Solargraph doesn't treat a Hash's declared
+        #   `Object` value type as full Object here
         v.nil? || Array(v).empty?
       end
     end

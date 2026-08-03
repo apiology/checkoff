@@ -67,10 +67,7 @@ module Checkoff
       sections.each_entry { |section| by_section[section_key(section.name)] = [] }
       tasks.each do |task|
         assignee_section = task.assignee_section
-        # @sg-ignore assignee_section can be nil (task has no My Tasks section) but is
-        #   dereferenced without a nil guard — looks like a real gap, flagging for the
-        #   follow-up code PR
-        current_section = section_key(assignee_section.name)
+        current_section = section_key(assignee_section&.name)
         by_section[current_section] ||= []
         by_section[current_section] << task
       end

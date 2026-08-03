@@ -15,7 +15,8 @@ module Checkoff
         end
 
         # @return [Array(Hash{String => String}, Array<Symbol, Array>)]
-        # @sg-ignore out can genuinely be nil if none of the 3 known prefixes matched; relies on the raise above it
+        # @sg-ignore tool-limitation:type-narrowing
+        #   https://github.com/castwide/solargraph/issues/1254
         def convert
           return [{}, []] if date_url_params.empty?
 
@@ -130,18 +131,19 @@ module Checkoff
 
         # @param param_key [String]
         # @return [String]
-        # @sg-ignore value.length == 1 guard above isn't inferred as narrowing value[0] to non-nil
+        # @sg-ignore tool-limitation:type-narrowing
+        #   https://github.com/castwide/solargraph/issues/1254
         def get_single_param(param_key)
           raise "Expected #{param_key} to have at least one value" unless date_url_params.key? param_key
 
           value = date_url_params.fetch(param_key)
 
-          # @sg-ignore Hash#fetch generic<X> leak on rbs >= 4.1.0, fix in progress upstream
-          # https://github.com/castwide/solargraph/pull/1228
+          # @sg-ignore upstream-type-annotation:rbs-4-1-regression
+          #   https://github.com/castwide/solargraph/pull/1228
           raise "Expected #{param_key} to have one value" if value.length != 1
 
-          # @sg-ignore Hash#fetch generic<X> leak on rbs >= 4.1.0, fix in progress upstream
-          # https://github.com/castwide/solargraph/pull/1228
+          # @sg-ignore upstream-type-annotation:rbs-4-1-regression
+          #   https://github.com/castwide/solargraph/pull/1228
           value[0]
         end
 
@@ -158,8 +160,8 @@ module Checkoff
         def validate_unit_is_day!(prefix)
           unit = date_url_params.fetch("#{prefix}.unit").fetch(0)
 
-          # @sg-ignore Hash#fetch generic<X> leak on rbs >= 4.1.0, fix in progress upstream
-          # https://github.com/castwide/solargraph/pull/1228
+          # @sg-ignore upstream-type-annotation:rbs-4-1-regression
+          #   https://github.com/castwide/solargraph/pull/1228
           raise "Teach me how to handle other time units: #{unit}" unless unit == 'day'
         end
 

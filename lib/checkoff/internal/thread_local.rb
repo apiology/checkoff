@@ -10,8 +10,9 @@ module Checkoff
       # @param value [Object,Boolean]
       # @yieldreturn [generic<T>]
       # @return [generic<T>]
-      # @sg-ignore return type could not be inferred — Solargraph's generic/yield-return
-      #   inference gap for #with_thread_local_variable
+      # @sg-ignore tool-limitation:other
+      #   return type could not be inferred — Solargraph's generic/yield-return inference gap
+      #   for #with_thread_local_variable
       def with_thread_local_variable(name, value, &block)
         old_value = Thread.current[name]
         Thread.current[name] = value

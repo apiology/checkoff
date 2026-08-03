@@ -8,10 +8,53 @@ require 'checkoff/internal/asana_event_enrichment'
 class TestAsanaEventEnrichment < ClassTest
   extend Forwardable
 
+  # @!parse
+  #  # @return [Checkoff::Internal::AsanaEventEnrichment]
+  #  def get_test_object; end
+
   def_delegators(:@mocks, :resources, :tasks)
 
   typed_let_mock :task, Asana::Resources::Task
   typed_let_mock :resource, Asana::Resources::Resource
+
+  # @return [void]
+  def test_enrich_webhook_subscription_nil
+    enrichment = get_test_object
+
+    # @sg-ignore literal nil infers as NilClass, not the declared nil type -- same
+    #   NilClass-vs-nil distinctness gap seen elsewhere in this codebase
+    assert_nil(enrichment.enrich_webhook_subscription!(nil))
+  end
+
+  # @return [void]
+  def test_enrich_webhook_subscription
+    enrichment = get_test_object do
+      resources.expects(:resource_by_gid).with('789', resource_type: nil).returns([resource, 'task'])
+      resource.expects(:name).returns('Some Resource').at_least_once
+    end
+
+    webhook_subscription = {
+      'resource' => '789',
+      'filters' => [{}],
+    }
+    enrichment.enrich_webhook_subscription!(webhook_subscription)
+
+    assert_equal('Some Resource', webhook_subscription.fetch('checkoff:enriched:name'))
+    assert_equal('task', webhook_subscription.fetch('checkoff:enriched:resource_type'))
+  end
+
+  # @return [void]
+  def test_enrich_webhook_subscription_no_filters
+    enrichment = get_test_object do
+      resources.expects(:resource_by_gid).with('789', resource_type: nil).returns([resource, 'task'])
+      resource.expects(:name).returns('Some Resource').at_least_once
+    end
+
+    webhook_subscription = { 'resource' => '789' }
+    enrichment.enrich_webhook_subscription!(webhook_subscription)
+
+    assert_equal('Some Resource', webhook_subscription.fetch('checkoff:enriched:name'))
+  end
 
   # @return [void]
   def test_enrich_filter_parent_gid_found

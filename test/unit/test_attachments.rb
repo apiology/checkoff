@@ -51,6 +51,42 @@ class TestAttachments < ClassTest
     assert_equal('bar', attachment.foo)
   end
 
+  # @return [void]
+  def test_create_attachment_from_downloaded_url
+    url = 'http://example.com/picture.png'
+    # @sg-ignore gem-limitation:webmock
+    stub_request(:get, url).to_return(body: 'fake image bytes', status: 200)
+    # @sg-ignore gem-limitation:mocha
+    resource.expects(:attach).with(filename: 'custom.png', mime: 'image/png', io: instance_of(File))
+
+    attachments = get_test_object
+    attachments.create_attachment_from_url!(url, resource, attachment_name: 'custom.png')
+  end
+
+  # @return [void]
+  def test_create_attachment_from_downloaded_url_no_host
+    attachments = get_test_object
+
+    e = assert_raises(RuntimeError) do
+      attachments.create_attachment_from_url!('/no-host-here', resource, attachment_name: 'custom.png')
+    end
+    assert_match(/URI has no host/, e.message)
+  end
+
+  # @return [void]
+  def test_create_attachment_from_downloaded_url_bad_response_code
+    url = 'http://example.com/picture.png'
+    # @sg-ignore gem-limitation:webmock
+    stub_request(:get, url).to_return(body: 'not found', status: 404)
+
+    attachments = get_test_object
+
+    e = assert_raises(RuntimeError) do
+      attachments.create_attachment_from_url!(url, resource, attachment_name: 'custom.png')
+    end
+    assert_match(/Error downloading/, e.message)
+  end
+
   # @param gid [String]
   # @param url [String]
   # @return [Mocha::Mock]
@@ -89,6 +125,24 @@ class TestAttachments < ClassTest
     expect_run_on_attachment(gid, url)
 
     assert_match(/#<Attachment>/, capture_attachments_run)
+  ensure
+    ARGV.replace([$PROGRAM_NAME])
+  end
+
+  # @return [void]
+  def test_run_task_not_found
+    gid = '123'
+    url = 'http://example.com'
+    tasks_client = mock('tasks_client')
+    attachments_client = mock('attachments_client')
+
+    ARGV.replace([gid, url])
+    Checkoff::Tasks.expects(:new).returns(tasks_client)
+    Checkoff::Attachments.expects(:new).returns(attachments_client)
+    tasks_client.expects(:task_by_gid).with(gid).returns(nil)
+
+    e = assert_raises(RuntimeError) { capture_attachments_run }
+    assert_match(/Could not find task/, e.message)
   ensure
     ARGV.replace([$PROGRAM_NAME])
   end

@@ -30,7 +30,9 @@ module Checkoff
     end
 
     # @return [Array<Class<Checkoff::SelectorClasses::FunctionEvaluator>>]
-    # @sg-ignore abstract method always raises; declared type documents the override contract, not this body
+    # @sg-ignore tool-limitation:raise-only-body
+    #   abstract method always raises; declared type documents the override contract, not this
+    #   body
     def function_evaluators
       raise 'Implement me!'
     end
@@ -41,7 +43,8 @@ module Checkoff
     def evaluate_args(selector, evaluator)
       return [] unless selector.is_a?(Array)
 
-      # @sg-ignore Array#[] with an open-ended range is inferred as nilable even though it never is here
+      # @sg-ignore tool-limitation:other
+      #   Array#[] with an open-ended range is inferred as nilable even though it never is here
       selector[1..].map.with_index do |item, index|
         if evaluator.evaluate_arg?(index)
           evaluate(item)

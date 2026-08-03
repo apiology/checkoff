@@ -18,7 +18,14 @@ module Checkoff
         # @param section [Asana::Resources::Section]
         #
         # @return [Boolean]
-        # @sg-ignore String, nil safe-nav chain isn't inferred as returning Boolean
+        # @sg-ignore tool-limitation:parse-stub-kwarg-return
+        #   Asana::ProxiedResourceClasses::Task#get_tasks is declared via @!parse in
+        #   config/annotations_asana.rb with a correct, complete @return tag, but calling a
+        #   @!parse-declared method with keyword arguments never resolves its return type at the
+        #   call site (confirmed in an isolated repro against plain upstream solargraph 0.60.2,
+        #   with all kwargs passed and with a subset — same failure either way; the equivalent
+        #   real Ruby method definition, not a @!parse stub, resolves fine) — T.unsafe works
+        #   around this, not a missing/incomplete annotation
         def evaluate(section)
           tasks = client.tasks.get_tasks(section: section.gid,
                                          per_page: 100,

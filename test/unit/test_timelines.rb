@@ -42,6 +42,25 @@ class TestTimelines < ClassTest
   end
 
   # @return [void]
+  def test_task_dependent_on_previous_section_last_milestone_section_not_found
+    memberships = [
+      { 'section' => { 'gid' => section_2_gid } },
+    ]
+    task_data = {
+      'memberships' => memberships,
+    }
+    timelines = get_test_object do
+      expect_task_data_created(task, task_data)
+      sections.expects(:section_by_gid).with(section_2_gid).returns(nil)
+    end
+
+    # @sg-ignore Wrong argument type for
+    #   Checkoff::Timelines#task_dependent_on_previous_section_last_milestone?: limit_to_portfolio_gid
+    #   expected String, nil, received NilClass
+    refute(timelines.task_dependent_on_previous_section_last_milestone?(task, limit_to_portfolio_gid: nil))
+  end
+
+  # @return [void]
   def mock_task_dependent_on_previous_section_last_milestone_false_no_dependencies
     memberships = [
       { 'section' => { 'gid' => section_2_gid } },

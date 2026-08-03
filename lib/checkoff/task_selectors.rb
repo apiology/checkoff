@@ -64,19 +64,22 @@ module Checkoff
     # :nocov:
     class << self
       # @return [String]
-      # @sg-ignore `x || raise(...)` isn't inferred as narrowing away the nil branch
+      # @sg-ignore tool-limitation:type-narrowing
+      #   https://github.com/castwide/solargraph/issues/1254
       def project_name
         ARGV[1] || raise('Please pass project name to pull tasks from as first argument')
       end
 
       # @return [String]
-      # @sg-ignore `x || raise(...)` isn't inferred as narrowing away the nil branch
+      # @sg-ignore tool-limitation:type-narrowing
+      #   https://github.com/castwide/solargraph/issues/1254
       def workspace_name
         ARGV[0] || raise('Please pass workspace name as first argument')
       end
 
       # @return [Array(Symbol, Array)]
-      # @sg-ignore `x || raise(...)` isn't inferred as narrowing away the nil branch
+      # @sg-ignore tool-limitation:type-narrowing
+      #   https://github.com/castwide/solargraph/issues/1254
       def task_selector
         task_selector_json = ARGV[2] || raise('Please pass task_selector in JSON form as third argument')
 

@@ -69,16 +69,14 @@ module Checkoff
       #
       # @return [void]
       def enrich_webhook_subscription!(webhook_subscription)
-        webhook_subscription&.fetch('filters', nil)&.map! do |filter|
+        return if webhook_subscription.nil?
+
+        webhook_subscription.fetch('filters', nil)&.map! do |filter|
           enrich_filter(filter)
         end
-        resource = webhook_subscription&.fetch('resource', nil)
+        resource = webhook_subscription.fetch('resource', nil)
         name, resource_type = enrich_gid(resource) if resource
-        # @sg-ignore webhook_subscription is declared [Hash, nil] but this line assumes non-nil
-        #   without the &. used elsewhere in this method — looks like a real nil-safety gap, not
-        #   just a typing gap; flagging for the follow-up code PR rather than silently widening
         webhook_subscription['checkoff:enriched:name'] = name if name
-        # @sg-ignore same nil-safety gap as above
         webhook_subscription['checkoff:enriched:resource_type'] = resource_type if resource_type
       end
 
@@ -143,12 +141,12 @@ module Checkoff
         return unless parent
 
         # @type [String]
-        # @sg-ignore Hash#fetch generic<X> leak on rbs >= 4.1.0, fix in progress upstream
-        # https://github.com/castwide/solargraph/pull/1228
+        # @sg-ignore upstream-type-annotation:rbs-4-1-regression
+        #   https://github.com/castwide/solargraph/pull/1228
         resource_type = parent.fetch('resource_type')
         # @type [String]
-        # @sg-ignore Hash#fetch generic<X> leak on rbs >= 4.1.0, fix in progress upstream
-        # https://github.com/castwide/solargraph/pull/1228
+        # @sg-ignore upstream-type-annotation:rbs-4-1-regression
+        #   https://github.com/castwide/solargraph/pull/1228
         gid = parent.fetch('gid')
         name, _resource_type = enrich_gid(gid, resource_type:)
         parent['checkoff:enriched:name'] = name if name
@@ -163,13 +161,13 @@ module Checkoff
         # @type [Hash{String => String}]
         resource = T.cast(asana_event['resource'], T::Hash[String, String])
         # @type [String]
-        # @sg-ignore Hash#fetch generic<X> leak on rbs >= 4.1.0, fix in progress upstream
-        # https://github.com/castwide/solargraph/pull/1228
+        # @sg-ignore upstream-type-annotation:rbs-4-1-regression
+        #   https://github.com/castwide/solargraph/pull/1228
         resource_type = resource.fetch('resource_type')
 
         # @type [String]
-        # @sg-ignore Hash#fetch generic<X> leak on rbs >= 4.1.0, fix in progress upstream
-        # https://github.com/castwide/solargraph/pull/1228
+        # @sg-ignore upstream-type-annotation:rbs-4-1-regression
+        #   https://github.com/castwide/solargraph/pull/1228
         gid = resource.fetch('gid')
 
         name, _resource_type = enrich_gid(gid, resource_type:)

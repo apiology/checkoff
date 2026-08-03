@@ -180,8 +180,9 @@ module Checkoff
     # @param assignee_gid [String]
     #
     # @return [Asana::Resources::Task]
-    # @sg-ignore @asana_task.create return type could not be inferred — calling a class method
-    #   through a Class<T>-typed ivar is a known Solargraph dispatch limitation
+    # @sg-ignore tool-limitation:class-ivar-dispatch
+    #   @asana_task.create return type could not be inferred — calling a class method through a
+    #   Class<T>-typed ivar is a known Solargraph dispatch limitation
     def add_task(name,
                  workspace_gid: @workspaces.default_workspace_gid,
                  assignee_gid: default_assignee_gid)
@@ -295,7 +296,11 @@ module Checkoff
     # @param portfolio_name [String]
     # @param workspace_name [String]
     # @return [Boolean]
-    # @sg-ignore Checkoff::Tasks#in_portfolio_named? return type could not be inferred
+    # @sg-ignore tool-limitation:context-dependent-return-inference
+    #   Checkoff::Tasks#in_portfolio_named? return type could not be inferred — confirmed the
+    #   outer T.cast is not the trigger (removing it alone still fails the same way); only
+    #   reproduces inside this real file, not in an isolated repro — same class of context-
+    #   dependent corruption already reported upstream in castwide/solargraph#1233
     def in_portfolio_named?(task,
                             portfolio_name,
                             workspace_name: T.must(@workspaces.default_workspace.name))
@@ -386,9 +391,10 @@ module Checkoff
     end
 
     # @return [String]
-    # @sg-ignore @config.fetch return type could not be inferred — @config is intentionally
-    #   dual-typed [Hash, EnvFallbackConfigLoader] throughout this codebase; Solargraph can't
-    #   unify #fetch across that union
+    # @sg-ignore tool-limitation:config-fetch-union
+    #   @config.fetch return type could not be inferred — @config is intentionally dual-typed
+    #   [Hash, EnvFallbackConfigLoader] throughout this codebase; Solargraph can't unify #fetch
+    #   across that union
     def default_assignee_gid
       @config.fetch(:default_assignee_gid)
     end
