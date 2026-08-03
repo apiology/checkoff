@@ -314,7 +314,7 @@ module Checkoff
     arg 'workspace'
     arg 'task_name'
     command :quickadd do |c|
-      # @sg-ignore dynamic-metaprogramming
+      # @sg-ignore gem-limitation:gli
       #   c is yielded by GLI's command DSL block; the gem ships no type info for it
       c.action do |_global_options, _options, args|
         workspace_name = args.fetch(0)
@@ -330,7 +330,7 @@ module Checkoff
     arg 'section', :optional
     arg 'task_name', :optional
     command :view do |c|
-      # @sg-ignore dynamic-metaprogramming
+      # @sg-ignore gem-limitation:gli
       #   c is yielded by GLI's command DSL block; the gem ships no type info for it
       c.action do |_global_options, _options, args|
         workspace_name = args.fetch(0)
@@ -346,43 +346,43 @@ module Checkoff
 
     # rubocop:disable Metrics/BlockLength
     command :mv do |c|
-      # @sg-ignore dynamic-metaprogramming
+      # @sg-ignore gem-limitation:gli
       #   c is yielded by GLI's command DSL block; the gem ships no type info for it
       c.flag :from_workspace,
              type: String,
              default_value: :default_workspace,
              desc: 'Workspace to move tasks from'
-      # @sg-ignore dynamic-metaprogramming
+      # @sg-ignore gem-limitation:gli
       #   c is yielded by GLI's command DSL block; the gem ships no type info for it
       c.flag :from_project,
              type: String,
              required: true,
              desc: 'Project to move tasks from'
-      # @sg-ignore dynamic-metaprogramming
+      # @sg-ignore gem-limitation:gli
       #   c is yielded by GLI's command DSL block; the gem ships no type info for it
       c.flag :from_section,
              type: String,
              default_value: :all_sections,
              desc: 'Section to move tasks from'
-      # @sg-ignore dynamic-metaprogramming
+      # @sg-ignore gem-limitation:gli
       #   c is yielded by GLI's command DSL block; the gem ships no type info for it
       c.flag :to_workspace,
              type: String,
              default_value: :source_workspace,
              desc: 'Workspace to move tasks to'
-      # @sg-ignore dynamic-metaprogramming
+      # @sg-ignore gem-limitation:gli
       #   c is yielded by GLI's command DSL block; the gem ships no type info for it
       c.flag :to_project,
              type: String,
              default_value: :source_project,
              desc: 'Section to move tasks to'
-      # @sg-ignore dynamic-metaprogramming
+      # @sg-ignore gem-limitation:gli
       #   c is yielded by GLI's command DSL block; the gem ships no type info for it
       c.flag :to_section,
              type: String,
              default_value: :source_section,
              desc: 'Section to move tasks to'
-      # @sg-ignore dynamic-metaprogramming
+      # @sg-ignore gem-limitation:gli
       #   c is yielded by GLI's command DSL block; the gem ships no type info for it
       c.action do |_global_options, options, _args|
         from_workspace = options.fetch('from_workspace')

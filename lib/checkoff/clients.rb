@@ -30,10 +30,10 @@ module Checkoff
     # @return [Asana::Client]
     def client
       @client ||= @asana_client_class.new do |c|
-        # @sg-ignore dynamic-metaprogramming
+        # @sg-ignore gem-limitation:asana
         #   Unresolved call to authentication — gem config DSL block, not covered by annotations
         c.authentication :access_token, @config.fetch(:personal_access_token)
-        # @sg-ignore dynamic-metaprogramming
+        # @sg-ignore gem-limitation:asana
         #   Unresolved call to default_headers — gem config DSL block, not covered by annotations
         c.default_headers 'asana-enable' =>
                           'new_project_templates,new_user_task_lists,new_memberships,new_goal_memberships'

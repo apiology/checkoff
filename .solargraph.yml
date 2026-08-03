@@ -28,7 +28,13 @@ exclude:
   - ".markdownlint_style.rb"
   # Mocha-heavy test helper stays excluded from strong typecheck.
   - test/unit/test_helper.rb
-require: []
+require:
+  # Must be the RBS stdlib library name (hyphenated), not the Ruby require path
+  # ('net/http'). Solargraph doesn't translate require paths to RBS library names, so
+  # without this the real net-http RBS core sig never loads and Net::HTTP falls back to
+  # whichever gem happens to reopen the class (multipart-post here), hiding Net::HTTP::Get
+  # and #request. https://github.com/castwide/solargraph/issues/1256
+  - net-http
 domains: []
 reporters:
   - rubocop

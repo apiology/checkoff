@@ -38,7 +38,6 @@ module Checkoff
             when [param_name]
               # @type param_values [Array<String>]
               # @sg-ignore upstream-type-annotation:rbs-4-1-regression
-              #   Hash#fetch generic<X> leak on rbs >= 4.1.0, fix in progress upstream
               #   https://github.com/castwide/solargraph/pull/1228
               param_values = remaining_params.fetch(param_name)
               unless param_values.length == 1

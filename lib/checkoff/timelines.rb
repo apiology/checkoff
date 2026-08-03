@@ -55,12 +55,10 @@ module Checkoff
       memberships_data.all? do |membership_data|
         # @type [Hash{String => String}]
         # @sg-ignore upstream-type-annotation:rbs-4-1-regression
-        #   Hash#fetch generic<X> leak on rbs >= 4.1.0, fix in progress upstream
         #   https://github.com/castwide/solargraph/pull/1228
         section_data = membership_data.fetch('section')
         section_gid = section_data.fetch('gid')
         # @sg-ignore upstream-type-annotation:rbs-4-1-regression
-        #   Hash#fetch generic<X> leak on rbs >= 4.1.0, fix in progress upstream
         #   https://github.com/castwide/solargraph/pull/1228
         section = @sections.section_by_gid(section_gid)
         next false if section.nil?
@@ -87,7 +85,6 @@ module Checkoff
         unless limit_to_portfolio_name.nil?
           # @type [Hash{String => Object}]
           # @sg-ignore upstream-type-annotation:rbs-4-1-regression
-          #   Hash#fetch generic<X> leak on rbs >= 4.1.0, fix in progress upstream
           #   https://github.com/castwide/solargraph/pull/1228
           project_data = md.fetch('project')
           project_gid = project_data.fetch('gid')
@@ -95,13 +92,11 @@ module Checkoff
         end
         # @type [Hash{String => Object}]
         # @sg-ignore upstream-type-annotation:rbs-4-1-regression
-        #   Hash#fetch generic<X> leak on rbs >= 4.1.0, fix in progress upstream
         #   https://github.com/castwide/solargraph/pull/1228
         section_data = md.fetch('section')
         section_gid = section_data.fetch('gid')
 
         # @sg-ignore upstream-type-annotation:rbs-4-1-regression
-        #   Hash#fetch generic<X> leak on rbs >= 4.1.0, fix in progress upstream
         #   https://github.com/castwide/solargraph/pull/1228
         last_milestone = last_milestone_in_section(section_gid)
 
@@ -135,7 +130,6 @@ module Checkoff
         unless limit_to_portfolio_name.nil?
           # @type [Hash{String => Object}]
           # @sg-ignore upstream-type-annotation:rbs-4-1-regression
-          #   Hash#fetch generic<X> leak on rbs >= 4.1.0, fix in progress upstream
           #   https://github.com/castwide/solargraph/pull/1228
           project_data = md.fetch('project')
           project_gid = project_data.fetch('gid')

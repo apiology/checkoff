@@ -280,7 +280,6 @@ module Checkoff
         def convert_arg(key, values)
           # @type [Class<SimpleParam::SimpleParam>]
           # @sg-ignore upstream-type-annotation:rbs-4-1-regression
-          #   Hash#fetch generic<X> leak on rbs >= 4.1.0, fix in progress upstream
           #   https://github.com/castwide/solargraph/pull/1228
           clazz = ARGS.fetch(key)
           # @type [SimpleParam::SimpleParam]

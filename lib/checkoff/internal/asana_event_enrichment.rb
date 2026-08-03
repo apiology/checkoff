@@ -142,12 +142,10 @@ module Checkoff
 
         # @type [String]
         # @sg-ignore upstream-type-annotation:rbs-4-1-regression
-        #   Hash#fetch generic<X> leak on rbs >= 4.1.0, fix in progress upstream
         #   https://github.com/castwide/solargraph/pull/1228
         resource_type = parent.fetch('resource_type')
         # @type [String]
         # @sg-ignore upstream-type-annotation:rbs-4-1-regression
-        #   Hash#fetch generic<X> leak on rbs >= 4.1.0, fix in progress upstream
         #   https://github.com/castwide/solargraph/pull/1228
         gid = parent.fetch('gid')
         name, _resource_type = enrich_gid(gid, resource_type:)
@@ -164,13 +162,11 @@ module Checkoff
         resource = T.cast(asana_event['resource'], T::Hash[String, String])
         # @type [String]
         # @sg-ignore upstream-type-annotation:rbs-4-1-regression
-        #   Hash#fetch generic<X> leak on rbs >= 4.1.0, fix in progress upstream
         #   https://github.com/castwide/solargraph/pull/1228
         resource_type = resource.fetch('resource_type')
 
         # @type [String]
         # @sg-ignore upstream-type-annotation:rbs-4-1-regression
-        #   Hash#fetch generic<X> leak on rbs >= 4.1.0, fix in progress upstream
         #   https://github.com/castwide/solargraph/pull/1228
         gid = resource.fetch('gid')
 

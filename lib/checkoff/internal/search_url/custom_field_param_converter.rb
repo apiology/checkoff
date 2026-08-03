@@ -66,7 +66,6 @@ module Checkoff
           variant = single_custom_field_params.fetch(variant_key)
           remaining_params = single_custom_field_params.reject { |k, _v| k == variant_key }
           # @sg-ignore upstream-type-annotation:rbs-4-1-regression
-          #   Hash#fetch generic<X> leak on rbs >= 4.1.0, fix in progress upstream
           #   https://github.com/castwide/solargraph/pull/1228
           raise "Teach me how to handle #{variant_key} = #{variant}" unless variant.length == 1
 

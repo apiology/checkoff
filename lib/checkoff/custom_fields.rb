@@ -81,7 +81,6 @@ module Checkoff
     # @param custom_field_name [String]
     # @return [Array<String>]
     # @sg-ignore upstream-type-annotation:rbs-4-1-regression
-    #   Hash#fetch generic<X> leak on rbs >= 4.1.0, fix in progress upstream
     #   https://github.com/castwide/solargraph/pull/1228
     def resource_custom_field_values_names_by_name(resource, custom_field_name)
       custom_field = resource_custom_field_by_name(resource, custom_field_name)
@@ -152,7 +151,6 @@ module Checkoff
     #
     # @return [Array<Hash>]
     # @sg-ignore upstream-type-annotation:rbs-4-1-regression
-    #   Hash#fetch generic<X> leak on rbs >= 4.1.0, fix in progress upstream
     #   https://github.com/castwide/solargraph/pull/1228
     def resource_custom_field_enum_values(custom_field)
       resource_subtype = custom_field.fetch('resource_subtype')
