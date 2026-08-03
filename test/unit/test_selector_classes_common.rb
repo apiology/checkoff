@@ -13,9 +13,10 @@ class TestSelectorClassesCommon < Minitest::Test
                                                                               custom_fields: mock('custom_fields'))
     task = mock('task')
 
-    assert_raises(RuntimeError, /Expected a String selector/) do
+    e = assert_raises(RuntimeError) do
       # @sg-ignore deliberately passing a bare mock instead of a real resource
       evaluator.evaluate(task)
     end
+    assert_match(/Expected a String selector/, e.message)
   end
 end

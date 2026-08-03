@@ -67,9 +67,10 @@ class TestAttachments < ClassTest
   def test_create_attachment_from_downloaded_url_no_host
     attachments = get_test_object
 
-    assert_raises(RuntimeError, /URI has no host/) do
+    e = assert_raises(RuntimeError) do
       attachments.create_attachment_from_url!('/no-host-here', resource, attachment_name: 'custom.png')
     end
+    assert_match(/URI has no host/, e.message)
   end
 
   # @return [void]
@@ -80,9 +81,10 @@ class TestAttachments < ClassTest
 
     attachments = get_test_object
 
-    assert_raises(RuntimeError, /Error downloading/) do
+    e = assert_raises(RuntimeError) do
       attachments.create_attachment_from_url!(url, resource, attachment_name: 'custom.png')
     end
+    assert_match(/Error downloading/, e.message)
   end
 
   # @param gid [String]
@@ -137,7 +139,8 @@ class TestAttachments < ClassTest
     Checkoff::Tasks.expects(:new).returns(tasks_client)
     tasks_client.expects(:task_by_gid).with(gid).returns(nil)
 
-    assert_raises(RuntimeError, /Could not find task/) { capture_attachments_run }
+    e = assert_raises(RuntimeError) { capture_attachments_run }
+    assert_match(/Could not find task/, e.message)
   ensure
     ARGV.replace([$PROGRAM_NAME])
   end

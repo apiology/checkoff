@@ -11,7 +11,8 @@ class TestCustomFieldParamConverter < Minitest::Test
       custom_field_params: { 'custom_field' => ['1'] }
     )
 
-    assert_raises(RuntimeError, /Unexpected custom field param key/) { converter.convert }
+    e = assert_raises(RuntimeError) { converter.convert }
+    assert_match(/Unexpected custom field param key/, e.message)
   end
 
   # @return [void]
@@ -22,6 +23,7 @@ class TestCustomFieldParamConverter < Minitest::Test
       custom_field_params: { 'custom_field__x' => ['1'] }
     )
 
-    assert_raises(RuntimeError, /Unexpected custom field param key/) { converter.convert }
+    e = assert_raises(RuntimeError) { converter.convert }
+    assert_match(/Unexpected custom field param key/, e.message)
   end
 end
