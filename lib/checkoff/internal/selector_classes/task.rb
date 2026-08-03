@@ -393,6 +393,12 @@ module Checkoff
         # @param task [Asana::Resources::Task]
         #
         # @return [Boolean]
+        # @sg-ignore dynamic-metaprogramming
+        #   MilestonePFunctionEvaluator#evaluate return type could not be inferred --
+        #   task.resource_subtype is dispatched via the asana gem's method_missing (not a real
+        #   defined method on Asana::Resources::Task), so the == comparison's result type can't
+        #   be pinned to Boolean. Dropped without a trace during an earlier tagging pass on this
+        #   branch; restored per CircleCI's fresh environment (main still has it).
         def evaluate(task)
           resource_subtype = task.resource_subtype
           raise 'Please add resource_subtype to extra_fields' if resource_subtype.nil?
