@@ -155,10 +155,8 @@ module Checkoff
       resource_subtype = custom_field.fetch('resource_subtype')
       case resource_subtype
       when 'enum'
-        # @type [Array<Hash>]
         [custom_field.fetch('enum_value')]
       when 'multi_enum'
-        # @type [Array<Hash>]
         custom_field.fetch('multi_enum_values')
       else
         raise "Teach me how to handle resource_subtype #{resource_subtype}"

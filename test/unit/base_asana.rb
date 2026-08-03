@@ -9,16 +9,28 @@ require_relative 'class_test'
 class BaseAsana < ClassTest
   include TestDate
 
-  let_mock :projects, :my_tasks_in_workspace_gid,
-           :my_tasks_in_workspace, :my_time, :tasks,
-           :task_a, :task_b, :task_c,
-           :personal_access_token,
-           :project_a, :project_b, :project_c,
-           :a_name, :b_name, :c_name, :a_gid, :b_gid, :c_gid
+  # asana_projects is the raw Asana::Client#projects collection proxy
+  # (client.projects.find_by_workspace/find_by_id); it's distinct from the
+  # `projects` method some subclasses (TestSections, TestTasks) define
+  # themselves for a real Checkoff::Projects instance under test - keeping
+  # separate names avoids one silently shadowing the other.
+  typed_let_mock :asana_projects, Asana::ProxiedResourceClasses::Project
 
-  let_mock :a_completed_at, :b_completed_at, :section_one
+  typed_let_mock :my_tasks_in_workspace_gid, String
+  typed_let_mock :task_a, Asana::Resources::Task
+  typed_let_mock :task_b, Asana::Resources::Task
+  typed_let_mock :task_c, Asana::Resources::Task
+  typed_let_mock :personal_access_token, String
+  typed_let_mock :project_a, Asana::Resources::Project
+  typed_let_mock :project_b, Asana::Resources::Project
+  typed_let_mock :project_c, Asana::Resources::Project
+  typed_let_mock :a_name, String
+  typed_let_mock :b_name, String
+  typed_let_mock :c_name, String
+  typed_let_mock :a_gid, String
 
-  # @return [void]
+  # @param extra_fields [Array<String>]
+  # @return [Hash{Symbol => Object}]
   def task_options(extra_fields: [])
     {
       per_page: 100,
@@ -31,7 +43,7 @@ class BaseAsana < ClassTest
     }
   end
 
-  # @return [void]
+  # @return [Hash{Symbol => Object}]
   def task_options_with_completed
     {
       per_page: 100,

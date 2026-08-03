@@ -10,7 +10,8 @@ class TestAsanaEventEnrichment < ClassTest
 
   def_delegators(:@mocks, :resources, :tasks)
 
-  let_mock :task, :resource
+  typed_let_mock :task, Asana::Resources::Task
+  typed_let_mock :resource, Asana::Resources::Resource
 
   # @return [void]
   def test_enrich_filter_parent_gid_found

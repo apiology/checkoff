@@ -9,6 +9,17 @@ module Checkoff
     class FunctionEvaluator
       include Logging
 
+      # Concrete subclasses each declare their own initialize with their
+      # specific keyword args (and set @selector themselves before calling
+      # super()); this signature exists only so Solargraph can resolve
+      # `evaluator_class.new(selector:, **kwargs)` call sites that hold a
+      # `Class<FunctionEvaluator>` reference rather than a concrete subclass -
+      # deliberately a no-op so a bare `super()` call from those subclasses
+      # can't clobber the @selector they already set.
+      # @param selector [Symbol, Array, String, nil]
+      # @param _kwargs [Hash]
+      def initialize(selector: nil, **_kwargs); end
+
       # @param _index [Integer]
       def evaluate_arg?(_index)
         true

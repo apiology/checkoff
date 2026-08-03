@@ -8,13 +8,22 @@ require 'checkoff/project_selectors'
 class TestProjectSelectors < ClassTest
   extend Forwardable
 
-  def_delegators(:@mocks, :client, :projects)
+  def_delegators(:@mocks, :projects, :workspaces, :portfolios)
 
   # @!parse
   #  # @return [Checkoff::ProjectSelectors]
   #  def get_test_object; end
 
-  let_mock :project
+  # rubocop:disable YARD/TagTypeSyntax
+  # @return [Mocha::Mock & Asana::Client]
+  # @sg-ignore TestProjectSelectors#client return type could not be inferred
+  def client
+    # @sg-ignore Unresolved call to client on MyOpenStruct
+    mocks.client
+  end
+  # rubocop:enable YARD/TagTypeSyntax
+
+  typed_let_mock :project, Asana::Resources::Project
 
   # @return [void]
   def test_filter_via_custom_field_value_contain_any_value_false
@@ -25,7 +34,7 @@ class TestProjectSelectors < ClassTest
       'display_value' => 'something else',
     }
     project_selectors = get_test_object do
-      @mocks[:custom_fields] = Checkoff::CustomFields.new(client:)
+      mocks[:custom_fields] = Checkoff::CustomFields.new(client:)
       custom_fields = [custom_field]
       project.expects(:custom_fields).returns(custom_fields)
     end
@@ -44,7 +53,7 @@ class TestProjectSelectors < ClassTest
       'display_value' => 'timeline',
     }
     project_selectors = get_test_object do
-      @mocks[:custom_fields] = Checkoff::CustomFields.new(client:)
+      mocks[:custom_fields] = Checkoff::CustomFields.new(client:)
       custom_fields = [custom_field]
       project.expects(:custom_fields).returns(custom_fields)
     end
@@ -64,7 +73,7 @@ class TestProjectSelectors < ClassTest
       'display_value' => 'timeline',
     }
     project_selectors = get_test_object do
-      @mocks[:custom_fields] = Checkoff::CustomFields.new(client:)
+      mocks[:custom_fields] = Checkoff::CustomFields.new(client:)
       custom_fields = [custom_field]
       project.expects(:custom_fields).returns(custom_fields)
     end
@@ -86,7 +95,7 @@ class TestProjectSelectors < ClassTest
       'display_value' => 'timeline,something else',
     }
     project_selectors = get_test_object do
-      @mocks[:custom_fields] = Checkoff::CustomFields.new(client:)
+      mocks[:custom_fields] = Checkoff::CustomFields.new(client:)
       custom_fields = [custom_field]
       project.expects(:custom_fields).returns(custom_fields)
     end
@@ -105,7 +114,7 @@ class TestProjectSelectors < ClassTest
       'display_value' => 'timeline,something else',
     }
     project_selectors = get_test_object do
-      @mocks[:custom_fields] = Checkoff::CustomFields.new(client:)
+      mocks[:custom_fields] = Checkoff::CustomFields.new(client:)
       custom_fields = [custom_field]
       project.expects(:custom_fields).returns(custom_fields)
     end
@@ -118,7 +127,7 @@ class TestProjectSelectors < ClassTest
   # @return [void]
   def test_filter_via_custom_field_value_contains_any_value_no_custom_field_false
     project_selectors = get_test_object do
-      @mocks[:custom_fields] = Checkoff::CustomFields.new(client:)
+      mocks[:custom_fields] = Checkoff::CustomFields.new(client:)
       custom_fields = []
       project.expects(:custom_fields).returns(custom_fields).at_least(1)
     end
@@ -146,6 +155,47 @@ class TestProjectSelectors < ClassTest
 
     refute(project_selectors.filter_via_project_selector(project,
                                                          [:ready?]))
+  end
+
+  # @return [void]
+  def stub_default_workspace_lookup
+    workspace = mock('workspace')
+    workspace.stubs(:name).returns('My Workspace')
+    project.expects(:workspace).returns(nil)
+    workspaces.expects(:default_workspace).returns(workspace)
+  end
+
+  # @param matching_project_name [String]
+  # @return [void]
+  def stub_in_portfolio_named(matching_project_name)
+    stub_default_workspace_lookup
+    matching_project = mock('matching_project')
+    matching_project.stubs(:name).returns(matching_project_name)
+    portfolios
+      .expects(:projects_in_portfolio)
+      .with('My Workspace', 'My Portfolio', extra_project_fields: [])
+      .returns([matching_project])
+    project.expects(:name).returns('My Project')
+  end
+
+  # @return [void]
+  def test_filter_via_in_portfolio_named_true
+    project_selectors = get_test_object do
+      stub_in_portfolio_named('My Project')
+    end
+
+    assert(project_selectors.filter_via_project_selector(project,
+                                                         [:in_portfolio_named?, 'My Portfolio']))
+  end
+
+  # @return [void]
+  def test_filter_via_in_portfolio_named_false
+    project_selectors = get_test_object do
+      stub_in_portfolio_named('Some Other Project')
+    end
+
+    refute(project_selectors.filter_via_project_selector(project,
+                                                         [:in_portfolio_named?, 'My Portfolio']))
   end
 
   # @return [void]

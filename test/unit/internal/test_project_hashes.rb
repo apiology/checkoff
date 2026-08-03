@@ -6,7 +6,11 @@ require_relative '../class_test'
 require 'checkoff/internal/project_hashes'
 
 class TestProjectHashes < ClassTest
-  let_mock :project
+  # @!parse
+  #  # @return [Checkoff::Internal::ProjectHashes]
+  #  def get_test_object; end
+
+  typed_let_mock :project, Asana::Resources::Project
 
   PROJECT_A_RAW_HASH = {
     'name' => 'a',
@@ -88,7 +92,7 @@ class TestProjectHashes < ClassTest
     assert_equal(:my_tasks, project_data['project'])
   end
 
-  # @return [void]
+  # @return [Class]
   def class_under_test
     Checkoff::Internal::ProjectHashes
   end

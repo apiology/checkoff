@@ -8,10 +8,15 @@ require 'checkoff/events'
 class TestEvents < ClassTest
   extend Forwardable
 
+  # @!parse
+  #  # @return [Checkoff::Events]
+  #  def get_test_object; end
+
   def_delegators(:@mocks, :asana_event_filter_class)
 
-  let_mock :filters, :event,
-           :asana_event_filter
+  typed_let_mock :filters, Array
+  typed_let_mock :event, Hash
+  typed_let_mock :asana_event_filter, Checkoff::Internal::AsanaEventFilter
 
   # @return [void]
   def mock_filter_asana_events_true
@@ -38,11 +43,12 @@ class TestEvents < ClassTest
     assert_empty(events.filter_asana_events(filters, [event]))
   end
 
-  # @return [void]
+  # @return [Class]
   def class_under_test
     Checkoff::Events
   end
 
+  # @return [Hash{Symbol => Class}]
   def respond_like_instance_of
     {
       config: Checkoff::Internal::EnvFallbackConfigLoader,
@@ -56,6 +62,7 @@ class TestEvents < ClassTest
     }
   end
 
+  # @return [Hash{Symbol => Class}]
   def respond_like
     {
       asana_event_filter_class: Checkoff::Internal::AsanaEventFilter,

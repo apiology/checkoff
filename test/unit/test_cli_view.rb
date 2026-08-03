@@ -6,34 +6,44 @@ require_relative 'test_helper'
 
 # Test the Checkoff::CLI class with view subcommand
 class TestCLIView < Minitest::Test
-  let_mock :config, :workspaces, :sections, :tasks, :clients, :client,
-           :workspace, :workspace_gid, :task_a, :task_b, :task_c
+  # @return [Hash]
+  attr_reader :mocks
 
-  # @return [void]
+  typed_let_mock :config, Hash
+  typed_let_mock :workspaces, Checkoff::Workspaces
+  typed_let_mock :sections, Checkoff::Sections
+  typed_let_mock :tasks, Checkoff::Tasks
+  typed_let_mock :clients, Checkoff::Clients
+  typed_let_mock :client, Asana::Client
+  typed_let_mock :task_a, Asana::Resources::Task
+  typed_let_mock :task_b, Asana::Resources::Task
+  typed_let_mock :task_c, Asana::Resources::Task
+
+  # @return [String]
   def expected_json_no_section_specified
     '{"":[{"name":"task_a","due":"fake_date"}],' \
       '"section_name:":[{"name":"task_b","due":"fake_date"},' \
       '{"name":"task_c","due":"fake_date"}]}'
   end
 
-  # @return [void]
+  # @return [String]
   def section_name_str
     'section_name:'
   end
 
-  # @return [void]
+  # @return [String]
   def project_name
     'my_project'
   end
 
-  # @return [void]
+  # @return [String]
   def task_name
     'my_task'
   end
 
   # @return [void]
   def expect_tasks_by_section_pulled
-    @mocks[:sections]
+    mocks[:sections]
       .expects(:tasks_by_section)
       .with(workspace_name, project_name)
       .returns(nil => [task_a], section_name_str => [task_b, task_c])
@@ -45,6 +55,8 @@ class TestCLIView < Minitest::Test
   end
 
   # @return [void]
+  # @param due_on [String, NilClass]
+  # @param due_at [String, NilClass]
   def mock_run_with_no_section_specified_normal_project(due_on:, due_at:)
     expect_client_pulled
     expect_tasks_by_section_pulled
@@ -52,39 +64,52 @@ class TestCLIView < Minitest::Test
   end
 
   # @return [void]
+  # @param task_name [String]
+  # @param task [Mocha::Mock]
   def expect_task_named(task, task_name)
     task.expects(:name).returns(task_name).at_least(0)
   end
 
   # @return [void]
+  # @param due_on [String, NilClass]
+  # @param task [Mocha::Mock]
   def expect_task_due_on(task, due_on)
     task.expects(:due_on).returns(due_on).at_least(0)
   end
 
   # @return [void]
+  # @param task [Mocha::Mock]
+  # @param due_at [String, NilClass]
   def expect_task_due_at(task, due_at)
     task.expects(:due_at).returns(due_at).at_least(0)
   end
 
-  # @return [void]
+  # @return [Hash{Object => String}]
   def three_tasks
     { task_a => 'task_a', task_b => 'task_b', task_c => 'task_c' }
   end
 
   # @return [void]
+  # @param task [Mocha::Mock]
+  # @param due_at [String, NilClass]
+  # @param due_on [String, NilClass]
+  # @param task_name [String]
   def expect_task_queried(task, task_name, due_on, due_at)
     expect_task_named(task, task_name)
     expect_task_due_on(task, due_on)
     expect_task_due_at(task, due_at)
   end
 
+  # @param due_on [String, NilClass]
+  # @return [void]
+  # @param due_at [String, NilClass]
   def expect_three_tasks_queried(due_on:, due_at:)
     three_tasks.each do |task, task_name|
       expect_task_queried(task, task_name, due_on, due_at)
     end
   end
 
-  # @return [void]
+  # @return [String]
   def workspace_name
     'my workspace'
   end
@@ -126,7 +151,7 @@ class TestCLIView < Minitest::Test
     }
   end
 
-  # @return [void]
+  # @return [Class<Checkoff::CheckoffGLIApp>]
   def get_test_object(&_twiddle_mocks)
     set_mocks
     allow_workspaces_created
@@ -143,7 +168,7 @@ class TestCLIView < Minitest::Test
   def test_run_with_no_section_specified_normal_project
     cli = get_test_object do
       mock_run_with_no_section_specified_normal_project(due_on: 'fake_date', due_at: nil)
-      @mocks[:stdout].expects(:puts).with(expected_json_no_section_specified)
+      mocks[:stdout].expects(:puts).with(expected_json_no_section_specified)
     end
 
     assert_equal(0,
@@ -153,18 +178,26 @@ class TestCLIView < Minitest::Test
   end
 
   # @return [void]
+  # @param section_name [String, NilClass]
+  # @param due_on [String, NilClass]
+  # @param project_name [String]
+  # @param due_at [String, NilClass]
   def expect_three_tasks_pulled_and_queried(project_name:,
                                             section_name:,
                                             due_on:,
                                             due_at:)
     expect_client_pulled
-    @mocks[:sections].expects(:tasks).with(workspace_name, project_name,
-                                           section_name)
+    mocks[:sections].expects(:tasks).with(workspace_name, project_name,
+                                          section_name)
       .returns(three_tasks.keys)
     expect_three_tasks_queried(due_on:, due_at:)
   end
 
   # @return [void]
+  # @param due_at [String, NilClass]
+  # @param section_name [String, NilClass]
+  # @param project_name [String]
+  # @param due_on [String, NilClass]
   def mock_view(project_name:, section_name:,
                 due_at:, due_on:)
     expect_three_tasks_pulled_and_queried(project_name:,
@@ -174,12 +207,13 @@ class TestCLIView < Minitest::Test
   end
 
   # @return [void]
+  # @param section_name [String, NilClass]
   def mock_view_specific_task(section_name:)
     expect_client_pulled
     tasks.expects(:task).with(workspace_name, project_name, task_name,
                               section_name:).returns(task_a)
     expect_task_queried(task_a, task_name, nil, nil)
-    @mocks[:stdout].expects(:puts).with('{"name":"my_task"}')
+    mocks[:stdout].expects(:puts).with('{"name":"my_task"}')
   end
 
   # @return [void]
@@ -229,7 +263,7 @@ class TestCLIView < Minitest::Test
   def test_view_run_with_section_specified_empty_section
     cli = get_test_object do
       mock_view_run_with_section_specified_empty_section
-      @mocks[:stdout].expects(:puts).with(expected_json_section_specified)
+      mocks[:stdout].expects(:puts).with(expected_json_section_specified)
     end
 
     assert_equal(0,
@@ -239,17 +273,20 @@ class TestCLIView < Minitest::Test
                           '']))
   end
 
+  # @return [void]
   def mock_view_run_with_section_specified_normal_project_colon_project
+    # @sg-ignore Unresolved call to to_sym on void
     mock_view(project_name: project_name.to_sym,
               section_name: section_name_str,
               due_on: 'fake_date',
               due_at: nil)
   end
 
+  # @return [void]
   def test_view_run_with_section_specified_normal_project_colon_project
     cli = get_test_object do
       mock_view_run_with_section_specified_normal_project_colon_project
-      @mocks[:stdout].expects(:puts).with(expected_json_section_specified)
+      mocks[:stdout].expects(:puts).with(expected_json_section_specified)
     end
 
     assert_equal(0,
@@ -267,10 +304,11 @@ class TestCLIView < Minitest::Test
               due_at: nil)
   end
 
+  # @return [void]
   def test_view_run_with_section_specified_normal_project
     cli = get_test_object do
       mock_view_run_with_section_specified_normal_project
-      @mocks[:stdout].expects(:puts).with(expected_json_section_specified)
+      mocks[:stdout].expects(:puts).with(expected_json_section_specified)
     end
 
     assert_equal(0,
@@ -282,27 +320,29 @@ class TestCLIView < Minitest::Test
 
   # @return [void]
   def mock_run_with_no_project_specified
-    @mocks[:stderr].expects(:puts).at_least(1)
+    mocks[:stderr].expects(:puts).at_least(1)
   end
 
   # @return [void]
   def test_run_with_no_project_specified
     cli = get_test_object do
       mock_run_with_no_project_specified
-      @mocks[:stdout].expects(:puts)
+      mocks[:stdout].expects(:puts)
     end
 
     assert_equal(64, cli.run(['view', workspace_name]))
   end
 
+  # @return [void]
   def expected_json_view_not_due
     '{"":[{"name":"task_a"}],"section_name:":[{"name":"task_b"},{"name":"task_c"}]}'
   end
 
+  # @return [void]
   def test_view_not_due
     cli = get_test_object do
       mock_run_with_no_section_specified_normal_project(due_on: nil, due_at: nil)
-      @mocks[:stdout].expects(:puts).with(expected_json_view_not_due)
+      mocks[:stdout].expects(:puts).with(expected_json_view_not_due)
     end
 
     assert_equal(0,
@@ -318,10 +358,11 @@ class TestCLIView < Minitest::Test
       '{"name":"task_c","due":"fake time"}]}'
   end
 
+  # @return [void]
   def test_view_due_at
     cli = get_test_object do
       mock_run_with_no_section_specified_normal_project(due_on: nil, due_at: 'fake time')
-      @mocks[:stdout].expects(:puts).with(expected_json_view_due_at)
+      mocks[:stdout].expects(:puts).with(expected_json_view_due_at)
     end
 
     assert_equal(0,

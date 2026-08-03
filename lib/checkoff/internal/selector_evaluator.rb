@@ -11,13 +11,11 @@ module Checkoff
 
       function_evaluators.each do |evaluator_class|
         # @type [Checkoff::SelectorClasses::FunctionEvaluator]
-        # @sg-ignore
         evaluator = evaluator_class.new(selector:,
                                         **initializer_kwargs)
 
         next unless evaluator.matches?
 
-        # @sg-ignore
         return try_this_evaluator(selector, evaluator)
       end
 
@@ -32,18 +30,18 @@ module Checkoff
     end
 
     # @return [Array<Class<Checkoff::SelectorClasses::FunctionEvaluator>>]
-    # @sg-ignore
+    # @sg-ignore abstract method always raises; declared type documents the override contract, not this body
     def function_evaluators
       raise 'Implement me!'
     end
 
-    # @param selector [Array]
+    # @param selector [Symbol, Array]
     # @param evaluator [Checkoff::SelectorClasses::FunctionEvaluator]
     # @return [Array]
     def evaluate_args(selector, evaluator)
       return [] unless selector.is_a?(Array)
 
-      # @sg-ignore
+      # @sg-ignore Array#[] with an open-ended range is inferred as nilable even though it never is here
       selector[1..].map.with_index do |item, index|
         if evaluator.evaluate_arg?(index)
           evaluate(item)
@@ -53,7 +51,7 @@ module Checkoff
       end
     end
 
-    # @param selector [Array]
+    # @param selector [Symbol, Array]
     # @param evaluator [Checkoff::SelectorClasses::FunctionEvaluator]
     # @return [Boolean, Object, nil]
     def try_this_evaluator(selector, evaluator)

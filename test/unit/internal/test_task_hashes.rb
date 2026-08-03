@@ -6,7 +6,11 @@ require_relative '../class_test'
 require 'checkoff/internal/task_hashes'
 
 class TestTaskHashes < ClassTest
-  let_mock :task
+  # @!parse
+  #  # @return [Checkoff::Internal::TaskHashes]
+  #  def get_test_object; end
+
+  typed_let_mock :task, Asana::Resources::Task
 
   MEMBER_OF_SECTION_A_IN_PROJECT_1 = {
     'section' => {
@@ -110,7 +114,7 @@ class TestTaskHashes < ClassTest
     assert_equal(TASK_B_HASH, task_hashes.task_to_h(task))
   end
 
-  # @return [void]
+  # @return [Class]
   def class_under_test
     Checkoff::Internal::TaskHashes
   end

@@ -14,11 +14,9 @@ class TestSectionSelectors < ClassTest
 
   def_delegators(:@mocks, :client, :sections)
 
-  let_mock :section
-
-  let_mock :tasks
-
-  let_mock :milestone
+  typed_let_mock :section, Asana::Resources::Section
+  typed_let_mock :tasks, Asana::ProxiedResourceClasses::Task
+  typed_let_mock :milestone, Asana::Resources::Task
 
   # @return [void]
   def test_filter_via_ends_with_milestone_empty

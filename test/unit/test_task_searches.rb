@@ -8,12 +8,25 @@ require 'checkoff/task_searches'
 class TestTaskSearches < ClassTest
   extend Forwardable
 
+  # @!parse
+  #  # @return [Checkoff::TaskSearches]
+  #  def get_test_object; end
+
   def_delegators(:@mocks, :workspaces, :client, :search_url_parser,
                  :asana_resources_collection_class, :task_selectors)
 
-  let_mock :url, :workspace_name, :workspace, :workspace_gid, :api_params,
-           :task_selector, :search_response, :body, :data, :something_else,
-           :good_task, :bad_task
+  typed_let_mock :workspace_name, String
+  typed_let_mock :url, String
+
+  typed_let_mock :workspace, Asana::Resources::Workspace
+  typed_let_mock :api_params, Hash
+  typed_let_mock :task_selector, Array
+  typed_let_mock :search_response, Asana::HttpClient::Response
+  typed_let_mock :data, Array
+  typed_let_mock :good_task, Asana::Resources::Task
+  typed_let_mock :bad_task, Asana::Resources::Task
+
+  typed_let_mock :something_else, Object
 
   # @return [void]
   def expect_workspace_pulled
@@ -36,6 +49,7 @@ class TestTaskSearches < ClassTest
      'memberships.project.name', 'memberships.section.name', 'name', 'start_at', 'start_on', 'tags']
   end
 
+  # @return [void]
   def expect_client_get_called
     client
       .expects(:get)
@@ -55,6 +69,8 @@ class TestTaskSearches < ClassTest
     body.expects(:fetch).with('data').returns(data)
   end
 
+  # @param response_array [Array<Mocha::Mock>]
+  # @return [void]
   def expect_response_wrapped(response_array)
     asana_resources_collection_class
       .expects(:new)
@@ -95,13 +111,15 @@ class TestTaskSearches < ClassTest
 
   # @return [void]
   def projects
+    # @sg-ignore Wrong argument type for Checkoff::Projects.new: client expected Asana::Client, received Mocha::Mock
+    # https://github.com/castwide/solargraph/issues/1229
     Checkoff::Projects.new(client:)
   end
 
   # @return [void]
   def test_task_search
     task_searches = get_test_object do
-      @mocks[:projects] = projects
+      mocks[:projects] = projects
       mock_task_search
     end
 
@@ -127,7 +145,7 @@ class TestTaskSearches < ClassTest
   # @return [void]
   def test_raw_task_search_without_selector
     task_searches = get_test_object do
-      @mocks[:projects] = projects
+      mocks[:projects] = projects
     end
     collection = mock('collection')
     collection.expects(:count).returns(1)
@@ -158,7 +176,7 @@ class TestTaskSearches < ClassTest
   # @return [void]
   def test_raw_task_search_paginates_when_full_page
     task_searches = get_test_object do
-      @mocks[:projects] = projects
+      mocks[:projects] = projects
     end
     paginated = mock_full_page_raw_task_search(task_searches)
 

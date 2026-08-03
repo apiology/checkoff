@@ -6,7 +6,11 @@ require_relative '../class_test'
 require 'checkoff/internal/task_timing'
 
 class TestTaskTiming < ClassTest
-  let_mock :task
+  # @!parse
+  #  # @return [Checkoff::Internal::TaskTiming]
+  #  def get_test_object; end
+
+  typed_let_mock :task, Asana::Resources::Task
   # @return [void]
   def test_date_or_time_field_by_name_raises_if_unknown_field
     task_timing = get_test_object

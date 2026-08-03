@@ -66,15 +66,48 @@ def typed_mock(mock_sym, type)
   end
 end
 
-def let_mock(*mocks)
-  mocks.each do |mock_sym|
-    let_single_mock(mock_sym)
-  end
+# Like typed_mock, but skips responds_like_instance_of at runtime.
+# ruby-asana's Asana::Resources::Resource#respond_to_missing? assumes an
+# initialized @attributes hash; responds_like_instance_of allocates the
+# responder class via Class#allocate (bypassing #initialize), so any
+# unstubbed method call on the mock crashes with NoMethodError inside
+# ruby-asana itself rather than Mocha's own error. Only the static type
+# (Mocha::Mock & type, via the matching Solargraph macro) is wanted here.
+#
+# @param mock_sym [Symbol]
+# @param type [Class]
+#
+# @return [void]
+def typed_let_mock(mock_sym, type)
+  let_single_mock(mock_sym)
 end
 
 def define_singleton_method_by_proc(obj, name, block)
   metaclass = class << obj; self; end
   metaclass.send(:define_method, name, block)
+end
+
+module Asana
+  # Real (but empty) backing classes for the per-resource collection types
+  # documented in config/annotations_asana.rb's @!parse block (e.g.
+  # Asana::Client#tasks is annotated to return Asana::ProxiedResourceClasses::Task).
+  # That block is YARD-comment-only, so it never defines these constants at
+  # runtime; typed_let_mock needs a real, loadable class to pass as its
+  # `type` argument, so it's defined here and picked up by the @!parse
+  # method annotations for static typing.
+  # rubocop:disable Lint/EmptyClass
+  module ProxiedResourceClasses
+    class Tag; end
+    class Task; end
+    class Workspace; end
+    class Section; end
+    class Project; end
+    class UserTaskList; end
+    class Portfolio; end
+    class User; end
+    class CustomField; end
+  end
+  # rubocop:enable Lint/EmptyClass
 end
 
 # No security (symbold denial of servie) issue; not building

@@ -6,8 +6,15 @@ require_relative 'test_helper'
 
 # Test the Checkoff::CLI class with quickadd subcommand
 class TestCLIQuickadd < Minitest::Test
-  let_mock :config, :workspaces, :sections, :tasks,
-           :workspace, :workspace_gid, :task_a, :task_b, :task_c
+  # @return [Hash]
+  attr_reader :mocks
+
+  typed_let_mock :config, Hash
+  typed_let_mock :workspaces, Checkoff::Workspaces
+  typed_let_mock :sections, Checkoff::Sections
+  typed_let_mock :tasks, Checkoff::Tasks
+  typed_let_mock :workspace, Asana::Resources::Workspace
+  typed_let_mock :workspace_gid, String
 
   # @return [void]
   def workspace_name
@@ -29,10 +36,12 @@ class TestCLIQuickadd < Minitest::Test
     Checkoff::Sections.expects(:new).returns(sections).at_least(0)
   end
 
+  # @return [void]
   def expect_tasks_created
     Checkoff::Tasks.expects(:new).returns(tasks).at_least(0)
   end
 
+  # @return [void]
   def set_mocks
     @mocks = {
       config:,
@@ -44,7 +53,7 @@ class TestCLIQuickadd < Minitest::Test
     }
   end
 
-  # @return [void]
+  # @return [Class<Checkoff::CheckoffGLIApp>]
   def get_test_object(&_twiddle_mocks)
     set_mocks
     expect_workspaces_created
@@ -58,11 +67,11 @@ class TestCLIQuickadd < Minitest::Test
 
   # @return [void]
   def mock_quickadd
-    @mocks[:workspaces].expects(:workspace_or_raise).with(workspace_name).returns(workspace)
+    mocks[:workspaces].expects(:workspace_or_raise).with(workspace_name).returns(workspace)
 
     workspace.expects(:gid).returns(workspace_gid)
-    @mocks[:tasks].expects(:add_task).with('my task name',
-                                           workspace_gid:)
+    mocks[:tasks].expects(:add_task).with('my task name',
+                                          workspace_gid:)
   end
 
   # @return [void]

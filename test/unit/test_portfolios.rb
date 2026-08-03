@@ -8,11 +8,26 @@ require 'checkoff/portfolios'
 class TestPortfolios < ClassTest
   extend Forwardable
 
+  # @!parse
+  #  # @return [Checkoff::Portfolios]
+  #  def get_test_object; end
+
   def_delegators(:@mocks, :workspaces, :client)
 
-  let_mock :workspace_name, :portfolio_name, :portfolio, :workspace, :workspace_gid,
-           :portfolios_api, :wrong_portfolio, :wrong_portfolio_name, :users_api, :me, :me_gid,
-           :portfolio_gid, :project_a
+  typed_let_mock :workspace_name, String
+  typed_let_mock :portfolio_gid, String
+  typed_let_mock :portfolio_name, String
+
+  typed_let_mock :portfolio, Asana::Resources::Portfolio
+  typed_let_mock :workspace, Asana::Resources::Workspace
+  typed_let_mock :workspace_gid, String
+  typed_let_mock :portfolios_api, Asana::ProxiedResourceClasses::Portfolio
+  typed_let_mock :wrong_portfolio, Asana::Resources::Portfolio
+  typed_let_mock :wrong_portfolio_name, String
+  typed_let_mock :users_api, Asana::ProxiedResourceClasses::User
+  typed_let_mock :me, Asana::Resources::User
+  typed_let_mock :me_gid, String
+  typed_let_mock :project_a, Asana::Resources::Project
 
   # @return [void]
   def test_portfolio_or_raise_raises
@@ -35,6 +50,7 @@ class TestPortfolios < ClassTest
     assert_equal(portfolio, portfolios.portfolio_or_raise(workspace_name, portfolio_name))
   end
 
+  # @return [void]
   def expect_workspace_pulled
     workspaces.expects(:workspace_or_raise).with(workspace_name).returns(workspace)
     workspace.expects(:gid).returns(workspace_gid)
@@ -58,6 +74,8 @@ class TestPortfolios < ClassTest
     me.expects(:gid).returns(me_gid)
   end
 
+  # @return [void]
+  # @param portfolio_arr [Array<Mocha::Mock>]
   def expect_portfolios_pulled(portfolio_arr)
     expect_workspace_pulled
     expect_portfolios_api_pulled
@@ -91,7 +109,9 @@ class TestPortfolios < ClassTest
   # @return [void]
   def test_projects_in_portfolios
     portfolios = get_test_object do
-      @mocks[:projects] = Checkoff::Projects.new(client:)
+      # @sg-ignore Wrong argument type for Checkoff::Projects.new: client expected Asana::Client, received Mocha::Mock
+      # https://github.com/castwide/solargraph/issues/1229
+      mocks[:projects] = Checkoff::Projects.new(client:)
       portfolio_arr = [portfolio]
       expect_portfolios_pulled(portfolio_arr)
       client.expects(:portfolios).returns(portfolios_api)

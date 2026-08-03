@@ -24,8 +24,12 @@ module Checkoff
           # @type [Hash{'unwrapped' => Hash}]
           task_data = tasks.task_to_h(task)
           # @type [Hash{'membership_by_project_name' => Hash}]
+          # @sg-ignore Hash#fetch generic<X> leak on rbs >= 4.1.0, fix in progress upstream
+          # https://github.com/castwide/solargraph/pull/1228
           unwrapped = task_data.fetch('unwrapped')
           # @type [Array]
+          # @sg-ignore Hash#fetch generic<X> leak on rbs >= 4.1.0, fix in progress upstream
+          # https://github.com/castwide/solargraph/pull/1228
           projects = unwrapped.fetch('membership_by_project_name').keys
           !(projects - [:my_tasks]).empty?
         end
@@ -45,10 +49,18 @@ module Checkoff
         # @param task [Asana::Resources::Task]
         # @param section_name_prefix [String]
         # @return [Boolean]
-        # @sg-ignore
         def evaluate(task, section_name_prefix)
+          # @type [Hash{'unwrapped' => Hash}]
           task_data = tasks.task_to_h(task)
-          task_data.fetch('unwrapped').fetch('membership_by_section_name').keys.any? do |section_name|
+          # @type [Hash{'membership_by_section_name' => Hash}]
+          # @sg-ignore Hash#fetch generic<X> leak on rbs >= 4.1.0, fix in progress upstream
+          # https://github.com/castwide/solargraph/pull/1228
+          unwrapped = task_data.fetch('unwrapped')
+          # @type [Array]
+          # @sg-ignore Hash#fetch generic<X> leak on rbs >= 4.1.0, fix in progress upstream
+          # https://github.com/castwide/solargraph/pull/1228
+          section_names = unwrapped.fetch('membership_by_section_name').keys
+          section_names.any? do |section_name|
             String(section_name).start_with?(section_name_prefix)
           end
         end
@@ -65,13 +77,21 @@ module Checkoff
           false
         end
 
-        # @sg-ignore
         # @param task [Asana::Resources::Task]
         # @param section_name [String]
         # @return [Boolean]
         def evaluate(task, section_name)
+          # @type [Hash{'unwrapped' => Hash}]
           task_data = tasks.task_to_h(task)
-          task_data.fetch('unwrapped').fetch('membership_by_section_name').keys.any?(section_name)
+          # @type [Hash{'membership_by_section_name' => Hash}]
+          # @sg-ignore Hash#fetch generic<X> leak on rbs >= 4.1.0, fix in progress upstream
+          # https://github.com/castwide/solargraph/pull/1228
+          unwrapped = task_data.fetch('unwrapped')
+          # @type [Array]
+          # @sg-ignore Hash#fetch generic<X> leak on rbs >= 4.1.0, fix in progress upstream
+          # https://github.com/castwide/solargraph/pull/1228
+          section_names = unwrapped.fetch('membership_by_section_name').keys
+          section_names.any?(section_name)
         end
       end
 
@@ -89,13 +109,15 @@ module Checkoff
         # @param task [Asana::Resources::Task]
         # @param project_name [String]
         # @return [Boolean]
-        # @sg-ignore
+        # @sg-ignore Hash#fetch generic<X> leak on rbs >= 4.1.0, fix in progress upstream
+        # https://github.com/castwide/solargraph/pull/1228
         def evaluate(task, project_name)
           project_names = task.memberships.map do |membership|
-            m = T.cast(membership, T::Hash[String, T.untyped])
-            T.cast(m.fetch('project'), T::Hash[String, T.untyped]).fetch('name')
+            # @sg-ignore Hash#fetch generic<X> leak on rbs >= 4.1.0, fix in progress upstream
+            # https://github.com/castwide/solargraph/pull/1228
+            membership.fetch('project').fetch('name')
           end
-          T.cast(project_names.include?(project_name), T::Boolean)
+          project_names.include?(project_name)
         end
       end
 
@@ -132,9 +154,11 @@ module Checkoff
         # @param task [Asana::Resources::Task]
         # @param tag_name [String]
         # @return [Boolean]
-        # @sg-ignore
         def evaluate(task, tag_name)
-          task.tags.map(&:name).include? tag_name
+          # @type [Array<Asana::Resources::Tag>]
+          tags = task.tags.to_a
+          tag_names = tags.map(&:name)
+          tag_names.include?(tag_name)
         end
       end
 
@@ -235,13 +259,13 @@ module Checkoff
 
           # @type [Array<Asana::Resources::Story>]
           stories = task.stories(per_page: 100).to_a.reject do |story|
-            # @sg-ignore
+            # @sg-ignore story's inferred block param type regressed on rbs >= 4.1.0, fix in progress upstream
+            # https://github.com/castwide/solargraph/pull/1228
             excluding_resource_subtypes.include? story.resource_subtype
           end
           return true if stories.empty? # no stories == infinitely old!
 
-          last_story = stories.last
-          # @sg-ignore
+          last_story = T.must(stories.last)
           last_story_created_at = Time.parse(last_story.created_at)
           n_days_ago = Time.at(Time.now.to_i - (num_days * 86_400))
           last_story_created_at < n_days_ago
@@ -365,9 +389,10 @@ module Checkoff
         # @sg-ignore Checkoff::SelectorClasses::Task::MilestonePFunctionEvaluator#evaluate
         #   return type could not be inferred
         def evaluate(task)
-          raise 'Please add resource_subtype to extra_fields' if task.resource_subtype.nil?
+          resource_subtype = task.resource_subtype
+          raise 'Please add resource_subtype to extra_fields' if resource_subtype.nil?
 
-          task.resource_subtype == 'milestone'
+          resource_subtype == 'milestone'
         end
       end
 
