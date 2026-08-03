@@ -8,14 +8,20 @@ require 'checkoff/internal/project_timing'
 class TestProjectTiming < ClassTest
   extend Forwardable
 
+  # @!parse
+  #  # @return [Checkoff::Internal::ProjectTiming]
+  #  def get_test_object; end
+
   def_delegators(:@mocks, :custom_fields)
 
-  let_mock :project, :custom_field_name
+  typed_let_mock :project, Asana::Resources::Project
+
+  typed_let_mock :custom_field_name, String
 
   # @return [void]
   def test_date_or_time_field_by_name_due
     project_timing = get_test_object do
-      @mocks[:date_class] = Date
+      mocks[:date_class] = Date
       project.expects(:due_on).returns('2020-01-23').at_least_once
     end
 
@@ -25,16 +31,17 @@ class TestProjectTiming < ClassTest
   # @return [void]
   def test_date_or_time_field_by_name_due_nil
     project_timing = get_test_object do
-      @mocks[:date_class] = Date
+      mocks[:date_class] = Date
       project.expects(:due_on).returns(nil).at_least_once
     end
 
     assert_nil(project_timing.date_or_time_field_by_name(project, :due))
   end
 
+  # @return [void]
   def test_date_or_time_field_by_name_start
     project_timing = get_test_object do
-      @mocks[:date_class] = Date
+      mocks[:date_class] = Date
       project.expects(:start_on).returns('2020-01-23').at_least_once
     end
 
@@ -44,7 +51,7 @@ class TestProjectTiming < ClassTest
   # @return [void]
   def test_date_or_time_field_by_name_start_nil
     project_timing = get_test_object do
-      @mocks[:date_class] = Date
+      mocks[:date_class] = Date
       project.expects(:start_on).returns(nil).at_least_once
     end
 
@@ -54,7 +61,7 @@ class TestProjectTiming < ClassTest
   # @return [void]
   def test_date_or_time_field_by_name_ready
     project_timing = get_test_object do
-      @mocks[:date_class] = Date
+      mocks[:date_class] = Date
       project.expects(:start_on).returns('2020-01-23').at_least_once
     end
 
@@ -64,7 +71,7 @@ class TestProjectTiming < ClassTest
   # @return [void]
   def test_date_or_time_field_by_name_custom_field
     project_timing = get_test_object do
-      @mocks[:date_class] = Date
+      mocks[:date_class] = Date
       resource_custom_field = {
         'display_value' => '2020-01-23 01:23:00 -0500',
       }
@@ -82,7 +89,7 @@ class TestProjectTiming < ClassTest
   # @return [void]
   def test_date_or_time_field_by_name_custom_field_nil
     project_timing = get_test_object do
-      @mocks[:date_class] = Date
+      mocks[:date_class] = Date
       resource_custom_field = {
         'display_value' => nil,
       }

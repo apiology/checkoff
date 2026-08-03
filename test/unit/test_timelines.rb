@@ -8,11 +8,26 @@ require 'checkoff/timelines'
 class TestTimelines < ClassTest
   extend Forwardable
 
+  # @!parse
+  #  # @return [Checkoff::Timelines]
+  #  def get_test_object; end
+
   def_delegators(:@mocks, :workspaces, :client, :tasks, :sections, :portfolios)
 
-  let_mock :task, :section_2_gid, :section_2, :section_1_gid, :section_1,
-           :milestone, :milestone_gid, :task_gid, :portfolio_name, :default_workspace,
-           :default_workspace_name, :project_a_gid, :project_a
+  typed_let_mock :task, Asana::Resources::Task
+  typed_let_mock :milestone, Asana::Resources::Task
+  typed_let_mock :portfolio_name, String
+
+  typed_let_mock :section_2_gid, String
+  typed_let_mock :section_2, Asana::Resources::Section
+  typed_let_mock :section_1_gid, String
+  typed_let_mock :section_1, Asana::Resources::Section
+  typed_let_mock :milestone_gid, String
+  typed_let_mock :task_gid, String
+  typed_let_mock :default_workspace, Asana::Resources::Workspace
+  typed_let_mock :default_workspace_name, String
+  typed_let_mock :project_a_gid, String
+  typed_let_mock :project_a, Asana::Resources::Project
 
   # @return [void]
   def test_task_dependent_on_previous_section_last_milestone_no_memberships
@@ -20,6 +35,9 @@ class TestTimelines < ClassTest
       expect_task_data_created(task, { 'memberships' => [] })
     end
 
+    # @sg-ignore Wrong argument type for
+    #   Checkoff::Timelines#task_dependent_on_previous_section_last_milestone?: limit_to_portfolio_gid
+    #   expected String, nil, received NilClass
     assert(timelines.task_dependent_on_previous_section_last_milestone?(task, limit_to_portfolio_gid: nil))
   end
 
@@ -46,14 +64,20 @@ class TestTimelines < ClassTest
       mock_task_dependent_on_previous_section_last_milestone_false_no_dependencies
     end
 
+    # @sg-ignore Wrong argument type for
+    #   Checkoff::Timelines#task_dependent_on_previous_section_last_milestone?: limit_to_portfolio_gid
+    #   expected String, nil, received NilClass
     refute(timelines.task_dependent_on_previous_section_last_milestone?(task, limit_to_portfolio_gid: nil))
   end
 
   # @return [void]
+  # @param task [Mocha::Mock]
+  # @param task_data [Hash]
   def expect_task_data_created(task, task_data)
     tasks.expects(:task_to_h).with(task).returns(task_data)
   end
 
+  # @return [void]
   def expect_section_2_pulled
     sections.expects(:section_by_gid).with(section_2_gid).returns(section_2)
   end
@@ -98,6 +122,9 @@ class TestTimelines < ClassTest
       mock_task_dependent_on_previous_section_last_milestone_true_no_tasks
     end
 
+    # @sg-ignore Wrong argument type for
+    #   Checkoff::Timelines#task_dependent_on_previous_section_last_milestone?: limit_to_portfolio_gid
+    #   expected String, nil, received NilClass
     assert(timelines.task_dependent_on_previous_section_last_milestone?(task, limit_to_portfolio_gid: nil))
   end
 
@@ -133,11 +160,15 @@ class TestTimelines < ClassTest
     expect_milestone_queried
   end
 
+  # @return [void]
   def test_task_dependent_on_previous_section_last_milestone_true
     timelines = get_test_object do
       mock_task_dependent_on_previous_section_last_milestone_true
     end
 
+    # @sg-ignore Wrong argument type for
+    #   Checkoff::Timelines#task_dependent_on_previous_section_last_milestone?: limit_to_portfolio_gid
+    #   expected String, nil, received NilClass
     assert(timelines.task_dependent_on_previous_section_last_milestone?(task, limit_to_portfolio_gid: nil))
   end
 
@@ -163,6 +194,9 @@ class TestTimelines < ClassTest
       mock_task_dependent_on_previous_section_last_milestone_false_no_previous_section
     end
 
+    # @sg-ignore Wrong argument type for
+    #   Checkoff::Timelines#task_dependent_on_previous_section_last_milestone?: limit_to_portfolio_gid
+    #   expected String, nil, received NilClass
     refute(timelines.task_dependent_on_previous_section_last_milestone?(task, limit_to_portfolio_gid: nil))
   end
 
@@ -175,16 +209,22 @@ class TestTimelines < ClassTest
     assert(timelines.last_task_milestone_depends_on_this_task?(task))
   end
 
+  # @param dependents [Array<Mocha::Mock>]
+  # @param task [Mocha::Mock]
+  # @return [void]
   def expect_all_dependent_tasks_pulled(task, dependents)
     tasks.expects(:all_dependent_tasks).with(task).returns(dependents)
   end
 
   # @return [void]
+  # @param memberships [Array<Hash>]
+  # @param task [Mocha::Mock]
   def expect_memberships_pulled(task, memberships)
     task.expects(:memberships).returns(memberships)
   end
 
   # @return [void]
+  # @param tasks [Array<Mocha::Mock>]
   def expect_tasks_by_section_gid_pulled(tasks)
     sections.expects(:tasks_by_section_gid)
       .with(section_1_gid, extra_fields: ['resource_subtype'])
@@ -260,6 +300,7 @@ class TestTimelines < ClassTest
   end
 
   # @return [void]
+  # @param projects [Array<Mocha::Mock>]
   def export_portfolio_projects_pulled(projects)
     workspaces.expects(:default_workspace).returns(default_workspace)
     default_workspace.expects(:name).returns(default_workspace_name)

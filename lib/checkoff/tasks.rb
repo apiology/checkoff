@@ -302,7 +302,7 @@ module Checkoff
     #   @return [Boolean]
     def in_portfolio_named?(task,
                             portfolio_name,
-                            workspace_name: @workspaces.default_workspace.name)
+                            workspace_name: T.must(@workspaces.default_workspace.name))
       portfolio_projects = @portfolios.projects_in_portfolio(workspace_name, portfolio_name)
       T.cast(task.memberships.any? do |membership|
         m = T.cast(membership, T::Hash[String, T.untyped])
@@ -319,7 +319,7 @@ module Checkoff
     # @return [Boolean]
     def in_portfolio_more_than_once?(task,
                                      portfolio_name,
-                                     workspace_name: @workspaces.default_workspace.name)
+                                     workspace_name: T.must(@workspaces.default_workspace.name))
       portfolio_projects = @portfolios.projects_in_portfolio(workspace_name, portfolio_name)
       portfolio_project_gids = portfolio_projects.map(&:gid)
       seen = T.let(false, T::Boolean)

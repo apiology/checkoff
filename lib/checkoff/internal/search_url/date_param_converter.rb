@@ -16,8 +16,8 @@ module Checkoff
 
         # @return [Array(Hash{String => String}, Array<Symbol, Array>)]
         # @sg-ignore needs-type-narrowing
-        #   out starts nil and is only conditionally reassigned in the loop below; Solargraph
-        #   doesn't narrow it back to the declared tuple return type
+        #   out can genuinely be nil if none of the 3 known prefixes matched; relies on the raise
+        #   above it
         def convert
           return [{}, []] if date_url_params.empty?
 
@@ -131,16 +131,22 @@ module Checkoff
         end
 
         # @param param_key [String]
-        # @sg-ignore needs-type-narrowing
-        #   value[0] after the length check above is still typed String,nil per Array#[]
         # @return [String]
+        # @sg-ignore needs-type-narrowing
+        #   value.length == 1 guard above isn't inferred as narrowing value[0] to non-nil
         def get_single_param(param_key)
           raise "Expected #{param_key} to have at least one value" unless date_url_params.key? param_key
 
           value = date_url_params.fetch(param_key)
 
+          # @sg-ignore tool-limitation:rbs-4-1-regression
+          #   Hash#fetch generic<X> leak on rbs >= 4.1.0, fix in progress upstream
+          #   https://github.com/castwide/solargraph/pull/1228
           raise "Expected #{param_key} to have one value" if value.length != 1
 
+          # @sg-ignore tool-limitation:rbs-4-1-regression
+          #   Hash#fetch generic<X> leak on rbs >= 4.1.0, fix in progress upstream
+          #   https://github.com/castwide/solargraph/pull/1228
           value[0]
         end
 
@@ -157,6 +163,9 @@ module Checkoff
         def validate_unit_is_day!(prefix)
           unit = date_url_params.fetch("#{prefix}.unit").fetch(0)
 
+          # @sg-ignore tool-limitation:rbs-4-1-regression
+          #   Hash#fetch generic<X> leak on rbs >= 4.1.0, fix in progress upstream
+          #   https://github.com/castwide/solargraph/pull/1228
           raise "Teach me how to handle other time units: #{unit}" unless unit == 'day'
         end
 

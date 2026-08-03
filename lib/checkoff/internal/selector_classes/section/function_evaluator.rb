@@ -22,13 +22,16 @@ module Checkoff
           super()
         end
 
+        # @return [Checkoff::Sections]
+        attr_reader :sections
+
+        # @return [Asana::Client]
+        attr_reader :client
+
         private
 
         # @return [Array(Symbol, Array)]
         attr_reader :selector
-
-        # @return [Asana::Client]
-        attr_reader :client
       end
     end
   end

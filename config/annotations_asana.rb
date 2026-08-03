@@ -5,6 +5,18 @@
 # @!parse
 #   module Asana
 #     class Client
+#       # @yieldparam c [Asana::Client::Configuration]
+#       # @return [void]
+#       def initialize(&block); end
+#       class Configuration
+#         # @param type [Symbol]
+#         # @param value [Object]
+#         # @return [void]
+#         def authentication(type, value); end
+#         # @param value [Hash]
+#         # @return [void]
+#         def default_headers(value); end
+#       end
 #       # @return [Asana::ProxiedResourceClasses::Tag]
 #       def tags; end
 #       # @return [Asana::ProxiedResourceClasses::Task]
@@ -34,6 +46,17 @@
 #       def get(url, **args); end
 #     end
 #     module Resources
+#       class Resource
+#         # @return [String]
+#         def gid; end
+#         # @param filename [String]
+#         # @param mime [String]
+#         # @param io [IO, nil]
+#         # @param options [Hash]
+#         # @param data [Hash]
+#         # @return [Asana::Resources::Attachment]
+#         def attach(filename:, mime:, io: nil, options: {}, **data); end
+#       end
 #       # https://developers.asana.com/reference/gettask
 #       class Task
 #         # @return [String]
@@ -68,6 +91,12 @@
 #         def html_notes; end
 #         # @return [Array<Hash{String => Hash{String => String}}>]
 #         def memberships; end
+#         # @return [Array<Asana::Resources::Tag>]
+#         def tags; end
+#         # @param per_page [Integer] the number of records to fetch per page.
+#         # @param options [Hash] the request I/O options
+#         # @return [Enumerable<Asana::Resources::Story>]
+#         def stories(per_page: 20, options: {}); end
 #         class << self
 #           # @param client [Asana::Client]
 #           # @param assignee [String]
@@ -76,6 +105,18 @@
 #           # @return [Asana::Resources::Task]
 #           def create(client, assignee:, workspace:, name:); end
 #         end
+#       end
+#       class Tag
+#         # @return [String,nil]
+#         def name; end
+#         # @return [String]
+#         def gid; end
+#       end
+#       class Story
+#         # @return [String,nil]
+#         def resource_subtype; end
+#         # @return [String,nil]
+#         def created_at; end
 #       end
 #       class Section
 #         # @return [String,nil]
@@ -102,6 +143,8 @@
 #         def html_notes; end
 #         # @return [String]
 #         def gid; end
+#         # @return [String, nil]
+#         def name; end
 #         class << self
 #           # @param client [Asana::Client]
 #           # @param id [String]

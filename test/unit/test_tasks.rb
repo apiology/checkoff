@@ -9,26 +9,51 @@ require 'checkoff/cli'
 class TestTasks < BaseAsana
   extend Forwardable
 
-  def_delegators :@mocks, :sections, :asana_task, :time_class, :date_class, :client, :workspaces,
+  # @!parse
+  #  # @return [Checkoff::Tasks]
+  #  def get_test_object; end
+
+  def_delegators :@mocks, :sections, :asana_task, :time_class, :date_class, :workspaces,
                  :portfolios
 
-  let_mock :mock_tasks, :modified_mock_tasks, :tasks_by_section,
-           :unflattened_modified_mock_tasks, :task_hashes, :project_gid, :wrong_project,
-           :wrong_project_gid, :asana_tasks_client, :task_gid
+  typed_let_mock :task, Asana::Resources::Task
 
-  let_mock :default_workspace, :workspace_gid, :task_name, :default_assignee_gid
+  # rubocop:disable YARD/TagTypeSyntax
+  # @return [Mocha::Mock & Asana::Client]
+  # @sg-ignore TestTasks#client return type could not be inferred
+  def client
+    # @sg-ignore Unresolved call to client on MyOpenStruct
+    mocks.client
+  end
+  # rubocop:enable YARD/TagTypeSyntax
 
-  let_mock :task,
-           :start_on_string, :start_on_date_obj,
-           :start_on_time_obj,
-           :start_at_string, :start_at_time_obj,
-           :due_at_string, :due_at_time_obj,
-           :due_on_string, :due_on_date_obj,
-           :due_on_time_obj,
-           :asana_entity_project,
-           :dependency_1, :dependency_1_gid,
-           :dependency_1_full_task, :now,
-           :dependent_1, :dependent_1_gid
+  typed_let_mock :task_hashes, Checkoff::Internal::TaskHashes
+  typed_let_mock :project_gid, String
+  typed_let_mock :wrong_project, Asana::Resources::Project
+  typed_let_mock :wrong_project_gid, String
+  typed_let_mock :asana_tasks_client, Asana::ProxiedResourceClasses::Task
+  typed_let_mock :task_gid, String
+
+  typed_let_mock :default_workspace, Asana::Resources::Workspace
+  typed_let_mock :workspace_gid, String
+  typed_let_mock :task_name, String
+  typed_let_mock :default_assignee_gid, String
+
+  typed_let_mock :start_on_string, String
+  typed_let_mock :start_on_date_obj, Date
+  typed_let_mock :start_on_time_obj, Time
+  typed_let_mock :start_at_string, String
+  typed_let_mock :start_at_time_obj, Time
+  typed_let_mock :due_at_string, String
+  typed_let_mock :due_at_time_obj, Time
+  typed_let_mock :due_on_string, String
+  typed_let_mock :due_on_date_obj, Date
+  typed_let_mock :due_on_time_obj, Time
+  typed_let_mock :dependency_1_gid, String
+  typed_let_mock :dependency_1_full_task, Asana::Resources::Task
+  typed_let_mock :now, Time
+  typed_let_mock :dependent_1, Asana::Resources::Task
+  typed_let_mock :dependent_1_gid, String
 
   # @return [void]
   def expect_now_pulled
@@ -36,6 +61,7 @@ class TestTasks < BaseAsana
   end
 
   # @return [void]
+  # @param less_than_now [Boolean]
   def expect_due_on_parsed(less_than_now:)
     date_class.expects(:parse).with(due_on_string).returns(due_on_date_obj).at_least(0)
     due_on_date_obj.expects(:to_time).returns(due_on_time_obj).at_least(0)
@@ -43,6 +69,7 @@ class TestTasks < BaseAsana
   end
 
   # @return [void]
+  # @param less_than_now [Boolean]
   def expect_start_on_parsed(less_than_now:)
     date_class.expects(:parse).with(start_on_string).returns(start_on_date_obj)
     start_on_date_obj.expects(:to_time).returns(start_on_time_obj).at_least(1)
@@ -51,6 +78,7 @@ class TestTasks < BaseAsana
   end
 
   # @return [void]
+  # @param less_than_now [Boolean]
   def expect_start_at_parsed(less_than_now:)
     time_class.expects(:parse).with(start_at_string).returns(start_at_time_obj)
     start_at_time_obj.expects(:localtime).returns(start_at_time_obj)
@@ -75,6 +103,7 @@ class TestTasks < BaseAsana
     refute(tasks.task_ready?(task))
   end
 
+  # @return [void]
   def mock_task_ready_true_start_in_past
     expect_dependency_gids_pulled(task, [])
     allow_task_due(start_on: start_on_string, due_on: due_on_string, due_at: nil)
@@ -111,6 +140,7 @@ class TestTasks < BaseAsana
   end
 
   # @return [void]
+  # @param less_than_now [Boolean]
   def expect_due_at_parsed(less_than_now:)
     time_class.expects(:parse).with(due_at_string).returns(due_at_time_obj)
     due_at_time_obj.expects(:localtime).returns(due_at_time_obj)
@@ -136,6 +166,8 @@ class TestTasks < BaseAsana
   end
 
   # @return [void]
+  # @param dependency_gids [Array<Hash>]
+  # @param task [Mocha::Mock]
   def expect_dependency_gids_pulled(task, dependency_gids)
     task.expects(:instance_variable_get).with(:@dependencies).returns(dependency_gids)
   end
@@ -155,18 +187,22 @@ class TestTasks < BaseAsana
     client.expects(:tasks).returns(asana_tasks_client)
   end
 
-  # @return [void]
+  # @return [Array<String>]
   def default_fields
     ['completed_at', 'due_at', 'due_on', 'memberships.project.gid', 'memberships.project.name',
      'memberships.section.name', 'name', 'start_at', 'start_on', 'tags']
   end
 
-  # @return [void]
+  # @return [Array<String>]
+  # @param extra_fields [Array<String>]
   def fields_including(extra_fields)
     (default_fields + extra_fields).sort.uniq
   end
 
   # @return [void]
+  # @param dependency_full_task [Mocha::Mock]
+  # @param dependency_gid [Mocha::Mock]
+  # @param completed [Boolean]
   def expect_dependency_completion_pulled(dependency_gid, dependency_full_task,
                                           completed)
     expect_task_options_pulled
@@ -185,6 +221,7 @@ class TestTasks < BaseAsana
                                         false)
   end
 
+  # @return [void]
   def test_task_ready_false_dependency
     tasks = get_test_object do
       mock_task_ready_false_dependency
@@ -207,6 +244,7 @@ class TestTasks < BaseAsana
   end
 
   # @return [void]
+  # @param dependency_gid [Mocha::Mock]
   def expect_dependency_missing(dependency_gid)
     expect_task_options_pulled
     expect_asana_tasks_client_pulled
@@ -232,6 +270,14 @@ class TestTasks < BaseAsana
   end
 
   # @return [void]
+  # @param due_at [Mocha::Mock, NilClass]
+  # @param due_on [Mocha::Mock, NilClass]
+  # @param start_at [Mocha::Mock, NilClass]
+  # @param start_on [Mocha::Mock, NilClass]
+  # @sg-ignore Declared type Mocha::Mock, NilClass does not match inferred type nil for variable due_at
+  # @sg-ignore Declared type Mocha::Mock, NilClass does not match inferred type nil for variable due_on
+  # @sg-ignore Declared type Mocha::Mock, NilClass does not match inferred type nil for variable start_at
+  # @sg-ignore Declared type Mocha::Mock, NilClass does not match inferred type nil for variable start_on
   def allow_task_due(start_on: nil, start_at: nil, due_on: nil, due_at: nil)
     allow_start_at_pulled(task, start_at)
     allow_start_on_pulled(task, start_on)
@@ -240,23 +286,34 @@ class TestTasks < BaseAsana
   end
 
   # @return [void]
+  # @param start_at [Mocha::Mock, NilClass]
+  # @param task [Mocha::Mock]
   def allow_start_at_pulled(task, start_at)
     task.expects(:start_at).returns(start_at).at_least(0)
   end
 
+  # @param start_on [Mocha::Mock, NilClass]
+  # @return [void]
+  # @param task [Mocha::Mock]
   def allow_start_on_pulled(task, start_on)
     task.expects(:start_on).returns(start_on).at_least(0)
   end
 
   # @return [void]
+  # @param due_at [Mocha::Mock, NilClass]
+  # @param task [Mocha::Mock]
   def allow_due_at_pulled(task, due_at)
     task.expects(:due_at).returns(due_at).at_least(0)
   end
 
+  # @param due_on [Mocha::Mock, NilClass]
+  # @param task [Mocha::Mock]
+  # @return [void]
   def allow_due_on_pulled(task, due_on)
     task.expects(:due_on).returns(due_on).at_least(0)
   end
 
+  # @return [void]
   def test_url_of_task
     tasks = get_test_object do
       task.expects(:gid).returns('my_gid')
@@ -265,16 +322,17 @@ class TestTasks < BaseAsana
     assert_equal('https://app.asana.com/0/0/my_gid/f', tasks.url_of_task(task))
   end
 
+  # @return [void]
   def expect_task_created
-    @mocks[:asana_task].expects(:create).with(client,
-                                              assignee: default_assignee_gid,
-                                              workspace: workspace_gid,
-                                              name: task_name)
+    mocks[:asana_task].expects(:create).with(client,
+                                             assignee: default_assignee_gid,
+                                             workspace: workspace_gid,
+                                             name: task_name)
   end
 
   # @return [void]
   def mock_add_task
-    @mocks[:config].expects(:fetch).with(:default_assignee_gid)
+    mocks[:config].expects(:fetch).with(:default_assignee_gid)
       .returns(default_assignee_gid)
     expect_task_created
   end
@@ -287,8 +345,12 @@ class TestTasks < BaseAsana
     tasks.send(:add_task, task_name, workspace_gid:)
   end
 
-  let_mock :workspace_name, :project_name, :section_name, :task_name, :task, :project
+  typed_let_mock :workspace_name, String
+  typed_let_mock :project_name, String
+  typed_let_mock :section_name, String
+  typed_let_mock :project, Asana::Resources::Project
 
+  # @return [void]
   def expect_tasks_from_project_pulled
     projects.expects(:tasks_from_project)
       .with(project,
@@ -304,6 +366,8 @@ class TestTasks < BaseAsana
       .returns(project)
   end
 
+  # @param extra_fields [Array<String>]
+  # @return [void]
   def expect_task_by_gid_pulled(extra_fields: [])
     task.expects(:gid).returns(task_gid)
     expect_task_options_pulled
@@ -316,6 +380,7 @@ class TestTasks < BaseAsana
       .returns(task)
   end
 
+  # @return [void]
   def expect_tasks_from_section_pulled
     sections.expects(:tasks).with(workspace_name, project_name, section_name,
                                   only_uncompleted: false,
@@ -324,15 +389,20 @@ class TestTasks < BaseAsana
     expect_task_by_gid_pulled(extra_fields: ['dependencies'])
   end
 
+  # @return [void]
   def projects
+    # @sg-ignore Wrong argument type for Checkoff::Projects.new: workspaces expected Checkoff::Workspaces, received Mocha::Mock
+    # https://github.com/castwide/solargraph/issues/1229
     @projects ||= Checkoff::Projects.new(client:,
                                          workspaces:)
   end
 
+  # @return [void]
   def expect_task_options_pulled
     sections.expects(:projects).returns(projects).at_least(0)
   end
 
+  # @return [void]
   def mock_task_with_section
     expect_tasks_from_section_pulled
     expect_task_options_pulled
@@ -347,6 +417,7 @@ class TestTasks < BaseAsana
     assert_equal(task, returned_task)
   end
 
+  # @return [void]
   def mock_task
     expect_project_pulled
     expect_tasks_from_project_pulled
@@ -423,6 +494,7 @@ class TestTasks < BaseAsana
     assert_nil(tasks.gid_for_task(workspace_name, project_name, :unspecified, task_name))
   end
 
+  # @return [void]
   def test_task_to_h_delegates
     tasks = get_test_object do
       Checkoff::Internal::TaskHashes.expects(:new).returns(task_hashes)

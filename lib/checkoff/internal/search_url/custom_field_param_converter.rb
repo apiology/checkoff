@@ -59,25 +59,24 @@ module Checkoff
         # @param gid [String]
         # @param single_custom_field_params [Hash{String => Array<String>}]
         # @return [Array(Hash{String => String}, Array<Symbol, Array>)]
-        # @sg-ignore dynamic-metaprogramming
-        #   the returned convert value's type depends on which VARIANTS class gets picked at
-        #   runtime
+        # @sg-ignore needs-type-narrowing
+        #   `unless variant_class.nil?` return value isn't inferred as the declared tuple type
         def convert_single_custom_field_params(gid, single_custom_field_params)
           variant_key = "custom_field_#{gid}.variant"
           variant = single_custom_field_params.fetch(variant_key)
           remaining_params = single_custom_field_params.reject { |k, _v| k == variant_key }
+          # @sg-ignore tool-limitation:rbs-4-1-regression
+          #   Hash#fetch generic<X> leak on rbs >= 4.1.0, fix in progress upstream
+          #   https://github.com/castwide/solargraph/pull/1228
           raise "Teach me how to handle #{variant_key} = #{variant}" unless variant.length == 1
 
-          # @sg-ignore dynamic-metaprogramming
-          #   VARIANTS is a Hash{String=>Class}; the class picked here is chosen at runtime
-          # @type [Class<CustomFieldVariant>]
-          # @sg-ignore dynamic-metaprogramming
-          #   same runtime class-dispatch gap
+          # @type [Class<CustomFieldVariant>, nil]
+          # @sg-ignore needs-type-narrowing
+          #   variant.length == 1 guard above isn't inferred as narrowing variant[0] to non-nil
           variant_class = VARIANTS[variant[0]]
           # @type [Array(Hash{String => String}, Array<Symbol, Array>)]
-          # @sg-ignore dynamic-metaprogramming
-          #   variant_class is picked at runtime from VARIANTS, so its #convert return type is
-          #   unresolvable statically
+          # @sg-ignore needs-type-narrowing
+          #   `unless variant_class.nil?` isn't inferred as narrowing the receiver in the same statement
           return variant_class.new(gid, remaining_params).convert unless variant_class.nil?
 
           raise "Teach me how to handle #{variant_key} = #{variant}"
@@ -86,11 +85,10 @@ module Checkoff
         # @param key [String]
         # @return [String]
         # @sg-ignore needs-type-narrowing
-        #   key.split('_')[2].split('.')[0] can be nil (Array#[] on a split result), but the
-        #   declared @return [String] doesn't account for that
+        #   split(...)[n]'s nilable Array indexing isn't inferred as the declared String return
         def gid_from_custom_field_key(key)
           # @sg-ignore needs-type-narrowing
-          #   same Array#[]-can-be-nil gap as the @return declaration above
+          #   split(...)[n] is nilable Array indexing; key's shape guarantees enough parts here
           key.split('_')[2].split('.')[0]
         end
 

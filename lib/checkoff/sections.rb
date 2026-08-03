@@ -142,13 +142,11 @@ module Checkoff
     # @param section_name [String, nil]
     #
     # @return [Array<String>]
-    # @sg-ignore tool-limitation:return-type-didnt-stick
-    #   T.cast(task_array.map(&:name), T::Array[String]) as the tail expression still isn't
-    #   recognized as satisfying the declared @return [Array<String>]
+    # @sg-ignore needs-type-narrowing
+    #   Task#name is nilable; task names are assumed present here
     def section_task_names(workspace_name, project_name, section_name)
       task_array = tasks(workspace_name, project_name, section_name)
-      # @type [Array<String>]
-      T.cast(task_array.map(&:name), T::Array[String])
+      T.cast(task_array.map(&:name), Array)
     end
     cache_method :section_task_names, SHORT_CACHE_TIME
 
@@ -187,21 +185,15 @@ module Checkoff
     #
     # @return [Asana::Resources::Section, nil]
     def previous_section(section)
-      sections = sections_by_project_gid(section.project.fetch('gid'))
+      project_sections = sections_by_project_gid(section.project.fetch('gid'))
 
       # @type [Array<Asana::Resources::Section>]
-      # @sg-ignore needs-yard-annotation
-      #   sections_by_project_gid's Enumerable<Section> declared type doesn't match the inferred
-      #   type of this reassigned local after #to_a
-      sections = sections.to_a
+      project_sections_arr = project_sections.to_a
 
-      index = sections.find_index { |s| s.gid == section.gid }
+      index = project_sections_arr.find_index { |s| s.gid == section.gid }
       return nil if index.nil? || index.zero?
 
-      # @sg-ignore needs-type-narrowing
-      #   index.zero? was already excluded above, so index - 1 can't go out of range, but
-      #   Solargraph doesn't follow that
-      sections[index - 1]
+      project_sections_arr[index - 1]
     end
     cache_method :previous_section, SHORT_CACHE_TIME
 
@@ -302,10 +294,6 @@ module Checkoff
       # @type [String, nil]
       current_section = section_key(section_name)
 
-      # @sg-ignore tool-limitation:hash-value-type-dispatch
-      #   Hash#fetch arg0 expected String,NilClass received String,nil — Solargraph treats the
-      #   nil literal in a Hash{K,nil=>V} declaration and an inferred `nil` union member as
-      #   distinct types; no comment-only fix found
       by_section.fetch(current_section) << task
     end
 

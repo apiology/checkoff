@@ -7,10 +7,21 @@ require_relative 'class_test'
 class TestCustomFields < ClassTest
   extend Forwardable
 
+  # @!parse
+  #  # @return [Checkoff::CustomFields]
+  #  def get_test_object; end
+
   def_delegators(:@mocks, :workspaces, :client)
 
-  let_mock :workspace_name, :custom_field_name, :custom_field, :workspace, :workspace_gid,
-           :custom_fields_api, :wrong_custom_field, :wrong_custom_field_name
+  typed_let_mock :workspace_name, String
+  typed_let_mock :custom_field_name, String
+
+  typed_let_mock :custom_field, Asana::Resources::CustomField
+  typed_let_mock :workspace, Asana::Resources::Workspace
+  typed_let_mock :workspace_gid, String
+  typed_let_mock :custom_fields_api, Asana::ProxiedResourceClasses::CustomField
+  typed_let_mock :wrong_custom_field, Asana::Resources::CustomField
+  typed_let_mock :wrong_custom_field_name, String
 
   # @return [void]
   def test_custom_field_or_raise_raises
@@ -34,6 +45,7 @@ class TestCustomFields < ClassTest
                                                                    custom_field_name))
   end
 
+  # @return [void]
   def expect_workspace_pulled
     workspaces.expects(:workspace_or_raise).with(workspace_name).returns(workspace)
     workspace.expects(:gid).returns(workspace_gid)
@@ -46,6 +58,7 @@ class TestCustomFields < ClassTest
   end
 
   # @return [void]
+  # @param custom_field_arr [Array<Mocha::Mock>]
   def expect_custom_fields_pulled(custom_field_arr)
     expect_workspace_pulled
     client.expects(:custom_fields).returns(custom_fields_api)

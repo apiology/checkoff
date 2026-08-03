@@ -7,11 +7,25 @@ require_relative 'class_test'
 class TestTags < ClassTest
   extend Forwardable
 
+  # @!parse
+  #  # @return [Checkoff::Tags]
+  #  def get_test_object; end
+
   def_delegators(:@mocks, :workspaces, :client)
 
-  let_mock :workspace_name, :tag_name, :tag, :workspace, :workspace_gid,
-           :tags_api, :wrong_tag, :wrong_tag_name, :task_collection, :response,
-           :parsed_data, :response_body, :response_body_data
+  typed_let_mock :workspace_name, String
+  typed_let_mock :tag_name, String
+
+  typed_let_mock :tag, Asana::Resources::Tag
+  typed_let_mock :workspace, Asana::Resources::Workspace
+  typed_let_mock :workspace_gid, String
+  typed_let_mock :tags_api, Asana::ProxiedResourceClasses::Tag
+  typed_let_mock :wrong_tag, Asana::Resources::Tag
+  typed_let_mock :wrong_tag_name, String
+  typed_let_mock :task_collection, Asana::Resources::Collection
+  typed_let_mock :response, Asana::HttpClient::Response
+  typed_let_mock :response_body, Hash
+  typed_let_mock :response_body_data, Array
 
   # @return [void]
   def test_tag_or_raise_raises
@@ -34,6 +48,7 @@ class TestTags < ClassTest
     assert_equal(tag, tags.tag_or_raise(workspace_name, tag_name))
   end
 
+  # @return [void]
   def expect_workspace_pulled
     workspaces.expects(:workspace_or_raise).with(workspace_name).returns(workspace)
     workspace.expects(:gid).returns(workspace_gid)
@@ -46,6 +61,7 @@ class TestTags < ClassTest
   end
 
   # @return [void]
+  # @param tag_arr [Array<Mocha::Mock>]
   def expect_tags_pulled(tag_arr)
     expect_workspace_pulled
     client.expects(:tags).returns(tags_api)
@@ -64,6 +80,7 @@ class TestTags < ClassTest
   end
 
   # @return [void]
+  # @param only_uncompleted [Boolean]
   def mock_tasks(only_uncompleted: true)
     task_params = build_task_params(only_uncompleted)
     merged_task_options = generate_merged_task_options
@@ -75,14 +92,15 @@ class TestTags < ClassTest
     setup_collection_expects
   end
 
-  # @return [void]
+  # @return [Hash{Symbol => Object}]
+  # @param only_uncompleted [Boolean]
   def build_task_params(only_uncompleted)
     task_params = { limit: 100 }
     task_params[:completed_since] = '9999-12-01' if only_uncompleted
     task_params
   end
 
-  # @return [void]
+  # @return [Hash{String => Object}]
   def build_response_body
     {
       'data' => response_body_data,
@@ -90,11 +108,15 @@ class TestTags < ClassTest
   end
 
   # @return [void]
+  # @param merged_task_options [Hash]
+  # @param task_endpoint [String]
+  # @param task_params [Hash{Symbol => Object}]
   def setup_client_expects(task_endpoint, task_params, merged_task_options)
     client.expects(:get).with(task_endpoint, params: task_params, options: merged_task_options).returns(response)
   end
 
   # @return [void]
+  # @param response_body [Hash{String => Object}]
   def setup_response_expects(response_body)
     response.expects(:body).returns(response_body).at_least(1)
   end
@@ -119,7 +141,7 @@ class TestTags < ClassTest
     }
   end
 
-  # @return [void]
+  # @return [Hash]
   def generate_merged_task_options
     {
       fields: %w[name completed_at due_at due_on tags
@@ -129,21 +151,24 @@ class TestTags < ClassTest
     }
   end
 
-  # @return [void]
+  # @return [String]
   def generate_task_endpoint
     tag.expects(:gid).returns('tag_gid').at_least(1)
+    # @sg-ignore gid isn't resolved on the Mocha::Mock & Asana::Resources::Tag intersection type here
     "/tags/#{tag.gid}/tasks"
   end
 
   # @return [void]
   def projects
+    # @sg-ignore Wrong argument type for Checkoff::Projects.new: client expected Asana::Client, received Mocha::Mock
+    # https://github.com/castwide/solargraph/issues/1229
     Checkoff::Projects.new(client:)
   end
 
   # @return [void]
   def test_tasks
     tags = get_test_object do
-      @mocks[:projects] = projects
+      mocks[:projects] = projects
       mock_tasks(only_uncompleted: true)
     end
 
@@ -160,7 +185,7 @@ class TestTags < ClassTest
   # @return [void]
   def test_tasks_with_completed
     tags = get_test_object do
-      @mocks[:projects] = projects
+      mocks[:projects] = projects
       mock_tasks(only_uncompleted: false)
     end
 

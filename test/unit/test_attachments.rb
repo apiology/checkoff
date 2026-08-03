@@ -8,11 +8,20 @@ require 'stringio'
 class TestAttachments < ClassTest
   extend Forwardable
 
+  # @!parse
+  #  # @return [Checkoff::Attachments]
+  #  def get_test_object; end
+
   def_delegators(:@mocks, :client)
 
-  let_mock :attachment_name, :resource, :parent_gid, :response
+  typed_let_mock :resource, Asana::Resources::Resource
+  typed_let_mock :attachment_name, String
+
+  typed_let_mock :parent_gid, String
+  typed_let_mock :response, Asana::HttpClient::Response
 
   # @return [void]
+  # @param url [String]
   def mock_create_attachment_from_url(url)
     resource.expects(:gid).returns(parent_gid)
     body = {
@@ -38,6 +47,7 @@ class TestAttachments < ClassTest
     end
     attachment = attachments.create_attachment_from_url!(url, resource, attachment_name:, just_the_url: true)
 
+    # @sg-ignore Unresolved call to foo
     assert_equal('bar', attachment.foo)
   end
 
@@ -59,10 +69,12 @@ class TestAttachments < ClassTest
   end
 
   # @return [String]
+  # @sg-ignore TestAttachments#capture_attachments_run return type could not be inferred
   def capture_attachments_run
     old_stdout = $stdout
     $stdout = StringIO.new
     Checkoff::Attachments.run
+    # @sg-ignore Unresolved call to string
     $stdout.string
   ensure
     $stdout = old_stdout if old_stdout

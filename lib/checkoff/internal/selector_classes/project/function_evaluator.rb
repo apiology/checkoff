@@ -25,6 +25,15 @@ module Checkoff
           super()
         end
 
+        # @return [Checkoff::Projects]
+        attr_reader :projects
+
+        # @return [Checkoff::Portfolios]
+        attr_reader :portfolios
+
+        # @return [Checkoff::Workspaces]
+        attr_reader :workspaces
+
         private
 
         # @return [Array(Symbol, Array)]

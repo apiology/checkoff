@@ -7,23 +7,28 @@ require 'checkoff/internal/asana_event_filter'
 class TestAsanaEventFilter < ClassTest
   extend Forwardable
 
+  # @!parse
+  #  # @return [Checkoff::Internal::AsanaEventFilter]
+  #  def get_test_object; end
+
   def_delegators(:@mocks, :workspaces, :client, :tasks)
 
-  let_mock :task, :asana_tasks
+  typed_let_mock :task, Asana::Resources::Task
+  typed_let_mock :asana_tasks, Asana::ProxiedResourceClasses::Task
 
   # @return [void]
   def test_matches_nil_filters_true
     asana_event_filter = get_test_object do
-      @mocks[:filters] = nil
+      mocks[:filters] = nil
     end
 
-    assert(asana_event_filter.matches?([{}]))
+    assert(asana_event_filter.matches?({}))
   end
 
   # @return [void]
   def test_matches_zero_filters_false
     asana_event_filter = get_test_object do
-      @mocks[:filters] = []
+      mocks[:filters] = []
     end
 
     refute(asana_event_filter.matches?({}))
@@ -32,7 +37,7 @@ class TestAsanaEventFilter < ClassTest
   # @return [void]
   def test_matches_on_resource_type_true
     asana_event_filter = get_test_object do
-      @mocks[:filters] = [{ 'resource_type' => 'task' }]
+      mocks[:filters] = [{ 'resource_type' => 'task' }]
     end
 
     assert(asana_event_filter.matches?({ 'resource' => { 'resource_type' => 'task' } }))
@@ -41,7 +46,7 @@ class TestAsanaEventFilter < ClassTest
   # @return [void]
   def test_matches_on_resource_subtype_true
     asana_event_filter = get_test_object do
-      @mocks[:filters] = [{ 'resource_subtype' => 'milestone' }]
+      mocks[:filters] = [{ 'resource_subtype' => 'milestone' }]
     end
 
     assert(asana_event_filter.matches?({ 'resource' => { 'resource_subtype' => 'milestone' } }))
@@ -50,15 +55,16 @@ class TestAsanaEventFilter < ClassTest
   # @return [void]
   def test_matches_on_action_true
     asana_event_filter = get_test_object do
-      @mocks[:filters] = [{ 'action' => 'deleted' }]
+      mocks[:filters] = [{ 'action' => 'deleted' }]
     end
 
     assert(asana_event_filter.matches?({ 'action' => 'deleted' }))
   end
 
+  # @return [void]
   def test_matches_on_action_false
     asana_event_filter = get_test_object do
-      @mocks[:filters] = [{ 'action' => 'deleted' }]
+      mocks[:filters] = [{ 'action' => 'deleted' }]
     end
 
     refute(asana_event_filter.matches?({ 'action' => 'completed' }))
@@ -164,7 +170,7 @@ class TestAsanaEventFilter < ClassTest
   # @return [void]
   def test_fetched_section_gid
     asana_event_filter = get_test_object do
-      @mocks[:filters] = [{ 'checkoff:fetched.section.gid' => '123' }]
+      mocks[:filters] = [{ 'checkoff:fetched.section.gid' => '123' }]
       expect_task_fetched('456',
                           ['memberships.project.gid', 'memberships.project.name',
                            'memberships.section.name', 'assignee', 'assignee_section'],
@@ -185,13 +191,16 @@ class TestAsanaEventFilter < ClassTest
   # @return [void]
   def test_matches_on_fields_true
     asana_event_filter = get_test_object do
-      @mocks[:filters] = [{ 'fields' => ['custom_fields'] }]
+      mocks[:filters] = [{ 'fields' => ['custom_fields'] }]
     end
 
     assert(asana_event_filter.matches?(CUSTOM_FIELD_CHANGED_EVENT))
   end
 
   # @return [void]
+  # @param gid [String]
+  # @param task_obj [Mocha::Mock]
+  # @param fields [Array<String>]
   def expect_task_fetched(gid, fields, task_obj)
     client.expects(:tasks).returns(asana_tasks)
     asana_tasks
@@ -204,7 +213,7 @@ class TestAsanaEventFilter < ClassTest
   # @return [void]
   def test_task_completed_event_true
     asana_event_filter = get_test_object do
-      @mocks[:filters] = [
+      mocks[:filters] = [
         {
           'action' => 'changed',
           'fields' => ['completed'],
@@ -223,7 +232,7 @@ class TestAsanaEventFilter < ClassTest
   # @return [void]
   def test_matches_on_parent_gid_true
     asana_event_filter = get_test_object do
-      @mocks[:filters] = [{ 'checkoff:parent.gid' => '90' }]
+      mocks[:filters] = [{ 'checkoff:parent.gid' => '90' }]
     end
 
     assert(asana_event_filter.matches?(TASK_REMOVED_FROM_SECTION_EVENT))
@@ -232,7 +241,7 @@ class TestAsanaEventFilter < ClassTest
   # @return [void]
   def test_matches_on_bad_key_raises
     asana_event_filter = get_test_object do
-      @mocks[:filters] = [{ 'checkoff:bogus' => '90' }]
+      mocks[:filters] = [{ 'checkoff:bogus' => '90' }]
     end
     e = assert_raises(RuntimeError) do
       asana_event_filter.matches?(TASK_REMOVED_FROM_SECTION_EVENT)

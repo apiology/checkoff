@@ -8,42 +8,60 @@ require_relative 'base_asana'
 class TestProjects < BaseAsana
   extend Forwardable
 
+  # @!parse
+  #  # @return [Checkoff::Projects]
+  #  def get_test_object; end
+
   def_delegators(:@mocks, :client, :project_hashes, :project_timing, :timing)
 
   # @return [void]
   def setup_config
-    @mocks[:config] = { personal_access_token: }
+    mocks[:config] = { personal_access_token: }
   end
 
   # @return [void]
   def setup_projects_pulled
-    client.expects(:projects).returns(projects).at_least(1)
+    client.expects(:projects).returns(asana_projects).at_least(1)
   end
 
-  let_mock :workspaces, :workspace_workspace, :some_other_workspace,
-           :workspace_one, :workspace_one_gid, :my_workspace_gid, :n,
-           :workspace_name, :all_workspaces, :my_tasks_project, :tasks,
-           :task_a, :task_b, :user_task_lists, :user_task_list, :project_a_hash,
-           :project, :project_gid, :client_projects, :field_name, :period,
-           :returned_date
+  typed_let_mock :project, Asana::Resources::Project
+  typed_let_mock :workspace_one, Asana::Resources::Workspace
+  typed_let_mock :workspace_one_gid, String
+  typed_let_mock :my_workspace_gid, String
+  typed_let_mock :my_tasks_project, Asana::Resources::Project
+  typed_let_mock :tasks, Asana::ProxiedResourceClasses::Task
+  typed_let_mock :task_a, Asana::Resources::Task
+  typed_let_mock :task_b, Asana::Resources::Task
+  typed_let_mock :user_task_lists, Asana::ProxiedResourceClasses::UserTaskList
+  typed_let_mock :user_task_list, Asana::Resources::UserTaskList
+  typed_let_mock :project_a_hash, Hash
+  typed_let_mock :project_gid, String
+  typed_let_mock :client_projects, Asana::ProxiedResourceClasses::Project
+  typed_let_mock :field_name, Symbol
+  typed_let_mock :period, Symbol
+  typed_let_mock :returned_date, Date
 
-  # @return [void]
+  # @return [Hash{Mocha::Mock => Mocha::Mock}]
   def sample_projects
     { project_a => a_name, project_b => b_name, project_c => c_name }
   end
 
+  # @return [void]
+  # @param workspace_gid [Mocha::Mock]
   def setup_projects_queried(workspace_gid: my_workspace_gid)
-    projects
+    asana_projects
       .expects(:find_by_workspace).with(workspace: workspace_gid,
                                         per_page: 100,
                                         options: { fields: %w[custom_fields name] })
       .returns(sample_projects.keys)
     sample_projects.each do |project, name|
+      # @sg-ignore project's type isn't inferred through this Hash#each tuple-destructuring block param
       project.expects(:name).returns(name).at_least(0)
     end
   end
 
   # @return [void]
+  # @param options [Hash]
   def expect_tasks_found(options:)
     options[:project] = a_gid
     tasks.expects(:find_all).with(**options).returns(tasks)
@@ -51,6 +69,7 @@ class TestProjects < BaseAsana
   end
 
   # @return [void]
+  # @param options [Hash]
   def mock_tasks_from_project(options:)
     setup_config
     project_a.expects(:gid).returns(a_gid)
@@ -89,7 +108,7 @@ class TestProjects < BaseAsana
 
   # @return [void]
   def setup_workspace_pulled
-    @mocks[:workspaces].expects(:workspace_or_raise)
+    mocks[:workspaces].expects(:workspace_or_raise)
       .with('Workspace 1').returns(workspace_one)
     workspace_one.expects(:gid).returns(workspace_one_gid)
   end
@@ -121,6 +140,7 @@ class TestProjects < BaseAsana
     end
   end
 
+  # @return [void]
   def test_project_by_gid
     projects = get_test_object do
       client.expects(:projects).returns(client_projects)
@@ -140,12 +160,13 @@ class TestProjects < BaseAsana
     assert_equal(my_tasks_project, projects.project_or_raise('Workspace 1', :my_tasks))
   end
 
+  # @return [void]
   def mock_project_my_tasks
     setup_config
     setup_workspace_pulled
     setup_projects_pulled
     setup_user_task_list_pulled
-    projects
+    asana_projects
       .expects(:find_by_id).with(my_tasks_in_workspace_gid)
       .returns(my_tasks_project)
   end
@@ -159,6 +180,7 @@ class TestProjects < BaseAsana
     assert_equal(my_tasks_project, projects.project('Workspace 1', :my_tasks))
   end
 
+  # @return [void]
   def test_project_to_h
     projects = get_test_object do
       project_hashes.expects(:project_to_h).with(project_a, project: :not_specified)
@@ -168,6 +190,7 @@ class TestProjects < BaseAsana
     assert_equal(project_a_hash, projects.project_to_h(project_a))
   end
 
+  # @return [void]
   def mock_test_in_period
     project_timing.expects(:date_or_time_field_by_name)
       .with(project, field_name).returns(returned_date)
@@ -200,8 +223,6 @@ class TestProjects < BaseAsana
 
     assert(projects.project_ready?(project, period:))
   end
-
-  let_mock :my_tasks_config
 
   # @return [void]
   def class_under_test

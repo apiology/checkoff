@@ -105,15 +105,9 @@ module Checkoff
         # @param custom_field_name [String]
         # @return [String, nil]
         def evaluate(resource, custom_field_name)
-          # @sg-ignore needs-yard-annotation
-          #   resource_custom_field_by_name declares a bare Hash return; bracket access below can't be typed
-          custom_field = @custom_fields.resource_custom_field_by_name(resource, custom_field_name)
-          # @sg-ignore needs-yard-annotation
-          #   same bare-Hash gap cascading through the nil check
+          custom_field = custom_fields.resource_custom_field_by_name(resource, custom_field_name)
           return nil if custom_field.nil?
 
-          # @sg-ignore needs-yard-annotation
-          #   same bare-Hash gap; bracket access on an untyped Hash value
           custom_field['display_value']
         end
       end
@@ -128,22 +122,13 @@ module Checkoff
           false
         end
 
-        # @sg-ignore needs-yard-annotation
-        #   resource_custom_field_by_gid_or_raise declares a bare Hash return
         # @param resource [Asana::Resources::Task,Asana::Resources::Project]
-        # @sg-ignore needs-yard-annotation
-        #   same bare-Hash gap
         # @param custom_field_gid [String]
         # @return [String, nil]
-        # @sg-ignore needs-yard-annotation
-        #   same bare-Hash gap
         def evaluate(resource, custom_field_gid)
-          # @sg-ignore needs-yard-annotation
-          #   resource_custom_field_by_gid_or_raise declares a bare Hash return
-          custom_field = @custom_fields.resource_custom_field_by_gid_or_raise(resource, custom_field_gid)
-          # @sg-ignore needs-yard-annotation
-          #   bracket access on the same untyped Hash value
-          custom_field['display_value']
+          custom_field = custom_fields.resource_custom_field_by_gid_or_raise(resource, custom_field_gid)
+          display_value = custom_field['display_value']
+          display_value.nil? ? nil : T.cast(display_value, String)
         end
       end
 
@@ -160,22 +145,13 @@ module Checkoff
         end
 
         # @param resource [Asana::Resources::Task,Asana::Resources::Project]
-        # @sg-ignore needs-yard-annotation
-        #   resource_custom_field_values_gids_or_raise's Array<String> element type doesn't
-        #   propagate to the @return below
         # @param custom_field_gid [String]
         # @param custom_field_values_gids [Array<String>]
         # @return [Boolean]
-        # @sg-ignore needs-yard-annotation
-        #   same propagation gap
         def evaluate(resource, custom_field_gid, custom_field_values_gids)
-          # @sg-ignore needs-yard-annotation
-          #   resource_custom_field_values_gids_or_raise's declared type doesn't reach this local
-          actual_custom_field_values_gids = @custom_fields.resource_custom_field_values_gids_or_raise(resource,
-                                                                                                      custom_field_gid)
+          actual_custom_field_values_gids = custom_fields.resource_custom_field_values_gids_or_raise(resource,
+                                                                                                     custom_field_gid)
 
-          # @sg-ignore needs-yard-annotation
-          #   same declared-type propagation gap on #intersect?
           actual_custom_field_values_gids.intersect?(custom_field_values_gids)
         end
       end
@@ -194,23 +170,13 @@ module Checkoff
 
         # @param resource [Asana::Resources::Task,Asana::Resources::Project]
         # @param custom_field_name [String]
-        # @sg-ignore needs-yard-annotation
-        #   resource_custom_field_values_names_by_name's declared Array<String> doesn't match the
-        #   inferred type below (see custom_fields.rb's own annotated ignore on that method)
         # @param custom_field_value_names [Array<String>]
-        # @sg-ignore needs-yard-annotation
-        #   same declared-vs-inferred mismatch
         # @return [Boolean]
         def evaluate(resource, custom_field_name, custom_field_value_names)
           actual_custom_field_values_names =
-            # @sg-ignore needs-yard-annotation
-            #   resource_custom_field_values_names_by_name's declared Array<String> doesn't match
-            #   the inferred type here
-            @custom_fields.resource_custom_field_values_names_by_name(resource,
-                                                                      custom_field_name)
+            custom_fields.resource_custom_field_values_names_by_name(resource,
+                                                                     custom_field_name)
 
-          # @sg-ignore needs-yard-annotation
-          #   same declared-vs-inferred mismatch on #intersect?
           actual_custom_field_values_names.intersect?(custom_field_value_names)
         end
       end
@@ -233,14 +199,10 @@ module Checkoff
         # @return [Boolean]
         def evaluate(resource, custom_field_gid, custom_field_values_gids)
           actual_custom_field_values_gids =
-            # @sg-ignore needs-yard-annotation
-            #   resource_custom_field_values_gids_or_raise's declared type doesn't reach this local
-            @custom_fields.resource_custom_field_values_gids_or_raise(resource,
-                                                                      custom_field_gid)
+            custom_fields.resource_custom_field_values_gids_or_raise(resource,
+                                                                     custom_field_gid)
 
           custom_field_values_gids.all? do |custom_field_value|
-            # @sg-ignore needs-yard-annotation
-            #   same declared-type propagation gap on #include?
             actual_custom_field_values_gids.include?(custom_field_value)
           end
         end
@@ -278,11 +240,10 @@ module Checkoff
 
         # @param _resource [Asana::Resources::Task,Asana::Resources::Project]
         # @return [String]
-        # @sg-ignore tool-limitation:return-type-didnt-stick
-        #   T.cast(selector, String) as the tail expression still isn't recognized as satisfying
-        #   the declared @return [String]
+        # @sg-ignore needs-type-narrowing
+        #   selector is only String here per matches?'s is_a?(String) check, in another method
         def evaluate(_resource)
-          T.cast(selector, String)
+          selector
         end
       end
     end

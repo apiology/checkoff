@@ -54,8 +54,14 @@ module Checkoff
       memberships_data = task_data.fetch('memberships')
       memberships_data.all? do |membership_data|
         # @type [Hash{String => String}]
+        # @sg-ignore tool-limitation:rbs-4-1-regression
+        #   Hash#fetch generic<X> leak on rbs >= 4.1.0, fix in progress upstream
+        #   https://github.com/castwide/solargraph/pull/1228
         section_data = membership_data.fetch('section')
         section_gid = section_data.fetch('gid')
+        # @sg-ignore tool-limitation:rbs-4-1-regression
+        #   Hash#fetch generic<X> leak on rbs >= 4.1.0, fix in progress upstream
+        #   https://github.com/castwide/solargraph/pull/1228
         section = @sections.section_by_gid(section_gid)
         # @sg-ignore needs-type-narrowing
         #   section_by_gid can return nil on a gid lookup miss, and
@@ -70,7 +76,7 @@ module Checkoff
     # @return [Boolean]
     def last_task_milestone_depends_on_this_task?(task, limit_to_portfolio_name: nil)
       unless limit_to_portfolio_name.nil?
-        limit_to_projects = @portfolios.projects_in_portfolio(@workspaces.default_workspace.name,
+        limit_to_projects = @portfolios.projects_in_portfolio(T.must(@workspaces.default_workspace.name),
                                                               limit_to_portfolio_name)
       end
 
@@ -82,14 +88,23 @@ module Checkoff
         md = membership_data
         unless limit_to_portfolio_name.nil?
           # @type [Hash{String => Object}]
+          # @sg-ignore tool-limitation:rbs-4-1-regression
+          #   Hash#fetch generic<X> leak on rbs >= 4.1.0, fix in progress upstream
+          #   https://github.com/castwide/solargraph/pull/1228
           project_data = md.fetch('project')
           project_gid = project_data.fetch('gid')
           next true unless limit_to_projects.map(&:gid).include? project_gid
         end
         # @type [Hash{String => Object}]
+        # @sg-ignore tool-limitation:rbs-4-1-regression
+        #   Hash#fetch generic<X> leak on rbs >= 4.1.0, fix in progress upstream
+        #   https://github.com/castwide/solargraph/pull/1228
         section_data = md.fetch('section')
         section_gid = section_data.fetch('gid')
 
+        # @sg-ignore tool-limitation:rbs-4-1-regression
+        #   Hash#fetch generic<X> leak on rbs >= 4.1.0, fix in progress upstream
+        #   https://github.com/castwide/solargraph/pull/1228
         last_milestone = last_milestone_in_section(section_gid)
 
         next false if last_milestone.nil?
@@ -110,7 +125,7 @@ module Checkoff
     # @return [Boolean]
     def any_milestone_depends_on_this_task?(task, limit_to_portfolio_name: nil)
       unless limit_to_portfolio_name.nil?
-        limit_to_projects = @portfolios.projects_in_portfolio(@workspaces.default_workspace.name,
+        limit_to_projects = @portfolios.projects_in_portfolio(T.must(@workspaces.default_workspace.name),
                                                               limit_to_portfolio_name)
       end
 
@@ -122,6 +137,9 @@ module Checkoff
         md = membership_data
         unless limit_to_portfolio_name.nil?
           # @type [Hash{String => Object}]
+          # @sg-ignore tool-limitation:rbs-4-1-regression
+          #   Hash#fetch generic<X> leak on rbs >= 4.1.0, fix in progress upstream
+          #   https://github.com/castwide/solargraph/pull/1228
           project_data = md.fetch('project')
           project_gid = project_data.fetch('gid')
           next true unless limit_to_projects.map(&:gid).include? project_gid

@@ -65,23 +65,21 @@ module Checkoff
     class << self
       # @return [String]
       # @sg-ignore needs-type-narrowing
-      #   ARGV[1] is typed String,nil; the `|| raise` guard rules out nil but Solargraph doesn't
-      #   narrow it back to String
+      #   `x || raise(...)` isn't inferred as narrowing away the nil branch
       def project_name
         ARGV[1] || raise('Please pass project name to pull tasks from as first argument')
       end
 
-      # @sg-ignore needs-type-narrowing
-      #   ARGV[0] is typed String,nil; the `|| raise` guard rules out nil but Solargraph doesn't
-      #   narrow it back to String
       # @return [String]
+      # @sg-ignore needs-type-narrowing
+      #   `x || raise(...)` isn't inferred as narrowing away the nil branch
       def workspace_name
         ARGV[0] || raise('Please pass workspace name as first argument')
       end
 
       # @return [Array(Symbol, Array)]
-      # @sg-ignore tool-limitation:tuple-type-inference
-      #   T.cast(JSON.parse(...), [Symbol, Array]) — the tuple-shaped cast target doesn't resolve
+      # @sg-ignore needs-type-narrowing
+      #   `x || raise(...)` isn't inferred as narrowing away the nil branch
       def task_selector
         task_selector_json = ARGV[2] || raise('Please pass task_selector in JSON form as third argument')
 

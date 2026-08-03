@@ -7,9 +7,14 @@ require_relative 'class_test'
 class TestClients < ClassTest
   extend Forwardable
 
+  # @!parse
+  #  # @return [Checkoff::Clients]
+  #  def get_test_object; end
+
   def_delegators(:@mocks, :asana_client_class, :config)
 
-  let_mock :client, :personal_access_token
+  typed_let_mock :client, Asana::Client
+  typed_let_mock :personal_access_token, String
 
   # @return [void]
   def expect_client_created
@@ -34,7 +39,7 @@ class TestClients < ClassTest
     assert_equal(client, clients.client)
   end
 
-  # @return [void]
+  # @return [Class]
   def class_under_test
     Checkoff::Clients
   end

@@ -31,6 +31,18 @@ module Checkoff
             end
           end
 
+          public
+
+          # @return [Array<String>]
+          # @sg-ignore tool-limitation:raise-only-body
+          #   abstract method always raises; declared type documents the override contract, not
+          #   this body
+          def convert
+            raise 'Implement me!'
+          end
+
+          private
+
           # @return [String]
           attr_reader :key
 
@@ -226,9 +238,6 @@ module Checkoff
         # @return [Hash{String => String}] the converted params
         def convert
           # @type [Array<Array(String, String)>]
-          # @sg-ignore tool-limitation:block-param-inference
-          #   the inline @type annotations inside this flat_map block don't survive to the
-          #   declared local's type here
           arr_of_tuples = simple_url_params.to_a.flat_map do |key, values|
             # @type
             entry = convert_arg(key, values).each_slice(2).to_a
@@ -267,17 +276,15 @@ module Checkoff
         # https://developers.asana.com/docs/search-tasks-in-a-workspace
         # @param key [String] the name of the search url param
         # @param values [Array<String>] the values of the search url param
-        # @sg-ignore dynamic-metaprogramming
-        #   clazz is picked at runtime from ARGS, a Hash{String=>Class}, so #convert's return
-        #   type is unresolvable statically
-        # @return [Hash{String => String}] the converted params
+        # @return [Array<String>] the converted params, as an alternating key/value flat array
         def convert_arg(key, values)
           # @type [Class<SimpleParam::SimpleParam>]
+          # @sg-ignore tool-limitation:rbs-4-1-regression
+          #   Hash#fetch generic<X> leak on rbs >= 4.1.0, fix in progress upstream
+          #   https://github.com/castwide/solargraph/pull/1228
           clazz = ARGS.fetch(key)
           # @type [SimpleParam::SimpleParam]
           obj = clazz.new(key:, values:)
-          # @sg-ignore dynamic-metaprogramming
-          #   same runtime class-dispatch gap
           obj.convert
         end
 

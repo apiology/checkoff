@@ -5,7 +5,6 @@ require_relative 'test_helper'
 
 # Test a class that uses initializer mocks.
 class ClassTest < Minitest::Test
-  # @return [void]
   # Implement 'class_under_test' returning the class name to be
   # initialized with keyword mocks
   #
@@ -13,6 +12,19 @@ class ClassTest < Minitest::Test
   #    # Go ahead and use concrete value for constructor arg
   #    @mocks[:some_constructor_arg] = 123
   # end
+  #
+  # @return [MyOpenStruct]
+  attr_reader :mocks
+
+  # Implemented by subclasses to return the class under test.
+  # @return [Class]
+  # @sg-ignore abstract method always raises; declared type documents the override contract, not this body
+  def class_under_test
+    raise 'Implement me!'
+  end
+
+  # @param clazz [Class]
+  # @return [Object]
   def get_test_object(clazz = class_under_test, &twiddle_mocks)
     @mocks = get_initializer_mocks(clazz,
                                    respond_like_instance_of:,
@@ -32,17 +44,19 @@ class ClassTest < Minitest::Test
   # setting this to non-nil values, which are validated and require
   # setting a full hash of values
 
-  # @return [void]
+  # @return [Hash{Symbol => Class}, nil]
   def respond_like_instance_of
     nil
   end
 
-  # @return [void]
+  # @return [Hash{Symbol => Class}, nil]
   def respond_like
     nil
   end
 
-  # @return [void]
+  # @param clazz [Class]
+  # @return [Object]
+  # @sg-ignore .new's return isn't resolved through the generic Class-typed clazz reference
   def create_object(clazz = class_under_test)
     clazz.new(**@mocks.to_h)
   end

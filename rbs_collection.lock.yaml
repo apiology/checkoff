@@ -73,6 +73,10 @@ gems:
   version: '0'
   source:
     type: stdlib
+- name: delegate
+  version: '0'
+  source:
+    type: stdlib
 - name: diff-lcs
   version: '1.5'
   source:
@@ -270,7 +274,7 @@ gems:
   source:
     type: stdlib
 - name: rbs
-  version: 4.0.3
+  version: 4.1.1
   source:
     type: rubygems
 - name: rdoc
@@ -354,6 +358,10 @@ gems:
   source:
     type: stdlib
 - name: timeout
+  version: '0'
+  source:
+    type: stdlib
+- name: tmpdir
   version: '0'
   source:
     type: stdlib

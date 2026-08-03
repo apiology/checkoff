@@ -6,8 +6,13 @@ require 'checkoff/cli'
 
 # Test the Checkoff::CLI class with the help option
 class TestCLIHelp < Minitest::Test
-  let_mock :config, :workspaces, :sections, :tasks,
-           :workspace, :workspace_gid, :task_a, :task_b, :task_c
+  # @return [Hash]
+  attr_reader :mocks
+
+  typed_let_mock :config, Hash
+  typed_let_mock :workspaces, Checkoff::Workspaces
+  typed_let_mock :sections, Checkoff::Sections
+  typed_let_mock :tasks, Checkoff::Tasks
 
   # @return [void]
   def expect_workspaces_created
@@ -29,6 +34,7 @@ class TestCLIHelp < Minitest::Test
     Checkoff::Tasks.expects(:new).returns(tasks).at_least(0)
   end
 
+  # @return [void]
   def set_mocks
     @mocks = {
       config:,
@@ -40,7 +46,7 @@ class TestCLIHelp < Minitest::Test
     }
   end
 
-  # @return [void]
+  # @return [Class<Checkoff::CheckoffGLIApp>]
   def get_test_object(&twiddle_mocks)
     set_mocks
     expect_workspaces_created
@@ -55,7 +61,7 @@ class TestCLIHelp < Minitest::Test
   # @return [void]
   def test_run_with_help_arg
     cli = get_test_object do
-      @mocks[:stdout].expects(:puts).at_least(1)
+      mocks[:stdout].expects(:puts).at_least(1)
     end
 
     assert_equal(0, cli.run(['--help']))
