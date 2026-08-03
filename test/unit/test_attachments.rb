@@ -51,6 +51,40 @@ class TestAttachments < ClassTest
     assert_equal('bar', attachment.foo)
   end
 
+  # @return [void]
+  def test_create_attachment_from_downloaded_url
+    url = 'http://example.com/picture.png'
+    # @sg-ignore gem-limitation:webmock
+    stub_request(:get, url).to_return(body: 'fake image bytes', status: 200)
+    # @sg-ignore gem-limitation:mocha
+    resource.expects(:attach).with(filename: 'custom.png', mime: 'image/png', io: instance_of(File))
+
+    attachments = get_test_object
+    attachments.create_attachment_from_url!(url, resource, attachment_name: 'custom.png')
+  end
+
+  # @return [void]
+  def test_create_attachment_from_downloaded_url_no_host
+    attachments = get_test_object
+
+    assert_raises(RuntimeError, /URI has no host/) do
+      attachments.create_attachment_from_url!('/no-host-here', resource, attachment_name: 'custom.png')
+    end
+  end
+
+  # @return [void]
+  def test_create_attachment_from_downloaded_url_bad_response_code
+    url = 'http://example.com/picture.png'
+    # @sg-ignore gem-limitation:webmock
+    stub_request(:get, url).to_return(body: 'not found', status: 404)
+
+    attachments = get_test_object
+
+    assert_raises(RuntimeError, /Error downloading/) do
+      attachments.create_attachment_from_url!(url, resource, attachment_name: 'custom.png')
+    end
+  end
+
   # @param gid [String]
   # @param url [String]
   # @return [Mocha::Mock]
@@ -89,6 +123,21 @@ class TestAttachments < ClassTest
     expect_run_on_attachment(gid, url)
 
     assert_match(/#<Attachment>/, capture_attachments_run)
+  ensure
+    ARGV.replace([$PROGRAM_NAME])
+  end
+
+  # @return [void]
+  def test_run_task_not_found
+    gid = '123'
+    url = 'http://example.com'
+    tasks_client = mock('tasks_client')
+
+    ARGV.replace([gid, url])
+    Checkoff::Tasks.expects(:new).returns(tasks_client)
+    tasks_client.expects(:task_by_gid).with(gid).returns(nil)
+
+    assert_raises(RuntimeError, /Could not find task/) { capture_attachments_run }
   ensure
     ARGV.replace([$PROGRAM_NAME])
   end
