@@ -214,8 +214,12 @@ module Checkoff
 
         # @param task [Asana::Resources::Task]
         # @return [Boolean]
+        # @sg-ignore tool-limitation:context-dependent-return-inference
+        #   CircleCI's fresh environment finds this genuinely unresolved even though local
+        #   solargraph doesn't reproduce it (same local-vs-CI divergence as #1233) -- trusting
+        #   CI, restoring the T.cast this ignore covers.
         def evaluate(task)
-          task.assignee.nil? == true
+          T.cast(task.assignee.nil? == true, T::Boolean)
         end
       end
 
