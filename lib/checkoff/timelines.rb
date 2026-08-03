@@ -63,10 +63,8 @@ module Checkoff
         #   Hash#fetch generic<X> leak on rbs >= 4.1.0, fix in progress upstream
         #   https://github.com/castwide/solargraph/pull/1228
         section = @sections.section_by_gid(section_gid)
-        # @sg-ignore needs-type-narrowing
-        #   section_by_gid can return nil on a gid lookup miss, and
-        #   task_data_dependent_on_previous_section_last_milestone? dereferences it immediately
-        #   without a nil guard — looks like a real gap, flagging for the follow-up code PR
+        next false if section.nil?
+
         task_data_dependent_on_previous_section_last_milestone?(task_data, section)
       end
     end

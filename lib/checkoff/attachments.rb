@@ -130,19 +130,19 @@ module Checkoff
     def create_attachment_from_downloaded_url!(url, resource, attachment_name:,
                                                verify_mode: OpenSSL::SSL::VERIFY_PEER)
       uri = URI(url)
-      attachment_name ||= File.basename(uri.path)
+      # @type [String]
+      resolved_attachment_name = attachment_name || File.basename(uri.path)
       download_uri(uri, verify_mode:) do |tempfile|
-        # @sg-ignore needs-type-narrowing
-        #   attachment_name reassignment above isn't narrowed from the declared [String, nil]
-        #   param type — needs a fresh typed local, deferred to a follow-up code PR
-        content_type ||= content_type_from_filename(attachment_name)
+        content_type = content_type_from_filename(resolved_attachment_name)
         # @sg-ignore tool-limitation:type-narrowing
         #   URI::Generic#path can be nil
         content_type ||= content_type_from_filename(uri.path)
+        # neither the attachment name nor the URL's path has a MIME-recognizable extension
+        content_type ||= 'application/octet-stream'
 
-        # @sg-ignore needs-type-narrowing
-        #   same attachment_name/content_type narrowing gap as above
-        resource.attach(filename: attachment_name, mime: content_type,
+        # @sg-ignore tool-limitation:type-narrowing
+        #   https://github.com/castwide/solargraph/issues/1250
+        resource.attach(filename: resolved_attachment_name, mime: content_type,
                         io: tempfile)
       end
     end
@@ -201,8 +201,10 @@ module Checkoff
         tasks = Checkoff::Tasks.new
         attachments = Checkoff::Attachments.new
         task = tasks.task_by_gid(gid)
-        # @sg-ignore needs-type-narrowing
-        #   task_by_gid can return nil; needs a raise-if-nil guard, deferred to a follow-up code PR
+        raise "Could not find task #{gid}" if task.nil?
+
+        # @sg-ignore tool-limitation:type-narrowing
+        #   https://github.com/castwide/solargraph/issues/1254
         attachment = attachments.create_attachment_from_url!(url, task)
         puts "Results: #{attachment.inspect}"
       end

@@ -80,10 +80,9 @@ module Checkoff
     # @param resource [Asana::Resources::Project,Asana::Resources::Task]
     # @param custom_field_name [String]
     # @return [Array<String>]
-    # @sg-ignore needs-yard-annotation
-    #   Declared return type Array<String> does not match inferred type Array,Array<Array> —
-    #   fixing cleanly needs binding enum_value.fetch('name') to a typed local; leaving for a
-    #   follow-up code PR to keep this one annotation-only.
+    # @sg-ignore tool-limitation:rbs-4-1-regression
+    #   Hash#fetch generic<X> leak on rbs >= 4.1.0, fix in progress upstream
+    #   https://github.com/castwide/solargraph/pull/1228
     def resource_custom_field_values_names_by_name(resource, custom_field_name)
       custom_field = resource_custom_field_by_name(resource, custom_field_name)
       return [] if custom_field.nil?
@@ -152,10 +151,9 @@ module Checkoff
     # @param custom_field [Hash{String => Hash,Array<Hash>}]
     #
     # @return [Array<Hash>]
-    # @sg-ignore needs-yard-annotation
-    #   Declared return type Array<Hash> does not match inferred type Array,Hash,Array<Hash> —
-    #   fixing cleanly needs restructuring the case/when to bind each branch to a typed local;
-    #   leaving for a follow-up code PR to keep this one annotation-only.
+    # @sg-ignore tool-limitation:rbs-4-1-regression
+    #   Hash#fetch generic<X> leak on rbs >= 4.1.0, fix in progress upstream
+    #   https://github.com/castwide/solargraph/pull/1228
     def resource_custom_field_enum_values(custom_field)
       resource_subtype = custom_field.fetch('resource_subtype')
       case resource_subtype
