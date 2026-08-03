@@ -134,9 +134,7 @@ module Checkoff
       resolved_attachment_name = attachment_name || File.basename(uri.path)
       download_uri(uri, verify_mode:) do |tempfile|
         content_type = content_type_from_filename(resolved_attachment_name)
-        # @sg-ignore tool-limitation:type-narrowing
-        #   URI::Generic#path can be nil
-        content_type ||= content_type_from_filename(uri.path)
+        content_type ||= content_type_from_filename(uri.path || '')
         # neither the attachment name nor the URL's path has a MIME-recognizable extension
         content_type ||= 'application/octet-stream'
 

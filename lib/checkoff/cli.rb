@@ -193,8 +193,7 @@ module Checkoff
         run_on_section(workspace_name, project_name, section_name)
       else
         # @sg-ignore tool-limitation:type-narrowing
-        #   section_name/task_name are typed [String, Symbol, nil] on the param, but reaching this
-        #   branch means both nil-checks above already passed; Solargraph doesn't narrow that
+        #   https://github.com/castwide/solargraph/issues/1249
         run_on_task(workspace_name, project_name, section_name, task_name)
       end
     end

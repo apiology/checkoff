@@ -142,11 +142,9 @@ module Checkoff
     # @param section_name [String, nil]
     #
     # @return [Array<String>]
-    # @sg-ignore tool-limitation:type-narrowing
-    #   Task#name is nilable; task names are assumed present here
     def section_task_names(workspace_name, project_name, section_name)
       task_array = tasks(workspace_name, project_name, section_name)
-      T.cast(task_array.map(&:name), Array)
+      task_array.filter_map(&:name)
     end
     cache_method :section_task_names, SHORT_CACHE_TIME
 
