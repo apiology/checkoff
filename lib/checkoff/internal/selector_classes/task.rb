@@ -259,6 +259,8 @@ module Checkoff
 
           # @type [Array<Asana::Resources::Story>]
           stories = task.stories(per_page: 100).to_a.reject do |story|
+            # @sg-ignore story's inferred block param type regressed on rbs >= 4.1.0, fix in progress upstream
+            # https://github.com/castwide/solargraph/pull/1228
             excluding_resource_subtypes.include? story.resource_subtype
           end
           return true if stories.empty? # no stories == infinitely old!
