@@ -18,8 +18,11 @@ module Checkoff
         # @param section [Asana::Resources::Section]
         #
         # @return [Boolean]
-        # @sg-ignore tool-limitation:return-type-didnt-stick
-        #   String, nil safe-nav chain isn't inferred as returning Boolean
+        # @sg-ignore needs-yard-annotation
+        #   Asana::ProxiedResourceClasses::Task#get_tasks has no @!parse stub in
+        #   config/annotations_asana.rb, so its return type is fully unresolved ("Unresolved
+        #   call to last" when T.unsafe is removed) — the T.unsafe here isn't papering over a
+        #   Boolean-inference gap, it's working around this missing stub
         def evaluate(section)
           tasks = client.tasks.get_tasks(section: section.gid,
                                          per_page: 100,

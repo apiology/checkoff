@@ -222,12 +222,8 @@ module Checkoff
 
         # @param task [Asana::Resources::Task]
         # @return [Boolean]
-        # @sg-ignore tool-limitation:return-type-didnt-stick
-        #   Checkoff::SelectorClasses::Task::UnassignedPFunctionEvaluator#evaluate return type
-        #   could not be inferred — T.cast(..., T::Boolean) as the tail expression still isn't
-        #   recognized as satisfying the declared @return [Boolean]
         def evaluate(task)
-          T.cast(task.assignee.nil? == true, T::Boolean)
+          task.assignee.nil? == true
         end
       end
 
@@ -241,10 +237,13 @@ module Checkoff
 
         # @param task [Asana::Resources::Task]
         # @return [Boolean]
-        # @sg-ignore tool-limitation:return-type-didnt-stick
+        # @sg-ignore tool-limitation:context-dependent-return-inference
         #   Checkoff::SelectorClasses::Task::DueDateSetPFunctionEvaluator#evaluate return type
-        #   could not be inferred — T.cast(..., T::Boolean) as the tail expression still isn't
-        #   recognized as satisfying the declared @return [Boolean]
+        #   could not be inferred — confirmed via a minimal Sorbet-free repro that the bare
+        #   negated-&&-of-.nil?-checks expression alone is not the trigger (it types fine in
+        #   isolation, with or without a T.cast wrapper); only reproduces inside this real
+        #   multi-class file, not in an isolated 1-2 class repro — same class of context-
+        #   dependent corruption already reported upstream in castwide/solargraph#1233
         def evaluate(task)
           T.cast(!(task.due_at.nil? && task.due_on.nil?), T::Boolean)
         end
@@ -400,10 +399,6 @@ module Checkoff
         # @param task [Asana::Resources::Task]
         #
         # @return [Boolean]
-        # @sg-ignore tool-limitation:return-type-didnt-stick
-        #   Checkoff::SelectorClasses::Task::MilestonePFunctionEvaluator#evaluate return type
-        #   could not be inferred — task.resource_subtype's method_missing-dispatched type makes
-        #   the trailing == comparison's Boolean result not stick to the declared @return
         def evaluate(task)
           resource_subtype = task.resource_subtype
           raise 'Please add resource_subtype to extra_fields' if resource_subtype.nil?
