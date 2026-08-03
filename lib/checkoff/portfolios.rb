@@ -47,7 +47,8 @@ module Checkoff
     # @param portfolio_name [String]
     #
     # @return [Asana::Resources::Portfolio]
-    # @sg-ignore nil check above is not flow-sensitive
+    # @sg-ignore needs-type-narrowing
+    #   nil check above is not flow-sensitive
     def portfolio_or_raise(workspace_name, portfolio_name)
       portfolio_obj = portfolio(workspace_name, portfolio_name)
       raise "Could not find portfolio #{portfolio_name} under workspace #{workspace_name}." if portfolio_obj.nil?

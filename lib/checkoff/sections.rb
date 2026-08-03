@@ -142,7 +142,9 @@ module Checkoff
     # @param section_name [String, nil]
     #
     # @return [Array<String>]
-    # @sg-ignore
+    # @sg-ignore tool-limitation:return-type-didnt-stick
+    #   T.cast(task_array.map(&:name), T::Array[String]) as the tail expression still isn't
+    #   recognized as satisfying the declared @return [Array<String>]
     def section_task_names(workspace_name, project_name, section_name)
       task_array = tasks(workspace_name, project_name, section_name)
       # @type [Array<String>]
@@ -156,7 +158,8 @@ module Checkoff
     # @param extra_section_fields [Array<String>]
     #
     # @return [Asana::Resources::Section]
-    # @sg-ignore section() is nil-checked below
+    # @sg-ignore needs-type-narrowing
+    #   section() is nil-checked below
     def section_or_raise(workspace_name, project_name, section_name, extra_section_fields: [])
       s = section(workspace_name, project_name, section_name,
                   extra_section_fields:)
@@ -187,13 +190,17 @@ module Checkoff
       sections = sections_by_project_gid(section.project.fetch('gid'))
 
       # @type [Array<Asana::Resources::Section>]
-      # @sg-ignore
+      # @sg-ignore needs-yard-annotation
+      #   sections_by_project_gid's Enumerable<Section> declared type doesn't match the inferred
+      #   type of this reassigned local after #to_a
       sections = sections.to_a
 
       index = sections.find_index { |s| s.gid == section.gid }
       return nil if index.nil? || index.zero?
 
-      # @sg-ignore
+      # @sg-ignore needs-type-narrowing
+      #   index.zero? was already excluded above, so index - 1 can't go out of range, but
+      #   Solargraph doesn't follow that
       sections[index - 1]
     end
     cache_method :previous_section, SHORT_CACHE_TIME
@@ -295,16 +302,18 @@ module Checkoff
       # @type [String, nil]
       current_section = section_key(section_name)
 
-      # @sg-ignore Hash#fetch arg0 expected String,NilClass received String,nil — Solargraph
-      #   treats the nil literal in a Hash{K,nil=>V} declaration and an inferred `nil` union
-      #   member as distinct types; no comment-only fix found
+      # @sg-ignore tool-limitation:hash-value-type-dispatch
+      #   Hash#fetch arg0 expected String,NilClass received String,nil — Solargraph treats the
+      #   nil literal in a Hash{K,nil=>V} declaration and an inferred `nil` union member as
+      #   distinct types; no comment-only fix found
       by_section.fetch(current_section) << task
     end
 
     # @param workspace_name [String, Symbol]
     # @param project_name [String, Symbol]
     # @return [Asana::Resources::Project]
-    # @sg-ignore projects.project may be nil but is raised below
+    # @sg-ignore needs-type-narrowing
+    #   projects.project may be nil but is raised below
     def project_or_raise(workspace_name, project_name)
       raise ArgumentError, 'Provide nil project_name' if T.unsafe(project_name).nil?
 

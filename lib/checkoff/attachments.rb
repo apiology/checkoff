@@ -86,8 +86,9 @@ module Checkoff
     def download_uri(uri, verify_mode: OpenSSL::SSL::VERIFY_PEER, &block)
       out = nil
       Net::HTTP.start(uri.host, uri.port, use_ssl: uri.scheme == 'https', verify_mode:) do |http|
-        # @sg-ignore Unresolved constant Net::HTTP::Get / Unresolved call to request —
-        #   stdlib RBS gap on Net::HTTP block param types
+        # @sg-ignore tool-limitation:net-http-stdlib-gap
+        #   Unresolved constant Net::HTTP::Get / Unresolved call to request — stdlib RBS gap on
+        #   Net::HTTP block param types
         http.request(Net::HTTP::Get.new(uri)) do |response|
           raise("Unexpected response code: #{response.code}") unless response.code == '200'
 
@@ -108,7 +109,8 @@ module Checkoff
     def write_tempfile_from_response(response)
       Tempfile.create('checkoff') do |tempfile|
         tempfile.binmode
-        # @sg-ignore Unresolved call to read_body on #read_body
+        # @sg-ignore tool-limitation:net-http-stdlib-gap
+        #   Unresolved call to read_body on #read_body — same Net::HTTP stdlib RBS gap
         response.read_body do |chunk|
           tempfile.write(chunk)
         end
@@ -130,13 +132,16 @@ module Checkoff
       uri = URI(url)
       attachment_name ||= File.basename(uri.path)
       download_uri(uri, verify_mode:) do |tempfile|
-        # @sg-ignore attachment_name reassignment above isn't narrowed from the declared
-        #   [String, nil] param type — needs a fresh typed local, deferred to a follow-up code PR
+        # @sg-ignore needs-type-narrowing
+        #   attachment_name reassignment above isn't narrowed from the declared [String, nil]
+        #   param type — needs a fresh typed local, deferred to a follow-up code PR
         content_type ||= content_type_from_filename(attachment_name)
-        # @sg-ignore URI::Generic#path can be nil
+        # @sg-ignore needs-type-narrowing
+        #   URI::Generic#path can be nil
         content_type ||= content_type_from_filename(uri.path)
 
-        # @sg-ignore same attachment_name/content_type narrowing gap as above
+        # @sg-ignore needs-type-narrowing
+        #   same attachment_name/content_type narrowing gap as above
         resource.attach(filename: attachment_name, mime: content_type,
                         io: tempfile)
       end
@@ -196,8 +201,8 @@ module Checkoff
         tasks = Checkoff::Tasks.new
         attachments = Checkoff::Attachments.new
         task = tasks.task_by_gid(gid)
-        # @sg-ignore task_by_gid can return nil; needs a raise-if-nil guard, deferred to a
-        #   follow-up code PR
+        # @sg-ignore needs-type-narrowing
+        #   task_by_gid can return nil; needs a raise-if-nil guard, deferred to a follow-up code PR
         attachment = attachments.create_attachment_from_url!(url, task)
         puts "Results: #{attachment.inspect}"
       end

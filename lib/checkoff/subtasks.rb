@@ -90,7 +90,9 @@ module Checkoff
     #
     # @param subtask [Asana::Resources::Task]
     # @return [Boolean, nil]
-    # @sg-ignore Checkoff::Subtasks#subtask_section? return type could not be inferred
+    # @sg-ignore dynamic-metaprogramming
+    #   Checkoff::Subtasks#subtask_section? return type could not be inferred —
+    #   subtask.is_rendered_as_separator is dispatched via the asana gem's method_missing
     def subtask_section?(subtask)
       subtask.is_rendered_as_separator
     end

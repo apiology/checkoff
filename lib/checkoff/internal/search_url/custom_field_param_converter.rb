@@ -59,19 +59,25 @@ module Checkoff
         # @param gid [String]
         # @param single_custom_field_params [Hash{String => Array<String>}]
         # @return [Array(Hash{String => String}, Array<Symbol, Array>)]
-        # @sg-ignore
+        # @sg-ignore dynamic-metaprogramming
+        #   the returned convert value's type depends on which VARIANTS class gets picked at
+        #   runtime
         def convert_single_custom_field_params(gid, single_custom_field_params)
           variant_key = "custom_field_#{gid}.variant"
           variant = single_custom_field_params.fetch(variant_key)
           remaining_params = single_custom_field_params.reject { |k, _v| k == variant_key }
           raise "Teach me how to handle #{variant_key} = #{variant}" unless variant.length == 1
 
-          # @sg-ignore
+          # @sg-ignore dynamic-metaprogramming
+          #   VARIANTS is a Hash{String=>Class}; the class picked here is chosen at runtime
           # @type [Class<CustomFieldVariant>]
-          # @sg-ignore
+          # @sg-ignore dynamic-metaprogramming
+          #   same runtime class-dispatch gap
           variant_class = VARIANTS[variant[0]]
           # @type [Array(Hash{String => String}, Array<Symbol, Array>)]
-          # @sg-ignore
+          # @sg-ignore dynamic-metaprogramming
+          #   variant_class is picked at runtime from VARIANTS, so its #convert return type is
+          #   unresolvable statically
           return variant_class.new(gid, remaining_params).convert unless variant_class.nil?
 
           raise "Teach me how to handle #{variant_key} = #{variant}"
@@ -79,9 +85,12 @@ module Checkoff
 
         # @param key [String]
         # @return [String]
-        # @sg-ignore
+        # @sg-ignore needs-type-narrowing
+        #   key.split('_')[2].split('.')[0] can be nil (Array#[] on a split result), but the
+        #   declared @return [String] doesn't account for that
         def gid_from_custom_field_key(key)
-          # @sg-ignore
+          # @sg-ignore needs-type-narrowing
+          #   same Array#[]-can-be-nil gap as the @return declaration above
           key.split('_')[2].split('.')[0]
         end
 

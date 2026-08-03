@@ -192,7 +192,9 @@ module Checkoff
       elsif task_name.nil?
         run_on_section(workspace_name, project_name, section_name)
       else
-        # @sg-ignore
+        # @sg-ignore needs-type-narrowing
+        #   section_name/task_name are typed [String, Symbol, nil] on the param, but reaching this
+        #   branch means both nil-checks above already passed; Solargraph doesn't narrow that
         run_on_task(workspace_name, project_name, section_name, task_name)
       end
     end
@@ -243,7 +245,8 @@ module Checkoff
       task = tasks.task(workspace.to_s, project, task_name, section_name: section)
       raise "Task not found: #{task_name}" if task.nil?
 
-      # @sg-ignore nil check above is not flow-sensitive
+      # @sg-ignore needs-type-narrowing
+      #   nil check above is not flow-sensitive
       task_to_hash(task).to_json
     end
 
@@ -312,7 +315,8 @@ module Checkoff
     arg 'workspace'
     arg 'task_name'
     command :quickadd do |c|
-      # @sg-ignore
+      # @sg-ignore dynamic-metaprogramming
+      #   c is yielded by GLI's command DSL block; the gem ships no type info for it
       c.action do |_global_options, _options, args|
         workspace_name = args.fetch(0)
         task_name = args.fetch(1)
@@ -327,7 +331,8 @@ module Checkoff
     arg 'section', :optional
     arg 'task_name', :optional
     command :view do |c|
-      # @sg-ignore
+      # @sg-ignore dynamic-metaprogramming
+      #   c is yielded by GLI's command DSL block; the gem ships no type info for it
       c.action do |_global_options, _options, args|
         workspace_name = args.fetch(0)
         project_name = args.fetch(1)
@@ -342,37 +347,44 @@ module Checkoff
 
     # rubocop:disable Metrics/BlockLength
     command :mv do |c|
-      # @sg-ignore
+      # @sg-ignore dynamic-metaprogramming
+      #   c is yielded by GLI's command DSL block; the gem ships no type info for it
       c.flag :from_workspace,
              type: String,
              default_value: :default_workspace,
              desc: 'Workspace to move tasks from'
-      # @sg-ignore
+      # @sg-ignore dynamic-metaprogramming
+      #   c is yielded by GLI's command DSL block; the gem ships no type info for it
       c.flag :from_project,
              type: String,
              required: true,
              desc: 'Project to move tasks from'
-      # @sg-ignore
+      # @sg-ignore dynamic-metaprogramming
+      #   c is yielded by GLI's command DSL block; the gem ships no type info for it
       c.flag :from_section,
              type: String,
              default_value: :all_sections,
              desc: 'Section to move tasks from'
-      # @sg-ignore
+      # @sg-ignore dynamic-metaprogramming
+      #   c is yielded by GLI's command DSL block; the gem ships no type info for it
       c.flag :to_workspace,
              type: String,
              default_value: :source_workspace,
              desc: 'Workspace to move tasks to'
-      # @sg-ignore
+      # @sg-ignore dynamic-metaprogramming
+      #   c is yielded by GLI's command DSL block; the gem ships no type info for it
       c.flag :to_project,
              type: String,
              default_value: :source_project,
              desc: 'Section to move tasks to'
-      # @sg-ignore
+      # @sg-ignore dynamic-metaprogramming
+      #   c is yielded by GLI's command DSL block; the gem ships no type info for it
       c.flag :to_section,
              type: String,
              default_value: :source_section,
              desc: 'Section to move tasks to'
-      # @sg-ignore
+      # @sg-ignore dynamic-metaprogramming
+      #   c is yielded by GLI's command DSL block; the gem ships no type info for it
       c.action do |_global_options, options, _args|
         from_workspace = options.fetch('from_workspace')
         from_project = options.fetch('from_project')

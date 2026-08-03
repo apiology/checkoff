@@ -37,7 +37,8 @@ local_file = File.join(repo_root, '.local-overcommit.yml')
 
 unless File.exist?(local_file)
   source = sibling_worktree_local_overcommit(repo_root)
-  # @sg-ignore FileUtils.ln_sf
+  # @sg-ignore tool-limitation:other
+  #   FileUtils.ln_sf has incomplete stdlib RBS coverage
   FileUtils.ln_sf(source, local_file) if source
 end
 
@@ -47,5 +48,6 @@ raw_config = load_local_overcommit_config(local_file)
 return unless raw_config&.[]('verify_signatures') == false
 
 signed = String(`git config --local --get overcommit.configuration.verifysignatures 2>/dev/null`).strip
-# @sg-ignore Unresolved call to []= on RBS::Unnamed::ENVClass
+# @sg-ignore tool-limitation:env-class-rbs-gap
+#   Unresolved call to []= on RBS::Unnamed::ENVClass
 ENV['OVERCOMMIT_NO_VERIFY'] = '1' if signed != '0'

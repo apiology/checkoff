@@ -41,7 +41,8 @@ module Checkoff
     # @param custom_field_name [String]
     #
     # @return [Asana::Resources::CustomField]
-    # @sg-ignore nil check above is not flow-sensitive
+    # @sg-ignore needs-type-narrowing
+    #   nil check above is not flow-sensitive
     def custom_field_or_raise(workspace_name, custom_field_name)
       cf = custom_field(workspace_name, custom_field_name)
       raise "Could not find custom_field #{custom_field_name} under workspace #{workspace_name}." if cf.nil?
@@ -79,7 +80,8 @@ module Checkoff
     # @param resource [Asana::Resources::Project,Asana::Resources::Task]
     # @param custom_field_name [String]
     # @return [Array<String>]
-    # @sg-ignore Declared return type Array<String> does not match inferred type Array,Array<Array> —
+    # @sg-ignore needs-yard-annotation
+    #   Declared return type Array<String> does not match inferred type Array,Array<Array> —
     #   fixing cleanly needs binding enum_value.fetch('name') to a typed local; leaving for a
     #   follow-up code PR to keep this one annotation-only.
     def resource_custom_field_values_names_by_name(resource, custom_field_name)
@@ -112,7 +114,8 @@ module Checkoff
     # @param resource [Asana::Resources::Task,Asana::Resources::Project]
     # @param custom_field_name [String]
     # @return [Hash]
-    # @sg-ignore nil check above is not flow-sensitive
+    # @sg-ignore needs-type-narrowing
+    #   nil check above is not flow-sensitive
     def resource_custom_field_by_name_or_raise(resource, custom_field_name)
       custom_field = resource_custom_field_by_name(resource, custom_field_name)
       if custom_field.nil?
@@ -125,7 +128,8 @@ module Checkoff
     # @param resource [Asana::Resources::Project,Asana::Resources::Task]
     # @param custom_field_gid [String]
     # @return [Hash]
-    # @sg-ignore nil check above is not flow-sensitive
+    # @sg-ignore needs-type-narrowing
+    #   nil check above is not flow-sensitive
     def resource_custom_field_by_gid_or_raise(resource, custom_field_gid)
       # @type [Array<Hash>]
       custom_fields = resource.custom_fields
@@ -148,9 +152,10 @@ module Checkoff
     # @param custom_field [Hash{String => Hash,Array<Hash>}]
     #
     # @return [Array<Hash>]
-    # @sg-ignore Declared return type Array<Hash> does not match inferred type Array,Hash,Array<Hash> —
-    #   fixing cleanly needs restructuring the case/when to bind each branch to a typed local; leaving
-    #   for a follow-up code PR to keep this one annotation-only.
+    # @sg-ignore needs-yard-annotation
+    #   Declared return type Array<Hash> does not match inferred type Array,Hash,Array<Hash> —
+    #   fixing cleanly needs restructuring the case/when to bind each branch to a typed local;
+    #   leaving for a follow-up code PR to keep this one annotation-only.
     def resource_custom_field_enum_values(custom_field)
       resource_subtype = custom_field.fetch('resource_subtype')
       case resource_subtype

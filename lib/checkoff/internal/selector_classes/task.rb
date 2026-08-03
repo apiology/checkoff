@@ -45,7 +45,8 @@ module Checkoff
         # @param task [Asana::Resources::Task]
         # @param section_name_prefix [String]
         # @return [Boolean]
-        # @sg-ignore
+        # @sg-ignore needs-yard-annotation
+        #   tasks.task_to_h declares a bare Hash return; the .fetch chain below can't be typed
         def evaluate(task, section_name_prefix)
           task_data = tasks.task_to_h(task)
           task_data.fetch('unwrapped').fetch('membership_by_section_name').keys.any? do |section_name|
@@ -65,7 +66,8 @@ module Checkoff
           false
         end
 
-        # @sg-ignore
+        # @sg-ignore needs-yard-annotation
+        #   tasks.task_to_h declares a bare Hash return; the .fetch chain below can't be typed
         # @param task [Asana::Resources::Task]
         # @param section_name [String]
         # @return [Boolean]
@@ -89,7 +91,9 @@ module Checkoff
         # @param task [Asana::Resources::Task]
         # @param project_name [String]
         # @return [Boolean]
-        # @sg-ignore
+        # @sg-ignore dynamic-metaprogramming
+        #   task.memberships is dispatched via the asana gem's method_missing, so its element type
+        #   is untyped
         def evaluate(task, project_name)
           project_names = task.memberships.map do |membership|
             m = T.cast(membership, T::Hash[String, T.untyped])
@@ -132,7 +136,9 @@ module Checkoff
         # @param task [Asana::Resources::Task]
         # @param tag_name [String]
         # @return [Boolean]
-        # @sg-ignore
+        # @sg-ignore dynamic-metaprogramming
+        #   task.tags is dispatched via the asana gem's method_missing, so its element type is
+        #   untyped
         def evaluate(task, tag_name)
           task.tags.map(&:name).include? tag_name
         end
@@ -190,8 +196,10 @@ module Checkoff
 
         # @param task [Asana::Resources::Task]
         # @return [Boolean]
-        # @sg-ignore Checkoff::SelectorClasses::Task::UnassignedPFunctionEvaluator#evaluate
-        #   return type could not be inferred
+        # @sg-ignore tool-limitation:return-type-didnt-stick
+        #   Checkoff::SelectorClasses::Task::UnassignedPFunctionEvaluator#evaluate return type
+        #   could not be inferred — T.cast(..., T::Boolean) as the tail expression still isn't
+        #   recognized as satisfying the declared @return [Boolean]
         def evaluate(task)
           T.cast(task.assignee.nil? == true, T::Boolean)
         end
@@ -207,8 +215,10 @@ module Checkoff
 
         # @param task [Asana::Resources::Task]
         # @return [Boolean]
-        # @sg-ignore Checkoff::SelectorClasses::Task::DueDateSetPFunctionEvaluator#evaluate
-        #   return type could not be inferred
+        # @sg-ignore tool-limitation:return-type-didnt-stick
+        #   Checkoff::SelectorClasses::Task::DueDateSetPFunctionEvaluator#evaluate return type
+        #   could not be inferred — T.cast(..., T::Boolean) as the tail expression still isn't
+        #   recognized as satisfying the declared @return [Boolean]
         def evaluate(task)
           T.cast(!(task.due_at.nil? && task.due_on.nil?), T::Boolean)
         end
@@ -235,13 +245,17 @@ module Checkoff
 
           # @type [Array<Asana::Resources::Story>]
           stories = task.stories(per_page: 100).to_a.reject do |story|
-            # @sg-ignore
+            # @sg-ignore dynamic-metaprogramming
+            #   story.resource_subtype is dispatched via the asana gem's method_missing, so it's
+            #   untyped
             excluding_resource_subtypes.include? story.resource_subtype
           end
           return true if stories.empty? # no stories == infinitely old!
 
           last_story = stories.last
-          # @sg-ignore
+          # @sg-ignore dynamic-metaprogramming
+          #   last_story.created_at is dispatched via the asana gem's method_missing, so it's
+          #   untyped
           last_story_created_at = Time.parse(last_story.created_at)
           n_days_ago = Time.at(Time.now.to_i - (num_days * 86_400))
           last_story_created_at < n_days_ago
@@ -362,8 +376,10 @@ module Checkoff
         # @param task [Asana::Resources::Task]
         #
         # @return [Boolean]
-        # @sg-ignore Checkoff::SelectorClasses::Task::MilestonePFunctionEvaluator#evaluate
-        #   return type could not be inferred
+        # @sg-ignore tool-limitation:return-type-didnt-stick
+        #   Checkoff::SelectorClasses::Task::MilestonePFunctionEvaluator#evaluate return type
+        #   could not be inferred — task.resource_subtype's method_missing-dispatched type makes
+        #   the trailing == comparison's Boolean result not stick to the declared @return
         def evaluate(task)
           raise 'Please add resource_subtype to extra_fields' if task.resource_subtype.nil?
 

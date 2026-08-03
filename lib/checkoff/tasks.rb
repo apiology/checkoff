@@ -180,8 +180,9 @@ module Checkoff
     # @param assignee_gid [String]
     #
     # @return [Asana::Resources::Task]
-    # @sg-ignore @asana_task.create return type could not be inferred — calling a class method
-    #   through a Class<T>-typed ivar is a known Solargraph dispatch limitation
+    # @sg-ignore tool-limitation:class-ivar-dispatch
+    #   @asana_task.create return type could not be inferred — calling a class method through a
+    #   Class<T>-typed ivar is a known Solargraph dispatch limitation
     def add_task(name,
                  workspace_gid: @workspaces.default_workspace_gid,
                  assignee_gid: default_assignee_gid)
@@ -295,7 +296,10 @@ module Checkoff
     # @param portfolio_name [String]
     # @param workspace_name [String]
     # @return [Boolean]
-    # @sg-ignore Checkoff::Tasks#in_portfolio_named? return type could not be inferred
+    # @sg-ignore tool-limitation:return-type-didnt-stick
+    #   Checkoff::Tasks#in_portfolio_named? return type could not be inferred — T.cast(...,
+    #   T::Boolean) as the tail expression still isn't recognized as satisfying the declared
+    #   @return [Boolean]
     def in_portfolio_named?(task,
                             portfolio_name,
                             workspace_name: @workspaces.default_workspace.name)
@@ -386,9 +390,10 @@ module Checkoff
     end
 
     # @return [String]
-    # @sg-ignore @config.fetch return type could not be inferred — @config is intentionally
-    #   dual-typed [Hash, EnvFallbackConfigLoader] throughout this codebase; Solargraph can't
-    #   unify #fetch across that union
+    # @sg-ignore tool-limitation:config-fetch-union
+    #   @config.fetch return type could not be inferred — @config is intentionally dual-typed
+    #   [Hash, EnvFallbackConfigLoader] throughout this codebase; Solargraph can't unify #fetch
+    #   across that union
     def default_assignee_gid
       @config.fetch(:default_assignee_gid)
     end

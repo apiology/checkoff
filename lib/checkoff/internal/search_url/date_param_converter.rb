@@ -15,7 +15,9 @@ module Checkoff
         end
 
         # @return [Array(Hash{String => String}, Array<Symbol, Array>)]
-        # @sg-ignore
+        # @sg-ignore needs-type-narrowing
+        #   out starts nil and is only conditionally reassigned in the loop below; Solargraph
+        #   doesn't narrow it back to the declared tuple return type
         def convert
           return [{}, []] if date_url_params.empty?
 
@@ -129,7 +131,8 @@ module Checkoff
         end
 
         # @param param_key [String]
-        # @sg-ignore
+        # @sg-ignore needs-type-narrowing
+        #   value[0] after the length check above is still typed String,nil per Array#[]
         # @return [String]
         def get_single_param(param_key)
           raise "Expected #{param_key} to have at least one value" unless date_url_params.key? param_key

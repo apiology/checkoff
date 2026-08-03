@@ -74,11 +74,13 @@ module Checkoff
         end
         resource = webhook_subscription&.fetch('resource', nil)
         name, resource_type = enrich_gid(resource) if resource
-        # @sg-ignore webhook_subscription is declared [Hash, nil] but this line assumes non-nil
-        #   without the &. used elsewhere in this method — looks like a real nil-safety gap, not
-        #   just a typing gap; flagging for the follow-up code PR rather than silently widening
+        # @sg-ignore needs-type-narrowing
+        #   webhook_subscription is declared [Hash, nil] but this line assumes non-nil without
+        #   the &. used elsewhere in this method — looks like a real nil-safety gap, not just a
+        #   typing gap; flagging for the follow-up code PR rather than silently widening
         webhook_subscription['checkoff:enriched:name'] = name if name
-        # @sg-ignore same nil-safety gap as above
+        # @sg-ignore needs-type-narrowing
+        #   same nil-safety gap as above
         webhook_subscription['checkoff:enriched:resource_type'] = resource_type if resource_type
       end
 

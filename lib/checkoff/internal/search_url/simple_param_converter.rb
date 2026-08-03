@@ -226,7 +226,9 @@ module Checkoff
         # @return [Hash{String => String}] the converted params
         def convert
           # @type [Array<Array(String, String)>]
-          # @sg-ignore
+          # @sg-ignore tool-limitation:block-param-inference
+          #   the inline @type annotations inside this flat_map block don't survive to the
+          #   declared local's type here
           arr_of_tuples = simple_url_params.to_a.flat_map do |key, values|
             # @type
             entry = convert_arg(key, values).each_slice(2).to_a
@@ -265,14 +267,17 @@ module Checkoff
         # https://developers.asana.com/docs/search-tasks-in-a-workspace
         # @param key [String] the name of the search url param
         # @param values [Array<String>] the values of the search url param
-        # @sg-ignore
+        # @sg-ignore dynamic-metaprogramming
+        #   clazz is picked at runtime from ARGS, a Hash{String=>Class}, so #convert's return
+        #   type is unresolvable statically
         # @return [Hash{String => String}] the converted params
         def convert_arg(key, values)
           # @type [Class<SimpleParam::SimpleParam>]
           clazz = ARGS.fetch(key)
           # @type [SimpleParam::SimpleParam]
           obj = clazz.new(key:, values:)
-          # @sg-ignore
+          # @sg-ignore dynamic-metaprogramming
+          #   same runtime class-dispatch gap
           obj.convert
         end
 
