@@ -65,13 +65,9 @@ module Checkoff
           variant_key = "custom_field_#{gid}.variant"
           variant = single_custom_field_params.fetch(variant_key)
           remaining_params = single_custom_field_params.reject { |k, _v| k == variant_key }
-          # @sg-ignore tool-limitation:issue-1232
-          #   https://github.com/castwide/solargraph/issues/1232
           raise "Teach me how to handle #{variant_key} = #{variant}" unless variant.length == 1
 
           # @type [Class<CustomFieldVariant>, nil]
-          # @sg-ignore tool-limitation:type-narrowing
-          #   https://github.com/castwide/solargraph/issues/1254
           variant_class = VARIANTS[variant[0]]
           # @type [Array(Hash{String => String}, Array<Symbol, Array>)]
           # @sg-ignore tool-limitation:type-narrowing

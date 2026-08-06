@@ -113,11 +113,6 @@ module Checkoff
           validate_unit_is_day!(prefix)
 
           # @type [Date]
-          # @sg-ignore tool-limitation:overload-arg-type-dispatch
-          #   Date#- is overloaded (Date-Date -> Rational, Date-Integer -> Date);
-          #   Solargraph merges both overloads' return types instead of dispatching
-          #   on value's actual Integer type, producing Date, Rational. Not yet
-          #   filed upstream.
           after = Date.today - value
 
           [{ "#{API_PREFIX.fetch(prefix)}.after" => after.to_s }, []]
@@ -145,12 +140,8 @@ module Checkoff
 
           value = date_url_params.fetch(param_key)
 
-          # @sg-ignore tool-limitation:issue-1232
-          #   https://github.com/castwide/solargraph/issues/1232
           raise "Expected #{param_key} to have one value" if value.length != 1
 
-          # @sg-ignore tool-limitation:issue-1232
-          #   https://github.com/castwide/solargraph/issues/1232
           value[0]
         end
 
@@ -167,8 +158,6 @@ module Checkoff
         def validate_unit_is_day!(prefix)
           unit = date_url_params.fetch("#{prefix}.unit").fetch(0)
 
-          # @sg-ignore tool-limitation:issue-1232
-          #   https://github.com/castwide/solargraph/issues/1232
           raise "Teach me how to handle other time units: #{unit}" unless unit == 'day'
         end
 

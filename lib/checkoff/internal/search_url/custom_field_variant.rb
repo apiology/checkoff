@@ -37,8 +37,6 @@ module Checkoff
             case remaining_params.keys
             when [param_name]
               # @type param_values [Array<String>]
-              # @sg-ignore tool-limitation:issue-1232
-              #   https://github.com/castwide/solargraph/issues/1232
               param_values = remaining_params.fetch(param_name)
               unless param_values.length == 1
                 raise "Teach me how to handle these remaining keys for #{param_name}: #{remaining_params}"
