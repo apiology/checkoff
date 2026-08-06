@@ -132,7 +132,7 @@ module Checkoff
                                                verify_mode: OpenSSL::SSL::VERIFY_PEER)
       uri = URI(url)
       # @type [String]
-      resolved_attachment_name = attachment_name || File.basename(uri.path)
+      resolved_attachment_name = attachment_name || File.basename(uri.path || '')
       download_uri(uri, verify_mode:) do |tempfile|
         content_type = content_type_from_filename(resolved_attachment_name)
         content_type ||= content_type_from_filename(uri.path || '')
