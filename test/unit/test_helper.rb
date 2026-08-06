@@ -103,26 +103,82 @@ def define_singleton_method_by_proc(obj, name, block)
 end
 
 module Asana
-  # Real (but empty) backing classes for the per-resource collection types
-  # documented in config/annotations_asana.rb's @!parse block (e.g.
-  # Asana::Client#tasks is annotated to return Asana::ProxiedResourceClasses::Task).
-  # That block is YARD-comment-only, so it never defines these constants at
-  # runtime; typed_let_mock needs a real, loadable class to pass as its
-  # `type` argument, so it's defined here and picked up by the @!parse
-  # method annotations for static typing.
-  # rubocop:disable Lint/EmptyClass
+  # Real backing classes for the per-resource collection types documented in
+  # config/annotations_asana.rb's @!parse block (e.g. Asana::Client#tasks is
+  # annotated to return Asana::ProxiedResourceClasses::Task). That block is
+  # YARD-comment-only, so it never defines these constants at runtime;
+  # typed_mock needs a real, loadable class to pass as its `type` argument,
+  # so it's defined here and picked up by the @!parse method annotations for
+  # static typing.
+  #
+  # Each class stubs out the specific methods checkoff actually calls on the
+  # real ruby-asana collection proxy, with matching arity, so that
+  # responds_like_instance_of can verify both that the method exists and
+  # that it's being called with a compatible signature.
   module ProxiedResourceClasses
-    class Tag; end
-    class Task; end
-    class Workspace; end
-    class Section; end
-    class Project; end
-    class UserTaskList; end
-    class Portfolio; end
-    class User; end
-    class CustomField; end
+    class Tag
+      # @return [Array<Asana::Resources::Tag>]
+      def get_tags_for_workspace(workspace_gid:); end
+    end
+
+    class Task
+      # @return [Enumerable<Asana::Resources::Task>]
+      def find_all(**options); end
+
+      # @return [Asana::Resources::Task]
+      def find_by_id(task_gid, options: {}); end
+
+      # @return [Enumerable<Asana::Resources::Task>]
+      def get_tasks(section:, **options); end
+
+      # @return [Array<Asana::Resources::Task>]
+      def to_a; end
+    end
+
+    class Workspace
+      # @return [Enumerable<Asana::Resources::Workspace>]
+      def find_all; end
+    end
+
+    class Section
+      # @return [Enumerable<Asana::Resources::Section>]
+      def get_sections_for_project(project_gid:, **options); end
+    end
+
+    class Project
+      # @return [Asana::Resources::Project]
+      def find_by_id(gid, options: {}); end
+
+      # @return [Enumerable<Asana::Resources::Project>]
+      def find_by_workspace(workspace:, **options); end
+    end
+
+    class UserTaskList
+      # @return [Asana::Resources::UserTaskList]
+      def get_user_task_list_for_user(user_gid:, **options); end
+    end
+
+    class Portfolio
+      # @return [Asana::Resources::Portfolio]
+      def find_by_id(portfolio_gid, options: {}); end
+
+      # @return [Enumerable<Asana::Resources::Portfolio>]
+      def find_all(**options); end
+
+      # @return [Enumerable<Asana::Resources::Project>]
+      def get_items_for_portfolio(portfolio_gid:, **options); end
+    end
+
+    class User
+      # @return [Asana::Resources::User]
+      def me; end
+    end
+
+    class CustomField
+      # @return [Array<Asana::Resources::CustomField>]
+      def get_custom_fields_for_workspace(workspace_gid:); end
+    end
   end
-  # rubocop:enable Lint/EmptyClass
 end
 
 # No security (symbold denial of servie) issue; not building
