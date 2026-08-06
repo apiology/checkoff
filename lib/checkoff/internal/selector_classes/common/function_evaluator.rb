@@ -8,7 +8,7 @@ module Checkoff
     module Common
       # Base class to evaluate a project selector function given fully evaluated arguments
       class FunctionEvaluator < ::Checkoff::SelectorClasses::FunctionEvaluator
-        # @param selector [Array(Symbol, Array), String]
+        # @param selector [Array<Symbol, Array>, Symbol]
         # @param custom_fields [Checkoff::CustomFields]
         # @param _kwargs [Hash]
         def initialize(selector:, custom_fields:, **_kwargs)
@@ -22,7 +22,7 @@ module Checkoff
 
         private
 
-        # @return [Array(Symbol, Array), String]
+        # @return [Array<Symbol, Array>, Symbol]
         attr_reader :selector
       end
     end

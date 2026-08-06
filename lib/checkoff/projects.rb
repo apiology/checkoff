@@ -214,7 +214,7 @@ module Checkoff
     # date is today or in the past.
     #
     # @param project [Asana::Resources::Project]
-    # @param period [Symbol, Array(Symbol, Integer)] See Checkoff::Timing#in_period? - :now_or_before,:this_week
+    # @param period [Symbol, Array<Symbol, Integer>] See Checkoff::Timing#in_period? - :now_or_before,:this_week
     def project_ready?(project, period: :now_or_before)
       in_period?(project, :ready, period)
     end

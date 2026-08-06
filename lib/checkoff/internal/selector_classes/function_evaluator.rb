@@ -43,10 +43,13 @@ module Checkoff
 
       private
 
-      # @param object [Object]
+      # @param object [Array<Symbol, Array>, Symbol]
       # @param fn_name [Symbol]
+      # @return [Boolean]
       def fn?(object, fn_name)
-        object.is_a?(Array) && !object.empty? && [fn_name, fn_name.to_s].include?(object[0])
+        return false unless object.is_a?(Array) && !object.empty?
+
+        [fn_name, fn_name.to_s].include?(object[0])
       end
     end
   end
