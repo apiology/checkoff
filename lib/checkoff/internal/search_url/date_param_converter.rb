@@ -15,8 +15,13 @@ module Checkoff
         end
 
         # @return [Array(Hash{String => String}, Array<Symbol, Array>)]
-        # @sg-ignore tool-limitation:type-narrowing
-        #   https://github.com/castwide/solargraph/issues/1254
+        # @sg-ignore inherent-limit:cross-procedural-narrowing
+        #   out's non-nil-ness after the loop depends on date_url_params.empty?,
+        #   which is only true because convert_for_prefix (called inside the loop)
+        #   mutates date_url_params as a side effect. No static type checker
+        #   verifies invariants across a method boundary like this -- not a
+        #   solargraph gap, an inherent limit of static analysis. Real fix would
+        #   be checking out.nil? directly instead of via the date_url_params proxy.
         def convert
           return [{}, []] if date_url_params.empty?
 
