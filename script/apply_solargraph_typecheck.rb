@@ -75,8 +75,8 @@ def find_sg_ignore_index(lines, line_num)
   idx = line_num - 1
   return idx if idx >= 0 && sg_ignore_line?(lines[idx])
 
-  start = [idx - 1, 0].max
-  finish = [idx - 20, 0].max
+  start = T.must([idx - 1, 0].max)
+  finish = T.must([idx - 20, 0].max)
   start.downto(finish) do |i|
     return i if sg_ignore_line?(lines[i])
   end
