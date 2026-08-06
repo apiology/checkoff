@@ -10,7 +10,17 @@ class TestTiming < ClassTest
   #  # @return [Checkoff::Timing]
   #  def get_test_object; end
 
-  typed_delegate :today_getter, Date
+  # A literal method (not the typed_delegate macro used elsewhere) because
+  # Sorbet has native understanding of Forwardable#def_delegators but not of
+  # typed_delegate, and this file is typed: true.
+  # @return [Mocha::Mock]
+  # @sg-ignore tool-limitation:untyped-openstruct-return-cast
+  #   TestTiming#today_getter return type could not be inferred -- OpenStruct#[]
+  #   is declared untyped, so casting its result to the declared return type
+  #   isn't recognized as satisfying it
+  def today_getter
+    mocks[:today_getter]
+  end
 
   # @return [void]
   def test_in_period_this_week_date_true
