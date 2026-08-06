@@ -236,8 +236,6 @@ module Checkoff
 
         # @param _resource [Asana::Resources::Task,Asana::Resources::Project]
         # @return [String]
-        # @sg-ignore tool-limitation:type-narrowing
-        #   https://github.com/castwide/solargraph/issues/1254
         def evaluate(_resource)
           raise "Expected a String selector, got #{selector.inspect}" unless selector.is_a?(String)
 
