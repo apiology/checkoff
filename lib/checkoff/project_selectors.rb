@@ -42,7 +42,7 @@ module Checkoff
     end
 
     # @param [Asana::Resources::Project] project
-    # @param [Array(Symbol, Array)] project_selector Filter based on
+    # @param [Array<Symbol, String, Array>] project_selector Filter based on
     #        project details.  Examples: [:tag, 'foo'] [:not, [:tag, 'foo']] [:tag, 'foo']
     # @return [Boolean]
     def filter_via_project_selector(project, project_selector)

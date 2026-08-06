@@ -7,21 +7,20 @@ require_relative 'class_test'
 
 # Test the Checkoff::MvSubcommand class used in CLI processing
 class TestMvSubcommand < ClassTest
-  extend Forwardable
-
   # @!parse
   #  # @return [Checkoff::MvSubcommand]
   #  def get_test_object; end
 
-  def_delegators(:@mocks, :projects, :sections,
-                 :logger)
+  typed_delegate :projects, Checkoff::Projects
+  typed_delegate :sections, Checkoff::Sections
+  typed_delegate :logger, IO
 
-  typed_let_mock :to_project, Asana::Resources::Project
-  typed_let_mock :to_project_gid, String
-  typed_let_mock :to_section, Asana::Resources::Section
-  typed_let_mock :to_section_gid, String
-  typed_let_mock :task_a, Asana::Resources::Task
-  typed_let_mock :task_a_name, String
+  typed_mock :to_project, Asana::Resources::Project
+  typed_mock :to_project_gid, String
+  typed_mock :to_section, Asana::Resources::Section
+  typed_mock :to_section_gid, String
+  typed_mock :task_a, Asana::Resources::Task
+  typed_mock :task_a_name, String
 
   # @return [String]
   attr_reader :from_project_arg
@@ -36,7 +35,10 @@ class TestMvSubcommand < ClassTest
   # @return [String, Symbol]
   def argument_to_name(arg)
     if arg.start_with? ':'
-      # @sg-ignore Unresolved call to to_sym on String, nil
+      # @sg-ignore tool-limitation:type-narrowing
+      #   Unresolved call to to_sym on String, nil -- String#[](Range) is nilable per
+      #   RBS; the start_with? guard above doesn't narrow it back to non-nil. Not one
+      #   of the numbered issues on file (no local var reassignment/raise-guard shape).
       arg[1..].to_sym
     else
       arg

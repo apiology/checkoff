@@ -10,7 +10,7 @@ class TestTaskHashes < ClassTest
   #  # @return [Checkoff::Internal::TaskHashes]
   #  def get_test_object; end
 
-  typed_let_mock :task, Asana::Resources::Task
+  typed_mock :task, Asana::Resources::Task
 
   MEMBER_OF_SECTION_A_IN_PROJECT_1 = {
     'section' => {

@@ -15,8 +15,13 @@ module Checkoff
         end
 
         # @return [Array(Hash{String => String}, Array<Symbol, Array>)]
-        # @sg-ignore tool-limitation:type-narrowing
-        #   https://github.com/castwide/solargraph/issues/1254
+        # @sg-ignore inherent-limit:cross-procedural-narrowing
+        #   out's non-nil-ness after the loop depends on date_url_params.empty?,
+        #   which is only true because convert_for_prefix (called inside the loop)
+        #   mutates date_url_params as a side effect. No static type checker
+        #   verifies invariants across a method boundary like this -- not a
+        #   solargraph gap, an inherent limit of static analysis. Real fix would
+        #   be checking out.nil? directly instead of via the date_url_params proxy.
         def convert
           return [{}, []] if date_url_params.empty?
 
@@ -99,6 +104,8 @@ module Checkoff
           # Example value: 1702857600000
           # +1 is because API seems to operate on inclusive ranges
           # @type [Date]
+          # @sg-ignore tool-limitation:issue-1232
+          #   https://github.com/castwide/solargraph/issues/1232
           after = Time.at(after.to_i / 1000).to_date + 1
           [{ "#{API_PREFIX.fetch(prefix)}.after" => after.to_s }, []]
         end
@@ -138,12 +145,8 @@ module Checkoff
 
           value = date_url_params.fetch(param_key)
 
-          # @sg-ignore upstream-type-annotation:rbs-4-1-regression
-          #   https://github.com/castwide/solargraph/pull/1228
           raise "Expected #{param_key} to have one value" if value.length != 1
 
-          # @sg-ignore upstream-type-annotation:rbs-4-1-regression
-          #   https://github.com/castwide/solargraph/pull/1228
           value[0]
         end
 
@@ -160,8 +163,6 @@ module Checkoff
         def validate_unit_is_day!(prefix)
           unit = date_url_params.fetch("#{prefix}.unit").fetch(0)
 
-          # @sg-ignore upstream-type-annotation:rbs-4-1-regression
-          #   https://github.com/castwide/solargraph/pull/1228
           raise "Teach me how to handle other time units: #{unit}" unless unit == 'day'
         end
 

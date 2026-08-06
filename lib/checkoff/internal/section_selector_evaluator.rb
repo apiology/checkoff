@@ -53,7 +53,7 @@ module Checkoff
       { sections:, projects:, client:, custom_fields: }
     end
 
-    # @return [Asana::Resources::Project]
+    # @return [Asana::Resources::Section]
     attr_reader :item
     # @return [Checkoff::Sections]
     attr_reader :sections

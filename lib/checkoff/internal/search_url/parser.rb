@@ -59,13 +59,8 @@ module Checkoff
         # @return [Array(Hash{String => Array<String>}, Hash{String => Array<String>}, Hash{String => Array<String>})]
         def partition_url_params(url_params)
           groups = T.let(url_params.to_a.group_by do |key, _values|
-                           # @sg-ignore tool-limitation:block-param-inference
-                           #   Unresolved call to start_with? — T.let wrapping this chained
-                           #   group_by block seems to block block-param inference
                            if key.start_with? 'custom_field_'
                              :custom_field
-                           # @sg-ignore tool-limitation:block-param-inference
-                           #   Unresolved call to include? — same T.let/block-param gap
                            elsif key.include? '_date'
                              :date
                            else

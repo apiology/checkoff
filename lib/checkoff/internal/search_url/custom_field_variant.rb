@@ -37,8 +37,6 @@ module Checkoff
             case remaining_params.keys
             when [param_name]
               # @type param_values [Array<String>]
-              # @sg-ignore upstream-type-annotation:rbs-4-1-regression
-              #   https://github.com/castwide/solargraph/pull/1228
               param_values = remaining_params.fetch(param_name)
               unless param_values.length == 1
                 raise "Teach me how to handle these remaining keys for #{param_name}: #{remaining_params}"

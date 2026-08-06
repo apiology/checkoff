@@ -154,8 +154,11 @@ module Checkoff
     # @param extra_section_fields [Array<String>]
     #
     # @return [Asana::Resources::Section]
-    # @sg-ignore tool-limitation:type-narrowing
-    #   https://github.com/castwide/solargraph/issues/1254
+    # @sg-ignore tool-limitation:pr-1259-follow-up
+    #   https://github.com/castwide/solargraph/pull/1259#issuecomment-5208798931 -- PR #1259
+    #   fixed the single-statement raise-guard case for #1254, but this if-branch has an
+    #   extra statement (valid_sections = ...) before the raise, which
+    #   always_leaves_compound_statement? still doesn't recognize.
     def section_or_raise(workspace_name, project_name, section_name, extra_section_fields: [])
       s = section(workspace_name, project_name, section_name,
                   extra_section_fields:)
@@ -298,8 +301,6 @@ module Checkoff
     # @param workspace_name [String, Symbol]
     # @param project_name [String, Symbol]
     # @return [Asana::Resources::Project]
-    # @sg-ignore tool-limitation:type-narrowing
-    #   https://github.com/castwide/solargraph/issues/1254
     def project_or_raise(workspace_name, project_name)
       raise ArgumentError, 'Provide nil project_name' if T.unsafe(project_name).nil?
 

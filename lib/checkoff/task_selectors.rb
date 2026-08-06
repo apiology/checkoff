@@ -40,7 +40,7 @@ module Checkoff
     end
 
     # @param [Asana::Resources::Task] task
-    # @param [Symbol, Array<Symbol, Integer, Array>] task_selector Filter based on
+    # @param [Symbol, Array<Symbol, String, Integer, Array>] task_selector Filter based on
     #   task details.  Examples: [:tag, 'foo'] [:not, [:tag, 'foo']] [:tag, 'foo']
     # @return [Boolean]
     def filter_via_task_selector(task, task_selector)
@@ -64,22 +64,31 @@ module Checkoff
     # :nocov:
     class << self
       # @return [String]
-      # @sg-ignore tool-limitation:type-narrowing
-      #   https://github.com/castwide/solargraph/issues/1254
+      # @sg-ignore tool-limitation:pr-1259-follow-up
+      #   https://github.com/castwide/solargraph/pull/1259#issuecomment-5208799798 -- the
+      #   `x || raise(...)` idiom never narrows at all, with or without PR #1259:
+      #   always_leaves_compound_statement? is only invoked from if-node handling, and
+      #   this is an :or node, so it's never reached.
       def project_name
         ARGV[1] || raise('Please pass project name to pull tasks from as first argument')
       end
 
       # @return [String]
-      # @sg-ignore tool-limitation:type-narrowing
-      #   https://github.com/castwide/solargraph/issues/1254
+      # @sg-ignore tool-limitation:pr-1259-follow-up
+      #   https://github.com/castwide/solargraph/pull/1259#issuecomment-5208799798 -- the
+      #   `x || raise(...)` idiom never narrows at all, with or without PR #1259:
+      #   always_leaves_compound_statement? is only invoked from if-node handling, and
+      #   this is an :or node, so it's never reached.
       def workspace_name
         ARGV[0] || raise('Please pass workspace name as first argument')
       end
 
       # @return [Array(Symbol, Array)]
-      # @sg-ignore tool-limitation:type-narrowing
-      #   https://github.com/castwide/solargraph/issues/1254
+      # @sg-ignore tool-limitation:pr-1259-follow-up
+      #   https://github.com/castwide/solargraph/pull/1259#issuecomment-5208799798 -- the
+      #   `x || raise(...)` idiom never narrows at all, with or without PR #1259:
+      #   always_leaves_compound_statement? is only invoked from if-node handling, and
+      #   this is an :or node, so it's never reached.
       def task_selector
         task_selector_json = ARGV[2] || raise('Please pass task_selector in JSON form as third argument')
 

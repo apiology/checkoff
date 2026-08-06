@@ -5,27 +5,26 @@ require_relative 'test_helper'
 require_relative 'class_test'
 
 class TestTags < ClassTest
-  extend Forwardable
-
   # @!parse
   #  # @return [Checkoff::Tags]
   #  def get_test_object; end
 
-  def_delegators(:@mocks, :workspaces, :client)
+  typed_delegate :workspaces, Checkoff::Workspaces
+  typed_delegate :client, Asana::Client
 
-  typed_let_mock :workspace_name, String
-  typed_let_mock :tag_name, String
+  typed_mock :workspace_name, String
+  typed_mock :tag_name, String
 
-  typed_let_mock :tag, Asana::Resources::Tag
-  typed_let_mock :workspace, Asana::Resources::Workspace
-  typed_let_mock :workspace_gid, String
-  typed_let_mock :tags_api, Asana::ProxiedResourceClasses::Tag
-  typed_let_mock :wrong_tag, Asana::Resources::Tag
-  typed_let_mock :wrong_tag_name, String
-  typed_let_mock :task_collection, Asana::Resources::Collection
-  typed_let_mock :response, Asana::HttpClient::Response
-  typed_let_mock :response_body, Hash
-  typed_let_mock :response_body_data, Array
+  typed_mock :tag, Asana::Resources::Tag
+  typed_mock :workspace, Asana::Resources::Workspace
+  typed_mock :workspace_gid, String
+  typed_mock :tags_api, Asana::ProxiedResourceClasses::Tag
+  typed_mock :wrong_tag, Asana::Resources::Tag
+  typed_mock :wrong_tag_name, String
+  typed_mock :task_collection, Asana::Resources::Collection
+  typed_mock :response, Asana::HttpClient::Response
+  typed_mock :response_body, Hash
+  typed_mock :response_body_data, Array
 
   # @return [void]
   def test_tag_or_raise_raises
@@ -154,14 +153,13 @@ class TestTags < ClassTest
   # @return [String]
   def generate_task_endpoint
     tag.expects(:gid).returns('tag_gid').at_least(1)
-    # @sg-ignore gid isn't resolved on the Mocha::Mock & Asana::Resources::Tag intersection type here
+    # @sg-ignore tool-limitation:issue-1229
+    #   https://github.com/castwide/solargraph/issues/1229
     "/tags/#{tag.gid}/tasks"
   end
 
   # @return [void]
   def projects
-    # @sg-ignore Wrong argument type for Checkoff::Projects.new: client expected Asana::Client, received Mocha::Mock
-    # https://github.com/castwide/solargraph/issues/1229
     Checkoff::Projects.new(client:)
   end
 

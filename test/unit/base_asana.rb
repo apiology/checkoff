@@ -14,20 +14,20 @@ class BaseAsana < ClassTest
   # `projects` method some subclasses (TestSections, TestTasks) define
   # themselves for a real Checkoff::Projects instance under test - keeping
   # separate names avoids one silently shadowing the other.
-  typed_let_mock :asana_projects, Asana::ProxiedResourceClasses::Project
+  typed_mock :asana_projects, Asana::ProxiedResourceClasses::Project
 
-  typed_let_mock :my_tasks_in_workspace_gid, String
-  typed_let_mock :task_a, Asana::Resources::Task
-  typed_let_mock :task_b, Asana::Resources::Task
-  typed_let_mock :task_c, Asana::Resources::Task
-  typed_let_mock :personal_access_token, String
-  typed_let_mock :project_a, Asana::Resources::Project
-  typed_let_mock :project_b, Asana::Resources::Project
-  typed_let_mock :project_c, Asana::Resources::Project
-  typed_let_mock :a_name, String
-  typed_let_mock :b_name, String
-  typed_let_mock :c_name, String
-  typed_let_mock :a_gid, String
+  typed_mock :my_tasks_in_workspace_gid, String
+  typed_mock :task_a, Asana::Resources::Task
+  typed_mock :task_b, Asana::Resources::Task
+  typed_mock :task_c, Asana::Resources::Task
+  typed_mock :personal_access_token, String
+  typed_mock :project_a, Asana::Resources::Project
+  typed_mock :project_b, Asana::Resources::Project
+  typed_mock :project_c, Asana::Resources::Project
+  typed_mock :a_name, String
+  typed_mock :b_name, String
+  typed_mock :c_name, String
+  typed_mock :a_gid, String
 
   # @param extra_fields [Array<String>]
   # @return [Hash{Symbol => Object}]

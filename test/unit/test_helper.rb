@@ -37,17 +37,18 @@ ENV['LOG_LEVEL'] = 'WARN'
 ENV['TZ'] = 'America/New_York'
 require_relative '../../lib/checkoff'
 
-def let_single_mock(mock_sym)
-  define_method(mock_sym.to_s) do
-    var = "@#{mock_sym}"
-    mock = instance_variable_get(var)
-    unless mock
-      mock = mock(mock_sym.to_s)
-      instance_variable_set var, mock
-    end
-    mock
-  end
-end
+# responds_like_instance_of builds its responder via Class#allocate, which
+# MRI refuses for these classes (no heap representation to carve out --
+# their values are immediates or interned). responds_like takes a real
+# instance instead, so a literal value works directly.
+NON_ALLOCATABLE_EXAMPLES = {
+  Symbol => :placeholder,
+  Integer => 0,
+  Float => 0.0,
+  NilClass => nil,
+  TrueClass => true,
+  FalseClass => false,
+}.freeze
 
 # @param mock_sym [Symbol]
 # @param type [Class]
@@ -60,26 +61,29 @@ def typed_mock(mock_sym, type)
     unless mock
       mock = mock(mock_sym.to_s)
       instance_variable_set var, mock
-      mock.responds_like_instance_of(type)
+      if NON_ALLOCATABLE_EXAMPLES.key?(type)
+        mock.responds_like(NON_ALLOCATABLE_EXAMPLES.fetch(type))
+      else
+        mock.responds_like_instance_of(type)
+      end
     end
     mock
   end
 end
 
-# Like typed_mock, but skips responds_like_instance_of at runtime.
-# ruby-asana's Asana::Resources::Resource#respond_to_missing? assumes an
-# initialized @attributes hash; responds_like_instance_of allocates the
-# responder class via Class#allocate (bypassing #initialize), so any
-# unstubbed method call on the mock crashes with NoMethodError inside
-# ruby-asana itself rather than Mocha's own error. Only the static type
-# (Mocha::Mock & type, via the matching Solargraph macro) is wanted here.
+# Exposes an existing @mocks entry (from get_initializer_mocks) as a
+# precisely-typed bare method, like def_delegators but with a real
+# type instead of the generic Mocha::Mock the def_delegators macro
+# provides.
 #
 # @param mock_sym [Symbol]
 # @param type [Class]
 #
 # @return [void]
-def typed_let_mock(mock_sym, type)
-  let_single_mock(mock_sym)
+def typed_delegate(mock_sym, type)
+  define_method(mock_sym.to_s) do
+    mocks.public_send(mock_sym)
+  end
 end
 
 def define_singleton_method_by_proc(obj, name, block)
@@ -88,26 +92,141 @@ def define_singleton_method_by_proc(obj, name, block)
 end
 
 module Asana
-  # Real (but empty) backing classes for the per-resource collection types
-  # documented in config/annotations_asana.rb's @!parse block (e.g.
-  # Asana::Client#tasks is annotated to return Asana::ProxiedResourceClasses::Task).
-  # That block is YARD-comment-only, so it never defines these constants at
-  # runtime; typed_let_mock needs a real, loadable class to pass as its
-  # `type` argument, so it's defined here and picked up by the @!parse
-  # method annotations for static typing.
-  # rubocop:disable Lint/EmptyClass
+  # Real backing classes for the per-resource collection types documented in
+  # config/annotations_asana.rb's @!parse block (e.g. Asana::Client#tasks is
+  # annotated to return Asana::ProxiedResourceClasses::Task). That block is
+  # YARD-comment-only, so it never defines these constants at runtime;
+  # typed_mock needs a real, loadable class to pass as its `type` argument,
+  # so it's defined here and picked up by the @!parse method annotations for
+  # static typing.
+  #
+  # Each class stubs out the specific methods checkoff actually calls on the
+  # real ruby-asana collection proxy, with matching arity, so that
+  # responds_like_instance_of can verify both that the method exists and
+  # that it's being called with a compatible signature.
   module ProxiedResourceClasses
-    class Tag; end
-    class Task; end
-    class Workspace; end
-    class Section; end
-    class Project; end
-    class UserTaskList; end
-    class Portfolio; end
-    class User; end
-    class CustomField; end
+    class Tag
+      # @return [Array<Asana::Resources::Tag>]
+      def get_tags_for_workspace(workspace_gid:); end
+    end
+
+    class Task
+      # @return [Enumerable<Asana::Resources::Task>]
+      def find_all(**options); end
+
+      # @return [Asana::Resources::Task]
+      def find_by_id(task_gid, options: {}); end
+
+      # @return [Enumerable<Asana::Resources::Task>]
+      def get_tasks(section:, **options); end
+
+      # @return [Array<Asana::Resources::Task>]
+      def to_a; end
+    end
+
+    class Workspace
+      # @return [Enumerable<Asana::Resources::Workspace>]
+      def find_all; end
+    end
+
+    class Section
+      # @return [Enumerable<Asana::Resources::Section>]
+      def get_sections_for_project(project_gid:, **options); end
+    end
+
+    class Project
+      # @return [Asana::Resources::Project]
+      def find_by_id(gid, options: {}); end
+
+      # @return [Enumerable<Asana::Resources::Project>]
+      def find_by_workspace(workspace:, **options); end
+    end
+
+    class UserTaskList
+      # @return [Asana::Resources::UserTaskList]
+      def get_user_task_list_for_user(user_gid:, **options); end
+    end
+
+    class Portfolio
+      # @return [Asana::Resources::Portfolio]
+      def find_by_id(portfolio_gid, options: {}); end
+
+      # @return [Enumerable<Asana::Resources::Portfolio>]
+      def find_all(**options); end
+
+      # @return [Enumerable<Asana::Resources::Project>]
+      def get_items_for_portfolio(portfolio_gid:, **options); end
+    end
+
+    class User
+      # @return [Asana::Resources::User]
+      def me; end
+    end
+
+    class CustomField
+      # @return [Array<Asana::Resources::CustomField>]
+      def get_custom_fields_for_workspace(workspace_gid:); end
+    end
   end
-  # rubocop:enable Lint/EmptyClass
+end
+
+# The live Asana API has fields this pinned ruby-asana gem hasn't caught
+# up on declaring as attr_readers. Curated here (like
+# Asana::ProxiedResourceClasses above) so the strict duck-type check below
+# doesn't reject legitimate calls to them.
+module Asana
+  module Resources
+    class Task
+      attr_reader :assignee_section, :start_at
+    end
+
+    # #name is declared separately on every concrete subclass (Task,
+    # Project, Tag, Section, Portfolio, Workspace, User -- everything
+    # except CustomField) rather than hoisted onto the shared base class
+    # upstream. Checkoff code that handles a resource of unknown/mixed
+    # type (e.g. Checkoff::Resources#resource_by_gid) is typed as the
+    # base Resource and still calls #name, relying on that duck type.
+    class Resource
+      attr_reader :name
+    end
+  end
+end
+
+# typed_mock's responds_like_instance_of allocates a responder via
+# Class#allocate, bypassing #initialize, so Asana::Resources::Resource
+# subclasses (Task, Project, etc.) end up with a nil @_data. Statically
+# declared attrs (attr_reader :gid etc., including the curated ones just
+# above) are real methods and unaffected, but any method proxied through
+# respond_to_missing? -> to_h.key?(...) crashes with NoMethodError on the
+# nil @_data instead of returning false/true. Return false: an
+# undeclared/uncurated attribute call on a no-data responder is either a
+# typo or a real field this file hasn't caught up on yet -- both should
+# fail loudly rather than be silently accepted. Prepending (not
+# reopening -- reopening would replace the original method entirely and
+# break `super`) is what lets this still fall through to the real
+# to_h.key?(...) check once @_data is populated (a genuine Resource
+# built from real data).
+module Asana
+  module Resources
+    module SafeRespondToMissingOnUninitializedResource
+      def respond_to_missing?(name, include_private = false)
+        return false if @_data.nil?
+
+        super
+      end
+
+      def to_s
+        return "#<#{self.class} (no data)>" if @_data.nil?
+
+        super
+      end
+      alias inspect to_s
+    end
+
+    class Resource
+      prepend SafeRespondToMissingOnUninitializedResource
+    end
+  end
 end
 
 # No security (symbold denial of servie) issue; not building

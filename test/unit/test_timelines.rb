@@ -6,28 +6,30 @@ require_relative 'class_test'
 require 'checkoff/timelines'
 
 class TestTimelines < ClassTest
-  extend Forwardable
-
   # @!parse
   #  # @return [Checkoff::Timelines]
   #  def get_test_object; end
 
-  def_delegators(:@mocks, :workspaces, :client, :tasks, :sections, :portfolios)
+  typed_delegate :workspaces, Checkoff::Workspaces
+  typed_delegate :client, Asana::Client
+  typed_delegate :tasks, Checkoff::Tasks
+  typed_delegate :sections, Checkoff::Sections
+  typed_delegate :portfolios, Checkoff::Portfolios
 
-  typed_let_mock :task, Asana::Resources::Task
-  typed_let_mock :milestone, Asana::Resources::Task
-  typed_let_mock :portfolio_name, String
+  typed_mock :task, Asana::Resources::Task
+  typed_mock :milestone, Asana::Resources::Task
+  typed_mock :portfolio_name, String
 
-  typed_let_mock :section_2_gid, String
-  typed_let_mock :section_2, Asana::Resources::Section
-  typed_let_mock :section_1_gid, String
-  typed_let_mock :section_1, Asana::Resources::Section
-  typed_let_mock :milestone_gid, String
-  typed_let_mock :task_gid, String
-  typed_let_mock :default_workspace, Asana::Resources::Workspace
-  typed_let_mock :default_workspace_name, String
-  typed_let_mock :project_a_gid, String
-  typed_let_mock :project_a, Asana::Resources::Project
+  typed_mock :section_2_gid, String
+  typed_mock :section_2, Asana::Resources::Section
+  typed_mock :section_1_gid, String
+  typed_mock :section_1, Asana::Resources::Section
+  typed_mock :milestone_gid, String
+  typed_mock :task_gid, String
+  typed_mock :default_workspace, Asana::Resources::Workspace
+  typed_mock :default_workspace_name, String
+  typed_mock :project_a_gid, String
+  typed_mock :project_a, Asana::Resources::Project
 
   # @return [void]
   def test_task_dependent_on_previous_section_last_milestone_no_memberships
@@ -35,9 +37,6 @@ class TestTimelines < ClassTest
       expect_task_data_created(task, { 'memberships' => [] })
     end
 
-    # @sg-ignore Wrong argument type for
-    #   Checkoff::Timelines#task_dependent_on_previous_section_last_milestone?: limit_to_portfolio_gid
-    #   expected String, nil, received NilClass
     assert(timelines.task_dependent_on_previous_section_last_milestone?(task, limit_to_portfolio_gid: nil))
   end
 
@@ -54,9 +53,6 @@ class TestTimelines < ClassTest
       sections.expects(:section_by_gid).with(section_2_gid).returns(nil)
     end
 
-    # @sg-ignore Wrong argument type for
-    #   Checkoff::Timelines#task_dependent_on_previous_section_last_milestone?: limit_to_portfolio_gid
-    #   expected String, nil, received NilClass
     refute(timelines.task_dependent_on_previous_section_last_milestone?(task, limit_to_portfolio_gid: nil))
   end
 
@@ -83,9 +79,6 @@ class TestTimelines < ClassTest
       mock_task_dependent_on_previous_section_last_milestone_false_no_dependencies
     end
 
-    # @sg-ignore Wrong argument type for
-    #   Checkoff::Timelines#task_dependent_on_previous_section_last_milestone?: limit_to_portfolio_gid
-    #   expected String, nil, received NilClass
     refute(timelines.task_dependent_on_previous_section_last_milestone?(task, limit_to_portfolio_gid: nil))
   end
 
@@ -141,9 +134,6 @@ class TestTimelines < ClassTest
       mock_task_dependent_on_previous_section_last_milestone_true_no_tasks
     end
 
-    # @sg-ignore Wrong argument type for
-    #   Checkoff::Timelines#task_dependent_on_previous_section_last_milestone?: limit_to_portfolio_gid
-    #   expected String, nil, received NilClass
     assert(timelines.task_dependent_on_previous_section_last_milestone?(task, limit_to_portfolio_gid: nil))
   end
 
@@ -185,9 +175,6 @@ class TestTimelines < ClassTest
       mock_task_dependent_on_previous_section_last_milestone_true
     end
 
-    # @sg-ignore Wrong argument type for
-    #   Checkoff::Timelines#task_dependent_on_previous_section_last_milestone?: limit_to_portfolio_gid
-    #   expected String, nil, received NilClass
     assert(timelines.task_dependent_on_previous_section_last_milestone?(task, limit_to_portfolio_gid: nil))
   end
 
@@ -213,9 +200,6 @@ class TestTimelines < ClassTest
       mock_task_dependent_on_previous_section_last_milestone_false_no_previous_section
     end
 
-    # @sg-ignore Wrong argument type for
-    #   Checkoff::Timelines#task_dependent_on_previous_section_last_milestone?: limit_to_portfolio_gid
-    #   expected String, nil, received NilClass
     refute(timelines.task_dependent_on_previous_section_last_milestone?(task, limit_to_portfolio_gid: nil))
   end
 

@@ -2729,7 +2729,6 @@ end
 # pkg:gem/rbs#lib/rbs/collection/sources/rubygems.rb:9
 class RBS::Collection::Sources::Rubygems
   include ::RBS::Collection::Sources::Base
-  include ::Singleton::SingletonInstanceMethods
   include ::Singleton
   extend ::Singleton::SingletonClassMethods
 
@@ -2769,7 +2768,6 @@ end
 # pkg:gem/rbs#lib/rbs/collection/sources/stdlib.rb:9
 class RBS::Collection::Sources::Stdlib
   include ::RBS::Collection::Sources::Base
-  include ::Singleton::SingletonInstanceMethods
   include ::Singleton
   extend ::Singleton::SingletonClassMethods
 
@@ -4409,36 +4407,20 @@ class RBS::LoadingError < ::RBS::BaseError; end
 # JRuby loads this instead, before rbs/location_aux.rb layers the public API on
 # top, so RBS::Location behaves identically without the native extension.
 #
-# pkg:gem/rbs#lib/rbs.rb:82
+# pkg:gem/rbs#lib/rbs/location_aux.rb:4
 class RBS::Location
-  # pkg:gem/rbs#lib/rbs.rb:82
   def initialize(_arg0, _arg1, _arg2); end
 
   # pkg:gem/rbs#lib/rbs/location_aux.rb:79
   def ==(other); end
 
-  # pkg:gem/rbs#lib/rbs.rb:82
   def [](_arg0); end
-
-  # pkg:gem/rbs#lib/rbs.rb:82
   def _add_optional_child(_arg0, _arg1, _arg2); end
-
-  # pkg:gem/rbs#lib/rbs.rb:82
   def _add_optional_no_child(_arg0); end
-
-  # pkg:gem/rbs#lib/rbs.rb:82
   def _add_required_child(_arg0, _arg1, _arg2); end
-
-  # pkg:gem/rbs#lib/rbs.rb:82
   def _end_pos; end
-
-  # pkg:gem/rbs#lib/rbs.rb:82
   def _optional_keys; end
-
-  # pkg:gem/rbs#lib/rbs.rb:82
   def _required_keys; end
-
-  # pkg:gem/rbs#lib/rbs.rb:82
   def _start_pos; end
 
   # pkg:gem/rbs#lib/rbs/location_aux.rb:110
@@ -4450,7 +4432,6 @@ class RBS::Location
   # pkg:gem/rbs#lib/rbs/location_aux.rb:27
   def aref(_arg0); end
 
-  # pkg:gem/rbs#lib/rbs.rb:82
   def buffer; end
 
   # pkg:gem/rbs#lib/rbs/location_aux.rb:118
@@ -4518,7 +4499,6 @@ class RBS::Location
 
   private
 
-  # pkg:gem/rbs#lib/rbs.rb:82
   def initialize_copy(_arg0); end
 
   class << self
@@ -4845,37 +4825,18 @@ end
 # AST with RBS::WASM::Deserializer. rbs/parser_aux.rb layers the public
 # RBS::Parser API on top, exactly as it does for the C extension.
 #
-# pkg:gem/rbs#lib/rbs.rb:82
+# pkg:gem/rbs#lib/rbs/parser/lex_result.rb:4
 class RBS::Parser
   class << self
-    # pkg:gem/rbs#lib/rbs.rb:82
     def _lex(_arg0, _arg1); end
-
-    # pkg:gem/rbs#lib/rbs.rb:82
     def _parse_inline_leading_annotation(_arg0, _arg1, _arg2, _arg3); end
-
-    # pkg:gem/rbs#lib/rbs.rb:82
     def _parse_inline_trailing_annotation(_arg0, _arg1, _arg2, _arg3); end
-
-    # pkg:gem/rbs#lib/rbs.rb:82
     def _parse_method_type(_arg0, _arg1, _arg2, _arg3, _arg4); end
-
-    # pkg:gem/rbs#lib/rbs.rb:82
     def _parse_method_type_to_bytes(_arg0, _arg1, _arg2, _arg3, _arg4); end
-
-    # pkg:gem/rbs#lib/rbs.rb:82
     def _parse_signature(_arg0, _arg1, _arg2); end
-
-    # pkg:gem/rbs#lib/rbs.rb:82
     def _parse_signature_to_bytes(_arg0, _arg1, _arg2); end
-
-    # pkg:gem/rbs#lib/rbs.rb:82
     def _parse_type(_arg0, _arg1, _arg2, _arg3, _arg4, _arg5, _arg6, _arg7); end
-
-    # pkg:gem/rbs#lib/rbs.rb:82
     def _parse_type_params(_arg0, _arg1, _arg2, _arg3); end
-
-    # pkg:gem/rbs#lib/rbs.rb:82
     def _parse_type_to_bytes(_arg0, _arg1, _arg2, _arg3, _arg4, _arg5, _arg6, _arg7); end
 
     # pkg:gem/rbs#lib/rbs/parser_aux.rb:79

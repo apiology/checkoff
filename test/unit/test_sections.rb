@@ -9,31 +9,30 @@ require 'active_support'
 
 # Test the Checkoff::Sections class
 class TestSections < BaseAsana
-  extend Forwardable
-
   # @!parse
   #  # @return [Checkoff::Sections]
   #  def get_test_object; end
 
-  def_delegators(:@mocks, :workspaces, :client)
+  typed_delegate :workspaces, Checkoff::Workspaces
+  typed_delegate :client, Asana::Client
 
   typed_mock :a_membership_project, Hash
   typed_mock :a_membership_section, Hash
 
-  typed_let_mock :a_membership, Hash
-  typed_let_mock :sections, Asana::ProxiedResourceClasses::Section
-  typed_let_mock :section_1, Asana::Resources::Section
-  typed_let_mock :section_2, Asana::Resources::Section
-  typed_let_mock :tasks, Asana::ProxiedResourceClasses::Task
-  typed_let_mock :section_1_gid, String
-  typed_let_mock :section_2_gid, String
-  typed_let_mock :recently_assigned, Asana::Resources::Section
-  typed_let_mock :assignee_section, Asana::Resources::Section
-  typed_let_mock :assignee_section_name, String
-  typed_let_mock :empty_section, Asana::Resources::Section
-  typed_let_mock :empty_section_gid, String
-  typed_let_mock :project_gid, String
-  typed_let_mock :get_results, Asana::HttpClient::Response
+  typed_mock :a_membership, Hash
+  typed_mock :sections, Asana::ProxiedResourceClasses::Section
+  typed_mock :section_1, Asana::Resources::Section
+  typed_mock :section_2, Asana::Resources::Section
+  typed_mock :tasks, Asana::ProxiedResourceClasses::Task
+  typed_mock :section_1_gid, String
+  typed_mock :section_2_gid, String
+  typed_mock :recently_assigned, Asana::Resources::Section
+  typed_mock :assignee_section, Asana::Resources::Section
+  typed_mock :assignee_section_name, String
+  typed_mock :empty_section, Asana::Resources::Section
+  typed_mock :empty_section_gid, String
+  typed_mock :project_gid, String
+  typed_mock :get_results, Asana::HttpClient::Response
 
   # @return [void]
   def test_section_task_names_no_tasks
@@ -49,8 +48,6 @@ class TestSections < BaseAsana
 
   # @return [void]
   def projects
-    # @sg-ignore Wrong argument type for Checkoff::Projects.new: client expected Asana::Client, received Mocha::Mock
-    # https://github.com/castwide/solargraph/issues/1229
     @projects ||= Checkoff::Projects.new(client:)
   end
 
@@ -86,7 +83,8 @@ class TestSections < BaseAsana
   # @return [void]
   def test_sections_or_raise_nil_project_name
     sections = get_test_object
-    # @sg-ignore Unresolved call to sections_or_raise
+    # @sg-ignore tool-limitation:generic-class-new-dispatch
+    #   Unresolved call to sections_or_raise
     assert_raises(ArgumentError) { sections.sections_or_raise('Workspace 1', nil) }
   end
 
@@ -121,7 +119,7 @@ class TestSections < BaseAsana
     task.expects(:assignee_section).returns(section).at_least(0)
   end
 
-  typed_let_mock :my_tasks_project, Asana::Resources::Project
+  typed_mock :my_tasks_project, Asana::Resources::Project
 
   # @return [void]
   def expect_my_tasks_sections_pulled
@@ -158,14 +156,16 @@ class TestSections < BaseAsana
   # @return [void]
   def test_tasks_by_section_nil_workspace_name
     sections = get_test_object
-    # @sg-ignore Unresolved call to tasks_by_section
+    # @sg-ignore tool-limitation:generic-class-new-dispatch
+    #   Unresolved call to tasks_by_section
     assert_raises(ArgumentError) { sections.tasks_by_section(nil, :my_tasks) }
   end
 
   # @return [void]
   def test_tasks_by_section_nil_project_name
     sections = get_test_object
-    # @sg-ignore Unresolved call to tasks_by_section
+    # @sg-ignore tool-limitation:generic-class-new-dispatch
+    #   Unresolved call to tasks_by_section
     assert_raises(ArgumentError) { sections.tasks_by_section('Workspace 1', nil) }
   end
 
@@ -440,8 +440,6 @@ class TestSections < BaseAsana
       mock_tasks_inbox
     end
 
-    # @sg-ignore Unresolved call to task_c
-    # @sg-ignore Unresolved call to tasks
     assert_equal([task_c], sections.tasks('Workspace 1', a_name, nil))
   end
 
@@ -504,7 +502,8 @@ class TestSections < BaseAsana
     end
     section = sections.section_by_gid(section_1_gid)
 
-    # @sg-ignore Unresolved call to gid
+    # @sg-ignore tool-limitation:generic-class-new-dispatch
+    #   Unresolved call to gid
     assert_equal(123, section.gid)
   end
 

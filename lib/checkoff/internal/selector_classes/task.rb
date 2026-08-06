@@ -24,12 +24,8 @@ module Checkoff
           # @type [Hash{'unwrapped' => Hash}]
           task_data = tasks.task_to_h(task)
           # @type [Hash{'membership_by_project_name' => Hash}]
-          # @sg-ignore upstream-type-annotation:rbs-4-1-regression
-          #   https://github.com/castwide/solargraph/pull/1228
           unwrapped = task_data.fetch('unwrapped')
           # @type [Array]
-          # @sg-ignore upstream-type-annotation:rbs-4-1-regression
-          #   https://github.com/castwide/solargraph/pull/1228
           projects = unwrapped.fetch('membership_by_project_name').keys
           !(projects - [:my_tasks]).empty?
         end
@@ -53,12 +49,8 @@ module Checkoff
           # @type [Hash{'unwrapped' => Hash}]
           task_data = tasks.task_to_h(task)
           # @type [Hash{'membership_by_section_name' => Hash}]
-          # @sg-ignore upstream-type-annotation:rbs-4-1-regression
-          #   https://github.com/castwide/solargraph/pull/1228
           unwrapped = task_data.fetch('unwrapped')
           # @type [Array]
-          # @sg-ignore upstream-type-annotation:rbs-4-1-regression
-          #   https://github.com/castwide/solargraph/pull/1228
           section_names = unwrapped.fetch('membership_by_section_name').keys
           section_names.any? do |section_name|
             String(section_name).start_with?(section_name_prefix)
@@ -84,12 +76,8 @@ module Checkoff
           # @type [Hash{'unwrapped' => Hash}]
           task_data = tasks.task_to_h(task)
           # @type [Hash{'membership_by_section_name' => Hash}]
-          # @sg-ignore upstream-type-annotation:rbs-4-1-regression
-          #   https://github.com/castwide/solargraph/pull/1228
           unwrapped = task_data.fetch('unwrapped')
           # @type [Array]
-          # @sg-ignore upstream-type-annotation:rbs-4-1-regression
-          #   https://github.com/castwide/solargraph/pull/1228
           section_names = unwrapped.fetch('membership_by_section_name').keys
           section_names.any?(section_name)
         end
@@ -109,12 +97,8 @@ module Checkoff
         # @param task [Asana::Resources::Task]
         # @param project_name [String]
         # @return [Boolean]
-        # @sg-ignore upstream-type-annotation:rbs-4-1-regression
-        #   https://github.com/castwide/solargraph/pull/1228
         def evaluate(task, project_name)
           project_names = task.memberships.map do |membership|
-            # @sg-ignore upstream-type-annotation:rbs-4-1-regression
-            #   https://github.com/castwide/solargraph/pull/1228
             membership.fetch('project').fetch('name')
           end
           project_names.include?(project_name)
@@ -266,8 +250,6 @@ module Checkoff
 
           # @type [Array<Asana::Resources::Story>]
           stories = task.stories(per_page: 100).to_a.reject do |story|
-            # @sg-ignore upstream-type-annotation:rbs-4-1-regression
-            #   https://github.com/castwide/solargraph/pull/1228
             excluding_resource_subtypes.include? story.resource_subtype
           end
           return true if stories.empty? # no stories == infinitely old!
@@ -393,12 +375,6 @@ module Checkoff
         # @param task [Asana::Resources::Task]
         #
         # @return [Boolean]
-        # @sg-ignore dynamic-metaprogramming
-        #   MilestonePFunctionEvaluator#evaluate return type could not be inferred --
-        #   task.resource_subtype is dispatched via the asana gem's method_missing (not a real
-        #   defined method on Asana::Resources::Task), so the == comparison's result type can't
-        #   be pinned to Boolean. Dropped without a trace during an earlier tagging pass on this
-        #   branch; restored per CircleCI's fresh environment (main still has it).
         def evaluate(task)
           resource_subtype = task.resource_subtype
           raise 'Please add resource_subtype to extra_fields' if resource_subtype.nil?

@@ -5,23 +5,21 @@ require_relative 'test_helper'
 require_relative 'class_test'
 
 class TestSubtasks < ClassTest
-  extend Forwardable
-
   # @!parse
   #  # @return [Checkoff::Subtasks]
   #  def get_test_object; end
 
-  def_delegators(:@mocks, :projects)
+  typed_delegate :projects, Checkoff::Projects
 
-  typed_let_mock :task, Asana::Resources::Task
-  typed_let_mock :raw_subtasks, Array
-  typed_let_mock :subtask, Asana::Resources::Task
-  typed_let_mock :subtask_section_1, Asana::Resources::Task
-  typed_let_mock :subtask_1a, Asana::Resources::Task
-  typed_let_mock :subtask_1b, Asana::Resources::Task
-  typed_let_mock :subtask_section_2, Asana::Resources::Task
-  typed_let_mock :subtask_section_3, Asana::Resources::Task
-  typed_let_mock :subtask_3a, Asana::Resources::Task
+  typed_mock :task, Asana::Resources::Task
+  typed_mock :raw_subtasks, Array
+  typed_mock :subtask, Asana::Resources::Task
+  typed_mock :subtask_section_1, Asana::Resources::Task
+  typed_mock :subtask_1a, Asana::Resources::Task
+  typed_mock :subtask_1b, Asana::Resources::Task
+  typed_mock :subtask_section_2, Asana::Resources::Task
+  typed_mock :subtask_section_3, Asana::Resources::Task
+  typed_mock :subtask_3a, Asana::Resources::Task
 
   # @return [void]
   def task_options

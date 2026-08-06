@@ -6,23 +6,20 @@ require_relative 'class_test'
 require 'checkoff/internal/asana_event_enrichment'
 
 class TestAsanaEventEnrichment < ClassTest
-  extend Forwardable
-
   # @!parse
   #  # @return [Checkoff::Internal::AsanaEventEnrichment]
   #  def get_test_object; end
 
-  def_delegators(:@mocks, :resources, :tasks)
+  typed_delegate :resources, Checkoff::Resources
+  typed_delegate :tasks, Checkoff::Tasks
 
-  typed_let_mock :task, Asana::Resources::Task
-  typed_let_mock :resource, Asana::Resources::Resource
+  typed_mock :task, Asana::Resources::Task
+  typed_mock :resource, Asana::Resources::Resource
 
   # @return [void]
   def test_enrich_webhook_subscription_nil
     enrichment = get_test_object
 
-    # @sg-ignore literal nil infers as NilClass, not the declared nil type -- same
-    #   NilClass-vs-nil distinctness gap seen elsewhere in this codebase
     assert_nil(enrichment.enrich_webhook_subscription!(nil))
   end
 

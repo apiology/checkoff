@@ -6,13 +6,14 @@ require_relative 'base_asana'
 
 # Test the Checkoff::Projects class
 class TestProjects < BaseAsana
-  extend Forwardable
-
   # @!parse
   #  # @return [Checkoff::Projects]
   #  def get_test_object; end
 
-  def_delegators(:@mocks, :client, :project_hashes, :project_timing, :timing)
+  typed_delegate :client, Asana::Client
+  typed_delegate :project_hashes, Checkoff::Internal::ProjectHashes
+  typed_delegate :project_timing, Checkoff::Internal::ProjectTiming
+  typed_delegate :timing, Checkoff::Timing
 
   # @return [void]
   def setup_config
@@ -24,22 +25,22 @@ class TestProjects < BaseAsana
     client.expects(:projects).returns(asana_projects).at_least(1)
   end
 
-  typed_let_mock :project, Asana::Resources::Project
-  typed_let_mock :workspace_one, Asana::Resources::Workspace
-  typed_let_mock :workspace_one_gid, String
-  typed_let_mock :my_workspace_gid, String
-  typed_let_mock :my_tasks_project, Asana::Resources::Project
-  typed_let_mock :tasks, Asana::ProxiedResourceClasses::Task
-  typed_let_mock :task_a, Asana::Resources::Task
-  typed_let_mock :task_b, Asana::Resources::Task
-  typed_let_mock :user_task_lists, Asana::ProxiedResourceClasses::UserTaskList
-  typed_let_mock :user_task_list, Asana::Resources::UserTaskList
-  typed_let_mock :project_a_hash, Hash
-  typed_let_mock :project_gid, String
-  typed_let_mock :client_projects, Asana::ProxiedResourceClasses::Project
-  typed_let_mock :field_name, Symbol
-  typed_let_mock :period, Symbol
-  typed_let_mock :returned_date, Date
+  typed_mock :project, Asana::Resources::Project
+  typed_mock :workspace_one, Asana::Resources::Workspace
+  typed_mock :workspace_one_gid, String
+  typed_mock :my_workspace_gid, String
+  typed_mock :my_tasks_project, Asana::Resources::Project
+  typed_mock :tasks, Asana::ProxiedResourceClasses::Task
+  typed_mock :task_a, Asana::Resources::Task
+  typed_mock :task_b, Asana::Resources::Task
+  typed_mock :user_task_lists, Asana::ProxiedResourceClasses::UserTaskList
+  typed_mock :user_task_list, Asana::Resources::UserTaskList
+  typed_mock :project_a_hash, Hash
+  typed_mock :project_gid, String
+  typed_mock :client_projects, Asana::ProxiedResourceClasses::Project
+  typed_mock :field_name, Symbol
+  typed_mock :period, Symbol
+  typed_mock :returned_date, Date
 
   # @return [Hash{Mocha::Mock => Mocha::Mock}]
   def sample_projects
@@ -55,7 +56,6 @@ class TestProjects < BaseAsana
                                         options: { fields: %w[custom_fields name] })
       .returns(sample_projects.keys)
     sample_projects.each do |project, name|
-      # @sg-ignore project's type isn't inferred through this Hash#each tuple-destructuring block param
       project.expects(:name).returns(name).at_least(0)
     end
   end

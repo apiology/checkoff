@@ -7,11 +7,10 @@ require_relative 'class_test'
 
 # Test the Checkoff::ViewSubcommand class used in CLI processing
 class TestViewSubcommand < ClassTest
-  extend Forwardable
+  typed_delegate :sections, Checkoff::Sections
+  typed_delegate :tasks, Checkoff::Tasks
 
-  def_delegators(:@mocks, :sections, :tasks)
-
-  typed_let_mock :task, Asana::Resources::Task
+  typed_mock :task, Asana::Resources::Task
 
   # @return [String]
   def task_name
@@ -64,8 +63,6 @@ class TestViewSubcommand < ClassTest
   # @param clazz [Class<Checkoff::ViewSubcommand>]
   # @return [Checkoff::ViewSubcommand]
   def create_object(clazz = class_under_test)
-    # @sg-ignore Wrong argument type for Checkoff::ViewSubcommand.new: section_name
-    #   expected String, Symbol, nil, received NilClass
     clazz.new('workspace', :project, nil, task_name, **mocks.to_h)
   end
 

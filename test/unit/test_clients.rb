@@ -5,28 +5,28 @@ require_relative 'test_helper'
 require_relative 'class_test'
 
 class TestClients < ClassTest
-  extend Forwardable
-
   # @!parse
   #  # @return [Checkoff::Clients]
   #  def get_test_object; end
 
-  def_delegators(:@mocks, :asana_client_class, :config)
+  typed_delegate :asana_client_class, Class
+  typed_delegate :config, Checkoff::Internal::EnvFallbackConfigLoader
 
-  typed_let_mock :client, Asana::Client
-  typed_let_mock :personal_access_token, String
+  typed_mock :client, Asana::Client
+  typed_mock :configuration, Asana::Client::Configuration
+  typed_mock :personal_access_token, String
 
   # @return [void]
   def expect_client_created
-    asana_client_class.expects(:new).yields(client).returns(client)
+    asana_client_class.expects(:new).yields(configuration).returns(client)
   end
 
   # @return [void]
   def mock_client
     expect_client_created
     config.expects(:fetch).with(:personal_access_token).returns(personal_access_token)
-    client.expects(:authentication).with(:access_token, personal_access_token)
-    client.expects(:default_headers)
+    configuration.expects(:authentication).with(:access_token, personal_access_token)
+    configuration.expects(:default_headers)
       .with('asana-enable' => 'new_project_templates,new_user_task_lists,new_memberships,new_goal_memberships')
   end
 

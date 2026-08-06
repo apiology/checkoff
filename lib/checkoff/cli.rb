@@ -244,8 +244,6 @@ module Checkoff
       task = tasks.task(workspace.to_s, project, task_name, section_name: section)
       raise "Task not found: #{task_name}" if task.nil?
 
-      # @sg-ignore tool-limitation:type-narrowing
-      #   https://github.com/castwide/solargraph/issues/1254
       task_to_hash(task).to_json
     end
 

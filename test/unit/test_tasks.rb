@@ -7,53 +7,48 @@ require 'checkoff/cli'
 
 # Test the Checkoff::Tasks class
 class TestTasks < BaseAsana
-  extend Forwardable
-
   # @!parse
   #  # @return [Checkoff::Tasks]
   #  def get_test_object; end
 
-  def_delegators :@mocks, :sections, :asana_task, :time_class, :date_class, :workspaces,
-                 :portfolios
+  typed_delegate :sections, Checkoff::Sections
+  typed_delegate :asana_task, Class
+  typed_delegate :time_class, Time
+  typed_delegate :date_class, Date
+  typed_delegate :workspaces, Checkoff::Workspaces
+  typed_delegate :portfolios, Checkoff::Portfolios
 
-  typed_let_mock :task, Asana::Resources::Task
+  typed_mock :task, Asana::Resources::Task
 
-  # rubocop:disable YARD/TagTypeSyntax
-  # @return [Mocha::Mock & Asana::Client]
-  # @sg-ignore TestTasks#client return type could not be inferred
-  def client
-    # @sg-ignore Unresolved call to client on MyOpenStruct
-    mocks.client
-  end
-  # rubocop:enable YARD/TagTypeSyntax
+  typed_delegate :client, Asana::Client
 
-  typed_let_mock :task_hashes, Checkoff::Internal::TaskHashes
-  typed_let_mock :project_gid, String
-  typed_let_mock :wrong_project, Asana::Resources::Project
-  typed_let_mock :wrong_project_gid, String
-  typed_let_mock :asana_tasks_client, Asana::ProxiedResourceClasses::Task
-  typed_let_mock :task_gid, String
+  typed_mock :task_hashes, Checkoff::Internal::TaskHashes
+  typed_mock :project_gid, String
+  typed_mock :wrong_project, Asana::Resources::Project
+  typed_mock :wrong_project_gid, String
+  typed_mock :asana_tasks_client, Asana::ProxiedResourceClasses::Task
+  typed_mock :task_gid, String
 
-  typed_let_mock :default_workspace, Asana::Resources::Workspace
-  typed_let_mock :workspace_gid, String
-  typed_let_mock :task_name, String
-  typed_let_mock :default_assignee_gid, String
+  typed_mock :default_workspace, Asana::Resources::Workspace
+  typed_mock :workspace_gid, String
+  typed_mock :task_name, String
+  typed_mock :default_assignee_gid, String
 
-  typed_let_mock :start_on_string, String
-  typed_let_mock :start_on_date_obj, Date
-  typed_let_mock :start_on_time_obj, Time
-  typed_let_mock :start_at_string, String
-  typed_let_mock :start_at_time_obj, Time
-  typed_let_mock :due_at_string, String
-  typed_let_mock :due_at_time_obj, Time
-  typed_let_mock :due_on_string, String
-  typed_let_mock :due_on_date_obj, Date
-  typed_let_mock :due_on_time_obj, Time
-  typed_let_mock :dependency_1_gid, String
-  typed_let_mock :dependency_1_full_task, Asana::Resources::Task
-  typed_let_mock :now, Time
-  typed_let_mock :dependent_1, Asana::Resources::Task
-  typed_let_mock :dependent_1_gid, String
+  typed_mock :start_on_string, String
+  typed_mock :start_on_date_obj, Date
+  typed_mock :start_on_time_obj, Time
+  typed_mock :start_at_string, String
+  typed_mock :start_at_time_obj, Time
+  typed_mock :due_at_string, String
+  typed_mock :due_at_time_obj, Time
+  typed_mock :due_on_string, String
+  typed_mock :due_on_date_obj, Date
+  typed_mock :due_on_time_obj, Time
+  typed_mock :dependency_1_gid, String
+  typed_mock :dependency_1_full_task, Asana::Resources::Task
+  typed_mock :now, Time
+  typed_mock :dependent_1, Asana::Resources::Task
+  typed_mock :dependent_1_gid, String
 
   # @return [void]
   def expect_now_pulled
@@ -274,10 +269,6 @@ class TestTasks < BaseAsana
   # @param due_on [Mocha::Mock, NilClass]
   # @param start_at [Mocha::Mock, NilClass]
   # @param start_on [Mocha::Mock, NilClass]
-  # @sg-ignore Declared type Mocha::Mock, NilClass does not match inferred type nil for variable due_at
-  # @sg-ignore Declared type Mocha::Mock, NilClass does not match inferred type nil for variable due_on
-  # @sg-ignore Declared type Mocha::Mock, NilClass does not match inferred type nil for variable start_at
-  # @sg-ignore Declared type Mocha::Mock, NilClass does not match inferred type nil for variable start_on
   def allow_task_due(start_on: nil, start_at: nil, due_on: nil, due_at: nil)
     allow_start_at_pulled(task, start_at)
     allow_start_on_pulled(task, start_on)
@@ -345,10 +336,10 @@ class TestTasks < BaseAsana
     tasks.send(:add_task, task_name, workspace_gid:)
   end
 
-  typed_let_mock :workspace_name, String
-  typed_let_mock :project_name, String
-  typed_let_mock :section_name, String
-  typed_let_mock :project, Asana::Resources::Project
+  typed_mock :workspace_name, String
+  typed_mock :project_name, String
+  typed_mock :section_name, String
+  typed_mock :project, Asana::Resources::Project
 
   # @return [void]
   def expect_tasks_from_project_pulled
@@ -391,8 +382,6 @@ class TestTasks < BaseAsana
 
   # @return [void]
   def projects
-    # @sg-ignore Wrong argument type for Checkoff::Projects.new: workspaces expected Checkoff::Workspaces, received Mocha::Mock
-    # https://github.com/castwide/solargraph/issues/1229
     @projects ||= Checkoff::Projects.new(client:,
                                          workspaces:)
   end

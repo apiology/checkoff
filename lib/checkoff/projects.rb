@@ -123,8 +123,6 @@ module Checkoff
     # @param [Array<String>] extra_fields
     #
     # @return [Asana::Resources::Project]
-    # @sg-ignore tool-limitation:type-narrowing
-    #   https://github.com/castwide/solargraph/issues/1254
     def project_or_raise(workspace_name, project_name, extra_fields: [])
       p = project(workspace_name, project_name, extra_fields:)
       raise "Could not find project #{project_name.inspect} under workspace #{workspace_name}." if p.nil?
@@ -216,14 +214,14 @@ module Checkoff
     # date is today or in the past.
     #
     # @param project [Asana::Resources::Project]
-    # @param period [Symbol, Array(Symbol, Integer)] See Checkoff::Timing#in_period? - :now_or_before,:this_week
+    # @param period [Symbol, Array<Symbol, Integer>] See Checkoff::Timing#in_period? - :now_or_before,:this_week
     def project_ready?(project, period: :now_or_before)
       in_period?(project, :ready, period)
     end
 
     # @param project [Asana::Resources::Project]
     # @param field_name [Symbol,Array]
-    # @param period [Symbol, Array(Symbol,Integer)] See Checkoff::Timing#in_period? - :now_or_before,:this_week
+    # @param period [Symbol, Array<Symbol, Integer>] See Checkoff::Timing#in_period? - :now_or_before,:this_week
     def in_period?(project, field_name, period)
       # @type [Date,Time,nil]
       project_date = project_timing.date_or_time_field_by_name(project, field_name)

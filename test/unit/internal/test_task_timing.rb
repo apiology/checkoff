@@ -10,7 +10,7 @@ class TestTaskTiming < ClassTest
   #  # @return [Checkoff::Internal::TaskTiming]
   #  def get_test_object; end
 
-  typed_let_mock :task, Asana::Resources::Task
+  typed_mock :task, Asana::Resources::Task
   # @return [void]
   def test_date_or_time_field_by_name_raises_if_unknown_field
     task_timing = get_test_object

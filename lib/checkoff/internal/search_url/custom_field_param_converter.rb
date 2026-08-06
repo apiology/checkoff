@@ -65,13 +65,9 @@ module Checkoff
           variant_key = "custom_field_#{gid}.variant"
           variant = single_custom_field_params.fetch(variant_key)
           remaining_params = single_custom_field_params.reject { |k, _v| k == variant_key }
-          # @sg-ignore upstream-type-annotation:rbs-4-1-regression
-          #   https://github.com/castwide/solargraph/pull/1228
           raise "Teach me how to handle #{variant_key} = #{variant}" unless variant.length == 1
 
           # @type [Class<CustomFieldVariant>, nil]
-          # @sg-ignore tool-limitation:type-narrowing
-          #   https://github.com/castwide/solargraph/issues/1254
           variant_class = VARIANTS[variant[0]]
           # @type [Array(Hash{String => String}, Array<Symbol, Array>)]
           # @sg-ignore tool-limitation:type-narrowing
@@ -83,17 +79,11 @@ module Checkoff
 
         # @param key [String]
         # @return [String]
-        # @sg-ignore tool-limitation:type-narrowing
-        #   https://github.com/castwide/solargraph/issues/1254
         def gid_from_custom_field_key(key)
           gid_and_suffix = key.split('_')[2]
           raise "Unexpected custom field param key: #{key}" if gid_and_suffix.nil?
 
-          # @sg-ignore tool-limitation:type-narrowing
-          #   https://github.com/castwide/solargraph/issues/1254
           gid = gid_and_suffix.split('.')[0]
-          # @sg-ignore tool-limitation:type-narrowing
-          #   https://github.com/castwide/solargraph/issues/1254
           raise "Unexpected custom field param key: #{key}" if gid.nil?
 
           gid

@@ -47,8 +47,6 @@ module Checkoff
     # @param portfolio_name [String]
     #
     # @return [Asana::Resources::Portfolio]
-    # @sg-ignore tool-limitation:type-narrowing
-    #   https://github.com/castwide/solargraph/issues/1254
     def portfolio_or_raise(workspace_name, portfolio_name)
       portfolio_obj = portfolio(workspace_name, portfolio_name)
       raise "Could not find portfolio #{portfolio_name} under workspace #{workspace_name}." if portfolio_obj.nil?

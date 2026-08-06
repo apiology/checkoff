@@ -279,8 +279,6 @@ module Checkoff
         # @return [Array<String>] the converted params, as an alternating key/value flat array
         def convert_arg(key, values)
           # @type [Class<SimpleParam::SimpleParam>]
-          # @sg-ignore upstream-type-annotation:rbs-4-1-regression
-          #   https://github.com/castwide/solargraph/pull/1228
           clazz = ARGS.fetch(key)
           # @type [SimpleParam::SimpleParam]
           obj = clazz.new(key:, values:)

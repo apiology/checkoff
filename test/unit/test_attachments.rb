@@ -6,19 +6,17 @@ require 'checkoff/attachments'
 require 'stringio'
 
 class TestAttachments < ClassTest
-  extend Forwardable
-
   # @!parse
   #  # @return [Checkoff::Attachments]
   #  def get_test_object; end
 
-  def_delegators(:@mocks, :client)
+  typed_delegate :client, Asana::Client
 
-  typed_let_mock :resource, Asana::Resources::Resource
-  typed_let_mock :attachment_name, String
+  typed_mock :resource, Asana::Resources::Task
+  typed_mock :attachment_name, String
 
-  typed_let_mock :parent_gid, String
-  typed_let_mock :response, Asana::HttpClient::Response
+  typed_mock :parent_gid, String
+  typed_mock :response, Asana::HttpClient::Response
 
   # @return [void]
   # @param url [String]
@@ -47,7 +45,8 @@ class TestAttachments < ClassTest
     end
     attachment = attachments.create_attachment_from_url!(url, resource, attachment_name:, just_the_url: true)
 
-    # @sg-ignore Unresolved call to foo
+    # @sg-ignore tool-limitation:generic-class-new-dispatch
+    #   Unresolved call to foo
     assert_equal('bar', attachment.foo)
   end
 
@@ -105,12 +104,15 @@ class TestAttachments < ClassTest
   end
 
   # @return [String]
-  # @sg-ignore TestAttachments#capture_attachments_run return type could not be inferred
+  # @sg-ignore tool-limitation:global-var-reassignment
+  #   TestAttachments#capture_attachments_run return type could not be inferred
   def capture_attachments_run
     old_stdout = $stdout
     $stdout = StringIO.new
     Checkoff::Attachments.run
-    # @sg-ignore Unresolved call to string
+    # @sg-ignore tool-limitation:global-var-reassignment
+    #   Unresolved call to string -- $stdout's declared type stays IO; the local
+    #   reassignment to StringIO.new isn't tracked
     $stdout.string
   ensure
     $stdout = old_stdout if old_stdout

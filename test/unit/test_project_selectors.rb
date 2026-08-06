@@ -6,24 +6,16 @@ require_relative 'class_test'
 require 'checkoff/project_selectors'
 
 class TestProjectSelectors < ClassTest
-  extend Forwardable
-
-  def_delegators(:@mocks, :projects, :workspaces, :portfolios)
-
   # @!parse
   #  # @return [Checkoff::ProjectSelectors]
   #  def get_test_object; end
 
-  # rubocop:disable YARD/TagTypeSyntax
-  # @return [Mocha::Mock & Asana::Client]
-  # @sg-ignore TestProjectSelectors#client return type could not be inferred
-  def client
-    # @sg-ignore Unresolved call to client on MyOpenStruct
-    mocks.client
-  end
-  # rubocop:enable YARD/TagTypeSyntax
+  typed_delegate :projects, Checkoff::Projects
+  typed_delegate :workspaces, Checkoff::Workspaces
+  typed_delegate :portfolios, Checkoff::Portfolios
+  typed_delegate :client, Asana::Client
 
-  typed_let_mock :project, Asana::Resources::Project
+  typed_mock :project, Asana::Resources::Project
 
   # @return [void]
   def test_filter_via_custom_field_value_contain_any_value_false

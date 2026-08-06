@@ -6,28 +6,27 @@ require_relative 'class_test'
 require 'checkoff/portfolios'
 
 class TestPortfolios < ClassTest
-  extend Forwardable
-
   # @!parse
   #  # @return [Checkoff::Portfolios]
   #  def get_test_object; end
 
-  def_delegators(:@mocks, :workspaces, :client)
+  typed_delegate :workspaces, Checkoff::Workspaces
+  typed_delegate :client, Asana::Client
 
-  typed_let_mock :workspace_name, String
-  typed_let_mock :portfolio_gid, String
-  typed_let_mock :portfolio_name, String
+  typed_mock :workspace_name, String
+  typed_mock :portfolio_gid, String
+  typed_mock :portfolio_name, String
 
-  typed_let_mock :portfolio, Asana::Resources::Portfolio
-  typed_let_mock :workspace, Asana::Resources::Workspace
-  typed_let_mock :workspace_gid, String
-  typed_let_mock :portfolios_api, Asana::ProxiedResourceClasses::Portfolio
-  typed_let_mock :wrong_portfolio, Asana::Resources::Portfolio
-  typed_let_mock :wrong_portfolio_name, String
-  typed_let_mock :users_api, Asana::ProxiedResourceClasses::User
-  typed_let_mock :me, Asana::Resources::User
-  typed_let_mock :me_gid, String
-  typed_let_mock :project_a, Asana::Resources::Project
+  typed_mock :portfolio, Asana::Resources::Portfolio
+  typed_mock :workspace, Asana::Resources::Workspace
+  typed_mock :workspace_gid, String
+  typed_mock :portfolios_api, Asana::ProxiedResourceClasses::Portfolio
+  typed_mock :wrong_portfolio, Asana::Resources::Portfolio
+  typed_mock :wrong_portfolio_name, String
+  typed_mock :users_api, Asana::ProxiedResourceClasses::User
+  typed_mock :me, Asana::Resources::User
+  typed_mock :me_gid, String
+  typed_mock :project_a, Asana::Resources::Project
 
   # @return [void]
   def test_portfolio_or_raise_raises
@@ -109,8 +108,6 @@ class TestPortfolios < ClassTest
   # @return [void]
   def test_projects_in_portfolios
     portfolios = get_test_object do
-      # @sg-ignore Wrong argument type for Checkoff::Projects.new: client expected Asana::Client, received Mocha::Mock
-      # https://github.com/castwide/solargraph/issues/1229
       mocks[:projects] = Checkoff::Projects.new(client:)
       portfolio_arr = [portfolio]
       expect_portfolios_pulled(portfolio_arr)

@@ -36,7 +36,7 @@ module Checkoff
     end
 
     # @param date_or_time [Date,Time,nil]
-    # @param period [Symbol, Array(Symbol,Integer)]
+    # @param period [Symbol, Array<Symbol, Integer>]
     #
     #        Valid values: :this_week, :now_or_before, :indefinite, [:less_than_n_days_ago, Integer]
     def in_period?(date_or_time, period)

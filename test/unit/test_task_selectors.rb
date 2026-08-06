@@ -11,35 +11,16 @@ class TestTaskSelectors < ClassTest
   #  # @return [Checkoff::TaskSelectors]
   #  def get_test_object; end
 
-  # rubocop:disable YARD/TagTypeSyntax
-  # @return [Mocha::Mock & Checkoff::Tasks]
-  # @sg-ignore TestTaskSelectors#tasks return type could not be inferred
-  def tasks
-    # @sg-ignore Unresolved call to tasks on MyOpenStruct
-    mocks.tasks
-  end
+  typed_delegate :tasks, Checkoff::Tasks
+  typed_delegate :timelines, Checkoff::Timelines
+  typed_delegate :client, Asana::Client
 
-  # @return [Mocha::Mock & Checkoff::Timelines]
-  # @sg-ignore TestTaskSelectors#timelines return type could not be inferred
-  def timelines
-    # @sg-ignore Unresolved call to timelines on MyOpenStruct
-    mocks.timelines
-  end
-
-  # @return [Mocha::Mock & Asana::Client]
-  # @sg-ignore TestTaskSelectors#client return type could not be inferred
-  def client
-    # @sg-ignore Unresolved call to client on MyOpenStruct
-    mocks.client
-  end
-  # rubocop:enable YARD/TagTypeSyntax
-
-  typed_let_mock :custom_field, Hash
-  typed_let_mock :task, Asana::Resources::Task
-  typed_let_mock :custom_field_gid, String
-  typed_let_mock :task_gid, String
-  typed_let_mock :story, Asana::Resources::Story
-  typed_let_mock :custom_field_value_gid_1, String
+  typed_mock :custom_field, Hash
+  typed_mock :task, Asana::Resources::Task
+  typed_mock :custom_field_gid, String
+  typed_mock :task_gid, String
+  typed_mock :story, Asana::Resources::Story
+  typed_mock :custom_field_value_gid_1, String
 
   # @return [void]
   def stub_custom_fields
@@ -513,7 +494,9 @@ class TestTaskSelectors < ClassTest
     expect_now_jan_1_2019
     expect_no_start
     expect_due_jan_1_2099
-    # @sg-ignore Unresolved call to at_least on void
+    # @sg-ignore gem-limitation:mocha
+    #   Unresolved call to at_least on void -- expect_no_incomplete_dependencies is declared
+    #   @return [void] but its body's actual runtime value is a chainable Mocha::Expectation
     expect_no_incomplete_dependencies.at_least(0)
   end
 
@@ -804,10 +787,8 @@ class TestTaskSelectors < ClassTest
 
   # @return [void]
   def mock_filter_via_task_selector_field_greater_than_or_equal_to_n_days_from_today_due_on
-    # @sg-ignore Not enough arguments to Date.new
     Date.expects(:today).returns(Date.new(2000, 1, 1)).at_least(1)
     task.expects(:due_at).returns(nil)
-    # @sg-ignore Not enough arguments to Date.new
     task.expects(:due_on).returns(Date.new(2000, 1, 8).to_s).at_least(1)
   end
 
@@ -826,7 +807,6 @@ class TestTaskSelectors < ClassTest
   # @return [void]
   def mock_filter_via_task_selector_field_greater_than_or_equal_to_n_days_from_today_due_at
     expect_tasks_not_mocked
-    # @sg-ignore Not enough arguments to Date.new
     Date.expects(:today).returns(Date.new(2000, 1, 1)).at_least(0)
     task.expects(:due_at).returns(Time.new(1999, 12, 1, 0, 0, 0, '+00:00').to_s).at_least(1)
   end

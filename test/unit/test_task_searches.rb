@@ -6,27 +6,28 @@ require_relative 'class_test'
 require 'checkoff/task_searches'
 
 class TestTaskSearches < ClassTest
-  extend Forwardable
-
   # @!parse
   #  # @return [Checkoff::TaskSearches]
   #  def get_test_object; end
 
-  def_delegators(:@mocks, :workspaces, :client, :search_url_parser,
-                 :asana_resources_collection_class, :task_selectors)
+  typed_delegate :workspaces, Checkoff::Workspaces
+  typed_delegate :client, Asana::Client
+  typed_delegate :search_url_parser, Checkoff::Internal::SearchUrl::Parser
+  typed_delegate :asana_resources_collection_class, Class
+  typed_delegate :task_selectors, Checkoff::TaskSelectors
 
-  typed_let_mock :workspace_name, String
-  typed_let_mock :url, String
+  typed_mock :workspace_name, String
+  typed_mock :url, String
 
-  typed_let_mock :workspace, Asana::Resources::Workspace
-  typed_let_mock :api_params, Hash
-  typed_let_mock :task_selector, Array
-  typed_let_mock :search_response, Asana::HttpClient::Response
-  typed_let_mock :data, Array
-  typed_let_mock :good_task, Asana::Resources::Task
-  typed_let_mock :bad_task, Asana::Resources::Task
+  typed_mock :workspace, Asana::Resources::Workspace
+  typed_mock :api_params, Hash
+  typed_mock :task_selector, Array
+  typed_mock :search_response, Asana::HttpClient::Response
+  typed_mock :data, Array
+  typed_mock :good_task, Asana::Resources::Task
+  typed_mock :bad_task, Asana::Resources::Task
 
-  typed_let_mock :something_else, Object
+  typed_mock :something_else, Object
 
   # @return [void]
   def expect_workspace_pulled
@@ -111,8 +112,6 @@ class TestTaskSearches < ClassTest
 
   # @return [void]
   def projects
-    # @sg-ignore Wrong argument type for Checkoff::Projects.new: client expected Asana::Client, received Mocha::Mock
-    # https://github.com/castwide/solargraph/issues/1229
     Checkoff::Projects.new(client:)
   end
 

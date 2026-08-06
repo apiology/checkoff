@@ -73,10 +73,6 @@ module Checkoff
       workspace = workspaces.workspace_or_raise(workspace_name)
       api_params, task_selector = @search_url_parser.convert_params(url)
       debug { "Task search params: api_params=#{api_params}, task_selector=#{task_selector}" }
-      # @sg-ignore tool-limitation:tuple-type-inference
-      #   task_selector expected Symbol,Array<Symbol,Integer,Array> received Hash{String=>String}
-      #   — Solargraph mis-assigns tuple-destructured types from
-      #   `api_params, task_selector = @search_url_parser.convert_params(url)` above
       raw_task_search(api_params, workspace_gid: workspace.gid, task_selector:,
                                   extra_fields:)
     end
