@@ -6,14 +6,15 @@ require_relative 'class_test'
 require 'checkoff/task_searches'
 
 class TestTaskSearches < ClassTest
-  extend Forwardable
-
   # @!parse
   #  # @return [Checkoff::TaskSearches]
   #  def get_test_object; end
 
-  def_delegators(:@mocks, :workspaces, :client, :search_url_parser,
-                 :asana_resources_collection_class, :task_selectors)
+  typed_delegate :workspaces, Checkoff::Workspaces
+  typed_delegate :client, Asana::Client
+  typed_delegate :search_url_parser, Checkoff::Internal::SearchUrl::Parser
+  typed_delegate :asana_resources_collection_class, Class
+  typed_delegate :task_selectors, Checkoff::TaskSelectors
 
   typed_mock :workspace_name, String
   typed_mock :url, String
@@ -111,8 +112,6 @@ class TestTaskSearches < ClassTest
 
   # @return [void]
   def projects
-    # @sg-ignore tool-limitation:issue-1229
-    #   https://github.com/castwide/solargraph/issues/1229
     Checkoff::Projects.new(client:)
   end
 

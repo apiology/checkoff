@@ -5,13 +5,12 @@ require_relative 'test_helper'
 require_relative 'class_test'
 
 class TestClients < ClassTest
-  extend Forwardable
-
   # @!parse
   #  # @return [Checkoff::Clients]
   #  def get_test_object; end
 
-  def_delegators(:@mocks, :asana_client_class, :config)
+  typed_delegate :asana_client_class, Class
+  typed_delegate :config, Checkoff::Internal::EnvFallbackConfigLoader
 
   typed_mock :client, Asana::Client
   typed_mock :configuration, Asana::Client::Configuration

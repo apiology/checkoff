@@ -9,13 +9,12 @@ require 'active_support'
 
 # Test the Checkoff::Sections class
 class TestSections < BaseAsana
-  extend Forwardable
-
   # @!parse
   #  # @return [Checkoff::Sections]
   #  def get_test_object; end
 
-  def_delegators(:@mocks, :workspaces, :client)
+  typed_delegate :workspaces, Checkoff::Workspaces
+  typed_delegate :client, Asana::Client
 
   typed_mock :a_membership_project, Hash
   typed_mock :a_membership_section, Hash
@@ -49,8 +48,6 @@ class TestSections < BaseAsana
 
   # @return [void]
   def projects
-    # @sg-ignore tool-limitation:issue-1229
-    #   https://github.com/castwide/solargraph/issues/1229
     @projects ||= Checkoff::Projects.new(client:)
   end
 

@@ -7,9 +7,8 @@ require_relative 'class_test'
 
 # Test the Checkoff::ViewSubcommand class used in CLI processing
 class TestViewSubcommand < ClassTest
-  extend Forwardable
-
-  def_delegators(:@mocks, :sections, :tasks)
+  typed_delegate :sections, Checkoff::Sections
+  typed_delegate :tasks, Checkoff::Tasks
 
   typed_mock :task, Asana::Resources::Task
 

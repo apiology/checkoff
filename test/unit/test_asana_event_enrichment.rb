@@ -6,13 +6,12 @@ require_relative 'class_test'
 require 'checkoff/internal/asana_event_enrichment'
 
 class TestAsanaEventEnrichment < ClassTest
-  extend Forwardable
-
   # @!parse
   #  # @return [Checkoff::Internal::AsanaEventEnrichment]
   #  def get_test_object; end
 
-  def_delegators(:@mocks, :resources, :tasks)
+  typed_delegate :resources, Checkoff::Resources
+  typed_delegate :tasks, Checkoff::Tasks
 
   typed_mock :task, Asana::Resources::Task
   typed_mock :resource, Asana::Resources::Resource

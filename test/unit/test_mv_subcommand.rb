@@ -7,14 +7,13 @@ require_relative 'class_test'
 
 # Test the Checkoff::MvSubcommand class used in CLI processing
 class TestMvSubcommand < ClassTest
-  extend Forwardable
-
   # @!parse
   #  # @return [Checkoff::MvSubcommand]
   #  def get_test_object; end
 
-  def_delegators(:@mocks, :projects, :sections,
-                 :logger)
+  typed_delegate :projects, Checkoff::Projects
+  typed_delegate :sections, Checkoff::Sections
+  typed_delegate :logger, IO
 
   typed_mock :to_project, Asana::Resources::Project
   typed_mock :to_project_gid, String

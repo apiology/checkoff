@@ -6,13 +6,14 @@ require_relative 'base_asana'
 
 # Test the Checkoff::Projects class
 class TestProjects < BaseAsana
-  extend Forwardable
-
   # @!parse
   #  # @return [Checkoff::Projects]
   #  def get_test_object; end
 
-  def_delegators(:@mocks, :client, :project_hashes, :project_timing, :timing)
+  typed_delegate :client, Asana::Client
+  typed_delegate :project_hashes, Checkoff::Internal::ProjectHashes
+  typed_delegate :project_timing, Checkoff::Internal::ProjectTiming
+  typed_delegate :timing, Checkoff::Timing
 
   # @return [void]
   def setup_config

@@ -5,13 +5,12 @@ require_relative 'test_helper'
 require_relative 'class_test'
 
 class TestCustomFields < ClassTest
-  extend Forwardable
-
   # @!parse
   #  # @return [Checkoff::CustomFields]
   #  def get_test_object; end
 
-  def_delegators(:@mocks, :workspaces, :client)
+  typed_delegate :workspaces, Checkoff::Workspaces
+  typed_delegate :client, Asana::Client
 
   typed_mock :workspace_name, String
   typed_mock :custom_field_name, String

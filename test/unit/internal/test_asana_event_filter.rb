@@ -5,13 +5,13 @@ require_relative '../class_test'
 require 'checkoff/internal/asana_event_filter'
 
 class TestAsanaEventFilter < ClassTest
-  extend Forwardable
-
   # @!parse
   #  # @return [Checkoff::Internal::AsanaEventFilter]
   #  def get_test_object; end
 
-  def_delegators(:@mocks, :workspaces, :client, :tasks)
+  typed_delegate :workspaces, Checkoff::Workspaces
+  typed_delegate :client, Asana::Client
+  typed_delegate :tasks, Checkoff::Tasks
 
   typed_mock :task, Asana::Resources::Task
   typed_mock :asana_tasks, Asana::ProxiedResourceClasses::Task

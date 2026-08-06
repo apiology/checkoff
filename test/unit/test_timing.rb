@@ -6,21 +6,16 @@ require_relative 'class_test'
 require 'checkoff/timing'
 
 class TestTiming < ClassTest
-  extend Forwardable
-
   # @!parse
   #  # @return [Checkoff::Timing]
   #  def get_test_object; end
 
-  def_delegators(:@mocks, :today_getter)
+  typed_delegate :today_getter, Date
 
   # @return [void]
   def test_in_period_this_week_date_true
     date = Date.parse('2019-01-04') # Friday
     timing = get_test_object do
-      # @sg-ignore gem-limitation:mocha
-      #   Not enough arguments to Date.new -- only seen when Date.new appears as an
-      #   argument inside a Mocha .returns(...) chain; not yet filed upstream
       today_getter.expects(:today).returns(Date.new(2019, 1, 1)) # Tuesday
     end
 
@@ -45,9 +40,6 @@ class TestTiming < ClassTest
   def test_in_period_day_of_week_saturday_false
     date = Date.parse('2099-01-04')
     timing = get_test_object do
-      # @sg-ignore gem-limitation:mocha
-      #   Not enough arguments to Date.new -- only seen when Date.new appears as an
-      #   argument inside a Mocha .returns(...) chain; not yet filed upstream
       today_getter.expects(:today).returns(Date.new(2019, 1, 1)) # Tuesday
     end
 

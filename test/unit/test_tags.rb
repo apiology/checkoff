@@ -5,13 +5,12 @@ require_relative 'test_helper'
 require_relative 'class_test'
 
 class TestTags < ClassTest
-  extend Forwardable
-
   # @!parse
   #  # @return [Checkoff::Tags]
   #  def get_test_object; end
 
-  def_delegators(:@mocks, :workspaces, :client)
+  typed_delegate :workspaces, Checkoff::Workspaces
+  typed_delegate :client, Asana::Client
 
   typed_mock :workspace_name, String
   typed_mock :tag_name, String
@@ -161,8 +160,6 @@ class TestTags < ClassTest
 
   # @return [void]
   def projects
-    # @sg-ignore tool-limitation:issue-1229
-    #   https://github.com/castwide/solargraph/issues/1229
     Checkoff::Projects.new(client:)
   end
 

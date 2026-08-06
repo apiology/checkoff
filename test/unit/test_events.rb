@@ -6,13 +6,11 @@ require_relative 'class_test'
 require 'checkoff/events'
 
 class TestEvents < ClassTest
-  extend Forwardable
-
   # @!parse
   #  # @return [Checkoff::Events]
   #  def get_test_object; end
 
-  def_delegators(:@mocks, :asana_event_filter_class)
+  typed_delegate :asana_event_filter_class, Class
 
   typed_mock :filters, Array
   typed_mock :event, Hash

@@ -6,13 +6,12 @@ require_relative 'class_test'
 require 'checkoff/portfolios'
 
 class TestPortfolios < ClassTest
-  extend Forwardable
-
   # @!parse
   #  # @return [Checkoff::Portfolios]
   #  def get_test_object; end
 
-  def_delegators(:@mocks, :workspaces, :client)
+  typed_delegate :workspaces, Checkoff::Workspaces
+  typed_delegate :client, Asana::Client
 
   typed_mock :workspace_name, String
   typed_mock :portfolio_gid, String
@@ -109,8 +108,6 @@ class TestPortfolios < ClassTest
   # @return [void]
   def test_projects_in_portfolios
     portfolios = get_test_object do
-      # @sg-ignore tool-limitation:issue-1229
-      #   https://github.com/castwide/solargraph/issues/1229
       mocks[:projects] = Checkoff::Projects.new(client:)
       portfolio_arr = [portfolio]
       expect_portfolios_pulled(portfolio_arr)

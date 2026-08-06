@@ -6,14 +6,13 @@ require_relative 'class_test'
 require 'checkoff/project_selectors'
 
 class TestProjectSelectors < ClassTest
-  extend Forwardable
-
-  def_delegators(:@mocks, :projects, :workspaces, :portfolios)
-
   # @!parse
   #  # @return [Checkoff::ProjectSelectors]
   #  def get_test_object; end
 
+  typed_delegate :projects, Checkoff::Projects
+  typed_delegate :workspaces, Checkoff::Workspaces
+  typed_delegate :portfolios, Checkoff::Portfolios
   typed_delegate :client, Asana::Client
 
   typed_mock :project, Asana::Resources::Project

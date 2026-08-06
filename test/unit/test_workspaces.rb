@@ -6,13 +6,12 @@ require_relative 'base_asana'
 
 # Test the Checkoff::Workspaces class
 class TestWorkspaces < BaseAsana
-  extend Forwardable
-
   # @!parse
   #  # @return [Checkoff::Workspaces]
   #  def get_test_object; end
 
-  def_delegators(:@mocks, :client, :asana_workspace)
+  typed_delegate :client, Asana::Client
+  typed_delegate :asana_workspace, Class
 
   typed_mock :workspace_a_name, String
   typed_mock :workspace_a, Asana::Resources::Workspace

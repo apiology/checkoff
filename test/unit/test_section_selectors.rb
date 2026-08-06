@@ -6,13 +6,12 @@ require_relative 'class_test'
 require 'checkoff/section_selectors'
 
 class TestSectionSelectors < ClassTest
-  extend Forwardable
-
   # @!parse
   #  # @return [Checkoff::SectionSelectors]
   #  def get_test_object; end
 
-  def_delegators(:@mocks, :client, :sections)
+  typed_delegate :client, Asana::Client
+  typed_delegate :sections, Checkoff::Sections
 
   typed_mock :section, Asana::Resources::Section
   typed_mock :tasks, Asana::ProxiedResourceClasses::Task

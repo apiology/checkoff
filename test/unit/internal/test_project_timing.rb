@@ -6,13 +6,11 @@ require_relative '../class_test'
 require 'checkoff/internal/project_timing'
 
 class TestProjectTiming < ClassTest
-  extend Forwardable
-
   # @!parse
   #  # @return [Checkoff::Internal::ProjectTiming]
   #  def get_test_object; end
 
-  def_delegators(:@mocks, :custom_fields)
+  typed_delegate :custom_fields, Checkoff::CustomFields
 
   typed_mock :project, Asana::Resources::Project
 

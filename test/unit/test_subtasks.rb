@@ -5,13 +5,11 @@ require_relative 'test_helper'
 require_relative 'class_test'
 
 class TestSubtasks < ClassTest
-  extend Forwardable
-
   # @!parse
   #  # @return [Checkoff::Subtasks]
   #  def get_test_object; end
 
-  def_delegators(:@mocks, :projects)
+  typed_delegate :projects, Checkoff::Projects
 
   typed_mock :task, Asana::Resources::Task
   typed_mock :raw_subtasks, Array

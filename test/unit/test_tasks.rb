@@ -7,14 +7,16 @@ require 'checkoff/cli'
 
 # Test the Checkoff::Tasks class
 class TestTasks < BaseAsana
-  extend Forwardable
-
   # @!parse
   #  # @return [Checkoff::Tasks]
   #  def get_test_object; end
 
-  def_delegators :@mocks, :sections, :asana_task, :time_class, :date_class, :workspaces,
-                 :portfolios
+  typed_delegate :sections, Checkoff::Sections
+  typed_delegate :asana_task, Class
+  typed_delegate :time_class, Time
+  typed_delegate :date_class, Date
+  typed_delegate :workspaces, Checkoff::Workspaces
+  typed_delegate :portfolios, Checkoff::Portfolios
 
   typed_mock :task, Asana::Resources::Task
 

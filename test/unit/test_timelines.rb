@@ -6,13 +6,15 @@ require_relative 'class_test'
 require 'checkoff/timelines'
 
 class TestTimelines < ClassTest
-  extend Forwardable
-
   # @!parse
   #  # @return [Checkoff::Timelines]
   #  def get_test_object; end
 
-  def_delegators(:@mocks, :workspaces, :client, :tasks, :sections, :portfolios)
+  typed_delegate :workspaces, Checkoff::Workspaces
+  typed_delegate :client, Asana::Client
+  typed_delegate :tasks, Checkoff::Tasks
+  typed_delegate :sections, Checkoff::Sections
+  typed_delegate :portfolios, Checkoff::Portfolios
 
   typed_mock :task, Asana::Resources::Task
   typed_mock :milestone, Asana::Resources::Task

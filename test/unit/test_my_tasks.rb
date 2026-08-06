@@ -7,13 +7,11 @@ require 'checkoff/my_tasks'
 
 # Test the Checkoff::MyTasks class
 class TestMyTasks < BaseAsana
-  extend Forwardable
-
   # @!parse
   #  # @return [Checkoff::MyTasks]
   #  def get_test_object; end
 
-  def_delegators(:@mocks, :client)
+  typed_delegate :client, Asana::Client
 
   typed_mock :sections, Asana::ProxiedResourceClasses::Section
   typed_mock :section_1, Asana::Resources::Section

@@ -6,13 +6,11 @@ require 'checkoff/attachments'
 require 'stringio'
 
 class TestAttachments < ClassTest
-  extend Forwardable
-
   # @!parse
   #  # @return [Checkoff::Attachments]
   #  def get_test_object; end
 
-  def_delegators(:@mocks, :client)
+  typed_delegate :client, Asana::Client
 
   typed_mock :resource, Asana::Resources::Task
   typed_mock :attachment_name, String
