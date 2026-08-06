@@ -54,12 +54,12 @@ module Checkoff
       memberships_data = task_data.fetch('memberships')
       memberships_data.all? do |membership_data|
         # @type [Hash{String => String}]
-        # @sg-ignore upstream-type-annotation:rbs-4-1-regression
-        #   https://github.com/castwide/solargraph/pull/1228
+        # @sg-ignore tool-limitation:issue-1232
+        #   https://github.com/castwide/solargraph/issues/1232
         section_data = membership_data.fetch('section')
         section_gid = section_data.fetch('gid')
-        # @sg-ignore upstream-type-annotation:rbs-4-1-regression
-        #   https://github.com/castwide/solargraph/pull/1228
+        # @sg-ignore tool-limitation:issue-1232
+        #   https://github.com/castwide/solargraph/issues/1232
         section = @sections.section_by_gid(section_gid)
         next false if section.nil?
 
@@ -84,20 +84,20 @@ module Checkoff
         md = membership_data
         unless limit_to_portfolio_name.nil?
           # @type [Hash{String => Object}]
-          # @sg-ignore upstream-type-annotation:rbs-4-1-regression
-          #   https://github.com/castwide/solargraph/pull/1228
+          # @sg-ignore tool-limitation:issue-1232
+          #   https://github.com/castwide/solargraph/issues/1232
           project_data = md.fetch('project')
           project_gid = project_data.fetch('gid')
           next true unless limit_to_projects.map(&:gid).include? project_gid
         end
         # @type [Hash{String => Object}]
-        # @sg-ignore upstream-type-annotation:rbs-4-1-regression
-        #   https://github.com/castwide/solargraph/pull/1228
+        # @sg-ignore tool-limitation:issue-1232
+        #   https://github.com/castwide/solargraph/issues/1232
         section_data = md.fetch('section')
         section_gid = section_data.fetch('gid')
 
-        # @sg-ignore upstream-type-annotation:rbs-4-1-regression
-        #   https://github.com/castwide/solargraph/pull/1228
+        # @sg-ignore tool-limitation:issue-1232
+        #   https://github.com/castwide/solargraph/issues/1232
         last_milestone = last_milestone_in_section(section_gid)
 
         next false if last_milestone.nil?
@@ -127,8 +127,8 @@ module Checkoff
         md = membership_data
         unless limit_to_portfolio_name.nil?
           # @type [Hash{String => Object}]
-          # @sg-ignore upstream-type-annotation:rbs-4-1-regression
-          #   https://github.com/castwide/solargraph/pull/1228
+          # @sg-ignore tool-limitation:issue-1232
+          #   https://github.com/castwide/solargraph/issues/1232
           project_data = md.fetch('project')
           project_gid = project_data.fetch('gid')
           next true unless limit_to_projects.map(&:gid).include? project_gid

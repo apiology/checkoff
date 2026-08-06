@@ -141,12 +141,12 @@ module Checkoff
         return unless parent
 
         # @type [String]
-        # @sg-ignore upstream-type-annotation:rbs-4-1-regression
-        #   https://github.com/castwide/solargraph/pull/1228
+        # @sg-ignore tool-limitation:issue-1232
+        #   https://github.com/castwide/solargraph/issues/1232
         resource_type = parent.fetch('resource_type')
         # @type [String]
-        # @sg-ignore upstream-type-annotation:rbs-4-1-regression
-        #   https://github.com/castwide/solargraph/pull/1228
+        # @sg-ignore tool-limitation:issue-1232
+        #   https://github.com/castwide/solargraph/issues/1232
         gid = parent.fetch('gid')
         name, _resource_type = enrich_gid(gid, resource_type:)
         parent['checkoff:enriched:name'] = name if name
@@ -161,13 +161,13 @@ module Checkoff
         # @type [Hash{String => String}]
         resource = T.cast(asana_event['resource'], T::Hash[String, String])
         # @type [String]
-        # @sg-ignore upstream-type-annotation:rbs-4-1-regression
-        #   https://github.com/castwide/solargraph/pull/1228
+        # @sg-ignore tool-limitation:issue-1232
+        #   https://github.com/castwide/solargraph/issues/1232
         resource_type = resource.fetch('resource_type')
 
         # @type [String]
-        # @sg-ignore upstream-type-annotation:rbs-4-1-regression
-        #   https://github.com/castwide/solargraph/pull/1228
+        # @sg-ignore tool-limitation:issue-1232
+        #   https://github.com/castwide/solargraph/issues/1232
         gid = resource.fetch('gid')
 
         name, _resource_type = enrich_gid(gid, resource_type:)

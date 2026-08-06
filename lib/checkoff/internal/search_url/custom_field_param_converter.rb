@@ -65,8 +65,8 @@ module Checkoff
           variant_key = "custom_field_#{gid}.variant"
           variant = single_custom_field_params.fetch(variant_key)
           remaining_params = single_custom_field_params.reject { |k, _v| k == variant_key }
-          # @sg-ignore upstream-type-annotation:rbs-4-1-regression
-          #   https://github.com/castwide/solargraph/pull/1228
+          # @sg-ignore tool-limitation:issue-1232
+          #   https://github.com/castwide/solargraph/issues/1232
           raise "Teach me how to handle #{variant_key} = #{variant}" unless variant.length == 1
 
           # @type [Class<CustomFieldVariant>, nil]

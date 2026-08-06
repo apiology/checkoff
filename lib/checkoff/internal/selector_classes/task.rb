@@ -24,12 +24,12 @@ module Checkoff
           # @type [Hash{'unwrapped' => Hash}]
           task_data = tasks.task_to_h(task)
           # @type [Hash{'membership_by_project_name' => Hash}]
-          # @sg-ignore upstream-type-annotation:rbs-4-1-regression
-          #   https://github.com/castwide/solargraph/pull/1228
+          # @sg-ignore tool-limitation:issue-1232
+          #   https://github.com/castwide/solargraph/issues/1232
           unwrapped = task_data.fetch('unwrapped')
           # @type [Array]
-          # @sg-ignore upstream-type-annotation:rbs-4-1-regression
-          #   https://github.com/castwide/solargraph/pull/1228
+          # @sg-ignore tool-limitation:issue-1232
+          #   https://github.com/castwide/solargraph/issues/1232
           projects = unwrapped.fetch('membership_by_project_name').keys
           !(projects - [:my_tasks]).empty?
         end
@@ -53,12 +53,12 @@ module Checkoff
           # @type [Hash{'unwrapped' => Hash}]
           task_data = tasks.task_to_h(task)
           # @type [Hash{'membership_by_section_name' => Hash}]
-          # @sg-ignore upstream-type-annotation:rbs-4-1-regression
-          #   https://github.com/castwide/solargraph/pull/1228
+          # @sg-ignore tool-limitation:issue-1232
+          #   https://github.com/castwide/solargraph/issues/1232
           unwrapped = task_data.fetch('unwrapped')
           # @type [Array]
-          # @sg-ignore upstream-type-annotation:rbs-4-1-regression
-          #   https://github.com/castwide/solargraph/pull/1228
+          # @sg-ignore tool-limitation:issue-1232
+          #   https://github.com/castwide/solargraph/issues/1232
           section_names = unwrapped.fetch('membership_by_section_name').keys
           section_names.any? do |section_name|
             String(section_name).start_with?(section_name_prefix)
@@ -84,12 +84,12 @@ module Checkoff
           # @type [Hash{'unwrapped' => Hash}]
           task_data = tasks.task_to_h(task)
           # @type [Hash{'membership_by_section_name' => Hash}]
-          # @sg-ignore upstream-type-annotation:rbs-4-1-regression
-          #   https://github.com/castwide/solargraph/pull/1228
+          # @sg-ignore tool-limitation:issue-1232
+          #   https://github.com/castwide/solargraph/issues/1232
           unwrapped = task_data.fetch('unwrapped')
           # @type [Array]
-          # @sg-ignore upstream-type-annotation:rbs-4-1-regression
-          #   https://github.com/castwide/solargraph/pull/1228
+          # @sg-ignore tool-limitation:issue-1232
+          #   https://github.com/castwide/solargraph/issues/1232
           section_names = unwrapped.fetch('membership_by_section_name').keys
           section_names.any?(section_name)
         end

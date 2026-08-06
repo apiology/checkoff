@@ -78,8 +78,8 @@ module Checkoff
     # @param resource [Asana::Resources::Project,Asana::Resources::Task]
     # @param custom_field_name [String]
     # @return [Array<String>]
-    # @sg-ignore upstream-type-annotation:rbs-4-1-regression
-    #   https://github.com/castwide/solargraph/pull/1228
+    # @sg-ignore tool-limitation:issue-1232
+    #   https://github.com/castwide/solargraph/issues/1232
     def resource_custom_field_values_names_by_name(resource, custom_field_name)
       custom_field = resource_custom_field_by_name(resource, custom_field_name)
       return [] if custom_field.nil?
@@ -144,8 +144,8 @@ module Checkoff
     # @param custom_field [Hash{String => Hash,Array<Hash>}]
     #
     # @return [Array<Hash>]
-    # @sg-ignore upstream-type-annotation:rbs-4-1-regression
-    #   https://github.com/castwide/solargraph/pull/1228
+    # @sg-ignore tool-limitation:issue-1232
+    #   https://github.com/castwide/solargraph/issues/1232
     def resource_custom_field_enum_values(custom_field)
       resource_subtype = custom_field.fetch('resource_subtype')
       case resource_subtype

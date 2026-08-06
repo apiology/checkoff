@@ -99,6 +99,8 @@ module Checkoff
           # Example value: 1702857600000
           # +1 is because API seems to operate on inclusive ranges
           # @type [Date]
+          # @sg-ignore tool-limitation:issue-1232
+          #   https://github.com/castwide/solargraph/issues/1232
           after = Time.at(after.to_i / 1000).to_date + 1
           [{ "#{API_PREFIX.fetch(prefix)}.after" => after.to_s }, []]
         end
@@ -111,6 +113,11 @@ module Checkoff
           validate_unit_is_day!(prefix)
 
           # @type [Date]
+          # @sg-ignore tool-limitation:overload-arg-type-dispatch
+          #   Date#- is overloaded (Date-Date -> Rational, Date-Integer -> Date);
+          #   Solargraph merges both overloads' return types instead of dispatching
+          #   on value's actual Integer type, producing Date, Rational. Not yet
+          #   filed upstream.
           after = Date.today - value
 
           [{ "#{API_PREFIX.fetch(prefix)}.after" => after.to_s }, []]
@@ -138,12 +145,12 @@ module Checkoff
 
           value = date_url_params.fetch(param_key)
 
-          # @sg-ignore upstream-type-annotation:rbs-4-1-regression
-          #   https://github.com/castwide/solargraph/pull/1228
+          # @sg-ignore tool-limitation:issue-1232
+          #   https://github.com/castwide/solargraph/issues/1232
           raise "Expected #{param_key} to have one value" if value.length != 1
 
-          # @sg-ignore upstream-type-annotation:rbs-4-1-regression
-          #   https://github.com/castwide/solargraph/pull/1228
+          # @sg-ignore tool-limitation:issue-1232
+          #   https://github.com/castwide/solargraph/issues/1232
           value[0]
         end
 
@@ -160,8 +167,8 @@ module Checkoff
         def validate_unit_is_day!(prefix)
           unit = date_url_params.fetch("#{prefix}.unit").fetch(0)
 
-          # @sg-ignore upstream-type-annotation:rbs-4-1-regression
-          #   https://github.com/castwide/solargraph/pull/1228
+          # @sg-ignore tool-limitation:issue-1232
+          #   https://github.com/castwide/solargraph/issues/1232
           raise "Teach me how to handle other time units: #{unit}" unless unit == 'day'
         end
 
