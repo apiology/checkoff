@@ -154,14 +154,15 @@ class TestTags < ClassTest
   # @return [String]
   def generate_task_endpoint
     tag.expects(:gid).returns('tag_gid').at_least(1)
-    # @sg-ignore gid isn't resolved on the Mocha::Mock & Asana::Resources::Tag intersection type here
+    # @sg-ignore tool-limitation:issue-1229
+    #   https://github.com/castwide/solargraph/issues/1229
     "/tags/#{tag.gid}/tasks"
   end
 
   # @return [void]
   def projects
-    # @sg-ignore Wrong argument type for Checkoff::Projects.new: client expected Asana::Client, received Mocha::Mock
-    # https://github.com/castwide/solargraph/issues/1229
+    # @sg-ignore tool-limitation:issue-1229
+    #   https://github.com/castwide/solargraph/issues/1229
     Checkoff::Projects.new(client:)
   end
 

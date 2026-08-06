@@ -53,7 +53,6 @@ module TestDate
 
   # @param zone [String, nil]
   # @return [Time]
-  # @sg-ignore nil check above is not flow-sensitive for Hash#[] result
   def mock_now_with_zone(zone)
     time = time_by_period(zone.to_s)[time_period]
     raise 'mock time missing' if time.nil?

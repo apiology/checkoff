@@ -180,9 +180,6 @@ module Checkoff
     # @param assignee_gid [String]
     #
     # @return [Asana::Resources::Task]
-    # @sg-ignore tool-limitation:class-ivar-dispatch
-    #   @asana_task.create return type could not be inferred — calling a class method through a
-    #   Class<T>-typed ivar is a known Solargraph dispatch limitation
     def add_task(name,
                  workspace_gid: @workspaces.default_workspace_gid,
                  assignee_gid: default_assignee_gid)

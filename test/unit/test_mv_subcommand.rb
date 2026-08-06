@@ -36,7 +36,10 @@ class TestMvSubcommand < ClassTest
   # @return [String, Symbol]
   def argument_to_name(arg)
     if arg.start_with? ':'
-      # @sg-ignore Unresolved call to to_sym on String, nil
+      # @sg-ignore tool-limitation:type-narrowing
+      #   Unresolved call to to_sym on String, nil -- String#[](Range) is nilable per
+      #   RBS; the start_with? guard above doesn't narrow it back to non-nil. Not one
+      #   of the numbered issues on file (no local var reassignment/raise-guard shape).
       arg[1..].to_sym
     else
       arg

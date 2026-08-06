@@ -111,8 +111,8 @@ class TestTaskSearches < ClassTest
 
   # @return [void]
   def projects
-    # @sg-ignore Wrong argument type for Checkoff::Projects.new: client expected Asana::Client, received Mocha::Mock
-    # https://github.com/castwide/solargraph/issues/1229
+    # @sg-ignore tool-limitation:issue-1229
+    #   https://github.com/castwide/solargraph/issues/1229
     Checkoff::Projects.new(client:)
   end
 

@@ -275,7 +275,9 @@ class TestCLIView < Minitest::Test
 
   # @return [void]
   def mock_view_run_with_section_specified_normal_project_colon_project
-    # @sg-ignore Unresolved call to to_sym on void
+    # @sg-ignore unclear
+    #   Unresolved call to to_sym on void -- project_name is declared @return [String]
+    #   with a matching literal body; cause of the void inference not yet determined
     mock_view(project_name: project_name.to_sym,
               section_name: section_name_str,
               due_on: 'fake_date',

@@ -19,16 +19,12 @@ module Checkoff
 
       # @param task [Asana::Resources::Task]
       # @return [Time, nil]
-      # @sg-ignore tool-limitation:union-safe-nav
-      #   return type could not be inferred — #to_time called via &. on a Date|Time union receiver
       def start_time(task)
         date_or_time_field_by_name(task, :start)&.to_time
       end
 
       # @param task [Asana::Resources::Task]
       # @return [Time, nil]
-      # @sg-ignore tool-limitation:union-safe-nav
-      #   return type could not be inferred — #to_time called via &. on a Date|Time union receiver
       def due_time(task)
         date_or_time_field_by_name(task, :due)&.to_time
       end

@@ -223,10 +223,6 @@ module Checkoff
         # @param resource [Asana::Resources::Task, Asana::Resources::Project]
         # @param prefix [String]
         # @return [boolish]
-        # @sg-ignore dynamic-metaprogramming
-        #   Checkoff::SelectorClasses::Common::NameStartsWithPFunctionEvaluator#evaluate return
-        #   type could not be inferred — resource.name is dispatched via the asana gem's
-        #   method_missing, so &.start_with? chains off an untyped receiver
         def evaluate(resource, prefix)
           resource.name&.start_with?(prefix)
         end

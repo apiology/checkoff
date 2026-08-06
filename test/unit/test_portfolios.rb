@@ -109,8 +109,8 @@ class TestPortfolios < ClassTest
   # @return [void]
   def test_projects_in_portfolios
     portfolios = get_test_object do
-      # @sg-ignore Wrong argument type for Checkoff::Projects.new: client expected Asana::Client, received Mocha::Mock
-      # https://github.com/castwide/solargraph/issues/1229
+      # @sg-ignore tool-limitation:issue-1229
+      #   https://github.com/castwide/solargraph/issues/1229
       mocks[:projects] = Checkoff::Projects.new(client:)
       portfolio_arr = [portfolio]
       expect_portfolios_pulled(portfolio_arr)

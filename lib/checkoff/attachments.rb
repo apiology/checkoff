@@ -139,8 +139,6 @@ module Checkoff
         # neither the attachment name nor the URL's path has a MIME-recognizable extension
         content_type ||= 'application/octet-stream'
 
-        # @sg-ignore tool-limitation:type-narrowing
-        #   https://github.com/castwide/solargraph/issues/1250
         resource.attach(filename: resolved_attachment_name, mime: content_type,
                         io: tempfile)
       end
@@ -202,8 +200,6 @@ module Checkoff
         task = tasks.task_by_gid(gid)
         raise "Could not find task #{gid}" if task.nil?
 
-        # @sg-ignore tool-limitation:type-narrowing
-        #   https://github.com/castwide/solargraph/issues/1254
         attachment = attachments.create_attachment_from_url!(url, task)
         puts "Results: #{attachment.inspect}"
       end

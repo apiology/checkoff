@@ -17,8 +17,6 @@ module Checkoff
 
         # @param resource [Asana::Resources::Project]
         # @return [String, nil]
-        # @sg-ignore tool-limitation:parse-declared-nilable-return
-        #   nilable return from an @!parse-declared method isn't inferred
         def evaluate(resource)
           resource.due_date
         end

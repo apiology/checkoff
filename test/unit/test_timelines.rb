@@ -35,9 +35,6 @@ class TestTimelines < ClassTest
       expect_task_data_created(task, { 'memberships' => [] })
     end
 
-    # @sg-ignore Wrong argument type for
-    #   Checkoff::Timelines#task_dependent_on_previous_section_last_milestone?: limit_to_portfolio_gid
-    #   expected String, nil, received NilClass
     assert(timelines.task_dependent_on_previous_section_last_milestone?(task, limit_to_portfolio_gid: nil))
   end
 
@@ -54,9 +51,6 @@ class TestTimelines < ClassTest
       sections.expects(:section_by_gid).with(section_2_gid).returns(nil)
     end
 
-    # @sg-ignore Wrong argument type for
-    #   Checkoff::Timelines#task_dependent_on_previous_section_last_milestone?: limit_to_portfolio_gid
-    #   expected String, nil, received NilClass
     refute(timelines.task_dependent_on_previous_section_last_milestone?(task, limit_to_portfolio_gid: nil))
   end
 
@@ -83,9 +77,6 @@ class TestTimelines < ClassTest
       mock_task_dependent_on_previous_section_last_milestone_false_no_dependencies
     end
 
-    # @sg-ignore Wrong argument type for
-    #   Checkoff::Timelines#task_dependent_on_previous_section_last_milestone?: limit_to_portfolio_gid
-    #   expected String, nil, received NilClass
     refute(timelines.task_dependent_on_previous_section_last_milestone?(task, limit_to_portfolio_gid: nil))
   end
 
@@ -141,9 +132,6 @@ class TestTimelines < ClassTest
       mock_task_dependent_on_previous_section_last_milestone_true_no_tasks
     end
 
-    # @sg-ignore Wrong argument type for
-    #   Checkoff::Timelines#task_dependent_on_previous_section_last_milestone?: limit_to_portfolio_gid
-    #   expected String, nil, received NilClass
     assert(timelines.task_dependent_on_previous_section_last_milestone?(task, limit_to_portfolio_gid: nil))
   end
 
@@ -185,9 +173,6 @@ class TestTimelines < ClassTest
       mock_task_dependent_on_previous_section_last_milestone_true
     end
 
-    # @sg-ignore Wrong argument type for
-    #   Checkoff::Timelines#task_dependent_on_previous_section_last_milestone?: limit_to_portfolio_gid
-    #   expected String, nil, received NilClass
     assert(timelines.task_dependent_on_previous_section_last_milestone?(task, limit_to_portfolio_gid: nil))
   end
 
@@ -213,9 +198,6 @@ class TestTimelines < ClassTest
       mock_task_dependent_on_previous_section_last_milestone_false_no_previous_section
     end
 
-    # @sg-ignore Wrong argument type for
-    #   Checkoff::Timelines#task_dependent_on_previous_section_last_milestone?: limit_to_portfolio_gid
-    #   expected String, nil, received NilClass
     refute(timelines.task_dependent_on_previous_section_last_milestone?(task, limit_to_portfolio_gid: nil))
   end
 

@@ -298,8 +298,6 @@ module Checkoff
     # @param workspace_name [String, Symbol]
     # @param project_name [String, Symbol]
     # @return [Asana::Resources::Project]
-    # @sg-ignore tool-limitation:type-narrowing
-    #   https://github.com/castwide/solargraph/issues/1254
     def project_or_raise(workspace_name, project_name)
       raise ArgumentError, 'Provide nil project_name' if T.unsafe(project_name).nil?
 

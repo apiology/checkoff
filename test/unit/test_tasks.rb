@@ -20,9 +20,11 @@ class TestTasks < BaseAsana
 
   # rubocop:disable YARD/TagTypeSyntax
   # @return [Mocha::Mock & Asana::Client]
-  # @sg-ignore TestTasks#client return type could not be inferred
+  # @sg-ignore dynamic-metaprogramming
+  #   TestTasks#client return type could not be inferred
   def client
-    # @sg-ignore Unresolved call to client on MyOpenStruct
+    # @sg-ignore dynamic-metaprogramming
+    #   Unresolved call to client on MyOpenStruct
     mocks.client
   end
   # rubocop:enable YARD/TagTypeSyntax
@@ -274,10 +276,6 @@ class TestTasks < BaseAsana
   # @param due_on [Mocha::Mock, NilClass]
   # @param start_at [Mocha::Mock, NilClass]
   # @param start_on [Mocha::Mock, NilClass]
-  # @sg-ignore Declared type Mocha::Mock, NilClass does not match inferred type nil for variable due_at
-  # @sg-ignore Declared type Mocha::Mock, NilClass does not match inferred type nil for variable due_on
-  # @sg-ignore Declared type Mocha::Mock, NilClass does not match inferred type nil for variable start_at
-  # @sg-ignore Declared type Mocha::Mock, NilClass does not match inferred type nil for variable start_on
   def allow_task_due(start_on: nil, start_at: nil, due_on: nil, due_at: nil)
     allow_start_at_pulled(task, start_at)
     allow_start_on_pulled(task, start_on)
@@ -391,8 +389,6 @@ class TestTasks < BaseAsana
 
   # @return [void]
   def projects
-    # @sg-ignore Wrong argument type for Checkoff::Projects.new: workspaces expected Checkoff::Workspaces, received Mocha::Mock
-    # https://github.com/castwide/solargraph/issues/1229
     @projects ||= Checkoff::Projects.new(client:,
                                          workspaces:)
   end

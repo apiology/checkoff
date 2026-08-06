@@ -41,8 +41,6 @@ module Checkoff
     # @param custom_field_name [String]
     #
     # @return [Asana::Resources::CustomField]
-    # @sg-ignore tool-limitation:type-narrowing
-    #   https://github.com/castwide/solargraph/issues/1254
     def custom_field_or_raise(workspace_name, custom_field_name)
       cf = custom_field(workspace_name, custom_field_name)
       raise "Could not find custom_field #{custom_field_name} under workspace #{workspace_name}." if cf.nil?
@@ -112,8 +110,6 @@ module Checkoff
     # @param resource [Asana::Resources::Task,Asana::Resources::Project]
     # @param custom_field_name [String]
     # @return [Hash]
-    # @sg-ignore tool-limitation:type-narrowing
-    #   https://github.com/castwide/solargraph/issues/1254
     def resource_custom_field_by_name_or_raise(resource, custom_field_name)
       custom_field = resource_custom_field_by_name(resource, custom_field_name)
       if custom_field.nil?
@@ -126,8 +122,6 @@ module Checkoff
     # @param resource [Asana::Resources::Project,Asana::Resources::Task]
     # @param custom_field_gid [String]
     # @return [Hash]
-    # @sg-ignore tool-limitation:type-narrowing
-    #   https://github.com/castwide/solargraph/issues/1254
     def resource_custom_field_by_gid_or_raise(resource, custom_field_gid)
       # @type [Array<Hash>]
       custom_fields = resource.custom_fields

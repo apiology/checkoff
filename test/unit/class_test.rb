@@ -18,7 +18,8 @@ class ClassTest < Minitest::Test
 
   # Implemented by subclasses to return the class under test.
   # @return [Class]
-  # @sg-ignore abstract method always raises; declared type documents the override contract, not this body
+  # @sg-ignore tool-limitation:raise-only-body
+  #   abstract method always raises; declared type documents the override contract, not this body
   def class_under_test
     raise 'Implement me!'
   end
@@ -56,7 +57,8 @@ class ClassTest < Minitest::Test
 
   # @param clazz [Class]
   # @return [Object]
-  # @sg-ignore .new's return isn't resolved through the generic Class-typed clazz reference
+  # @sg-ignore tool-limitation:generic-class-new-dispatch
+  #   .new's return isn't resolved through the generic Class-typed clazz reference
   def create_object(clazz = class_under_test)
     clazz.new(**@mocks.to_h)
   end

@@ -49,8 +49,8 @@ class TestSections < BaseAsana
 
   # @return [void]
   def projects
-    # @sg-ignore Wrong argument type for Checkoff::Projects.new: client expected Asana::Client, received Mocha::Mock
-    # https://github.com/castwide/solargraph/issues/1229
+    # @sg-ignore tool-limitation:issue-1229
+    #   https://github.com/castwide/solargraph/issues/1229
     @projects ||= Checkoff::Projects.new(client:)
   end
 
@@ -86,7 +86,8 @@ class TestSections < BaseAsana
   # @return [void]
   def test_sections_or_raise_nil_project_name
     sections = get_test_object
-    # @sg-ignore Unresolved call to sections_or_raise
+    # @sg-ignore tool-limitation:generic-class-new-dispatch
+    #   Unresolved call to sections_or_raise
     assert_raises(ArgumentError) { sections.sections_or_raise('Workspace 1', nil) }
   end
 
@@ -158,14 +159,16 @@ class TestSections < BaseAsana
   # @return [void]
   def test_tasks_by_section_nil_workspace_name
     sections = get_test_object
-    # @sg-ignore Unresolved call to tasks_by_section
+    # @sg-ignore tool-limitation:generic-class-new-dispatch
+    #   Unresolved call to tasks_by_section
     assert_raises(ArgumentError) { sections.tasks_by_section(nil, :my_tasks) }
   end
 
   # @return [void]
   def test_tasks_by_section_nil_project_name
     sections = get_test_object
-    # @sg-ignore Unresolved call to tasks_by_section
+    # @sg-ignore tool-limitation:generic-class-new-dispatch
+    #   Unresolved call to tasks_by_section
     assert_raises(ArgumentError) { sections.tasks_by_section('Workspace 1', nil) }
   end
 
@@ -440,8 +443,6 @@ class TestSections < BaseAsana
       mock_tasks_inbox
     end
 
-    # @sg-ignore Unresolved call to task_c
-    # @sg-ignore Unresolved call to tasks
     assert_equal([task_c], sections.tasks('Workspace 1', a_name, nil))
   end
 
@@ -504,7 +505,8 @@ class TestSections < BaseAsana
     end
     section = sections.section_by_gid(section_1_gid)
 
-    # @sg-ignore Unresolved call to gid
+    # @sg-ignore tool-limitation:generic-class-new-dispatch
+    #   Unresolved call to gid
     assert_equal(123, section.gid)
   end
 

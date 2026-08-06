@@ -83,17 +83,11 @@ module Checkoff
 
         # @param key [String]
         # @return [String]
-        # @sg-ignore tool-limitation:type-narrowing
-        #   https://github.com/castwide/solargraph/issues/1254
         def gid_from_custom_field_key(key)
           gid_and_suffix = key.split('_')[2]
           raise "Unexpected custom field param key: #{key}" if gid_and_suffix.nil?
 
-          # @sg-ignore tool-limitation:type-narrowing
-          #   https://github.com/castwide/solargraph/issues/1254
           gid = gid_and_suffix.split('.')[0]
-          # @sg-ignore tool-limitation:type-narrowing
-          #   https://github.com/castwide/solargraph/issues/1254
           raise "Unexpected custom field param key: #{key}" if gid.nil?
 
           gid

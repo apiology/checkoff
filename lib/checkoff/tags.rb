@@ -79,8 +79,6 @@ module Checkoff
     # @param tag_name [String]
     #
     # @return [Asana::Resources::Tag]
-    # @sg-ignore tool-limitation:type-narrowing
-    #   https://github.com/castwide/solargraph/issues/1254
     def tag_or_raise(workspace_name, tag_name)
       t = tag(workspace_name, tag_name)
 
