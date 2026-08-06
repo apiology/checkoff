@@ -170,28 +170,61 @@ module Asana
   end
 end
 
+# The live Asana API has fields this pinned ruby-asana gem hasn't caught
+# up on declaring as attr_readers. Curated here (like
+# Asana::ProxiedResourceClasses above) so the strict duck-type check below
+# doesn't reject legitimate calls to them.
+module Asana
+  module Resources
+    class Task
+      attr_reader :assignee_section, :start_at
+    end
+
+    # #name is declared separately on every concrete subclass (Task,
+    # Project, Tag, Section, Portfolio, Workspace, User -- everything
+    # except CustomField) rather than hoisted onto the shared base class
+    # upstream. Checkoff code that handles a resource of unknown/mixed
+    # type (e.g. Checkoff::Resources#resource_by_gid) is typed as the
+    # base Resource and still calls #name, relying on that duck type.
+    class Resource
+      attr_reader :name
+    end
+  end
+end
+
 # typed_mock's responds_like_instance_of allocates a responder via
 # Class#allocate, bypassing #initialize, so Asana::Resources::Resource
 # subclasses (Task, Project, etc.) end up with a nil @_data. Statically
-# declared attrs (attr_reader :gid etc.) are real methods and unaffected,
-# but any method proxied through respond_to_missing? -> to_h.key?(...)
-# crashes with NoMethodError on the nil @_data instead of returning
-# false/true. Prepending (not reopening -- reopening would replace the
-# original method entirely and break `super`) treats a nil @_data as
-# "responds to anything," matching how a live Resource's attribute set is
-# inherently dynamic/unverifiable when there's no real data to check.
+# declared attrs (attr_reader :gid etc., including the curated ones just
+# above) are real methods and unaffected, but any method proxied through
+# respond_to_missing? -> to_h.key?(...) crashes with NoMethodError on the
+# nil @_data instead of returning false/true. Return false: an
+# undeclared/uncurated attribute call on a no-data responder is either a
+# typo or a real field this file hasn't caught up on yet -- both should
+# fail loudly rather than be silently accepted. Prepending (not
+# reopening -- reopening would replace the original method entirely and
+# break `super`) is what lets this still fall through to the real
+# to_h.key?(...) check once @_data is populated (a genuine Resource
+# built from real data).
 module Asana
   module Resources
-    module PermissiveRespondToMissing
+    module SafeRespondToMissingOnUninitializedResource
       def respond_to_missing?(name, include_private = false)
-        return true if @_data.nil?
+        return false if @_data.nil?
 
         super
       end
+
+      def to_s
+        return "#<#{self.class} (no data)>" if @_data.nil?
+
+        super
+      end
+      alias inspect to_s
     end
 
     class Resource
-      prepend PermissiveRespondToMissing
+      prepend SafeRespondToMissingOnUninitializedResource
     end
   end
 end

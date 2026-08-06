@@ -14,7 +14,7 @@ class TestAttachments < ClassTest
 
   def_delegators(:@mocks, :client)
 
-  typed_mock :resource, Asana::Resources::Resource
+  typed_mock :resource, Asana::Resources::Task
   typed_mock :attachment_name, String
 
   typed_mock :parent_gid, String
