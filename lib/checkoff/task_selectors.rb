@@ -40,7 +40,7 @@ module Checkoff
     end
 
     # @param [Asana::Resources::Task] task
-    # @param [Symbol, Array<Symbol, Integer, Array>] task_selector Filter based on
+    # @param [Symbol, Array<Symbol, String, Integer, Array>] task_selector Filter based on
     #   task details.  Examples: [:tag, 'foo'] [:not, [:tag, 'foo']] [:tag, 'foo']
     # @return [Boolean]
     def filter_via_task_selector(task, task_selector)
