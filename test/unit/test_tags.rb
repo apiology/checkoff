@@ -13,19 +13,19 @@ class TestTags < ClassTest
 
   def_delegators(:@mocks, :workspaces, :client)
 
-  typed_let_mock :workspace_name, String
-  typed_let_mock :tag_name, String
+  typed_mock :workspace_name, String
+  typed_mock :tag_name, String
 
-  typed_let_mock :tag, Asana::Resources::Tag
-  typed_let_mock :workspace, Asana::Resources::Workspace
-  typed_let_mock :workspace_gid, String
-  typed_let_mock :tags_api, Asana::ProxiedResourceClasses::Tag
-  typed_let_mock :wrong_tag, Asana::Resources::Tag
-  typed_let_mock :wrong_tag_name, String
-  typed_let_mock :task_collection, Asana::Resources::Collection
-  typed_let_mock :response, Asana::HttpClient::Response
-  typed_let_mock :response_body, Hash
-  typed_let_mock :response_body_data, Array
+  typed_mock :tag, Asana::Resources::Tag
+  typed_mock :workspace, Asana::Resources::Workspace
+  typed_mock :workspace_gid, String
+  typed_mock :tags_api, Asana::ProxiedResourceClasses::Tag
+  typed_mock :wrong_tag, Asana::Resources::Tag
+  typed_mock :wrong_tag_name, String
+  typed_mock :task_collection, Asana::Resources::Collection
+  typed_mock :response, Asana::HttpClient::Response
+  typed_mock :response_body, Hash
+  typed_mock :response_body_data, Array
 
   # @return [void]
   def test_tag_or_raise_raises

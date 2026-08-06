@@ -9,12 +9,12 @@ class TestCLIQuickadd < Minitest::Test
   # @return [Hash]
   attr_reader :mocks
 
-  typed_let_mock :config, Hash
-  typed_let_mock :workspaces, Checkoff::Workspaces
-  typed_let_mock :sections, Checkoff::Sections
-  typed_let_mock :tasks, Checkoff::Tasks
-  typed_let_mock :workspace, Asana::Resources::Workspace
-  typed_let_mock :workspace_gid, String
+  typed_mock :config, Hash
+  typed_mock :workspaces, Checkoff::Workspaces
+  typed_mock :sections, Checkoff::Sections
+  typed_mock :tasks, Checkoff::Tasks
+  typed_mock :workspace, Asana::Resources::Workspace
+  typed_mock :workspace_gid, String
 
   # @return [void]
   def workspace_name

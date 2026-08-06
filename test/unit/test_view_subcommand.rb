@@ -11,7 +11,7 @@ class TestViewSubcommand < ClassTest
 
   def_delegators(:@mocks, :sections, :tasks)
 
-  typed_let_mock :task, Asana::Resources::Task
+  typed_mock :task, Asana::Resources::Task
 
   # @return [String]
   def task_name

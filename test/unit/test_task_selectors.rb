@@ -15,12 +15,12 @@ class TestTaskSelectors < ClassTest
   typed_delegate :timelines, Checkoff::Timelines
   typed_delegate :client, Asana::Client
 
-  typed_let_mock :custom_field, Hash
-  typed_let_mock :task, Asana::Resources::Task
-  typed_let_mock :custom_field_gid, String
-  typed_let_mock :task_gid, String
-  typed_let_mock :story, Asana::Resources::Story
-  typed_let_mock :custom_field_value_gid_1, String
+  typed_mock :custom_field, Hash
+  typed_mock :task, Asana::Resources::Task
+  typed_mock :custom_field_gid, String
+  typed_mock :task_gid, String
+  typed_mock :story, Asana::Resources::Story
+  typed_mock :custom_field_value_gid_1, String
 
   # @return [void]
   def stub_custom_fields

@@ -15,9 +15,9 @@ class TestMyTasks < BaseAsana
 
   def_delegators(:@mocks, :client)
 
-  typed_let_mock :sections, Asana::ProxiedResourceClasses::Section
-  typed_let_mock :section_1, Asana::Resources::Section
-  typed_let_mock :project_gid, String
+  typed_mock :sections, Asana::ProxiedResourceClasses::Section
+  typed_mock :section_1, Asana::Resources::Section
+  typed_mock :project_gid, String
 
   # @return [void]
   def mock_sections_for_project

@@ -13,8 +13,8 @@ class TestAsanaEventFilter < ClassTest
 
   def_delegators(:@mocks, :workspaces, :client, :tasks)
 
-  typed_let_mock :task, Asana::Resources::Task
-  typed_let_mock :asana_tasks, Asana::ProxiedResourceClasses::Task
+  typed_mock :task, Asana::Resources::Task
+  typed_mock :asana_tasks, Asana::ProxiedResourceClasses::Task
 
   # @return [void]
   def test_matches_nil_filters_true

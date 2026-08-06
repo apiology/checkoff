@@ -14,11 +14,11 @@ class TestAttachments < ClassTest
 
   def_delegators(:@mocks, :client)
 
-  typed_let_mock :resource, Asana::Resources::Resource
-  typed_let_mock :attachment_name, String
+  typed_mock :resource, Asana::Resources::Resource
+  typed_mock :attachment_name, String
 
-  typed_let_mock :parent_gid, String
-  typed_let_mock :response, Asana::HttpClient::Response
+  typed_mock :parent_gid, String
+  typed_mock :response, Asana::HttpClient::Response
 
   # @return [void]
   # @param url [String]

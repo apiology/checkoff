@@ -16,37 +16,37 @@ class TestTasks < BaseAsana
   def_delegators :@mocks, :sections, :asana_task, :time_class, :date_class, :workspaces,
                  :portfolios
 
-  typed_let_mock :task, Asana::Resources::Task
+  typed_mock :task, Asana::Resources::Task
 
   typed_delegate :client, Asana::Client
 
-  typed_let_mock :task_hashes, Checkoff::Internal::TaskHashes
-  typed_let_mock :project_gid, String
-  typed_let_mock :wrong_project, Asana::Resources::Project
-  typed_let_mock :wrong_project_gid, String
-  typed_let_mock :asana_tasks_client, Asana::ProxiedResourceClasses::Task
-  typed_let_mock :task_gid, String
+  typed_mock :task_hashes, Checkoff::Internal::TaskHashes
+  typed_mock :project_gid, String
+  typed_mock :wrong_project, Asana::Resources::Project
+  typed_mock :wrong_project_gid, String
+  typed_mock :asana_tasks_client, Asana::ProxiedResourceClasses::Task
+  typed_mock :task_gid, String
 
-  typed_let_mock :default_workspace, Asana::Resources::Workspace
-  typed_let_mock :workspace_gid, String
-  typed_let_mock :task_name, String
-  typed_let_mock :default_assignee_gid, String
+  typed_mock :default_workspace, Asana::Resources::Workspace
+  typed_mock :workspace_gid, String
+  typed_mock :task_name, String
+  typed_mock :default_assignee_gid, String
 
-  typed_let_mock :start_on_string, String
-  typed_let_mock :start_on_date_obj, Date
-  typed_let_mock :start_on_time_obj, Time
-  typed_let_mock :start_at_string, String
-  typed_let_mock :start_at_time_obj, Time
-  typed_let_mock :due_at_string, String
-  typed_let_mock :due_at_time_obj, Time
-  typed_let_mock :due_on_string, String
-  typed_let_mock :due_on_date_obj, Date
-  typed_let_mock :due_on_time_obj, Time
-  typed_let_mock :dependency_1_gid, String
-  typed_let_mock :dependency_1_full_task, Asana::Resources::Task
-  typed_let_mock :now, Time
-  typed_let_mock :dependent_1, Asana::Resources::Task
-  typed_let_mock :dependent_1_gid, String
+  typed_mock :start_on_string, String
+  typed_mock :start_on_date_obj, Date
+  typed_mock :start_on_time_obj, Time
+  typed_mock :start_at_string, String
+  typed_mock :start_at_time_obj, Time
+  typed_mock :due_at_string, String
+  typed_mock :due_at_time_obj, Time
+  typed_mock :due_on_string, String
+  typed_mock :due_on_date_obj, Date
+  typed_mock :due_on_time_obj, Time
+  typed_mock :dependency_1_gid, String
+  typed_mock :dependency_1_full_task, Asana::Resources::Task
+  typed_mock :now, Time
+  typed_mock :dependent_1, Asana::Resources::Task
+  typed_mock :dependent_1_gid, String
 
   # @return [void]
   def expect_now_pulled
@@ -334,10 +334,10 @@ class TestTasks < BaseAsana
     tasks.send(:add_task, task_name, workspace_gid:)
   end
 
-  typed_let_mock :workspace_name, String
-  typed_let_mock :project_name, String
-  typed_let_mock :section_name, String
-  typed_let_mock :project, Asana::Resources::Project
+  typed_mock :workspace_name, String
+  typed_mock :project_name, String
+  typed_mock :section_name, String
+  typed_mock :project, Asana::Resources::Project
 
   # @return [void]
   def expect_tasks_from_project_pulled

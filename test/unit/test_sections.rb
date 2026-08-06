@@ -20,20 +20,20 @@ class TestSections < BaseAsana
   typed_mock :a_membership_project, Hash
   typed_mock :a_membership_section, Hash
 
-  typed_let_mock :a_membership, Hash
-  typed_let_mock :sections, Asana::ProxiedResourceClasses::Section
-  typed_let_mock :section_1, Asana::Resources::Section
-  typed_let_mock :section_2, Asana::Resources::Section
-  typed_let_mock :tasks, Asana::ProxiedResourceClasses::Task
-  typed_let_mock :section_1_gid, String
-  typed_let_mock :section_2_gid, String
-  typed_let_mock :recently_assigned, Asana::Resources::Section
-  typed_let_mock :assignee_section, Asana::Resources::Section
-  typed_let_mock :assignee_section_name, String
-  typed_let_mock :empty_section, Asana::Resources::Section
-  typed_let_mock :empty_section_gid, String
-  typed_let_mock :project_gid, String
-  typed_let_mock :get_results, Asana::HttpClient::Response
+  typed_mock :a_membership, Hash
+  typed_mock :sections, Asana::ProxiedResourceClasses::Section
+  typed_mock :section_1, Asana::Resources::Section
+  typed_mock :section_2, Asana::Resources::Section
+  typed_mock :tasks, Asana::ProxiedResourceClasses::Task
+  typed_mock :section_1_gid, String
+  typed_mock :section_2_gid, String
+  typed_mock :recently_assigned, Asana::Resources::Section
+  typed_mock :assignee_section, Asana::Resources::Section
+  typed_mock :assignee_section_name, String
+  typed_mock :empty_section, Asana::Resources::Section
+  typed_mock :empty_section_gid, String
+  typed_mock :project_gid, String
+  typed_mock :get_results, Asana::HttpClient::Response
 
   # @return [void]
   def test_section_task_names_no_tasks
@@ -122,7 +122,7 @@ class TestSections < BaseAsana
     task.expects(:assignee_section).returns(section).at_least(0)
   end
 
-  typed_let_mock :my_tasks_project, Asana::Resources::Project
+  typed_mock :my_tasks_project, Asana::Resources::Project
 
   # @return [void]
   def expect_my_tasks_sections_pulled

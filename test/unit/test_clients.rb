@@ -13,8 +13,8 @@ class TestClients < ClassTest
 
   def_delegators(:@mocks, :asana_client_class, :config)
 
-  typed_let_mock :client, Asana::Client
-  typed_let_mock :personal_access_token, String
+  typed_mock :client, Asana::Client
+  typed_mock :personal_access_token, String
 
   # @return [void]
   def expect_client_created

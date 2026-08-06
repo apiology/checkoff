@@ -10,7 +10,7 @@ class TestProjectHashes < ClassTest
   #  # @return [Checkoff::Internal::ProjectHashes]
   #  def get_test_object; end
 
-  typed_let_mock :project, Asana::Resources::Project
+  typed_mock :project, Asana::Resources::Project
 
   PROJECT_A_RAW_HASH = {
     'name' => 'a',

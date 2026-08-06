@@ -14,20 +14,20 @@ class TestPortfolios < ClassTest
 
   def_delegators(:@mocks, :workspaces, :client)
 
-  typed_let_mock :workspace_name, String
-  typed_let_mock :portfolio_gid, String
-  typed_let_mock :portfolio_name, String
+  typed_mock :workspace_name, String
+  typed_mock :portfolio_gid, String
+  typed_mock :portfolio_name, String
 
-  typed_let_mock :portfolio, Asana::Resources::Portfolio
-  typed_let_mock :workspace, Asana::Resources::Workspace
-  typed_let_mock :workspace_gid, String
-  typed_let_mock :portfolios_api, Asana::ProxiedResourceClasses::Portfolio
-  typed_let_mock :wrong_portfolio, Asana::Resources::Portfolio
-  typed_let_mock :wrong_portfolio_name, String
-  typed_let_mock :users_api, Asana::ProxiedResourceClasses::User
-  typed_let_mock :me, Asana::Resources::User
-  typed_let_mock :me_gid, String
-  typed_let_mock :project_a, Asana::Resources::Project
+  typed_mock :portfolio, Asana::Resources::Portfolio
+  typed_mock :workspace, Asana::Resources::Workspace
+  typed_mock :workspace_gid, String
+  typed_mock :portfolios_api, Asana::ProxiedResourceClasses::Portfolio
+  typed_mock :wrong_portfolio, Asana::Resources::Portfolio
+  typed_mock :wrong_portfolio_name, String
+  typed_mock :users_api, Asana::ProxiedResourceClasses::User
+  typed_mock :me, Asana::Resources::User
+  typed_mock :me_gid, String
+  typed_mock :project_a, Asana::Resources::Project
 
   # @return [void]
   def test_portfolio_or_raise_raises

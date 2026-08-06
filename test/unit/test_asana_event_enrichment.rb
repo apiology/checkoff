@@ -14,8 +14,8 @@ class TestAsanaEventEnrichment < ClassTest
 
   def_delegators(:@mocks, :resources, :tasks)
 
-  typed_let_mock :task, Asana::Resources::Task
-  typed_let_mock :resource, Asana::Resources::Resource
+  typed_mock :task, Asana::Resources::Task
+  typed_mock :resource, Asana::Resources::Resource
 
   # @return [void]
   def test_enrich_webhook_subscription_nil

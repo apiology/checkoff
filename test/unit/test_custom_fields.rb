@@ -13,15 +13,15 @@ class TestCustomFields < ClassTest
 
   def_delegators(:@mocks, :workspaces, :client)
 
-  typed_let_mock :workspace_name, String
-  typed_let_mock :custom_field_name, String
+  typed_mock :workspace_name, String
+  typed_mock :custom_field_name, String
 
-  typed_let_mock :custom_field, Asana::Resources::CustomField
-  typed_let_mock :workspace, Asana::Resources::Workspace
-  typed_let_mock :workspace_gid, String
-  typed_let_mock :custom_fields_api, Asana::ProxiedResourceClasses::CustomField
-  typed_let_mock :wrong_custom_field, Asana::Resources::CustomField
-  typed_let_mock :wrong_custom_field_name, String
+  typed_mock :custom_field, Asana::Resources::CustomField
+  typed_mock :workspace, Asana::Resources::Workspace
+  typed_mock :workspace_gid, String
+  typed_mock :custom_fields_api, Asana::ProxiedResourceClasses::CustomField
+  typed_mock :wrong_custom_field, Asana::Resources::CustomField
+  typed_mock :wrong_custom_field_name, String
 
   # @return [void]
   def test_custom_field_or_raise_raises

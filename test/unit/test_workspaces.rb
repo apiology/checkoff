@@ -14,13 +14,13 @@ class TestWorkspaces < BaseAsana
 
   def_delegators(:@mocks, :client, :asana_workspace)
 
-  typed_let_mock :workspace_a_name, String
-  typed_let_mock :workspace_a, Asana::Resources::Workspace
-  typed_let_mock :workspace_a_gid, String
-  typed_let_mock :workspace_b_name, String
-  typed_let_mock :workspace_b, Asana::Resources::Workspace
-  typed_let_mock :workspace_b_gid, String
-  typed_let_mock :workspaces, Asana::ProxiedResourceClasses::Workspace
+  typed_mock :workspace_a_name, String
+  typed_mock :workspace_a, Asana::Resources::Workspace
+  typed_mock :workspace_a_gid, String
+  typed_mock :workspace_b_name, String
+  typed_mock :workspace_b, Asana::Resources::Workspace
+  typed_mock :workspace_b_gid, String
+  typed_mock :workspaces, Asana::ProxiedResourceClasses::Workspace
 
   # @return [void]
   def mock_workspace_or_raise_nil

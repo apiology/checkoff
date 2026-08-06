@@ -14,9 +14,9 @@ class TestEvents < ClassTest
 
   def_delegators(:@mocks, :asana_event_filter_class)
 
-  typed_let_mock :filters, Array
-  typed_let_mock :event, Hash
-  typed_let_mock :asana_event_filter, Checkoff::Internal::AsanaEventFilter
+  typed_mock :filters, Array
+  typed_mock :event, Hash
+  typed_mock :asana_event_filter, Checkoff::Internal::AsanaEventFilter
 
   # @return [void]
   def mock_filter_asana_events_true

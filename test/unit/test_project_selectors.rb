@@ -16,7 +16,7 @@ class TestProjectSelectors < ClassTest
 
   typed_delegate :client, Asana::Client
 
-  typed_let_mock :project, Asana::Resources::Project
+  typed_mock :project, Asana::Resources::Project
 
   # @return [void]
   def test_filter_via_custom_field_value_contain_any_value_false
