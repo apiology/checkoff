@@ -221,7 +221,7 @@ module Checkoff
 
     # @param project [Asana::Resources::Project]
     # @param field_name [Symbol,Array]
-    # @param period [Symbol, Array(Symbol,Integer)] See Checkoff::Timing#in_period? - :now_or_before,:this_week
+    # @param period [Symbol, Array<Symbol, Integer>] See Checkoff::Timing#in_period? - :now_or_before,:this_week
     def in_period?(project, field_name, period)
       # @type [Date,Time,nil]
       project_date = project_timing.date_or_time_field_by_name(project, field_name)
