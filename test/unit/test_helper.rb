@@ -37,18 +37,6 @@ ENV['LOG_LEVEL'] = 'WARN'
 ENV['TZ'] = 'America/New_York'
 require_relative '../../lib/checkoff'
 
-def let_single_mock(mock_sym)
-  define_method(mock_sym.to_s) do
-    var = "@#{mock_sym}"
-    mock = instance_variable_get(var)
-    unless mock
-      mock = mock(mock_sym.to_s)
-      instance_variable_set var, mock
-    end
-    mock
-  end
-end
-
 # @param mock_sym [Symbol]
 # @param type [Class]
 #
@@ -60,26 +48,16 @@ def typed_mock(mock_sym, type)
     unless mock
       mock = mock(mock_sym.to_s)
       instance_variable_set var, mock
-      mock.responds_like_instance_of(type)
+      begin
+        mock.responds_like_instance_of(type)
+      rescue TypeError
+        # Value types like Symbol/Integer/Float have no Ruby allocator,
+        # so Mocha can't build a responder instance to check against.
+        # Nothing to verify at runtime here -- the static type is all we get.
+      end
     end
     mock
   end
-end
-
-# Like typed_mock, but skips responds_like_instance_of at runtime.
-# ruby-asana's Asana::Resources::Resource#respond_to_missing? assumes an
-# initialized @attributes hash; responds_like_instance_of allocates the
-# responder class via Class#allocate (bypassing #initialize), so any
-# unstubbed method call on the mock crashes with NoMethodError inside
-# ruby-asana itself rather than Mocha's own error. Only the static type
-# (Mocha::Mock & type, via the matching Solargraph macro) is wanted here.
-#
-# @param mock_sym [Symbol]
-# @param type [Class]
-#
-# @return [void]
-def typed_let_mock(mock_sym, type)
-  let_single_mock(mock_sym)
 end
 
 # Exposes an existing @mocks entry (from get_initializer_mocks) as a
@@ -177,6 +155,32 @@ module Asana
     class CustomField
       # @return [Array<Asana::Resources::CustomField>]
       def get_custom_fields_for_workspace(workspace_gid:); end
+    end
+  end
+end
+
+# typed_mock's responds_like_instance_of allocates a responder via
+# Class#allocate, bypassing #initialize, so Asana::Resources::Resource
+# subclasses (Task, Project, etc.) end up with a nil @_data. Statically
+# declared attrs (attr_reader :gid etc.) are real methods and unaffected,
+# but any method proxied through respond_to_missing? -> to_h.key?(...)
+# crashes with NoMethodError on the nil @_data instead of returning
+# false/true. Prepending (not reopening -- reopening would replace the
+# original method entirely and break `super`) treats a nil @_data as
+# "responds to anything," matching how a live Resource's attribute set is
+# inherently dynamic/unverifiable when there's no real data to check.
+module Asana
+  module Resources
+    module PermissiveRespondToMissing
+      def respond_to_missing?(name, include_private = false)
+        return true if @_data.nil?
+
+        super
+      end
+    end
+
+    class Resource
+      prepend PermissiveRespondToMissing
     end
   end
 end
