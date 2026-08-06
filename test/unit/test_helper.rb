@@ -37,6 +37,19 @@ ENV['LOG_LEVEL'] = 'WARN'
 ENV['TZ'] = 'America/New_York'
 require_relative '../../lib/checkoff'
 
+# responds_like_instance_of builds its responder via Class#allocate, which
+# MRI refuses for these classes (no heap representation to carve out --
+# their values are immediates or interned). responds_like takes a real
+# instance instead, so a literal value works directly.
+NON_ALLOCATABLE_EXAMPLES = {
+  Symbol => :placeholder,
+  Integer => 0,
+  Float => 0.0,
+  NilClass => nil,
+  TrueClass => true,
+  FalseClass => false,
+}.freeze
+
 # @param mock_sym [Symbol]
 # @param type [Class]
 #
@@ -48,12 +61,10 @@ def typed_mock(mock_sym, type)
     unless mock
       mock = mock(mock_sym.to_s)
       instance_variable_set var, mock
-      begin
+      if NON_ALLOCATABLE_EXAMPLES.key?(type)
+        mock.responds_like(NON_ALLOCATABLE_EXAMPLES.fetch(type))
+      else
         mock.responds_like_instance_of(type)
-      rescue TypeError
-        # Value types like Symbol/Integer/Float have no Ruby allocator,
-        # so Mocha can't build a responder instance to check against.
-        # Nothing to verify at runtime here -- the static type is all we get.
       end
     end
     mock
