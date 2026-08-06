@@ -82,6 +82,21 @@ def typed_let_mock(mock_sym, type)
   let_single_mock(mock_sym)
 end
 
+# Exposes an existing @mocks entry (from get_initializer_mocks) as a
+# precisely-typed bare method, like def_delegators but with a real
+# type instead of the generic Mocha::Mock the def_delegators macro
+# provides.
+#
+# @param mock_sym [Symbol]
+# @param type [Class]
+#
+# @return [void]
+def typed_delegate(mock_sym, type)
+  define_method(mock_sym.to_s) do
+    mocks.public_send(mock_sym)
+  end
+end
+
 def define_singleton_method_by_proc(obj, name, block)
   metaclass = class << obj; self; end
   metaclass.send(:define_method, name, block)

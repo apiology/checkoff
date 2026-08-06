@@ -14,16 +14,7 @@ class TestProjectSelectors < ClassTest
   #  # @return [Checkoff::ProjectSelectors]
   #  def get_test_object; end
 
-  # rubocop:disable YARD/TagTypeSyntax
-  # @return [Mocha::Mock & Asana::Client]
-  # @sg-ignore dynamic-metaprogramming
-  #   TestProjectSelectors#client return type could not be inferred
-  def client
-    # @sg-ignore dynamic-metaprogramming
-    #   Unresolved call to client on MyOpenStruct
-    mocks.client
-  end
-  # rubocop:enable YARD/TagTypeSyntax
+  typed_delegate :client, Asana::Client
 
   typed_let_mock :project, Asana::Resources::Project
 

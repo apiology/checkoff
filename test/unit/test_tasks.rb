@@ -18,16 +18,7 @@ class TestTasks < BaseAsana
 
   typed_let_mock :task, Asana::Resources::Task
 
-  # rubocop:disable YARD/TagTypeSyntax
-  # @return [Mocha::Mock & Asana::Client]
-  # @sg-ignore dynamic-metaprogramming
-  #   TestTasks#client return type could not be inferred
-  def client
-    # @sg-ignore dynamic-metaprogramming
-    #   Unresolved call to client on MyOpenStruct
-    mocks.client
-  end
-  # rubocop:enable YARD/TagTypeSyntax
+  typed_delegate :client, Asana::Client
 
   typed_let_mock :task_hashes, Checkoff::Internal::TaskHashes
   typed_let_mock :project_gid, String

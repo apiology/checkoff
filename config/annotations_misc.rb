@@ -155,6 +155,13 @@
 #     # @param type [Class]
 #     # @return [void]
 #     def typed_let_mock(mock_sym, type); end
+#     # @!macro [new] typed_delegate
+#     #   @!method $1
+#     #     @return [Mocha::Mock & $2]
+#     # @param mock_sym [Symbol]
+#     # @param type [Class]
+#     # @return [void]
+#     def typed_delegate(mock_sym, type); end
 #     # @param clazz [Class]
 #     # @param respond_like_instance_of [Hash, nil]
 #     # @param respond_like [Hash, nil]

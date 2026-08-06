@@ -11,34 +11,9 @@ class TestTaskSelectors < ClassTest
   #  # @return [Checkoff::TaskSelectors]
   #  def get_test_object; end
 
-  # rubocop:disable YARD/TagTypeSyntax
-  # @return [Mocha::Mock & Checkoff::Tasks]
-  # @sg-ignore dynamic-metaprogramming
-  #   TestTaskSelectors#tasks return type could not be inferred
-  def tasks
-    # @sg-ignore dynamic-metaprogramming
-    #   Unresolved call to tasks on MyOpenStruct
-    mocks.tasks
-  end
-
-  # @return [Mocha::Mock & Checkoff::Timelines]
-  # @sg-ignore dynamic-metaprogramming
-  #   TestTaskSelectors#timelines return type could not be inferred
-  def timelines
-    # @sg-ignore dynamic-metaprogramming
-    #   Unresolved call to timelines on MyOpenStruct
-    mocks.timelines
-  end
-
-  # @return [Mocha::Mock & Asana::Client]
-  # @sg-ignore dynamic-metaprogramming
-  #   TestTaskSelectors#client return type could not be inferred
-  def client
-    # @sg-ignore dynamic-metaprogramming
-    #   Unresolved call to client on MyOpenStruct
-    mocks.client
-  end
-  # rubocop:enable YARD/TagTypeSyntax
+  typed_delegate :tasks, Checkoff::Tasks
+  typed_delegate :timelines, Checkoff::Timelines
+  typed_delegate :client, Asana::Client
 
   typed_let_mock :custom_field, Hash
   typed_let_mock :task, Asana::Resources::Task
