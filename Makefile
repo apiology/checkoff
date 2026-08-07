@@ -152,6 +152,11 @@ typecheck: build-typecheck srb solargraph ## validate types in code and configur
 citypecheck: ci-build-typecheck srb ci-solargraph ## Run type check from CircleCI
 
 ci-solargraph: ## Run Solargraph typechecker in CI
+	echo "DEBUG SOLARGRAPH_FORCE_VERSION=$${SOLARGRAPH_FORCE_VERSION:-<unset>}"
+	echo "DEBUG BUNDLE_PATH=$${BUNDLE_PATH:-<unset>}"
+	bundle exec solargraph --version
+	bundle show solargraph
+	awk '/^GIT$$/ { r=""; v=""; g=1; next } g && /^  remote:/ { r=$$2 } g && /^  revision:/ { v=$$2 } g && /^$$/ { if (r ~ /solargraph/) print "DEBUG Gemfile.lock pinned revision:", v; g=0 }' Gemfile.lock
 	bin/solargraph typecheck --level strong
 
 typecoverage: typecheck ## Run type checking and then ratchet coverage in metrics/
