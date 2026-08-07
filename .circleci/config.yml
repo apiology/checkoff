@@ -48,13 +48,12 @@ commands:
       - restore_cache:
           name: Restore rbenv cache
           keys:
-            - rbenv-v5-{{ checksum "checkoff.gemspec" }}-{{ checksum "Gemfile" }}-{{ checksum "Gemfile.lock" }}-{{ checksum "Makefile" }}-{{ checksum ".circleci/config.yml" }}- # yamllint disable-line rule:line-length
-            - rbenv-v5-{{ checksum "checkoff.gemspec" }}-{{ checksum "Gemfile" }}-{{ checksum "Gemfile.lock" }}-{{ checksum "Makefile" }}- # yamllint disable-line rule:line-length
-            - rbenv-v5-{{ checksum "checkoff.gemspec" }}-{{ checksum "Gemfile" }}-{{ checksum "Gemfile.lock" }}-
-            - rbenv-v5-{{ checksum "checkoff.gemspec" }}-{{ checksum "Gemfile" }}-
-            - rbenv-v5-{{ checksum "checkoff.gemspec" }}-
-            - rbenv-v5-
-            - rbenv-
+            - rbenv-v6-{{ checksum "checkoff.gemspec" }}-{{ checksum "Gemfile" }}-{{ checksum "Gemfile.lock" }}-{{ checksum "Makefile" }}-{{ checksum ".circleci/config.yml" }}- # yamllint disable-line rule:line-length
+            - rbenv-v6-{{ checksum "checkoff.gemspec" }}-{{ checksum "Gemfile" }}-{{ checksum "Gemfile.lock" }}-{{ checksum "Makefile" }}- # yamllint disable-line rule:line-length
+            - rbenv-v6-{{ checksum "checkoff.gemspec" }}-{{ checksum "Gemfile" }}-{{ checksum "Gemfile.lock" }}-
+            - rbenv-v6-{{ checksum "checkoff.gemspec" }}-{{ checksum "Gemfile" }}-
+            - rbenv-v6-{{ checksum "checkoff.gemspec" }}-
+            - rbenv-v6-
       - restore_cache:
           # NOTE: bump the ruby-types-vN- prefix when YARD_OPTS changes in
           # the Makefile (see the comment there for why).
@@ -96,7 +95,7 @@ commands:
             - "/home/circleci/.pyenv"
       - save_cache:
           name: 'Save rbenv cache'
-          key: rbenv-v5-{{ checksum "checkoff.gemspec" }}-{{ checksum "Gemfile" }}-{{ checksum "Gemfile.lock" }}-{{ checksum "Makefile" }}-{{ checksum ".circleci/config.yml" }}-{{ checksum ".ruby-version" }} # yamllint disable-line rule:line-length
+          key: rbenv-v6-{{ checksum "checkoff.gemspec" }}-{{ checksum "Gemfile" }}-{{ checksum "Gemfile.lock" }}-{{ checksum "Makefile" }}-{{ checksum ".circleci/config.yml" }}-{{ checksum ".ruby-version" }} # yamllint disable-line rule:line-length
           paths:
             - "Gemfile.lock.installed"
             - 'vendor/.keep'
