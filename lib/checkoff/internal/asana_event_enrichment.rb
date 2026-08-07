@@ -141,12 +141,8 @@ module Checkoff
         return unless parent
 
         # @type [String]
-        # @sg-ignore tool-limitation:pr-1274-follow-on
-        #   https://github.com/castwide/solargraph/pull/1274
         resource_type = parent.fetch('resource_type')
         # @type [String]
-        # @sg-ignore tool-limitation:pr-1274-follow-on
-        #   https://github.com/castwide/solargraph/pull/1274
         gid = parent.fetch('gid')
         name, _resource_type = enrich_gid(gid, resource_type:)
         parent['checkoff:enriched:name'] = name if name
@@ -161,13 +157,9 @@ module Checkoff
         # @type [Hash{String => String}]
         resource = T.cast(asana_event['resource'], T::Hash[String, String])
         # @type [String]
-        # @sg-ignore tool-limitation:pr-1274-follow-on
-        #   https://github.com/castwide/solargraph/pull/1274
         resource_type = resource.fetch('resource_type')
 
         # @type [String]
-        # @sg-ignore tool-limitation:pr-1274-follow-on
-        #   https://github.com/castwide/solargraph/pull/1274
         gid = resource.fetch('gid')
 
         name, _resource_type = enrich_gid(gid, resource_type:)

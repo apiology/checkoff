@@ -22,8 +22,6 @@ module Checkoff
           private
 
           # @return [String] the single value of the search url param
-          # @sg-ignore tool-limitation:pr-1274-follow-on
-          #   https://github.com/castwide/solargraph/pull/1274
           def single_value
             @single_value ||= begin
               raise "Teach me how to handle #{key} = #{values}" if values.length != 1
@@ -60,8 +58,6 @@ module Checkoff
           # @param sections [Array<String>]
           # @return [void]
           def parse_projects_and_sections(projects, sections)
-            # @sg-ignore tool-limitation:pr-1274-follow-on
-            #   https://github.com/castwide/solargraph/pull/1274
             single_value.split('~').each do |project_section_pair|
               project, section = project_section_pair.split('_column_')
               raise "Invalid query string: #{project_section_pair}" if project.nil?
@@ -91,8 +87,6 @@ module Checkoff
         class PortfoliosIds < SimpleParam
           # @return [Array<String>]
           def convert
-            # @sg-ignore tool-limitation:pr-1274-follow-on
-            #   https://github.com/castwide/solargraph/pull/1274
             { 'portfolios.any' => single_value.split('~').join(',') }.to_a.flatten
           end
         end
@@ -133,8 +127,6 @@ module Checkoff
           # @return [Array<String>]
           def convert
             tag_ids = single_value.split('~')
-            # @sg-ignore tool-limitation:pr-1274-follow-on
-            #   https://github.com/castwide/solargraph/pull/1274
             ['tags.not', tag_ids.join(',')]
           end
         end
@@ -159,8 +151,6 @@ module Checkoff
           # @return [Array<String>]
           def convert
             tag_ids = single_value.split('~')
-            # @sg-ignore tool-limitation:pr-1274-follow-on
-            #   https://github.com/castwide/solargraph/pull/1274
             ['tags.any', tag_ids.join(',')]
           end
         end
@@ -170,8 +160,6 @@ module Checkoff
           # @return [Array<String>]
           def convert
             tag_ids = single_value.split('~')
-            # @sg-ignore tool-limitation:pr-1274-follow-on
-            #   https://github.com/castwide/solargraph/pull/1274
             ['tags.all', tag_ids.join(',')]
           end
         end
@@ -250,8 +238,6 @@ module Checkoff
         # @return [Hash{String => String}] the converted params
         def convert
           # @type [Array<Array(String, String)>]
-          # @sg-ignore tool-limitation:pr-1274-follow-on
-          #   https://github.com/castwide/solargraph/pull/1274
           arr_of_tuples = simple_url_params.to_a.flat_map do |key, values|
             # @type
             entry = convert_arg(key, values).each_slice(2).to_a
@@ -293,8 +279,6 @@ module Checkoff
         # @return [Array<String>] the converted params, as an alternating key/value flat array
         def convert_arg(key, values)
           # @type [Class<SimpleParam::SimpleParam>]
-          # @sg-ignore tool-limitation:pr-1274-follow-on
-          #   https://github.com/castwide/solargraph/pull/1274
           clazz = ARGS.fetch(key)
           # @type [SimpleParam::SimpleParam]
           obj = clazz.new(key:, values:)

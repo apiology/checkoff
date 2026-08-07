@@ -8,29 +8,21 @@ module Checkoff
       class ResultsMerger
         # @param args [Array<Hash{String => String}>]
         # @return [Hash{String => String}]
-        # @sg-ignore tool-limitation:pr-1274-follow-on
-        #   https://github.com/castwide/solargraph/pull/1274
         def self.merge_args(*args)
           # first element of args
           f = args.fetch(0)
           # rest of args
           r = args.drop(0)
-          # @sg-ignore tool-limitation:pr-1274-follow-on
-          #   https://github.com/castwide/solargraph/pull/1274
           f.merge(*r)
         end
 
         # @param task_selectors [Array<Symbol, Array>]
         # @return [Symbol, Array, Array(Symbol, Array, Array)]
-        # @sg-ignore tool-limitation:pr-1274-follow-on
-        #   https://github.com/castwide/solargraph/pull/1274
         def self.merge_task_selectors(*task_selectors)
           return [] if task_selectors.empty?
 
           first_task_selector = task_selectors.fetch(0)
 
-          # @sg-ignore tool-limitation:pr-1274-follow-on
-          #   https://github.com/castwide/solargraph/pull/1274
           return merge_task_selectors(*task_selectors.drop(1)) if first_task_selector.empty?
 
           return first_task_selector if task_selectors.length == 1

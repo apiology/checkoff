@@ -33,14 +33,10 @@ module Checkoff
           # @param [String] param_name
           #
           # @return [String]
-          # @sg-ignore tool-limitation:pr-1274-follow-on
-          #   https://github.com/castwide/solargraph/pull/1274
           def fetch_solo_param(param_name)
             case remaining_params.keys
             when [param_name]
               # @type param_values [Array<String>]
-              # @sg-ignore tool-limitation:pr-1274-follow-on
-              #   https://github.com/castwide/solargraph/pull/1274
               param_values = remaining_params.fetch(param_name)
               unless param_values.length == 1
                 raise "Teach me how to handle these remaining keys for #{param_name}: #{remaining_params}"
@@ -182,8 +178,6 @@ module Checkoff
         # custom_field_#{gid}.variant = 'is'
         class Is < CustomFieldVariant
           # @return [Array(Hash{String => String}, Array<Array<String>, String, Array>)]
-          # @sg-ignore tool-limitation:pr-1274-follow-on
-          #   https://github.com/castwide/solargraph/pull/1274
           def convert
             selected_options = fetch_solo_param("custom_field_#{gid}.selected_options").split('~')
 
