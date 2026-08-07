@@ -235,15 +235,15 @@ class TestSections < BaseAsana
 
   # @return [void]
   def expect_task_project_memberships_queried
-    a_membership.expects(:[]).with('project').returns(a_membership_project)
+    a_membership.expects(:fetch).with('project').returns(a_membership_project)
     a_membership_project.expects(:[]).with('gid').returns(a_gid)
   end
 
   # @return [void]
   # @param section_name [String]
   def expect_task_section_memberships_queried(section_name)
-    a_membership.expects(:[]).with('section').returns(a_membership_section)
-    a_membership_section.expects(:[]).with('name').returns(section_name)
+    a_membership.expects(:fetch).with('section').returns(a_membership_section)
+    a_membership_section.expects(:fetch).with('name').returns(section_name)
   end
 
   # @param section_name [String]

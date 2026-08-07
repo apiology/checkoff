@@ -53,12 +53,7 @@ module Checkoff
         return unless task_hash.key? 'assignee_section'
 
         assignee_section = task_hash.fetch('assignee_section')
-        # @sg-ignore needs-yard-annotation:cast-stub-non-class-arg
-        #   Local T.cast generic override (config/annotations_misc.rb) only binds the
-        #   generic for a literal Class argument; T::Hash[String, String] here leaves
-        #   assignee as unbound generic<T2>, conflicting with the local @type cast.
-        # @type [Hash{String => String}]
-        assignee = T.cast(task_hash.fetch('assignee'), T::Hash[String, String])
+        assignee = assignee_hash(task_hash)
         memberships << {
           'section' => assignee_section.dup,
           'project' => {
@@ -66,6 +61,15 @@ module Checkoff
             'name' => :my_tasks,
           },
         }
+      end
+
+      # @param task_hash [Hash{String => String, Hash, Array}]
+      # @return [Hash]
+      def assignee_hash(task_hash)
+        assignee = task_hash.fetch('assignee')
+        raise "Expected assignee to be a Hash, got #{assignee.class}" unless assignee.is_a?(Hash)
+
+        assignee
       end
 
       # @param task_hash [Hash]

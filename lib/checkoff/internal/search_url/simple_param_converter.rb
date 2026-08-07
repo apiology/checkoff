@@ -243,12 +243,8 @@ module Checkoff
             entry = convert_arg(key, values).each_slice(2).to_a
             entry
           end
-          # @sg-ignore needs-yard-annotation:cast-stub-non-class-arg
-          #   Local T.cast generic override (config/annotations_misc.rb) only binds the
-          #   generic for a literal Class argument; T::Hash[String, String] here leaves
-          #   out as unbound generic<T2>, conflicting with the local @type cast.
           # @type [Hash{String => String}]
-          out = T.cast(arr_of_tuples.to_h, T::Hash[String, String])
+          out = arr_of_tuples.to_h
           unless out.include? 'sort_by'
             # keep results consistent between calls; API using default
             # sort_by does not seem to be.

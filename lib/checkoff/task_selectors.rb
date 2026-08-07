@@ -74,22 +74,25 @@ module Checkoff
       end
 
       # @return [Array(Symbol, Array)]
-      # @sg-ignore tool-limitation:pr-1259-follow-up
-      #   https://github.com/castwide/solargraph/pull/1259#issuecomment-5208799798 -- the
-      #   `x || raise(...)` idiom never narrows at all, with or without PR #1259:
-      #   always_leaves_compound_statement? is only invoked from if-node handling, and
-      #   this is an :or node, so it's never reached.
       def task_selector
         task_selector_json = ARGV[2] || raise('Please pass task_selector in JSON form as third argument')
+        function_name, args = validate_task_selector(JSON.parse(task_selector_json))
+        [function_name.to_sym, args]
+      end
 
-        # @sg-ignore needs-yard-annotation:cast-stub-non-class-arg
-        #   Local T.cast generic override (config/annotations_misc.rb) only binds the
-        #   generic for a literal Class argument; the raw array literal [Symbol, Array]
-        #   here isn't a Class, so it doesn't bind either (pre-existing questionable
-        #   Sorbet usage -- not standard T.cast type syntax -- previously silently
-        #   accepted since T.cast was untyped everywhere; unrelated to this override).
-        # @return [Symbol, Array]
-        T.cast(JSON.parse(task_selector_json), [Symbol, Array])
+      # @param parsed [Object] result of JSON.parse on a task selector
+      # @return [Array(String, Array)]
+      def validate_task_selector(parsed)
+        raise "Expected a 2-element [function_name, args] array, got #{parsed.inspect}" \
+          unless parsed.is_a?(Array) && parsed.length == 2
+
+        function_name = parsed.fetch(0)
+        args = parsed.fetch(1)
+        raise "Expected function_name to be a String, got #{function_name.inspect}" \
+          unless function_name.is_a?(String)
+        raise "Expected args to be an Array, got #{args.inspect}" unless args.is_a?(Array)
+
+        [function_name, args]
       end
 
       # @return [void]
