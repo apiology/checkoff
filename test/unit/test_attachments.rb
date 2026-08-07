@@ -52,9 +52,7 @@ class TestAttachments < ClassTest
   # @return [void]
   def test_create_attachment_from_downloaded_url
     url = 'http://example.com/picture.png'
-    # @sg-ignore gem-limitation:webmock
     stub_request(:get, url).to_return(body: 'fake image bytes', status: 200)
-    # @sg-ignore gem-limitation:mocha
     resource.expects(:attach).with(filename: 'custom.png', mime: 'image/png', io: instance_of(File))
 
     attachments = get_test_object(Checkoff::Attachments)
@@ -74,7 +72,6 @@ class TestAttachments < ClassTest
   # @return [void]
   def test_create_attachment_from_downloaded_url_bad_response_code
     url = 'http://example.com/picture.png'
-    # @sg-ignore gem-limitation:webmock
     stub_request(:get, url).to_return(body: 'not found', status: 404)
 
     attachments = get_test_object(Checkoff::Attachments)

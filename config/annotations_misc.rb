@@ -124,6 +124,13 @@
 #       # @return [void]
 #       def responds_like(type); end
 #     end
+#     module ParameterMatchers
+#       # Parameter matcher returned by the instance_of method above; not
+#       # indexed by Solargraph's mocha yardoc cache despite being a real,
+#       # public class.
+#       class InstanceOf
+#       end
+#     end
 #   end
 #   class Object
 #     # @param method_name [Symbol, String]
@@ -158,6 +165,26 @@
 #     # @param mock_syms [Array<Symbol>]
 #     # @return [Hash{Symbol => Mocha::Mock}]
 #     def create_hash_of_mocks(mock_syms); end
+#     # Mocha::ParameterMatchers::Methods, mixed into Minitest::Test at
+#     # runtime by mocha/minitest -- real signature already correct in the
+#     # gem's own YARD, but Solargraph can't trace the dynamic include.
+#     # @param klass [Class]
+#     # @return [Mocha::ParameterMatchers::InstanceOf]
+#     def instance_of(klass); end
+#     # WebMock::API, mixed into Minitest::Test at runtime by
+#     # webmock/minitest via `test_class.class_eval { include WebMock::API }`
+#     # -- same dynamic-include gap as Mocha above.
+#     # @param method [Symbol, String]
+#     # @param uri [String, Regexp]
+#     # @return [WebMock::RequestStub]
+#     def stub_request(method, uri); end
+#   end
+#   module WebMock
+#     class RequestStub
+#       # @param response_hashes [Array<Hash>]
+#       # @return [WebMock::RequestStub]
+#       def to_return(*response_hashes); end
+#     end
 #   end
 #   # Test helper DSLs (defined in test/unit/test_helper.rb; that file stays
 #   # excluded from strong typecheck because of Mocha-heavy internals).
