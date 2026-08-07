@@ -60,7 +60,7 @@ commands:
               /^GIT$/ { remote = ""; revision = ""; ingit = 1; next }
               ingit && /^  remote:/ { remote = $2 }
               ingit && /^  revision:/ { revision = $2 }
-              ingit && /^$/ { if (remote ~ /solargraph/) print revision; ingit = 0 }
+              ingit && /^$/ { if (remote ~ /\/solargraph(\.git)?$/) print revision; ingit = 0 }
             ' Gemfile.lock > /tmp/solargraph_revision
       - restore_cache:
           name: Restore rbenv cache
