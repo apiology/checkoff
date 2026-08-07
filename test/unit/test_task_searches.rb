@@ -6,10 +6,6 @@ require_relative 'class_test'
 require 'checkoff/task_searches'
 
 class TestTaskSearches < ClassTest
-  # @!parse
-  #  # @return [Checkoff::TaskSearches]
-  #  def get_test_object; end
-
   typed_delegate :workspaces, Checkoff::Workspaces
   typed_delegate :client, Asana::Client
   typed_delegate :search_url_parser, Checkoff::Internal::SearchUrl::Parser
@@ -117,7 +113,7 @@ class TestTaskSearches < ClassTest
 
   # @return [void]
   def test_task_search
-    task_searches = get_test_object do
+    task_searches = get_test_object(Checkoff::TaskSearches) do
       mocks[:projects] = projects
       mock_task_search
     end
@@ -136,14 +132,14 @@ class TestTaskSearches < ClassTest
 
   # @return [void]
   def test_as_cache_key
-    task_searches = get_test_object
+    task_searches = get_test_object(Checkoff::TaskSearches)
 
     assert_empty(task_searches.as_cache_key)
   end
 
   # @return [void]
   def test_raw_task_search_without_selector
-    task_searches = get_test_object do
+    task_searches = get_test_object(Checkoff::TaskSearches) do
       mocks[:projects] = projects
     end
     collection = mock('collection')
@@ -174,7 +170,7 @@ class TestTaskSearches < ClassTest
 
   # @return [void]
   def test_raw_task_search_paginates_when_full_page
-    task_searches = get_test_object do
+    task_searches = get_test_object(Checkoff::TaskSearches) do
       mocks[:projects] = projects
     end
     paginated = mock_full_page_raw_task_search(task_searches)
@@ -182,11 +178,6 @@ class TestTaskSearches < ClassTest
     result = task_searches.send(:raw_task_search, api_params, workspace_gid: 'abc', task_selector: [])
 
     assert_equal(paginated, result.to_a)
-  end
-
-  # @return [void]
-  def class_under_test
-    Checkoff::TaskSearches
   end
 
   def respond_like_instance_of

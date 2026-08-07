@@ -6,10 +6,6 @@ require_relative 'class_test'
 require 'checkoff/portfolios'
 
 class TestPortfolios < ClassTest
-  # @!parse
-  #  # @return [Checkoff::Portfolios]
-  #  def get_test_object; end
-
   typed_delegate :workspaces, Checkoff::Workspaces
   typed_delegate :client, Asana::Client
 
@@ -30,7 +26,7 @@ class TestPortfolios < ClassTest
 
   # @return [void]
   def test_portfolio_or_raise_raises
-    portfolios = get_test_object do
+    portfolios = get_test_object(Checkoff::Portfolios) do
       portfolio_arr = [wrong_portfolio]
       expect_portfolios_pulled(portfolio_arr)
     end
@@ -41,7 +37,7 @@ class TestPortfolios < ClassTest
 
   # @return [void]
   def test_portfolio_or_raise
-    portfolios = get_test_object do
+    portfolios = get_test_object(Checkoff::Portfolios) do
       portfolio_arr = [wrong_portfolio, portfolio]
       expect_portfolios_pulled(portfolio_arr)
     end
@@ -86,7 +82,7 @@ class TestPortfolios < ClassTest
 
   # @return [void]
   def test_portfolio
-    portfolios = get_test_object do
+    portfolios = get_test_object(Checkoff::Portfolios) do
       portfolio_arr = [wrong_portfolio, portfolio]
       expect_portfolios_pulled(portfolio_arr)
     end
@@ -96,7 +92,7 @@ class TestPortfolios < ClassTest
 
   # @return [void]
   def test_portfolio_by_gid
-    portfolios = get_test_object do
+    portfolios = get_test_object(Checkoff::Portfolios) do
       expect_portfolios_api_pulled
       portfolios_api.expects(:find_by_id).with(portfolio_gid,
                                                options: { fields: ['name'] }).returns(portfolio)
@@ -107,7 +103,7 @@ class TestPortfolios < ClassTest
 
   # @return [void]
   def test_projects_in_portfolios
-    portfolios = get_test_object do
+    portfolios = get_test_object(Checkoff::Portfolios) do
       mocks[:projects] = Checkoff::Projects.new(client:)
       portfolio_arr = [portfolio]
       expect_portfolios_pulled(portfolio_arr)
@@ -119,11 +115,6 @@ class TestPortfolios < ClassTest
     end
 
     assert_equal([project_a], portfolios.projects_in_portfolio(workspace_name, portfolio_name))
-  end
-
-  # @return [void]
-  def class_under_test
-    Checkoff::Portfolios
   end
 
   def respond_like_instance_of

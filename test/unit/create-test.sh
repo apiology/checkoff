@@ -25,7 +25,7 @@ class Test${class_name} < ClassTest
            :${underscored_singular_name}
 
   def test_${underscored_singular_name}_or_raise_raises
-    ${underscored_plural_name} = get_test_object do
+    ${underscored_plural_name} = get_test_object(Checkoff::${class_name}) do
       ${underscored_singular_name}_arr = [wrong_${underscored_singular_name}]
       expect_${underscored_plural_name}_pulled(${underscored_singular_name}_arr)
     end
@@ -35,7 +35,7 @@ class Test${class_name} < ClassTest
   end
 
   def test_${underscored_singular_name}_or_raise
-    ${underscored_plural_name} = get_test_object do
+    ${underscored_plural_name} = get_test_object(Checkoff::${class_name}) do
       ${underscored_singular_name}_arr = [wrong_${underscored_singular_name}, ${underscored_singular_name}]
       expect_${underscored_plural_name}_pulled(${underscored_singular_name}_arr)
     end
@@ -60,15 +60,11 @@ class Test${class_name} < ClassTest
   end
 
   def test_${underscored_singular_name}
-    ${underscored_plural_name} = get_test_object do
+    ${underscored_plural_name} = get_test_object(Checkoff::${class_name}) do
       ${underscored_singular_name}_arr = [wrong_${underscored_singular_name}, ${underscored_singular_name}]
       expect_${underscored_plural_name}_pulled(${underscored_singular_name}_arr)
     end
     assert_equal(${underscored_singular_name}, ${underscored_plural_name}.${underscored_singular_name}(workspace_name, ${underscored_singular_name}_name))
-  end
-
-  def class_under_test
-    Checkoff::${class_name}
   end
 
   def respond_like_instance_of

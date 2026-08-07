@@ -5,10 +5,7 @@ require_relative 'test_helper'
 
 # Test a class that uses initializer mocks.
 class ClassTest < Minitest::Test
-  # Implement 'class_under_test' returning the class name to be
-  # initialized with keyword mocks
-  #
-  # obj = get_test_object do
+  # obj = get_test_object(SomeClass) do
   #    # Go ahead and use concrete value for constructor arg
   #    @mocks[:some_constructor_arg] = 123
   # end
@@ -16,17 +13,10 @@ class ClassTest < Minitest::Test
   # @return [MyOpenStruct]
   attr_reader :mocks
 
-  # Implemented by subclasses to return the class under test.
-  # @return [Class]
-  # @sg-ignore tool-limitation:raise-only-body
-  #   abstract method always raises; declared type documents the override contract, not this body
-  def class_under_test
-    raise 'Implement me!'
-  end
-
-  # @param clazz [Class]
-  # @return [Object]
-  def get_test_object(clazz = class_under_test, &twiddle_mocks)
+  # @generic T
+  # @param clazz [Class<generic<T>>]
+  # @return [generic<T>]
+  def get_test_object(clazz, &twiddle_mocks)
     @mocks = get_initializer_mocks(clazz,
                                    respond_like_instance_of:,
                                    respond_like:)
@@ -55,11 +45,12 @@ class ClassTest < Minitest::Test
     nil
   end
 
-  # @param clazz [Class]
-  # @return [Object]
+  # @generic T
+  # @param clazz [Class<generic<T>>]
+  # @return [generic<T>]
   # @sg-ignore tool-limitation:generic-class-new-dispatch
-  #   .new's return isn't resolved through the generic Class-typed clazz reference
-  def create_object(clazz = class_under_test)
+  #   ClassTest#create_object return type could not be inferred
+  def create_object(clazz)
     clazz.new(**@mocks.to_h)
   end
 end

@@ -6,10 +6,6 @@ require_relative '../class_test'
 require 'checkoff/internal/project_hashes'
 
 class TestProjectHashes < ClassTest
-  # @!parse
-  #  # @return [Checkoff::Internal::ProjectHashes]
-  #  def get_test_object; end
-
   typed_mock :project, Asana::Resources::Project
 
   PROJECT_A_RAW_HASH = {
@@ -63,7 +59,7 @@ class TestProjectHashes < ClassTest
 
   # @return [void]
   def test_project_a_to_h
-    project_hashes = get_test_object do
+    project_hashes = get_test_object(Checkoff::Internal::ProjectHashes) do
       project.expects(:to_h).returns(PROJECT_A_RAW_HASH.dup)
       project.expects(:name).returns('a')
     end
@@ -73,7 +69,7 @@ class TestProjectHashes < ClassTest
 
   # @return [void]
   def test_project_b_to_h
-    project_hashes = get_test_object do
+    project_hashes = get_test_object(Checkoff::Internal::ProjectHashes) do
       project.expects(:to_h).returns(PROJECT_B_RAW_HASH.dup)
       project.expects(:name).returns('b')
     end
@@ -83,17 +79,12 @@ class TestProjectHashes < ClassTest
 
   # @return [void]
   def test_project_b_to_h_named
-    project_hashes = get_test_object do
+    project_hashes = get_test_object(Checkoff::Internal::ProjectHashes) do
       project.expects(:to_h).returns(PROJECT_B_RAW_HASH.dup)
     end
 
     project_data = project_hashes.project_to_h(project, project: :my_tasks)
 
     assert_equal(:my_tasks, project_data['project'])
-  end
-
-  # @return [Class]
-  def class_under_test
-    Checkoff::Internal::ProjectHashes
   end
 end

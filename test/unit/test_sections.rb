@@ -9,10 +9,6 @@ require 'active_support'
 
 # Test the Checkoff::Sections class
 class TestSections < BaseAsana
-  # @!parse
-  #  # @return [Checkoff::Sections]
-  #  def get_test_object; end
-
   typed_delegate :workspaces, Checkoff::Workspaces
   typed_delegate :client, Asana::Client
 
@@ -36,7 +32,7 @@ class TestSections < BaseAsana
 
   # @return [void]
   def test_section_task_names_no_tasks
-    sections = get_test_object do
+    sections = get_test_object(Checkoff::Sections) do
       mocks[:projects] = projects
       mock_tasks_normal_project(only_uncompleted: true)
       expect_named(task_c, 'c')
@@ -53,7 +49,7 @@ class TestSections < BaseAsana
 
   # @return [void]
   def test_section_task_names
-    sections = get_test_object do
+    sections = get_test_object(Checkoff::Sections) do
       mocks[:projects] = projects
       mock_tasks_normal_project(only_uncompleted: true)
       expect_named(task_c, 'c')
@@ -73,7 +69,7 @@ class TestSections < BaseAsana
 
   # @return [void]
   def test_sections_or_raise
-    sections = get_test_object do
+    sections = get_test_object(Checkoff::Sections) do
       mock_sections_or_raise
     end
 
@@ -82,8 +78,8 @@ class TestSections < BaseAsana
 
   # @return [void]
   def test_sections_or_raise_nil_project_name
-    sections = get_test_object
-    # @sg-ignore tool-limitation:generic-class-new-dispatch
+    sections = get_test_object(Checkoff::Sections)
+    # @sg-ignore tool-limitation:issue-1265
     #   Unresolved call to sections_or_raise
     assert_raises(ArgumentError) { sections.sections_or_raise('Workspace 1', nil) }
   end
@@ -145,7 +141,7 @@ class TestSections < BaseAsana
 
   # @return [void]
   def test_tasks_by_section_my_tasks
-    sections = get_test_object do
+    sections = get_test_object(Checkoff::Sections) do
       mock_tasks_by_section_my_tasks
     end
 
@@ -155,23 +151,23 @@ class TestSections < BaseAsana
 
   # @return [void]
   def test_tasks_by_section_nil_workspace_name
-    sections = get_test_object
-    # @sg-ignore tool-limitation:generic-class-new-dispatch
+    sections = get_test_object(Checkoff::Sections)
+    # @sg-ignore tool-limitation:issue-1265
     #   Unresolved call to tasks_by_section
     assert_raises(ArgumentError) { sections.tasks_by_section(nil, :my_tasks) }
   end
 
   # @return [void]
   def test_tasks_by_section_nil_project_name
-    sections = get_test_object
-    # @sg-ignore tool-limitation:generic-class-new-dispatch
+    sections = get_test_object(Checkoff::Sections)
+    # @sg-ignore tool-limitation:issue-1265
     #   Unresolved call to tasks_by_section
     assert_raises(ArgumentError) { sections.tasks_by_section('Workspace 1', nil) }
   end
 
   # @return [void]
   def test_tasks_by_section_some_in_empty_section
-    sections = get_test_object do
+    sections = get_test_object(Checkoff::Sections) do
       expect_tasks_and_sections_pulled('Workspace 1', project_a, a_name, '(no section)')
       expect_project_gid_pulled(project_a, a_gid)
       expect_sections_client_pulled
@@ -192,7 +188,7 @@ class TestSections < BaseAsana
 
   # @return [void]
   def test_tasks_by_section
-    sections = get_test_object do
+    sections = get_test_object(Checkoff::Sections) do
       expect_project_a_tasks_pulled
       allow_section_1_name_pulled
       allow_empty_section_name_pulled
@@ -348,7 +344,7 @@ class TestSections < BaseAsana
 
   # @return [void]
   def test_tasks_not_only_uncompleted
-    sections = get_test_object do
+    sections = get_test_object(Checkoff::Sections) do
       mocks[:projects] = projects
       mock_tasks_normal_project(only_uncompleted: false)
     end
@@ -388,7 +384,7 @@ class TestSections < BaseAsana
 
   # @return [void]
   def test_tasks_normal_project
-    sections = get_test_object do
+    sections = get_test_object(Checkoff::Sections) do
       mocks[:projects] = projects
       mock_tasks_normal_project(only_uncompleted: true)
     end
@@ -399,7 +395,7 @@ class TestSections < BaseAsana
 
   # @return [void]
   def test_tasks_by_section_gid
-    sections = get_test_object do
+    sections = get_test_object(Checkoff::Sections) do
       mocks[:projects] = projects
       expect_section_tasks_pulled(section_1, section_1_gid, [task_c],
                                   only_uncompleted: true)
@@ -411,7 +407,7 @@ class TestSections < BaseAsana
 
   # @return [void]
   def test_tasks_by_section_also_completed
-    sections = get_test_object do
+    sections = get_test_object(Checkoff::Sections) do
       mocks[:projects] = projects
       expect_section_tasks_pulled(section_1, section_1_gid, [task_c],
                                   only_uncompleted: false)
@@ -435,7 +431,7 @@ class TestSections < BaseAsana
 
   # @return [void]
   def test_tasks_inbox
-    sections = get_test_object do
+    sections = get_test_object(Checkoff::Sections) do
       mocks[:projects] = projects
       mock_tasks_inbox
     end
@@ -445,7 +441,7 @@ class TestSections < BaseAsana
 
   # @return [void]
   def test_tasks_section_not_found
-    sections = get_test_object do
+    sections = get_test_object(Checkoff::Sections) do
       expect_project_pulled('Workspace 1', project_a, a_name)
       expect_project_gid_pulled(project_a, a_gid)
       expect_sections_client_pulled
@@ -458,7 +454,7 @@ class TestSections < BaseAsana
 
   # @return [void]
   def test_tasks_project_not_found
-    sections = get_test_object do
+    sections = get_test_object(Checkoff::Sections) do
       mocks[:projects]
         .expects(:project).with('Workspace 1', 'not found')
         .returns(nil)
@@ -471,7 +467,7 @@ class TestSections < BaseAsana
 
   # @return [void]
   def test_previous_section
-    sections = get_test_object do
+    sections = get_test_object(Checkoff::Sections) do
       section_2.expects(:project).returns({ 'gid' => project_gid })
       expect_sections_client_pulled
       expect_project_sections_pulled(project_gid, [section_1, section_2])
@@ -484,7 +480,7 @@ class TestSections < BaseAsana
 
   # @return [void]
   def test_previous_section_on_inbox_returns_nil
-    sections = get_test_object do
+    sections = get_test_object(Checkoff::Sections) do
       section_1.expects(:project).returns({ 'gid' => project_gid })
       expect_sections_client_pulled
       expect_project_sections_pulled(project_gid, [section_1])
@@ -496,20 +492,23 @@ class TestSections < BaseAsana
 
   # @return [void]
   def test_section_by_gid
-    sections = get_test_object do
+    sections = get_test_object(Checkoff::Sections) do
       client.expects(:get).returns(get_results)
       get_results.expects(:body).returns({ 'data' => { 'gid' => 123 } }).at_least(1)
     end
     section = sections.section_by_gid(section_1_gid)
 
-    # @sg-ignore tool-limitation:generic-class-new-dispatch
-    #   Unresolved call to gid
+    # @sg-ignore inherent-limit:method-missing-dispatch
+    #   Unresolved call to gid -- section is an Asana::Resources::Section (< SectionsBase
+    #   < Resource), whose #method_missing proxies arbitrary JSON response keys to
+    #   accessor methods; the method set is genuinely unknowable ahead of time, not a
+    #   missing annotation.
     assert_equal(123, section.gid)
   end
 
   # @return [void]
   def test_section_by_gid_bad_server_data
-    sections = get_test_object do
+    sections = get_test_object(Checkoff::Sections) do
       client.expects(:get).returns(get_results)
       get_results.expects(:body).returns({}).at_least(1)
     end
@@ -532,10 +531,5 @@ class TestSections < BaseAsana
     {
       time: Time,
     }
-  end
-
-  # @return [void]
-  def class_under_test
-    Checkoff::Sections
   end
 end

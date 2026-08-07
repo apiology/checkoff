@@ -12,19 +12,17 @@ module Overcommit
       class Punchlist < Base
         # @param stdout [String]
         # @return [Array<Overcommit::Hook::Message>]
-        # @sg-ignore tool-limitation:other
-        #   Message.new is inferred as Punchlist (this hook class) instead of
-        #   Overcommit::Hook::Message — Solargraph misresolves the constant against this class's
-        #   own nesting
         def parse_output(stdout)
           stdout.split("\n").map do |line|
             file, line_no, _message = line.split(':', 3)
             # @sg-ignore tool-limitation:other
-            #   Overcommit::Hook::Message is defined as
-            #   `Message = Struct.new(:type, :file, :line, :content)`. Combined with the
-            #   constant-misresolution above, Solargraph checks this .new call against
-            #   Struct.new's class-defining overload (classname, fields) instead of the
-            #   struct subclass's own instance constructor.
+            #   Message.new is inferred as Punchlist (this hook class) instead of
+            #   Overcommit::Hook::Message — Solargraph misresolves the constant against this
+            #   class's own nesting. Overcommit::Hook::Message is
+            #   `Struct.new(:type, :file, :line, :content)`, so once the constant is
+            #   misresolved, Solargraph checks the .new call below against Struct.new's
+            #   class-defining overload (classname, fields) instead of the struct subclass's
+            #   own instance constructor.
             Overcommit::Hook::Message.new(:error, file, line_no.to_i, line)
           end
         end

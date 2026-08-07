@@ -5,10 +5,6 @@ require_relative 'test_helper'
 require_relative 'class_test'
 
 class TestClients < ClassTest
-  # @!parse
-  #  # @return [Checkoff::Clients]
-  #  def get_test_object; end
-
   typed_delegate :asana_client_class, Class
   typed_delegate :config, Checkoff::Internal::EnvFallbackConfigLoader
 
@@ -32,15 +28,10 @@ class TestClients < ClassTest
 
   # @return [void]
   def test_client
-    clients = get_test_object do
+    clients = get_test_object(Checkoff::Clients) do
       mock_client
     end
 
     assert_equal(client, clients.client)
-  end
-
-  # @return [Class]
-  def class_under_test
-    Checkoff::Clients
   end
 end

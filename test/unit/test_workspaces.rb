@@ -6,10 +6,6 @@ require_relative 'base_asana'
 
 # Test the Checkoff::Workspaces class
 class TestWorkspaces < BaseAsana
-  # @!parse
-  #  # @return [Checkoff::Workspaces]
-  #  def get_test_object; end
-
   typed_delegate :client, Asana::Client
   typed_delegate :asana_workspace, Class
 
@@ -30,7 +26,7 @@ class TestWorkspaces < BaseAsana
 
   # @return [void]
   def test_workspace_or_raise_nil
-    asana = get_test_object { mock_workspace_or_raise_nil }
+    asana = get_test_object(Checkoff::Workspaces) { mock_workspace_or_raise_nil }
     assert_raises(RuntimeError) do
       asana.workspace_or_raise(workspace_a_name)
     end
@@ -45,7 +41,7 @@ class TestWorkspaces < BaseAsana
 
   # @return [void]
   def test_workspace_or_raise
-    asana = get_test_object { mock_workspace_or_raise }
+    asana = get_test_object(Checkoff::Workspaces) { mock_workspace_or_raise }
 
     assert_equal(workspace_a, asana.workspace_or_raise(workspace_a_name))
   end
@@ -58,7 +54,7 @@ class TestWorkspaces < BaseAsana
 
   # @return [void]
   def test_default_workspace_gid
-    asana = get_test_object do
+    asana = get_test_object(Checkoff::Workspaces) do
       expect_default_workspace_gid_config_fetched
     end
 
@@ -67,16 +63,11 @@ class TestWorkspaces < BaseAsana
 
   # @return [void]
   def test_default_workspace
-    asana = get_test_object do
+    asana = get_test_object(Checkoff::Workspaces) do
       expect_default_workspace_gid_config_fetched
       asana_workspace.expects(:find_by_id).with(client, workspace_a_gid).returns(workspace_a)
     end
 
     assert_equal(workspace_a, asana.default_workspace)
-  end
-
-  # @return [void]
-  def class_under_test
-    Checkoff::Workspaces
   end
 end

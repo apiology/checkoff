@@ -5,10 +5,6 @@ require_relative 'test_helper'
 require_relative 'class_test'
 
 class TestTags < ClassTest
-  # @!parse
-  #  # @return [Checkoff::Tags]
-  #  def get_test_object; end
-
   typed_delegate :workspaces, Checkoff::Workspaces
   typed_delegate :client, Asana::Client
 
@@ -28,7 +24,7 @@ class TestTags < ClassTest
 
   # @return [void]
   def test_tag_or_raise_raises
-    tags = get_test_object do
+    tags = get_test_object(Checkoff::Tags) do
       tag_arr = [wrong_tag]
       expect_tags_pulled(tag_arr)
     end
@@ -39,7 +35,7 @@ class TestTags < ClassTest
 
   # @return [void]
   def test_tag_or_raise
-    tags = get_test_object do
+    tags = get_test_object(Checkoff::Tags) do
       tag_arr = [wrong_tag, tag]
       expect_tags_pulled(tag_arr)
     end
@@ -70,7 +66,7 @@ class TestTags < ClassTest
 
   # @return [void]
   def test_tag
-    tags = get_test_object do
+    tags = get_test_object(Checkoff::Tags) do
       tag_arr = [wrong_tag, tag]
       expect_tags_pulled(tag_arr)
     end
@@ -153,8 +149,6 @@ class TestTags < ClassTest
   # @return [String]
   def generate_task_endpoint
     tag.expects(:gid).returns('tag_gid').at_least(1)
-    # @sg-ignore tool-limitation:issue-1229
-    #   https://github.com/castwide/solargraph/issues/1229
     "/tags/#{tag.gid}/tasks"
   end
 
@@ -165,7 +159,7 @@ class TestTags < ClassTest
 
   # @return [void]
   def test_tasks
-    tags = get_test_object do
+    tags = get_test_object(Checkoff::Tags) do
       mocks[:projects] = projects
       mock_tasks(only_uncompleted: true)
     end
@@ -182,7 +176,7 @@ class TestTags < ClassTest
 
   # @return [void]
   def test_tasks_with_completed
-    tags = get_test_object do
+    tags = get_test_object(Checkoff::Tags) do
       mocks[:projects] = projects
       mock_tasks(only_uncompleted: false)
     end
@@ -209,10 +203,5 @@ class TestTags < ClassTest
 
   def respond_like
     {}
-  end
-
-  # @return [void]
-  def class_under_test
-    Checkoff::Tags
   end
 end

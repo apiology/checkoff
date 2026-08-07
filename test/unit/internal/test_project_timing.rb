@@ -6,10 +6,6 @@ require_relative '../class_test'
 require 'checkoff/internal/project_timing'
 
 class TestProjectTiming < ClassTest
-  # @!parse
-  #  # @return [Checkoff::Internal::ProjectTiming]
-  #  def get_test_object; end
-
   typed_delegate :custom_fields, Checkoff::CustomFields
 
   typed_mock :project, Asana::Resources::Project
@@ -18,7 +14,7 @@ class TestProjectTiming < ClassTest
 
   # @return [void]
   def test_date_or_time_field_by_name_due
-    project_timing = get_test_object do
+    project_timing = get_test_object(Checkoff::Internal::ProjectTiming) do
       mocks[:date_class] = Date
       project.expects(:due_on).returns('2020-01-23').at_least_once
     end
@@ -28,7 +24,7 @@ class TestProjectTiming < ClassTest
 
   # @return [void]
   def test_date_or_time_field_by_name_due_nil
-    project_timing = get_test_object do
+    project_timing = get_test_object(Checkoff::Internal::ProjectTiming) do
       mocks[:date_class] = Date
       project.expects(:due_on).returns(nil).at_least_once
     end
@@ -38,7 +34,7 @@ class TestProjectTiming < ClassTest
 
   # @return [void]
   def test_date_or_time_field_by_name_start
-    project_timing = get_test_object do
+    project_timing = get_test_object(Checkoff::Internal::ProjectTiming) do
       mocks[:date_class] = Date
       project.expects(:start_on).returns('2020-01-23').at_least_once
     end
@@ -48,7 +44,7 @@ class TestProjectTiming < ClassTest
 
   # @return [void]
   def test_date_or_time_field_by_name_start_nil
-    project_timing = get_test_object do
+    project_timing = get_test_object(Checkoff::Internal::ProjectTiming) do
       mocks[:date_class] = Date
       project.expects(:start_on).returns(nil).at_least_once
     end
@@ -58,7 +54,7 @@ class TestProjectTiming < ClassTest
 
   # @return [void]
   def test_date_or_time_field_by_name_ready
-    project_timing = get_test_object do
+    project_timing = get_test_object(Checkoff::Internal::ProjectTiming) do
       mocks[:date_class] = Date
       project.expects(:start_on).returns('2020-01-23').at_least_once
     end
@@ -68,7 +64,7 @@ class TestProjectTiming < ClassTest
 
   # @return [void]
   def test_date_or_time_field_by_name_custom_field
-    project_timing = get_test_object do
+    project_timing = get_test_object(Checkoff::Internal::ProjectTiming) do
       mocks[:date_class] = Date
       resource_custom_field = {
         'display_value' => '2020-01-23 01:23:00 -0500',
@@ -86,7 +82,7 @@ class TestProjectTiming < ClassTest
 
   # @return [void]
   def test_date_or_time_field_by_name_custom_field_nil
-    project_timing = get_test_object do
+    project_timing = get_test_object(Checkoff::Internal::ProjectTiming) do
       mocks[:date_class] = Date
       resource_custom_field = {
         'display_value' => nil,
@@ -103,7 +99,7 @@ class TestProjectTiming < ClassTest
 
   # @return [void]
   def test_date_or_time_field_by_name_raises_if_unknown_field
-    project_timing = get_test_object
+    project_timing = get_test_object(Checkoff::Internal::ProjectTiming)
     e = assert_raises(RuntimeError) { project_timing.date_or_time_field_by_name(project, :blah) }
 
     assert_equal 'Teach me how to handle field :blah', e.message
@@ -111,15 +107,10 @@ class TestProjectTiming < ClassTest
 
   # @return [void]
   def test_date_or_time_field_by_name_raises_if_unknown_array_field
-    project_timing = get_test_object
+    project_timing = get_test_object(Checkoff::Internal::ProjectTiming)
     e = assert_raises(RuntimeError) { project_timing.date_or_time_field_by_name(project, [:blah]) }
 
     assert_equal 'Teach me how to handle field [:blah]', e.message
-  end
-
-  # @return [void]
-  def class_under_test
-    Checkoff::Internal::ProjectTiming
   end
 
   def respond_like_instance_of

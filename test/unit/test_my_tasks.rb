@@ -7,10 +7,6 @@ require 'checkoff/my_tasks'
 
 # Test the Checkoff::MyTasks class
 class TestMyTasks < BaseAsana
-  # @!parse
-  #  # @return [Checkoff::MyTasks]
-  #  def get_test_object; end
-
   typed_delegate :client, Asana::Client
 
   typed_mock :sections, Asana::ProxiedResourceClasses::Section
@@ -35,7 +31,7 @@ class TestMyTasks < BaseAsana
 
   # @return [void]
   def test_by_my_tasks_section_groups_by_assignee_section
-    my_tasks = get_test_object do
+    my_tasks = get_test_object(Checkoff::MyTasks) do
       mock_by_my_tasks_section
     end
 
@@ -57,10 +53,5 @@ class TestMyTasks < BaseAsana
   # @return [void]
   def respond_like
     {}
-  end
-
-  # @return [Class]
-  def class_under_test
-    Checkoff::MyTasks
   end
 end

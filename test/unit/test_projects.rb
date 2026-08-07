@@ -6,10 +6,6 @@ require_relative 'base_asana'
 
 # Test the Checkoff::Projects class
 class TestProjects < BaseAsana
-  # @!parse
-  #  # @return [Checkoff::Projects]
-  #  def get_test_object; end
-
   typed_delegate :client, Asana::Client
   typed_delegate :project_hashes, Checkoff::Internal::ProjectHashes
   typed_delegate :project_timing, Checkoff::Internal::ProjectTiming
@@ -79,7 +75,7 @@ class TestProjects < BaseAsana
 
   # @return [void]
   def test_tasks_from_project_not_only_uncompleted
-    projects = get_test_object do
+    projects = get_test_object(Checkoff::Projects) do
       mock_tasks_from_project(options: task_options_with_completed)
     end
 
@@ -89,7 +85,7 @@ class TestProjects < BaseAsana
 
   # @return [void]
   def test_tasks_from_project
-    projects = get_test_object do
+    projects = get_test_object(Checkoff::Projects) do
       mock_tasks_from_project(options: task_options(extra_fields: []))
     end
 
@@ -98,7 +94,7 @@ class TestProjects < BaseAsana
 
   # @return [void]
   def test_active_tasks
-    projects = get_test_object do
+    projects = get_test_object(Checkoff::Projects) do
       task_a.expects(:completed_at).returns(mock_now)
       task_b.expects(:completed_at).returns(nil)
     end
@@ -132,7 +128,7 @@ class TestProjects < BaseAsana
 
   # @return [void]
   def test_project_or_raise_unknown
-    projects = get_test_object do
+    projects = get_test_object(Checkoff::Projects) do
       mock_project_or_raise_unknown
     end
     assert_raises(RuntimeError) do
@@ -142,7 +138,7 @@ class TestProjects < BaseAsana
 
   # @return [void]
   def test_project_by_gid
-    projects = get_test_object do
+    projects = get_test_object(Checkoff::Projects) do
       client.expects(:projects).returns(client_projects)
       client_projects.expects(:find_by_id).with(project_gid,
                                                 options: { fields: %w[custom_fields name] }).returns(project)
@@ -153,7 +149,7 @@ class TestProjects < BaseAsana
 
   # @return [void]
   def test_project_or_raise_my_tasks
-    projects = get_test_object do
+    projects = get_test_object(Checkoff::Projects) do
       mock_project_my_tasks
     end
 
@@ -173,7 +169,7 @@ class TestProjects < BaseAsana
 
   # @return [void]
   def test_project_my_tasks
-    projects = get_test_object do
+    projects = get_test_object(Checkoff::Projects) do
       mock_project_my_tasks
     end
 
@@ -182,7 +178,7 @@ class TestProjects < BaseAsana
 
   # @return [void]
   def test_project_to_h
-    projects = get_test_object do
+    projects = get_test_object(Checkoff::Projects) do
       project_hashes.expects(:project_to_h).with(project_a, project: :not_specified)
         .returns(project_a_hash)
     end
@@ -200,7 +196,7 @@ class TestProjects < BaseAsana
 
   # @return [void]
   def test_in_period
-    projects = get_test_object do
+    projects = get_test_object(Checkoff::Projects) do
       mock_test_in_period
     end
 
@@ -217,15 +213,10 @@ class TestProjects < BaseAsana
 
   # @return [void]
   def test_project_ready
-    projects = get_test_object do
+    projects = get_test_object(Checkoff::Projects) do
       mock_project_ready
     end
 
     assert(projects.project_ready?(project, period:))
-  end
-
-  # @return [void]
-  def class_under_test
-    Checkoff::Projects
   end
 end

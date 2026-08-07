@@ -293,11 +293,8 @@ module Checkoff
     # @param portfolio_name [String]
     # @param workspace_name [String]
     # @return [Boolean]
-    # @sg-ignore tool-limitation:context-dependent-return-inference
-    #   Checkoff::Tasks#in_portfolio_named? return type could not be inferred — confirmed the
-    #   outer T.cast is not the trigger (removing it alone still fails the same way); only
-    #   reproduces inside this real file, not in an isolated repro — same class of context-
-    #   dependent corruption already reported upstream in castwide/solargraph#1233
+    # @sg-ignore tool-limitation:pr-1231
+    #   https://github.com/castwide/solargraph/pull/1231
     def in_portfolio_named?(task,
                             portfolio_name,
                             workspace_name: T.must(@workspaces.default_workspace.name))

@@ -6,10 +6,6 @@ require 'checkoff/attachments'
 require 'stringio'
 
 class TestAttachments < ClassTest
-  # @!parse
-  #  # @return [Checkoff::Attachments]
-  #  def get_test_object; end
-
   typed_delegate :client, Asana::Client
 
   typed_mock :resource, Asana::Resources::Task
@@ -40,13 +36,16 @@ class TestAttachments < ClassTest
   # @return [void]
   def test_create_attachment_from_url
     url = 'http://example.com'
-    attachments = get_test_object do
+    attachments = get_test_object(Checkoff::Attachments) do
       mock_create_attachment_from_url(url)
     end
     attachment = attachments.create_attachment_from_url!(url, resource, attachment_name:, just_the_url: true)
 
-    # @sg-ignore tool-limitation:generic-class-new-dispatch
-    #   Unresolved call to foo
+    # @sg-ignore inherent-limit:method-missing-dispatch
+    #   Unresolved call to foo -- attachment is an Asana::Resources::Resource, whose
+    #   #method_missing proxies arbitrary JSON response keys to accessor methods
+    #   (asana gem's resource_includes/resource.rb); the method set is genuinely
+    #   unknowable ahead of time, not a missing annotation.
     assert_equal('bar', attachment.foo)
   end
 
@@ -58,13 +57,13 @@ class TestAttachments < ClassTest
     # @sg-ignore gem-limitation:mocha
     resource.expects(:attach).with(filename: 'custom.png', mime: 'image/png', io: instance_of(File))
 
-    attachments = get_test_object
+    attachments = get_test_object(Checkoff::Attachments)
     attachments.create_attachment_from_url!(url, resource, attachment_name: 'custom.png')
   end
 
   # @return [void]
   def test_create_attachment_from_downloaded_url_no_host
-    attachments = get_test_object
+    attachments = get_test_object(Checkoff::Attachments)
 
     e = assert_raises(RuntimeError) do
       attachments.create_attachment_from_url!('/no-host-here', resource, attachment_name: 'custom.png')
@@ -78,7 +77,7 @@ class TestAttachments < ClassTest
     # @sg-ignore gem-limitation:webmock
     stub_request(:get, url).to_return(body: 'not found', status: 404)
 
-    attachments = get_test_object
+    attachments = get_test_object(Checkoff::Attachments)
 
     e = assert_raises(RuntimeError) do
       attachments.create_attachment_from_url!(url, resource, attachment_name: 'custom.png')
@@ -147,11 +146,6 @@ class TestAttachments < ClassTest
     assert_match(/Could not find task/, e.message)
   ensure
     ARGV.replace([$PROGRAM_NAME])
-  end
-
-  # @return [void]
-  def class_under_test
-    Checkoff::Attachments
   end
 
   def respond_like_instance_of
