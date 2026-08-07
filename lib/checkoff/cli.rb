@@ -322,8 +322,6 @@ module Checkoff
         workspace_name = args.fetch(0)
         task_name = args.fetch(1)
 
-        # @sg-ignore tool-limitation:pr-1274-follow-on
-        #   https://github.com/castwide/solargraph/pull/1274
         QuickaddSubcommand.new(workspace_name, task_name).run
       end
     end
@@ -342,8 +340,6 @@ module Checkoff
         section_name = args[2]
         task_name = args[3]
 
-        # @sg-ignore tool-limitation:pr-1274-follow-on
-        #   https://github.com/castwide/solargraph/pull/1274
         puts ViewSubcommand.new(workspace_name, project_name, section_name, task_name).run
       end
     end

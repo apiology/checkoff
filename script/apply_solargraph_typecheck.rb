@@ -42,11 +42,7 @@ def parse_issues(path)
     match = stripped.match(/\A(.+):(\d+) - (.+)\z/)
     next unless match
 
-    # @sg-ignore tool-limitation:pr-1274-follow-on
-    #   https://github.com/castwide/solargraph/pull/1274
     file = Pathname(match[1].to_s).expand_path
-    # @sg-ignore tool-limitation:pr-1274-follow-on
-    #   https://github.com/castwide/solargraph/pull/1274
     Issue.new(file: file.to_s, line: match[2].to_i, message: match[3].to_s.strip)
   end
 end
@@ -118,8 +114,6 @@ def add_sg_ignore!(issue)
   indent = ''
   if line
     indent_match = line.match(/\A(\s*)/)
-    # @sg-ignore tool-limitation:pr-1274-follow-on
-    #   https://github.com/castwide/solargraph/pull/1274
     indent = indent_match.captures.first if indent_match
   end
   lines.insert(idx, "#{indent}# @sg-ignore\n")
@@ -133,8 +127,6 @@ def fix_missing_return!(issue)
   match = issue.message.match(/\AMissing @return tag for (\S+)#(\S+)\z/)
   return false unless match
 
-  # @sg-ignore tool-limitation:pr-1274-follow-on
-  #   https://github.com/castwide/solargraph/pull/1274
   _klass, method_name = match.captures
   lines = read_lines(issue.file)
   insert_at = insert_at_for_missing_return(lines, issue.line, method_name)
@@ -181,13 +173,9 @@ def fix_date_new!(issue)
   date_match = line.match(/Date\.new\((\d+),\s*(\d+),\s*(\d+)\)/)
   return false unless date_match
 
-  # @sg-ignore tool-limitation:pr-1274-follow-on
-  #   https://github.com/castwide/solargraph/pull/1274
   year, month, day = date_match.captures
   lines[idx] = line.gsub(
     "Date.new(#{year}, #{month}, #{day})",
-    # @sg-ignore tool-limitation:pr-1274-follow-on
-    #   https://github.com/castwide/solargraph/pull/1274
     "Date.parse('#{year}-#{month.rjust(2, '0')}-#{day.rjust(2, '0')}')"
   )
   write_lines(issue.file, lines)

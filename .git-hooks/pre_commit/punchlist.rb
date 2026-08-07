@@ -12,13 +12,16 @@ module Overcommit
       class Punchlist < Base
         # @param stdout [String]
         # @return [Array<Overcommit::Hook::Message>]
-        # @sg-ignore tool-limitation:pr-1274-follow-on
-        #   https://github.com/castwide/solargraph/pull/1274
         def parse_output(stdout)
-          # @sg-ignore tool-limitation:pr-1274-follow-on
-          #   https://github.com/castwide/solargraph/pull/1274
           stdout.split("\n").map do |line|
             file, line_no, _message = line.split(':', 3)
+            # @sg-ignore tool-limitation:struct-new-block-form
+            #   Wrong argument type for Struct.new: fields expected Symbol, String, received
+            #   Integer. Message.new(:error, file, line_no.to_i, line) is the block-form
+            #   Struct subclass's generated initializer, but Solargraph resolves the call
+            #   against Struct.new's own class-definition signature (Symbol/String field
+            #   names) instead. Not yet filed upstream; same neighborhood as open
+            #   castwide/solargraph#1268/#1269/#260 (general Struct support gaps).
             Overcommit::Hook::Message.new(:error, file, line_no.to_i, line)
           end
         end
