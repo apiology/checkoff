@@ -6,10 +6,6 @@ require_relative 'class_test'
 require 'checkoff/timelines'
 
 class TestTimelines < ClassTest
-  # @!parse
-  #  # @return [Checkoff::Timelines]
-  #  def get_test_object; end
-
   typed_delegate :workspaces, Checkoff::Workspaces
   typed_delegate :client, Asana::Client
   typed_delegate :tasks, Checkoff::Tasks
@@ -33,7 +29,7 @@ class TestTimelines < ClassTest
 
   # @return [void]
   def test_task_dependent_on_previous_section_last_milestone_no_memberships
-    timelines = get_test_object do
+    timelines = get_test_object(Checkoff::Timelines) do
       expect_task_data_created(task, { 'memberships' => [] })
     end
 
@@ -48,7 +44,7 @@ class TestTimelines < ClassTest
     task_data = {
       'memberships' => memberships,
     }
-    timelines = get_test_object do
+    timelines = get_test_object(Checkoff::Timelines) do
       expect_task_data_created(task, task_data)
       sections.expects(:section_by_gid).with(section_2_gid).returns(nil)
     end
@@ -75,7 +71,7 @@ class TestTimelines < ClassTest
 
   # @return [void]
   def test_task_dependent_on_previous_section_last_milestone_false_no_dependencies_
-    timelines = get_test_object do
+    timelines = get_test_object(Checkoff::Timelines) do
       mock_task_dependent_on_previous_section_last_milestone_false_no_dependencies
     end
 
@@ -130,7 +126,7 @@ class TestTimelines < ClassTest
 
   # @return [void]
   def test_task_dependent_on_previous_section_last_milestone_true_no_tasks
-    timelines = get_test_object do
+    timelines = get_test_object(Checkoff::Timelines) do
       mock_task_dependent_on_previous_section_last_milestone_true_no_tasks
     end
 
@@ -171,7 +167,7 @@ class TestTimelines < ClassTest
 
   # @return [void]
   def test_task_dependent_on_previous_section_last_milestone_true
-    timelines = get_test_object do
+    timelines = get_test_object(Checkoff::Timelines) do
       mock_task_dependent_on_previous_section_last_milestone_true
     end
 
@@ -196,7 +192,7 @@ class TestTimelines < ClassTest
 
   # @return [void]
   def test_task_dependent_on_previous_section_last_milestone_false_no_previous_section
-    timelines = get_test_object do
+    timelines = get_test_object(Checkoff::Timelines) do
       mock_task_dependent_on_previous_section_last_milestone_false_no_previous_section
     end
 
@@ -205,7 +201,7 @@ class TestTimelines < ClassTest
 
   # @return [void]
   def test_last_task_milestone_depends_on_this_task_no_memberships
-    timelines = get_test_object do
+    timelines = get_test_object(Checkoff::Timelines) do
       task.expects(:memberships).returns([])
     end
 
@@ -247,7 +243,7 @@ class TestTimelines < ClassTest
 
   # @return [void]
   def test_last_task_milestone_depends_on_this_task_false
-    timelines = get_test_object do
+    timelines = get_test_object(Checkoff::Timelines) do
       expect_all_dependent_tasks_pulled(task, [])
       memberships = [
         {
@@ -267,7 +263,7 @@ class TestTimelines < ClassTest
 
   # @return [void]
   def test_last_task_milestone_depends_on_this_task_no_milestone
-    timelines = get_test_object do
+    timelines = get_test_object(Checkoff::Timelines) do
       # expect_all_dependent_tasks_pulled(task, [])
       memberships = [
         {
@@ -285,7 +281,7 @@ class TestTimelines < ClassTest
 
   # @return [void]
   def test_last_task_milestone_depends_on_this_task_is_last_milestone
-    timelines = get_test_object do
+    timelines = get_test_object(Checkoff::Timelines) do
       # expect_all_dependent_tasks_pulled(milestone, [])
       memberships = [
         {
@@ -313,7 +309,7 @@ class TestTimelines < ClassTest
 
   # @return [void]
   def test_last_task_milestone_depends_on_this_task_is_last_milestone_limited_to_portfolio_no_projects
-    timelines = get_test_object do
+    timelines = get_test_object(Checkoff::Timelines) do
       # expect_all_dependent_tasks_pulled(milestone, [])
       memberships = [
         {
@@ -354,7 +350,7 @@ class TestTimelines < ClassTest
 
   # @return [void]
   def test_last_task_milestone_depends_on_this_task_is_last_milestone_limited_to_portfolio
-    timelines = get_test_object do
+    timelines = get_test_object(Checkoff::Timelines) do
       mock_last_task_milestone_depends_on_this_task_is_last_milestone_limited_to_portfolio
     end
 
@@ -364,14 +360,14 @@ class TestTimelines < ClassTest
 
   # @return [void]
   def test_init
-    timelines = get_test_object
+    timelines = get_test_object(Checkoff::Timelines)
 
     refute_nil(timelines)
   end
 
   # @return [void]
   def test_any_milestone_depends_on_this_task_false
-    timelines = get_test_object do
+    timelines = get_test_object(Checkoff::Timelines) do
       memberships = [{ 'project' => { 'gid' => project_a_gid } }]
       expect_memberships_pulled(task, memberships)
       tasks.expects(:all_dependent_tasks)
@@ -384,7 +380,7 @@ class TestTimelines < ClassTest
 
   # @return [void]
   def test_any_milestone_depends_on_this_task_true
-    timelines = get_test_object do
+    timelines = get_test_object(Checkoff::Timelines) do
       memberships = [{ 'project' => { 'gid' => project_a_gid } }]
       expect_memberships_pulled(task, memberships)
       export_portfolio_projects_pulled([project_a])
@@ -399,11 +395,6 @@ class TestTimelines < ClassTest
     end
 
     assert(timelines.any_milestone_depends_on_this_task?(task, limit_to_portfolio_name: portfolio_name))
-  end
-
-  # @return [void]
-  def class_under_test
-    Checkoff::Timelines
   end
 
   def respond_like_instance_of

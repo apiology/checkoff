@@ -69,7 +69,7 @@ ruby .cursor/skills/solargraph-typecheck/scripts/strip_sg_ignore.rb path/to/file
   `#   return type could not be inferred`.
 - **Unneeded @sg-ignore** means remove that comment; Solargraph 0.59 reports stale ignores after upgrades.
 - Do **not** write the literal text `@sg-ignore` in normal comments or file headers — Solargraph treats it as a directive (`Unneeded @sg-ignore` on unrelated lines). Say "ignore comment" in prose instead.
-- Prefer **fixes** over ignores when cheap (YARD `@param`, `String(...)`, `attr_reader`, nil guards).
+- Prefer **fixes** over ignores when cheap (YARD `@param`, `String(...)`, `attr_reader`, nil guards) — but only when the fix addresses something genuinely incomplete or wrong in *this repo's own* code (a missing `@param`, a too-narrow type, a real nil-deref). If the underlying cause is a genuine Solargraph engine gap — confirmed via `solargraph pin <ref>` or an isolated repro, not just "adding a local `# @type` cast makes it pass" — don't route around it with a workaround (a local `@type` cast added purely to silence the failure, an annotation for a fully-untyped third-party method, etc.) unless the user has specifically asked for that marker to be fixed. Tag it with `# @sg-ignore` and a durable slug instead (see the `sg-ignore-audit` skill for the classification taxonomy). This repo's whole ignore-tagging discipline exists to build an accurate inventory of real Solargraph gaps so they can be prioritized for upstream fixes — silently engineering a marker away deletes that data point before it's ever counted, even when the workaround itself is cheap and uses an idiom already established elsewhere in the codebase.
 
 ## Fix patterns (prefer these over ignores)
 

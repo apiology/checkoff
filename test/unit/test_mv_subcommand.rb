@@ -7,10 +7,6 @@ require_relative 'class_test'
 
 # Test the Checkoff::MvSubcommand class used in CLI processing
 class TestMvSubcommand < ClassTest
-  # @!parse
-  #  # @return [Checkoff::MvSubcommand]
-  #  def get_test_object; end
-
   typed_delegate :projects, Checkoff::Projects
   typed_delegate :sections, Checkoff::Sections
   typed_delegate :logger, IO
@@ -220,7 +216,7 @@ class TestMvSubcommand < ClassTest
   # @return [void]
   def test_run_to_different_workspace
     assert_raises(NotImplementedError) do
-      get_test_object do
+      get_test_object(::Checkoff::MvSubcommand) do
         mock_run_to_different_workspace
       end
     end
@@ -240,7 +236,7 @@ class TestMvSubcommand < ClassTest
 
   # @return [void]
   def test_run_from_all_sections
-    mv_subcommand = get_test_object do
+    mv_subcommand = get_test_object(::Checkoff::MvSubcommand) do
       mock_run_from_all_sections
     end
     assert_raises(NotImplementedError) do
@@ -262,7 +258,7 @@ class TestMvSubcommand < ClassTest
 
   # @return [void]
   def test_run_from_regular_project
-    mv_subcommand = get_test_object do
+    mv_subcommand = get_test_object(::Checkoff::MvSubcommand) do
       mock_run_from_regular_project
     end
     mv_subcommand.run
@@ -282,7 +278,7 @@ class TestMvSubcommand < ClassTest
 
   # @return [void]
   def test_run_to_same_section_different_project
-    mv_subcommand = get_test_object do
+    mv_subcommand = get_test_object(::Checkoff::MvSubcommand) do
       mock_run_to_same_section_different_project
     end
     mv_subcommand.run
@@ -302,7 +298,7 @@ class TestMvSubcommand < ClassTest
 
   # @return [void]
   def test_run_with_explicit_to_project
-    mv_subcommand = get_test_object do
+    mv_subcommand = get_test_object(::Checkoff::MvSubcommand) do
       mock_run_with_explicit_to_project
     end
     mv_subcommand.run
@@ -322,7 +318,7 @@ class TestMvSubcommand < ClassTest
 
   # @return [void]
   def test_run_from_my_tasks
-    mv_subcommand = get_test_object do
+    mv_subcommand = get_test_object(::Checkoff::MvSubcommand) do
       mock_run_from_my_tasks
     end
     mv_subcommand.run
@@ -343,7 +339,7 @@ class TestMvSubcommand < ClassTest
   # @return [void]
   def test_init_default_workspace_not_implemented
     assert_raises(NotImplementedError) do
-      get_test_object do
+      get_test_object(::Checkoff::MvSubcommand) do
         mock_init_default_workspace_not_implemented
       end
     end
@@ -351,7 +347,7 @@ class TestMvSubcommand < ClassTest
 
   # @return [void]
   def test_init
-    mv_subcommand = get_test_object do
+    mv_subcommand = get_test_object(::Checkoff::MvSubcommand) do
       @from_workspace_arg = 'My workspace'
       @from_project_arg = ':my_tasks'
       @from_section_arg = 'Recently assigned'
@@ -363,10 +359,5 @@ class TestMvSubcommand < ClassTest
     end
 
     refute_nil mv_subcommand
-  end
-
-  # @return [void]
-  def class_under_test
-    ::Checkoff::MvSubcommand
   end
 end

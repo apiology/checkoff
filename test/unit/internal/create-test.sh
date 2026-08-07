@@ -18,12 +18,8 @@ class Test${class_name} < ClassTest
   def_delegators(:@mocks, :workspaces, :client)
 
   def test_foo
-    ${underscored_name} = get_test_object
+    ${underscored_name} = get_test_object(Checkoff::Internal::${class_name})
     assert_equal(123, ${underscored_name}.foo)
-  end
-
-  def class_under_test
-    Checkoff::Internal::${class_name}
   end
 
   def respond_like_instance_of

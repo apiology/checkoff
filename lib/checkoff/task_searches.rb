@@ -186,9 +186,10 @@ module Checkoff
 
     # @param [Array<String>] extra_fields
     # @return [Hash{Symbol => Array<String>}]
-    # @sg-ignore tool-limitation:hash-value-type-dispatch
-    #   return type could not be inferred — bracket access on a Hash{Symbol=>undefined} local
-    #   doesn't narrow even with a T.cast on the return expression
+    # @sg-ignore needs-yard-annotation
+    #   return type could not be inferred — Checkoff::Projects#task_options declares its own
+    #   return as Hash{Symbol => undefined}; tightening that @return to a real value type
+    #   would resolve this, not a Solargraph gap.
     def calculate_api_options(extra_fields)
       # @type [Hash{Symbol => undefined}]
       all_options = projects.task_options(extra_fields: ['custom_fields'] + extra_fields)

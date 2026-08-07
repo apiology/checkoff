@@ -6,10 +6,6 @@ require_relative 'class_test'
 require 'checkoff/events'
 
 class TestEvents < ClassTest
-  # @!parse
-  #  # @return [Checkoff::Events]
-  #  def get_test_object; end
-
   typed_delegate :asana_event_filter_class, Class
 
   typed_mock :filters, Array
@@ -24,7 +20,7 @@ class TestEvents < ClassTest
 
   # @return [void]
   def test_filter_asana_events_true
-    events = get_test_object do
+    events = get_test_object(Checkoff::Events) do
       mock_filter_asana_events_true
     end
 
@@ -33,17 +29,12 @@ class TestEvents < ClassTest
 
   # @return [void]
   def test_filter_asana_events_false
-    events = get_test_object do
+    events = get_test_object(Checkoff::Events) do
       asana_event_filter_class.expects(:new).with(filters:).returns(asana_event_filter)
       asana_event_filter.expects(:matches?).with(event).returns(false)
     end
 
     assert_empty(events.filter_asana_events(filters, [event]))
-  end
-
-  # @return [Class]
-  def class_under_test
-    Checkoff::Events
   end
 
   # @return [Hash{Symbol => Class}]

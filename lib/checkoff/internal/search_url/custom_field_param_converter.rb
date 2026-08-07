@@ -59,18 +59,22 @@ module Checkoff
         # @param gid [String]
         # @param single_custom_field_params [Hash{String => Array<String>}]
         # @return [Array(Hash{String => String}, Array<Symbol, Array>)]
-        # @sg-ignore tool-limitation:type-narrowing
+        # @sg-ignore tool-limitation:issue-1254
         #   https://github.com/castwide/solargraph/issues/1254
         def convert_single_custom_field_params(gid, single_custom_field_params)
           variant_key = "custom_field_#{gid}.variant"
           variant = single_custom_field_params.fetch(variant_key)
           remaining_params = single_custom_field_params.reject { |k, _v| k == variant_key }
+          # @sg-ignore tool-limitation:pr-1274-follow-on
+          #   https://github.com/castwide/solargraph/pull/1274
           raise "Teach me how to handle #{variant_key} = #{variant}" unless variant.length == 1
 
           # @type [Class<CustomFieldVariant>, nil]
+          # @sg-ignore tool-limitation:pr-1274-follow-on
+          #   https://github.com/castwide/solargraph/pull/1274
           variant_class = VARIANTS[variant[0]]
           # @type [Array(Hash{String => String}, Array<Symbol, Array>)]
-          # @sg-ignore tool-limitation:type-narrowing
+          # @sg-ignore tool-limitation:issue-1254
           #   https://github.com/castwide/solargraph/issues/1254
           return variant_class.new(gid, remaining_params).convert unless variant_class.nil?
 

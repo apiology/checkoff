@@ -275,9 +275,11 @@ class TestCLIView < Minitest::Test
 
   # @return [void]
   def mock_view_run_with_section_specified_normal_project_colon_project
-    # @sg-ignore unclear
-    #   Unresolved call to to_sym on void -- project_name is declared @return [String]
-    #   with a matching literal body; cause of the void inference not yet determined
+    # @sg-ignore needs-yard-annotation
+    #   Wrong argument type for TestCLIView#mock_view: project_name expected String,
+    #   received Symbol -- mock_view's @param project_name is declared [String] only;
+    #   production code (lib/checkoff/cli.rb:162,203) accepts [String, Symbol] and this
+    #   test deliberately exercises the Symbol case. Tighten to [String, Symbol].
     mock_view(project_name: project_name.to_sym,
               section_name: section_name_str,
               due_on: 'fake_date',

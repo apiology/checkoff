@@ -5,10 +5,6 @@ require_relative 'test_helper'
 require_relative 'class_test'
 
 class TestSubtasks < ClassTest
-  # @!parse
-  #  # @return [Checkoff::Subtasks]
-  #  def get_test_object; end
-
   typed_delegate :projects, Checkoff::Projects
 
   typed_mock :task, Asana::Resources::Task
@@ -44,7 +40,7 @@ class TestSubtasks < ClassTest
   end
 
   # def test_all_subtasks_completed_false
-  #   subtasks = get_test_object do
+  #   subtasks = get_test_object(Checkoff::Subtasks) do
   #     expect_raw_subtasks_pulled
   #     active_subtasks = [subtask_section_1, subtask_1a, subtask_1b,
   #                        subtask_section_2,
@@ -73,7 +69,7 @@ class TestSubtasks < ClassTest
   end
 
   # def test_all_subtasks_completed_true
-  #   subtasks = get_test_object do
+  #   subtasks = get_test_object(Checkoff::Subtasks) do
   #     expect_raw_subtasks_pulled
   #     active_subtasks = [subtask_section_1,
   #                        subtask_section_2,
@@ -93,7 +89,7 @@ class TestSubtasks < ClassTest
   end
 
   # def test_subtask_section
-  #   subtasks = get_test_object do
+  #   subtasks = get_test_object(Checkoff::Subtasks) do
   #     allow_subtask_section_status_queried(subtask, is_rendered_as_separator)
   #   end
 
@@ -132,7 +128,7 @@ class TestSubtasks < ClassTest
   end
 
   # def test_by_section
-  #   subtasks = get_test_object { mock_by_section }
+  #   subtasks = get_test_object(Checkoff::Subtasks) { mock_by_section }
 
   #   assert_equal({
   #                  nil => [subtask_1a],
@@ -147,7 +143,7 @@ class TestSubtasks < ClassTest
   # end
 
   # def test_by_section_dupes
-  #   subtasks = get_test_object { mock_by_section }
+  #   subtasks = get_test_object(Checkoff::Subtasks) { mock_by_section }
   #   e = assert_raises(RuntimeError) do
   #     subtasks.by_section([subtask_section_1, subtask_1a, subtask_1b,
   #                          subtask_section_1, subtask_1a, subtask_1b,
@@ -164,7 +160,7 @@ class TestSubtasks < ClassTest
   end
 
   # def test_raw_subtasks
-  #   subtasks = get_test_object do
+  #   subtasks = get_test_object(Checkoff::Subtasks) do
   #     expect_raw_subtasks_pulled
   #   end
 
@@ -172,15 +168,10 @@ class TestSubtasks < ClassTest
   # end
 
   # def test_init
-  #   subtasks = get_test_object
+  #   subtasks = get_test_object(Checkoff::Subtasks)
 
   #   refute_nil subtasks
   # end
-
-  # @return [void]
-  def class_under_test
-    Checkoff::Subtasks
-  end
 
   def respond_like_instance_of
     {

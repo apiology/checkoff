@@ -6,10 +6,6 @@ require_relative '../class_test'
 require 'checkoff/internal/task_hashes'
 
 class TestTaskHashes < ClassTest
-  # @!parse
-  #  # @return [Checkoff::Internal::TaskHashes]
-  #  def get_test_object; end
-
   typed_mock :task, Asana::Resources::Task
 
   MEMBER_OF_SECTION_A_IN_PROJECT_1 = {
@@ -96,7 +92,7 @@ class TestTaskHashes < ClassTest
 
   # @return [void]
   def test_task_a_to_h
-    task_hashes = get_test_object do
+    task_hashes = get_test_object(Checkoff::Internal::TaskHashes) do
       task.expects(:to_h).returns(TASK_A_RAW_HASH.dup)
       task.expects(:name).returns('a')
     end
@@ -106,16 +102,11 @@ class TestTaskHashes < ClassTest
 
   # @return [void]
   def test_task_b_to_h
-    task_hashes = get_test_object do
+    task_hashes = get_test_object(Checkoff::Internal::TaskHashes) do
       task.expects(:to_h).returns(TASK_B_RAW_HASH.dup)
       task.expects(:name).returns('b')
     end
 
     assert_equal(TASK_B_HASH, task_hashes.task_to_h(task))
-  end
-
-  # @return [Class]
-  def class_under_test
-    Checkoff::Internal::TaskHashes
   end
 end

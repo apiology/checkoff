@@ -37,7 +37,7 @@ local_file = File.join(repo_root, '.local-overcommit.yml')
 
 unless File.exist?(local_file)
   source = sibling_worktree_local_overcommit(repo_root)
-  # @sg-ignore tool-limitation:rbs-type-alias-not-expanded
+  # @sg-ignore tool-limitation:issue-1255
   #   https://github.com/castwide/solargraph/issues/1255
   FileUtils.ln_sf(source, local_file) if source
 end

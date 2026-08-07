@@ -78,8 +78,14 @@ module Checkoff
     # @param resource [Asana::Resources::Project,Asana::Resources::Task]
     # @param custom_field_name [String]
     # @return [Array<String>]
-    # @sg-ignore tool-limitation:issue-1232
-    #   https://github.com/castwide/solargraph/issues/1232
+    # @sg-ignore tool-limitation:hash-value-union-not-narrowed-by-key
+    #   Declared return type Array<String> does not match inferred type Array, Array<Array> --
+    #   downstream propagation of the same gap as resource_custom_field_enum_values below:
+    #   flat_map's Hash element (from that method's declared Array<Hash>) has no per-key value
+    #   type, so .fetch('name') doesn't resolve to String. Confirmed by tightening
+    #   resource_custom_field_enum_values's @return to Array<Hash{String => String}> in
+    #   isolation -- doesn't clear the error, since the underlying custom_field param's
+    #   Hash{String => Hash,Array<Hash>} type still gives one flat value union for every key.
     def resource_custom_field_values_names_by_name(resource, custom_field_name)
       custom_field = resource_custom_field_by_name(resource, custom_field_name)
       return [] if custom_field.nil?
@@ -144,8 +150,13 @@ module Checkoff
     # @param custom_field [Hash{String => Hash,Array<Hash>}]
     #
     # @return [Array<Hash>]
-    # @sg-ignore tool-limitation:issue-1232
-    #   https://github.com/castwide/solargraph/issues/1232
+    # @sg-ignore tool-limitation:hash-value-union-not-narrowed-by-key
+    #   custom_field's Hash{String => Hash,Array<Hash>} annotation gives Solargraph one flat
+    #   Hash|Array<Hash> union for every key -- fetch('enum_value') and fetch('multi_enum_values')
+    #   both get that same union rather than the narrower per-key type, so the branches infer
+    #   as Array<Hash,Array<Hash>>/Hash/Array<Hash> against the declared Array<Hash>. Not
+    #   issue-1232 (no RBS interface-typed param involved); YARD's Hash{K=>V} syntax has no way
+    #   to express per-literal-key value types.
     def resource_custom_field_enum_values(custom_field)
       resource_subtype = custom_field.fetch('resource_subtype')
       case resource_subtype

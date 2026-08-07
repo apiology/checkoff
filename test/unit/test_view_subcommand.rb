@@ -36,7 +36,7 @@ class TestViewSubcommand < ClassTest
 
   # @return [void]
   def test_run_on_task
-    view = get_test_object do
+    view = get_test_object(Checkoff::ViewSubcommand) do
       expect_task_lookup
       stub_task_due_fields
     end
@@ -49,7 +49,7 @@ class TestViewSubcommand < ClassTest
 
   # @return [void]
   def test_run_on_task_not_found
-    view = get_test_object do
+    view = get_test_object(Checkoff::ViewSubcommand) do
       tasks.expects(:task).with('workspace', :project, task_name, section_name: nil).returns(nil)
     end
 
@@ -62,13 +62,8 @@ class TestViewSubcommand < ClassTest
 
   # @param clazz [Class<Checkoff::ViewSubcommand>]
   # @return [Checkoff::ViewSubcommand]
-  def create_object(clazz = class_under_test)
+  def create_object(clazz)
     clazz.new('workspace', :project, nil, task_name, **mocks.to_h)
-  end
-
-  # @return [Class<Checkoff::ViewSubcommand>]
-  def class_under_test
-    Checkoff::ViewSubcommand
   end
 
   def respond_like_instance_of

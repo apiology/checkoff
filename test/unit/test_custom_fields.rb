@@ -5,10 +5,6 @@ require_relative 'test_helper'
 require_relative 'class_test'
 
 class TestCustomFields < ClassTest
-  # @!parse
-  #  # @return [Checkoff::CustomFields]
-  #  def get_test_object; end
-
   typed_delegate :workspaces, Checkoff::Workspaces
   typed_delegate :client, Asana::Client
 
@@ -24,7 +20,7 @@ class TestCustomFields < ClassTest
 
   # @return [void]
   def test_custom_field_or_raise_raises
-    custom_fields = get_test_object do
+    custom_fields = get_test_object(Checkoff::CustomFields) do
       custom_field_arr = [wrong_custom_field]
       expect_custom_fields_pulled(custom_field_arr)
     end
@@ -35,7 +31,7 @@ class TestCustomFields < ClassTest
 
   # @return [void]
   def test_custom_field_or_raise
-    custom_fields = get_test_object do
+    custom_fields = get_test_object(Checkoff::CustomFields) do
       custom_field_arr = [wrong_custom_field, custom_field]
       expect_custom_fields_pulled(custom_field_arr)
     end
@@ -67,16 +63,11 @@ class TestCustomFields < ClassTest
 
   # @return [void]
   def test_custom_field
-    custom_fields = get_test_object do
+    custom_fields = get_test_object(Checkoff::CustomFields) do
       custom_field_arr = [wrong_custom_field, custom_field]
       expect_custom_fields_pulled(custom_field_arr)
     end
 
     assert_equal(custom_field, custom_fields.custom_field(workspace_name, custom_field_name))
-  end
-
-  # @return [void]
-  def class_under_test
-    Checkoff::CustomFields
   end
 end

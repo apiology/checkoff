@@ -5,10 +5,6 @@ require_relative '../class_test'
 require 'checkoff/internal/asana_event_filter'
 
 class TestAsanaEventFilter < ClassTest
-  # @!parse
-  #  # @return [Checkoff::Internal::AsanaEventFilter]
-  #  def get_test_object; end
-
   typed_delegate :workspaces, Checkoff::Workspaces
   typed_delegate :client, Asana::Client
   typed_delegate :tasks, Checkoff::Tasks
@@ -18,7 +14,7 @@ class TestAsanaEventFilter < ClassTest
 
   # @return [void]
   def test_matches_nil_filters_true
-    asana_event_filter = get_test_object do
+    asana_event_filter = get_test_object(Checkoff::Internal::AsanaEventFilter) do
       mocks[:filters] = nil
     end
 
@@ -27,7 +23,7 @@ class TestAsanaEventFilter < ClassTest
 
   # @return [void]
   def test_matches_zero_filters_false
-    asana_event_filter = get_test_object do
+    asana_event_filter = get_test_object(Checkoff::Internal::AsanaEventFilter) do
       mocks[:filters] = []
     end
 
@@ -36,7 +32,7 @@ class TestAsanaEventFilter < ClassTest
 
   # @return [void]
   def test_matches_on_resource_type_true
-    asana_event_filter = get_test_object do
+    asana_event_filter = get_test_object(Checkoff::Internal::AsanaEventFilter) do
       mocks[:filters] = [{ 'resource_type' => 'task' }]
     end
 
@@ -45,7 +41,7 @@ class TestAsanaEventFilter < ClassTest
 
   # @return [void]
   def test_matches_on_resource_subtype_true
-    asana_event_filter = get_test_object do
+    asana_event_filter = get_test_object(Checkoff::Internal::AsanaEventFilter) do
       mocks[:filters] = [{ 'resource_subtype' => 'milestone' }]
     end
 
@@ -54,7 +50,7 @@ class TestAsanaEventFilter < ClassTest
 
   # @return [void]
   def test_matches_on_action_true
-    asana_event_filter = get_test_object do
+    asana_event_filter = get_test_object(Checkoff::Internal::AsanaEventFilter) do
       mocks[:filters] = [{ 'action' => 'deleted' }]
     end
 
@@ -63,7 +59,7 @@ class TestAsanaEventFilter < ClassTest
 
   # @return [void]
   def test_matches_on_action_false
-    asana_event_filter = get_test_object do
+    asana_event_filter = get_test_object(Checkoff::Internal::AsanaEventFilter) do
       mocks[:filters] = [{ 'action' => 'deleted' }]
     end
 
@@ -169,7 +165,7 @@ class TestAsanaEventFilter < ClassTest
 
   # @return [void]
   def test_fetched_section_gid
-    asana_event_filter = get_test_object do
+    asana_event_filter = get_test_object(Checkoff::Internal::AsanaEventFilter) do
       mocks[:filters] = [{ 'checkoff:fetched.section.gid' => '123' }]
       expect_task_fetched('456',
                           ['memberships.project.gid', 'memberships.project.name',
@@ -190,7 +186,7 @@ class TestAsanaEventFilter < ClassTest
 
   # @return [void]
   def test_matches_on_fields_true
-    asana_event_filter = get_test_object do
+    asana_event_filter = get_test_object(Checkoff::Internal::AsanaEventFilter) do
       mocks[:filters] = [{ 'fields' => ['custom_fields'] }]
     end
 
@@ -212,7 +208,7 @@ class TestAsanaEventFilter < ClassTest
 
   # @return [void]
   def test_task_completed_event_true
-    asana_event_filter = get_test_object do
+    asana_event_filter = get_test_object(Checkoff::Internal::AsanaEventFilter) do
       mocks[:filters] = [
         {
           'action' => 'changed',
@@ -231,7 +227,7 @@ class TestAsanaEventFilter < ClassTest
 
   # @return [void]
   def test_matches_on_parent_gid_true
-    asana_event_filter = get_test_object do
+    asana_event_filter = get_test_object(Checkoff::Internal::AsanaEventFilter) do
       mocks[:filters] = [{ 'checkoff:parent.gid' => '90' }]
     end
 
@@ -240,7 +236,7 @@ class TestAsanaEventFilter < ClassTest
 
   # @return [void]
   def test_matches_on_bad_key_raises
-    asana_event_filter = get_test_object do
+    asana_event_filter = get_test_object(Checkoff::Internal::AsanaEventFilter) do
       mocks[:filters] = [{ 'checkoff:bogus' => '90' }]
     end
     e = assert_raises(RuntimeError) do
@@ -248,11 +244,6 @@ class TestAsanaEventFilter < ClassTest
     end
 
     assert_match(/Unknown filter key checkoff:bogus/, e.message)
-  end
-
-  # @return [void]
-  def class_under_test
-    Checkoff::Internal::AsanaEventFilter
   end
 
   def respond_like_instance_of

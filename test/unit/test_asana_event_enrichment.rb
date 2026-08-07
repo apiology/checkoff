@@ -6,10 +6,6 @@ require_relative 'class_test'
 require 'checkoff/internal/asana_event_enrichment'
 
 class TestAsanaEventEnrichment < ClassTest
-  # @!parse
-  #  # @return [Checkoff::Internal::AsanaEventEnrichment]
-  #  def get_test_object; end
-
   typed_delegate :resources, Checkoff::Resources
   typed_delegate :tasks, Checkoff::Tasks
 
@@ -18,14 +14,14 @@ class TestAsanaEventEnrichment < ClassTest
 
   # @return [void]
   def test_enrich_webhook_subscription_nil
-    enrichment = get_test_object
+    enrichment = get_test_object(Checkoff::Internal::AsanaEventEnrichment)
 
     assert_nil(enrichment.enrich_webhook_subscription!(nil))
   end
 
   # @return [void]
   def test_enrich_webhook_subscription
-    enrichment = get_test_object do
+    enrichment = get_test_object(Checkoff::Internal::AsanaEventEnrichment) do
       resources.expects(:resource_by_gid).with('789', resource_type: nil).returns([resource, 'task'])
       resource.expects(:name).returns('Some Resource').at_least_once
     end
@@ -42,7 +38,7 @@ class TestAsanaEventEnrichment < ClassTest
 
   # @return [void]
   def test_enrich_webhook_subscription_no_filters
-    enrichment = get_test_object do
+    enrichment = get_test_object(Checkoff::Internal::AsanaEventEnrichment) do
       resources.expects(:resource_by_gid).with('789', resource_type: nil).returns([resource, 'task'])
       resource.expects(:name).returns('Some Resource').at_least_once
     end
@@ -55,7 +51,7 @@ class TestAsanaEventEnrichment < ClassTest
 
   # @return [void]
   def test_enrich_filter_parent_gid_found
-    enrichment = get_test_object do
+    enrichment = get_test_object(Checkoff::Internal::AsanaEventEnrichment) do
       resources.expects(:resource_by_gid).with('123', resource_type: nil).returns([resource, 'task'])
       resource.expects(:name).returns('Some Task').at_least_once
     end
@@ -69,7 +65,7 @@ class TestAsanaEventEnrichment < ClassTest
 
   # @return [void]
   def test_enrich_filter_parent_gid_absent
-    enrichment = get_test_object
+    enrichment = get_test_object(Checkoff::Internal::AsanaEventEnrichment)
 
     filter = {}
     enrichment.send(:enrich_filter_parent_gid!, filter)
@@ -79,7 +75,7 @@ class TestAsanaEventEnrichment < ClassTest
 
   # @return [void]
   def test_enrich_filter_resource_found
-    enrichment = get_test_object do
+    enrichment = get_test_object(Checkoff::Internal::AsanaEventEnrichment) do
       tasks.expects(:task_by_gid).with('456').returns(task)
       task.expects(:name).returns('Some Task Name').at_least_once
     end
@@ -92,17 +88,12 @@ class TestAsanaEventEnrichment < ClassTest
 
   # @return [void]
   def test_enrich_filter_resource_absent
-    enrichment = get_test_object
+    enrichment = get_test_object(Checkoff::Internal::AsanaEventEnrichment)
 
     filter = {}
     enrichment.send(:enrich_filter_resource!, filter)
 
     assert_empty(filter)
-  end
-
-  # @return [void]
-  def class_under_test
-    Checkoff::Internal::AsanaEventEnrichment
   end
 
   def respond_like_instance_of

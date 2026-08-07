@@ -154,11 +154,6 @@ module Checkoff
     # @param extra_section_fields [Array<String>]
     #
     # @return [Asana::Resources::Section]
-    # @sg-ignore tool-limitation:pr-1259-follow-up
-    #   https://github.com/castwide/solargraph/pull/1259#issuecomment-5208798931 -- PR #1259
-    #   fixed the single-statement raise-guard case for #1254, but this if-branch has an
-    #   extra statement (valid_sections = ...) before the raise, which
-    #   always_leaves_compound_statement? still doesn't recognize.
     def section_or_raise(workspace_name, project_name, section_name, extra_section_fields: [])
       s = section(workspace_name, project_name, section_name,
                   extra_section_fields:)

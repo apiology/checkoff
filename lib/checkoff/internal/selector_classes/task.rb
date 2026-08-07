@@ -24,8 +24,12 @@ module Checkoff
           # @type [Hash{'unwrapped' => Hash}]
           task_data = tasks.task_to_h(task)
           # @type [Hash{'membership_by_project_name' => Hash}]
+          # @sg-ignore tool-limitation:pr-1274-follow-on
+          #   https://github.com/castwide/solargraph/pull/1274
           unwrapped = task_data.fetch('unwrapped')
           # @type [Array]
+          # @sg-ignore tool-limitation:pr-1274-follow-on
+          #   https://github.com/castwide/solargraph/pull/1274
           projects = unwrapped.fetch('membership_by_project_name').keys
           !(projects - [:my_tasks]).empty?
         end
@@ -49,8 +53,12 @@ module Checkoff
           # @type [Hash{'unwrapped' => Hash}]
           task_data = tasks.task_to_h(task)
           # @type [Hash{'membership_by_section_name' => Hash}]
+          # @sg-ignore tool-limitation:pr-1274-follow-on
+          #   https://github.com/castwide/solargraph/pull/1274
           unwrapped = task_data.fetch('unwrapped')
           # @type [Array]
+          # @sg-ignore tool-limitation:pr-1274-follow-on
+          #   https://github.com/castwide/solargraph/pull/1274
           section_names = unwrapped.fetch('membership_by_section_name').keys
           section_names.any? do |section_name|
             String(section_name).start_with?(section_name_prefix)
@@ -76,8 +84,12 @@ module Checkoff
           # @type [Hash{'unwrapped' => Hash}]
           task_data = tasks.task_to_h(task)
           # @type [Hash{'membership_by_section_name' => Hash}]
+          # @sg-ignore tool-limitation:pr-1274-follow-on
+          #   https://github.com/castwide/solargraph/pull/1274
           unwrapped = task_data.fetch('unwrapped')
           # @type [Array]
+          # @sg-ignore tool-limitation:pr-1274-follow-on
+          #   https://github.com/castwide/solargraph/pull/1274
           section_names = unwrapped.fetch('membership_by_section_name').keys
           section_names.any?(section_name)
         end
@@ -198,10 +210,8 @@ module Checkoff
 
         # @param task [Asana::Resources::Task]
         # @return [Boolean]
-        # @sg-ignore tool-limitation:context-dependent-return-inference
-        #   CircleCI's fresh environment finds this genuinely unresolved even though local
-        #   solargraph doesn't reproduce it (same local-vs-CI divergence as #1233) -- trusting
-        #   CI, restoring the T.cast this ignore covers.
+        # @sg-ignore tool-limitation:pr-1231
+        #   https://github.com/castwide/solargraph/pull/1231
         def evaluate(task)
           T.cast(task.assignee.nil? == true, T::Boolean)
         end
@@ -217,13 +227,8 @@ module Checkoff
 
         # @param task [Asana::Resources::Task]
         # @return [Boolean]
-        # @sg-ignore tool-limitation:context-dependent-return-inference
-        #   Checkoff::SelectorClasses::Task::DueDateSetPFunctionEvaluator#evaluate return type
-        #   could not be inferred — confirmed via a minimal Sorbet-free repro that the bare
-        #   negated-&&-of-.nil?-checks expression alone is not the trigger (it types fine in
-        #   isolation, with or without a T.cast wrapper); only reproduces inside this real
-        #   multi-class file, not in an isolated 1-2 class repro — same class of context-
-        #   dependent corruption already reported upstream in castwide/solargraph#1233
+        # @sg-ignore tool-limitation:pr-1231
+        #   https://github.com/castwide/solargraph/pull/1231
         def evaluate(task)
           T.cast(!(task.due_at.nil? && task.due_on.nil?), T::Boolean)
         end

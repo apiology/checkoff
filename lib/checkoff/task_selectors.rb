@@ -64,21 +64,11 @@ module Checkoff
     # :nocov:
     class << self
       # @return [String]
-      # @sg-ignore tool-limitation:pr-1259-follow-up
-      #   https://github.com/castwide/solargraph/pull/1259#issuecomment-5208799798 -- the
-      #   `x || raise(...)` idiom never narrows at all, with or without PR #1259:
-      #   always_leaves_compound_statement? is only invoked from if-node handling, and
-      #   this is an :or node, so it's never reached.
       def project_name
         ARGV[1] || raise('Please pass project name to pull tasks from as first argument')
       end
 
       # @return [String]
-      # @sg-ignore tool-limitation:pr-1259-follow-up
-      #   https://github.com/castwide/solargraph/pull/1259#issuecomment-5208799798 -- the
-      #   `x || raise(...)` idiom never narrows at all, with or without PR #1259:
-      #   always_leaves_compound_statement? is only invoked from if-node handling, and
-      #   this is an :or node, so it's never reached.
       def workspace_name
         ARGV[0] || raise('Please pass workspace name as first argument')
       end

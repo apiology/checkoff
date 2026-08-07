@@ -110,7 +110,7 @@ module Checkoff
     def write_tempfile_from_response(response)
       Tempfile.create('checkoff') do |tempfile|
         tempfile.binmode
-        # @sg-ignore tool-limitation:duck-type-param-unresolved
+        # @sg-ignore tool-limitation:issue-1257
         #   https://github.com/castwide/solargraph/issues/1257
         response.read_body do |chunk|
           tempfile.write(chunk)

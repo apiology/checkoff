@@ -7,10 +7,6 @@ require 'checkoff/cli'
 
 # Test the Checkoff::Tasks class
 class TestTasks < BaseAsana
-  # @!parse
-  #  # @return [Checkoff::Tasks]
-  #  def get_test_object; end
-
   typed_delegate :sections, Checkoff::Sections
   typed_delegate :asana_task, Class
   typed_delegate :time_class, Time
@@ -91,7 +87,7 @@ class TestTasks < BaseAsana
 
   # @return [void]
   def test_task_ready_false_due_in_future_on_date
-    tasks = get_test_object do
+    tasks = get_test_object(Checkoff::Tasks) do
       mock_task_ready_false_due_in_future_on_date
     end
 
@@ -109,7 +105,7 @@ class TestTasks < BaseAsana
 
   # @return [void]
   def test_task_ready_true_start_in_past
-    tasks = get_test_object do
+    tasks = get_test_object(Checkoff::Tasks) do
       mock_task_ready_true_start_in_past
     end
 
@@ -127,7 +123,7 @@ class TestTasks < BaseAsana
 
   # @return [void]
   def test_task_ready_true_start_in_past_time
-    tasks = get_test_object do
+    tasks = get_test_object(Checkoff::Tasks) do
       mock_task_ready_true_start_in_past_time
     end
 
@@ -153,7 +149,7 @@ class TestTasks < BaseAsana
 
   # @return [void]
   def test_task_ready_false_due_in_future_at_time
-    tasks = get_test_object do
+    tasks = get_test_object(Checkoff::Tasks) do
       mock_task_ready_false_due_in_future_at_time
     end
 
@@ -169,7 +165,7 @@ class TestTasks < BaseAsana
 
   # @return [void]
   def test_task_ready_true_no_due_anything
-    tasks = get_test_object do
+    tasks = get_test_object(Checkoff::Tasks) do
       expect_dependency_gids_pulled(task, [])
       allow_task_due(due_on: nil, due_at: nil)
     end
@@ -218,7 +214,7 @@ class TestTasks < BaseAsana
 
   # @return [void]
   def test_task_ready_false_dependency
-    tasks = get_test_object do
+    tasks = get_test_object(Checkoff::Tasks) do
       mock_task_ready_false_dependency
     end
 
@@ -227,7 +223,7 @@ class TestTasks < BaseAsana
 
   # @return [void]
   def test_task_ready_false_dependency_cached
-    tasks = get_test_object do
+    tasks = get_test_object(Checkoff::Tasks) do
       allow_task_due(due_on: nil, due_at: nil)
       task.expects(:instance_variable_get).with(:@dependencies)
         .returns([{ 'gid' => dependency_1_gid }])
@@ -257,7 +253,7 @@ class TestTasks < BaseAsana
 
   # @return [void]
   def test_task_ready_false_dependency_missing
-    tasks = get_test_object do
+    tasks = get_test_object(Checkoff::Tasks) do
       mock_task_ready_false_dependency_missing
     end
 
@@ -306,7 +302,7 @@ class TestTasks < BaseAsana
 
   # @return [void]
   def test_url_of_task
-    tasks = get_test_object do
+    tasks = get_test_object(Checkoff::Tasks) do
       task.expects(:gid).returns('my_gid')
     end
 
@@ -330,7 +326,7 @@ class TestTasks < BaseAsana
 
   # @return [void]
   def test_add_task
-    tasks = get_test_object do
+    tasks = get_test_object(Checkoff::Tasks) do
       mock_add_task
     end
     tasks.send(:add_task, task_name, workspace_gid:)
@@ -399,7 +395,7 @@ class TestTasks < BaseAsana
 
   # @return [void]
   def test_task_with_section
-    tasks = get_test_object { mock_task_with_section }
+    tasks = get_test_object(Checkoff::Tasks) { mock_task_with_section }
     returned_task = tasks.task(workspace_name, project_name, task_name,
                                only_uncompleted: true, section_name:)
 
@@ -415,7 +411,7 @@ class TestTasks < BaseAsana
 
   # @return [void]
   def test_task
-    tasks = get_test_object { mock_task }
+    tasks = get_test_object(Checkoff::Tasks) { mock_task }
     returned_task = tasks.task(workspace_name, project_name, task_name,
                                only_uncompleted: true)
 
@@ -424,7 +420,7 @@ class TestTasks < BaseAsana
 
   # @return [void]
   def test_in_portfolio_more_than_once
-    tasks = get_test_object do
+    tasks = get_test_object(Checkoff::Tasks) do
       portfolios.expects(:projects_in_portfolio).with('workspace_name', 'portfolio name')
         .returns([])
       task.expects(:memberships).returns([])
@@ -436,7 +432,7 @@ class TestTasks < BaseAsana
 
   # @return [void]
   def test_in_portfolio_more_than_once_true
-    tasks = get_test_object do
+    tasks = get_test_object(Checkoff::Tasks) do
       portfolio_project = mock('portfolio_project')
       portfolio_project.expects(:gid).returns(project_gid)
       portfolios.expects(:projects_in_portfolio).with('workspace_name', 'portfolio name')
@@ -454,7 +450,7 @@ class TestTasks < BaseAsana
 
   # @return [void]
   def test_gid_for_task
-    tasks = get_test_object do
+    tasks = get_test_object(Checkoff::Tasks) do
       projects_instance = Checkoff::Projects.new(client:)
       sections.expects(:projects).returns(projects_instance).at_least_once
       projects_instance.expects(:project_or_raise).with(workspace_name, project_name).returns(project)
@@ -471,7 +467,7 @@ class TestTasks < BaseAsana
 
   # @return [void]
   def test_gid_for_task_not_found
-    tasks = get_test_object do
+    tasks = get_test_object(Checkoff::Tasks) do
       projects_instance = Checkoff::Projects.new(client:)
       sections.expects(:projects).returns(projects_instance).at_least_once
       projects_instance.expects(:project_or_raise).with(workspace_name, project_name).returns(project)
@@ -485,7 +481,7 @@ class TestTasks < BaseAsana
 
   # @return [void]
   def test_task_to_h_delegates
-    tasks = get_test_object do
+    tasks = get_test_object(Checkoff::Tasks) do
       Checkoff::Internal::TaskHashes.expects(:new).returns(task_hashes)
       task_hashes.expects(:task_to_h).with(task).returns(123)
     end
@@ -509,7 +505,7 @@ class TestTasks < BaseAsana
 
   # @return [void]
   def test_in_portfolio_named_false_no_projects_no_memberships
-    tasks = get_test_object do
+    tasks = get_test_object(Checkoff::Tasks) do
       mock_in_portfolio_named_false_no_projects_no_memberships
     end
 
@@ -527,7 +523,7 @@ class TestTasks < BaseAsana
 
   # @return [void]
   def test_in_portfolio_named_false_no_projects_but_memberships
-    tasks = get_test_object do
+    tasks = get_test_object(Checkoff::Tasks) do
       mock_in_portfolio_named_false_no_projects_but_memberships
     end
 
@@ -546,7 +542,7 @@ class TestTasks < BaseAsana
 
   # @return [void]
   def test_in_portfolio_named_false_projects_wrong_memberships
-    tasks = get_test_object do
+    tasks = get_test_object(Checkoff::Tasks) do
       mock_in_portfolio_named_false_projects_wrong_memberships
     end
 
@@ -555,7 +551,7 @@ class TestTasks < BaseAsana
 
   # @return [void]
   def test_date_or_time_field_by_name
-    tasks = get_test_object do
+    tasks = get_test_object(Checkoff::Tasks) do
       task.expects(:due_at).returns(due_at_string).at_least(1)
       time_class.expects(:parse).with(due_at_string).returns(due_at_time_obj)
       due_at_time_obj.expects(:localtime).returns(due_at_time_obj)
@@ -566,7 +562,7 @@ class TestTasks < BaseAsana
 
   # @return [void]
   def test_h_to_task
-    tasks = get_test_object
+    tasks = get_test_object(Checkoff::Tasks)
     task = tasks.h_to_task({ 'name' => 'foo' })
 
     assert_equal('foo', task.name)
@@ -574,7 +570,7 @@ class TestTasks < BaseAsana
 
   # @return [void]
   def test_all_dependent_tasks_empty
-    tasks = get_test_object do
+    tasks = get_test_object(Checkoff::Tasks) do
       task.expects(:instance_variable_get).with(:@dependents).returns(nil)
     end
 
@@ -583,7 +579,7 @@ class TestTasks < BaseAsana
 
   # @return [void]
   def test_all_dependent_tasks_one
-    tasks = get_test_object do
+    tasks = get_test_object(Checkoff::Tasks) do
       task.expects(:instance_variable_get).with(:@dependents).returns([{ 'gid' => dependent_1_gid }])
 
       expect_task_options_pulled
@@ -600,13 +596,8 @@ class TestTasks < BaseAsana
 
   # @return [void]
   def test_as_cache_key
-    tasks = get_test_object
+    tasks = get_test_object(Checkoff::Tasks)
 
     assert_empty(tasks.as_cache_key)
-  end
-
-  # @return [void]
-  def class_under_test
-    Checkoff::Tasks
   end
 end

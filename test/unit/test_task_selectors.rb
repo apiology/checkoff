@@ -7,10 +7,6 @@ require 'checkoff/task_selectors'
 
 # rubocop:disable Metrics/ClassLength
 class TestTaskSelectors < ClassTest
-  # @!parse
-  #  # @return [Checkoff::TaskSelectors]
-  #  def get_test_object; end
-
   typed_delegate :tasks, Checkoff::Tasks
   typed_delegate :timelines, Checkoff::Timelines
   typed_delegate :client, Asana::Client
@@ -57,7 +53,7 @@ class TestTaskSelectors < ClassTest
       'resource_type' => 'custom_field',
       'resource_subtype' => 'enum',
     }
-    task_selectors = get_test_object do
+    task_selectors = get_test_object(Checkoff::TaskSelectors) do
       stub_custom_fields
       custom_fields = [custom_field]
       task.expects(:custom_fields).returns(custom_fields)
@@ -79,7 +75,7 @@ class TestTaskSelectors < ClassTest
       'resource_type' => 'custom_field',
       'resource_subtype' => 'multi_enum',
     }
-    task_selectors = get_test_object do
+    task_selectors = get_test_object(Checkoff::TaskSelectors) do
       stub_custom_fields
       custom_fields = [custom_field]
       task.expects(:custom_fields).returns(custom_fields)
@@ -101,7 +97,7 @@ class TestTaskSelectors < ClassTest
       'resource_type' => 'custom_field',
       'resource_subtype' => 'something_unknown',
     }
-    task_selectors = get_test_object do
+    task_selectors = get_test_object(Checkoff::TaskSelectors) do
       stub_custom_fields
       custom_fields = [custom_field]
       task.expects(:custom_fields).returns(custom_fields).at_least(1)
@@ -132,7 +128,7 @@ class TestTaskSelectors < ClassTest
       'resource_type' => 'custom_field',
       'resource_subtype' => 'enum',
     }
-    task_selectors = get_test_object do
+    task_selectors = get_test_object(Checkoff::TaskSelectors) do
       stub_custom_fields
       task.expects(:custom_fields).returns([custom_field])
     end
@@ -149,7 +145,7 @@ class TestTaskSelectors < ClassTest
   def test_filter_via_custom_field_none_matched
     custom_field_gid = '123'
     enum_value_gid = '456'
-    task_selectors = get_test_object do
+    task_selectors = get_test_object(Checkoff::TaskSelectors) do
       stub_custom_fields
       task.expects(:custom_fields).returns([]).at_least(1)
       task.expects(:gid).returns(123).at_least(1)
@@ -168,7 +164,7 @@ class TestTaskSelectors < ClassTest
   def test_filter_via_custom_field_gid_values_gids_custom_field_not_provided
     custom_field_gid = '123'
     enum_value_gid = '456'
-    task_selectors = get_test_object do
+    task_selectors = get_test_object(Checkoff::TaskSelectors) do
       stub_custom_fields
       task.expects(:custom_fields).returns(nil).at_least(1)
       task.expects(:gid).returns(123)
@@ -196,7 +192,7 @@ class TestTaskSelectors < ClassTest
       'resource_type' => 'custom_field',
       'resource_subtype' => 'enum',
     }
-    task_selectors = get_test_object do
+    task_selectors = get_test_object(Checkoff::TaskSelectors) do
       stub_custom_fields
       custom_fields = [custom_field]
       task.expects(:custom_fields).returns(custom_fields)
@@ -210,7 +206,7 @@ class TestTaskSelectors < ClassTest
 
   # @return [void]
   def test_filter_via_invalid_syntax
-    task_selectors = get_test_object
+    task_selectors = get_test_object(Checkoff::TaskSelectors)
     e = assert_raises(RuntimeError) do
       task_selectors.filter_via_task_selector(task,
                                               [:bad_predicate?, [:custom_field_value,
@@ -222,7 +218,7 @@ class TestTaskSelectors < ClassTest
 
   # @return [void]
   def test_filter_via_custom_field_value_nil_false_found
-    task_selectors = get_test_object do
+    task_selectors = get_test_object(Checkoff::TaskSelectors) do
       stub_custom_fields
       custom_fields = [custom_field]
       stub_custom_field_value('custom_field_name', 'some value')
@@ -244,7 +240,7 @@ class TestTaskSelectors < ClassTest
 
   # @return [void]
   def test_filter_via_custom_field_gid_value_gid_nil
-    task_selectors = get_test_object do
+    task_selectors = get_test_object(Checkoff::TaskSelectors) do
       stub_custom_fields
       mock_filter_via_custom_field_gid_value_gid_nil
     end
@@ -264,7 +260,7 @@ class TestTaskSelectors < ClassTest
 
   # @return [void]
   def test_filter_via_custom_field_gid_value_gid_present
-    task_selectors = get_test_object do
+    task_selectors = get_test_object(Checkoff::TaskSelectors) do
       stub_custom_fields
       mock_filter_via_custom_field_gid_value_gid_present
     end
@@ -276,7 +272,7 @@ class TestTaskSelectors < ClassTest
 
   # @return [void]
   def test_filter_via_custom_field_value_custom_fields_not_provided
-    task_selectors = get_test_object do
+    task_selectors = get_test_object(Checkoff::TaskSelectors) do
       stub_custom_fields
       task.expects(:custom_fields).returns(nil)
     end
@@ -291,7 +287,7 @@ class TestTaskSelectors < ClassTest
 
   # @return [void]
   def test_filter_via_custom_field_value_nil_none_found
-    task_selectors = get_test_object do
+    task_selectors = get_test_object(Checkoff::TaskSelectors) do
       stub_custom_fields
       custom_fields = []
       task.expects(:custom_fields).returns(custom_fields)
@@ -304,7 +300,7 @@ class TestTaskSelectors < ClassTest
 
   # @return [void]
   def test_filter_via_custom_field_value_gid_nil_none_found
-    task_selectors = get_test_object do
+    task_selectors = get_test_object(Checkoff::TaskSelectors) do
       stub_custom_fields
       custom_fields = []
       task.expects(:gid).returns('task_gid')
@@ -321,7 +317,7 @@ class TestTaskSelectors < ClassTest
 
   # @return [void]
   def test_filter_via_task_selector_tag
-    task_selectors = get_test_object do
+    task_selectors = get_test_object(Checkoff::TaskSelectors) do
       task.expects(:tags).returns([])
     end
 
@@ -330,35 +326,35 @@ class TestTaskSelectors < ClassTest
 
   # @return [void]
   def test_filter_via_task_selector_not
-    task_selectors = get_test_object
+    task_selectors = get_test_object(Checkoff::TaskSelectors)
 
     refute(task_selectors.filter_via_task_selector(task, [:not, []]))
   end
 
   # @return [void]
   def test_filter_via_task_selector_and
-    task_selectors = get_test_object
+    task_selectors = get_test_object(Checkoff::TaskSelectors)
 
     assert(task_selectors.filter_via_task_selector(task, [:and, [], []]))
   end
 
   # @return [void]
   def test_filter_via_task_selector_or
-    task_selectors = get_test_object
+    task_selectors = get_test_object(Checkoff::TaskSelectors)
 
     assert(task_selectors.filter_via_task_selector(task, [:or, [], []]))
   end
 
   # @return [void]
   def test_filter_via_task_selector_simple
-    task_selectors = get_test_object
+    task_selectors = get_test_object(Checkoff::TaskSelectors)
 
     assert(task_selectors.filter_via_task_selector(task, []))
   end
 
   # @return [void]
   def test_filter_via_task_selector_ready
-    task_selectors = get_test_object do
+    task_selectors = get_test_object(Checkoff::TaskSelectors) do
       tasks.expects(:task_ready?).with(task, period: :now_or_before, ignore_dependencies: false).returns(true)
     end
 
@@ -389,7 +385,7 @@ class TestTaskSelectors < ClassTest
 
   # @return [void]
   def test_filter_via_task_selector_ready_between_relative_starts_now
-    task_selectors = get_test_object do
+    task_selectors = get_test_object(Checkoff::TaskSelectors) do
       mock_filter_via_task_selector_ready_between_relative_starts_no
     end
 
@@ -405,7 +401,7 @@ class TestTaskSelectors < ClassTest
 
   # @return [void]
   def test_filter_via_task_selector_ready_between_relative_starts_today
-    task_selectors = get_test_object do
+    task_selectors = get_test_object(Checkoff::TaskSelectors) do
       stub_tasks
       mock_filter_via_task_selector_ready_between_relative_starts_today
     end
@@ -423,7 +419,7 @@ class TestTaskSelectors < ClassTest
 
   # @return [void]
   def test_filter_via_task_selector_ready_between_relative_due_now
-    task_selectors = get_test_object do
+    task_selectors = get_test_object(Checkoff::TaskSelectors) do
       stub_tasks
       mock_filter_via_task_selector_ready_between_relative_due_now
     end
@@ -453,7 +449,7 @@ class TestTaskSelectors < ClassTest
 
   # @return [void]
   def test_filter_via_task_selector_ready_between_relative_due_today
-    task_selectors = get_test_object do
+    task_selectors = get_test_object(Checkoff::TaskSelectors) do
       mock_filter_via_task_selector_ready_between_relative_due_today
     end
 
@@ -475,7 +471,7 @@ class TestTaskSelectors < ClassTest
 
   # @return [void]
   def test_filter_via_task_selector_ready_between_relative_no_due
-    task_selectors = get_test_object do
+    task_selectors = get_test_object(Checkoff::TaskSelectors) do
       stub_tasks
       mock_filter_via_task_selector_ready_between_relative_no_due
     end
@@ -494,15 +490,16 @@ class TestTaskSelectors < ClassTest
     expect_now_jan_1_2019
     expect_no_start
     expect_due_jan_1_2099
-    # @sg-ignore gem-limitation:mocha
-    #   Unresolved call to at_least on void -- expect_no_incomplete_dependencies is declared
-    #   @return [void] but its body's actual runtime value is a chainable Mocha::Expectation
+    # @sg-ignore needs-yard-annotation
+    #   expect_no_incomplete_dependencies is declared @return [void] but its body's actual
+    #   runtime value is a chainable Mocha::Expectation; Mocha's own Expectation#at_least
+    #   is correctly YARD-tagged, so the gap is in our own method's return annotation.
     expect_no_incomplete_dependencies.at_least(0)
   end
 
   # @return [void]
   def test_filter_via_task_selector_ready_between_relative_due_far_future
-    task_selectors = get_test_object do
+    task_selectors = get_test_object(Checkoff::TaskSelectors) do
       expect_tasks_not_mocked
       mock_filter_via_task_selector_ready_between_relative_due_far_future
     end
@@ -522,7 +519,7 @@ class TestTaskSelectors < ClassTest
 
   # @return [void]
   def test_filter_via_task_selector_unassigned
-    task_selectors = get_test_object do
+    task_selectors = get_test_object(Checkoff::TaskSelectors) do
       task.expects(:assignee).returns(nil)
     end
 
@@ -542,7 +539,7 @@ class TestTaskSelectors < ClassTest
       'resource_type' => 'custom_field',
       'resource_subtype' => 'enum',
     }
-    task_selectors = get_test_object do
+    task_selectors = get_test_object(Checkoff::TaskSelectors) do
       stub_custom_fields
       custom_fields = [custom_field]
       task.expects(:custom_fields).returns(custom_fields)
@@ -556,7 +553,7 @@ class TestTaskSelectors < ClassTest
 
   # @return [void]
   def test_filter_via_task_selector_due_date_set
-    task_selectors = get_test_object do
+    task_selectors = get_test_object(Checkoff::TaskSelectors) do
       expect_no_due
     end
 
@@ -565,7 +562,7 @@ class TestTaskSelectors < ClassTest
 
   # @return [void]
   def test_filter_via_task_selector_custom_field_less_than_n_days_from_now
-    task_selectors = get_test_object do
+    task_selectors = get_test_object(Checkoff::TaskSelectors) do
       stub_custom_fields
       expect_tasks_not_mocked
       Time.expects(:now).returns(Time.new(2000, 1, 1, 0, 0, 0, '+00:00')).at_least(1)
@@ -580,7 +577,7 @@ class TestTaskSelectors < ClassTest
 
   # @return [void]
   def test_filter_via_task_selector_custom_field_less_than_n_days_from_now_not_set
-    task_selectors = get_test_object do
+    task_selectors = get_test_object(Checkoff::TaskSelectors) do
       stub_custom_fields
       expect_tasks_not_mocked
       task.expects(:custom_fields).returns([{ 'name' => 'start date',
@@ -594,7 +591,7 @@ class TestTaskSelectors < ClassTest
 
   # @return [void]
   def test_filter_via_task_selector_custom_field_less_than_n_days_from_now_custom_field_not_found
-    task_selectors = get_test_object do
+    task_selectors = get_test_object(Checkoff::TaskSelectors) do
       stub_custom_fields
       expect_tasks_not_mocked
       task.expects(:gid).returns('123')
@@ -614,7 +611,7 @@ class TestTaskSelectors < ClassTest
 
   # @return [void]
   def test_filter_via_task_selector_custom_field_greater_than_or_equal_to_n_days_from_now
-    task_selectors = get_test_object do
+    task_selectors = get_test_object(Checkoff::TaskSelectors) do
       stub_custom_fields
       expect_tasks_not_mocked
       Time.expects(:now).returns(Time.new(2000, 1, 1, 0, 0, 0, '+00:00')).at_least(1)
@@ -631,7 +628,7 @@ class TestTaskSelectors < ClassTest
 
   # @return [void]
   def test_filter_via_task_selector_custom_field_greater_than_or_equal_to_n_days_from_now_nil
-    task_selectors = get_test_object do
+    task_selectors = get_test_object(Checkoff::TaskSelectors) do
       stub_custom_fields
       expect_tasks_not_mocked
       task.expects(:custom_fields).returns([{ 'name' => 'start date',
@@ -645,7 +642,7 @@ class TestTaskSelectors < ClassTest
 
   # @return [void]
   def test_filter_via_task_selector_custom_field_greater_than_or_equal_to_n_days_from_now_custom_field_not_found
-    task_selectors = get_test_object do
+    task_selectors = get_test_object(Checkoff::TaskSelectors) do
       expect_tasks_not_mocked
       stub_custom_fields
       task.expects(:gid).returns('123')
@@ -672,7 +669,7 @@ class TestTaskSelectors < ClassTest
 
   # @return [void]
   def test_filter_via_task_selector_modified_less_than_n_days_ago
-    task_selectors = get_test_object do
+    task_selectors = get_test_object(Checkoff::TaskSelectors) do
       mock_filter_via_task_selector_modified_less_than_n_days_ago
     end
 
@@ -683,7 +680,7 @@ class TestTaskSelectors < ClassTest
 
   # @return [void]
   def test_estimate_exceeds_duration_true
-    task_selectors = get_test_object do
+    task_selectors = get_test_object(Checkoff::TaskSelectors) do
       stub_custom_fields
       stub_estimated_time(960)
       task.expects(:start_on).returns('2000-01-01').at_least(1)
@@ -696,7 +693,7 @@ class TestTaskSelectors < ClassTest
 
   # @return [void]
   def test_estimate_exceeds_duration_false_no_estimate_set
-    task_selectors = get_test_object do
+    task_selectors = get_test_object(Checkoff::TaskSelectors) do
       stub_custom_fields
       stub_estimated_time(nil)
     end
@@ -707,7 +704,7 @@ class TestTaskSelectors < ClassTest
 
   # @return [void]
   def test_estimate_exceeds_duration_true_only_due_set
-    task_selectors = get_test_object do
+    task_selectors = get_test_object(Checkoff::TaskSelectors) do
       stub_custom_fields
       stub_estimated_time(960)
       task.expects(:start_on).returns(nil).at_least(1)
@@ -720,7 +717,7 @@ class TestTaskSelectors < ClassTest
 
   # @return [void]
   def test_estimate_exceeds_duration_true_no_dates_set
-    task_selectors = get_test_object do
+    task_selectors = get_test_object(Checkoff::TaskSelectors) do
       stub_custom_fields
       stub_estimated_time(960)
       task.expects(:start_on).returns(nil).at_least(1)
@@ -733,7 +730,7 @@ class TestTaskSelectors < ClassTest
 
   # @return [void]
   def test_estimate_exceeds_duration_no_estimate_field
-    task_selectors = get_test_object do
+    task_selectors = get_test_object(Checkoff::TaskSelectors) do
       stub_custom_fields
       task.expects(:custom_fields).returns([]).at_least(1)
     end
@@ -744,7 +741,7 @@ class TestTaskSelectors < ClassTest
 
   # @return [void]
   def test_filter_via_task_selector_modified_less_than_n_days_ago_nil
-    task_selectors = get_test_object do
+    task_selectors = get_test_object(Checkoff::TaskSelectors) do
       expect_tasks_not_mocked
       Time.expects(:now).returns(Time.new(2000, 1, 1, 0, 0, 0, '+00:00').to_s).at_least(0)
       task.expects(:modified_at).returns(nil).at_least(1)
@@ -757,7 +754,7 @@ class TestTaskSelectors < ClassTest
 
   # @return [void]
   def test_filter_via_task_selector_modified_less_than_n_days_ago_field_not_supported
-    task_selectors = get_test_object do
+    task_selectors = get_test_object(Checkoff::TaskSelectors) do
       expect_tasks_not_mocked
     end
 
@@ -772,7 +769,7 @@ class TestTaskSelectors < ClassTest
 
   # @return [void]
   def test_filter_via_task_selector_modified_less_than_n_days_ago_compound_field_not_supported
-    task_selectors = get_test_object do
+    task_selectors = get_test_object(Checkoff::TaskSelectors) do
       expect_tasks_not_mocked
     end
 
@@ -794,7 +791,7 @@ class TestTaskSelectors < ClassTest
 
   # @return [void]
   def test_filter_via_task_selector_field_greater_than_or_equal_to_n_days_from_today_due_on
-    task_selectors = get_test_object do
+    task_selectors = get_test_object(Checkoff::TaskSelectors) do
       expect_tasks_not_mocked
       mock_filter_via_task_selector_field_greater_than_or_equal_to_n_days_from_today_due_on
     end
@@ -813,7 +810,7 @@ class TestTaskSelectors < ClassTest
 
   # @return [void]
   def test_filter_via_task_selector_field_greater_than_or_equal_to_n_days_from_today_due_at
-    task_selectors = get_test_object do
+    task_selectors = get_test_object(Checkoff::TaskSelectors) do
       mock_filter_via_task_selector_field_greater_than_or_equal_to_n_days_from_today_due_at
     end
 
@@ -831,7 +828,7 @@ class TestTaskSelectors < ClassTest
 
   # @return [void]
   def test_filter_via_task_selector_field_greater_than_or_equal_to_n_days_from_today_due_nil
-    task_selectors = get_test_object do
+    task_selectors = get_test_object(Checkoff::TaskSelectors) do
       expect_tasks_not_mocked
       mock_filter_via_task_selector_field_greater_than_or_equal_to_n_days_from_today_due_nil
     end
@@ -843,7 +840,7 @@ class TestTaskSelectors < ClassTest
 
   # @return [void]
   def test_filter_via_task_selector_custom_field_equal_to_date
-    task_selectors = get_test_object do
+    task_selectors = get_test_object(Checkoff::TaskSelectors) do
       stub_custom_fields
       task.expects(:custom_fields).returns([{ 'name' => 'end date',
                                               'display_value' => '2000-01-15' }]).at_least(1)
@@ -855,7 +852,7 @@ class TestTaskSelectors < ClassTest
 
   # @return [void]
   def test_filter_via_task_selector_custom_field_not_equal_to_date
-    task_selectors = get_test_object do
+    task_selectors = get_test_object(Checkoff::TaskSelectors) do
       stub_custom_fields
       task.expects(:custom_fields).returns([{ 'name' => 'end date',
                                               'display_value' => '2000-01-15' }]).at_least(1)
@@ -867,7 +864,7 @@ class TestTaskSelectors < ClassTest
 
   # @return [void]
   def test_filter_via_task_selector_last_story_created_less_than_n_days_ago_no_stories
-    task_selectors = get_test_object do
+    task_selectors = get_test_object(Checkoff::TaskSelectors) do
       task.expects(:stories).returns([])
     end
 
@@ -885,7 +882,7 @@ class TestTaskSelectors < ClassTest
 
   # @return [void]
   def test_filter_via_task_selector_last_story_created_less_than_n_days_ago_ancient
-    task_selectors = get_test_object do
+    task_selectors = get_test_object(Checkoff::TaskSelectors) do
       mock_filter_via_task_selector_last_story_created_less_than_n_days_ago_ancient
     end
 
@@ -903,7 +900,7 @@ class TestTaskSelectors < ClassTest
 
   # @return [void]
   def test_filter_via_task_selector_last_story_created_less_than_n_days_ago_recent
-    task_selectors = get_test_object do
+    task_selectors = get_test_object(Checkoff::TaskSelectors) do
       mock_filter_via_task_selector_last_story_created_less_than_n_days_ago_recent
     end
 
@@ -913,7 +910,7 @@ class TestTaskSelectors < ClassTest
 
   # @return [void]
   def test_filter_via_task_selector_in_project_named_false
-    task_selectors = get_test_object do
+    task_selectors = get_test_object(Checkoff::TaskSelectors) do
       task.expects(:memberships).returns([])
     end
 
@@ -923,7 +920,7 @@ class TestTaskSelectors < ClassTest
 
   # @return [void]
   def test_filter_via_task_selector_in_project_named_true
-    task_selectors = get_test_object do
+    task_selectors = get_test_object(Checkoff::TaskSelectors) do
       task.expects(:memberships).returns([{ 'project' => { 'name' => 'foo' } }])
     end
 
@@ -933,7 +930,7 @@ class TestTaskSelectors < ClassTest
 
   # @return [void]
   def test_filter_via_task_selector_in_section_named_false
-    task_selectors = get_test_object do
+    task_selectors = get_test_object(Checkoff::TaskSelectors) do
       tasks.expects(:task_to_h).with(task).returns(
         'unwrapped' => { 'membership_by_section_name' => {} }
       )
@@ -945,7 +942,7 @@ class TestTaskSelectors < ClassTest
 
   # @return [void]
   def test_filter_via_task_selector_in_section_named_true
-    task_selectors = get_test_object do
+    task_selectors = get_test_object(Checkoff::TaskSelectors) do
       tasks.expects(:task_to_h).with(task).returns(
         'unwrapped' => { 'membership_by_section_name' => { 'foo' => {}, 'bar' => {} } }
       )
@@ -957,7 +954,7 @@ class TestTaskSelectors < ClassTest
 
   # @return [void]
   def test_dependent_on_previous_section_last_milestone
-    task_selectors = get_test_object do
+    task_selectors = get_test_object(Checkoff::TaskSelectors) do
       timelines
         .expects(:task_dependent_on_previous_section_last_milestone?)
         .with(task,
@@ -970,7 +967,7 @@ class TestTaskSelectors < ClassTest
 
   # @return [void]
   def test_in_portfolio_named_true
-    task_selectors = get_test_object do
+    task_selectors = get_test_object(Checkoff::TaskSelectors) do
       tasks.expects(:in_portfolio_named?).with(task, 'foo').returns(true)
     end
 
@@ -980,7 +977,7 @@ class TestTaskSelectors < ClassTest
 
   # @return [void]
   def test_in_portfolio_named_false
-    task_selectors = get_test_object do
+    task_selectors = get_test_object(Checkoff::TaskSelectors) do
       tasks.expects(:in_portfolio_named?).with(task, 'foo').returns(false)
     end
 
@@ -990,7 +987,7 @@ class TestTaskSelectors < ClassTest
 
   # @return [void]
   def test_milestone_true
-    task_selectors = get_test_object do
+    task_selectors = get_test_object(Checkoff::TaskSelectors) do
       task.expects(:resource_subtype).returns('milestone')
     end
 
@@ -999,7 +996,7 @@ class TestTaskSelectors < ClassTest
 
   # @return [void]
   def test_milestone_false
-    task_selectors = get_test_object do
+    task_selectors = get_test_object(Checkoff::TaskSelectors) do
       task.expects(:resource_subtype).returns('task')
     end
 
@@ -1008,7 +1005,7 @@ class TestTaskSelectors < ClassTest
 
   # @return [void]
   def test_milestone_raises_without_resource_subtype
-    task_selectors = get_test_object do
+    task_selectors = get_test_object(Checkoff::TaskSelectors) do
       task.expects(:resource_subtype).returns(nil)
     end
 
@@ -1019,7 +1016,7 @@ class TestTaskSelectors < ClassTest
 
   # @return [void]
   def test_custom_field_gid_value_contains_any_gid_false_multi_enum
-    task_selectors = get_test_object do
+    task_selectors = get_test_object(Checkoff::TaskSelectors) do
       stub_custom_fields
       custom_fields = [
         {
@@ -1038,7 +1035,7 @@ class TestTaskSelectors < ClassTest
 
   # @return [void]
   def test_last_task_milestone_does_not_depend_on_this_task
-    task_selectors = get_test_object do
+    task_selectors = get_test_object(Checkoff::TaskSelectors) do
       timelines.expects(:last_task_milestone_depends_on_this_task?).returns(true)
     end
 
@@ -1048,7 +1045,7 @@ class TestTaskSelectors < ClassTest
 
   # @return [void]
   def test_in_a_real_project_true
-    task_selectors = get_test_object do
+    task_selectors = get_test_object(Checkoff::TaskSelectors) do
       tasks.expects(:task_to_h).with(task).returns(
         'unwrapped' => { 'membership_by_project_name' => { 'Real Project' => {} } }
       )
@@ -1059,7 +1056,7 @@ class TestTaskSelectors < ClassTest
 
   # @return [void]
   def test_in_a_real_project_false_only_my_tasks
-    task_selectors = get_test_object do
+    task_selectors = get_test_object(Checkoff::TaskSelectors) do
       tasks.expects(:task_to_h).with(task).returns(
         'unwrapped' => { 'membership_by_project_name' => { my_tasks: {} } }
       )
@@ -1070,7 +1067,7 @@ class TestTaskSelectors < ClassTest
 
   # @return [void]
   def test_section_name_starts_with_true
-    task_selectors = get_test_object do
+    task_selectors = get_test_object(Checkoff::TaskSelectors) do
       tasks.expects(:task_to_h).with(task).returns(
         'unwrapped' => { 'membership_by_section_name' => { 'Done items' => {} } }
       )
@@ -1081,7 +1078,7 @@ class TestTaskSelectors < ClassTest
 
   # @return [void]
   def test_section_name_starts_with_false
-    task_selectors = get_test_object do
+    task_selectors = get_test_object(Checkoff::TaskSelectors) do
       tasks.expects(:task_to_h).with(task).returns(
         'unwrapped' => { 'membership_by_section_name' => { 'Inbox' => {} } }
       )
@@ -1092,7 +1089,7 @@ class TestTaskSelectors < ClassTest
 
   # @return [void]
   def test_in_section_named_true
-    task_selectors = get_test_object do
+    task_selectors = get_test_object(Checkoff::TaskSelectors) do
       tasks.expects(:task_to_h).with(task).returns(
         'unwrapped' => { 'membership_by_section_name' => { 'Today' => {} } }
       )
@@ -1103,7 +1100,7 @@ class TestTaskSelectors < ClassTest
 
   # @return [void]
   def test_in_section_named_false
-    task_selectors = get_test_object do
+    task_selectors = get_test_object(Checkoff::TaskSelectors) do
       tasks.expects(:task_to_h).with(task).returns(
         'unwrapped' => { 'membership_by_section_name' => { 'Today' => {} } }
       )
@@ -1114,7 +1111,7 @@ class TestTaskSelectors < ClassTest
 
   # @return [void]
   def test_in_portfolio_more_than_once_true
-    task_selectors = get_test_object do
+    task_selectors = get_test_object(Checkoff::TaskSelectors) do
       tasks.expects(:in_portfolio_more_than_once?).with(task, 'portfolio').returns(true)
     end
 
@@ -1123,7 +1120,7 @@ class TestTaskSelectors < ClassTest
 
   # @return [void]
   def test_no_milestone_depends_on_this_task_true
-    task_selectors = get_test_object do
+    task_selectors = get_test_object(Checkoff::TaskSelectors) do
       timelines.expects(:any_milestone_depends_on_this_task?)
         .with(task, limit_to_portfolio_name: nil).returns(false)
     end
@@ -1145,11 +1142,6 @@ class TestTaskSelectors < ClassTest
 
   def respond_like
     {}
-  end
-
-  # @return [Class<Checkoff::TaskSelectors>]
-  def class_under_test
-    Checkoff::TaskSelectors
   end
 end
 # rubocop:enable Metrics/ClassLength

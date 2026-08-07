@@ -104,8 +104,12 @@ module Checkoff
           # Example value: 1702857600000
           # +1 is because API seems to operate on inclusive ranges
           # @type [Date]
-          # @sg-ignore tool-limitation:issue-1232
-          #   https://github.com/castwide/solargraph/issues/1232
+          # @sg-ignore tool-limitation:type-tag-same-line-self-reassignment
+          #   The `# @type [Date]` tag on this reassignment retroactively types the earlier
+          #   `after` reference on the same line (`after.to_i`) as Date too, so `.to_i` is
+          #   "Unresolved call" -- confirmed by renaming the RHS reference to a separate local
+          #   (after_str), which clears the error with no ignore needed. Not issue-1232 (no RBS
+          #   interface param involved).
           after = Time.at(after.to_i / 1000).to_date + 1
           [{ "#{API_PREFIX.fetch(prefix)}.after" => after.to_s }, []]
         end
@@ -138,15 +142,19 @@ module Checkoff
 
         # @param param_key [String]
         # @return [String]
-        # @sg-ignore tool-limitation:type-narrowing
+        # @sg-ignore tool-limitation:issue-1254
         #   https://github.com/castwide/solargraph/issues/1254
         def get_single_param(param_key)
           raise "Expected #{param_key} to have at least one value" unless date_url_params.key? param_key
 
           value = date_url_params.fetch(param_key)
 
+          # @sg-ignore tool-limitation:pr-1274-follow-on
+          #   https://github.com/castwide/solargraph/pull/1274
           raise "Expected #{param_key} to have one value" if value.length != 1
 
+          # @sg-ignore tool-limitation:pr-1274-follow-on
+          #   https://github.com/castwide/solargraph/pull/1274
           value[0]
         end
 
@@ -163,6 +171,8 @@ module Checkoff
         def validate_unit_is_day!(prefix)
           unit = date_url_params.fetch("#{prefix}.unit").fetch(0)
 
+          # @sg-ignore tool-limitation:pr-1274-follow-on
+          #   https://github.com/castwide/solargraph/pull/1274
           raise "Teach me how to handle other time units: #{unit}" unless unit == 'day'
         end
 

@@ -192,8 +192,12 @@ module Checkoff
       elsif task_name.nil?
         run_on_section(workspace_name, project_name, section_name)
       else
-        # @sg-ignore tool-limitation:type-narrowing
-        #   https://github.com/castwide/solargraph/issues/1249
+        # @sg-ignore needs-yard-annotation
+        #   Wrong argument type for Checkoff::ViewSubcommand#run_on_task: task_name expected
+        #   String, received String, Symbol -- ViewSubcommand's own constructor over-declares
+        #   task_name as [String, Symbol, nil] (copied from project_name's pattern) though
+        #   nothing ever assigns it a Symbol; narrowing to [String, nil] resolves this cleanly
+        #   (confirmed: 0 problems with that tightened annotation).
         run_on_task(workspace_name, project_name, section_name, task_name)
       end
     end
@@ -311,13 +315,15 @@ module Checkoff
     desc 'Add a short task to Asana'
     arg 'workspace'
     arg 'task_name'
+    # @param c [GLI::Command]
     command :quickadd do |c|
-      # @sg-ignore gem-limitation:gli
-      #   c is yielded by GLI's command DSL block; the gem ships no type info for it
+      # @param args [Array<String>]
       c.action do |_global_options, _options, args|
         workspace_name = args.fetch(0)
         task_name = args.fetch(1)
 
+        # @sg-ignore tool-limitation:pr-1274-follow-on
+        #   https://github.com/castwide/solargraph/pull/1274
         QuickaddSubcommand.new(workspace_name, task_name).run
       end
     end
@@ -327,15 +333,17 @@ module Checkoff
     arg 'project'
     arg 'section', :optional
     arg 'task_name', :optional
+    # @param c [GLI::Command]
     command :view do |c|
-      # @sg-ignore gem-limitation:gli
-      #   c is yielded by GLI's command DSL block; the gem ships no type info for it
+      # @param args [Array<String>]
       c.action do |_global_options, _options, args|
         workspace_name = args.fetch(0)
         project_name = args.fetch(1)
         section_name = args[2]
         task_name = args[3]
 
+        # @sg-ignore tool-limitation:pr-1274-follow-on
+        #   https://github.com/castwide/solargraph/pull/1274
         puts ViewSubcommand.new(workspace_name, project_name, section_name, task_name).run
       end
     end
@@ -343,45 +351,33 @@ module Checkoff
     desc 'Move tasks from one section to another within a project'
 
     # rubocop:disable Metrics/BlockLength
+    # @param c [GLI::Command]
     command :mv do |c|
-      # @sg-ignore gem-limitation:gli
-      #   c is yielded by GLI's command DSL block; the gem ships no type info for it
       c.flag :from_workspace,
              type: String,
              default_value: :default_workspace,
              desc: 'Workspace to move tasks from'
-      # @sg-ignore gem-limitation:gli
-      #   c is yielded by GLI's command DSL block; the gem ships no type info for it
       c.flag :from_project,
              type: String,
              required: true,
              desc: 'Project to move tasks from'
-      # @sg-ignore gem-limitation:gli
-      #   c is yielded by GLI's command DSL block; the gem ships no type info for it
       c.flag :from_section,
              type: String,
              default_value: :all_sections,
              desc: 'Section to move tasks from'
-      # @sg-ignore gem-limitation:gli
-      #   c is yielded by GLI's command DSL block; the gem ships no type info for it
       c.flag :to_workspace,
              type: String,
              default_value: :source_workspace,
              desc: 'Workspace to move tasks to'
-      # @sg-ignore gem-limitation:gli
-      #   c is yielded by GLI's command DSL block; the gem ships no type info for it
       c.flag :to_project,
              type: String,
              default_value: :source_project,
              desc: 'Section to move tasks to'
-      # @sg-ignore gem-limitation:gli
-      #   c is yielded by GLI's command DSL block; the gem ships no type info for it
       c.flag :to_section,
              type: String,
              default_value: :source_section,
              desc: 'Section to move tasks to'
-      # @sg-ignore gem-limitation:gli
-      #   c is yielded by GLI's command DSL block; the gem ships no type info for it
+      # @param options [Hash]
       c.action do |_global_options, options, _args|
         from_workspace = options.fetch('from_workspace')
         from_project = options.fetch('from_project')
