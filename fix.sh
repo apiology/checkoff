@@ -17,7 +17,7 @@ if [ -z "${SOLARGRAPH_FORCE_VERSION:-}" ] && [ -f Gemfile.lock ]; then
     /^GIT$/ { remote = ""; revision = ""; ingit = 1; next }
     ingit && /^  remote:/ { remote = $2 }
     ingit && /^  revision:/ { revision = $2 }
-    ingit && /^$/ { if (remote ~ /solargraph/) print revision; ingit = 0 }
+    ingit && /^$/ { if (remote ~ /\/solargraph(\.git)?$/) print revision; ingit = 0 }
   ' Gemfile.lock 2>/dev/null || true)
   if [ -n "${solargraph_revision}" ]; then
     export SOLARGRAPH_FORCE_VERSION="0.0.1.dev-${solargraph_revision}"
