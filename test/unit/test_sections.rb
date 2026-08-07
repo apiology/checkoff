@@ -498,11 +498,13 @@ class TestSections < BaseAsana
     end
     section = sections.section_by_gid(section_1_gid)
 
-    # @sg-ignore inherent-limit:method-missing-dispatch
-    #   Unresolved call to gid -- section is an Asana::Resources::Section (< SectionsBase
-    #   < Resource), whose #method_missing proxies arbitrary JSON response keys to
-    #   accessor methods; the method set is genuinely unknowable ahead of time, not a
-    #   missing annotation.
+    # @sg-ignore tool-limitation:nilable-union-method-unresolved
+    #   Unresolved call to gid -- section is typed Asana::Resources::Section, nil (nilable
+    #   union return from Sections#section_by_gid). gid is a real attr_reader on Section
+    #   (confirmed via `solargraph pin Asana::Resources::Section#gid`); forcing section's
+    #   type to the non-nilable Section via a local @type cast resolves gid cleanly, so the
+    #   gap is Solargraph failing to resolve a real method through a T, nil union return,
+    #   not method_missing or a missing annotation. Not yet filed upstream.
     assert_equal(123, section.gid)
   end
 
