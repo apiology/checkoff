@@ -6,6 +6,24 @@ set -o pipefail
 export LANG="${LANG:-en_US.UTF-8}"
 export LC_ALL="${LC_ALL:-en_US.UTF-8}"
 
+# CI (and any other caller that skips .envrc) needs the same
+# SOLARGRAPH_FORCE_VERSION .envrc computes locally, or `bundle install`
+# fails: the apiology/solargraph fork's gemspec reads this var, so an
+# unset value evaluates to the plain default, which doesn't match the
+# forced label Gemfile.lock records for the pinned git revision.
+# Guarded so an already-set value (from .envrc) wins.
+if [ -z "${SOLARGRAPH_FORCE_VERSION:-}" ] && [ -f Gemfile.lock ]; then
+  solargraph_revision=$(awk '
+    /^GIT$/ { remote = ""; revision = ""; ingit = 1; next }
+    ingit && /^  remote:/ { remote = $2 }
+    ingit && /^  revision:/ { revision = $2 }
+    ingit && /^$/ { if (remote ~ /solargraph/) print revision; ingit = 0 }
+  ' Gemfile.lock 2>/dev/null || true)
+  if [ -n "${solargraph_revision}" ]; then
+    export SOLARGRAPH_FORCE_VERSION="0.0.1.dev-${solargraph_revision}"
+  fi
+fi
+
 if [ -n "${FIX_SH_TIMING_LOG+x}" ]; then
     rm -f "${FIX_SH_TIMING_LOG}"
     if ! type gdate >/dev/null 2>&1; then sudo ln -sf /bin/date /bin/gdate; fi
