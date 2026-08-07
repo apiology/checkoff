@@ -21,6 +21,16 @@ if [ -z "${SOLARGRAPH_FORCE_VERSION:-}" ] && [ -f Gemfile.lock ]; then
   ' Gemfile.lock 2>/dev/null || true)
   if [ -n "${solargraph_revision}" ]; then
     export SOLARGRAPH_FORCE_VERSION="0.0.1.dev-${solargraph_revision}"
+    # CircleCI runs each `run:` step as a fresh shell -- a plain `export`
+    # here only lives for this step's process, so `bundle install`
+    # succeeds in this script but a *later* step's `bundle
+    # exec`/`solargraph typecheck` re-evaluates the pinned gem's dynamic
+    # gemspec with the var unset and gets the wrong version. $BASH_ENV is
+    # sourced at the start of every step in the job, so appending here
+    # makes every later step see the same value too.
+    if [ -n "${BASH_ENV:-}" ]; then
+      echo "export SOLARGRAPH_FORCE_VERSION=\"${SOLARGRAPH_FORCE_VERSION}\"" >> "${BASH_ENV}"
+    fi
   fi
 fi
 
