@@ -41,11 +41,12 @@ class TestAttachments < ClassTest
     end
     attachment = attachments.create_attachment_from_url!(url, resource, attachment_name:, just_the_url: true)
 
-    # @sg-ignore inherent-limit:method-missing-dispatch
-    #   Unresolved call to foo -- attachment is an Asana::Resources::Resource, whose
-    #   #method_missing proxies arbitrary JSON response keys to accessor methods
-    #   (asana gem's resource_includes/resource.rb); the method set is genuinely
-    #   unknowable ahead of time, not a missing annotation.
+    # @sg-ignore test-example
+    #   'foo' is an arbitrary JSON field name this test injects into the mocked
+    #   response body to prove attribute passthrough works, not a real attribute --
+    #   attachment is an Asana::Resources::Resource, whose #method_missing proxies
+    #   arbitrary JSON response keys to accessor methods (asana gem's
+    #   resource_includes/resource.rb); no fixed method set to annotate.
     assert_equal('bar', attachment.foo)
   end
 
