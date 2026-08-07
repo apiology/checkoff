@@ -198,10 +198,8 @@ module Checkoff
 
         # @param task [Asana::Resources::Task]
         # @return [Boolean]
-        # @sg-ignore tool-limitation:pr-1231
-        #   https://github.com/castwide/solargraph/pull/1231
         def evaluate(task)
-          T.cast(task.assignee.nil? == true, T::Boolean)
+          task.assignee.nil?
         end
       end
 
@@ -215,10 +213,8 @@ module Checkoff
 
         # @param task [Asana::Resources::Task]
         # @return [Boolean]
-        # @sg-ignore tool-limitation:pr-1231
-        #   https://github.com/castwide/solargraph/pull/1231
         def evaluate(task)
-          T.cast(!(task.due_at.nil? && task.due_on.nil?), T::Boolean)
+          !(task.due_at.nil? && task.due_on.nil?)
         end
       end
 

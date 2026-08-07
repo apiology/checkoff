@@ -175,8 +175,6 @@ module Checkoff
     # @param num_days [Integer]
     #
     # @return [Date]
-    # @sg-ignore tool-limitation:pr-1231
-    #   https://github.com/castwide/solargraph/pull/1231
     def n_days_from_today(num_days)
       T.cast(@today_getter.today + num_days, Date)
     end

@@ -285,6 +285,10 @@ module Checkoff
 
       membership_data = T.unsafe(membership)
       section = T.cast(membership_data['section'], T::Hash[String, T.untyped])
+      # @sg-ignore needs-yard-annotation:cast-stub-non-class-arg
+      #   Local T.cast generic override (config/annotations_misc.rb) only binds the
+      #   generic for a literal Class argument; T::Hash[String, T.untyped] on the line
+      #   above leaves section as unbound generic<T2>, so section['name'] can't resolve.
       section_name = T.cast(section['name'], String)
 
       # @type [String, nil]

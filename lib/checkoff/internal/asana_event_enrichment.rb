@@ -101,6 +101,10 @@ module Checkoff
         parent_gid = T.cast(filter['checkoff:parent.gid'], T.nilable(String))
         return unless parent_gid
 
+        # @sg-ignore needs-yard-annotation:cast-stub-non-class-arg
+        #   Local T.cast generic override (config/annotations_misc.rb) only binds the
+        #   generic for a literal Class argument; T.nilable(String) here leaves parent_gid
+        #   as unbound generic<T2> instead, breaking downstream inference.
         name, resource_type = enrich_gid(parent_gid)
         filter['checkoff:enriched:parent.name'] = name if name
         filter['checkoff:enriched:parent.resource_type'] = resource_type if resource_type
@@ -114,6 +118,10 @@ module Checkoff
 
         return unless resource_gid
 
+        # @sg-ignore needs-yard-annotation:cast-stub-non-class-arg
+        #   Local T.cast generic override (config/annotations_misc.rb) only binds the
+        #   generic for a literal Class argument; T.nilable(String) here leaves
+        #   resource_gid as unbound generic<T2> instead, breaking downstream inference.
         task = tasks.task_by_gid(resource_gid)
         task_name = task&.name
         filter['checkoff:enriched:resource.name'] = task_name if task_name
@@ -126,6 +134,10 @@ module Checkoff
         section_gid = T.cast(filter['checkoff:fetched.section.gid'], T.nilable(String))
         return unless section_gid
 
+        # @sg-ignore needs-yard-annotation:cast-stub-non-class-arg
+        #   Local T.cast generic override (config/annotations_misc.rb) only binds the
+        #   generic for a literal Class argument; T.nilable(String) here leaves
+        #   section_gid as unbound generic<T2> instead, breaking downstream inference.
         section = sections.section_by_gid(section_gid)
         name = section&.name
         filter['checkoff:enriched:fetched.section.name'] = name if name
@@ -154,6 +166,10 @@ module Checkoff
       #
       # @return [void]
       def enrich_event_resource!(asana_event)
+        # @sg-ignore needs-yard-annotation:cast-stub-non-class-arg
+        #   Local T.cast generic override (config/annotations_misc.rb) only binds the
+        #   generic for a literal Class argument; T::Hash[String, String] here leaves
+        #   resource as unbound generic<T2>, conflicting with the local @type cast.
         # @type [Hash{String => String}]
         resource = T.cast(asana_event['resource'], T::Hash[String, String])
         # @type [String]

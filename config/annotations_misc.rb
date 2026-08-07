@@ -169,3 +169,23 @@
 #     # @return [self]
 #     def merge!(hash); end
 #   end
+#   # sorbet-runtime's T.cast is declared `(value untyped, type untyped,
+#   # ?checked: untyped) -> untyped` in its own gem YARD -- Solargraph has no
+#   # special-case understanding of the second argument as a type
+#   # discriminator the way Sorbet's static checker does, so every call site
+#   # infers as untyped. This generic override lets Solargraph bind the
+#   # return type to a literal Class argument the same way #create_object
+#   # (test/unit/class_test.rb) already does for `clazz.new`. Only covers the
+#   # literal-Class-argument shape: call sites passing a T::Hash[...],
+#   # T.nilable(...), or other runtime-constructed Sorbet type object as
+#   # `type` will get a new "wrong argument type" error from this override
+#   # instead of the previous silent `untyped` -- @overload can't safely
+#   # split this (see sg-ignore-audit skill notes on T.cast).
+#   module T
+#     # @generic T2
+#     # @param value [Object]
+#     # @param type [::Class<generic<T2>>]
+#     # @param checked [Boolean]
+#     # @return [generic<T2>]
+#     def self.cast(value, type, checked: true); end
+#   end

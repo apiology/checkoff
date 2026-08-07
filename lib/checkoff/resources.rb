@@ -62,6 +62,10 @@ module Checkoff
       %w[task section project].each do |resource_type_to_try|
         next unless [resource_type_to_try, nil].include?(resource_type)
 
+        # @sg-ignore needs-yard-annotation:cast-stub-non-class-arg
+        #   Local T.cast generic override (config/annotations_misc.rb) only binds the
+        #   generic for a literal Class argument; T.nilable(Asana::Resources::Resource)
+        #   here leaves resource as unbound generic<T2>, conflicting with the @type cast.
         # @type [Asana::Resources::Resource, nil]
         resource = T.cast(method(:"fetch_#{resource_type_to_try}_gid").call(gid),
                           T.nilable(Asana::Resources::Resource))

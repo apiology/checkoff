@@ -82,6 +82,12 @@ module Checkoff
       def task_selector
         task_selector_json = ARGV[2] || raise('Please pass task_selector in JSON form as third argument')
 
+        # @sg-ignore needs-yard-annotation:cast-stub-non-class-arg
+        #   Local T.cast generic override (config/annotations_misc.rb) only binds the
+        #   generic for a literal Class argument; the raw array literal [Symbol, Array]
+        #   here isn't a Class, so it doesn't bind either (pre-existing questionable
+        #   Sorbet usage -- not standard T.cast type syntax -- previously silently
+        #   accepted since T.cast was untyped everywhere; unrelated to this override).
         # @return [Symbol, Array]
         T.cast(JSON.parse(task_selector_json), [Symbol, Array])
       end
