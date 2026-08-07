@@ -149,8 +149,12 @@ module Checkoff
 
           value = date_url_params.fetch(param_key)
 
+          # @sg-ignore tool-limitation:pr-1274-follow-on
+          #   https://github.com/castwide/solargraph/pull/1274
           raise "Expected #{param_key} to have one value" if value.length != 1
 
+          # @sg-ignore tool-limitation:pr-1274-follow-on
+          #   https://github.com/castwide/solargraph/pull/1274
           value[0]
         end
 
@@ -167,6 +171,8 @@ module Checkoff
         def validate_unit_is_day!(prefix)
           unit = date_url_params.fetch("#{prefix}.unit").fetch(0)
 
+          # @sg-ignore tool-limitation:pr-1274-follow-on
+          #   https://github.com/castwide/solargraph/pull/1274
           raise "Teach me how to handle other time units: #{unit}" unless unit == 'day'
         end
 

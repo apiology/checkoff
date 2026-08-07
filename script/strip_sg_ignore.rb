@@ -10,6 +10,8 @@ ROOT = Pathname(File.expand_path('..', __dir__))
 
 # @param arg [String]
 # @return [Array<Pathname>]
+# @sg-ignore tool-limitation:pr-1274-follow-on
+#   https://github.com/castwide/solargraph/pull/1274
 def paths_for_arg(arg)
   path = Pathname(arg)
   path = ROOT.join(arg) unless path.absolute?

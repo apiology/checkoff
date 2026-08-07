@@ -122,6 +122,8 @@ module Checkoff
         # @type [Hash{String => String}]
         resource = asana_event.fetch('resource')
         # @type [String]
+        # @sg-ignore tool-limitation:pr-1274-follow-on
+        #   https://github.com/castwide/solargraph/pull/1274
         resource_type = resource.fetch('resource_type')
         unless resource_type == 'task'
           raise "Teach me how to check #{key.inspect} on resource type #{resource_type.inspect}"
@@ -131,6 +133,8 @@ module Checkoff
         options = {
           fields:,
         }
+        # @sg-ignore tool-limitation:pr-1274-follow-on
+        #   https://github.com/castwide/solargraph/pull/1274
         @client.tasks.find_by_id(task_gid, options:)
       rescue Asana::Errors::NotFound
         nil
