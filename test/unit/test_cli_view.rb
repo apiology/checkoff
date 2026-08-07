@@ -180,7 +180,7 @@ class TestCLIView < Minitest::Test
   # @return [void]
   # @param section_name [String, NilClass]
   # @param due_on [String, NilClass]
-  # @param project_name [String]
+  # @param project_name [String, Symbol]
   # @param due_at [String, NilClass]
   def expect_three_tasks_pulled_and_queried(project_name:,
                                             section_name:,
@@ -196,7 +196,7 @@ class TestCLIView < Minitest::Test
   # @return [void]
   # @param due_at [String, NilClass]
   # @param section_name [String, NilClass]
-  # @param project_name [String]
+  # @param project_name [String, Symbol]
   # @param due_on [String, NilClass]
   def mock_view(project_name:, section_name:,
                 due_at:, due_on:)
@@ -275,11 +275,6 @@ class TestCLIView < Minitest::Test
 
   # @return [void]
   def mock_view_run_with_section_specified_normal_project_colon_project
-    # @sg-ignore needs-yard-annotation
-    #   Wrong argument type for TestCLIView#mock_view: project_name expected String,
-    #   received Symbol -- mock_view's @param project_name is declared [String] only;
-    #   production code (lib/checkoff/cli.rb:162,203) accepts [String, Symbol] and this
-    #   test deliberately exercises the Symbol case. Tighten to [String, Symbol].
     mock_view(project_name: project_name.to_sym,
               section_name: section_name_str,
               due_on: 'fake_date',

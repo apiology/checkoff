@@ -371,7 +371,7 @@ class TestTaskSelectors < ClassTest
     task.expects(:start_at).returns('2019-01-01T00:00:00Z').at_least(1)
   end
 
-  # @return [void]
+  # @return [Mocha::Expectation]
   def expect_no_incomplete_dependencies
     tasks.expects(:incomplete_dependencies?).with(task).returns(false)
   end
@@ -490,10 +490,6 @@ class TestTaskSelectors < ClassTest
     expect_now_jan_1_2019
     expect_no_start
     expect_due_jan_1_2099
-    # @sg-ignore needs-yard-annotation
-    #   expect_no_incomplete_dependencies is declared @return [void] but its body's actual
-    #   runtime value is a chainable Mocha::Expectation; Mocha's own Expectation#at_least
-    #   is correctly YARD-tagged, so the gap is in our own method's return annotation.
     expect_no_incomplete_dependencies.at_least(0)
   end
 
