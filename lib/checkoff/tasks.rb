@@ -383,7 +383,7 @@ module Checkoff
     end
 
     # @return [String]
-    # @sg-ignore tool-limitation:config-fetch-union
+    # @sg-ignore tool-limitation:method-call-on-union-type
     #   @config.fetch return type could not be inferred — @config is intentionally dual-typed
     #   [Hash, EnvFallbackConfigLoader] throughout this codebase; Solargraph can't unify #fetch
     #   across that union
