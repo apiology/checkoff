@@ -59,8 +59,6 @@ module Checkoff
         # @param gid [String]
         # @param single_custom_field_params [Hash{String => Array<String>}]
         # @return [Array(Hash{String => String}, Array<Symbol, Array>)]
-        # @sg-ignore tool-limitation:issue-1254
-        #   https://github.com/castwide/solargraph/issues/1254
         def convert_single_custom_field_params(gid, single_custom_field_params)
           variant_key = "custom_field_#{gid}.variant"
           variant = single_custom_field_params.fetch(variant_key)

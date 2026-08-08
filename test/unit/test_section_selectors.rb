@@ -4,6 +4,7 @@
 require_relative 'test_helper'
 require_relative 'class_test'
 require 'checkoff/section_selectors'
+require 'checkoff/internal/section_selector_evaluator'
 
 class TestSectionSelectors < ClassTest
   typed_delegate :client, Asana::Client
@@ -73,5 +74,17 @@ class TestSectionSelectors < ClassTest
 
     refute(section_selectors.filter_via_section_selector(section,
                                                          [:has_tasks?]))
+  end
+
+  # @return [void]
+  def test_evaluate_args_empty_selector_returns_empty_array
+    evaluator = get_test_object(Checkoff::SectionSelectorEvaluator) do
+      mocks[:section] = section
+    end
+
+    # An empty Array selector makes selector[1..] return nil (Array#[]
+    # with an open-ended range past the array's length); evaluate_args
+    # guards against that rather than raising NoMethodError on .map.
+    assert_equal([], evaluator.send(:evaluate_args, [], nil))
   end
 end

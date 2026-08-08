@@ -22,10 +22,10 @@ GIT
 
 GIT
   remote: https://github.com/apiology/solargraph.git
-  revision: 2e0198cbd9ddd9ba123124a32c44facd3e4852f6
+  revision: b022351b809d6f77a33e2850400c68cc48a78d5e
   branch: 2026-08-04
   specs:
-    solargraph (0.0.1.dev.pre.2e0198cbd9ddd9ba123124a32c44facd3e4852f6)
+    solargraph (0.0.1.dev.pre.b022351b809d6f77a33e2850400c68cc48a78d5e)
       ast (~> 2.4.3)
       backport (~> 1.2)
       benchmark (~> 0.4)
@@ -354,15 +354,15 @@ GEM
     snaky_hash (2.0.6)
       hashie (>= 0.1.0, < 6)
       version_gem (>= 1.1.8, < 3)
-    sorbet (0.6.13416)
-      sorbet-static (= 0.6.13416)
-    sorbet-runtime (0.6.13416)
-    sorbet-static (0.6.13416-aarch64-linux)
-    sorbet-static (0.6.13416-universal-darwin)
-    sorbet-static (0.6.13416-x86_64-linux)
-    sorbet-static-and-runtime (0.6.13416)
-      sorbet (= 0.6.13416)
-      sorbet-runtime (= 0.6.13416)
+    sorbet (0.6.13420)
+      sorbet-static (= 0.6.13420)
+    sorbet-runtime (0.6.13420)
+    sorbet-static (0.6.13420-aarch64-linux)
+    sorbet-static (0.6.13420-universal-darwin)
+    sorbet-static (0.6.13420-x86_64-linux)
+    sorbet-static-and-runtime (0.6.13420)
+      sorbet (= 0.6.13420)
+      sorbet-runtime (= 0.6.13420)
     source_finder (3.2.1)
     spoom (1.8.4)
       erubi (>= 1.10.0)
@@ -604,13 +604,13 @@ CHECKSUMS
   simplecov-lcov (0.9.0) sha256=7a77a31e200a595ed4b0249493056efd0c920601f53d2ef135ca34ee796346cd
   simplecov_json_formatter (0.1.4) sha256=529418fbe8de1713ac2b2d612aa3daa56d316975d307244399fa4838c601b428
   snaky_hash (2.0.6) sha256=3663cae48cdef582b517025cf8a39d8789996eaf0b4ed89e2f0624836505654a
-  solargraph (0.0.1.dev.pre.2e0198cbd9ddd9ba123124a32c44facd3e4852f6)
-  sorbet (0.6.13416) sha256=a60a6612d5e9b06d4dc045b1626d84cb80de1c6855b53aca1ff66eae80b7586d
-  sorbet-runtime (0.6.13416) sha256=7e1a0d66b9acc77ba14d60f412a04a32f345cfb645aefa95e86c74d8444bc9ca
-  sorbet-static (0.6.13416-aarch64-linux) sha256=d40d9cb411d63292f2cbf8560e2fcb8563e4e47609b6beb84142166f4fef4b8b
-  sorbet-static (0.6.13416-universal-darwin) sha256=2cd1e811d475aaecf908a923b66063ed361e6e8c5be20dd63b4efda527590e4f
-  sorbet-static (0.6.13416-x86_64-linux) sha256=0404b7bba5102ef7dbff4d1ba1473cf272a038665106f74991eaa1faa715db7b
-  sorbet-static-and-runtime (0.6.13416) sha256=aa5987933f9488e800aaefb95545dc42194e16291371db395a8b5516e774a32e
+  solargraph (0.0.1.dev.pre.b022351b809d6f77a33e2850400c68cc48a78d5e)
+  sorbet (0.6.13420) sha256=ee64aba80a2201d3785c09719f81a83d73ca69bfecba01d826d68ad3cae896e1
+  sorbet-runtime (0.6.13420) sha256=5ecbb843cdc17a55c2a35b98c9bd090736c897e53735f888590b361dd0cad492
+  sorbet-static (0.6.13420-aarch64-linux) sha256=656a6e2e89e43de23042a6a4092a919ffeb34500f97c36ac52043b154eb18392
+  sorbet-static (0.6.13420-universal-darwin) sha256=ca0a4033f4d06f121c7cc25467ae72b93946d3aeb1e0d2e96e6cbc1ded182fc6
+  sorbet-static (0.6.13420-x86_64-linux) sha256=21afb0a65df53be4e6898add0b864c23a2c80094dfd92055aa5407a89fda5ea0
+  sorbet-static-and-runtime (0.6.13420) sha256=4e6bbd369c246e7906f9df738f11ca65fa26d242fc1eff89dbe3dda9bdee883b
   sord (7.0.0)
   source_finder (3.2.1) sha256=7c9bf6f108e7e895940989f089e4d9011c175ec9da203d5de5f56402a73bfb0b
   spoom (1.8.4) sha256=7283c94a7bbfdfe8764af9027cee2929ef6e1a14271f285e6924e896ca52e880

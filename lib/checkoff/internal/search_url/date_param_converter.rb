@@ -15,13 +15,6 @@ module Checkoff
         end
 
         # @return [Array(Hash{String => String}, Array<Symbol, Array>)]
-        # @sg-ignore inherent-limit:cross-procedural-narrowing
-        #   out's non-nil-ness after the loop depends on date_url_params.empty?,
-        #   which is only true because convert_for_prefix (called inside the loop)
-        #   mutates date_url_params as a side effect. No static type checker
-        #   verifies invariants across a method boundary like this -- not a
-        #   solargraph gap, an inherent limit of static analysis. Real fix would
-        #   be checking out.nil? directly instead of via the date_url_params proxy.
         def convert
           return [{}, []] if date_url_params.empty?
 
@@ -36,10 +29,18 @@ module Checkoff
 
           raise "Teach me to handle these parameters: #{date_url_params.inspect}" unless date_url_params.empty?
 
-          out
+          ensure_matched!(out)
         end
 
         private
+
+        # @param out [Array(Hash{String => String}, Array<Symbol, Array>), nil]
+        # @return [Array(Hash{String => String}, Array<Symbol, Array>)]
+        def ensure_matched!(out)
+          return out if out
+
+          raise "no date param matched a known prefix: #{date_url_params.inspect}"
+        end
 
         # @param prefix [String]
         # @return [Array(Hash{String => String}, Array<Symbol, Array>)]

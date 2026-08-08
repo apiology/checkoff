@@ -34,9 +34,6 @@ module Checkoff
           public
 
           # @return [Array<String>]
-          # @sg-ignore tool-limitation:no-bot-type
-          #   abstract method always raises; declared type documents the override contract, not
-          #   this body
           def convert
             raise 'Implement me!'
           end
