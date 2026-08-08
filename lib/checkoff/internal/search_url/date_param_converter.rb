@@ -104,12 +104,14 @@ module Checkoff
           # Example value: 1702857600000
           # +1 is because API seems to operate on inclusive ranges
           # @type [Date]
-          # @sg-ignore tool-limitation:type-tag-same-line-self-reassignment
+          # @sg-ignore tool-limitation:reassignment-not-tracked
           #   The `# @type [Date]` tag on this reassignment retroactively types the earlier
           #   `after` reference on the same line (`after.to_i`) as Date too, so `.to_i` is
           #   "Unresolved call" -- confirmed by renaming the RHS reference to a separate local
-          #   (after_str), which clears the error with no ignore needed. Not issue-1232 (no RBS
-          #   interface param involved).
+          #   (after_str), which clears the error with no ignore needed. Filed under the same
+          #   general reassignment-type-change bucket as $stdout/StringIO
+          #   (test_attachments.rb#capture_attachments_run) until shown to be a distinct root
+          #   cause. Not issue-1232 (no RBS interface param involved).
           after = Time.at(after.to_i / 1000).to_date + 1
           [{ "#{API_PREFIX.fetch(prefix)}.after" => after.to_s }, []]
         end

@@ -101,13 +101,13 @@ class TestAttachments < ClassTest
   end
 
   # @return [String]
-  # @sg-ignore tool-limitation:global-var-reassignment
+  # @sg-ignore tool-limitation:reassignment-not-tracked
   #   TestAttachments#capture_attachments_run return type could not be inferred
   def capture_attachments_run
     old_stdout = $stdout
     $stdout = StringIO.new
     Checkoff::Attachments.run
-    # @sg-ignore tool-limitation:global-var-reassignment
+    # @sg-ignore tool-limitation:reassignment-not-tracked
     #   Unresolved call to string -- $stdout's declared type stays IO; the local
     #   reassignment to StringIO.new isn't tracked
     $stdout.string
