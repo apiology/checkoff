@@ -147,16 +147,23 @@ module Checkoff
 
     private
 
-    # @param custom_field [Hash{String => Hash,Array<Hash>}]
+    # rubocop:disable Layout/LineLength, YARD/TagTypeSyntax
+    # @param custom_field [Hash{'resource_subtype' => String} & Hash{'enum_value' => Hash} & Hash{'multi_enum_values' => Array<Hash>}]
+    # rubocop:enable Layout/LineLength, YARD/TagTypeSyntax
     #
     # @return [Array<Hash>]
-    # @sg-ignore tool-limitation:hash-value-union-not-narrowed-by-key
-    #   custom_field's Hash{String => Hash,Array<Hash>} annotation gives Solargraph one flat
-    #   Hash|Array<Hash> union for every key -- fetch('enum_value') and fetch('multi_enum_values')
-    #   both get that same union rather than the narrower per-key type, so the branches infer
-    #   as Array<Hash,Array<Hash>>/Hash/Array<Hash> against the declared Array<Hash>. Not
-    #   issue-1232 (no RBS interface-typed param involved); YARD's Hash{K=>V} syntax has no way
-    #   to express per-literal-key value types.
+    # @sg-ignore tool-limitation:no-record-type
+    #   YARD has no Record<K,V>-style syntax for per-literal-key Hash value types, so
+    #   custom_field is annotated with the intersection-of-single-key-Hashes syntax
+    #   (Hash{'k1'=>T1} & Hash{'k2'=>T2} & ...) that Solargraph is expected to support for
+    #   this soon, in place of the old flat Hash{String => Hash,Array<Hash>} (one value-type
+    #   union for every key). Current release doesn't yet do per-key dispatch on #fetch: it
+    #   unions all intersection members' value types into every #fetch call instead, so
+    #   fetch('resource_subtype') now also returns Hash|Array<Hash>, and the enum_value/
+    #   multi_enum_values branches infer against that flat union rather than their own
+    #   narrower type -- declared return type Array<Hash> vs inferred
+    #   Array<String,Hash,Array<Hash>>,String,Hash,Array<Hash>. Revisit once Solargraph does
+    #   per-key intersection dispatch; not issue-1232 (no RBS interface-typed param involved).
     def resource_custom_field_enum_values(custom_field)
       resource_subtype = custom_field.fetch('resource_subtype')
       case resource_subtype
