@@ -22,10 +22,10 @@ GIT
 
 GIT
   remote: https://github.com/apiology/solargraph.git
-  revision: dda32df1c0c34e1d7503bcd191a38f4f41775c26
+  revision: 82f464e0edff9e9181607cb48c0427c4fd48e6aa
   branch: 2026-08-04
   specs:
-    solargraph (0.0.1.dev.pre.dda32df1c0c34e1d7503bcd191a38f4f41775c26)
+    solargraph (0.0.1.dev.pre.82f464e0edff9e9181607cb48c0427c4fd48e6aa)
       ast (~> 2.4.3)
       backport (~> 1.2)
       benchmark (~> 0.4)
@@ -604,7 +604,7 @@ CHECKSUMS
   simplecov-lcov (0.9.0) sha256=7a77a31e200a595ed4b0249493056efd0c920601f53d2ef135ca34ee796346cd
   simplecov_json_formatter (0.1.4) sha256=529418fbe8de1713ac2b2d612aa3daa56d316975d307244399fa4838c601b428
   snaky_hash (2.0.6) sha256=3663cae48cdef582b517025cf8a39d8789996eaf0b4ed89e2f0624836505654a
-  solargraph (0.0.1.dev.pre.dda32df1c0c34e1d7503bcd191a38f4f41775c26)
+  solargraph (0.0.1.dev.pre.82f464e0edff9e9181607cb48c0427c4fd48e6aa)
   sorbet (0.6.13420) sha256=ee64aba80a2201d3785c09719f81a83d73ca69bfecba01d826d68ad3cae896e1
   sorbet-runtime (0.6.13420) sha256=5ecbb843cdc17a55c2a35b98c9bd090736c897e53735f888590b361dd0cad492
   sorbet-static (0.6.13420-aarch64-linux) sha256=656a6e2e89e43de23042a6a4092a919ffeb34500f97c36ac52043b154eb18392
