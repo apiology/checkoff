@@ -30,9 +30,8 @@ module Checkoff
     end
 
     # @return [Array<Class<Checkoff::SelectorClasses::FunctionEvaluator>>]
-    # @sg-ignore tool-limitation:no-bot-type
-    #   abstract method always raises; declared type documents the override contract, not this
-    #   body
+    # @sg-ignore tool-limitation:pr-1277
+    #   https://github.com/castwide/solargraph/pull/1277
     def function_evaluators
       raise 'Implement me!'
     end
@@ -43,13 +42,10 @@ module Checkoff
     def evaluate_args(selector, evaluator)
       return [] unless selector.is_a?(Array)
 
-      # @sg-ignore needs-type-narrowing
-      #   selector[1..] is genuinely nilable: Array#[] with an open-ended range returns nil
-      #   when the start index exceeds the array length (confirmed: `[][1..]` => nil), and
-      #   this method only guards selector.is_a?(Array), not non-empty. An empty-Array
-      #   selector reaching here would NoMethodError on .map. Solargraph is correctly
-      #   flagging a real gap, not a tool limitation; needs an explicit guard.
-      selector[1..].map.with_index do |item, index|
+      rest = selector[1..]
+      return [] unless rest
+
+      rest.map.with_index do |item, index|
         if evaluator.evaluate_arg?(index)
           evaluate(item)
         else

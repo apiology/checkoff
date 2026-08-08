@@ -182,15 +182,11 @@ def fix_date_new!(issue)
   true
 end
 
-# @sg-ignore tool-limitation:no-bot-type
-#   Array#fetch's block-form generic doesn't collapse cleanly when the block ends in
-#   Kernel#abort (a NoReturn/bot-typed call): `ARGV.fetch(0) { abort(...) }` alone infers
-#   as `String, generic<T>` instead of plain `String`, independent of T.cast -- isolated
-#   in a 2-line repro. The leaked generic<T> then fails the local T.cast stub's `value
-#   [Object]` param check. Not yet filed upstream.
+# @sg-ignore tool-limitation:pr-1277
+#   https://github.com/castwide/solargraph/pull/1277
 issues_path = T.cast(ARGV.fetch(0) { abort("usage: #{$PROGRAM_NAME} TYPECHECK_OUTPUT_FILE") }, String)
-# @sg-ignore tool-limitation:no-bot-type
-#   Same leaked generic<T2> as the assignment above propagates to this call site.
+# @sg-ignore tool-limitation:pr-1277
+#   https://github.com/castwide/solargraph/pull/1277
 issues = parse_issues(issues_path)
 
 unneeded = issues.select { |i| i.message == 'Unneeded @sg-ignore comment' }

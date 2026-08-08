@@ -498,13 +498,7 @@ class TestSections < BaseAsana
     end
     section = sections.section_by_gid(section_1_gid)
 
-    # @sg-ignore needs-type-narrowing
-    #   Unresolved call to gid -- section is typed Asana::Resources::Section, nil (nilable
-    #   union return from Sections#section_by_gid), and this line calls .gid without a nil
-    #   guard. Solargraph is correctly refusing to resolve gid through the unnarrowed nil
-    #   branch; the fix is a real guard here (e.g. refute_nil(section) before the
-    #   assert_equal), not a tool-limitation ignore.
-    assert_equal(123, section.gid)
+    assert_equal(123, section&.gid)
   end
 
   # @return [void]
