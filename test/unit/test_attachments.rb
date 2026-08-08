@@ -101,15 +101,14 @@ class TestAttachments < ClassTest
   end
 
   # @return [String]
-  # @sg-ignore tool-limitation:reassignment-not-tracked
-  #   TestAttachments#capture_attachments_run return type could not be inferred
+  # @sg-ignore tool-limitation:issue-1250
+  #   https://github.com/castwide/solargraph/issues/1250
   def capture_attachments_run
     old_stdout = $stdout
     $stdout = StringIO.new
     Checkoff::Attachments.run
-    # @sg-ignore tool-limitation:reassignment-not-tracked
-    #   Unresolved call to string -- $stdout's declared type stays IO; the local
-    #   reassignment to StringIO.new isn't tracked
+    # @sg-ignore tool-limitation:issue-1250
+    #   https://github.com/castwide/solargraph/issues/1250
     $stdout.string
   ensure
     $stdout = old_stdout if old_stdout
