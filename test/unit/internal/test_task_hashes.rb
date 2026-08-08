@@ -90,6 +90,56 @@ class TestTaskHashes < ClassTest
     },
   }.freeze
 
+  TASK_C_RAW_HASH = {
+    'name' => 'c',
+    'assignee_section' => {
+      'gid' => 'assignee_section_gid',
+      'name' => 'assignee_section_name',
+    },
+    'assignee' => {
+      'gid' => 'assignee_gid',
+      'name' => 'assignee_name',
+    },
+  }.freeze
+
+  ASSIGNEE_MEMBERSHIP = {
+    'section' => {
+      'gid' => 'assignee_section_gid',
+      'name' => 'assignee_section_name',
+    },
+    'project' => {
+      'gid' => 'assignee_gid',
+      'name' => :my_tasks,
+    },
+  }.freeze
+
+  TASK_C_HASH = {
+    'name' => 'c',
+    'task' => 'c',
+    'assignee_section' => {
+      'gid' => 'assignee_section_gid',
+      'name' => 'assignee_section_name',
+    },
+    'assignee' => {
+      'gid' => 'assignee_gid',
+      'name' => 'assignee_name',
+    },
+    'unwrapped' => {
+      'membership_by_section_gid' => {
+        'assignee_section_gid' => ASSIGNEE_MEMBERSHIP,
+      },
+      'membership_by_section_name' => {
+        'assignee_section_name' => ASSIGNEE_MEMBERSHIP,
+      },
+      'membership_by_project_gid' => {
+        'assignee_gid' => ASSIGNEE_MEMBERSHIP,
+      },
+      'membership_by_project_name' => {
+        my_tasks: ASSIGNEE_MEMBERSHIP,
+      },
+    },
+  }.freeze
+
   # @return [void]
   def test_task_a_to_h
     task_hashes = get_test_object(Checkoff::Internal::TaskHashes) do
@@ -108,5 +158,25 @@ class TestTaskHashes < ClassTest
     end
 
     assert_equal(TASK_B_HASH, task_hashes.task_to_h(task))
+  end
+
+  # @return [void]
+  def test_task_c_to_h_assignee_section
+    task_hashes = get_test_object(Checkoff::Internal::TaskHashes) do
+      task.expects(:to_h).returns(TASK_C_RAW_HASH.dup)
+      task.expects(:name).returns('c')
+    end
+
+    assert_equal(TASK_C_HASH, task_hashes.task_to_h(task))
+  end
+
+  # @return [void]
+  def test_assignee_hash_not_a_hash
+    task_hashes = get_test_object(Checkoff::Internal::TaskHashes)
+
+    e = assert_raises(RuntimeError) do
+      task_hashes.send(:assignee_hash, { 'assignee' => 'not a hash' })
+    end
+    assert_match(/Expected assignee to be a Hash, got String/, e.message)
   end
 end

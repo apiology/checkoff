@@ -60,19 +60,7 @@ module Checkoff
     # @return [Checkoff::CustomFields]
     attr_reader :custom_fields
 
-    # bundle exec ./task_selectors.rb
-    # :nocov:
     class << self
-      # @return [String]
-      def project_name
-        ARGV[1] || raise('Please pass project name to pull tasks from as first argument')
-      end
-
-      # @return [String]
-      def workspace_name
-        ARGV[0] || raise('Please pass workspace name as first argument')
-      end
-
       # @return [Array(Symbol, Array)]
       def task_selector
         task_selector_json = ARGV[2] || raise('Please pass task_selector in JSON form as third argument')
@@ -93,6 +81,20 @@ module Checkoff
         raise "Expected args to be an Array, got #{args.inspect}" unless args.is_a?(Array)
 
         [function_name, args]
+      end
+    end
+
+    # bundle exec ./task_selectors.rb
+    # :nocov:
+    class << self
+      # @return [String]
+      def project_name
+        ARGV[1] || raise('Please pass project name to pull tasks from as first argument')
+      end
+
+      # @return [String]
+      def workspace_name
+        ARGV[0] || raise('Please pass workspace name as first argument')
       end
 
       # @return [void]
