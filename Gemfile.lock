@@ -22,7 +22,7 @@ GIT
 
 GIT
   remote: https://github.com/apiology/solargraph.git
-  revision: b022351b809d6f77a33e2850400c68cc48a78d5e
+  revision: dda32df1c0c34e1d7503bcd191a38f4f41775c26
   branch: 2026-08-04
   specs:
     solargraph (0.0.1.dev.pre.b022351b809d6f77a33e2850400c68cc48a78d5e)
