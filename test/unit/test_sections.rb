@@ -498,13 +498,12 @@ class TestSections < BaseAsana
     end
     section = sections.section_by_gid(section_1_gid)
 
-    # @sg-ignore tool-limitation:nilable-union-method-unresolved
+    # @sg-ignore needs-type-narrowing
     #   Unresolved call to gid -- section is typed Asana::Resources::Section, nil (nilable
-    #   union return from Sections#section_by_gid). gid is a real attr_reader on Section
-    #   (confirmed via `solargraph pin Asana::Resources::Section#gid`); forcing section's
-    #   type to the non-nilable Section via a local @type cast resolves gid cleanly, so the
-    #   gap is Solargraph failing to resolve a real method through a T, nil union return,
-    #   not method_missing or a missing annotation. Not yet filed upstream.
+    #   union return from Sections#section_by_gid), and this line calls .gid without a nil
+    #   guard. Solargraph is correctly refusing to resolve gid through the unnarrowed nil
+    #   branch; the fix is a real guard here (e.g. refute_nil(section) before the
+    #   assert_equal), not a tool-limitation ignore.
     assert_equal(123, section.gid)
   end
 
