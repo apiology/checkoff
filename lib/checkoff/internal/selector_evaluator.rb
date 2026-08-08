@@ -30,7 +30,7 @@ module Checkoff
     end
 
     # @return [Array<Class<Checkoff::SelectorClasses::FunctionEvaluator>>]
-    # @sg-ignore tool-limitation:raise-only-body
+    # @sg-ignore tool-limitation:no-bot-type
     #   abstract method always raises; declared type documents the override contract, not this
     #   body
     def function_evaluators
