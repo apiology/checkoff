@@ -161,7 +161,7 @@ module Checkoff
     # @param workspace_name [String]
     # @param project_name [String, Symbol]
     # @param section_name [String, Symbol, nil]
-    # @param task_name [String, Symbol, nil]
+    # @param task_name [String, nil]
     # @param config [Checkoff::Internal::EnvFallbackConfigLoader, Hash]
     # @param projects [Checkoff::Projects]
     # @param sections [Checkoff::Sections]
@@ -192,12 +192,6 @@ module Checkoff
       elsif task_name.nil?
         run_on_section(workspace_name, project_name, section_name)
       else
-        # @sg-ignore needs-yard-annotation
-        #   Wrong argument type for Checkoff::ViewSubcommand#run_on_task: task_name expected
-        #   String, received String, Symbol -- ViewSubcommand's own constructor over-declares
-        #   task_name as [String, Symbol, nil] (copied from project_name's pattern) though
-        #   nothing ever assigns it a Symbol; narrowing to [String, nil] resolves this cleanly
-        #   (confirmed: 0 problems with that tightened annotation).
         run_on_task(workspace_name, project_name, section_name, task_name)
       end
     end

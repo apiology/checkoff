@@ -235,15 +235,15 @@ class TestSections < BaseAsana
 
   # @return [void]
   def expect_task_project_memberships_queried
-    a_membership.expects(:[]).with('project').returns(a_membership_project)
+    a_membership.expects(:fetch).with('project').returns(a_membership_project)
     a_membership_project.expects(:[]).with('gid').returns(a_gid)
   end
 
   # @return [void]
   # @param section_name [String]
   def expect_task_section_memberships_queried(section_name)
-    a_membership.expects(:[]).with('section').returns(a_membership_section)
-    a_membership_section.expects(:[]).with('name').returns(section_name)
+    a_membership.expects(:fetch).with('section').returns(a_membership_section)
+    a_membership_section.expects(:fetch).with('name').returns(section_name)
   end
 
   # @param section_name [String]
@@ -498,11 +498,12 @@ class TestSections < BaseAsana
     end
     section = sections.section_by_gid(section_1_gid)
 
-    # @sg-ignore inherent-limit:method-missing-dispatch
-    #   Unresolved call to gid -- section is an Asana::Resources::Section (< SectionsBase
-    #   < Resource), whose #method_missing proxies arbitrary JSON response keys to
-    #   accessor methods; the method set is genuinely unknowable ahead of time, not a
-    #   missing annotation.
+    # @sg-ignore needs-type-narrowing
+    #   Unresolved call to gid -- section is typed Asana::Resources::Section, nil (nilable
+    #   union return from Sections#section_by_gid), and this line calls .gid without a nil
+    #   guard. Solargraph is correctly refusing to resolve gid through the unnarrowed nil
+    #   branch; the fix is a real guard here (e.g. refute_nil(section) before the
+    #   assert_equal), not a tool-limitation ignore.
     assert_equal(123, section.gid)
   end
 

@@ -26,7 +26,7 @@ module Checkoff
       end
 
       # @return [Boolean]
-      # @sg-ignore tool-limitation:raise-only-body
+      # @sg-ignore tool-limitation:no-bot-type
       #   return type could not be inferred — abstract method body is only `raise`
       def matches?
         raise 'Override me!'
@@ -35,7 +35,7 @@ module Checkoff
       # @param _task [Asana::Resources::Task]
       # @param _args [Array<Object>]
       # @return [Object]
-      # @sg-ignore tool-limitation:raise-only-body
+      # @sg-ignore tool-limitation:no-bot-type
       #   return type could not be inferred — abstract method body is only `raise`
       def evaluate(_task, *_args)
         raise 'Implement me!'

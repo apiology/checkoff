@@ -53,8 +53,7 @@ module Checkoff
         return unless task_hash.key? 'assignee_section'
 
         assignee_section = task_hash.fetch('assignee_section')
-        # @type [Hash{String => String}]
-        assignee = T.cast(task_hash.fetch('assignee'), T::Hash[String, String])
+        assignee = assignee_hash(task_hash)
         memberships << {
           'section' => assignee_section.dup,
           'project' => {
@@ -62,6 +61,15 @@ module Checkoff
             'name' => :my_tasks,
           },
         }
+      end
+
+      # @param task_hash [Hash{String => String, Hash, Array}]
+      # @return [Hash]
+      def assignee_hash(task_hash)
+        assignee = task_hash.fetch('assignee')
+        raise "Expected assignee to be a Hash, got #{assignee.class}" unless assignee.is_a?(Hash)
+
+        assignee
       end
 
       # @param task_hash [Hash]

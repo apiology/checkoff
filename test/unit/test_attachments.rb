@@ -41,20 +41,19 @@ class TestAttachments < ClassTest
     end
     attachment = attachments.create_attachment_from_url!(url, resource, attachment_name:, just_the_url: true)
 
-    # @sg-ignore inherent-limit:method-missing-dispatch
-    #   Unresolved call to foo -- attachment is an Asana::Resources::Resource, whose
-    #   #method_missing proxies arbitrary JSON response keys to accessor methods
-    #   (asana gem's resource_includes/resource.rb); the method set is genuinely
-    #   unknowable ahead of time, not a missing annotation.
+    # @sg-ignore test-example
+    #   'foo' is an arbitrary JSON field name this test injects into the mocked
+    #   response body to prove attribute passthrough works, not a real attribute --
+    #   attachment is an Asana::Resources::Resource, whose #method_missing proxies
+    #   arbitrary JSON response keys to accessor methods (asana gem's
+    #   resource_includes/resource.rb); no fixed method set to annotate.
     assert_equal('bar', attachment.foo)
   end
 
   # @return [void]
   def test_create_attachment_from_downloaded_url
     url = 'http://example.com/picture.png'
-    # @sg-ignore gem-limitation:webmock
     stub_request(:get, url).to_return(body: 'fake image bytes', status: 200)
-    # @sg-ignore gem-limitation:mocha
     resource.expects(:attach).with(filename: 'custom.png', mime: 'image/png', io: instance_of(File))
 
     attachments = get_test_object(Checkoff::Attachments)
@@ -74,7 +73,6 @@ class TestAttachments < ClassTest
   # @return [void]
   def test_create_attachment_from_downloaded_url_bad_response_code
     url = 'http://example.com/picture.png'
-    # @sg-ignore gem-limitation:webmock
     stub_request(:get, url).to_return(body: 'not found', status: 404)
 
     attachments = get_test_object(Checkoff::Attachments)
@@ -103,15 +101,14 @@ class TestAttachments < ClassTest
   end
 
   # @return [String]
-  # @sg-ignore tool-limitation:global-var-reassignment
-  #   TestAttachments#capture_attachments_run return type could not be inferred
+  # @sg-ignore tool-limitation:issue-1250
+  #   https://github.com/castwide/solargraph/issues/1250
   def capture_attachments_run
     old_stdout = $stdout
     $stdout = StringIO.new
     Checkoff::Attachments.run
-    # @sg-ignore tool-limitation:global-var-reassignment
-    #   Unresolved call to string -- $stdout's declared type stays IO; the local
-    #   reassignment to StringIO.new isn't tracked
+    # @sg-ignore tool-limitation:issue-1250
+    #   https://github.com/castwide/solargraph/issues/1250
     $stdout.string
   ensure
     $stdout = old_stdout if old_stdout

@@ -34,7 +34,7 @@ module Checkoff
           public
 
           # @return [Array<String>]
-          # @sg-ignore tool-limitation:raise-only-body
+          # @sg-ignore tool-limitation:no-bot-type
           #   abstract method always raises; declared type documents the override contract, not
           #   this body
           def convert
@@ -244,7 +244,7 @@ module Checkoff
             entry
           end
           # @type [Hash{String => String}]
-          out = T.cast(arr_of_tuples.to_h, T::Hash[String, String])
+          out = arr_of_tuples.to_h
           unless out.include? 'sort_by'
             # keep results consistent between calls; API using default
             # sort_by does not seem to be.

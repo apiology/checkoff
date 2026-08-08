@@ -371,7 +371,7 @@ class TestTaskSelectors < ClassTest
     task.expects(:start_at).returns('2019-01-01T00:00:00Z').at_least(1)
   end
 
-  # @return [void]
+  # @return [Mocha::Expectation]
   def expect_no_incomplete_dependencies
     tasks.expects(:incomplete_dependencies?).with(task).returns(false)
   end
@@ -490,10 +490,6 @@ class TestTaskSelectors < ClassTest
     expect_now_jan_1_2019
     expect_no_start
     expect_due_jan_1_2099
-    # @sg-ignore needs-yard-annotation
-    #   expect_no_incomplete_dependencies is declared @return [void] but its body's actual
-    #   runtime value is a chainable Mocha::Expectation; Mocha's own Expectation#at_least
-    #   is correctly YARD-tagged, so the gap is in our own method's return annotation.
     expect_no_incomplete_dependencies.at_least(0)
   end
 
@@ -1126,6 +1122,54 @@ class TestTaskSelectors < ClassTest
     end
 
     assert(task_selectors.filter_via_task_selector(task, [:no_milestone_depends_on_this_task?]))
+  end
+
+  # @return [void]
+  def test_class_task_selector
+    ARGV.replace([nil, nil, '["foo", []]'])
+
+    assert_equal([:foo, []], Checkoff::TaskSelectors.task_selector)
+  ensure
+    ARGV.replace([$PROGRAM_NAME])
+  end
+
+  # @return [void]
+  def test_class_task_selector_missing
+    ARGV.replace([])
+
+    e = assert_raises(RuntimeError) { Checkoff::TaskSelectors.task_selector }
+    assert_match(/Please pass task_selector/, e.message)
+  ensure
+    ARGV.replace([$PROGRAM_NAME])
+  end
+
+  # @return [void]
+  def test_validate_task_selector
+    assert_equal(['foo', []], Checkoff::TaskSelectors.validate_task_selector(['foo', []]))
+  end
+
+  # @return [void]
+  def test_validate_task_selector_not_array
+    e = assert_raises(RuntimeError) { Checkoff::TaskSelectors.validate_task_selector('foo') }
+    assert_match(/Expected a 2-element/, e.message)
+  end
+
+  # @return [void]
+  def test_validate_task_selector_wrong_length
+    e = assert_raises(RuntimeError) { Checkoff::TaskSelectors.validate_task_selector(['foo']) }
+    assert_match(/Expected a 2-element/, e.message)
+  end
+
+  # @return [void]
+  def test_validate_task_selector_function_name_not_string
+    e = assert_raises(RuntimeError) { Checkoff::TaskSelectors.validate_task_selector([1, []]) }
+    assert_match(/Expected function_name to be a String/, e.message)
+  end
+
+  # @return [void]
+  def test_validate_task_selector_args_not_array
+    e = assert_raises(RuntimeError) { Checkoff::TaskSelectors.validate_task_selector(['foo', 1]) }
+    assert_match(/Expected args to be an Array/, e.message)
   end
 
   def respond_like_instance_of

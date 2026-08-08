@@ -104,12 +104,8 @@ module Checkoff
           # Example value: 1702857600000
           # +1 is because API seems to operate on inclusive ranges
           # @type [Date]
-          # @sg-ignore tool-limitation:type-tag-same-line-self-reassignment
-          #   The `# @type [Date]` tag on this reassignment retroactively types the earlier
-          #   `after` reference on the same line (`after.to_i`) as Date too, so `.to_i` is
-          #   "Unresolved call" -- confirmed by renaming the RHS reference to a separate local
-          #   (after_str), which clears the error with no ignore needed. Not issue-1232 (no RBS
-          #   interface param involved).
+          # @sg-ignore tool-limitation:issue-1250
+          #   https://github.com/castwide/solargraph/issues/1250
           after = Time.at(after.to_i / 1000).to_date + 1
           [{ "#{API_PREFIX.fetch(prefix)}.after" => after.to_s }, []]
         end

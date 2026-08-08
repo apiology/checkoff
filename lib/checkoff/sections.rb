@@ -278,14 +278,12 @@ module Checkoff
     # @return [void]
     def file_task_by_section(by_section, task, project_gid)
       membership = task.memberships.find do |m|
-        membership_hash = T.unsafe(m)
-        T.cast(membership_hash['project'], T::Hash[String, T.untyped])['gid'] == project_gid
+        m.fetch('project')['gid'] == project_gid
       end
       raise "Could not find task in project_gid #{project_gid}: #{task}" if membership.nil?
 
-      membership_data = T.unsafe(membership)
-      section = T.cast(membership_data['section'], T::Hash[String, T.untyped])
-      section_name = T.cast(section['name'], String)
+      section = membership.fetch('section')
+      section_name = section.fetch('name')
 
       # @type [String, nil]
       current_section = section_key(section_name)

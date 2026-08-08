@@ -62,15 +62,26 @@ module Checkoff
       %w[task section project].each do |resource_type_to_try|
         next unless [resource_type_to_try, nil].include?(resource_type)
 
-        # @type [Asana::Resources::Resource, nil]
-        resource = T.cast(method(:"fetch_#{resource_type_to_try}_gid").call(gid),
-                          T.nilable(Asana::Resources::Resource))
+        resource = fetch_gid_by_type(resource_type_to_try, gid)
         return [resource, resource_type_to_try] if resource
       end
       [nil, nil]
     end
 
     private
+
+    # @param resource_type [String]
+    # @param gid [String]
+    #
+    # @return [Asana::Resources::Resource, nil]
+    def fetch_gid_by_type(resource_type, gid)
+      case resource_type
+      when 'task' then fetch_task_gid(gid)
+      when 'section' then fetch_section_gid(gid)
+      when 'project' then fetch_project_gid(gid)
+      else raise "Unexpected resource_type: #{resource_type}"
+      end
+    end
 
     # @param gid [String]
     #

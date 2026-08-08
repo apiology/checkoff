@@ -300,8 +300,7 @@ module Checkoff
                             workspace_name: T.must(@workspaces.default_workspace.name))
       portfolio_projects = @portfolios.projects_in_portfolio(workspace_name, portfolio_name)
       T.cast(task.memberships.any? do |membership|
-        m = T.cast(membership, T::Hash[String, T.untyped])
-        project_gid = T.cast(m.fetch('project'), T::Hash[String, T.untyped]).fetch('gid')
+        project_gid = membership.fetch('project').fetch('gid')
         portfolio_projects.any? { |portfolio_project| portfolio_project.gid == project_gid }
       end, T::Boolean)
     end
@@ -319,8 +318,7 @@ module Checkoff
       portfolio_project_gids = portfolio_projects.map(&:gid)
       seen = T.let(false, T::Boolean)
       task.memberships.each do |membership|
-        m = T.cast(membership, T::Hash[String, T.untyped])
-        project_gid = T.cast(m.fetch('project'), T::Hash[String, T.untyped]).fetch('gid')
+        project_gid = membership.fetch('project').fetch('gid')
         next unless portfolio_project_gids.include?(project_gid)
         return true if seen
 
@@ -385,7 +383,7 @@ module Checkoff
     end
 
     # @return [String]
-    # @sg-ignore tool-limitation:config-fetch-union
+    # @sg-ignore tool-limitation:method-call-on-union-type
     #   @config.fetch return type could not be inferred — @config is intentionally dual-typed
     #   [Hash, EnvFallbackConfigLoader] throughout this codebase; Solargraph can't unify #fetch
     #   across that union

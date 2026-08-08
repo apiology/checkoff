@@ -98,8 +98,8 @@ module Checkoff
       #
       # @return [void]
       def enrich_filter_parent_gid!(filter)
-        parent_gid = T.cast(filter['checkoff:parent.gid'], T.nilable(String))
-        return unless parent_gid
+        parent_gid = filter['checkoff:parent.gid']
+        return unless parent_gid.is_a?(String)
 
         name, resource_type = enrich_gid(parent_gid)
         filter['checkoff:enriched:parent.name'] = name if name
@@ -110,9 +110,9 @@ module Checkoff
       #
       # @return [void]
       def enrich_filter_resource!(filter)
-        resource_gid = T.cast(filter['checkoff:resource.gid'], T.nilable(String))
+        resource_gid = filter['checkoff:resource.gid']
 
-        return unless resource_gid
+        return unless resource_gid.is_a?(String)
 
         task = tasks.task_by_gid(resource_gid)
         task_name = task&.name
@@ -123,8 +123,8 @@ module Checkoff
       #
       # @return [void]
       def enrich_filter_section!(filter)
-        section_gid = T.cast(filter['checkoff:fetched.section.gid'], T.nilable(String))
-        return unless section_gid
+        section_gid = filter['checkoff:fetched.section.gid']
+        return unless section_gid.is_a?(String)
 
         section = sections.section_by_gid(section_gid)
         name = section&.name
@@ -155,7 +155,7 @@ module Checkoff
       # @return [void]
       def enrich_event_resource!(asana_event)
         # @type [Hash{String => String}]
-        resource = T.cast(asana_event['resource'], T::Hash[String, String])
+        resource = asana_event['resource']
         # @type [String]
         resource_type = resource.fetch('resource_type')
 

@@ -60,6 +60,30 @@ module Checkoff
     # @return [Checkoff::CustomFields]
     attr_reader :custom_fields
 
+    class << self
+      # @return [Array(Symbol, Array)]
+      def task_selector
+        task_selector_json = ARGV[2] || raise('Please pass task_selector in JSON form as third argument')
+        function_name, args = validate_task_selector(JSON.parse(task_selector_json))
+        [function_name.to_sym, args]
+      end
+
+      # @param parsed [Object] result of JSON.parse on a task selector
+      # @return [Array(String, Array)]
+      def validate_task_selector(parsed)
+        raise "Expected a 2-element [function_name, args] array, got #{parsed.inspect}" \
+          unless parsed.is_a?(Array) && parsed.length == 2
+
+        function_name = parsed.fetch(0)
+        args = parsed.fetch(1)
+        raise "Expected function_name to be a String, got #{function_name.inspect}" \
+          unless function_name.is_a?(String)
+        raise "Expected args to be an Array, got #{args.inspect}" unless args.is_a?(Array)
+
+        [function_name, args]
+      end
+    end
+
     # bundle exec ./task_selectors.rb
     # :nocov:
     class << self
@@ -71,19 +95,6 @@ module Checkoff
       # @return [String]
       def workspace_name
         ARGV[0] || raise('Please pass workspace name as first argument')
-      end
-
-      # @return [Array(Symbol, Array)]
-      # @sg-ignore tool-limitation:pr-1259-follow-up
-      #   https://github.com/castwide/solargraph/pull/1259#issuecomment-5208799798 -- the
-      #   `x || raise(...)` idiom never narrows at all, with or without PR #1259:
-      #   always_leaves_compound_statement? is only invoked from if-node handling, and
-      #   this is an :or node, so it's never reached.
-      def task_selector
-        task_selector_json = ARGV[2] || raise('Please pass task_selector in JSON form as third argument')
-
-        # @return [Symbol, Array]
-        T.cast(JSON.parse(task_selector_json), [Symbol, Array])
       end
 
       # @return [void]
