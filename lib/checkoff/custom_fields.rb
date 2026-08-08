@@ -78,14 +78,15 @@ module Checkoff
     # @param resource [Asana::Resources::Project,Asana::Resources::Task]
     # @param custom_field_name [String]
     # @return [Array<String>]
-    # @sg-ignore tool-limitation:hash-value-union-not-narrowed-by-key
-    #   Declared return type Array<String> does not match inferred type Array, Array<Array> --
-    #   downstream propagation of the same gap as resource_custom_field_enum_values below:
-    #   flat_map's Hash element (from that method's declared Array<Hash>) has no per-key value
-    #   type, so .fetch('name') doesn't resolve to String. Confirmed by tightening
-    #   resource_custom_field_enum_values's @return to Array<Hash{String => String}> in
-    #   isolation -- doesn't clear the error, since the underlying custom_field param's
-    #   Hash{String => Hash,Array<Hash>} type still gives one flat value union for every key.
+    # @sg-ignore tool-limitation:no-record-type
+    #   Declared return type Array<String> does not match inferred type Array,
+    #   Array<Array, Array<String>> -- downstream propagation of the same gap as
+    #   resource_custom_field_enum_values below. That method's @return is now the
+    #   intersection-of-single-key-Hashes form (Hash{'gid'=>String} & Hash{'name'=>String}),
+    #   but Solargraph doesn't yet do per-key dispatch on #fetch (see that method's own
+    #   sg-ignore), so flat_map's enum_value element still resolves .fetch('name') against
+    #   the union of both intersection members rather than String alone. Revisit once
+    #   Solargraph does per-key intersection dispatch.
     def resource_custom_field_values_names_by_name(resource, custom_field_name)
       custom_field = resource_custom_field_by_name(resource, custom_field_name)
       return [] if custom_field.nil?
@@ -149,9 +150,9 @@ module Checkoff
 
     # rubocop:disable Layout/LineLength, YARD/TagTypeSyntax
     # @param custom_field [Hash{'resource_subtype' => String} & Hash{'enum_value' => Hash} & Hash{'multi_enum_values' => Array<Hash>}]
-    # rubocop:enable Layout/LineLength, YARD/TagTypeSyntax
     #
-    # @return [Array<Hash>]
+    # @return [Array<Hash{'gid' => String} & Hash{'name' => String}>]
+    # rubocop:enable Layout/LineLength, YARD/TagTypeSyntax
     # @sg-ignore tool-limitation:no-record-type
     #   YARD has no Record<K,V>-style syntax for per-literal-key Hash value types, so
     #   custom_field is annotated with the intersection-of-single-key-Hashes syntax
