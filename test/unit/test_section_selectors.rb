@@ -79,16 +79,12 @@ class TestSectionSelectors < ClassTest
   # @return [void]
   def test_evaluate_args_empty_selector_returns_empty_array
     evaluator = get_test_object(Checkoff::SectionSelectorEvaluator) do
-      @mocks[:section] = section
+      mocks[:section] = section
     end
 
     # An empty Array selector makes selector[1..] return nil (Array#[]
     # with an open-ended range past the array's length); evaluate_args
     # guards against that rather than raising NoMethodError on .map.
-    # @sg-ignore test-example
-    #   deliberately calling the private method with a selector shape the
-    #   public evaluate entrypoint never passes through (its own
-    #   selector.empty? guard returns early first)
     assert_equal([], evaluator.send(:evaluate_args, [], nil))
   end
 end

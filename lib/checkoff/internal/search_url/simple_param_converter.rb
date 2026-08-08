@@ -34,8 +34,6 @@ module Checkoff
           public
 
           # @return [Array<String>]
-          # @sg-ignore tool-limitation:pr-1277
-          #   https://github.com/castwide/solargraph/pull/1277
           def convert
             raise 'Implement me!'
           end

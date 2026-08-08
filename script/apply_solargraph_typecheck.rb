@@ -182,11 +182,7 @@ def fix_date_new!(issue)
   true
 end
 
-# @sg-ignore tool-limitation:pr-1277
-#   https://github.com/castwide/solargraph/pull/1277
 issues_path = T.cast(ARGV.fetch(0) { abort("usage: #{$PROGRAM_NAME} TYPECHECK_OUTPUT_FILE") }, String)
-# @sg-ignore tool-limitation:pr-1277
-#   https://github.com/castwide/solargraph/pull/1277
 issues = parse_issues(issues_path)
 
 unneeded = issues.select { |i| i.message == 'Unneeded @sg-ignore comment' }

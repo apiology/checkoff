@@ -1,4 +1,4 @@
-# typed: false
+# typed: true
 # frozen_string_literal: true
 
 module Checkoff
@@ -30,8 +30,6 @@ module Checkoff
     end
 
     # @return [Array<Class<Checkoff::SelectorClasses::FunctionEvaluator>>]
-    # @sg-ignore tool-limitation:pr-1277
-    #   https://github.com/castwide/solargraph/pull/1277
     def function_evaluators
       raise 'Implement me!'
     end
