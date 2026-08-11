@@ -32,7 +32,7 @@ module Checkoff
     LONG_CACHE_TIME = MINUTE * 15
     SHORT_CACHE_TIME = MINUTE * 5
 
-    # @param config [Hash, Checkoff::Internal::EnvFallbackConfigLoader]
+    # @param config [Hash{Symbol => Object}, Checkoff::Internal::EnvFallbackConfigLoader]
     # @param client [Asana::Client]
     # @param workspaces [Checkoff::Workspaces]
     # @param sections [Checkoff::Sections]
@@ -393,10 +393,6 @@ module Checkoff
     end
 
     # @return [String]
-    # @sg-ignore tool-limitation:method-call-on-union-type
-    #   @config.fetch return type could not be inferred — @config is intentionally dual-typed
-    #   [Hash, EnvFallbackConfigLoader] throughout this codebase; Solargraph can't unify #fetch
-    #   across that union
     def default_assignee_gid
       @config.fetch(:default_assignee_gid)
     end
