@@ -112,11 +112,9 @@ module Checkoff
     #
     # @return [Hash{Symbol => Object}]
     def build_params(options)
-      { limit: options[:per_page], completed_since: options[:completed_since] }.reject do |_, v|
-        # @sg-ignore tool-limitation:hash-literal-value-inference
-        #   Unresolved call to nil? on Object — Solargraph doesn't infer a parametric
-        #   (key/value) type for this Hash literal from its entries, so the block's `v`
-        #   isn't resolved as a real type here.
+      # @type [Hash{Symbol => Object}]
+      params = { limit: options[:per_page], completed_since: options[:completed_since] }
+      params.reject do |_, v|
         v.nil? || Array(v).empty?
       end
     end
