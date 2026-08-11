@@ -293,26 +293,14 @@ module Checkoff
     # @param portfolio_name [String]
     # @param workspace_name [String]
     # @return [Boolean]
-    # @sg-ignore tool-limitation:generic-method-overloading
-    #   Declared return type ::Boolean does not match inferred type generic<T2> for
-    #   Checkoff::Tasks#in_portfolio_named?. This T.cast call passes T::Boolean as the
-    #   type argument, which is not a literal Class at runtime, so it falls outside the
-    #   literal-Class-argument shape our local T.cast override
-    #   (config/annotations_misc.rb) binds T2 against -- T2 stays unresolved instead of
-    #   binding to Boolean. Mistagged pr-1231 previously; not an intersection/record-Hash
-    #   gap. Adding an @overload for the T::Boolean shape was considered and rejected: it
-    #   doesn't dispatch by the runtime value of `type`, so it would union generic<T2>
-    #   and Boolean into every T.cast call site rather than just this shape, which is
-    #   worse than the current untyped-for-this-shape baseline (see this override's own
-    #   comment and the sg-ignore-audit skill notes on T.cast).
     def in_portfolio_named?(task,
                             portfolio_name,
                             workspace_name: T.must(@workspaces.default_workspace.name))
       portfolio_projects = @portfolios.projects_in_portfolio(workspace_name, portfolio_name)
-      T.cast(task.memberships.any? do |membership|
+      task.memberships.any? do |membership|
         project_gid = membership.fetch('project').fetch('gid')
         portfolio_projects.any? { |portfolio_project| portfolio_project.gid == project_gid }
-      end, T::Boolean)
+      end
     end
 
     # True if the task is in a project which is in the given portfolio
