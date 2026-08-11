@@ -37,8 +37,14 @@ local_file = File.join(repo_root, '.local-overcommit.yml')
 
 unless File.exist?(local_file)
   source = sibling_worktree_local_overcommit(repo_root)
-  # @sg-ignore tool-limitation:pr-1281
-  #   https://github.com/castwide/solargraph/pull/1281
+  # @sg-ignore tool-limitation:pr-1281-follow-on
+  #   https://github.com/castwide/solargraph/pull/1281 merged (branch 2026-08-04 @
+  #   4dae548) but does not clear this call: still "Wrong argument type for
+  #   FileUtils.ln_sf: src expected FileUtils::path, Array, received String".
+  #   Confirmed via strip-and-observe against the post-merge revision with a cleared
+  #   pin cache. This src param is FileUtils::pathlist (path | Array[path]), not the
+  #   dest param's plain FileUtils::path that #1281's repro targeted -- may be a
+  #   distinct alias-expansion gap, or a partial fix. Not yet re-filed.
   FileUtils.ln_sf(source, local_file) if source
 end
 
