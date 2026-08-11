@@ -95,7 +95,7 @@
 #         def tags; end
 #         # @param per_page [Integer] the number of records to fetch per page.
 #         # @param options [Hash] the request I/O options
-#         # @return [Enumerable<Asana::Resources::Story>]
+#         # @return [Asana::Resources::Collection<Asana::Resources::Story>]
 #         def stories(per_page: 20, options: {}); end
 #         class << self
 #           # @param client [Asana::Client]
@@ -130,7 +130,7 @@
 #       end
 #       class Portfolio
 #         # @param options [Hash] the request I/O options
-#         # @return [Enumerable<Asana::Resources::Project>]
+#         # @return [Asana::Resources::Collection<Asana::Resources::Project>]
 #         def get_items(options = {}); end
 #       end
 #     end
@@ -161,7 +161,7 @@
 #         # @param workspace_gid [String]  (required) Globally unique identifier for the workspace or organization.
 #         # @param options [Hash] the request I/O options
 #         #
-#         # @return [Enumerable<Asana::Resources::CustomField>]
+#         # @return [Asana::Resources::Collection<Asana::Resources::CustomField>]
 #         def get_custom_fields_for_workspace(workspace_gid: required("workspace_gid"), options: {}); end
 #       end
 #       class Tag
@@ -173,7 +173,7 @@
 #          # > limit - [int]  Results per page. The number of objects to return per page. The value must be between 1 and 100.
 #          # > opt_fields - [list[str]]  Defines fields to return. Some requests return *compact* representations of objects in order to conserve resources and complete the request more efficiently. Other times requests return more information than you may need. This option allows you to list the exact set of fields that the API should be sure to return for the objects. The field names should be provided as paths, described below. The id of included objects will always be returned, regardless of the field options.
 #          # > opt_pretty - [bool]  Provides “pretty” output. Provides the response in a “pretty” format. In the case of JSON this means doing proper line breaking and indentation to make it readable. This will take extra time and increase the response size so it is advisable only to use this during debugging.
-#          # @return [Enumerable<Asana::Resources::Tag>]
+#          # @return [Asana::Resources::Collection<Asana::Resources::Tag>]
 #          def get_tags_for_workspace(workspace_gid:, options: {}); end
 #       end
 #       class Task
@@ -185,7 +185,7 @@
 #         # > limit - [int]  Results per page. The number of objects to return per page. The value must be between 1 and 100.
 #         # > opt_fields - [list[str]]  Defines fields to return. Some requests return *compact* representations of objects in order to conserve resources and complete the request more efficiently. Other times requests return more information than you may need. This option allows you to list the exact set of fields that the API should be sure to return for the objects. The field names should be provided as paths, described below. The id of included objects will always be returned, regardless of the field options.
 #         # > opt_pretty - [bool]  Provides “pretty” output. Provides the response in a “pretty” format. In the case of JSON this means doing proper line breaking and indentation to make it readable. This will take extra time and increase the response size so it is advisable only to use this during debugging.
-#         # @return [Enumerable<Asana::Resources::Task>]
+#         # @return [Asana::Resources::Collection<Asana::Resources::Task>]
 #         def get_subtasks_for_task(task_gid: required("task_gid"), options: {}); end
 #         # Returns the complete task record for a single task.
 #         #
@@ -225,7 +225,7 @@
 #         # just because another object it is associated with (e.g. a subtask)
 #         # is modified. Actions that count as modifying the task include
 #         # assigning, renaming, completing, and adding stories.
-#         # @return [Enumerable<Asana::Resources::Task>]
+#         # @return [Asana::Resources::Collection<Asana::Resources::Task>]
 #         def find_all(assignee: nil, workspace: nil, project: nil, section: nil,
 #                      tag: nil, user_task_list: nil, completed_since: nil,
 #                      modified_since: nil, per_page: 20, options: {}); end
@@ -249,13 +249,13 @@
 #                       options: {}); end
 #       end
 #       class Workspace
-#         # @return [Enumerable<Asana::Resources::Workspace>]
+#         # @return [Asana::Resources::Collection<Asana::Resources::Workspace>]
 #         def find_all; end
 #       end
 #       class Section
 #         # @param project_gid [String]
 #         # @param options [Hash]
-#         # @return [Enumerable<Asana::Resources::Section>]
+#         # @return [Asana::Resources::Collection<Asana::Resources::Section>]
 #         def get_sections_for_project(project_gid:, options: {}); end
 #         # Returns the complete record for a single section.
 #         #
@@ -276,7 +276,7 @@
 #         #
 #         # @param per_page [Integer] the number of records to fetch per page.
 #         # @param options [Hash] the request I/O options.
-#         # @return [Enumerable<Asana::Resources::Project>]
+#         # @return [Asana::Resources::Collection<Asana::Resources::Project>]
 #         def find_by_workspace(workspace: required("workspace"), is_template: nil, archived: nil, per_page: 20, options: {}); end
 #         # Returns the complete project record for a single project.
 #         #
@@ -304,7 +304,7 @@
 #         # @param per_page [Integer] the number of records to fetch per page.
 #         # @param options [Hash] the request I/O options.
 #         #
-#         # @return [Enumerable<Asana::Resources::Portfolio>]
+#         # @return [Asana::Resources::Collection<Asana::Resources::Portfolio>]
 #         def find_all(workspace: required("workspace"), owner: required("owner"), per_page: 20, options: {}); end
 #         # Returns the complete record for a single portfolio.
 #         #
@@ -318,7 +318,7 @@
 #         # @param portfolio_gid [String]  (required) Globally unique identifier for the portfolio.
 #         # @param options [Hash] the request I/O options
 #         #
-#         # @return [Enumerable<Asana::Resources::Project>]
+#         # @return [Asana::Resources::Collection<Asana::Resources::Project>]
 #         def get_items_for_portfolio(portfolio_gid: required("portfolio_gid"), options: {}); end
 #       end
 #       class User
