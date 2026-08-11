@@ -139,8 +139,14 @@ module Checkoff
 
         # @param param_key [String]
         # @return [String]
-        # @sg-ignore tool-limitation:issue-1254
-        #   https://github.com/castwide/solargraph/issues/1254
+        # @sg-ignore tool-limitation:type-narrowing
+        #   Declared return type ::String does not match inferred type ::String, nil.
+        #   value[0] (Array#[], declared nilable) is guarded by `raise ... if value.length != 1`
+        #   just above, but Solargraph doesn't narrow Array#[] based on a length check. Mistagged
+        #   issue-1254 previously: confirmed via strip-and-observe this isn't a raise/return-nil-
+        #   guard-on-a-Hash narrowing gap (PR castwide/solargraph#1259, whose fix commit is
+        #   already an ancestor of our pinned fork revision, doesn't touch this). Not one of the
+        #   numbered issues on file (length-then-index guard shape, distinct from those).
         def get_single_param(param_key)
           raise "Expected #{param_key} to have at least one value" unless date_url_params.key? param_key
 
