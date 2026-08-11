@@ -79,8 +79,9 @@ class TestSections < BaseAsana
   # @return [void]
   def test_sections_or_raise_nil_project_name
     sections = get_test_object(Checkoff::Sections)
-    # @sg-ignore tool-limitation:issue-1265
-    #   Unresolved call to sections_or_raise
+    # @sg-ignore test-example
+    #   deliberately passing nil project_name (declared String, Symbol) to
+    #   exercise sections_or_raise's own runtime ArgumentError guard
     assert_raises(ArgumentError) { sections.sections_or_raise('Workspace 1', nil) }
   end
 
@@ -152,16 +153,18 @@ class TestSections < BaseAsana
   # @return [void]
   def test_tasks_by_section_nil_workspace_name
     sections = get_test_object(Checkoff::Sections)
-    # @sg-ignore tool-limitation:issue-1265
-    #   Unresolved call to tasks_by_section
+    # @sg-ignore test-example
+    #   deliberately passing nil workspace_name (declared String, Symbol) to
+    #   exercise tasks_by_section's own runtime ArgumentError guard
     assert_raises(ArgumentError) { sections.tasks_by_section(nil, :my_tasks) }
   end
 
   # @return [void]
   def test_tasks_by_section_nil_project_name
     sections = get_test_object(Checkoff::Sections)
-    # @sg-ignore tool-limitation:issue-1265
-    #   Unresolved call to tasks_by_section
+    # @sg-ignore test-example
+    #   deliberately passing nil project_name (declared String, Symbol) to
+    #   exercise tasks_by_section's own runtime ArgumentError guard
     assert_raises(ArgumentError) { sections.tasks_by_section('Workspace 1', nil) }
   end
 

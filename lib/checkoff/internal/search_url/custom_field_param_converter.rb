@@ -68,8 +68,15 @@ module Checkoff
           # @type [Class<CustomFieldVariant>, nil]
           variant_class = VARIANTS[variant[0]]
           # @type [Array(Hash{String => String}, Array<Symbol, Array>)]
-          # @sg-ignore tool-limitation:issue-1254
-          #   https://github.com/castwide/solargraph/issues/1254
+          # @sg-ignore tool-limitation:generic-class-new-dispatch
+          #   Unresolved call to new on Class<Checkoff::Internal::SearchUrl::CustomFieldVariant>.
+          #   variant_class is Class<CustomFieldVariant>, nil, narrowed to non-nil by the
+          #   `unless variant_class.nil?` guard on this same statement, but .new dispatch on a
+          #   Class<T>-typed variable isn't resolved regardless -- same root cause as
+          #   test/unit/class_test.rb's create_object. Mistagged issue-1254 previously:
+          #   confirmed via strip-and-observe this isn't a raise/return-nil-guard-on-a-Hash
+          #   narrowing gap (PR castwide/solargraph#1259, whose fix commit is already an
+          #   ancestor of our pinned fork revision, doesn't touch this).
           return variant_class.new(gid, remaining_params).convert unless variant_class.nil?
 
           raise "Teach me how to handle #{variant_key} = #{variant}"
