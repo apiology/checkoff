@@ -238,7 +238,7 @@
 #         # @param modified_since [Time]
 #         # @param section [String]
 #         # @param options [Hash] the request I/O options.
-#         # @return [Enumerable<Asana::Resources::Task>]
+#         # @return [Asana::Resources::Collection<Asana::Resources::Task>]
 #         def get_tasks(assignee: nil,
 #                       project: nil,
 #                       section: nil,
@@ -328,6 +328,13 @@
 #         #
 #         # @return [Asana::Resources::User]
 #         def me(options: {}); end
+#       end
+#     end
+#     module Resources
+#       # @generic T
+#       class Collection
+#         # @return [generic<T>, nil]
+#         def last; end
 #       end
 #     end
 #   end
