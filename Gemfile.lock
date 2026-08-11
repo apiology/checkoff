@@ -22,10 +22,10 @@ GIT
 
 GIT
   remote: https://github.com/apiology/solargraph.git
-  revision: 82f464e0edff9e9181607cb48c0427c4fd48e6aa
+  revision: 71f16f832d6ee1790c3db0f868ff0335502438da
   branch: 2026-08-04
   specs:
-    solargraph (0.0.1.dev.pre.82f464e0edff9e9181607cb48c0427c4fd48e6aa)
+    solargraph (0.0.1.dev.pre.71f16f832d6ee1790c3db0f868ff0335502438da)
       ast (~> 2.4.3)
       backport (~> 1.2)
       benchmark (~> 0.4)
@@ -271,7 +271,7 @@ GEM
     rbi (0.3.15)
       prism (~> 1.0)
       rbs (>= 4.0.1)
-    rbs (4.1.2)
+    rbs (4.1.3)
       logger
       prism (>= 1.6.0)
       tsort
@@ -354,15 +354,15 @@ GEM
     snaky_hash (2.0.6)
       hashie (>= 0.1.0, < 6)
       version_gem (>= 1.1.8, < 3)
-    sorbet (0.6.13420)
-      sorbet-static (= 0.6.13420)
-    sorbet-runtime (0.6.13420)
-    sorbet-static (0.6.13420-aarch64-linux)
-    sorbet-static (0.6.13420-universal-darwin)
-    sorbet-static (0.6.13420-x86_64-linux)
-    sorbet-static-and-runtime (0.6.13420)
-      sorbet (= 0.6.13420)
-      sorbet-runtime (= 0.6.13420)
+    sorbet (0.6.13421)
+      sorbet-static (= 0.6.13421)
+    sorbet-runtime (0.6.13421)
+    sorbet-static (0.6.13421-aarch64-linux)
+    sorbet-static (0.6.13421-universal-darwin)
+    sorbet-static (0.6.13421-x86_64-linux)
+    sorbet-static-and-runtime (0.6.13421)
+      sorbet (= 0.6.13421)
+      sorbet-runtime (= 0.6.13421)
     source_finder (3.2.1)
     spoom (1.8.4)
       erubi (>= 1.10.0)
@@ -570,7 +570,7 @@ CHECKSUMS
   rainbow (3.1.1) sha256=039491aa3a89f42efa1d6dec2fc4e62ede96eb6acd95e52f1ad581182b79bc6a
   rake (13.4.2) sha256=cb825b2bd5f1f8e91ca37bddb4b9aaf345551b4731da62949be002fa89283701
   rbi (0.3.15) sha256=21b00dee9c9237d81521b1425079325a2ae4eb3e8cd2a861350b597e63d0efd7
-  rbs (4.1.2) sha256=050eb1d8b508f1233bed929c0f2c7052302f7adf295230d9cb314e9024078f48
+  rbs (4.1.3) sha256=0c4474a9751cdc14364bfad0b3e53678323bbdc2c31683b0445932867dbab8c4
   rdoc (7.2.0) sha256=8650f76cd4009c3b54955eb5d7e3a075c60a57276766ebf36f9085e8c9f23192
   regexp_parser (2.12.0) sha256=35a916a1d63190ab5c9009457136ae5f3c0c7512d60291d0d1378ba18ce08ebb
   reline (0.6.3) sha256=1198b04973565b36ec0f11542ab3f5cfeeec34823f4e54cebde90968092b1835
@@ -604,13 +604,13 @@ CHECKSUMS
   simplecov-lcov (0.9.0) sha256=7a77a31e200a595ed4b0249493056efd0c920601f53d2ef135ca34ee796346cd
   simplecov_json_formatter (0.1.4) sha256=529418fbe8de1713ac2b2d612aa3daa56d316975d307244399fa4838c601b428
   snaky_hash (2.0.6) sha256=3663cae48cdef582b517025cf8a39d8789996eaf0b4ed89e2f0624836505654a
-  solargraph (0.0.1.dev.pre.82f464e0edff9e9181607cb48c0427c4fd48e6aa)
-  sorbet (0.6.13420) sha256=ee64aba80a2201d3785c09719f81a83d73ca69bfecba01d826d68ad3cae896e1
-  sorbet-runtime (0.6.13420) sha256=5ecbb843cdc17a55c2a35b98c9bd090736c897e53735f888590b361dd0cad492
-  sorbet-static (0.6.13420-aarch64-linux) sha256=656a6e2e89e43de23042a6a4092a919ffeb34500f97c36ac52043b154eb18392
-  sorbet-static (0.6.13420-universal-darwin) sha256=ca0a4033f4d06f121c7cc25467ae72b93946d3aeb1e0d2e96e6cbc1ded182fc6
-  sorbet-static (0.6.13420-x86_64-linux) sha256=21afb0a65df53be4e6898add0b864c23a2c80094dfd92055aa5407a89fda5ea0
-  sorbet-static-and-runtime (0.6.13420) sha256=4e6bbd369c246e7906f9df738f11ca65fa26d242fc1eff89dbe3dda9bdee883b
+  solargraph (0.0.1.dev.pre.71f16f832d6ee1790c3db0f868ff0335502438da)
+  sorbet (0.6.13421) sha256=a956c827aca2e4b2d78a8709bc9fa1f7affe12bfc88c2ebd070f40375bd935c7
+  sorbet-runtime (0.6.13421) sha256=a19fac29c0f9dde55ab203ddc57c0e6f68d644ef951e09f41a092cc64cce5262
+  sorbet-static (0.6.13421-aarch64-linux) sha256=c19fefe0e368bde381142054d95d3cd3f03be017739d43d1d2f884b46bd0225b
+  sorbet-static (0.6.13421-universal-darwin) sha256=747c2a95a6bea7788b997f9dff36cb8d5d0f2ec1e12880977d3a14f2958edcee
+  sorbet-static (0.6.13421-x86_64-linux) sha256=e0037b9ae47a6d0932ac1eb8dcae8df125923f59921ccbbc163a16da1638e1b0
+  sorbet-static-and-runtime (0.6.13421) sha256=33250bab4eba3c495e57898406617bb2392c369cd5d696a36ab710db79d79469
   sord (7.0.0)
   source_finder (3.2.1) sha256=7c9bf6f108e7e895940989f089e4d9011c175ec9da203d5de5f56402a73bfb0b
   spoom (1.8.4) sha256=7283c94a7bbfdfe8764af9027cee2929ef6e1a14271f285e6924e896ca52e880
