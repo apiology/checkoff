@@ -18,12 +18,11 @@ Metrics/AbcSize:
     - 'test/unit/test_tasks.rb'
     - 'test/unit/test_timelines.rb'
 
-# Offense count: 9
+# Offense count: 8
 # Configuration parameters: CountComments, Max, CountAsOne.
 Metrics/ClassLength:
   Exclude:
     - 'lib/checkoff/attachments.rb'
-    - 'lib/checkoff/custom_fields.rb'
     - 'lib/checkoff/projects.rb'
     - 'lib/checkoff/sections.rb'
     - 'lib/checkoff/tasks.rb'
