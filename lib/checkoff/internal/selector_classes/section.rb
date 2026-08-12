@@ -18,8 +18,6 @@ module Checkoff
         # @param section [Asana::Resources::Section]
         #
         # @return [Boolean]
-        # @sg-ignore tool-limitation:issue-1286
-        #   https://github.com/castwide/solargraph/issues/1286
         def evaluate(section)
           tasks = client.tasks.get_tasks(section: section.gid,
                                          per_page: 100,
