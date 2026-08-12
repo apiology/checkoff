@@ -109,10 +109,7 @@ module Checkoff
         # @type [Enumerable<Asana::Resources::Project>]
         ps = projects_by_workspace_name(workspace_name, extra_fields:)
         # @type [Asana::Resources::Project,nil]
-        # @sg-ignore tool-limitation:block-param-inference
-        #   Variable type could not be inferred / Unresolved call to _1 — Solargraph doesn't
-        #   fully support numbered block parameters
-        project = ps.find { _1.name == project_name }
+        project = ps.find { |p| p.name == project_name }
         project_by_gid(project.gid, extra_fields:) unless project.nil?
       end
     end

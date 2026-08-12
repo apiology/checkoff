@@ -15,4 +15,14 @@ class TestDateParamConverter < Minitest::Test
     e = assert_raises(RuntimeError) { converter.send(:ensure_matched!, nil) }
     assert_match(/no date param matched a known prefix/, e.message)
   end
+
+  # @return [void]
+  def test_get_single_param_raises_on_nil_value
+    converter = Checkoff::Internal::SearchUrl::DateParamConverter.new(date_url_params: { 'key' => [nil] })
+
+    # value[0] is declared nilable by RBS even though a real caller can't
+    # construct this via the public API; this exercises the guard directly.
+    e = assert_raises(RuntimeError) { converter.send(:get_single_param, 'key') }
+    assert_match(/key to have a non-nil value/, e.message)
+  end
 end

@@ -78,27 +78,12 @@ module Checkoff
     # @param resource [Asana::Resources::Project,Asana::Resources::Task]
     # @param custom_field_name [String]
     # @return [Array<String>]
-    # @sg-ignore tool-limitation:pr-1231-follow-on
-    #   Declared return type Array<String> does not match inferred type Array,
-    #   Array<Array, Array<String>> -- downstream propagation of the same gap as
-    #   resource_custom_field_enum_values below. That method's @return is now the
-    #   intersection-of-single-key-Hashes form (Hash{'gid'=>String} & Hash{'name'=>String}),
-    #   which https://github.com/castwide/solargraph/pull/1231 already provides (present in
-    #   our pinned fork revision), but per-key dispatch on #fetch against an intersection
-    #   type is not yet implemented (see that method's own sg-ignore), so flat_map's
-    #   enum_value element still resolves .fetch('name') against the union of both
-    #   intersection members rather than String alone. Confirmed still failing via
-    #   strip-and-observe against the current pinned revision.
     def resource_custom_field_values_names_by_name(resource, custom_field_name)
       custom_field = resource_custom_field_by_name(resource, custom_field_name)
       return [] if custom_field.nil?
 
       resource_custom_field_enum_values(custom_field).flat_map do |enum_value|
-        if enum_value.nil?
-          []
-        else
-          [enum_value.fetch('name')]
-        end
+        [enum_value.fetch('name')]
       end
     end
 
@@ -151,23 +136,10 @@ module Checkoff
     private
 
     # rubocop:disable Layout/LineLength, YARD/TagTypeSyntax
-    # @param custom_field [Hash{'resource_subtype' => String} & Hash{'enum_value' => Hash} & Hash{'multi_enum_values' => Array<Hash>}]
+    # @param custom_field [Hash{"resource_subtype" => String} & Hash{"enum_value" => Hash} & Hash{"multi_enum_values" => Array<Hash>}]
     #
-    # @return [Array<Hash{'gid' => String} & Hash{'name' => String}>]
+    # @return [Array<Hash{"gid" => String} & Hash{"name" => String}>]
     # rubocop:enable Layout/LineLength, YARD/TagTypeSyntax
-    # @sg-ignore tool-limitation:pr-1231-follow-on
-    #   YARD has no Record<K,V>-style syntax for per-literal-key Hash value types, so
-    #   custom_field is annotated with the intersection-of-single-key-Hashes syntax
-    #   (Hash{'k1'=>T1} & Hash{'k2'=>T2} & ...) that
-    #   https://github.com/castwide/solargraph/pull/1231 already provides (present in our
-    #   pinned fork revision). Per-key dispatch on #fetch against an intersection type is
-    #   not yet implemented: it unions all intersection members' value types into every
-    #   #fetch call instead, so fetch('resource_subtype') now also returns Hash|Array<Hash>,
-    #   and the enum_value/multi_enum_values branches infer against that flat union rather
-    #   than their own narrower type -- declared return type Array<Hash> vs inferred
-    #   Array<String,Hash,Array<Hash>>,String,Hash,Array<Hash>. Confirmed still failing via
-    #   strip-and-observe against the current pinned revision; not issue-1232 (no RBS
-    #   interface-typed param involved).
     def resource_custom_field_enum_values(custom_field)
       resource_subtype = custom_field.fetch('resource_subtype')
       case resource_subtype

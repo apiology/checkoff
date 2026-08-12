@@ -105,8 +105,6 @@ module Checkoff
           # Example value: 1702857600000
           # +1 is because API seems to operate on inclusive ranges
           # @type [Date]
-          # @sg-ignore tool-limitation:issue-1250
-          #   https://github.com/castwide/solargraph/issues/1250
           after = Time.at(after.to_i / 1000).to_date + 1
           [{ "#{API_PREFIX.fetch(prefix)}.after" => after.to_s }, []]
         end
@@ -139,14 +137,6 @@ module Checkoff
 
         # @param param_key [String]
         # @return [String]
-        # @sg-ignore tool-limitation:type-narrowing
-        #   Declared return type ::String does not match inferred type ::String, nil.
-        #   value[0] (Array#[], declared nilable) is guarded by `raise ... if value.length != 1`
-        #   just above, but Solargraph doesn't narrow Array#[] based on a length check. Mistagged
-        #   issue-1254 previously: confirmed via strip-and-observe this isn't a raise/return-nil-
-        #   guard-on-a-Hash narrowing gap (PR castwide/solargraph#1259, whose fix commit is
-        #   already an ancestor of our pinned fork revision, doesn't touch this). Not one of the
-        #   numbered issues on file (length-then-index guard shape, distinct from those).
         def get_single_param(param_key)
           raise "Expected #{param_key} to have at least one value" unless date_url_params.key? param_key
 
@@ -154,7 +144,10 @@ module Checkoff
 
           raise "Expected #{param_key} to have one value" if value.length != 1
 
-          value[0]
+          single_value = value[0]
+          raise "Expected #{param_key} to have a non-nil value" if single_value.nil?
+
+          single_value
         end
 
         # @param prefix [String]
