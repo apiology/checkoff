@@ -105,14 +105,6 @@ module Checkoff
           # Example value: 1702857600000
           # +1 is because API seems to operate on inclusive ranges
           # @type [Date]
-          # @sg-ignore tool-limitation:pr-1282-follow-on
-          #   https://github.com/castwide/solargraph/pull/1282
-          #   Regression from #1282: self-reassignment (after = f(after)) leaks the new
-          #   post-assignment type back into the RHS's own reference to the old value --
-          #   after.to_i here resolves against Date (the value being assigned) instead of
-          #   the pre-assignment String. Reproduces with no @type tag at all, just plain
-          #   inference; bisected clean at 368b3e0a (before #1282), reproduces at b6eea57c
-          #   (#1282 merged). Commented on #1282, still open.
           after = Time.at(after.to_i / 1000).to_date + 1
           [{ "#{API_PREFIX.fetch(prefix)}.after" => after.to_s }, []]
         end
