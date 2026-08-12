@@ -15,6 +15,13 @@ module Checkoff
             @remaining_params = T.let(remaining_params, T::Hash[String, T::Array[String]])
           end
 
+          # Implemented by every subclass.
+          #
+          # @return [Array(Hash{String => String}, Array<Symbol, Array>)]
+          def convert
+            raise NotImplementedError
+          end
+
           private
 
           # @return [String]
