@@ -101,19 +101,13 @@ class TestAttachments < ClassTest
   end
 
   # @return [String]
-  # @sg-ignore tool-limitation:gvar-reassignment-not-tracked
-  #   TestAttachments#capture_attachments_run return type could not be inferred.
-  #   Reassigning a $-prefixed global to a new type is never tracked at all -- unlike an
-  #   equivalent local var or ivar reassignment (both work fine), $stdout's new StringIO
-  #   type never applies to the reassigned global, so $stdout.string below can't resolve
-  #   either. Related to but distinct from castwide/solargraph#663 (that one is about
-  #   reading a predefined global never assigned in the file at all, not a
-  #   reassignment-tracking gap). Not filed upstream.
+  # @sg-ignore tool-limitation:pr-1282-follow-on
+  #   https://github.com/castwide/solargraph/pull/1282#issuecomment-5272732583
   def capture_attachments_run
     old_stdout = $stdout
     $stdout = StringIO.new
     Checkoff::Attachments.run
-    # @sg-ignore tool-limitation:gvar-reassignment-not-tracked
+    # @sg-ignore tool-limitation:pr-1282-follow-on
     #   Same cause as this method's own sg-ignore above.
     $stdout.string
   ensure

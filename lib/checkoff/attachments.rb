@@ -87,9 +87,8 @@ module Checkoff
       out = nil
       host = uri.host || raise("URI has no host: #{uri}")
       Net::HTTP.start(host, uri.port, use_ssl: uri.scheme == 'https', verify_mode:) do |http|
-        # @sg-ignore tool-limitation:generic-block-yield-overload
-        #   Unresolved call to request -- Net::HTTP.start's generic block-form overload
-        #   doesn't bind T, so the yielded http param stays untyped. Not yet filed upstream.
+        # @sg-ignore tool-limitation:pr-1290
+        #   https://github.com/castwide/solargraph/pull/1290
         http.request(Net::HTTP::Get.new(uri)) do |response|
           raise("Unexpected response code: #{response.code}") unless response.code == '200'
 
