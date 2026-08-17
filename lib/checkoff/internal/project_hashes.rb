@@ -27,7 +27,7 @@ module Checkoff
       # @param project_hash [Hash]
       # @return [void]
       def unwrap_custom_fields(project_hash)
-        # @type [Array<Hash>,nil]
+        # @type [Array<Hash{String => Object}>,nil]
         custom_fields = project_hash['custom_fields']
 
         return if custom_fields.nil?
