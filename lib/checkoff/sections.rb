@@ -14,10 +14,15 @@ module Checkoff
     # @!parse
     #   extend CacheMethod::ClassMethods
 
+    # @return [Integer]
     MINUTE = 60
+    # @return [Integer]
     HOUR = MINUTE * 60
+    # @return [Integer]
     REALLY_LONG_CACHE_TIME = MINUTE * 30
+    # @return [Integer]
     LONG_CACHE_TIME = MINUTE * 15
+    # @return [Integer]
     SHORT_CACHE_TIME = MINUTE * 5
 
     extend Forwardable

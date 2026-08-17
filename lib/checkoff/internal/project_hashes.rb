@@ -10,7 +10,8 @@ module Checkoff
       def initialize(_deps = {}); end
 
       # @param project_obj [Asana::Resources::Project]
-      # @param project [String, Symbol] - :not_specified, :my_tasks
+      # @param project [String, :not_specified, :my_tasks, nil] - a String is a
+      #   project name
       #
       # @return [Hash]
       def project_to_h(project_obj, project: :not_specified)
@@ -27,7 +28,7 @@ module Checkoff
       # @return [void]
       def unwrap_custom_fields(project_hash)
         # @type [Array<Hash>,nil]
-        custom_fields = project_hash.fetch('custom_fields', nil)
+        custom_fields = project_hash['custom_fields']
 
         return if custom_fields.nil?
 
