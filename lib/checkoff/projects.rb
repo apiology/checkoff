@@ -72,6 +72,12 @@ module Checkoff
 
     # Default options used in Asana API to pull tasks
     #
+    # Keys are :per_page (Integer), :options (a Hash whose :fields is an
+    # Array<String>) and, when only_uncompleted is set, :completed_since
+    # (String). The value type is genuinely per-key, which a single YARD
+    # Hash value type cannot express.
+    # Callers who want the field list should call #task_fields directly.
+    #
     # @param extra_fields [Array<String>]
     # @param [Boolean] only_uncompleted
     #
@@ -206,7 +212,7 @@ module Checkoff
     # @param project [String, :not_specified, :my_tasks, nil] - a String is a
     #   project name
     #
-    # @return [Hash]
+    # @return [Hash{String => Object}]
     def project_to_h(project_obj, project: :not_specified)
       project_hashes.project_to_h(project_obj, project:)
     end

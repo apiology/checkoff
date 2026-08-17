@@ -13,7 +13,7 @@ module Checkoff
       # @param project [String, :not_specified, :my_tasks, nil] - a String is a
       #   project name
       #
-      # @return [Hash]
+      # @return [Hash{String => Object}]
       def project_to_h(project_obj, project: :not_specified)
         project = project_obj.name if project == :not_specified
         project_hash = { **project_obj.to_h, 'project' => project }
