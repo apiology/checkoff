@@ -9,7 +9,7 @@ module Checkoff
       # @param task [Asana::Resources::Task]
       # @return [Hash]
       def task_to_h(task)
-        # @type [Hash]
+        # @type [Hash{String => Object}]
         task_hash = task.to_h
         task_hash['unwrapped'] = {}
         unwrap_custom_fields(task_hash)
@@ -18,7 +18,7 @@ module Checkoff
         task_hash
       end
 
-      # @param task_data [Hash]
+      # @param task_data [Hash{String => Object}]
       # @param client [Asana::Client]
       #
       # @return [Asana::Resources::Task]
@@ -34,7 +34,7 @@ module Checkoff
       # @param task_hash [Hash]
       # @return [void]
       def unwrap_custom_fields(task_hash)
-        # @type [Array<Hash>,nil]
+        # @type [Array<Hash{String => Object}>,nil]
         custom_fields = task_hash.fetch('custom_fields', nil)
 
         return if custom_fields.nil?
@@ -64,7 +64,7 @@ module Checkoff
       end
 
       # @param task_hash [Hash{String => String, Hash, Array}]
-      # @return [Hash]
+      # @return [Hash{String => Object}]
       def assignee_hash(task_hash)
         assignee = task_hash.fetch('assignee')
         raise "Expected assignee to be a Hash, got #{assignee.class}" unless assignee.is_a?(Hash)
@@ -72,24 +72,24 @@ module Checkoff
         assignee
       end
 
-      # @param task_hash [Hash]
+      # @param task_hash [Hash{String => Object}]
       # @param resource [String]
       # @param memberships [Array<Hash>]
       # @param key [String]
       #
       # @return [void]
       def unwrap_memberships(task_hash, memberships, resource, key)
-        # @type [Hash]
+        # @type [Hash{String => Object}]
         unwrapped = task_hash.fetch('unwrapped')
         unwrapped["membership_by_#{resource}_#{key}"] = memberships.group_by do |membership|
           membership[resource][key]
         end.transform_values(&:first)
       end
 
-      # @param task_hash [Hash]
+      # @param task_hash [Hash{String => Object}]
       # @return [void]
       def unwrap_all_memberships(task_hash)
-        # @type [Array<Hash>]
+        # @type [Array<Hash{String => Object}>]
         memberships = task_hash.fetch('memberships', []).dup
         add_user_task_list(task_hash, memberships)
         unwrap_memberships(task_hash, memberships, 'section', 'gid')

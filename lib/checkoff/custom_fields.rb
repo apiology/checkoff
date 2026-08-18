@@ -89,21 +89,21 @@ module Checkoff
 
     # @param resource [Asana::Resources::Task,Asana::Resources::Project]
     # @param custom_field_name [String]
-    # @return [Hash, nil]
+    # @return [Hash{String => Object}, nil]
     def resource_custom_field_by_name(resource, custom_field_name)
-      # @type [Array<Hash>]
+      # @type [Array<Hash{String => Object}>]
       custom_fields = resource.custom_fields
       if custom_fields.nil?
         raise "custom fields not found on resource - did you add 'custom_fields' in your extra_fields argument?"
       end
 
-      # @type [Hash, nil]
+      # @type [Hash{String => Object}, nil]
       custom_fields.find { |field| field.fetch('name') == custom_field_name }
     end
 
     # @param resource [Asana::Resources::Task,Asana::Resources::Project]
     # @param custom_field_name [String]
-    # @return [Hash]
+    # @return [Hash{String => Object}]
     def resource_custom_field_by_name_or_raise(resource, custom_field_name)
       custom_field = resource_custom_field_by_name(resource, custom_field_name)
       if custom_field.nil?
@@ -115,15 +115,15 @@ module Checkoff
 
     # @param resource [Asana::Resources::Project,Asana::Resources::Task]
     # @param custom_field_gid [String]
-    # @return [Hash]
+    # @return [Hash{String => Object}]
     def resource_custom_field_by_gid_or_raise(resource, custom_field_gid)
-      # @type [Array<Hash>]
+      # @type [Array<Hash{String => Object}>]
       custom_fields = resource.custom_fields
       if custom_fields.nil?
         raise "Could not find custom_fields under project (was 'custom_fields' included in 'extra_fields'?)"
       end
 
-      # @type [Hash, nil]
+      # @type [Hash{String => Object}, nil]
       matched_custom_field = custom_fields.find { |data| data.fetch('gid') == custom_field_gid }
       if matched_custom_field.nil?
         raise "Could not find custom field with gid #{custom_field_gid} " \
@@ -152,7 +152,7 @@ module Checkoff
       end
     end
 
-    # @param custom_field [Hash]
+    # @param custom_field [Hash{String => Object}]
     # @param enum_value [Hash{String => String}, nil]
     # @return [Array<String>]
     def find_gids(custom_field, enum_value)

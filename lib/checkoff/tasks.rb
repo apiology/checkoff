@@ -280,7 +280,7 @@ module Checkoff
       task_hashes.task_to_h(task)
     end
 
-    # @param task_data [Hash]
+    # @param task_data [Hash{String => Object}]
     #
     # @return [Asana::Resources::Task]
     def h_to_task(task_data)

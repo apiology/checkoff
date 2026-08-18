@@ -22,12 +22,19 @@ require 'asana'
 module Checkoff
   # Work with projects in Asana
   class Projects
+    # @return [Integer]
     MINUTE = 60
+    # @return [Integer]
     HOUR = MINUTE * 60
+    # @return [Integer]
     DAY = 24 * HOUR
+    # @return [Integer]
     REALLY_LONG_CACHE_TIME = MINUTE * 30
+    # @return [Integer]
     LONG_CACHE_TIME = MINUTE * 15
+    # @return [Integer]
     MEDIUM_CACHE_TIME = MINUTE * 5
+    # @return [Integer]
     SHORT_CACHE_TIME = MINUTE
 
     # @!parse
@@ -64,6 +71,12 @@ module Checkoff
     end
 
     # Default options used in Asana API to pull tasks
+    #
+    # Keys are :per_page (Integer), :options (a Hash whose :fields is an
+    # Array<String>) and, when only_uncompleted is set, :completed_since
+    # (String). The value type is genuinely per-key, which a single YARD
+    # Hash value type cannot express.
+    # Callers who want the field list should call #task_fields directly.
     #
     # @param extra_fields [Array<String>]
     # @param [Boolean] only_uncompleted
@@ -196,9 +209,10 @@ module Checkoff
     cache_method :projects_by_workspace_name, REALLY_LONG_CACHE_TIME
 
     # @param project_obj [Asana::Resources::Project]
-    # @param project [String, Symbol] - :not_specified, :my_tasks or a project name
+    # @param project [String, :not_specified, :my_tasks, nil] - a String is a
+    #   project name
     #
-    # @return [Hash]
+    # @return [Hash{String => Object}]
     def project_to_h(project_obj, project: :not_specified)
       project_hashes.project_to_h(project_obj, project:)
     end

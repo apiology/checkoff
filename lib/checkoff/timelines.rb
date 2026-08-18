@@ -152,7 +152,7 @@ module Checkoff
 
     private
 
-    # @param task_data [Hash]
+    # @param task_data [Hash{String => Object}]
     # @param section [Asana::Resources::Section]
     #
     # @return [Boolean]

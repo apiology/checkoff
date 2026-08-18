@@ -52,7 +52,7 @@ module Checkoff
 
       private
 
-      # @param filter [Hash]
+      # @param filter [Hash{String => String, Array<String>}]
       # @param asana_event [Hash]
       # @param failures [Array<String>]
       #

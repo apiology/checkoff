@@ -20,19 +20,19 @@ module Asana
     # Public: The base resource class which provides some sugar over common
     # resource functionality.
     class Resource
-      # @return [Hash]
+      # @return [Hash{String => Object}]
       def marshal_dump
         { 'data' => @_data,
           'client' => @_client }
       end
 
-      # @param data [Hash]
+      # @param data [Hash{String => Object}]
       #
       # @return [void]
       def marshal_load(data)
         # @type [Asana::Client]
         @_client = data.fetch('client')
-        # @type [Hash]
+        # @type [Hash{String => Object}]
         @_data = data.fetch('data')
         @_data.each do |k, v|
           if respond_to?(k)

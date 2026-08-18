@@ -72,7 +72,7 @@ module Checkoff
     def subtasks_by_gid(task_gid,
                         extra_fields: [],
                         only_uncompleted: true)
-      # @type [Hash]
+      # @type [Hash{Symbol => undefined}]
       all_options = projects.task_options(extra_fields: extra_fields + %w[is_rendered_as_separator],
                                           only_uncompleted:)
       options = all_options.fetch(:options, {})
