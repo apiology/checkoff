@@ -9,11 +9,32 @@ module Checkoff
       # @param _deps [Hash]
       def initialize(_deps = {}); end
 
+      # The two custom_fields entries below hold the same records: the top-level
+      # array is what Asana returns, and unwrapped re-keys those records by name.
+      #
       # @param project_obj [Asana::Resources::Project]
       # @param project [String, :not_specified, :my_tasks, nil] - a String is a
       #   project name
       #
-      # @return [Hash{String => Object}]
+      # @return [Hash{"project" => String, Symbol, nil} &
+      #   Hash{"gid" => String} &
+      #   Hash{"name" => String} &
+      #   Hash{"custom_fields" => Array<
+      #     Hash{"gid" => String} &
+      #     Hash{"name" => String} &
+      #     Hash{"display_value" => String, nil} &
+      #     Hash{"number_value" => Float, Integer, nil} &
+      #     Hash{"text_value" => String, nil} &
+      #     Hash{"enum_value" => Hash{String => String}, nil}
+      #   >, nil} &
+      #   Hash{"unwrapped" => Hash{"custom_fields" => Hash{String =>
+      #     Hash{"gid" => String} &
+      #     Hash{"name" => String} &
+      #     Hash{"display_value" => String, nil} &
+      #     Hash{"number_value" => Float, Integer, nil} &
+      #     Hash{"text_value" => String, nil} &
+      #     Hash{"enum_value" => Hash{String => String}, nil}
+      #   }}}]
       def project_to_h(project_obj, project: :not_specified)
         project = project_obj.name if project == :not_specified
         project_hash = { **project_obj.to_h, 'project' => project }

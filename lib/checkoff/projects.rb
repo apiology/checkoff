@@ -212,7 +212,7 @@ module Checkoff
     # @param project [String, :not_specified, :my_tasks, nil] - a String is a
     #   project name
     #
-    # @return [Hash{String => Object}]
+    # @return (see Checkoff::Internal::ProjectHashes#project_to_h)
     def project_to_h(project_obj, project: :not_specified)
       project_hashes.project_to_h(project_obj, project:)
     end
