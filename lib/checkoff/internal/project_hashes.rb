@@ -9,11 +9,12 @@ module Checkoff
       # @param _deps [Hash]
       def initialize(_deps = {}); end
 
+      # The two custom_fields entries below hold the same records: the top-level
+      # array is what Asana returns, and unwrapped re-keys those records by name.
+      #
       # @param project_obj [Asana::Resources::Project]
       # @param project [String, :not_specified, :my_tasks, nil] - a String is a
       #   project name
-      # The two custom_fields entries below hold the same records: the top-level
-      # array is what Asana returns, and unwrapped re-keys those records by name.
       #
       # @return [Hash{"unwrapped" => Hash{"custom_fields" => Hash{String =>
       #   Hash{"gid" => String} & Hash{"name" => String} &
