@@ -13,7 +13,12 @@ module Checkoff
       # @param project [String, :not_specified, :my_tasks, nil] - a String is a
       #   project name
       #
-      # @return [Hash{String => Object}]
+      # @return [Hash{"unwrapped" => Hash{"custom_fields" => Hash{String =>
+      #   Hash{"gid" => String} & Hash{"name" => String} &
+      #   Hash{"display_value" => String, nil} & Hash{"number_value" => Float, Integer, nil} &
+      #   Hash{"text_value" => String, nil} & Hash{"enum_value" => Hash{String => String}, nil}}}} &
+      #   Hash{"project" => String, Symbol, nil} & Hash{"gid" => String} &
+      #   Hash{"name" => String} & Hash{"custom_fields" => Array<Hash{String => Object}>, nil}]
       def project_to_h(project_obj, project: :not_specified)
         project = project_obj.name if project == :not_specified
         project_hash = { **project_obj.to_h, 'project' => project }
