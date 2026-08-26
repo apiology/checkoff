@@ -262,20 +262,9 @@ module Checkoff
       dependent_tasks
     end
 
-    # Builds on the standard API representation of an Asana task with some
-    # convenience keys:
-    #
-    # <regular keys from API response>
-    # +
-    # unwrapped:
-    #  membership_by_section_gid: Hash{String => Hash (membership)>
-    #  membership_by_project_gid: Hash{String => Hash (membership)>
-    #  membership_by_project_name: Hash{String => Hash (membership)>
-    # task: String (name)
-    #
     # @param task [Asana::Resources::Task]
     #
-    # @return [Hash]
+    # @return (see Checkoff::Internal::TaskHashes#task_to_h)
     def task_to_h(task)
       task_hashes.task_to_h(task)
     end

@@ -21,9 +21,7 @@ module Checkoff
         # @param task [Asana::Resources::Task]
         # @return [Boolean]
         def evaluate(task)
-          # @type [Hash{'unwrapped' => Hash}]
           task_data = tasks.task_to_h(task)
-          # @type [Hash{'membership_by_project_name' => Hash}]
           unwrapped = task_data.fetch('unwrapped')
           # @type [Array]
           projects = unwrapped.fetch('membership_by_project_name').keys
@@ -46,9 +44,7 @@ module Checkoff
         # @param section_name_prefix [String]
         # @return [Boolean]
         def evaluate(task, section_name_prefix)
-          # @type [Hash{'unwrapped' => Hash}]
           task_data = tasks.task_to_h(task)
-          # @type [Hash{'membership_by_section_name' => Hash}]
           unwrapped = task_data.fetch('unwrapped')
           # @type [Array]
           section_names = unwrapped.fetch('membership_by_section_name').keys
@@ -73,9 +69,7 @@ module Checkoff
         # @param section_name [String]
         # @return [Boolean]
         def evaluate(task, section_name)
-          # @type [Hash{'unwrapped' => Hash}]
           task_data = tasks.task_to_h(task)
-          # @type [Hash{'membership_by_section_name' => Hash}]
           unwrapped = task_data.fetch('unwrapped')
           # @type [Array]
           section_names = unwrapped.fetch('membership_by_section_name').keys
