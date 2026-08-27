@@ -72,17 +72,21 @@ module Checkoff
 
     # Default options used in Asana API to pull tasks
     #
-    # Keys are :per_page (Integer), :options (a Hash whose :fields is an
-    # Array<String>) and, when only_uncompleted is set, :completed_since
-    # (String). The value type is genuinely per-key, which a single YARD
-    # Hash value type cannot express.
     # Callers who want the field list should call #task_fields directly.
     #
     # @param extra_fields [Array<String>]
     # @param [Boolean] only_uncompleted
+    # @param project_gid [String, nil]
     #
-    # @return [Hash{Symbol => undefined}]
-    def task_options(extra_fields: [], only_uncompleted: false)
+    # @return [Hash{:per_page => Integer} &
+    #   Hash{:options => Hash{:fields => Array<String>}} &
+    #   Hash{:completed_since => String} &
+    #   Hash{:project => String}]
+    def task_options(extra_fields: [], only_uncompleted: false, project_gid: nil)
+      # @type [Hash{:per_page => Integer} &
+      #   Hash{:options => Hash{:fields => Array<String>}} &
+      #   Hash{:completed_since => String} &
+      #   Hash{:project => String}]
       options = {
         per_page: 100,
         options: {
@@ -90,6 +94,7 @@ module Checkoff
         },
       }
       options[:completed_since] = '9999-12-01' if only_uncompleted
+      options[:project] = project_gid unless project_gid.nil?
       options
     end
 
@@ -185,8 +190,7 @@ module Checkoff
     def tasks_from_project_gid(project_gid,
                                only_uncompleted: true,
                                extra_fields: [])
-      options = task_options(extra_fields:, only_uncompleted:)
-      options[:project] = project_gid
+      options = task_options(extra_fields:, only_uncompleted:, project_gid:)
       # Note: 30 minute cache time on a raw Enumerable from SDK gives
       # 'Your pagination token has expired' errors.  So we go ahead
       # and eagerly evaluate here so we can enjoy the cache.
