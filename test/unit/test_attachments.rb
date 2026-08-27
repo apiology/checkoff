@@ -41,7 +41,7 @@ class TestAttachments < ClassTest
     end
     attachment = attachments.create_attachment_from_url!(url, resource, attachment_name:, just_the_url: true)
 
-    # @sg-ignore test-example
+    # @sg-ignore deliberate:fabricated-accessor
     #   'foo' is an arbitrary JSON field name this test injects into the mocked
     #   response body to prove attribute passthrough works, not a real attribute --
     #   attachment is an Asana::Resources::Resource, whose #method_missing proxies
