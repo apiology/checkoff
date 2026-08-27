@@ -21,9 +21,7 @@ module Checkoff
         # @param task [Asana::Resources::Task]
         # @return [Boolean]
         def evaluate(task)
-          # @type [Hash{'unwrapped' => Hash}]
           task_data = tasks.task_to_h(task)
-          # @type [Hash{'membership_by_project_name' => Hash}]
           unwrapped = task_data.fetch('unwrapped')
           # @type [Array]
           projects = unwrapped.fetch('membership_by_project_name').keys
@@ -46,9 +44,7 @@ module Checkoff
         # @param section_name_prefix [String]
         # @return [Boolean]
         def evaluate(task, section_name_prefix)
-          # @type [Hash{'unwrapped' => Hash}]
           task_data = tasks.task_to_h(task)
-          # @type [Hash{'membership_by_section_name' => Hash}]
           unwrapped = task_data.fetch('unwrapped')
           # @type [Array]
           section_names = unwrapped.fetch('membership_by_section_name').keys
@@ -73,9 +69,7 @@ module Checkoff
         # @param section_name [String]
         # @return [Boolean]
         def evaluate(task, section_name)
-          # @type [Hash{'unwrapped' => Hash}]
           task_data = tasks.task_to_h(task)
-          # @type [Hash{'membership_by_section_name' => Hash}]
           unwrapped = task_data.fetch('unwrapped')
           # @type [Array]
           section_names = unwrapped.fetch('membership_by_section_name').keys
@@ -163,11 +157,10 @@ module Checkoff
         # @param period [Symbol] - :now_or_before or :this_week
         # @param ignore_dependencies [Boolean]
         # @return [Boolean]
-        # rubocop:disable Style/OptionalBooleanParameter
+        # rubocop:disable-next Style/OptionalBooleanParameter
         def evaluate(task, period = :now_or_before, ignore_dependencies = false)
           tasks.task_ready?(task, period:, ignore_dependencies:)
         end
-        # rubocop:enable Style/OptionalBooleanParameter
       end
 
       # :in_period? function
@@ -243,10 +236,18 @@ module Checkoff
           end
           return true if stories.empty? # no stories == infinitely old!
 
-          last_story = T.must(stories.last)
-          last_story_created_at = Time.parse(last_story.created_at)
+          last_story_created_at = created_at_for(T.must(stories.last))
           n_days_ago = Time.at(Time.now.to_i - (num_days * 86_400))
           last_story_created_at < n_days_ago
+        end
+
+        # @param story [Asana::Resources::Story]
+        # @return [Time]
+        def created_at_for(story)
+          created_at = story.created_at
+          raise "Story #{story.gid} has no created_at timestamp" if created_at.nil?
+
+          Time.parse(created_at)
         end
       end
 

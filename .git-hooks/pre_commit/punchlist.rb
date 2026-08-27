@@ -15,17 +15,6 @@ module Overcommit
         def parse_output(stdout)
           stdout.split("\n").map do |line|
             file, line_no, _message = line.split(':', 3)
-            # @sg-ignore tool-limitation:struct-new-block-form
-            #   Wrong argument type for Struct.new: fields expected Symbol, String, _ToStr,
-            #   received Integer. Message.new(:error, file, line_no.to_i, line) is the
-            #   block-form Struct subclass's generated initializer, but Solargraph resolves
-            #   the call against Struct.new's own class-definition signature (Symbol/String
-            #   field names) instead. Confirmed cross-package-boundary specific: reproduces
-            #   with a purpose-built minimal gem (Struct.new(...) do...end assigned to a
-            #   constant, required via Bundler) but NOT with the identical code split across
-            #   two files in the same project via require_relative. Not yet filed upstream;
-            #   same neighborhood as open castwide/solargraph#1268/#1269/#260 (general
-            #   Struct support gaps).
             Overcommit::Hook::Message.new(:error, file, line_no.to_i, line)
           end
         end

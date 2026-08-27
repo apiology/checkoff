@@ -6,8 +6,35 @@ module Checkoff
     # Builds on the standard API representation of an Asana task with some
     # convenience keys.
     class TaskHashes
+      # The two custom_fields entries below hold the same records: the top-level
+      # array is what Asana returns, and unwrapped re-keys those records by name.
+      #
       # @param task [Asana::Resources::Task]
-      # @return [Hash]
+      #
+      # @return [Hash{"gid" => String} &
+      #   Hash{"name" => String} &
+      #   Hash{"task" => String} &
+      #   Hash{"memberships" => Array<Hash{String => Object}>} &
+      #   Hash{"custom_fields" => Array<
+      #     Hash{"gid" => String} &
+      #     Hash{"name" => String} &
+      #     Hash{"display_value" => String, nil} &
+      #     Hash{"number_value" => Float, Integer, nil} &
+      #     Hash{"text_value" => String, nil} &
+      #     Hash{"enum_value" => Hash{String => String}, nil}
+      #   >, nil} &
+      #   Hash{"unwrapped" => Hash{"custom_fields" => Hash{String =>
+      #     Hash{"gid" => String} &
+      #     Hash{"name" => String} &
+      #     Hash{"display_value" => String, nil} &
+      #     Hash{"number_value" => Float, Integer, nil} &
+      #     Hash{"text_value" => String, nil} &
+      #     Hash{"enum_value" => Hash{String => String}, nil}
+      #   }} &
+      #   Hash{"membership_by_section_gid" => Hash{String => Hash{String => Object}}} &
+      #   Hash{"membership_by_section_name" => Hash{String => Hash{String => Object}}} &
+      #   Hash{"membership_by_project_gid" => Hash{String => Hash{String => Object}}} &
+      #   Hash{"membership_by_project_name" => Hash{String => Hash{String => Object}}}}]
       def task_to_h(task)
         # @type [Hash{String => Object}]
         task_hash = task.to_h

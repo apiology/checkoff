@@ -87,9 +87,12 @@ class TestTags < ClassTest
     setup_collection_expects
   end
 
-  # @return [Hash{Symbol => Object}]
+  # @return [Hash{:limit => Integer} &
+  #   Hash{:completed_since => String}]
   # @param only_uncompleted [Boolean]
   def build_task_params(only_uncompleted)
+    # @type [Hash{:limit => Integer} &
+    #   Hash{:completed_since => String}]
     task_params = { limit: 100 }
     task_params[:completed_since] = '9999-12-01' if only_uncompleted
     task_params

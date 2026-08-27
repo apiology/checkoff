@@ -128,6 +128,7 @@ def fix_missing_return!(issue)
   return false unless match
 
   _klass, method_name = match.captures
+  method_name = T.must(method_name)
   lines = read_lines(issue.file)
   insert_at = insert_at_for_missing_return(lines, issue.line, method_name)
   return false unless insert_at
@@ -174,6 +175,9 @@ def fix_date_new!(issue)
   return false unless date_match
 
   year, month, day = date_match.captures
+  year = T.must(year)
+  month = T.must(month)
+  day = T.must(day)
   lines[idx] = line.gsub(
     "Date.new(#{year}, #{month}, #{day})",
     "Date.parse('#{year}-#{month.rjust(2, '0')}-#{day.rjust(2, '0')}')"

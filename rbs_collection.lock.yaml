@@ -274,7 +274,7 @@ gems:
   source:
     type: stdlib
 - name: rbs
-  version: 4.1.3
+  version: 4.2.0
   source:
     type: rubygems
 - name: rdoc
