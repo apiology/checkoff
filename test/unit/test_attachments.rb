@@ -101,13 +101,13 @@ class TestAttachments < ClassTest
   end
 
   # @return [String]
-  # @sg-ignore tool-limitation:pr-1282-follow-on
+  # @sg-ignore tool-limitation:pr-1282
   #   https://github.com/castwide/solargraph/pull/1282#issuecomment-5272732583
   def capture_attachments_run
     old_stdout = $stdout
     $stdout = StringIO.new
     Checkoff::Attachments.run
-    # @sg-ignore tool-limitation:pr-1282-follow-on
+    # @sg-ignore tool-limitation:pr-1282
     #   Same cause as this method's own sg-ignore above.
     $stdout.string
   ensure
