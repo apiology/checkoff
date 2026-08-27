@@ -131,7 +131,7 @@ class TestAsanaEventEnrichment < ClassTest
     asana_event = { 'resource' => { 'resource_type' => 'task', 'gid' => '789' } }
     enrichment.send(:enrich_event_resource!, asana_event)
 
-    assert_equal('Some Resource', asana_event['resource'].fetch('checkoff:enriched:name'))
+    assert_equal('Some Resource', asana_event.fetch('resource').fetch('checkoff:enriched:name'))
   end
 
   def respond_like_instance_of
