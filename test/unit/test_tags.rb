@@ -91,6 +91,8 @@ class TestTags < ClassTest
   # @param only_uncompleted [Boolean]
   def build_task_params(only_uncompleted)
     task_params = { limit: 100 }
+    # @sg-ignore tool-limitation:hash-literal-new-key-value-type-rejected
+    #   Same cause as lib/checkoff/projects.rb#task_options.
     task_params[:completed_since] = '9999-12-01' if only_uncompleted
     task_params
   end

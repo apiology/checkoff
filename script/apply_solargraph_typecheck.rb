@@ -2,7 +2,7 @@
 # typed: true
 # frozen_string_literal: true
 
-# rubocop:disable Naming/PredicateMethod, Metrics/AbcSize, Metrics/MethodLength
+# rubocop:disable Naming/PredicateMethod, Metrics/MethodLength
 
 # Applies solargraph typecheck output: removes unneeded ignore lines and
 # inserts ignore comments before remaining reported lines (unless already ignored).
@@ -128,6 +128,8 @@ def fix_missing_return!(issue)
   return false unless match
 
   _klass, method_name = match.captures
+  return false unless method_name
+
   lines = read_lines(issue.file)
   insert_at = insert_at_for_missing_return(lines, issue.line, method_name)
   return false unless insert_at
@@ -159,6 +161,21 @@ def insert_at_for_missing_return(lines, line_num, method_name)
   insert_at
 end
 
+# @param line [String]
+# @return [String, nil]
+def date_new_replacement(line)
+  date_match = line.match(/Date\.new\((\d+),\s*(\d+),\s*(\d+)\)/)
+  return nil unless date_match
+
+  year, month, day = date_match.captures
+  return nil unless year && month && day
+
+  line.gsub(
+    "Date.new(#{year}, #{month}, #{day})",
+    "Date.parse('#{year}-#{month.rjust(2, '0')}-#{day.rjust(2, '0')}')"
+  )
+end
+
 # @param issue [Issue]
 # @return [Boolean]
 def fix_date_new!(issue)
@@ -170,14 +187,10 @@ def fix_date_new!(issue)
   return false if line.nil?
   return false unless line.include?('Date.new(')
 
-  date_match = line.match(/Date\.new\((\d+),\s*(\d+),\s*(\d+)\)/)
-  return false unless date_match
+  replacement = date_new_replacement(line)
+  return false unless replacement
 
-  year, month, day = date_match.captures
-  lines[idx] = line.gsub(
-    "Date.new(#{year}, #{month}, #{day})",
-    "Date.parse('#{year}-#{month.rjust(2, '0')}-#{day.rjust(2, '0')}')"
-  )
+  lines[idx] = replacement
   write_lines(issue.file, lines)
   true
 end
@@ -201,4 +214,4 @@ warn "fixed #{fixed_returns} missing @return"
 warn "fixed #{fixed_dates} Date.new"
 warn "added #{added} @sg-ignore"
 
-# rubocop:enable Naming/PredicateMethod, Metrics/AbcSize, Metrics/MethodLength
+# rubocop:enable Naming/PredicateMethod, Metrics/MethodLength

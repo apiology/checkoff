@@ -101,13 +101,17 @@ class TestAttachments < ClassTest
   end
 
   # @return [String]
-  # @sg-ignore tool-limitation:pr-1282
-  #   https://github.com/castwide/solargraph/pull/1282#issuecomment-5272732583
+  # @sg-ignore tool-limitation:global-var-reassignment-not-narrowed
+  #   $stdout is reassigned to StringIO.new unconditionally, but the
+  #   reassignment narrows a global variable, not a parameter or local,
+  #   so it falls outside castwide/solargraph#1282's Pin::Parameter fix
+  #   and the #1250-family local-variable narrowing. Not yet filed
+  #   upstream.
   def capture_attachments_run
     old_stdout = $stdout
     $stdout = StringIO.new
     Checkoff::Attachments.run
-    # @sg-ignore tool-limitation:pr-1282
+    # @sg-ignore tool-limitation:global-var-reassignment-not-narrowed
     #   Same cause as this method's own sg-ignore above.
     $stdout.string
   ensure
