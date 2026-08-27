@@ -83,20 +83,15 @@ module Checkoff
     #
     # @return [Hash{Symbol => undefined}]
     def task_options(extra_fields: [], only_uncompleted: false)
+      # @type [Hash{:per_page => Integer} &
+      #   Hash{:options => Hash{Symbol => Array<String>}} &
+      #   Hash{:completed_since => String}]
       options = {
         per_page: 100,
         options: {
           fields: task_fields(extra_fields:),
         },
       }
-      # @sg-ignore tool-limitation:hash-literal-new-key-value-type-rejected
-      #   Wrong argument type for Hash#[]=: value expected Integer,
-      #   Hash{Symbol => Array<String>}, received String. Solargraph infers
-      #   the options literal as a fixed per-key record type from its
-      #   construction and rejects assigning a new key whose value type
-      #   was not among the literal's existing per-key types, even though
-      #   this is a normal, correct Ruby idiom at runtime. Not yet filed
-      #   upstream.
       options[:completed_since] = '9999-12-01' if only_uncompleted
       options
     end
