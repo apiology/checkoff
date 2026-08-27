@@ -232,7 +232,7 @@ end
 # No security (symbold denial of servie) issue; not building
 # OpenStruct from untrusted user data.
 #
-# rubocop:disable Style/OpenStructUse
+# rubocop:disable-next Style/OpenStructUse
 class MyOpenStruct < OpenStruct
   # @return [void]
   def delete(sym)
@@ -245,7 +245,6 @@ class MyOpenStruct < OpenStruct
     end
   end
 end
-# rubocop:enable Style/OpenStructUse
 
 def ensure_respond_like(mocks, respond_like_instance_of, respond_like)
   mocks.to_h.each do |mock_name, mock|
@@ -269,9 +268,8 @@ def get_initializer_mocks(clazz,
                           skip_these_keys: [])
   method = clazz.instance_method(:initialize)
 
-  # rubocop:disable Style/HashSlice
+  # rubocop:disable-next Style/HashSlice
   named_parameters = method.parameters.select { |name, _value| %i[key keyreq].include? name }
-  # rubocop:enable Style/HashSlice
 
   mock_syms = named_parameters.map { |_name, value| value } - skip_these_keys
 
