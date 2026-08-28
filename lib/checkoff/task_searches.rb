@@ -160,12 +160,6 @@ module Checkoff
 
       new_api_params['sort_by'] = 'created_at'
 
-      # @sg-ignore tool-limitation:module-function-explicit-receiver-unresolved
-      #   Unresolved call to loop on Module<Kernel>. Newly surfaced by the
-      #   62eb9b63->dd2bc51 apiology/solargraph pin bump; solargraph pin
-      #   Kernel.loop resolves fine standalone (rbs core kernel.rbs), so the
-      #   gap is specific to this in-method call context, not a missing pin.
-      #   Not yet filed upstream.
       Kernel.loop do
         # Get the most recently created results, then iterate on until we're out of results
 
