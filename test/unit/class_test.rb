@@ -48,13 +48,8 @@ class ClassTest < Minitest::Test
   # @generic T
   # @param clazz [Class<generic<T>> & #new]
   # @return [generic<T>]
-  # @sg-ignore tool-limitation:new-duck-type-infers-enclosing-class
-  #   Declared return type generic<T> does not match inferred type
-  #   ClassTest for ClassTest#create_object. Dispatching #new through a
-  #   Class<generic<T>> & #new duck-type intersection resolves to the
-  #   enclosing class (ClassTest) rather than binding T or failing to
-  #   infer -- a confidently wrong inference, not a missing one. Not
-  #   yet filed upstream.
+  # @sg-ignore tool-limitation:pr-72
+  #   https://github.com/apiology/solargraph/pull/72
   def create_object(clazz)
     clazz.new(**@mocks.to_h)
   end
