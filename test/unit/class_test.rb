@@ -14,7 +14,7 @@ class ClassTest < Minitest::Test
   attr_reader :mocks
 
   # @generic T
-  # @param clazz [Class<generic<T>>]
+  # @param clazz [Class<generic<T>> & #new]
   # @return [generic<T>]
   def get_test_object(clazz, &twiddle_mocks)
     @mocks = get_initializer_mocks(clazz,
@@ -46,10 +46,10 @@ class ClassTest < Minitest::Test
   end
 
   # @generic T
-  # @param clazz [Class<generic<T>>]
+  # @param clazz [Class<generic<T>> & #new]
   # @return [generic<T>]
-  # @sg-ignore tool-limitation:generic-class-new-dispatch
-  #   ClassTest#create_object return type could not be inferred
+  # @sg-ignore tool-limitation:pr-72
+  #   https://github.com/apiology/solargraph/pull/72
   def create_object(clazz)
     clazz.new(**@mocks.to_h)
   end

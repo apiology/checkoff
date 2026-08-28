@@ -18,6 +18,10 @@ class TestDateParamConverter < Minitest::Test
 
   # @return [void]
   def test_get_single_param_raises_on_nil_value
+    # @sg-ignore deliberate:wrong-argument-type
+    #   deliberately passing an Array<nil> where date_url_params declares
+    #   Hash{String => Array<String>}, to exercise get_single_param's own
+    #   runtime guard
     converter = Checkoff::Internal::SearchUrl::DateParamConverter.new(date_url_params: { 'key' => [nil] })
 
     # value[0] is declared nilable by RBS even though a real caller can't

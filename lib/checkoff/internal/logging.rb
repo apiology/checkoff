@@ -58,8 +58,7 @@ module Logging
 
   # @return [Symbol]
   def log_level
-    # rubocop:disable Style/RedundantFetchBlock
+    # rubocop:disable-next Style/RedundantFetchBlock
     ENV.fetch('LOG_LEVEL') { 'INFO' }.downcase.to_sym
-    # rubocop:enable Style/RedundantFetchBlock
   end
 end

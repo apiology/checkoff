@@ -83,6 +83,9 @@ module Checkoff
     #
     # @return [Hash{Symbol => undefined}]
     def task_options(extra_fields: [], only_uncompleted: false)
+      # @type [Hash{:per_page => Integer} &
+      #   Hash{:options => Hash{Symbol => Array<String>}} &
+      #   Hash{:completed_since => String}]
       options = {
         per_page: 100,
         options: {

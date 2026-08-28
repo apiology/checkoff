@@ -41,7 +41,7 @@ class TestAttachments < ClassTest
     end
     attachment = attachments.create_attachment_from_url!(url, resource, attachment_name:, just_the_url: true)
 
-    # @sg-ignore test-example
+    # @sg-ignore deliberate:fabricated-accessor
     #   'foo' is an arbitrary JSON field name this test injects into the mocked
     #   response body to prove attribute passthrough works, not a real attribute --
     #   attachment is an Asana::Resources::Resource, whose #method_missing proxies
@@ -101,15 +101,12 @@ class TestAttachments < ClassTest
   end
 
   # @return [String]
-  # @sg-ignore tool-limitation:pr-1282-follow-on
-  #   https://github.com/castwide/solargraph/pull/1282#issuecomment-5272732583
   def capture_attachments_run
     old_stdout = $stdout
-    $stdout = StringIO.new
+    new_stdout = StringIO.new
+    $stdout = new_stdout
     Checkoff::Attachments.run
-    # @sg-ignore tool-limitation:pr-1282-follow-on
-    #   Same cause as this method's own sg-ignore above.
-    $stdout.string
+    new_stdout.string
   ensure
     $stdout = old_stdout if old_stdout
   end

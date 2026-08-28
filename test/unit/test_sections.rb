@@ -79,7 +79,7 @@ class TestSections < BaseAsana
   # @return [void]
   def test_sections_or_raise_nil_project_name
     sections = get_test_object(Checkoff::Sections)
-    # @sg-ignore test-example
+    # @sg-ignore deliberate:wrong-argument-type
     #   deliberately passing nil project_name (declared String, Symbol) to
     #   exercise sections_or_raise's own runtime ArgumentError guard
     assert_raises(ArgumentError) { sections.sections_or_raise('Workspace 1', nil) }
@@ -153,7 +153,7 @@ class TestSections < BaseAsana
   # @return [void]
   def test_tasks_by_section_nil_workspace_name
     sections = get_test_object(Checkoff::Sections)
-    # @sg-ignore test-example
+    # @sg-ignore deliberate:wrong-argument-type
     #   deliberately passing nil workspace_name (declared String, Symbol) to
     #   exercise tasks_by_section's own runtime ArgumentError guard
     assert_raises(ArgumentError) { sections.tasks_by_section(nil, :my_tasks) }
@@ -162,7 +162,7 @@ class TestSections < BaseAsana
   # @return [void]
   def test_tasks_by_section_nil_project_name
     sections = get_test_object(Checkoff::Sections)
-    # @sg-ignore test-example
+    # @sg-ignore deliberate:wrong-argument-type
     #   deliberately passing nil project_name (declared String, Symbol) to
     #   exercise tasks_by_section's own runtime ArgumentError guard
     assert_raises(ArgumentError) { sections.tasks_by_section('Workspace 1', nil) }
