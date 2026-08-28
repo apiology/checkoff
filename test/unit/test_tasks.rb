@@ -376,7 +376,7 @@ class TestTasks < BaseAsana
     expect_task_by_gid_pulled(extra_fields: ['dependencies'])
   end
 
-  # @return [void]
+  # @return [Checkoff::Projects]
   def projects
     @projects ||= Checkoff::Projects.new(client:,
                                          workspaces:)
