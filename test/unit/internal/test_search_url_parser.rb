@@ -5,7 +5,7 @@ require_relative '../test_helper'
 require_relative '../class_test'
 require 'checkoff/internal/search_url'
 
-# rubocop:disable Metrics/ClassLength
+# rubocop:disable-next Metrics/ClassLength
 class TestSearchUrlParser < ClassTest
   # Ruby 3.4+ Hash#inspect inserts spaces around =>; normalize for assertions.
   #
@@ -762,4 +762,3 @@ class TestSearchUrlParser < ClassTest
                  e.message)
   end
 end
-# rubocop:enable Metrics/ClassLength

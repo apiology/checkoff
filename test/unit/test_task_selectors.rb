@@ -5,7 +5,7 @@ require_relative 'test_helper'
 require_relative 'class_test'
 require 'checkoff/task_selectors'
 
-# rubocop:disable Metrics/ClassLength
+# rubocop:disable-next Metrics/ClassLength
 class TestTaskSelectors < ClassTest
   typed_delegate :tasks, Checkoff::Tasks
   typed_delegate :timelines, Checkoff::Timelines
@@ -1188,4 +1188,3 @@ class TestTaskSelectors < ClassTest
     {}
   end
 end
-# rubocop:enable Metrics/ClassLength

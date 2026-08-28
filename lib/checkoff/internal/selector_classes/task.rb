@@ -163,11 +163,10 @@ module Checkoff
         # @param period [Symbol] - :now_or_before or :this_week
         # @param ignore_dependencies [Boolean]
         # @return [Boolean]
-        # rubocop:disable Style/OptionalBooleanParameter
+        # rubocop:disable-next Style/OptionalBooleanParameter
         def evaluate(task, period = :now_or_before, ignore_dependencies = false)
           tasks.task_ready?(task, period:, ignore_dependencies:)
         end
-        # rubocop:enable Style/OptionalBooleanParameter
       end
 
       # :in_period? function

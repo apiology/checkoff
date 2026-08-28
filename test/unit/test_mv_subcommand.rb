@@ -114,7 +114,7 @@ class TestMvSubcommand < ClassTest
   end
 
   # @return [void]
-  # rubocop:disable Metrics/AbcSize
+  # rubocop:disable-next Metrics/AbcSize
   def set_initializer_arguments
     mocks[:from_workspace_arg] = from_workspace_arg
     mocks[:from_project_arg] = from_project_arg
@@ -123,7 +123,6 @@ class TestMvSubcommand < ClassTest
     mocks[:to_project_arg] = to_project_arg
     mocks[:to_section_arg] = to_section_arg
   end
-  # rubocop:enable Metrics/AbcSize
 
   # @param from_workspace_arg [String, Symbol]
   # @param to_workspace_arg [String, Symbol]
