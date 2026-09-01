@@ -18,14 +18,14 @@ group :development, :test do
   gem 'mocha', ['>= 2']
   gem 'parlour',
       github: 'apiology/parlour',
-      branch: 'fix_io_deadlock'
+      branch: 'add_type_parameter_type'
   gem 'rbi'
   # ensure recent definitions
   gem 'rbs', ['>=3.8.1']
   gem 'rspec'
   gem 'sord', # ['>= 6.0.0'] # ,
       github: 'apiology/sord',
-      branch: '2025-07-04'
+      branch: 'sord-integration-2026-09-01'
   #   path: '../sord'
   # ensure version with branch coverage
   gem 'simplecov', ['>=0.18.0']
