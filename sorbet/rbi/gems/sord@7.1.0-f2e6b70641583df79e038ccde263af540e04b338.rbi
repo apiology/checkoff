@@ -41,7 +41,7 @@ class Sord::Generator
   # @param [YARD::CodeObjects::NamespaceObject] item
   # @return [void]
   #
-  # pkg:gem/sord#lib/sord/generator.rb:498
+  # pkg:gem/sord#lib/sord/generator.rb:512
   # sord warn - YARD::CodeObjects::NamespaceObject wasn't able to be resolved to a constant in this project
   # _@param_ `item`
   sig { params(item: YARD::CodeObjects::NamespaceObject).void }
@@ -75,7 +75,7 @@ class Sord::Generator
   # @param [YARD::CodeObjects::NamespaceObject] item
   # @return [void]
   #
-  # pkg:gem/sord#lib/sord/generator.rb:306
+  # pkg:gem/sord#lib/sord/generator.rb:317
   # sord warn - YARD::CodeObjects::NamespaceObject wasn't able to be resolved to a constant in this project
   # _@param_ `item`
   sig { params(item: YARD::CodeObjects::NamespaceObject).void }
@@ -97,7 +97,7 @@ class Sord::Generator
   # @param [YARD::CodeObjects::NamespaceObject] item
   # @return [void]
   #
-  # pkg:gem/sord#lib/sord/generator.rb:606
+  # pkg:gem/sord#lib/sord/generator.rb:620
   # sord warn - YARD::CodeObjects::NamespaceObject wasn't able to be resolved to a constant in this project
   # _@param_ `item`
   sig { params(item: YARD::CodeObjects::NamespaceObject).void }
@@ -123,7 +123,7 @@ class Sord::Generator
   # @param [String] default
   # @return [String, nil]
   #
-  # pkg:gem/sord#lib/sord/generator.rb:740
+  # pkg:gem/sord#lib/sord/generator.rb:792
   # _@param_ `default`
   sig { params(default: String).returns(T.nilable(String)) }
   def fix_default_if_unary_minus(default); end
@@ -133,9 +133,20 @@ class Sord::Generator
   # load the YARD registry first!
   # @return [void]
   #
-  # pkg:gem/sord#lib/sord/generator.rb:646
+  # pkg:gem/sord#lib/sord/generator.rb:680
   sig { void }
   def generate; end
+
+  # The names of type variables this method needs to declare in its own
+  # signature: those named by a solargraph-style `@generic` tag on the
+  # method itself. A `@generic` tag on the method's owning namespace is
+  # handled separately, as a type_member/class-level type parameter on the
+  # namespace itself (see #add_namespace) - not a per-method declaration.
+  # @param method [YARD::CodeObjects::MethodObject]
+  # @return [Array<Symbol>]
+  #
+  # pkg:gem/sord#lib/sord/generator.rb:309
+  def generic_type_parameter_names(method); end
 
   # @param method [YARD::CodeObjects::MethodObject]
   # @param tag_name [String]
@@ -174,7 +185,7 @@ class Sord::Generator
   # must load the YARD registry first!
   # @return [void]
   #
-  # pkg:gem/sord#lib/sord/generator.rb:635
+  # pkg:gem/sord#lib/sord/generator.rb:669
   sig { void }
   def populate; end
 
@@ -182,7 +193,7 @@ class Sord::Generator
   # final logs.
   # @return [void]
   #
-  # pkg:gem/sord#lib/sord/generator.rb:654
+  # pkg:gem/sord#lib/sord/generator.rb:688
   sig { void }
   def run; end
 
@@ -195,12 +206,24 @@ class Sord::Generator
   # @param [Array] pair2
   # @return Integer
   #
-  # pkg:gem/sord#lib/sord/generator.rb:703
+  # pkg:gem/sord#lib/sord/generator.rb:737
   # _@param_ `pair1`
   # _@param_ `pair2`
   # _@return_ — Integer
   sig { params(pair1: T::Array[T.untyped], pair2: T::Array[T.untyped]).returns(T.untyped) }
   def sort_params(pair1, pair2); end
+
+  # YARD documents a splat/double-splat's collected type (Array<String>
+  # for *args, Hash{K=>V} for **kwargs), but RBI/RBS splat syntax wants
+  # each individual vararg/kwarg value's type. Strips exactly one
+  # Array/Hash layer to convert between the two; anything else (a normal
+  # parameter, or a type not wrapped in Array/Hash) passes through as-is.
+  # @param [Parlour::Types::Type] type
+  # @param [String] name
+  # @return [Parlour::Types::Type]
+  #
+  # pkg:gem/sord#lib/sord/generator.rb:777
+  def unwrap_splat_param_type(type, name); end
 
   # @return [Array<Array(String, YARD::CodeObjects::Base, Integer)>] The
   #   errors encountered by by the generator. Each element is of the form
@@ -555,7 +578,7 @@ end
 
 # Contains methods to convert YARD types to Parlour types.
 #
-# pkg:gem/sord#lib/sord/type_converter.rb:9
+# pkg:gem/sord#lib/sord/type_converter.rb:22
 module Sord::TypeConverter
   class << self
     # Given a YARD duck type string, attempts to convert it to one of a list of pre-defined RBS
@@ -568,7 +591,7 @@ module Sord::TypeConverter
     # @param [String] type
     # @return [Parlour::Types::Type, nil]
     #
-    # pkg:gem/sord#lib/sord/type_converter.rb:328
+    # pkg:gem/sord#lib/sord/type_converter.rb:382
     # sord warn - Parlour::Types::Type wasn't able to be resolved to a constant in this project
     # _@param_ `type`
     sig { params(type: String).returns(T.nilable(Parlour::Types::Type)) }
@@ -582,7 +605,7 @@ module Sord::TypeConverter
     # @param [Boolean] replace_errors_with_untyped
     # @return [Parlour::Types::Type]
     #
-    # pkg:gem/sord#lib/sord/type_converter.rb:284
+    # pkg:gem/sord#lib/sord/type_converter.rb:338
     # sord warn - Parlour::Types::Type wasn't able to be resolved to a constant in this project
     # sord warn - YARD::CodeObjects::Base wasn't able to be resolved to a constant in this project
     # _@param_ `name`
@@ -604,11 +627,24 @@ module Sord::TypeConverter
     # @param [String] params The type parameters.
     # @return [Array<String>] The split type parameters.
     #
-    # pkg:gem/sord#lib/sord/type_converter.rb:53
+    # pkg:gem/sord#lib/sord/type_converter.rb:66
     # _@param_ `params` — The type parameters.
     # _@return_ — The split type parameters.
     sig { params(params: String).returns(T::Array[String]) }
     def split_type_parameters(params); end
+
+    # Checks whether the given name has been declared as a type variable via
+    # a solargraph-style `@generic` tag on the given item, or the item's
+    # owning namespace, and reports which: this determines how a reference to
+    # it must be rendered (see the `generic<...>` handling above). A tag on
+    # the item itself takes priority over one on its namespace.
+    #
+    # @param [String] name
+    # @param [YARD::CodeObjects::Base, nil] item
+    # @return [:method, :namespace, nil]
+    #
+    # pkg:gem/sord#lib/sord/type_converter.rb:316
+    def type_variable_scope(name, item); end
 
     # Converts a YARD type into a Parlour type.
     # @param [Boolean, Array, String] yard The YARD type.
@@ -618,7 +654,7 @@ module Sord::TypeConverter
     # @param [Configuration] config The generation configuration.
     # @return [Parlour::Types::Type]
     #
-    # pkg:gem/sord#lib/sord/type_converter.rb:128
+    # pkg:gem/sord#lib/sord/type_converter.rb:141
     # sord warn - YARD::CodeObjects::Base wasn't able to be resolved to a constant in this project
     # sord warn - Parlour::Types::Type wasn't able to be resolved to a constant in this project
     # _@param_ `yard` — The YARD type.
@@ -637,9 +673,9 @@ end
 
 # Configuration for how the type converter should work in particular cases.
 #
-# pkg:gem/sord#lib/sord/type_converter.rb:101
+# pkg:gem/sord#lib/sord/type_converter.rb:114
 class Sord::TypeConverter::Configuration
-  # pkg:gem/sord#lib/sord/type_converter.rb:102
+  # pkg:gem/sord#lib/sord/type_converter.rb:115
   # sord omit - no YARD type given for "replace_errors_with_untyped:", using untyped
   # sord omit - no YARD type given for "replace_unresolved_with_untyped:", using untyped
   # sord omit - no YARD type given for "output_language:", using untyped
@@ -655,37 +691,37 @@ class Sord::TypeConverter::Configuration
   # The language which the generated types will be converted to - one of
   # `:rbi` or `:rbs`.
   #
-  # pkg:gem/sord#lib/sord/type_converter.rb:110
+  # pkg:gem/sord#lib/sord/type_converter.rb:123
   def output_language; end
 
   # The language which the generated types will be converted to - one of
   # `:rbi` or `:rbs`.
   #
-  # pkg:gem/sord#lib/sord/type_converter.rb:110
+  # pkg:gem/sord#lib/sord/type_converter.rb:123
   def output_language=(_arg0); end
 
   # @return [Boolean] If true, T.untyped is used instead of SORD_ERROR_
   #   constants for unknown types.
   #
-  # pkg:gem/sord#lib/sord/type_converter.rb:114
+  # pkg:gem/sord#lib/sord/type_converter.rb:127
   def replace_errors_with_untyped; end
 
   # @return [Boolean] If true, T.untyped is used instead of SORD_ERROR_
   #   constants for unknown types.
   #
-  # pkg:gem/sord#lib/sord/type_converter.rb:114
+  # pkg:gem/sord#lib/sord/type_converter.rb:127
   def replace_errors_with_untyped=(_arg0); end
 
   # @param [Boolean] replace_unresolved_with_untyped If true, T.untyped is
   #   used when Sord is unable to resolve a constant.
   #
-  # pkg:gem/sord#lib/sord/type_converter.rb:118
+  # pkg:gem/sord#lib/sord/type_converter.rb:131
   def replace_unresolved_with_untyped; end
 
   # @param [Boolean] replace_unresolved_with_untyped If true, T.untyped is
   #   used when Sord is unable to resolve a constant.
   #
-  # pkg:gem/sord#lib/sord/type_converter.rb:118
+  # pkg:gem/sord#lib/sord/type_converter.rb:131
   def replace_unresolved_with_untyped=(_arg0); end
 end
 
@@ -695,13 +731,13 @@ end
 # Interfaces which use generic arguments have those arguments as `untyped`, since I'm not aware
 # of any standard way that these are specified.
 #
-# pkg:gem/sord#lib/sord/type_converter.rb:297
+# pkg:gem/sord#lib/sord/type_converter.rb:351
 Sord::TypeConverter::DUCK_TYPES_TO_RBS_TYPE_NAMES = T.let(T.unsafe(nil), Hash)
 
 # Match duck types which require the object implement one or more methods,
 # like '#foo', '#foo & #bar', '#foo&#bar&#baz', and '#foo&#bar&#baz&#foo_bar'.
 #
-# pkg:gem/sord#lib/sord/type_converter.rb:31
+# pkg:gem/sord#lib/sord/type_converter.rb:44
 Sord::TypeConverter::DUCK_TYPE_REGEX = T.let(T.unsafe(nil), Regexp)
 
 # A regular expression which matches a Ruby namespace immediately followed
@@ -710,43 +746,43 @@ Sord::TypeConverter::DUCK_TYPE_REGEX = T.let(T.unsafe(nil), Regexp)
 # types, such as "Array<String>", "Hash<String, Symbol>",
 # "Hash{String => Symbol}", etc.
 #
-# pkg:gem/sord#lib/sord/type_converter.rb:21
+# pkg:gem/sord#lib/sord/type_converter.rb:34
 Sord::TypeConverter::GENERIC_TYPE_REGEX = T.let(T.unsafe(nil), Regexp)
 
 # Matches valid method names.
 # From: https://stackoverflow.com/a/4379197/2626000
 #
-# pkg:gem/sord#lib/sord/type_converter.rb:26
+# pkg:gem/sord#lib/sord/type_converter.rb:39
 Sord::TypeConverter::METHOD_NAME_REGEX = T.let(T.unsafe(nil), Regexp)
 
 # A regular expression which matches ordered lists in the format of
 # either "Array(String, Symbol)" or "(String, Symbol)".
 #
-# pkg:gem/sord#lib/sord/type_converter.rb:36
+# pkg:gem/sord#lib/sord/type_converter.rb:49
 Sord::TypeConverter::ORDERED_LIST_REGEX = T.let(T.unsafe(nil), Regexp)
 
 # A regular expression which matches the shorthand Array syntax,
 # "<String>".
 #
-# pkg:gem/sord#lib/sord/type_converter.rb:44
+# pkg:gem/sord#lib/sord/type_converter.rb:57
 Sord::TypeConverter::SHORTHAND_ARRAY_SYNTAX = T.let(T.unsafe(nil), Regexp)
 
 # A regular expression which matches the shorthand Hash syntax,
 # "{String => Symbol}".
 #
-# pkg:gem/sord#lib/sord/type_converter.rb:40
+# pkg:gem/sord#lib/sord/type_converter.rb:53
 Sord::TypeConverter::SHORTHAND_HASH_SYNTAX = T.let(T.unsafe(nil), Regexp)
 
 # A regular expression which matches Ruby namespaces and identifiers.
 # "Foo", "Foo::Bar", and "::Foo::Bar" are all matches, whereas "Foo.Bar"
 # or "Foo#bar" are not.
 #
-# pkg:gem/sord#lib/sord/type_converter.rb:13
+# pkg:gem/sord#lib/sord/type_converter.rb:26
 Sord::TypeConverter::SIMPLE_TYPE_REGEX = T.let(T.unsafe(nil), Regexp)
 
 # Built in parlour single arg generics
 #
-# pkg:gem/sord#lib/sord/type_converter.rb:47
+# pkg:gem/sord#lib/sord/type_converter.rb:60
 Sord::TypeConverter::SINGLE_ARG_GENERIC_TYPES = T.let(T.unsafe(nil), Array)
 
 # pkg:gem/sord#lib/sord/version.rb:3
