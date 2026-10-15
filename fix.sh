@@ -201,7 +201,10 @@ ensure_ruby_versions() {
 
   # You can find out which feature versions are still supported / have
   # been release here: https://www.ruby-lang.org/en/downloads/
-  ruby_versions="$(latest_ruby_version 3.3)"
+  #
+  # FIX_SH_RUBY_VERSION picks one exact version instead, e.g. a preview
+  # release for a CI job that tests the next Ruby.
+  ruby_versions="${FIX_SH_RUBY_VERSION:-$(latest_ruby_version 3.3)}"
 
   installed_ruby_versions="$(rbenv versions --bare --skip-aliases)"
 

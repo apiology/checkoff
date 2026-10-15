@@ -32,6 +32,11 @@ commands:
             "LANG": "C.UTF-8"
   set_up_environment:
     description: "Install source environment"
+    parameters:
+      cache_tag:
+        type: string
+        description: "Keeps a job's rbenv cache apart, e.g. one on another Ruby"
+        default: ""
     steps:
       # Blobless default checkout lacks objects for tools that diff against origin/main
       # (e.g. undercover Rugged::OdbError). CircleCI uses method: full.
@@ -65,12 +70,12 @@ commands:
       - restore_cache:
           name: Restore rbenv cache
           keys:
-            - rbenv-v6-{{ checksum "/tmp/solargraph_revision" }}-{{ checksum "checkoff.gemspec" }}-{{ checksum "Gemfile" }}-{{ checksum "Gemfile.lock" }}-{{ checksum "Makefile" }}-{{ checksum ".circleci/config.yml" }}- # yamllint disable-line rule:line-length
-            - rbenv-v6-{{ checksum "/tmp/solargraph_revision" }}-{{ checksum "checkoff.gemspec" }}-{{ checksum "Gemfile" }}-{{ checksum "Gemfile.lock" }}-{{ checksum "Makefile" }}- # yamllint disable-line rule:line-length
-            - rbenv-v6-{{ checksum "/tmp/solargraph_revision" }}-{{ checksum "checkoff.gemspec" }}-{{ checksum "Gemfile" }}-{{ checksum "Gemfile.lock" }}- # yamllint disable-line rule:line-length
-            - rbenv-v6-{{ checksum "/tmp/solargraph_revision" }}-{{ checksum "checkoff.gemspec" }}-{{ checksum "Gemfile" }}- # yamllint disable-line rule:line-length
-            - rbenv-v6-{{ checksum "/tmp/solargraph_revision" }}-{{ checksum "checkoff.gemspec" }}-
-            - rbenv-v6-{{ checksum "/tmp/solargraph_revision" }}-
+            - rbenv-v6-<< parameters.cache_tag >>{{ checksum "/tmp/solargraph_revision" }}-{{ checksum "checkoff.gemspec" }}-{{ checksum "Gemfile" }}-{{ checksum "Gemfile.lock" }}-{{ checksum "Makefile" }}-{{ checksum ".circleci/config.yml" }}- # yamllint disable-line rule:line-length
+            - rbenv-v6-<< parameters.cache_tag >>{{ checksum "/tmp/solargraph_revision" }}-{{ checksum "checkoff.gemspec" }}-{{ checksum "Gemfile" }}-{{ checksum "Gemfile.lock" }}-{{ checksum "Makefile" }}- # yamllint disable-line rule:line-length
+            - rbenv-v6-<< parameters.cache_tag >>{{ checksum "/tmp/solargraph_revision" }}-{{ checksum "checkoff.gemspec" }}-{{ checksum "Gemfile" }}-{{ checksum "Gemfile.lock" }}- # yamllint disable-line rule:line-length
+            - rbenv-v6-<< parameters.cache_tag >>{{ checksum "/tmp/solargraph_revision" }}-{{ checksum "checkoff.gemspec" }}-{{ checksum "Gemfile" }}- # yamllint disable-line rule:line-length
+            - rbenv-v6-<< parameters.cache_tag >>{{ checksum "/tmp/solargraph_revision" }}-{{ checksum "checkoff.gemspec" }}-
+            - rbenv-v6-<< parameters.cache_tag >>{{ checksum "/tmp/solargraph_revision" }}-
       - restore_cache:
           # NOTE: bump the ruby-types-vN- prefix when YARD_OPTS changes in
           # the Makefile (see the comment there for why).
@@ -112,7 +117,7 @@ commands:
             - "/home/circleci/.pyenv"
       - save_cache:
           name: 'Save rbenv cache'
-          key: rbenv-v6-{{ checksum "/tmp/solargraph_revision" }}-{{ checksum "checkoff.gemspec" }}-{{ checksum "Gemfile" }}-{{ checksum "Gemfile.lock" }}-{{ checksum "Makefile" }}-{{ checksum ".circleci/config.yml" }}-{{ checksum ".ruby-version" }} # yamllint disable-line rule:line-length
+          key: rbenv-v6-<< parameters.cache_tag >>{{ checksum "/tmp/solargraph_revision" }}-{{ checksum "checkoff.gemspec" }}-{{ checksum "Gemfile" }}-{{ checksum "Gemfile.lock" }}-{{ checksum "Makefile" }}-{{ checksum ".circleci/config.yml" }}-{{ checksum ".ruby-version" }} # yamllint disable-line rule:line-length
           paths:
             - "Gemfile.lock.installed"
             - 'vendor/.keep'
@@ -288,6 +293,28 @@ jobs:
             make citest cicoverage
     # This seemed to shave 5ish% of the build time off when added
     resource_class: large.gen2
+  # Runs the tests on the next Ruby before it ships
+  test_ruby_preview:
+    working_directory: ~/checkoff
+    docker:
+      - image: cimg/base:current
+    environment:
+      FIX_SH_RUBY_VERSION: 4.1.0-preview1
+      # Bundler 2.x uses Pathname::SEPARATOR_PAT, which Ruby 4.1 removed
+      BUNDLER_VERSION: 4.0.23
+    steps:
+      - set_up_environment:
+          cache_tag: ruby-4.1.0-preview1-
+      - run_with_languages:
+          label: Test
+          command: |
+            # Set timezone as same on dev box for test consistency
+            sudo ln -fs /usr/share/zoneinfo/America/New_York /etc/localtime
+            sudo DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends tzdata
+            export TZ=America/New_York
+
+            make citest
+    resource_class: large.gen2
   publish_gem:
     working_directory: ~/checkoff
     docker:
@@ -343,6 +370,7 @@ workflows:
   build:
     jobs:
       - build
+      - test_ruby_preview
       - publish_gem:
           requires:
             - build
