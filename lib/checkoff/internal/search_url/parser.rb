@@ -3,7 +3,6 @@
 
 # frozen_string_literal: true
 
-require 'cgi'
 require 'uri'
 require_relative 'simple_param_converter'
 require_relative 'custom_field_param_converter'
@@ -24,8 +23,11 @@ module Checkoff
         # @param url [String]
         # @return [Array(Hash{String => String}, Array)]
         def convert_params(url)
-          # URI#query is nil for a URL with no query string; CGI.parse('') correctly yields {}
-          url_params = CGI.parse(URI.parse(url).query || '')
+          # URI#query is nil for a URL with no query string, and decoding '' yields {}.
+          # Groups repeated keys like CGI.parse did; Ruby 4 dropped CGI.parse.
+          url_params = URI.decode_www_form(URI.parse(url).query || '')
+            .group_by(&:first)
+            .transform_values { |pairs| pairs.map(&:last) }
           custom_field_params, date_url_params, simple_url_params = partition_url_params(url_params)
           custom_field_args, custom_field_task_selector = convert_custom_field_params(custom_field_params)
           date_url_args, date_task_selector = convert_date_params(date_url_params)
