@@ -305,9 +305,11 @@ jobs:
     steps:
       - run:
           # rubydex (via tapioca) ships no prebuilt binary for Ruby 4.1, so it
-          # builds from source, which needs Cargo
+          # builds from source, which needs Cargo, and libclang for bindgen
           name: Install Rust
           command: |
+            sudo apt-get update
+            sudo DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends libclang-dev
             curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y --profile minimal
             echo 'export PATH="${HOME}/.cargo/bin:${PATH}"' >> "${BASH_ENV}"
       - set_up_environment:
