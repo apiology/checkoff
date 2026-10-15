@@ -303,6 +303,13 @@ jobs:
       # Bundler 2.x uses Pathname::SEPARATOR_PAT, which Ruby 4.1 removed
       BUNDLER_VERSION: 4.0.23
     steps:
+      - run:
+          # rubydex (via tapioca) ships no prebuilt binary for Ruby 4.1, so it
+          # builds from source, which needs Cargo
+          name: Install Rust
+          command: |
+            curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y --profile minimal
+            echo 'export PATH="${HOME}/.cargo/bin:${PATH}"' >> "${BASH_ENV}"
       - set_up_environment:
           cache_tag: ruby-4.1.0-preview1-
       - run_with_languages:
