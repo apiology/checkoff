@@ -33,10 +33,10 @@ commands:
   set_up_environment:
     description: "Install source environment"
     parameters:
-      cache_tag:
+      ruby:
         type: string
-        description: "Keeps a job's rbenv cache apart, e.g. one on another Ruby"
-        default: ""
+        description: "Ruby series to install, e.g. 3.3; keys the rbenv cache"
+        default: "3.3"
     steps:
       # Blobless default checkout lacks objects for tools that diff against origin/main
       # (e.g. undercover Rugged::OdbError). CircleCI uses method: full.
@@ -70,12 +70,12 @@ commands:
       - restore_cache:
           name: Restore rbenv cache
           keys:
-            - rbenv-v6-<< parameters.cache_tag >>{{ checksum "/tmp/solargraph_revision" }}-{{ checksum "checkoff.gemspec" }}-{{ checksum "Gemfile" }}-{{ checksum "Gemfile.lock" }}-{{ checksum "Makefile" }}-{{ checksum ".circleci/config.yml" }}- # yamllint disable-line rule:line-length
-            - rbenv-v6-<< parameters.cache_tag >>{{ checksum "/tmp/solargraph_revision" }}-{{ checksum "checkoff.gemspec" }}-{{ checksum "Gemfile" }}-{{ checksum "Gemfile.lock" }}-{{ checksum "Makefile" }}- # yamllint disable-line rule:line-length
-            - rbenv-v6-<< parameters.cache_tag >>{{ checksum "/tmp/solargraph_revision" }}-{{ checksum "checkoff.gemspec" }}-{{ checksum "Gemfile" }}-{{ checksum "Gemfile.lock" }}- # yamllint disable-line rule:line-length
-            - rbenv-v6-<< parameters.cache_tag >>{{ checksum "/tmp/solargraph_revision" }}-{{ checksum "checkoff.gemspec" }}-{{ checksum "Gemfile" }}- # yamllint disable-line rule:line-length
-            - rbenv-v6-<< parameters.cache_tag >>{{ checksum "/tmp/solargraph_revision" }}-{{ checksum "checkoff.gemspec" }}-
-            - rbenv-v6-<< parameters.cache_tag >>{{ checksum "/tmp/solargraph_revision" }}-
+            - rbenv-v6-ruby<< parameters.ruby >>-{{ checksum "/tmp/solargraph_revision" }}-{{ checksum "checkoff.gemspec" }}-{{ checksum "Gemfile" }}-{{ checksum "Gemfile.lock" }}-{{ checksum "Makefile" }}-{{ checksum ".circleci/config.yml" }}- # yamllint disable-line rule:line-length
+            - rbenv-v6-ruby<< parameters.ruby >>-{{ checksum "/tmp/solargraph_revision" }}-{{ checksum "checkoff.gemspec" }}-{{ checksum "Gemfile" }}-{{ checksum "Gemfile.lock" }}-{{ checksum "Makefile" }}- # yamllint disable-line rule:line-length
+            - rbenv-v6-ruby<< parameters.ruby >>-{{ checksum "/tmp/solargraph_revision" }}-{{ checksum "checkoff.gemspec" }}-{{ checksum "Gemfile" }}-{{ checksum "Gemfile.lock" }}- # yamllint disable-line rule:line-length
+            - rbenv-v6-ruby<< parameters.ruby >>-{{ checksum "/tmp/solargraph_revision" }}-{{ checksum "checkoff.gemspec" }}-{{ checksum "Gemfile" }}- # yamllint disable-line rule:line-length
+            - rbenv-v6-ruby<< parameters.ruby >>-{{ checksum "/tmp/solargraph_revision" }}-{{ checksum "checkoff.gemspec" }}-
+            - rbenv-v6-ruby<< parameters.ruby >>-{{ checksum "/tmp/solargraph_revision" }}-
       - restore_cache:
           # NOTE: bump the ruby-types-vN- prefix when YARD_OPTS changes in
           # the Makefile (see the comment there for why).
@@ -117,7 +117,7 @@ commands:
             - "/home/circleci/.pyenv"
       - save_cache:
           name: 'Save rbenv cache'
-          key: rbenv-v6-<< parameters.cache_tag >>{{ checksum "/tmp/solargraph_revision" }}-{{ checksum "checkoff.gemspec" }}-{{ checksum "Gemfile" }}-{{ checksum "Gemfile.lock" }}-{{ checksum "Makefile" }}-{{ checksum ".circleci/config.yml" }}-{{ checksum ".ruby-version" }} # yamllint disable-line rule:line-length
+          key: rbenv-v6-ruby<< parameters.ruby >>-{{ checksum "/tmp/solargraph_revision" }}-{{ checksum "checkoff.gemspec" }}-{{ checksum "Gemfile" }}-{{ checksum "Gemfile.lock" }}-{{ checksum "Makefile" }}-{{ checksum ".circleci/config.yml" }}-{{ checksum ".ruby-version" }} # yamllint disable-line rule:line-length
           paths:
             - "Gemfile.lock.installed"
             - 'vendor/.keep'
@@ -244,10 +244,9 @@ jobs:
   build:
     parameters:
       ruby:
-        description: "default, or newest to test the newest Ruby, previews included"
-        type: enum
-        enum: ["default", "newest"]
-        default: "default"
+        description: "Ruby series to test, e.g. 3.3; a preview until its release"
+        type: string
+        default: "3.3"
     working_directory: ~/checkoff
     docker:
       - image: cimg/base:current
@@ -256,24 +255,19 @@ jobs:
     steps:
       - when:
           condition:
-            equal: ["newest", << parameters.ruby >>]
+            equal: ["4.1", << parameters.ruby >>]
           steps:
             - run:
-                name: Prepare for the newest Ruby
+                name: Prepare to build native gems
                 command: |
-                  # Native gems may ship no prebuilt binary for it yet; rubydex
-                  # (via tapioca) then builds from source, needing Cargo and libclang
+                  # rubydex (via tapioca) ships no prebuilt gem for 4.1 yet,
+                  # so it builds from source, needing Cargo and libclang
                   sudo apt-get update
                   sudo DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends libclang-dev
                   curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y --profile minimal
                   echo 'export PATH="${HOME}/.cargo/bin:${PATH}"' >> "${BASH_ENV}"
-            - set_up_environment:
-                cache_tag: newest-ruby-
-      - unless:
-          condition:
-            equal: ["newest", << parameters.ruby >>]
-          steps:
-            - set_up_environment
+      - set_up_environment:
+          ruby: << parameters.ruby >>
       - run:
           label: Verify deltas
           command: |
@@ -378,10 +372,10 @@ workflows:
           name: build-<< matrix.ruby >>
           matrix:
             parameters:
-              ruby: ["default", "newest"]
+              ruby: ["3.3", "4.1"]
       - publish_gem:
           requires:
-            - build-default
+            - build-3.3
           filters:
             branches:
               only: main
