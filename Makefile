@@ -77,8 +77,12 @@ sorbet/rbi/todo.rbi: sorbet/tapioca/require.rb rbi/checkoff.rbi tapioca.installe
 
 build-typecheck: Gemfile.lock.installed rbs_collection.lock.yaml types.installed sorbet/machine_specific_config sorbet/rbi/todo.rbi ## Fetch information that type checking depends on
 
+# rbs runs git in its gem_rbs_collection clone; the GIT_* variables git
+# exports to hooks would point it at this repo instead
+RBS_COLLECTION = env -u GIT_DIR -u GIT_INDEX_FILE -u GIT_WORK_TREE bin/rbs collection
+
 rbs_collection.lock.yaml: Gemfile.lock rbs_collection.yaml
-	bin/rbs collection update
+	$(RBS_COLLECTION) update
 	touch rbs_collection.lock.yaml
 
 rbs_collection.yaml: Gemfile.lock.installed
@@ -86,7 +90,7 @@ rbs_collection.yaml: Gemfile.lock.installed
 
 .gem_rbs_collection/.keepme: rbs_collection.lock.yaml
 	# Ensure that the gem rbs collection is installed
-	bin/rbs collection install
+	$(RBS_COLLECTION) install
 	touch .gem_rbs_collection/.keepme
 
 ci-build-typecheck: build-typecheck  ## Ensure cache is filled for CI to save regardless of actions run
