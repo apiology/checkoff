@@ -81,10 +81,8 @@ build-typecheck: Gemfile.lock.installed rbs_collection.lock.yaml types.installed
 # exports to hooks would point it at this repo instead
 RBS_COLLECTION = env -u GIT_DIR -u GIT_INDEX_FILE -u GIT_WORK_TREE bin/rbs collection
 
-# install keeps the gem_rbs_collection revision already locked; run
-# `bin/rbs collection update` by hand to pick up newer types
 rbs_collection.lock.yaml: Gemfile.lock rbs_collection.yaml
-	$(RBS_COLLECTION) install
+	$(RBS_COLLECTION) update
 	touch rbs_collection.lock.yaml
 
 rbs_collection.yaml: Gemfile.lock.installed
