@@ -242,11 +242,40 @@ jobs:
     steps:
       - quality
   build:
+    parameters:
+      ruby:
+        description: "default, or newest to test the newest Ruby, previews included"
+        type: enum
+        enum: ["default", "newest"]
+        default: "default"
     working_directory: ~/checkoff
     docker:
       - image: cimg/base:current
+    environment:
+      FIX_SH_RUBY: << parameters.ruby >>
     steps:
-      - set_up_environment
+      - when:
+          condition:
+            equal: ["newest", << parameters.ruby >>]
+          steps:
+            - run:
+                name: Prepare for the newest Ruby
+                command: |
+                  # The Bundler in Gemfile.lock may not run on the newest Ruby
+                  echo "export BUNDLER_VERSION=$(curl -fsS https://rubygems.org/api/v1/versions/bundler/latest.json | jq -r .version)" >> "${BASH_ENV}"
+                  # Native gems may ship no prebuilt binary for it yet; rubydex
+                  # (via tapioca) then builds from source, needing Cargo and libclang
+                  sudo apt-get update
+                  sudo DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends libclang-dev
+                  curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y --profile minimal
+                  echo 'export PATH="${HOME}/.cargo/bin:${PATH}"' >> "${BASH_ENV}"
+            - set_up_environment:
+                cache_tag: newest-ruby-
+      - unless:
+          condition:
+            equal: ["newest", << parameters.ruby >>]
+          steps:
+            - set_up_environment
       - run:
           label: Verify deltas
           command: |
@@ -292,37 +321,6 @@ jobs:
 
             make citest cicoverage
     # This seemed to shave 5ish% of the build time off when added
-    resource_class: large.gen2
-  # Runs the tests on the newest Ruby, previews included, before it ships
-  test_newest_ruby:
-    working_directory: ~/checkoff
-    docker:
-      - image: cimg/base:current
-    environment:
-      FIX_SH_RUBY: newest
-    steps:
-      - run:
-          name: Prepare for the newest Ruby
-          command: |
-            # The Bundler in Gemfile.lock may not run on the newest Ruby
-            echo "export BUNDLER_VERSION=$(curl -fsS https://rubygems.org/api/v1/versions/bundler/latest.json | jq -r .version)" >> "${BASH_ENV}"
-            # Native gems may ship no prebuilt binary for it yet; rubydex
-            # (via tapioca) then builds from source, needing Cargo and libclang
-            sudo apt-get update
-            sudo DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends libclang-dev
-            curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y --profile minimal
-            echo 'export PATH="${HOME}/.cargo/bin:${PATH}"' >> "${BASH_ENV}"
-      - set_up_environment:
-          cache_tag: newest-ruby-
-      - run_with_languages:
-          label: Test
-          command: |
-            # Set timezone as same on dev box for test consistency
-            sudo ln -fs /usr/share/zoneinfo/America/New_York /etc/localtime
-            sudo DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends tzdata
-            export TZ=America/New_York
-
-            make citest
     resource_class: large.gen2
   publish_gem:
     working_directory: ~/checkoff
@@ -378,11 +376,14 @@ workflows:
       - quality
   build:
     jobs:
-      - build
-      - test_newest_ruby
+      - build:
+          name: build-<< matrix.ruby >>
+          matrix:
+            parameters:
+              ruby: ["default", "newest"]
       - publish_gem:
           requires:
-            - build
+            - build-default
           filters:
             branches:
               only: main
