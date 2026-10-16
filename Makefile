@@ -77,8 +77,10 @@ sorbet/rbi/todo.rbi: sorbet/tapioca/require.rb rbi/checkoff.rbi tapioca.installe
 
 build-typecheck: Gemfile.lock.installed rbs_collection.lock.yaml types.installed sorbet/machine_specific_config sorbet/rbi/todo.rbi ## Fetch information that type checking depends on
 
+# install keeps the gem_rbs_collection revision already locked; run
+# `bin/rbs collection update` by hand to pick up newer types
 rbs_collection.lock.yaml: Gemfile.lock rbs_collection.yaml
-	bin/rbs collection update
+	bin/rbs collection install
 	touch rbs_collection.lock.yaml
 
 rbs_collection.yaml: Gemfile.lock.installed
