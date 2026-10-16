@@ -32,6 +32,11 @@ commands:
             "LANG": "C.UTF-8"
   set_up_environment:
     description: "Install source environment"
+    parameters:
+      ruby:
+        type: string
+        description: "Ruby series to install, e.g. 3.3; keys the rbenv cache"
+        default: "3.3"
     steps:
       # Blobless default checkout lacks objects for tools that diff against origin/main
       # (e.g. undercover Rugged::OdbError). CircleCI uses method: full.
@@ -65,12 +70,12 @@ commands:
       - restore_cache:
           name: Restore rbenv cache
           keys:
-            - rbenv-v6-{{ checksum "/tmp/solargraph_revision" }}-{{ checksum "checkoff.gemspec" }}-{{ checksum "Gemfile" }}-{{ checksum "Gemfile.lock" }}-{{ checksum "Makefile" }}-{{ checksum ".circleci/config.yml" }}- # yamllint disable-line rule:line-length
-            - rbenv-v6-{{ checksum "/tmp/solargraph_revision" }}-{{ checksum "checkoff.gemspec" }}-{{ checksum "Gemfile" }}-{{ checksum "Gemfile.lock" }}-{{ checksum "Makefile" }}- # yamllint disable-line rule:line-length
-            - rbenv-v6-{{ checksum "/tmp/solargraph_revision" }}-{{ checksum "checkoff.gemspec" }}-{{ checksum "Gemfile" }}-{{ checksum "Gemfile.lock" }}- # yamllint disable-line rule:line-length
-            - rbenv-v6-{{ checksum "/tmp/solargraph_revision" }}-{{ checksum "checkoff.gemspec" }}-{{ checksum "Gemfile" }}- # yamllint disable-line rule:line-length
-            - rbenv-v6-{{ checksum "/tmp/solargraph_revision" }}-{{ checksum "checkoff.gemspec" }}-
-            - rbenv-v6-{{ checksum "/tmp/solargraph_revision" }}-
+            - rbenv-v6-ruby<< parameters.ruby >>-{{ checksum "/tmp/solargraph_revision" }}-{{ checksum "checkoff.gemspec" }}-{{ checksum "Gemfile" }}-{{ checksum "Gemfile.lock" }}-{{ checksum "Makefile" }}-{{ checksum ".circleci/config.yml" }}- # yamllint disable-line rule:line-length
+            - rbenv-v6-ruby<< parameters.ruby >>-{{ checksum "/tmp/solargraph_revision" }}-{{ checksum "checkoff.gemspec" }}-{{ checksum "Gemfile" }}-{{ checksum "Gemfile.lock" }}-{{ checksum "Makefile" }}- # yamllint disable-line rule:line-length
+            - rbenv-v6-ruby<< parameters.ruby >>-{{ checksum "/tmp/solargraph_revision" }}-{{ checksum "checkoff.gemspec" }}-{{ checksum "Gemfile" }}-{{ checksum "Gemfile.lock" }}- # yamllint disable-line rule:line-length
+            - rbenv-v6-ruby<< parameters.ruby >>-{{ checksum "/tmp/solargraph_revision" }}-{{ checksum "checkoff.gemspec" }}-{{ checksum "Gemfile" }}- # yamllint disable-line rule:line-length
+            - rbenv-v6-ruby<< parameters.ruby >>-{{ checksum "/tmp/solargraph_revision" }}-{{ checksum "checkoff.gemspec" }}-
+            - rbenv-v6-ruby<< parameters.ruby >>-{{ checksum "/tmp/solargraph_revision" }}-
       - restore_cache:
           # NOTE: bump the ruby-types-vN- prefix when YARD_OPTS changes in
           # the Makefile (see the comment there for why).
@@ -112,7 +117,7 @@ commands:
             - "/home/circleci/.pyenv"
       - save_cache:
           name: 'Save rbenv cache'
-          key: rbenv-v6-{{ checksum "/tmp/solargraph_revision" }}-{{ checksum "checkoff.gemspec" }}-{{ checksum "Gemfile" }}-{{ checksum "Gemfile.lock" }}-{{ checksum "Makefile" }}-{{ checksum ".circleci/config.yml" }}-{{ checksum ".ruby-version" }} # yamllint disable-line rule:line-length
+          key: rbenv-v6-ruby<< parameters.ruby >>-{{ checksum "/tmp/solargraph_revision" }}-{{ checksum "checkoff.gemspec" }}-{{ checksum "Gemfile" }}-{{ checksum "Gemfile.lock" }}-{{ checksum "Makefile" }}-{{ checksum ".circleci/config.yml" }}-{{ checksum ".ruby-version" }} # yamllint disable-line rule:line-length
           paths:
             - "Gemfile.lock.installed"
             - 'vendor/.keep'
@@ -237,11 +242,32 @@ jobs:
     steps:
       - quality
   build:
+    parameters:
+      ruby:
+        description: "Ruby series to test, e.g. 3.3; a preview until its release"
+        type: string
+        default: "3.3"
     working_directory: ~/checkoff
     docker:
       - image: cimg/base:current
+    environment:
+      FIX_SH_RUBY: << parameters.ruby >>
     steps:
-      - set_up_environment
+      - when:
+          condition:
+            equal: ["4.1", << parameters.ruby >>]
+          steps:
+            - run:
+                name: Prepare to build native gems
+                command: |
+                  # rubydex (via tapioca) ships no prebuilt gem for 4.1 yet,
+                  # so it builds from source, needing Cargo and libclang
+                  sudo apt-get update
+                  sudo DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends libclang-dev
+                  curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y --profile minimal
+                  echo 'export PATH="${HOME}/.cargo/bin:${PATH}"' >> "${BASH_ENV}"
+      - set_up_environment:
+          ruby: << parameters.ruby >>
       - run:
           label: Verify deltas
           command: |
@@ -342,10 +368,14 @@ workflows:
       - quality
   build:
     jobs:
-      - build
+      - build:
+          name: build-<< matrix.ruby >>
+          matrix:
+            parameters:
+              ruby: ["3.3", "4.1"]
       - publish_gem:
           requires:
-            - build
+            - build-3.3
           filters:
             branches:
               only: main

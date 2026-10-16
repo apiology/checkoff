@@ -18,11 +18,12 @@ class TestConfigLoader < Minitest::Test
 
     config_hash = Checkoff::Internal::ConfigLoader.load(:foo)
 
-    ENV.expects(:fetch).with('FOO__NO_KEY_FOUND', nil).returns(nil).at_least(2)
-
-    assert_nil(config_hash[:no_key_found])
-    assert_raises(KeyError) do
-      config_hash.fetch(:no_key_found)
+    # Ruby 4.1 makes ENV shareable, so Mocha can no longer stub it
+    with_env('FOO__NO_KEY_FOUND' => nil) do
+      assert_nil(config_hash[:no_key_found])
+      assert_raises(KeyError) do
+        config_hash.fetch(:no_key_found)
+      end
     end
   end
 
@@ -32,10 +33,22 @@ class TestConfigLoader < Minitest::Test
 
     config_hash = Checkoff::Internal::ConfigLoader.load(:foo)
 
-    ENV.expects(:fetch).with('FOO__ENV_ONLY_KEY', nil).returns('123').at_least(2)
+    with_env('FOO__ENV_ONLY_KEY' => '123') do
+      assert_equal('123', config_hash[:env_only_key])
+      assert_equal('123', config_hash.fetch(:env_only_key))
+    end
+  end
 
-    assert_equal('123', config_hash[:env_only_key])
-    assert_equal('123', config_hash.fetch(:env_only_key))
+  # Sets environment variables for the block, then restores them
+  #
+  # @param vars [Hash{String => String, nil}] nil unsets the variable
+  # @return [void]
+  def with_env(vars)
+    old = vars.to_h { |name, _| [name, ENV.fetch(name, nil)] }
+    vars.each { |name, value| ENV[name] = value }
+    yield
+  ensure
+    old&.each { |name, value| ENV[name] = value }
   end
 
   # @return [void]
