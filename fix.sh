@@ -147,6 +147,22 @@ latest_ruby_version() {
   set -e
 }
 
+# The newest Ruby ruby-build knows, counting previews and release
+# candidates until their release ships: e.g. 4.1.0-preview1 before 4.1.0.
+newest_ruby_version() {
+  local all prerelease
+  set +e
+  all="$(rbenv install --list-all 2>/dev/null | grep -E '^[0-9]+\.[0-9]+\.[0-9]+(-(preview|rc)[0-9]+)?$')"
+  set -e
+  prerelease="$(grep -E -- '-(preview|rc)' <<< "${all}" | tail -1 || true)"
+  if [ -n "${prerelease}" ] && ! grep -qx -- "${prerelease%%-*}" <<< "${all}"
+  then
+    echo "${prerelease}"
+  else
+    grep -v -- '-' <<< "${all}" | tail -1
+  fi
+}
+
 ensure_binary_library() {
   library_base_name=${1:?library base name - like libfoo}
   homebrew_package=${2:?homebrew package}
@@ -202,9 +218,14 @@ ensure_ruby_versions() {
   # You can find out which feature versions are still supported / have
   # been release here: https://www.ruby-lang.org/en/downloads/
   #
-  # FIX_SH_RUBY_VERSION picks one exact version instead, e.g. a preview
-  # release for a CI job that tests the next Ruby.
-  ruby_versions="${FIX_SH_RUBY_VERSION:-$(latest_ruby_version 3.3)}"
+  # FIX_SH_RUBY=newest picks the newest Ruby instead, previews included,
+  # for a CI check that tests the next Ruby before it ships.
+  if [ "${FIX_SH_RUBY:-}" = newest ]
+  then
+    ruby_versions="$(newest_ruby_version)"
+  else
+    ruby_versions="$(latest_ruby_version 3.3)"
+  fi
 
   installed_ruby_versions="$(rbenv versions --bare --skip-aliases)"
 

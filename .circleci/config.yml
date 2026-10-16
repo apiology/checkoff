@@ -293,27 +293,27 @@ jobs:
             make citest cicoverage
     # This seemed to shave 5ish% of the build time off when added
     resource_class: large.gen2
-  # Runs the tests on the next Ruby before it ships
-  test_ruby_preview:
+  # Runs the tests on the newest Ruby, previews included, before it ships
+  test_newest_ruby:
     working_directory: ~/checkoff
     docker:
       - image: cimg/base:current
     environment:
-      FIX_SH_RUBY_VERSION: 4.1.0-preview1
-      # Bundler 2.x uses Pathname::SEPARATOR_PAT, which Ruby 4.1 removed
-      BUNDLER_VERSION: 4.0.23
+      FIX_SH_RUBY: newest
     steps:
       - run:
-          # rubydex (via tapioca) ships no prebuilt binary for Ruby 4.1, so it
-          # builds from source, which needs Cargo, and libclang for bindgen
-          name: Install Rust
+          name: Prepare for the newest Ruby
           command: |
+            # The Bundler in Gemfile.lock may not run on the newest Ruby
+            echo "export BUNDLER_VERSION=$(curl -fsS https://rubygems.org/api/v1/versions/bundler/latest.json | jq -r .version)" >> "${BASH_ENV}"
+            # Native gems may ship no prebuilt binary for it yet; rubydex
+            # (via tapioca) then builds from source, needing Cargo and libclang
             sudo apt-get update
             sudo DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends libclang-dev
             curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y --profile minimal
             echo 'export PATH="${HOME}/.cargo/bin:${PATH}"' >> "${BASH_ENV}"
       - set_up_environment:
-          cache_tag: ruby-4.1.0-preview1-
+          cache_tag: newest-ruby-
       - run_with_languages:
           label: Test
           command: |
@@ -379,7 +379,7 @@ workflows:
   build:
     jobs:
       - build
-      - test_ruby_preview
+      - test_newest_ruby
       - publish_gem:
           requires:
             - build
