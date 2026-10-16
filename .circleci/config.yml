@@ -261,8 +261,6 @@ jobs:
             - run:
                 name: Prepare for the newest Ruby
                 command: |
-                  # The Bundler in Gemfile.lock may not run on the newest Ruby
-                  echo "export BUNDLER_VERSION=$(curl -fsS https://rubygems.org/api/v1/versions/bundler/latest.json | jq -r .version)" >> "${BASH_ENV}"
                   # Native gems may ship no prebuilt binary for it yet; rubydex
                   # (via tapioca) then builds from source, needing Cargo and libclang
                   sudo apt-get update

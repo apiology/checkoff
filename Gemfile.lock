@@ -201,6 +201,7 @@ GEM
     mime-types (3.5.1)
       mime-types-data (~> 3.2015)
     mime-types-data (3.2026.0701)
+    mini_portile2 (2.8.9)
     minitest (5.27.0)
     minitest-profile (0.0.2)
     minitest-reporters (1.8.0)
@@ -220,6 +221,9 @@ GEM
       bigdecimal (>= 3.1, < 5)
     multipart-post (2.4.1)
     netrc (0.11.0)
+    nokogiri (1.19.4)
+      mini_portile2 (~> 2.8.2)
+      racc (~> 1.4)
     nokogiri (1.19.4-aarch64-linux-gnu)
       racc (~> 1.4)
     nokogiri (1.19.4-aarch64-linux-musl)
@@ -337,6 +341,7 @@ GEM
     ruby_parser (3.22.0)
       racc (~> 1.5)
       sexp_processor (~> 4.16)
+    rubydex (0.2.9)
     rubydex (0.2.9-aarch64-linux)
     rubydex (0.2.9-arm64-darwin)
     rubydex (0.2.9-x86_64-darwin)
@@ -483,6 +488,7 @@ CHECKSUMS
   brakeman (8.0.5) sha256=03735f9690d3fd4b32d66aacbf0a6d15a84266bdd06b32c05c8ecc8f6021d2be
   builder (3.3.0) sha256=497918d2f9dca528fdca4b88d84e4ef4387256d984b8154e9d5d3fe5a9c8835f
   bump (0.10.0) sha256=07929cf79031d2863f55e7b111e164566be10c43f8c42d67db7cb3b5745f0975
+  bundler (4.0.23) sha256=407ba8a1d928f412847f819aa5f8b6aef7c59fb51feb517112af8a165487287b
   bundler-audit (0.9.3) sha256=81c8766c71e47d0d28a0f98c7eed028539f21a6ea3cd8f685eb6f42333c9b4e9
   cache (0.4.1) sha256=d73c092f754d673b3b4ca5a16d678d0c8b73a0d660a3af3c0fce6ff1c9ae5a1c
   cache_method (0.2.7) sha256=744b80305fa97451b903035a71be305c1d1fc55995d4f5cebd161da8f3c9e705
@@ -534,6 +540,7 @@ CHECKSUMS
   method_source (1.1.0) sha256=181301c9c45b731b4769bc81e8860e72f9161ad7d66dd99103c9ab84f560f5c5
   mime-types (3.5.1) sha256=85d772fb6cf21f999ac8085998192fb9dd5d16e86ec4c69c5e79ac3003420d61
   mime-types-data (3.2026.0701) sha256=cd8811e1fb89d836499ba0582368a10ee74cef929ba956d1d5ddca045e6a730f
+  mini_portile2 (2.8.9) sha256=0cd7c7f824e010c072e33f68bc02d85a00aeb6fce05bb4819c03dfd3c140c289
   minitest (5.27.0) sha256=2d3b17f8a36fe7801c1adcffdbc38233b938eb0b4966e97a6739055a45fa77d5
   minitest-profile (0.0.2) sha256=caf5306217b59ea2854d75ff6b312e2c139f2948f2b6a39486677b8317b7048e
   minitest-reporters (1.8.0) sha256=8ce5280fb73ad3178ae525454df169b6f28c1b38b1d088ea91815d3a370ba384
@@ -545,6 +552,7 @@ CHECKSUMS
   multi_xml (0.9.1) sha256=7ce766b59c17241ed62976caeae1fae9b2431b263398c35396239a68c4a64e57
   multipart-post (2.4.1) sha256=9872d03a8e552020ca096adadbf5e3cb1cd1cdd6acd3c161136b8a5737cdb4a8
   netrc (0.11.0) sha256=de1ce33da8c99ab1d97871726cba75151113f117146becbe45aa85cb3dabee3f
+  nokogiri (1.19.4) sha256=50c951611c92bca05c51411aef45f1cbc50f2821c4802758c5c6d34696533ab5
   nokogiri (1.19.4-aarch64-linux-gnu) sha256=1269fb644a6de405057a53dd5c762b1209b43ca7424f839454d3dbc677c31a8f
   nokogiri (1.19.4-aarch64-linux-musl) sha256=35c65b9ce72b3bb03207bdbe7067915019dc18c1b9b59139684bd6690fdd01af
   nokogiri (1.19.4-arm64-darwin) sha256=a46db9853286e6597b36ebc6953817d15acf3a299583eb3f89fdc6f91dd63527
@@ -591,6 +599,7 @@ CHECKSUMS
   ruby-progressbar (1.13.0) sha256=80fc9c47a9b640d6834e0dc7b3c94c9df37f08cb072b7761e4a71e22cff29b33
   ruby2_keywords (0.0.5) sha256=ffd13740c573b7301cf7a2e61fc857b2a8e3d3aff32545d6f8300d8bae10e3ef
   ruby_parser (3.22.0) sha256=1eb4937cd9eb220aa2d194e352a24dba90aef00751e24c8dfffdb14000f15d23
+  rubydex (0.2.9) sha256=c4c0f707586c01e59926b62a8193df38b5d00b7c35d35677dab1fb059903e289
   rubydex (0.2.9-aarch64-linux) sha256=74391fd22c4b4ccca1b695d634daad13326e7cc81567e96549da17c5031265bb
   rubydex (0.2.9-arm64-darwin) sha256=1c014e3c244102739914d528202b1d0f54bdc3d1f85667b81b65ea22aabfa560
   rubydex (0.2.9-x86_64-darwin) sha256=000df1723b090d9176dbceb8e291b72f93931cc3c7782f32287e0db6c20c1dd7
@@ -632,4 +641,4 @@ CHECKSUMS
   yard-sorbet (0.9.0) sha256=03d1aa461b9e9c82b886919a13aa3e09fcf4d1852239d2967ed97e92723ffe21
 
 BUNDLED WITH
-   2.6.9
+  4.0.23
