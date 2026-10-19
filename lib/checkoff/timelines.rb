@@ -94,9 +94,9 @@ module Checkoff
 
         next true if last_milestone.gid == task.gid
 
-        all_dependent_task_gids ||= @tasks.all_dependent_tasks(task).map(&:gid)
+        dependent_task_gids = all_dependent_task_gids ||= @tasks.all_dependent_tasks(task).map(&:gid)
 
-        all_dependent_task_gids.include? last_milestone.gid
+        dependent_task_gids.include? last_milestone.gid
       end
     end
 
@@ -124,14 +124,14 @@ module Checkoff
 
         # do this once, but lazily, so we don't have to do it if all
         # projects are excluded
-        all_dependent_milestones ||=
+        dependent_milestones = all_dependent_milestones ||=
           @tasks.all_dependent_tasks(task,
                                      extra_task_fields: ['resource_subtype',
                                                          'memberships.project.gid']).select do |dependent_task|
             dependent_task.resource_subtype == 'milestone'
           end
 
-        all_dependent_milestones.any? do |milestone|
+        dependent_milestones.any? do |milestone|
           milestone.memberships.any? do |milestone_membership_data|
             milestone_membership_data.fetch('project').fetch('gid') == project_gid
           end
