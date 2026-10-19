@@ -1187,4 +1187,18 @@ class TestTaskSelectors < ClassTest
   def respond_like
     {}
   end
+
+  # @return [void]
+  def test_filter_via_task_selector_in_project_named_memberships_not_requested
+    task_selectors = get_test_object(Checkoff::TaskSelectors) do
+      task.expects(:memberships).returns(nil)
+      task.expects(:gid).returns('123')
+    end
+
+    e = assert_raises(RuntimeError) do
+      task_selectors.filter_via_task_selector(task, [:in_project_named?, 'foo'])
+    end
+
+    assert_match(/did you add 'memberships' in your extra_fields argument/, e.message)
+  end
 end

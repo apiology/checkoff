@@ -7,6 +7,7 @@ require_relative 'workspaces'
 require_relative 'clients'
 require_relative 'my_tasks'
 require_relative 'internal/logging'
+require_relative 'internal/requested_fields'
 
 module Checkoff
   # Query different sections of Asana projects
@@ -282,7 +283,7 @@ module Checkoff
     # @param project_gid [String]
     # @return [void]
     def file_task_by_section(by_section, task, project_gid)
-      membership = task.memberships.find do |m|
+      membership = Internal::RequestedFields.memberships_or_raise(task).find do |m|
         m.fetch('project')['gid'] == project_gid
       end
       raise "Could not find task in project_gid #{project_gid}: #{task}" if membership.nil?

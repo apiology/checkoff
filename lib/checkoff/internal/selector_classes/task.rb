@@ -3,6 +3,7 @@
 
 require_relative 'task/function_evaluator'
 require 'checkoff/internal/task_timing'
+require 'checkoff/internal/requested_fields'
 
 module Checkoff
   module SelectorClasses
@@ -98,7 +99,7 @@ module Checkoff
         # @param project_name [String]
         # @return [Boolean]
         def evaluate(task, project_name)
-          project_names = task.memberships.map do |membership|
+          project_names = Internal::RequestedFields.memberships_or_raise(task).map do |membership|
             membership.fetch('project').fetch('name')
           end
           project_names.include?(project_name)
