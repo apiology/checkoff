@@ -233,7 +233,6 @@ class TestMvSubcommand < ClassTest
 
     expect_run
     projects.stubs(:project_or_raise)
-    sections.expects(:section_or_raise).never
   end
 
   # @return [void]

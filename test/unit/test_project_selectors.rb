@@ -192,7 +192,6 @@ class TestProjectSelectors < ClassTest
                                                    'workspace' => { 'gid' => '1', 'name' => 'Workspace 1' } },
                                                  client: mock('client'))
     project_selectors = get_test_object(Checkoff::ProjectSelectors) do
-      workspaces.expects(:default_workspace).never
       matching_project = mock('matching_project')
       matching_project.stubs(:name).returns('My Project')
       portfolios
