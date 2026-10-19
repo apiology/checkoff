@@ -184,7 +184,7 @@ module Checkoff
 
         # custom_field_#{gid}.variant = 'is'
         class Is < CustomFieldVariant
-          # @return [Array(Hash{String => String}, Array<Array<String>, String, Array>)]
+          # @return [Array(Hash{String => String}, Array<Array<String>, String, Array, Symbol>)]
           def convert
             selected_options = fetch_solo_param("custom_field_#{gid}.selected_options").split('~')
 

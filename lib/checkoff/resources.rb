@@ -57,7 +57,7 @@ module Checkoff
     # @param gid [String]
     # @param resource_type [String,nil]
     #
-    # @return [Array([Asana::Resource, nil], [String,nil])]
+    # @return [Array(Asana::Resources::Resource, String), Array(nil, nil)]
     def resource_by_gid(gid, resource_type: nil)
       %w[task section project].each do |resource_type_to_try|
         next unless [resource_type_to_try, nil].include?(resource_type)
