@@ -163,8 +163,9 @@ module Checkoff
                     only_uncompleted: true)
       all_options = projects.task_options(extra_fields:,
                                           only_uncompleted:)
+      no_options = {} #: Hash[Symbol, untyped]
       # @type [Hash]
-      options = all_options.fetch(:options) { {} }
+      options = all_options.fetch(:options) { no_options }
       options[:completed_since] = all_options[:completed_since] unless all_options[:completed_since].nil?
       client.tasks.find_by_id(task_gid, options:)
     rescue Asana::Errors::NotFound => e
