@@ -6,7 +6,10 @@ require_relative 'class_test'
 
 class TestSubtasks < ClassTest
   typed_delegate :projects, Checkoff::Projects
+  typed_delegate :clients, Checkoff::Clients
 
+  typed_mock :client, Asana::Client
+  typed_mock :tasks, Asana::ProxiedResourceClasses::Task
   typed_mock :task, Asana::Resources::Task
   typed_mock :raw_subtasks, Array
   typed_mock :subtask, Asana::Resources::Task
@@ -28,7 +31,7 @@ class TestSubtasks < ClassTest
     }
   end
 
-  # @return [void]
+  # @return [Hash]
   def subtask_options
     {
       task_options: true,
@@ -122,37 +125,75 @@ class TestSubtasks < ClassTest
   end
 
   # @return [void]
+  def expect_client_pulled
+    clients.expects(:client).returns(client)
+  end
+
+  # @return [void]
   def mock_by_section
+    expect_client_pulled
     allow_subtask_names_queried
     allow_all_section_status_queried
   end
 
-  # def test_by_section
-  #   subtasks = get_test_object(Checkoff::Subtasks) { mock_by_section }
+  # @return [void]
+  def test_by_section
+    subtasks = get_test_object(Checkoff::Subtasks) { mock_by_section }
 
-  #   assert_equal({
-  #                  nil => [subtask_1a],
-  #                  '1:' => [subtask_1b],
-  #                  '2:' => [],
-  #                  '3:' => [subtask_3a],
-  #                },
-  #                subtasks.by_section([subtask_1a,
-  #                                     subtask_section_1, subtask_1b,
-  #                                     subtask_section_2,
-  #                                     subtask_section_3, subtask_3a]))
-  # end
+    assert_equal({
+                   nil => [subtask_1a],
+                   '1:' => [subtask_1b],
+                   '2:' => [],
+                   '3:' => [subtask_3a],
+                 },
+                 subtasks.by_section([subtask_1a,
+                                      subtask_section_1, subtask_1b,
+                                      subtask_section_2,
+                                      subtask_section_3, subtask_3a]))
+  end
 
-  # def test_by_section_dupes
-  #   subtasks = get_test_object(Checkoff::Subtasks) { mock_by_section }
-  #   e = assert_raises(RuntimeError) do
-  #     subtasks.by_section([subtask_section_1, subtask_1a, subtask_1b,
-  #                          subtask_section_1, subtask_1a, subtask_1b,
-  #                          subtask_section_2,
-  #                          subtask_section_3, subtask_3a])
-  #   end
+  # @return [void]
+  def test_by_section_dupes
+    subtasks = get_test_object(Checkoff::Subtasks) { mock_by_section }
+    e = assert_raises(RuntimeError) do
+      subtasks.by_section([subtask_section_1, subtask_1a, subtask_1b,
+                           subtask_section_1, subtask_1a, subtask_1b,
+                           subtask_section_2,
+                           subtask_section_3, subtask_3a])
+    end
 
-  #   assert_equal('More than one section named 1:', e.message)
-  # end
+    assert_equal('More than one section named 1:', e.message)
+  end
+
+  # @param task_options [Hash]
+  # @param options [Hash]
+  # @return [void]
+  def expect_subtasks_fetched(task_options, options)
+    expect_client_pulled
+    projects.expects(:task_options)
+      .with(extra_fields: %w[is_rendered_as_separator], only_uncompleted: true)
+      .returns(task_options)
+    client.expects(:tasks).returns(tasks)
+    tasks.expects(:get_subtasks_for_task).with(task_gid: '123', options:).returns(raw_subtasks)
+  end
+
+  # @return [void]
+  def test_subtasks_by_gid
+    subtasks = get_test_object(Checkoff::Subtasks) do
+      expect_subtasks_fetched(subtask_options, subtask_options[:options])
+    end
+
+    assert_equal(raw_subtasks, subtasks.subtasks_by_gid('123'))
+  end
+
+  # @return [void]
+  def test_subtasks_by_gid_without_options
+    subtasks = get_test_object(Checkoff::Subtasks) do
+      expect_subtasks_fetched({}, {})
+    end
+
+    assert_equal(raw_subtasks, subtasks.subtasks_by_gid('123'))
+  end
 
   # @return [void]
   def expect_raw_subtasks_pulled
