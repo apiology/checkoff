@@ -25,7 +25,7 @@ group :development, :test do
   gem 'rspec'
   gem 'sord', # ['>= 6.0.0'] # ,
       github: 'apiology/sord',
-      branch: 'sord-integration-2026-09-01'
+      branch: 'sord-integration-2026-10-19'
   #   path: '../sord'
   # ensure version with branch coverage
   gem 'simplecov', ['>=0.18.0']
