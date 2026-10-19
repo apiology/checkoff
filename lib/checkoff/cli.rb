@@ -185,7 +185,7 @@ module Checkoff
       @tasks = tasks
     end
 
-    # @return [void]
+    # @return [String]
     def run
       if section_name.nil?
         run_on_project(workspace_name, project_name)
