@@ -51,12 +51,7 @@ module Checkoff
 
       return now_or_before?(date_or_time) if period == :now_or_before
 
-      if period.is_a?(Array)
-        period_name = T.cast(period.first, Symbol)
-        args = period[1..]
-
-        return compound_in_period?(date_or_time, period_name, *args)
-      end
+      return compound_in_period?(date_or_time, period) if period.is_a?(Array)
 
       raise "Teach me how to handle period #{period.inspect}"
     end
@@ -204,24 +199,53 @@ module Checkoff
     end
 
     # @param date_or_time [Date,Time,nil]
-    # @param period_name [Symbol]
-    # @param args [Array<Object>]
-    def compound_in_period?(date_or_time, period_name, *args)
-      return less_than_n_days_ago?(date_or_time, *args) if period_name == :less_than_n_days_ago
+    # @param period [Array<Symbol, Integer, nil>] period name, then its arguments
+    def compound_in_period?(date_or_time, period)
+      period_name = period.first
+      args = period.drop(1)
 
-      return less_than_n_days_from_now?(date_or_time, *args) if period_name == :less_than_n_days_from_now
+      num_days = args.first
+      if args.length == 1 && num_days.is_a?(Integer)
+        return single_num_days_in_period?(date_or_time, period_name, num_days)
+      end
+
+      if period_name == :between_relative_days && args.length == 2
+        return between_relative_days?(date_or_time,
+                                      optional_num_days(period, args.fetch(0)),
+                                      optional_num_days(period, args.fetch(1)))
+      end
+
+      raise "Teach me how to handle period #{period.inspect}"
+    end
+
+    # @param period [Array<Symbol, Integer, nil>] period the argument came from
+    # @param arg [Symbol, Integer, nil]
+    #
+    # @return [Integer, nil]
+    def optional_num_days(period, arg)
+      return nil if arg.nil?
+      return arg if arg.is_a?(Integer)
+
+      raise "Teach me how to handle period #{period.inspect}"
+    end
+
+    # @param date_or_time [Date,Time,nil]
+    # @param period_name [Symbol, Integer, nil]
+    # @param num_days [Integer]
+    def single_num_days_in_period?(date_or_time, period_name, num_days)
+      return less_than_n_days_ago?(date_or_time, num_days) if period_name == :less_than_n_days_ago
+
+      return less_than_n_days_from_now?(date_or_time, num_days) if period_name == :less_than_n_days_from_now
 
       if period_name == :greater_than_or_equal_to_n_days_from_now
-        return greater_than_or_equal_to_n_days_from_now?(date_or_time, *args)
+        return greater_than_or_equal_to_n_days_from_now?(date_or_time, num_days)
       end
 
       if period_name == :greater_than_or_equal_to_n_days_from_today
-        return greater_than_or_equal_to_n_days_from_today?(date_or_time, *args)
+        return greater_than_or_equal_to_n_days_from_today?(date_or_time, num_days)
       end
 
-      return between_relative_days?(date_or_time, *args) if period_name == :between_relative_days
-
-      raise "Teach me how to handle period [#{period_name.inspect}, #{args.map(&:inspect).join(', ')}]"
+      raise "Teach me how to handle period [#{period_name.inspect}, #{num_days.inspect}]"
     end
 
     # bundle exec ./time.rb

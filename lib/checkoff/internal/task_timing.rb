@@ -72,6 +72,16 @@ module Checkoff
       end
 
       # @param task [Asana::Resources::Task]
+      # @param field_spec [Array] [:custom_field, custom field name]
+      #
+      # @return [Time, Date, nil]
+      def custom_field_by_spec(task, field_spec)
+        raise "Teach me how to handle field #{field_spec.inspect}" unless field_spec.length == 2
+
+        custom_field(task, field_spec.fetch(1))
+      end
+
+      # @param task [Asana::Resources::Task]
       # @param field_name [Symbol,Array]
       #
       # @return [Date, Time, nil]
@@ -87,9 +97,8 @@ module Checkoff
         if field_name.is_a?(Array)
           # @type [Symbol]
           actual_field_name = field_name.first
-          args = field_name[1..]
 
-          return custom_field(task, *args) if actual_field_name == :custom_field
+          return custom_field_by_spec(task, field_name) if actual_field_name == :custom_field
         end
 
         raise "Teach me how to handle field #{field_name.inspect}"
