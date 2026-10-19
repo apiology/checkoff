@@ -108,7 +108,12 @@ module Checkoff
           custom_field = custom_fields.resource_custom_field_by_name(resource, custom_field_name)
           return nil if custom_field.nil?
 
-          custom_field['display_value']
+          display_value = custom_field['display_value']
+          unless display_value.nil? || display_value.is_a?(String)
+            raise "Expected display_value to be a String or nil, got #{display_value.class}"
+          end
+
+          display_value
         end
       end
 

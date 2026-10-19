@@ -41,10 +41,12 @@ class TestAttachments < ClassTest
     end
     attachment = attachments.create_attachment_from_url!(url, resource, attachment_name:, just_the_url: true)
 
+    assert_instance_of(Asana::Resources::Attachment, attachment)
+
     # @sg-ignore deliberate:fabricated-accessor
     #   'foo' is an arbitrary JSON field name this test injects into the mocked
     #   response body to prove attribute passthrough works, not a real attribute --
-    #   attachment is an Asana::Resources::Resource, whose #method_missing proxies
+    #   attachment is an Asana::Resources::Attachment, whose #method_missing proxies
     #   arbitrary JSON response keys to accessor methods (asana gem's
     #   resource_includes/resource.rb); no fixed method set to annotate.
     assert_equal('bar', attachment.foo)
@@ -54,10 +56,27 @@ class TestAttachments < ClassTest
   def test_create_attachment_from_downloaded_url
     url = 'http://example.com/picture.png'
     stub_request(:get, url).to_return(body: 'fake image bytes', status: 200)
-    resource.expects(:attach).with(filename: 'custom.png', mime: 'image/png', io: instance_of(File))
+    attachment = mock('attachment')
+    resource.expects(:attach).with(filename: 'custom.png', mime: 'image/png',
+                                   io: instance_of(File)).returns(attachment)
 
     attachments = get_test_object(Checkoff::Attachments)
-    attachments.create_attachment_from_url!(url, resource, attachment_name: 'custom.png')
+
+    assert_same(attachment, attachments.create_attachment_from_url!(url, resource, attachment_name: 'custom.png'))
+  end
+
+  # @return [void]
+  def test_create_attachment_from_downloaded_url_no_attachment
+    url = 'http://example.com/picture.png'
+    stub_request(:get, url).to_return(body: 'fake image bytes', status: 200)
+    resource.expects(:attach).with(filename: 'custom.png', mime: 'image/png', io: instance_of(File)).returns(nil)
+
+    attachments = get_test_object(Checkoff::Attachments)
+
+    e = assert_raises(RuntimeError) do
+      attachments.create_attachment_from_url!(url, resource, attachment_name: 'custom.png')
+    end
+    assert_match(/No attachment created/, e.message)
   end
 
   # @return [void]
