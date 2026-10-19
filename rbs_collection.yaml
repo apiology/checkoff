@@ -1,5 +1,11 @@
 # Download sources
 sources:
+  # asana 0.10 RBS pending upstream in ruby/gem_rbs_collection
+  - type: git
+    name: apiology/gem_rbs_collection
+    remote: https://github.com/apiology/gem_rbs_collection.git
+    revision: add-asana-signatures
+    repo_dir: gems
   - type: git
     name: ruby/gem_rbs_collection
     remote: https://github.com/ruby/gem_rbs_collection.git

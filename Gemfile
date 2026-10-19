@@ -31,6 +31,7 @@ group :development, :test do
   gem 'simplecov', ['>=0.18.0']
   gem 'simplecov_json_formatter'
   gem 'simplecov-lcov'
+  gem 'steep'
   gem 'tapioca', ['>= 0.16.0'], require: false
   # need --exclude-files
   gem 'undercover', ['>=0.6.3']
