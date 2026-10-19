@@ -77,6 +77,17 @@ class TestSections < BaseAsana
   end
 
   # @return [void]
+  def test_section_symbol_name_matches_nothing
+    sections = get_test_object(Checkoff::Sections) do
+      mock_sections_or_raise
+      section_1.stubs(:name).returns('Section 1')
+      section_2.stubs(:name).returns('Section 2')
+    end
+
+    assert_nil(sections.section('Workspace 1', a_name, :all_sections))
+  end
+
+  # @return [void]
   def test_sections_or_raise_nil_project_name
     sections = get_test_object(Checkoff::Sections)
     # @sg-ignore deliberate:wrong-argument-type
