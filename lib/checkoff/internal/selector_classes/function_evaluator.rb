@@ -30,16 +30,16 @@ module Checkoff
         raise 'Override me!'
       end
 
-      # @param _task [Asana::Resources::Task]
+      # @param _resource [Asana::Resources::Resource]
       # @param _args [Array<Object>]
       # @return [Object]
-      def evaluate(_task, *_args)
+      def evaluate(_resource, *_args)
         raise 'Implement me!'
       end
 
       private
 
-      # @param object [Array<Symbol, Array>, Symbol]
+      # @param object [Array<Symbol, Array>, Symbol, String]
       # @param fn_name [Symbol]
       # @return [Boolean]
       def fn?(object, fn_name)

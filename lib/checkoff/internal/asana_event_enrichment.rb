@@ -88,7 +88,7 @@ module Checkoff
       # @param gid [String]
       # @param resource_type [String,nil]
       #
-      # @return [Array([String, nil], [String, nil])]
+      # @return [Array(String, String), Array(nil, nil)]
       def enrich_gid(gid, resource_type: nil)
         resource, resource_type = resources.resource_by_gid(gid, resource_type:)
         [resource&.name, resource_type]
