@@ -120,6 +120,9 @@ module Asana
       # @return [Enumerable<Asana::Resources::Task>]
       def get_tasks(section:, **options); end
 
+      # @return [Enumerable<Asana::Resources::Task>]
+      def get_subtasks_for_task(task_gid:, options: {}); end
+
       # @return [Array<Asana::Resources::Task>]
       def to_a; end
     end
