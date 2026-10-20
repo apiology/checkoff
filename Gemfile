@@ -51,12 +51,13 @@ group :development do
   gem 'rubocop-yard'
   # ensure version with RSpec/VerifiedDoubleReference
   gem 'rubocop-rspec', ['>=3.4.0']
-  # Integration branch for several open upstream PRs, incl. #1231 (real
-  # intersection type semantics for RBS `A & B`) and #1259/#1258 (flow-sensitive
-  # narrowing fixes). See https://github.com/apiology/solargraph/pull/49
+  # 2026-08-04 integration branch at 8afa152f5
+  # (https://github.com/apiology/solargraph/pull/49) plus rbs-inline `#:` support from
+  # https://github.com/apiology/solargraph/pull/214 and
+  # https://github.com/apiology/solargraph/pull/215
   gem 'solargraph',
       github: 'apiology/solargraph',
-      branch: '2026-08-04'
+      branch: '2026-08-04-inline-rbs'
   # need https://github.com/lsegal/yard/pull/1604
   gem 'yard',
       github: 'lsegal/yard',
