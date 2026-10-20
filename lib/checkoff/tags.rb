@@ -112,10 +112,9 @@ module Checkoff
     #
     # @return [Hash{Symbol => Object}]
     def build_params(options)
-      # @type [Hash{Symbol => Object}]
-      params = { limit: options[:per_page], completed_since: options[:completed_since] }
-      params.reject do |_, v|
-        v.nil? || Array(v).empty?
+      { limit: :per_page, completed_since: :completed_since }.each_with_object({}) do |(param, option), params|
+        value = options[option]
+        params[param] = value unless value.nil? || Array(value).empty?
       end
     end
 
@@ -123,7 +122,7 @@ module Checkoff
     #
     # @param response [Asana::HttpClient::Response]
     #
-    # @return [Array<Hash, Hash>]
+    # @return [Array(Array<Hash>, Hash)]
     def parse(response)
       data = response.body.fetch('data')
       extra = response.body.except('data')

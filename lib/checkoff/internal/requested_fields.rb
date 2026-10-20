@@ -18,6 +18,20 @@ module Checkoff
 
         memberships
       end
+
+      # @param section [Asana::Resources::Section]
+      #
+      # @return [Hash{String => String}]
+      def self.section_project_or_raise(section)
+        # @type [Hash{String => String}, nil]
+        project = section.project
+        if project.nil?
+          raise "project not found on section #{section.gid} - " \
+                "did you add 'project' in your extra_fields argument?"
+        end
+
+        project
+      end
     end
   end
 end

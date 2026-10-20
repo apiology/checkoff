@@ -494,6 +494,18 @@ class TestSections < BaseAsana
   end
 
   # @return [void]
+  def test_previous_section_project_not_requested
+    sections = get_test_object(Checkoff::Sections) do
+      section_1.expects(:project).returns(nil)
+      section_1.expects(:gid).returns('123')
+    end
+
+    e = assert_raises(RuntimeError) { sections.previous_section(section_1) }
+
+    assert_match(/did you add 'project' in your extra_fields argument/, e.message)
+  end
+
+  # @return [void]
   def test_section_by_gid
     sections = get_test_object(Checkoff::Sections) do
       client.expects(:get).returns(get_results)

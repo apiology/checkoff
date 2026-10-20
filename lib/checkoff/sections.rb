@@ -187,7 +187,8 @@ module Checkoff
     #
     # @return [Asana::Resources::Section, nil]
     def previous_section(section)
-      project_sections = sections_by_project_gid(section.project.fetch('gid'))
+      project = Internal::RequestedFields.section_project_or_raise(section)
+      project_sections = sections_by_project_gid(project.fetch('gid'))
 
       # @type [Array<Asana::Resources::Section>]
       project_sections_arr = project_sections.to_a
@@ -236,7 +237,7 @@ module Checkoff
     # https://github.com/Asana/ruby-asana/blob/master/lib/asana/resource_includes/response_helper.rb#L7
     # @param response [Asana::HttpClient::Response]
     #
-    # @return [Array<Hash, Hash>]
+    # @return [Array(Hash, Hash)]
     def parse(response)
       data = response.body.fetch('data') do
         raise("Unexpected response body: #{response.body}")
