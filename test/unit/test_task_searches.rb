@@ -185,7 +185,7 @@ class TestTaskSearches < ClassTest
     task_searches = get_test_object(Checkoff::TaskSearches) do
       mocks[:projects] = projects
     end
-    task_searches.expects(:raw_task_search).twice.returns([good_task]).then.returns([])
+    task_searches.expects(:raw_task_search).times(2).returns([good_task]).then.returns([])
     good_task.expects(:created_at).returns('2026-01-01T00:00:00.000Z')
 
     result = task_searches.send(:iterated_raw_task_search, {}, workspace_gid: 'abc', extra_fields: [])
