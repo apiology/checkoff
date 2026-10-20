@@ -57,7 +57,9 @@ module Checkoff
     # @param gid [String]
     # @param resource_type [String,nil]
     #
-    # @return [Array(Asana::Resources::Resource, String), Array(nil, nil)]
+    # @return [Array(Asana::Resources::Task, String),
+    #   Array(Asana::Resources::Section, String),
+    #   Array(Asana::Resources::Project, String), Array(nil, nil)]
     def resource_by_gid(gid, resource_type: nil)
       %w[task section project].each do |resource_type_to_try|
         next unless [resource_type_to_try, nil].include?(resource_type)
@@ -73,7 +75,8 @@ module Checkoff
     # @param resource_type [String]
     # @param gid [String]
     #
-    # @return [Asana::Resources::Resource, nil]
+    # @return [Asana::Resources::Task, Asana::Resources::Section,
+    #   Asana::Resources::Project, nil]
     def fetch_gid_by_type(resource_type, gid)
       case resource_type
       when 'task' then fetch_task_gid(gid)
