@@ -6,8 +6,8 @@ require_relative 'projects'
 require_relative 'workspaces'
 require_relative 'clients'
 require_relative 'my_tasks'
+require_relative 'tasks'
 require_relative 'internal/logging'
-require_relative 'internal/requested_fields'
 
 module Checkoff
   # Query different sections of Asana projects
@@ -45,15 +45,20 @@ module Checkoff
     # @param projects [Checkoff::Projects]
     # @param workspaces [Checkoff::Workspaces]
     # @param time [Class<Time>]
+    # @param tasks [Checkoff::Tasks]
     def initialize(config: Checkoff::Internal::ConfigLoader.load(:asana),
                    client: Checkoff::Clients.new(config:).client,
                    projects: Checkoff::Projects.new(config:,
                                                     client:),
                    workspaces: Checkoff::Workspaces.new(config:,
                                                         client:),
-                   time: Time)
+                   time: Time,
+                   tasks: Checkoff::Tasks.new(config:,
+                                              client:,
+                                              sections: self))
       @projects = projects
       @workspaces = workspaces
+      @tasks = tasks
       @my_tasks = Checkoff::MyTasks
         .new(config:, projects:, client:)
       @client = client
@@ -183,11 +188,28 @@ module Checkoff
       name
     end
 
+    # Asana returns nil for a section's project unless it was requested
+    # via 'fields' / extra_fields; raise a clear error instead.
+    #
+    # @param section [Asana::Resources::Section]
+    #
+    # @return [Hash{String => String}]
+    def section_project_or_raise(section)
+      # @type [Hash{String => String}, nil]
+      project = section.project
+      if project.nil?
+        raise "project not found on section #{section.gid} - " \
+              "did you add 'project' in your extra_fields argument?"
+      end
+
+      project
+    end
+
     # @param section [Asana::Resources::Section]
     #
     # @return [Asana::Resources::Section, nil]
     def previous_section(section)
-      project = Internal::RequestedFields.section_project_or_raise(section)
+      project = section_project_or_raise(section)
       project_sections = sections_by_project_gid(project.fetch('gid'))
 
       # @type [Array<Asana::Resources::Section>]
@@ -284,7 +306,7 @@ module Checkoff
     # @param project_gid [String]
     # @return [void]
     def file_task_by_section(by_section, task, project_gid)
-      membership = Internal::RequestedFields.memberships_or_raise(task).find do |m|
+      membership = @tasks.memberships_or_raise(task).find do |m|
         m.fetch('project')['gid'] == project_gid
       end
       raise "Could not find task in project_gid #{project_gid}: #{task}" if membership.nil?

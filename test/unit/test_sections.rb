@@ -252,7 +252,7 @@ class TestSections < BaseAsana
   # @param section_name [String]
   # @return [void]
   def expect_task_memberships_queried(section_name)
-    task_c.expects(:memberships).returns([a_membership])
+    mocks[:tasks].expects(:memberships_or_raise).with(task_c).returns([a_membership])
     expect_task_project_memberships_queried
     expect_task_section_memberships_queried(section_name)
   end
@@ -506,6 +506,29 @@ class TestSections < BaseAsana
   end
 
   # @return [void]
+  def test_section_project_or_raise
+    project = { 'gid' => '1' }
+    sections = get_test_object(Checkoff::Sections) do
+      section_1.expects(:project).returns(project)
+    end
+
+    assert_equal(project, sections.section_project_or_raise(section_1))
+  end
+
+  # @return [void]
+  def test_section_project_or_raise_not_requested
+    sections = get_test_object(Checkoff::Sections) do
+      section_1.expects(:project).returns(nil)
+      section_1.expects(:gid).returns('123')
+    end
+
+    e = assert_raises(RuntimeError) { sections.section_project_or_raise(section_1) }
+
+    assert_equal("project not found on section 123 - did you add 'project' in your extra_fields argument?",
+                 e.message)
+  end
+
+  # @return [void]
   def test_section_by_gid
     sections = get_test_object(Checkoff::Sections) do
       client.expects(:get).returns(get_results)
@@ -534,6 +557,7 @@ class TestSections < BaseAsana
       client: Asana::Client,
       projects: Checkoff::Projects,
       workspaces: Checkoff::Workspaces,
+      tasks: Checkoff::Tasks,
     }
   end
 
@@ -544,7 +568,13 @@ class TestSections < BaseAsana
   end
 
   # @return [void]
+  def stub_tasks
+    mocks[:tasks] = Checkoff::Tasks.new(client:)
+  end
+
+  # @return [void]
   def expect_project_a_tasks_pulled_without_memberships
+    stub_tasks
     expect_project_pulled('Workspace 1', project_a, a_name)
     expect_tasks_pulled(project_a, [task_a, task_b, task_c], [task_c])
     task_c.expects(:memberships).returns(nil)

@@ -202,7 +202,7 @@ class TestTimelines < ClassTest
   # @return [void]
   def test_last_task_milestone_depends_on_this_task_no_memberships
     timelines = get_test_object(Checkoff::Timelines) do
-      task.expects(:memberships).returns([])
+      expect_memberships_pulled(task, [])
     end
 
     assert(timelines.last_task_milestone_depends_on_this_task?(task))
@@ -219,7 +219,7 @@ class TestTimelines < ClassTest
   # @param memberships [Array<Hash>]
   # @param task [Mocha::Mock]
   def expect_memberships_pulled(task, memberships)
-    task.expects(:memberships).returns(memberships)
+    tasks.expects(:memberships_or_raise).with(task).returns(memberships)
   end
 
   # @return [void]
@@ -387,8 +387,7 @@ class TestTimelines < ClassTest
       project_a.expects(:gid).returns(project_a_gid)
       dependent_milestone = mock('dependent_milestone')
       dependent_milestone.expects(:resource_subtype).returns('milestone')
-      dependent_milestone.expects(:memberships)
-        .returns([{ 'project' => { 'gid' => project_a_gid } }])
+      expect_memberships_pulled(dependent_milestone, [{ 'project' => { 'gid' => project_a_gid } }])
       tasks.expects(:all_dependent_tasks)
         .with(task, extra_task_fields: ['resource_subtype', 'memberships.project.gid'])
         .returns([dependent_milestone])
@@ -416,6 +415,7 @@ class TestTimelines < ClassTest
   # @return [void]
   def test_last_task_milestone_depends_on_this_task_memberships_not_requested
     timelines = get_test_object(Checkoff::Timelines) do
+      mocks[:tasks] = Checkoff::Tasks.new(client:)
       task.expects(:memberships).returns(nil)
       task.expects(:gid).returns('123')
     end
@@ -430,6 +430,7 @@ class TestTimelines < ClassTest
   # @return [void]
   def test_any_milestone_depends_on_this_task_memberships_not_requested
     timelines = get_test_object(Checkoff::Timelines) do
+      mocks[:tasks] = Checkoff::Tasks.new(client:)
       task.expects(:memberships).returns(nil)
       task.expects(:gid).returns('123')
     end

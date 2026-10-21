@@ -6,7 +6,6 @@
 require 'forwardable'
 require 'cache_method'
 require_relative 'internal/config_loader'
-require_relative 'internal/requested_fields'
 require_relative 'workspaces'
 require_relative 'clients'
 
@@ -74,7 +73,7 @@ module Checkoff
       end
 
       all_dependent_task_gids = nil
-      Internal::RequestedFields.memberships_or_raise(task).all? do |membership_data|
+      @tasks.memberships_or_raise(task).all? do |membership_data|
         # @type [Hash{String => Object}]
         md = membership_data
         unless limit_to_portfolio_name.nil?
@@ -109,7 +108,7 @@ module Checkoff
       end
 
       all_dependent_milestones = nil
-      Internal::RequestedFields.memberships_or_raise(task).all? do |membership_data|
+      @tasks.memberships_or_raise(task).all? do |membership_data|
         # @type [Hash{String => Object}]
         md = membership_data
         unless limit_to_portfolio_name.nil?
@@ -129,7 +128,7 @@ module Checkoff
           end
 
         all_dependent_milestones.any? do |milestone|
-          Internal::RequestedFields.memberships_or_raise(milestone).any? do |milestone_membership_data|
+          @tasks.memberships_or_raise(milestone).any? do |milestone_membership_data|
             milestone_membership_data.fetch('project').fetch('gid') == project_gid
           end
         end

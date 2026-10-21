@@ -11,7 +11,6 @@ require_relative 'internal/config_loader'
 require_relative 'internal/task_timing'
 require_relative 'internal/task_hashes'
 require_relative 'internal/logging'
-require_relative 'internal/requested_fields'
 require_relative 'internal/thread_local'
 require 'asana'
 require 'sorbet-runtime'
@@ -288,6 +287,22 @@ module Checkoff
       task_hashes.h_to_task(task_data, client:)
     end
 
+    # Asana returns nil for memberships unless they were requested via
+    # 'fields' / extra_fields; raise a clear error instead.
+    #
+    # @param task [Asana::Resources::Task]
+    #
+    # @return [Array<Hash{String => Hash{String => String}}>]
+    def memberships_or_raise(task)
+      memberships = task.memberships
+      if memberships.nil?
+        raise "memberships not found on task #{task.gid} - " \
+              "did you add 'memberships' in your extra_fields argument?"
+      end
+
+      memberships
+    end
+
     # True if the task is in a project which is in the given portfolio
     #
     # @param task [Asana::Resources::Task]
@@ -298,7 +313,7 @@ module Checkoff
                             portfolio_name,
                             workspace_name: T.must(@workspaces.default_workspace.name))
       portfolio_projects = @portfolios.projects_in_portfolio(workspace_name, portfolio_name)
-      Internal::RequestedFields.memberships_or_raise(task).any? do |membership|
+      memberships_or_raise(task).any? do |membership|
         project_gid = membership.fetch('project').fetch('gid')
         portfolio_projects.any? { |portfolio_project| portfolio_project.gid == project_gid }
       end
@@ -316,7 +331,7 @@ module Checkoff
       portfolio_projects = @portfolios.projects_in_portfolio(workspace_name, portfolio_name)
       portfolio_project_gids = portfolio_projects.map(&:gid)
       seen = T.let(false, T::Boolean)
-      Internal::RequestedFields.memberships_or_raise(task).each do |membership|
+      memberships_or_raise(task).each do |membership|
         project_gid = membership.fetch('project').fetch('gid')
         next unless portfolio_project_gids.include?(project_gid)
         return true if seen
