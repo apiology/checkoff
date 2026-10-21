@@ -1,4 +1,3 @@
-# typed: false
 # frozen_string_literal: true
 
 require_relative 'test_helper'
@@ -67,6 +66,15 @@ class TestTiming < ClassTest
     e = assert_raises(RuntimeError) { timing.in_period?(date, [:invalid, 123]) }
 
     assert_equal('Teach me how to handle period [:invalid, 123]', e.message)
+  end
+
+  # @return [void]
+  def test_in_period_compound_period_without_symbol_name
+    date = Date.parse('2019-01-04') # Friday
+    timing = get_test_object(Checkoff::Timing)
+    e = assert_raises(TypeError) { timing.in_period?(date, [123, 123]) }
+
+    assert_equal('Expected period name Symbol, got 123', e.message)
   end
 
   def respond_like_instance_of

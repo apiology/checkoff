@@ -1,4 +1,3 @@
-# typed: false
 # frozen_string_literal: true
 
 require_relative 'test_helper'
@@ -151,6 +150,21 @@ class TestProjectSelectors < ClassTest
     workspace.stubs(:name).returns('My Workspace')
     project.expects(:workspace).returns(nil)
     workspaces.expects(:default_workspace).returns(workspace)
+  end
+
+  # @return [void]
+  def test_filter_via_in_portfolio_named_no_workspace_name
+    project_selectors = get_test_object(Checkoff::ProjectSelectors) do
+      workspace = mock('workspace')
+      workspace.stubs(:name).returns(nil)
+      project.expects(:workspace).returns(nil)
+      workspaces.expects(:default_workspace).returns(workspace)
+    end
+    e = assert_raises(RuntimeError) do
+      project_selectors.filter_via_project_selector(project, [:in_portfolio_named?, 'My Portfolio'])
+    end
+
+    assert_equal('No workspace name found', e.message)
   end
 
   # @param matching_project_name [String]

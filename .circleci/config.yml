@@ -76,12 +76,12 @@ commands:
           # the Makefile (see the comment there for why).
           name: Restore ruby-types cache
           keys:
-            - ruby-types-v11-{{ checksum "checkoff.gemspec" }}-{{ checksum "Gemfile" }}-{{ checksum "Gemfile.lock" }}-{{ checksum "rbs_collection.lock.yaml" }}-{{ checksum "Makefile" }}-{{ checksum ".circleci/config.yml" }}- # yamllint disable-line rule:line-length
-            - ruby-types-v11-{{ checksum "checkoff.gemspec" }}-{{ checksum "Gemfile" }}-{{ checksum "Gemfile.lock" }}-{{ checksum "Makefile" }}- # yamllint disable-line rule:line-length
-            - ruby-types-v11-{{ checksum "checkoff.gemspec" }}-{{ checksum "Gemfile" }}-{{ checksum "Gemfile.lock" }}- # yamllint disable-line rule:line-length
-            - ruby-types-v11-{{ checksum "checkoff.gemspec" }}-{{ checksum "Gemfile" }}-
-            - ruby-types-v11-{{ checksum "checkoff.gemspec" }}-
-            - ruby-types-v11-
+            - ruby-types-v12-{{ checksum "checkoff.gemspec" }}-{{ checksum "Gemfile" }}-{{ checksum "Gemfile.lock" }}-{{ checksum "rbs_collection.lock.yaml" }}-{{ checksum "Makefile" }}-{{ checksum ".circleci/config.yml" }}- # yamllint disable-line rule:line-length
+            - ruby-types-v12-{{ checksum "checkoff.gemspec" }}-{{ checksum "Gemfile" }}-{{ checksum "Gemfile.lock" }}-{{ checksum "Makefile" }}- # yamllint disable-line rule:line-length
+            - ruby-types-v12-{{ checksum "checkoff.gemspec" }}-{{ checksum "Gemfile" }}-{{ checksum "Gemfile.lock" }}- # yamllint disable-line rule:line-length
+            - ruby-types-v12-{{ checksum "checkoff.gemspec" }}-{{ checksum "Gemfile" }}-
+            - ruby-types-v12-{{ checksum "checkoff.gemspec" }}-
+            - ruby-types-v12-
       - restore_cache:
           name: Restore pyenv cache
           keys:
@@ -223,7 +223,7 @@ commands:
             #
             bin/overcommit --sign pre-commit
             bin/overcommit --sign pre-push
-            bundle exec git add Gemfile.lock sorbet
+            bundle exec git add Gemfile.lock
             bundle exec git commit -m "Bump dependency releases"
             OVERCOMMIT_DEBUG=1 bundle exec git push --set-upstream origin "${CIRCLE_BRANCH:?}"
             echo "Avoiding double build after git push"
@@ -260,17 +260,13 @@ jobs:
           path: rbi/checkoff.rbi
       - save_cache:
           name: 'Save ruby-types cache'
-          key: ruby-types-v11-{{ checksum "checkoff.gemspec" }}-{{ checksum "Gemfile" }}-{{ checksum "Gemfile.lock" }}-{{ checksum "rbs_collection.lock.yaml" }}-{{ checksum "Makefile" }}-{{ checksum ".circleci/config.yml" }}-{{ checksum ".ruby-version" }}-{{ checksum "rbi/checkoff.rbi" }}  # yamllint disable-line rule:line-length
+          key: ruby-types-v12-{{ checksum "checkoff.gemspec" }}-{{ checksum "Gemfile" }}-{{ checksum "Gemfile.lock" }}-{{ checksum "rbs_collection.lock.yaml" }}-{{ checksum "Makefile" }}-{{ checksum ".circleci/config.yml" }}-{{ checksum ".ruby-version" }}-{{ checksum "rbi/checkoff.rbi" }}  # yamllint disable-line rule:line-length
           paths:
             - ".yardoc"
             - "yardoc"
             - "/home/circleci/.cache/solargraph"
-            - "/home/circleci/.sorbet-cache"
-            - "/home/circleci/.cache/sorbet"
             - "types.installed"
             - "yardoc.installed"
-            - "tapioca.installed"
-            - "sorbet/machine_specific_config"
             - "rbi/checkoff.rbi"
             - ".gem_rbs_collection"
             - "rbs_collection.lock.yaml"

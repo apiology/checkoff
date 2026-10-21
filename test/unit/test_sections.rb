@@ -1,4 +1,3 @@
-# typed: false
 # frozen_string_literal: true
 
 require_relative 'test_helper'
@@ -453,6 +452,28 @@ class TestSections < BaseAsana
     assert_raises(RuntimeError) do
       sections.tasks('Workspace 1', a_name, 'not found')
     end
+  end
+
+  # @return [void]
+  def mock_tasks_section_without_name
+    expect_project_pulled('Workspace 1', project_a, a_name)
+    expect_project_gid_pulled(project_a, a_gid)
+    expect_sections_client_pulled
+    expect_project_sections_pulled(a_gid, [section_1])
+    section_1.expects(:name).returns(nil)
+    section_1.expects(:gid).returns('123')
+  end
+
+  # @return [void]
+  def test_tasks_section_without_name
+    sections = get_test_object(Checkoff::Sections) do
+      mock_tasks_section_without_name
+    end
+    e = assert_raises(TypeError) do
+      sections.tasks('Workspace 1', a_name, 'Section 1')
+    end
+
+    assert_equal('Section 123 has no name', e.message)
   end
 
   # @return [void]

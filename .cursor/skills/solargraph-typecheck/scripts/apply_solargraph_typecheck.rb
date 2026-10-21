@@ -1,5 +1,4 @@
 #!/usr/bin/env ruby
-# typed: true
 # frozen_string_literal: true
 
 # rubocop:disable Naming/PredicateMethod, Metrics/AbcSize, Metrics/MethodLength

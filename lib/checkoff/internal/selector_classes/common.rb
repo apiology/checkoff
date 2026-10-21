@@ -1,4 +1,3 @@
-# typed: true
 # frozen_string_literal: true
 
 require_relative 'common/function_evaluator'
@@ -128,7 +127,12 @@ module Checkoff
         def evaluate(resource, custom_field_gid)
           custom_field = custom_fields.resource_custom_field_by_gid_or_raise(resource, custom_field_gid)
           display_value = custom_field['display_value']
-          display_value.nil? ? nil : T.cast(display_value, String)
+          return nil if display_value.nil?
+          unless display_value.is_a?(String)
+            raise TypeError, "Expected String display_value, got #{display_value.inspect}"
+          end
+
+          display_value
         end
       end
 

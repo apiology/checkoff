@@ -1,5 +1,4 @@
 #!/usr/bin/env ruby
-# typed: false
 
 # frozen_string_literal: true
 
@@ -40,23 +39,18 @@ module Checkoff
     #
     #        Valid values: :this_week, :now_or_before, :indefinite, [:less_than_n_days_ago, Integer]
     def in_period?(date_or_time, period)
+      return compound_period?(date_or_time, period) if period.is_a?(Array)
+
       return this_week?(date_or_time) if period == :this_week
 
       return next_week?(date_or_time) if period == :next_week
 
-      return day_of_week?(date_or_time, T.cast(period, Symbol)) if %i[monday tuesday wednesday thursday friday
-                                                                      saturday sunday].include?(period)
+      return day_of_week?(date_or_time, period) if %i[monday tuesday wednesday thursday friday
+                                                      saturday sunday].include?(period)
 
       return true if period == :indefinite
 
       return now_or_before?(date_or_time) if period == :now_or_before
-
-      if period.is_a?(Array)
-        period_name = T.cast(period.first, Symbol)
-        args = period[1..]
-
-        return compound_in_period?(date_or_time, period_name, *args)
-      end
 
       raise "Teach me how to handle period #{period.inspect}"
     end
@@ -176,7 +170,7 @@ module Checkoff
     #
     # @return [Date]
     def n_days_from_today(num_days)
-      T.cast(@today_getter.today + num_days, Date)
+      @today_getter.today + num_days
     end
 
     # @param date_or_time [Date,Time,nil]
@@ -201,6 +195,16 @@ module Checkoff
           "comparing with #{start_date} and #{end_date} = #{out.inspect}"
       end
       out
+    end
+
+    # @param date_or_time [Date,Time,nil]
+    # @param period [Array<Symbol, Integer>]
+    # @return [Boolean]
+    def compound_period?(date_or_time, period)
+      period_name = period.first
+      raise TypeError, "Expected period name Symbol, got #{period_name.inspect}" unless period_name.is_a?(Symbol)
+
+      compound_in_period?(date_or_time, period_name, *period.drop(1))
     end
 
     # @param date_or_time [Date,Time,nil]

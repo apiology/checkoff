@@ -1,4 +1,4 @@
-.PHONY: build build-typecheck bundle_install cicoverage citypecheck citest citypecoverage clean clean-coverage clean-typecheck clean-typecoverage coverage default docs gem_dependencies help overcommit quality repl report-coverage rubocop rubocop-ratchet test typecheck typecoverage post_cookiecutter_sync update_from_cookiecutter yard
+.PHONY: build build-typecheck bundle_install cicoverage citypecheck citest citypecoverage clean clean-coverage clean-typecheck clean-typecoverage coverage default docs gem_dependencies help overcommit quality repl report-coverage rubocop rubocop-ratchet steep test typecheck typecoverage post_cookiecutter_sync update_from_cookiecutter yard
 
 .DEFAULT_GOAL := default
 
@@ -28,11 +28,8 @@ start: ## run code continously and watch files for changes
 
 SORD_GEN_OPTIONS = --replace-errors-with-untyped --exclude-messages OMIT --no-regenerate #  --hide-private
 
-rbi/checkoff.rbi: tapioca.installed yardoc.installed sorbet/config .gem_rbs_collection/.keepme ## Generate Sorbet types from Yard docs
-	bin/parlour run --trace # creates RBI file from from RBI inline annotations in code
-	bin/sord gen $(SORD_GEN_OPTIONS) rbi/checkoff-sord.rbi # YARD to RBI
-	cat rbi/checkoff-parlour.rbi rbi/checkoff-sord.rbi > rbi/checkoff.rbi
-	rm -f rbi/checkoff-sord.rbi rbi/checkoff-parlour.rbi
+rbi/checkoff.rbi: yardoc.installed .gem_rbs_collection/.keepme ## Generate Sorbet types from Yard docs for downstream users
+	bin/sord gen $(SORD_GEN_OPTIONS) rbi/checkoff.rbi # YARD to RBI
 	sed -i.bak -e 's/^# typed: strong/# typed: ignore/' rbi/checkoff.rbi
 	rm -f rbi/checkoff.rbi.bak
 	touch rbi/checkoff.rbi
@@ -41,7 +38,7 @@ sig/checkoff.rbs: yardoc.installed .gem_rbs_collection/.keepme ## Generate RBS f
 	rm -f sig/checkoff.rbs
 	bin/sord gen $(SORD_GEN_OPTIONS) sig/checkoff.rbs # YARD to RBS
 
-YARD_PLUGIN_OPTS = --plugin yard-sorbet --plugin yard-solargraph
+YARD_PLUGIN_OPTS = --plugin yard-solargraph
 
 # IMPORTANT: if you change the source globs/excludes below, bump the
 # ruby-types-vN- cache prefix in .circleci/config.yml.
@@ -55,27 +52,14 @@ YARD_PLUGIN_OPTS = --plugin yard-sorbet --plugin yard-solargraph
 # shipping stale types (e.g. test-only TestDate/TestTasks) in sig/rbi.
 YARD_OPTS = $(YARD_PLUGIN_OPTS) -c .yardoc --output-dir yardoc --backtrace --exclude '^config/' --exclude '^test/' '{lib,app}/**/*.rb' 'ext/**/*.{c,rb}'
 
-types.installed: tapioca.installed Gemfile.lock Gemfile.lock.installed rbi/checkoff.rbi sorbet/tapioca/require.rb sorbet/config ## Ensure typechecking dependencies are in place
+types.installed: Gemfile.lock Gemfile.lock.installed rbi/checkoff.rbi sig/checkoff.rbs ## Ensure typechecking dependencies are in place
 	bin/solargraph gems
 	bin/yard gems $(YARD_PLUGIN_OPTS) 2>&1 || bin/yard gems --safe $(YARD_PLUGIN_OPTS) 2>&1 || bin/yard gems $(YARD_PLUGIN_OPTS) 2>&1
-	# bin/solargraph scan 2>&1
-	bin/spoom srb bump || true
-	# spoom rudely updates timestamps on files, so let's keep up by
-	# touching yardoc.installed so we don't end up in a vicious
-	# cycle
-	touch yardoc.installed rbi/checkoff.rbi
-	# bin/solargraph scan 2>&1
 	touch types.installed
 
 build: bundle_install pip_install build-typecheck ## Update 3rd party packages as well and produce any artifacts needed from code
 
-sorbet/machine_specific_config:
-	echo "--cache-dir=$$HOME/.sorbet-cache" > sorbet/machine_specific_config
-
-sorbet/rbi/todo.rbi: sorbet/tapioca/require.rb rbi/checkoff.rbi tapioca.installed
-	bin/tapioca todo
-
-build-typecheck: Gemfile.lock.installed rbs_collection.lock.yaml types.installed sorbet/machine_specific_config sorbet/rbi/todo.rbi ## Fetch information that type checking depends on
+build-typecheck: Gemfile.lock.installed rbs_collection.lock.yaml types.installed ## Fetch information that type checking depends on
 
 rbs_collection.lock.yaml: Gemfile.lock rbs_collection.yaml
 	bin/rbs collection update
@@ -91,18 +75,6 @@ rbs_collection.yaml: Gemfile.lock.installed
 
 ci-build-typecheck: build-typecheck  ## Ensure cache is filled for CI to save regardless of actions run
 	bin/solargraph gems
-
-# Only create this once, so no dependencies
-sorbet/tapioca/require.rb:
-	make sorbet/machine_specific_config vendor/.keep
-	bin/tapioca init
-
-tapioca.installed: sorbet/tapioca/require.rb Gemfile.lock Gemfile.lock.installed ## Install Tapioca-generated type information
-	make sorbet/machine_specific_config
-	bin/tapioca gems
-	bin/tapioca annotations
-#	bin/tapioca dsl
-	touch tapioca.installed
 
 yardoc.installed: Makefile $(wildcard config/annotations_*.rb) $(SOURCE_FILES) ## Generate YARD documentation
 	bin/yard doc $(YARD_OPTS)
@@ -121,17 +93,14 @@ realclean-typecheck: clean-typecheck ## Remove all type checking artifacts
 	bin/solargraph clear || true
 	rm -fr rbi/*.rbi
 	rm -fr ~/.cache/solargraph
-	rm -f tapioca.installed
 
 realclean: clean realclean-typecheck
 	rm -fr vendor/bundle .bundle/config
 	rm -f .make/*
 	rm -f *.installed
 
-SORBET_TC_OPTIONS = --suppress-error-code 4010 # --suppress-error-code 4002
-
-srb: build-typecheck ## Run Sorbet typechecker
-	bin/srb tc $(SORBET_TC_OPTIONS)
+steep: build-typecheck ## Run Steep typechecker
+	bin/steep check
 
 solargraph: solargraph-strong ## Run Solargraph typechecker
 
@@ -147,9 +116,9 @@ solargraph-strict: build-typecheck ## Run Solargraph typechecker
 solargraph-strong: build-typecheck ## Run Solargraph typechecker
 	bin/solargraph typecheck --level strong
 
-typecheck: build-typecheck srb solargraph ## validate types in code and configuration
+typecheck: build-typecheck steep solargraph ## validate types in code and configuration
 
-citypecheck: ci-build-typecheck srb ci-solargraph ## Run type check from CircleCI
+citypecheck: ci-build-typecheck steep ci-solargraph ## Run type check from CircleCI
 
 ci-solargraph: ## Run Solargraph typechecker in CI
 	bin/solargraph typecheck --level strong
@@ -249,8 +218,6 @@ update_from_cookiecutter: ## Bring in changes from template project used to crea
 	@$(MAKE) post_cookiecutter_sync
 
 post_cookiecutter_sync: ## Ecosystem-specific steps after template sync
-	git checkout --theirs sorbet/rbi/gems || true
 	bundle update --conservative json nokogiri rack rexml yard brakeman || true
 	( make build && git add Gemfile.lock ) || true
-	bin/spoom srb bump || true
 

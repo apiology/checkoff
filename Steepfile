@@ -1,9 +1,11 @@
 # frozen_string_literal: true
 
 target :lib do
-  signature 'sig', 'tmp-stubs'
+  signature 'sig'
 
   check 'lib'
+
+  implicitly_returns_nil!
 
   collection_config 'rbs_collection.yaml'
 

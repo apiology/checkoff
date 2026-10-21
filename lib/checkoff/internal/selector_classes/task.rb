@@ -1,4 +1,3 @@
-# typed: true
 # frozen_string_literal: true
 
 require_relative 'task/function_evaluator'
@@ -240,12 +239,22 @@ module Checkoff
           stories = task.stories(per_page: 100).to_a.reject do |story|
             excluding_resource_subtypes.include? story.resource_subtype
           end
-          return true if stories.empty? # no stories == infinitely old!
+          last_story = stories.last
+          return true if last_story.nil? # no stories == infinitely old!
 
-          last_story = T.must(stories.last)
-          last_story_created_at = Time.parse(last_story.created_at)
           n_days_ago = Time.at(Time.now.to_i - (num_days * 86_400))
-          last_story_created_at < n_days_ago
+          created_time(last_story) < n_days_ago
+        end
+
+        private
+
+        # @param story [Asana::Resources::Story]
+        # @return [Time]
+        def created_time(story)
+          created_at = story.created_at
+          raise "Story #{story.gid} has no created_at" if created_at.nil?
+
+          Time.parse(created_at)
         end
       end
 

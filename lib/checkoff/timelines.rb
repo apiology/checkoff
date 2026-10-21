@@ -1,5 +1,4 @@
 #!/usr/bin/env ruby
-# typed: false
 
 # frozen_string_literal: true
 
@@ -68,8 +67,7 @@ module Checkoff
     # @return [Boolean]
     def last_task_milestone_depends_on_this_task?(task, limit_to_portfolio_name: nil)
       unless limit_to_portfolio_name.nil?
-        limit_to_projects = @portfolios.projects_in_portfolio(T.must(@workspaces.default_workspace.name),
-                                                              limit_to_portfolio_name)
+        limit_to_projects = @portfolios.projects_in_portfolio(default_workspace_name, limit_to_portfolio_name)
       end
 
       all_dependent_task_gids = nil
@@ -105,8 +103,7 @@ module Checkoff
     # @return [Boolean]
     def any_milestone_depends_on_this_task?(task, limit_to_portfolio_name: nil)
       unless limit_to_portfolio_name.nil?
-        limit_to_projects = @portfolios.projects_in_portfolio(T.must(@workspaces.default_workspace.name),
-                                                              limit_to_portfolio_name)
+        limit_to_projects = @portfolios.projects_in_portfolio(default_workspace_name, limit_to_portfolio_name)
       end
 
       all_dependent_milestones = nil
@@ -151,6 +148,14 @@ module Checkoff
     end
 
     private
+
+    # @return [String]
+    def default_workspace_name
+      name = @workspaces.default_workspace.name
+      raise 'Default workspace has no name' if name.nil?
+
+      name
+    end
 
     # @param task_data [Hash{String => Object}]
     # @param section [Asana::Resources::Section]

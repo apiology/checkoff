@@ -1,6 +1,4 @@
-# typed: false
 # frozen_string_literal: true
-# typed: ignore
 
 require 'checkoff/cli'
 require_relative 'class_test'

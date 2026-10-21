@@ -1,4 +1,3 @@
-# typed: false
 # frozen_string_literal: true
 
 module Checkoff
@@ -33,7 +32,8 @@ module Checkoff
       #
       # @return [Date, Time, nil]
       def start_date_or_time(task)
-        return @time_class.parse(T.must(task.start_at)).localtime unless task.start_at.nil?
+        start_at = task.start_at
+        return @time_class.parse(start_at).localtime unless start_at.nil?
 
         return @date_class.parse(task.start_on) unless task.start_on.nil?
 
@@ -44,7 +44,8 @@ module Checkoff
       #
       # @return [Date, Time, nil]
       def due_date_or_time(task)
-        return @time_class.parse(T.must(task.due_at)).localtime unless task.due_at.nil?
+        due_at = task.due_at
+        return @time_class.parse(due_at).localtime unless due_at.nil?
 
         return @date_class.parse(task.due_on) unless task.due_on.nil?
 
@@ -55,7 +56,8 @@ module Checkoff
       #
       # @return [Time, nil]
       def modified_time(task)
-        @time_class.parse(T.must(task.modified_at)).localtime unless task.modified_at.nil?
+        modified_at = task.modified_at
+        @time_class.parse(modified_at).localtime unless modified_at.nil?
       end
 
       # @param task [Asana::Resources::Task]

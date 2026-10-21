@@ -32,7 +32,6 @@ Gem::Specification.new do |spec|
   spec.add_dependency 'cache_method'
   spec.add_dependency 'gli'
   spec.add_dependency 'mime-types'
-  spec.add_dependency 'sorbet-runtime'
   spec.metadata = {
     'rubygems_mfa_required' => 'false',
   }
