@@ -227,7 +227,9 @@ module Checkoff
     def section(workspace_name, project_name, section_name, extra_section_fields: [])
       sections = sections_or_raise(workspace_name, project_name,
                                    extra_fields: extra_section_fields)
-      sections.find { |section| section_key(T.cast(section.name, String))&.chomp(':') == section_name&.chomp(':') }
+      # Symbols are caller sentinels (e.g., :all_sections), never section names
+      section_name = section_name.chomp(':') if section_name.is_a?(String)
+      sections.find { |section| section_key(T.cast(section.name, String))&.chomp(':') == section_name }
     end
 
     private
