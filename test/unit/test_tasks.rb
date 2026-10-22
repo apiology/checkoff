@@ -600,4 +600,36 @@ class TestTasks < BaseAsana
 
     assert_empty(tasks.as_cache_key)
   end
+
+  # @return [void]
+  def test_in_portfolio_named_memberships_not_requested
+    tasks = get_test_object(Checkoff::Tasks) do
+      portfolios.expects(:projects_in_portfolio).with('workspace_name', 'portfolio name')
+        .returns([])
+      task.expects(:memberships).returns(nil)
+      task.expects(:gid).returns('123')
+    end
+
+    e = assert_raises(RuntimeError) do
+      tasks.in_portfolio_named?(task, 'portfolio name', workspace_name: 'workspace_name')
+    end
+
+    assert_match(/did you add 'memberships' in your extra_fields argument/, e.message)
+  end
+
+  # @return [void]
+  def test_in_portfolio_more_than_once_memberships_not_requested
+    tasks = get_test_object(Checkoff::Tasks) do
+      portfolios.expects(:projects_in_portfolio).with('workspace_name', 'portfolio name')
+        .returns([])
+      task.expects(:memberships).returns(nil)
+      task.expects(:gid).returns('123')
+    end
+
+    e = assert_raises(RuntimeError) do
+      tasks.in_portfolio_more_than_once?(task, 'portfolio name', workspace_name: 'workspace_name')
+    end
+
+    assert_match(/did you add 'memberships' in your extra_fields argument/, e.message)
+  end
 end
