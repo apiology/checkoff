@@ -928,7 +928,6 @@ class TestTaskSelectors < ClassTest
   # @return [void]
   def test_filter_via_task_selector_in_project_named_false
     task_selectors = get_test_object(Checkoff::TaskSelectors) do
-      stub_tasks
       task.expects(:memberships).returns([])
     end
 
@@ -939,7 +938,6 @@ class TestTaskSelectors < ClassTest
   # @return [void]
   def test_filter_via_task_selector_in_project_named_true
     task_selectors = get_test_object(Checkoff::TaskSelectors) do
-      stub_tasks
       task.expects(:memberships).returns([{ 'project' => { 'name' => 'foo' } }])
     end
 
@@ -1214,7 +1212,6 @@ class TestTaskSelectors < ClassTest
   # @return [void]
   def test_filter_via_task_selector_in_project_named_memberships_not_requested
     task_selectors = get_test_object(Checkoff::TaskSelectors) do
-      stub_tasks
       task.expects(:memberships).returns(nil)
       task.expects(:gid).returns('123')
     end

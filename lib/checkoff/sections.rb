@@ -7,6 +7,7 @@ require_relative 'workspaces'
 require_relative 'clients'
 require_relative 'my_tasks'
 require_relative 'internal/logging'
+require_relative 'internal/memberships'
 
 module Checkoff
   # Query different sections of Asana projects
@@ -300,7 +301,7 @@ module Checkoff
     # @param project_gid [String]
     # @return [void]
     def file_task_by_section(by_section, task, project_gid)
-      membership = task_memberships_or_raise(task).find do |m|
+      membership = memberships.memberships_or_raise(task).find do |m|
         m.fetch('project')['gid'] == project_gid
       end
       raise "Could not find task in project_gid #{project_gid}: #{task}" if membership.nil?
@@ -312,22 +313,6 @@ module Checkoff
       current_section = section_key(section_name)
 
       by_section.fetch(current_section) << task
-    end
-
-    # Asana returns nil for memberships unless they were requested via
-    # 'fields' / extra_fields; raise a clear error instead.
-    #
-    # @param task [Asana::Resources::Task]
-    #
-    # @return [Array<Hash{String => Hash{String => String}}>]
-    def task_memberships_or_raise(task)
-      memberships = task.memberships
-      if memberships.nil?
-        raise "memberships not found on task #{task.gid} - " \
-              "did you add 'memberships' in your extra_fields argument?"
-      end
-
-      memberships
     end
 
     # @param workspace_name [String, Symbol]
@@ -342,6 +327,11 @@ module Checkoff
               "under workspace #{workspace_name}"
       end
       project
+    end
+
+    # @return [Checkoff::Internal::Memberships]
+    def memberships
+      @memberships ||= Checkoff::Internal::Memberships.new
     end
   end
 end

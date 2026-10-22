@@ -602,29 +602,6 @@ class TestTasks < BaseAsana
   end
 
   # @return [void]
-  def test_memberships_or_raise
-    memberships = [{ 'project' => { 'gid' => '1' } }]
-    tasks = get_test_object(Checkoff::Tasks) do
-      task.expects(:memberships).returns(memberships)
-    end
-
-    assert_equal(memberships, tasks.memberships_or_raise(task))
-  end
-
-  # @return [void]
-  def test_memberships_or_raise_not_requested
-    tasks = get_test_object(Checkoff::Tasks) do
-      task.expects(:memberships).returns(nil)
-      task.expects(:gid).returns('123')
-    end
-
-    e = assert_raises(RuntimeError) { tasks.memberships_or_raise(task) }
-
-    assert_equal("memberships not found on task 123 - did you add 'memberships' in your extra_fields argument?",
-                 e.message)
-  end
-
-  # @return [void]
   def test_in_portfolio_named_memberships_not_requested
     tasks = get_test_object(Checkoff::Tasks) do
       portfolios.expects(:projects_in_portfolio).with('workspace_name', 'portfolio name')
