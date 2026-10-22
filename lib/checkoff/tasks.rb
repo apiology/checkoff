@@ -1,7 +1,5 @@
 #!/usr/bin/env ruby
 
-# typed: true
-
 # frozen_string_literal: true
 
 require_relative 'sections'
@@ -14,15 +12,12 @@ require_relative 'internal/memberships'
 require_relative 'internal/logging'
 require_relative 'internal/thread_local'
 require 'asana'
-require 'sorbet-runtime'
 
 module Checkoff
   # Pull tasks from Asana
   class Tasks
     # @!parse
     #   extend CacheMethod::ClassMethods
-
-    extend T::Sig
 
     include Logging
 
@@ -237,7 +232,7 @@ module Checkoff
     # @return [Array<Asana::Resources::Task>]
     def all_dependent_tasks(task, extra_task_fields: [])
       # @type [Array<Asana::Resources::Task>]
-      dependent_tasks = T.let([], T::Array[Asana::Resources::Task])
+      dependent_tasks = []
       # See note above - same applies as does in @dependencies
       #
       # @type [Array<Hash>]
@@ -253,8 +248,9 @@ module Checkoff
         dependent_task = task_by_gid(dependent_task_hash.fetch('gid'),
                                      only_uncompleted: true,
                                      extra_fields: ['dependents'] + extra_task_fields)
-        debug { "#{task.name} has dependent task #{T.must(dependent_task).name}" }
         next if dependent_task.nil?
+
+        debug { "#{task.name} has dependent task #{dependent_task.name}" }
 
         dependent_tasks << dependent_task
         dependent_tasks += all_dependent_tasks(dependent_task,
@@ -296,7 +292,7 @@ module Checkoff
     # @return [Boolean]
     def in_portfolio_named?(task,
                             portfolio_name,
-                            workspace_name: T.must(@workspaces.default_workspace.name))
+                            workspace_name: default_workspace_name)
       portfolio_projects = @portfolios.projects_in_portfolio(workspace_name, portfolio_name)
       memberships.memberships_or_raise(task).any? do |membership|
         project_gid = membership.fetch('project').fetch('gid')
@@ -312,10 +308,10 @@ module Checkoff
     # @return [Boolean]
     def in_portfolio_more_than_once?(task,
                                      portfolio_name,
-                                     workspace_name: T.must(@workspaces.default_workspace.name))
+                                     workspace_name: default_workspace_name)
       portfolio_projects = @portfolios.projects_in_portfolio(workspace_name, portfolio_name)
       portfolio_project_gids = portfolio_projects.map(&:gid)
-      seen = T.let(false, T::Boolean)
+      seen = false
       memberships.memberships_or_raise(task).each do |membership|
         project_gid = membership.fetch('project').fetch('gid')
         next unless portfolio_project_gids.include?(project_gid)
@@ -332,6 +328,14 @@ module Checkoff
     end
 
     private
+
+    # @return [String]
+    def default_workspace_name
+      name = @workspaces.default_workspace.name
+      raise 'Default workspace has no name' if name.nil?
+
+      name
+    end
 
     # @return [Checkoff::Internal::TaskTiming]
     def task_timing

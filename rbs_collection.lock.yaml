@@ -5,17 +5,17 @@ gems:
   version: '7.0'
   source:
     type: git
-    name: ruby/gem_rbs_collection
-    revision: ca341ff7f4332252d4cf2755e6258bf7ce175594
-    remote: https://github.com/ruby/gem_rbs_collection.git
+    name: apiology/gem_rbs_collection
+    revision: f13172e0d8e53426649d4d1d8022347719db0a28
+    remote: https://github.com/apiology/gem_rbs_collection.git
     repo_dir: gems
 - name: addressable
   version: '2.8'
   source:
     type: git
-    name: ruby/gem_rbs_collection
-    revision: ca341ff7f4332252d4cf2755e6258bf7ce175594
-    remote: https://github.com/ruby/gem_rbs_collection.git
+    name: apiology/gem_rbs_collection
+    revision: f13172e0d8e53426649d4d1d8022347719db0a28
+    remote: https://github.com/apiology/gem_rbs_collection.git
     repo_dir: gems
 - name: anonymous_loader
   version: 0.1.2
@@ -25,17 +25,17 @@ gems:
   version: '0.10'
   source:
     type: git
-    name: ruby/gem_rbs_collection
-    revision: ca341ff7f4332252d4cf2755e6258bf7ce175594
-    remote: https://github.com/ruby/gem_rbs_collection.git
+    name: apiology/gem_rbs_collection
+    revision: f13172e0d8e53426649d4d1d8022347719db0a28
+    remote: https://github.com/apiology/gem_rbs_collection.git
     repo_dir: gems
 - name: ast
   version: '2.4'
   source:
     type: git
-    name: ruby/gem_rbs_collection
-    revision: ca341ff7f4332252d4cf2755e6258bf7ce175594
-    remote: https://github.com/ruby/gem_rbs_collection.git
+    name: apiology/gem_rbs_collection
+    revision: f13172e0d8e53426649d4d1d8022347719db0a28
+    remote: https://github.com/apiology/gem_rbs_collection.git
     repo_dir: gems
 - name: auth-sanitizer
   version: 0.2.2
@@ -57,33 +57,33 @@ gems:
   version: '0.2'
   source:
     type: git
-    name: ruby/gem_rbs_collection
-    revision: ca341ff7f4332252d4cf2755e6258bf7ce175594
-    remote: https://github.com/ruby/gem_rbs_collection.git
+    name: apiology/gem_rbs_collection#add-cache-method-signatures
+    revision: 346be4e43b130837e90d2c1ca5a45e065432fd07
+    remote: https://github.com/apiology/gem_rbs_collection.git
     repo_dir: gems
 - name: cgi
   version: '0.5'
   source:
     type: git
-    name: ruby/gem_rbs_collection
-    revision: ca341ff7f4332252d4cf2755e6258bf7ce175594
-    remote: https://github.com/ruby/gem_rbs_collection.git
+    name: apiology/gem_rbs_collection
+    revision: f13172e0d8e53426649d4d1d8022347719db0a28
+    remote: https://github.com/apiology/gem_rbs_collection.git
     repo_dir: gems
 - name: concurrent-ruby
   version: '1.1'
   source:
     type: git
-    name: ruby/gem_rbs_collection
-    revision: ca341ff7f4332252d4cf2755e6258bf7ce175594
-    remote: https://github.com/ruby/gem_rbs_collection.git
+    name: apiology/gem_rbs_collection
+    revision: f13172e0d8e53426649d4d1d8022347719db0a28
+    remote: https://github.com/apiology/gem_rbs_collection.git
     repo_dir: gems
 - name: connection_pool
   version: '2.4'
   source:
     type: git
-    name: ruby/gem_rbs_collection
-    revision: ca341ff7f4332252d4cf2755e6258bf7ce175594
-    remote: https://github.com/ruby/gem_rbs_collection.git
+    name: apiology/gem_rbs_collection
+    revision: f13172e0d8e53426649d4d1d8022347719db0a28
+    remote: https://github.com/apiology/gem_rbs_collection.git
     repo_dir: gems
 - name: date
   version: '0'
@@ -97,9 +97,9 @@ gems:
   version: '1.5'
   source:
     type: git
-    name: ruby/gem_rbs_collection
-    revision: ca341ff7f4332252d4cf2755e6258bf7ce175594
-    remote: https://github.com/ruby/gem_rbs_collection.git
+    name: apiology/gem_rbs_collection
+    revision: f13172e0d8e53426649d4d1d8022347719db0a28
+    remote: https://github.com/apiology/gem_rbs_collection.git
     repo_dir: gems
 - name: digest
   version: '0'
@@ -113,9 +113,9 @@ gems:
   version: '2.5'
   source:
     type: git
-    name: ruby/gem_rbs_collection
-    revision: ca341ff7f4332252d4cf2755e6258bf7ce175594
-    remote: https://github.com/ruby/gem_rbs_collection.git
+    name: apiology/gem_rbs_collection
+    revision: f13172e0d8e53426649d4d1d8022347719db0a28
+    remote: https://github.com/apiology/gem_rbs_collection.git
     repo_dir: gems
 - name: fileutils
   version: '0'
@@ -129,33 +129,33 @@ gems:
   version: '2.22'
   source:
     type: git
-    name: ruby/gem_rbs_collection
-    revision: ca341ff7f4332252d4cf2755e6258bf7ce175594
-    remote: https://github.com/ruby/gem_rbs_collection.git
+    name: apiology/gem_rbs_collection#add-gli-signatures
+    revision: 7494eedd2e5378bc7bbe249d36428d60ace48382
+    remote: https://github.com/apiology/gem_rbs_collection.git
     repo_dir: gems
 - name: hashdiff
   version: '1.1'
   source:
     type: git
-    name: ruby/gem_rbs_collection
-    revision: ca341ff7f4332252d4cf2755e6258bf7ce175594
-    remote: https://github.com/ruby/gem_rbs_collection.git
+    name: apiology/gem_rbs_collection
+    revision: f13172e0d8e53426649d4d1d8022347719db0a28
+    remote: https://github.com/apiology/gem_rbs_collection.git
     repo_dir: gems
 - name: hashie
   version: '5.0'
   source:
     type: git
-    name: ruby/gem_rbs_collection
-    revision: ca341ff7f4332252d4cf2755e6258bf7ce175594
-    remote: https://github.com/ruby/gem_rbs_collection.git
+    name: apiology/gem_rbs_collection
+    revision: f13172e0d8e53426649d4d1d8022347719db0a28
+    remote: https://github.com/apiology/gem_rbs_collection.git
     repo_dir: gems
 - name: i18n
   version: '1.10'
   source:
     type: git
-    name: ruby/gem_rbs_collection
-    revision: ca341ff7f4332252d4cf2755e6258bf7ce175594
-    remote: https://github.com/ruby/gem_rbs_collection.git
+    name: apiology/gem_rbs_collection
+    revision: f13172e0d8e53426649d4d1d8022347719db0a28
+    remote: https://github.com/apiology/gem_rbs_collection.git
     repo_dir: gems
 - name: io-console
   version: '0'
@@ -169,9 +169,9 @@ gems:
   version: '2.5'
   source:
     type: git
-    name: ruby/gem_rbs_collection
-    revision: ca341ff7f4332252d4cf2755e6258bf7ce175594
-    remote: https://github.com/ruby/gem_rbs_collection.git
+    name: apiology/gem_rbs_collection
+    revision: f13172e0d8e53426649d4d1d8022347719db0a28
+    remote: https://github.com/apiology/gem_rbs_collection.git
     repo_dir: gems
 - name: language_server-protocol
   version: 3.17.0.6
@@ -181,33 +181,33 @@ gems:
   version: '1.1'
   source:
     type: git
-    name: ruby/gem_rbs_collection
-    revision: ca341ff7f4332252d4cf2755e6258bf7ce175594
-    remote: https://github.com/ruby/gem_rbs_collection.git
+    name: apiology/gem_rbs_collection
+    revision: f13172e0d8e53426649d4d1d8022347719db0a28
+    remote: https://github.com/apiology/gem_rbs_collection.git
     repo_dir: gems
 - name: logger
   version: '1.7'
   source:
     type: git
-    name: ruby/gem_rbs_collection
-    revision: ca341ff7f4332252d4cf2755e6258bf7ce175594
-    remote: https://github.com/ruby/gem_rbs_collection.git
+    name: apiology/gem_rbs_collection
+    revision: f13172e0d8e53426649d4d1d8022347719db0a28
+    remote: https://github.com/apiology/gem_rbs_collection.git
     repo_dir: gems
 - name: mime-types
   version: '3.5'
   source:
     type: git
-    name: ruby/gem_rbs_collection
-    revision: ca341ff7f4332252d4cf2755e6258bf7ce175594
-    remote: https://github.com/ruby/gem_rbs_collection.git
+    name: apiology/gem_rbs_collection
+    revision: f13172e0d8e53426649d4d1d8022347719db0a28
+    remote: https://github.com/apiology/gem_rbs_collection.git
     repo_dir: gems
 - name: minitest
   version: '5.25'
   source:
     type: git
-    name: ruby/gem_rbs_collection
-    revision: ca341ff7f4332252d4cf2755e6258bf7ce175594
-    remote: https://github.com/ruby/gem_rbs_collection.git
+    name: apiology/gem_rbs_collection
+    revision: f13172e0d8e53426649d4d1d8022347719db0a28
+    remote: https://github.com/apiology/gem_rbs_collection.git
     repo_dir: gems
 - name: monitor
   version: '0'
@@ -221,9 +221,9 @@ gems:
   version: '1.11'
   source:
     type: git
-    name: ruby/gem_rbs_collection
-    revision: ca341ff7f4332252d4cf2755e6258bf7ce175594
-    remote: https://github.com/ruby/gem_rbs_collection.git
+    name: apiology/gem_rbs_collection
+    revision: f13172e0d8e53426649d4d1d8022347719db0a28
+    remote: https://github.com/apiology/gem_rbs_collection.git
     repo_dir: gems
 - name: oauth2
   version: 2.0.24
@@ -233,9 +233,9 @@ gems:
   version: '0.1'
   source:
     type: git
-    name: ruby/gem_rbs_collection
-    revision: ca341ff7f4332252d4cf2755e6258bf7ce175594
-    remote: https://github.com/ruby/gem_rbs_collection.git
+    name: apiology/gem_rbs_collection
+    revision: f13172e0d8e53426649d4d1d8022347719db0a28
+    remote: https://github.com/apiology/gem_rbs_collection.git
     repo_dir: gems
 - name: open3
   version: '0'
@@ -253,17 +253,17 @@ gems:
   version: '1.20'
   source:
     type: git
-    name: ruby/gem_rbs_collection
-    revision: ca341ff7f4332252d4cf2755e6258bf7ce175594
-    remote: https://github.com/ruby/gem_rbs_collection.git
+    name: apiology/gem_rbs_collection
+    revision: f13172e0d8e53426649d4d1d8022347719db0a28
+    remote: https://github.com/apiology/gem_rbs_collection.git
     repo_dir: gems
 - name: parser
   version: '3.2'
   source:
     type: git
-    name: ruby/gem_rbs_collection
-    revision: ca341ff7f4332252d4cf2755e6258bf7ce175594
-    remote: https://github.com/ruby/gem_rbs_collection.git
+    name: apiology/gem_rbs_collection
+    revision: f13172e0d8e53426649d4d1d8022347719db0a28
+    remote: https://github.com/apiology/gem_rbs_collection.git
     repo_dir: gems
 - name: prism
   version: 1.9.0
@@ -273,33 +273,33 @@ gems:
   version: '1.8'
   source:
     type: git
-    name: ruby/gem_rbs_collection
-    revision: ca341ff7f4332252d4cf2755e6258bf7ce175594
-    remote: https://github.com/ruby/gem_rbs_collection.git
+    name: apiology/gem_rbs_collection
+    revision: f13172e0d8e53426649d4d1d8022347719db0a28
+    remote: https://github.com/apiology/gem_rbs_collection.git
     repo_dir: gems
 - name: rack
   version: '2.2'
   source:
     type: git
-    name: ruby/gem_rbs_collection
-    revision: ca341ff7f4332252d4cf2755e6258bf7ce175594
-    remote: https://github.com/ruby/gem_rbs_collection.git
+    name: apiology/gem_rbs_collection
+    revision: f13172e0d8e53426649d4d1d8022347719db0a28
+    remote: https://github.com/apiology/gem_rbs_collection.git
     repo_dir: gems
 - name: rainbow
   version: '3.0'
   source:
     type: git
-    name: ruby/gem_rbs_collection
-    revision: ca341ff7f4332252d4cf2755e6258bf7ce175594
-    remote: https://github.com/ruby/gem_rbs_collection.git
+    name: apiology/gem_rbs_collection
+    revision: f13172e0d8e53426649d4d1d8022347719db0a28
+    remote: https://github.com/apiology/gem_rbs_collection.git
     repo_dir: gems
 - name: rake
   version: '13.0'
   source:
     type: git
-    name: ruby/gem_rbs_collection
-    revision: ca341ff7f4332252d4cf2755e6258bf7ce175594
-    remote: https://github.com/ruby/gem_rbs_collection.git
+    name: apiology/gem_rbs_collection
+    revision: f13172e0d8e53426649d4d1d8022347719db0a28
+    remote: https://github.com/apiology/gem_rbs_collection.git
     repo_dir: gems
 - name: random-formatter
   version: '0'
@@ -317,9 +317,9 @@ gems:
   version: '2.8'
   source:
     type: git
-    name: ruby/gem_rbs_collection
-    revision: ca341ff7f4332252d4cf2755e6258bf7ce175594
-    remote: https://github.com/ruby/gem_rbs_collection.git
+    name: apiology/gem_rbs_collection
+    revision: f13172e0d8e53426649d4d1d8022347719db0a28
+    remote: https://github.com/apiology/gem_rbs_collection.git
     repo_dir: gems
 - name: ripper
   version: '0'
@@ -329,17 +329,17 @@ gems:
   version: '1.57'
   source:
     type: git
-    name: ruby/gem_rbs_collection
-    revision: ca341ff7f4332252d4cf2755e6258bf7ce175594
-    remote: https://github.com/ruby/gem_rbs_collection.git
+    name: apiology/gem_rbs_collection
+    revision: f13172e0d8e53426649d4d1d8022347719db0a28
+    remote: https://github.com/apiology/gem_rbs_collection.git
     repo_dir: gems
 - name: rubocop-ast
   version: '1.46'
   source:
     type: git
-    name: ruby/gem_rbs_collection
-    revision: ca341ff7f4332252d4cf2755e6258bf7ce175594
-    remote: https://github.com/ruby/gem_rbs_collection.git
+    name: apiology/gem_rbs_collection
+    revision: f13172e0d8e53426649d4d1d8022347719db0a28
+    remote: https://github.com/apiology/gem_rbs_collection.git
     repo_dir: gems
 - name: rubocop-yard
   version: 1.3.0
@@ -353,9 +353,9 @@ gems:
   version: '0.22'
   source:
     type: git
-    name: ruby/gem_rbs_collection
-    revision: ca341ff7f4332252d4cf2755e6258bf7ce175594
-    remote: https://github.com/ruby/gem_rbs_collection.git
+    name: apiology/gem_rbs_collection
+    revision: f13172e0d8e53426649d4d1d8022347719db0a28
+    remote: https://github.com/apiology/gem_rbs_collection.git
     repo_dir: gems
 - name: singleton
   version: '0'
@@ -381,9 +381,9 @@ gems:
   version: '1.2'
   source:
     type: git
-    name: ruby/gem_rbs_collection
-    revision: ca341ff7f4332252d4cf2755e6258bf7ce175594
-    remote: https://github.com/ruby/gem_rbs_collection.git
+    name: apiology/gem_rbs_collection
+    revision: f13172e0d8e53426649d4d1d8022347719db0a28
+    remote: https://github.com/apiology/gem_rbs_collection.git
     repo_dir: gems
 - name: time
   version: '0'
@@ -405,9 +405,9 @@ gems:
   version: '2.0'
   source:
     type: git
-    name: ruby/gem_rbs_collection
-    revision: ca341ff7f4332252d4cf2755e6258bf7ce175594
-    remote: https://github.com/ruby/gem_rbs_collection.git
+    name: apiology/gem_rbs_collection
+    revision: f13172e0d8e53426649d4d1d8022347719db0a28
+    remote: https://github.com/apiology/gem_rbs_collection.git
     repo_dir: gems
 - name: uri
   version: '0'
@@ -421,16 +421,16 @@ gems:
   version: '3.19'
   source:
     type: git
-    name: ruby/gem_rbs_collection
-    revision: ca341ff7f4332252d4cf2755e6258bf7ce175594
-    remote: https://github.com/ruby/gem_rbs_collection.git
+    name: apiology/gem_rbs_collection
+    revision: f13172e0d8e53426649d4d1d8022347719db0a28
+    remote: https://github.com/apiology/gem_rbs_collection.git
     repo_dir: gems
 - name: yard
   version: '0.9'
   source:
     type: git
-    name: ruby/gem_rbs_collection
-    revision: ca341ff7f4332252d4cf2755e6258bf7ce175594
-    remote: https://github.com/ruby/gem_rbs_collection.git
+    name: apiology/gem_rbs_collection
+    revision: f13172e0d8e53426649d4d1d8022347719db0a28
+    remote: https://github.com/apiology/gem_rbs_collection.git
     repo_dir: gems
 gemfile_lock_path: Gemfile.lock

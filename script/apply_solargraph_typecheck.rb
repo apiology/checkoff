@@ -1,5 +1,4 @@
 #!/usr/bin/env ruby
-# typed: true
 # frozen_string_literal: true
 
 # rubocop:disable Naming/PredicateMethod, Metrics/MethodLength
@@ -8,7 +7,6 @@
 # inserts ignore comments before remaining reported lines (unless already ignored).
 
 require 'pathname'
-require 'sorbet-runtime'
 
 ROOT = Pathname(File.expand_path('..', __dir__))
 
@@ -75,8 +73,8 @@ def find_sg_ignore_index(lines, line_num)
   idx = line_num - 1
   return idx if idx >= 0 && sg_ignore_line?(lines[idx])
 
-  start = T.must([idx - 1, 0].max)
-  finish = T.must([idx - 20, 0].max)
+  start = idx.positive? ? idx - 1 : 0
+  finish = idx > 20 ? idx - 20 : 0
   start.downto(finish) do |i|
     return i if sg_ignore_line?(lines[i])
   end
@@ -195,7 +193,7 @@ def fix_date_new!(issue)
   true
 end
 
-issues_path = T.cast(ARGV.fetch(0) { abort("usage: #{$PROGRAM_NAME} TYPECHECK_OUTPUT_FILE") }, String)
+issues_path = ARGV.fetch(0) { abort("usage: #{$PROGRAM_NAME} TYPECHECK_OUTPUT_FILE") }
 issues = parse_issues(issues_path)
 
 unneeded = issues.select { |i| i.message == 'Unneeded @sg-ignore comment' }

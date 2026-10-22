@@ -1,4 +1,3 @@
-# typed: true
 # frozen_string_literal: true
 
 require 'forwardable'
@@ -95,8 +94,8 @@ module Checkoff
                          project_name,
                          only_uncompleted: true,
                          extra_fields: [])
-      raise ArgumentError, 'Provided nil workspace name' if T.unsafe(workspace_name).nil?
-      raise ArgumentError, 'Provided nil project name' if T.unsafe(project_name).nil?
+      raise ArgumentError, 'Provided nil workspace name' if workspace_name.nil?
+      raise ArgumentError, 'Provided nil project name' if project_name.nil?
 
       project = project_or_raise(workspace_name, project_name)
       if project_name == :my_tasks
@@ -227,7 +226,12 @@ module Checkoff
     def section(workspace_name, project_name, section_name, extra_section_fields: [])
       sections = sections_or_raise(workspace_name, project_name,
                                    extra_fields: extra_section_fields)
-      sections.find { |section| section_key(T.cast(section.name, String))&.chomp(':') == section_name&.chomp(':') }
+      sections.find do |section|
+        name = section.name
+        raise TypeError, "Section #{section.gid} has no name" if name.nil?
+
+        section_key(name)&.chomp(':') == section_name&.chomp(':')
+      end
     end
 
     private
@@ -319,7 +323,7 @@ module Checkoff
     # @param project_name [String, Symbol]
     # @return [Asana::Resources::Project]
     def project_or_raise(workspace_name, project_name)
-      raise ArgumentError, 'Provide nil project_name' if T.unsafe(project_name).nil?
+      raise ArgumentError, 'Provide nil project_name' if project_name.nil?
 
       project = projects.project(workspace_name, project_name)
       if project.nil?
