@@ -273,7 +273,7 @@ jobs:
             - "sorbet/machine_specific_config"
             - "rbi/checkoff.rbi"
             - ".gem_rbs_collection"
-            - "rbs_collection.lock.yaml"
+            - "/home/circleci/.cache/rbs"
       - run_with_languages:
           label: Test
           command: |
