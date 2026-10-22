@@ -74,9 +74,8 @@ module Checkoff
     def portfolio_by_gid(portfolio_gid,
                          extra_fields: [])
       options = {
-        fields: ['name'],
+        fields: ['name'] + extra_fields,
       }
-      options[:fields] += extra_fields
       client.portfolios.find_by_id(portfolio_gid, options:)
     end
     cache_method :portfolio_by_gid, SHORT_CACHE_TIME

@@ -6,6 +6,7 @@ require_relative 'workspaces'
 require_relative 'clients'
 require_relative 'my_tasks'
 require_relative 'internal/logging'
+require_relative 'internal/memberships'
 
 module Checkoff
   # Query different sections of Asana projects
@@ -185,7 +186,8 @@ module Checkoff
     #
     # @return [Asana::Resources::Section, nil]
     def previous_section(section)
-      project_sections = sections_by_project_gid(section.project.fetch('gid'))
+      project = section_project_or_raise(section)
+      project_sections = sections_by_project_gid(project.fetch('gid'))
 
       # @type [Array<Asana::Resources::Section>]
       project_sections_arr = project_sections.to_a
@@ -236,10 +238,27 @@ module Checkoff
 
     include Logging
 
+    # Asana returns nil for a section's project unless it was requested
+    # via 'fields' / extra_fields; raise a clear error instead.
+    #
+    # @param section [Asana::Resources::Section]
+    #
+    # @return [Hash{String => String}]
+    def section_project_or_raise(section)
+      # @type [Hash{String => String}, nil]
+      project = section.project
+      if project.nil?
+        raise "project not found on section #{section.gid} - " \
+              "did you add 'project' in your extra_fields argument?"
+      end
+
+      project
+    end
+
     # https://github.com/Asana/ruby-asana/blob/master/lib/asana/resource_includes/response_helper.rb#L7
     # @param response [Asana::HttpClient::Response]
     #
-    # @return [Array<Hash, Hash>]
+    # @return [Array(Hash, Hash)]
     def parse(response)
       data = response.body.fetch('data') do
         raise("Unexpected response body: #{response.body}")
@@ -286,7 +305,7 @@ module Checkoff
     # @param project_gid [String]
     # @return [void]
     def file_task_by_section(by_section, task, project_gid)
-      membership = task.memberships.find do |m|
+      membership = memberships.memberships_or_raise(task).find do |m|
         m.fetch('project')['gid'] == project_gid
       end
       raise "Could not find task in project_gid #{project_gid}: #{task}" if membership.nil?
@@ -312,6 +331,11 @@ module Checkoff
               "under workspace #{workspace_name}"
       end
       project
+    end
+
+    # @return [Checkoff::Internal::Memberships]
+    def memberships
+      @memberships ||= Checkoff::Internal::Memberships.new
     end
   end
 end

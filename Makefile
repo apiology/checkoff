@@ -1,4 +1,4 @@
-.PHONY: build build-typecheck bundle_install cicoverage citypecheck citest citypecoverage clean clean-coverage clean-typecheck clean-typecoverage coverage default docs gem_dependencies help overcommit quality repl report-coverage rubocop rubocop-ratchet steep test typecheck typecoverage post_cookiecutter_sync update_from_cookiecutter yard
+.PHONY: build build-typecheck bundle_install cicoverage citypecheck citest citypecoverage clean clean-coverage clean-typecheck clean-typecoverage coverage default docs gem_dependencies help overcommit quality rbs_collection_install repl report-coverage rubocop rubocop-ratchet steep test typecheck typecoverage post_cookiecutter_sync update_from_cookiecutter yard
 
 .DEFAULT_GOAL := default
 
@@ -59,7 +59,7 @@ types.installed: Gemfile.lock Gemfile.lock.installed rbi/checkoff.rbi sig/checko
 
 build: bundle_install pip_install build-typecheck ## Update 3rd party packages as well and produce any artifacts needed from code
 
-build-typecheck: Gemfile.lock.installed rbs_collection.lock.yaml types.installed ## Fetch information that type checking depends on
+build-typecheck: Gemfile.lock.installed rbs_collection.lock.yaml rbs_collection_install types.installed ## Fetch information that type checking depends on
 
 rbs_collection.lock.yaml: Gemfile.lock rbs_collection.yaml
 	bin/rbs collection update
@@ -72,6 +72,9 @@ rbs_collection.yaml: Gemfile.lock.installed
 	# Ensure that the gem rbs collection is installed
 	bin/rbs collection install
 	touch .gem_rbs_collection/.keepme
+
+rbs_collection_install: rbs_collection.lock.yaml ## Bring .gem_rbs_collection in line with the lock
+	bin/rbs collection install
 
 ci-build-typecheck: build-typecheck  ## Ensure cache is filled for CI to save regardless of actions run
 	bin/solargraph gems

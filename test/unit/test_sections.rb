@@ -515,6 +515,19 @@ class TestSections < BaseAsana
   end
 
   # @return [void]
+  def test_previous_section_project_not_requested
+    sections = get_test_object(Checkoff::Sections) do
+      section_1.expects(:project).returns(nil)
+      section_1.expects(:gid).returns('123')
+    end
+
+    e = assert_raises(RuntimeError) { sections.previous_section(section_1) }
+
+    assert_equal("project not found on section 123 - did you add 'project' in your extra_fields argument?",
+                 e.message)
+  end
+
+  # @return [void]
   def test_section_by_gid
     sections = get_test_object(Checkoff::Sections) do
       client.expects(:get).returns(get_results)
@@ -550,5 +563,30 @@ class TestSections < BaseAsana
     {
       time: Time,
     }
+  end
+
+  # @return [void]
+  def expect_project_a_tasks_pulled_without_memberships
+    expect_project_pulled('Workspace 1', project_a, a_name)
+    expect_tasks_pulled(project_a, [task_a, task_b, task_c], [task_c])
+    task_c.expects(:memberships).returns(nil)
+    task_c.expects(:gid).returns('123')
+  end
+
+  # @return [void]
+  def test_tasks_by_section_memberships_not_requested
+    sections = get_test_object(Checkoff::Sections) do
+      expect_project_a_tasks_pulled_without_memberships
+      expect_project_gid_pulled(project_a, a_gid)
+      expect_sections_client_pulled
+      expect_project_sections_pulled(a_gid, [empty_section])
+      allow_empty_section_name_pulled
+    end
+
+    e = assert_raises(RuntimeError) do
+      sections.tasks_by_section('Workspace 1', a_name)
+    end
+
+    assert_match(/did you add 'memberships' in your extra_fields argument/, e.message)
   end
 end

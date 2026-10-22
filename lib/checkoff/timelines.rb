@@ -5,6 +5,7 @@
 require 'forwardable'
 require 'cache_method'
 require_relative 'internal/config_loader'
+require_relative 'internal/memberships'
 require_relative 'workspaces'
 require_relative 'clients'
 
@@ -71,9 +72,7 @@ module Checkoff
       end
 
       all_dependent_task_gids = nil
-      # @type [Array<Hash{String => Object}>]
-      memberships = task.memberships
-      memberships.all? do |membership_data|
+      memberships.memberships_or_raise(task).all? do |membership_data|
         # @type [Hash{String => Object}]
         md = membership_data
         unless limit_to_portfolio_name.nil?
@@ -107,9 +106,7 @@ module Checkoff
       end
 
       all_dependent_milestones = nil
-      # @type [Array<Hash{String => Object}>]
-      memberships = task.memberships
-      memberships.all? do |membership_data|
+      memberships.memberships_or_raise(task).all? do |membership_data|
         # @type [Hash{String => Object}]
         md = membership_data
         unless limit_to_portfolio_name.nil?
@@ -129,7 +126,7 @@ module Checkoff
           end
 
         all_dependent_milestones.any? do |milestone|
-          milestone.memberships.any? do |milestone_membership_data|
+          memberships.memberships_or_raise(milestone).any? do |milestone_membership_data|
             milestone_membership_data.fetch('project').fetch('gid') == project_gid
           end
         end
@@ -180,6 +177,11 @@ module Checkoff
 
     # @return [Asana::Client]
     attr_reader :client
+
+    # @return [Checkoff::Internal::Memberships]
+    def memberships
+      @memberships ||= Checkoff::Internal::Memberships.new
+    end
 
     # bundle exec ./timelines.rb
     # :nocov:

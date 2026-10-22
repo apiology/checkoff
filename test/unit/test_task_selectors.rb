@@ -947,6 +947,27 @@ class TestTaskSelectors < ClassTest
   end
 
   # @return [void]
+  def mock_filter_via_task_selector_last_story_created_less_than_n_days_ago_no_created_at
+    task.expects(:stories).returns([story])
+    story.expects(:resource_subtype).returns('blah')
+    story.expects(:created_at).returns(nil)
+    story.expects(:gid).returns('123')
+  end
+
+  # @return [void]
+  def test_filter_via_task_selector_last_story_created_less_than_n_days_ago_no_created_at
+    task_selectors = get_test_object(Checkoff::TaskSelectors) do
+      mock_filter_via_task_selector_last_story_created_less_than_n_days_ago_no_created_at
+    end
+
+    e = assert_raises(RuntimeError) do
+      task_selectors.filter_via_task_selector(task, [:last_story_created_less_than_n_days_ago?, 7, []])
+    end
+
+    assert_equal('Story 123 has no created_at', e.message)
+  end
+
+  # @return [void]
   def test_filter_via_task_selector_in_project_named_false
     task_selectors = get_test_object(Checkoff::TaskSelectors) do
       task.expects(:memberships).returns([])
@@ -1228,5 +1249,19 @@ class TestTaskSelectors < ClassTest
 
   def respond_like
     {}
+  end
+
+  # @return [void]
+  def test_filter_via_task_selector_in_project_named_memberships_not_requested
+    task_selectors = get_test_object(Checkoff::TaskSelectors) do
+      task.expects(:memberships).returns(nil)
+      task.expects(:gid).returns('123')
+    end
+
+    e = assert_raises(RuntimeError) do
+      task_selectors.filter_via_task_selector(task, [:in_project_named?, 'foo'])
+    end
+
+    assert_match(/did you add 'memberships' in your extra_fields argument/, e.message)
   end
 end

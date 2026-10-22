@@ -424,4 +424,32 @@ class TestTimelines < ClassTest
   def respond_like
     {}
   end
+
+  # @return [void]
+  def test_last_task_milestone_depends_on_this_task_memberships_not_requested
+    timelines = get_test_object(Checkoff::Timelines) do
+      task.expects(:memberships).returns(nil)
+      task.expects(:gid).returns('123')
+    end
+
+    e = assert_raises(RuntimeError) do
+      timelines.last_task_milestone_depends_on_this_task?(task)
+    end
+
+    assert_match(/did you add 'memberships' in your extra_fields argument/, e.message)
+  end
+
+  # @return [void]
+  def test_any_milestone_depends_on_this_task_memberships_not_requested
+    timelines = get_test_object(Checkoff::Timelines) do
+      task.expects(:memberships).returns(nil)
+      task.expects(:gid).returns('123')
+    end
+
+    e = assert_raises(RuntimeError) do
+      timelines.any_milestone_depends_on_this_task?(task)
+    end
+
+    assert_match(/did you add 'memberships' in your extra_fields argument/, e.message)
+  end
 end
