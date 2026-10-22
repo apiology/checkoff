@@ -6,7 +6,6 @@ require_relative 'projects'
 require_relative 'workspaces'
 require_relative 'clients'
 require_relative 'my_tasks'
-require_relative 'tasks'
 require_relative 'internal/logging'
 
 module Checkoff
@@ -45,20 +44,15 @@ module Checkoff
     # @param projects [Checkoff::Projects]
     # @param workspaces [Checkoff::Workspaces]
     # @param time [Class<Time>]
-    # @param tasks [Checkoff::Tasks]
     def initialize(config: Checkoff::Internal::ConfigLoader.load(:asana),
                    client: Checkoff::Clients.new(config:).client,
                    projects: Checkoff::Projects.new(config:,
                                                     client:),
                    workspaces: Checkoff::Workspaces.new(config:,
                                                         client:),
-                   time: Time,
-                   tasks: Checkoff::Tasks.new(config:,
-                                              client:,
-                                              sections: self))
+                   time: Time)
       @projects = projects
       @workspaces = workspaces
-      @tasks = tasks
       @my_tasks = Checkoff::MyTasks
         .new(config:, projects:, client:)
       @client = client
@@ -306,7 +300,7 @@ module Checkoff
     # @param project_gid [String]
     # @return [void]
     def file_task_by_section(by_section, task, project_gid)
-      membership = @tasks.memberships_or_raise(task).find do |m|
+      membership = task_memberships_or_raise(task).find do |m|
         m.fetch('project')['gid'] == project_gid
       end
       raise "Could not find task in project_gid #{project_gid}: #{task}" if membership.nil?
@@ -318,6 +312,22 @@ module Checkoff
       current_section = section_key(section_name)
 
       by_section.fetch(current_section) << task
+    end
+
+    # Asana returns nil for memberships unless they were requested via
+    # 'fields' / extra_fields; raise a clear error instead.
+    #
+    # @param task [Asana::Resources::Task]
+    #
+    # @return [Array<Hash{String => Hash{String => String}}>]
+    def task_memberships_or_raise(task)
+      memberships = task.memberships
+      if memberships.nil?
+        raise "memberships not found on task #{task.gid} - " \
+              "did you add 'memberships' in your extra_fields argument?"
+      end
+
+      memberships
     end
 
     # @param workspace_name [String, Symbol]

@@ -252,7 +252,7 @@ class TestSections < BaseAsana
   # @param section_name [String]
   # @return [void]
   def expect_task_memberships_queried(section_name)
-    mocks[:tasks].expects(:memberships_or_raise).with(task_c).returns([a_membership])
+    task_c.expects(:memberships).returns([a_membership])
     expect_task_project_memberships_queried
     expect_task_section_memberships_queried(section_name)
   end
@@ -557,7 +557,6 @@ class TestSections < BaseAsana
       client: Asana::Client,
       projects: Checkoff::Projects,
       workspaces: Checkoff::Workspaces,
-      tasks: Checkoff::Tasks,
     }
   end
 
@@ -568,13 +567,7 @@ class TestSections < BaseAsana
   end
 
   # @return [void]
-  def stub_tasks
-    mocks[:tasks] = Checkoff::Tasks.new(client:)
-  end
-
-  # @return [void]
   def expect_project_a_tasks_pulled_without_memberships
-    stub_tasks
     expect_project_pulled('Workspace 1', project_a, a_name)
     expect_tasks_pulled(project_a, [task_a, task_b, task_c], [task_c])
     task_c.expects(:memberships).returns(nil)
