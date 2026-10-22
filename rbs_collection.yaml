@@ -35,3 +35,9 @@ path: .gem_rbs_collection
 #   # If you want to avoid installing rbs files for gems, you can specify them here.
 #   - name: GEM_NAME
 #     ignore: true
+gems:
+  # Steep comes from a git checkout, whose sig/ (excluded from the
+  # released gem) re-declares language_server-protocol constants;
+  # checkoff calls no Steep API.
+  - name: steep
+    ignore: true

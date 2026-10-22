@@ -85,14 +85,6 @@ gems:
     revision: f13172e0d8e53426649d4d1d8022347719db0a28
     remote: https://github.com/apiology/gem_rbs_collection.git
     repo_dir: gems
-- name: csv
-  version: '3.3'
-  source:
-    type: git
-    name: apiology/gem_rbs_collection
-    revision: f13172e0d8e53426649d4d1d8022347719db0a28
-    remote: https://github.com/apiology/gem_rbs_collection.git
-    repo_dir: gems
 - name: date
   version: '0'
   source:
@@ -125,10 +117,6 @@ gems:
     revision: f13172e0d8e53426649d4d1d8022347719db0a28
     remote: https://github.com/apiology/gem_rbs_collection.git
     repo_dir: gems
-- name: ffi
-  version: 1.17.4
-  source:
-    type: rubygems
 - name: fileutils
   version: '0'
   source:
@@ -191,14 +179,6 @@ gems:
     type: rubygems
 - name: lint_roller
   version: '1.1'
-  source:
-    type: git
-    name: apiology/gem_rbs_collection
-    revision: f13172e0d8e53426649d4d1d8022347719db0a28
-    remote: https://github.com/apiology/gem_rbs_collection.git
-    repo_dir: gems
-- name: listen
-  version: '3.9'
   source:
     type: git
     name: apiology/gem_rbs_collection
@@ -390,10 +370,6 @@ gems:
   source:
     type: stdlib
 - name: stringio
-  version: '0'
-  source:
-    type: stdlib
-- name: strscan
   version: '0'
   source:
     type: stdlib
