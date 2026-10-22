@@ -272,6 +272,8 @@ jobs:
             - "tapioca.installed"
             - "sorbet/machine_specific_config"
             - "rbi/checkoff.rbi"
+            - ".gem_rbs_collection"
+            - "/home/circleci/.cache/rbs"
       - run_with_languages:
           label: Test
           command: |
