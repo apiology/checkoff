@@ -83,12 +83,6 @@ commands:
             - ruby-types-v12-{{ checksum "checkoff.gemspec" }}-
             - ruby-types-v12-
       - restore_cache:
-          # Exact key only: a prefix match would restore a collection
-          # that does not match the checked-in rbs_collection.lock.yaml.
-          name: Restore rbs collection cache
-          keys:
-            - rbs-collection-v1-{{ checksum "rbs_collection.lock.yaml" }}
-      - restore_cache:
           name: Restore pyenv cache
           keys:
             - pyenv-v2-{{ checksum "requirements_dev.txt" }}-
@@ -278,11 +272,6 @@ jobs:
             - "tapioca.installed"
             - "sorbet/machine_specific_config"
             - "rbi/checkoff.rbi"
-      - save_cache:
-          name: 'Save rbs collection cache'
-          key: rbs-collection-v1-{{ checksum "rbs_collection.lock.yaml" }}
-          paths:
-            - ".gem_rbs_collection"
       - run_with_languages:
           label: Test
           command: |
