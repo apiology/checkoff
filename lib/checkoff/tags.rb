@@ -112,9 +112,10 @@ module Checkoff
     #
     # @return [Hash{Symbol => Object}]
     def build_params(options)
-      { limit: :per_page, completed_since: :completed_since }.each_with_object({}) do |(param, option), params|
-        value = options[option]
-        params[param] = value unless value.nil? || Array(value).empty?
+      # @type [Hash{Symbol => Object}]
+      params = { limit: options[:per_page], completed_since: options[:completed_since] }
+      params.reject do |_, v|
+        v.nil? || Array(v).empty?
       end
     end
 
