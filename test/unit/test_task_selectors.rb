@@ -1084,6 +1084,24 @@ class TestTaskSelectors < ClassTest
   end
 
   # @return [void]
+  def test_name_starts_with_true
+    task_selectors = get_test_object(Checkoff::TaskSelectors) do
+      task.expects(:name).returns('Done: ship it')
+    end
+
+    assert(task_selectors.filter_via_task_selector(task, [:name_starts_with?, 'Done']))
+  end
+
+  # @return [void]
+  def test_name_starts_with_false
+    task_selectors = get_test_object(Checkoff::TaskSelectors) do
+      task.expects(:name).returns('Ship it')
+    end
+
+    refute(task_selectors.filter_via_task_selector(task, [:name_starts_with?, 'Done']))
+  end
+
+  # @return [void]
   def test_in_section_named_true
     task_selectors = get_test_object(Checkoff::TaskSelectors) do
       tasks.expects(:task_to_h).with(task).returns(
