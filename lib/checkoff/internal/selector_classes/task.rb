@@ -254,10 +254,7 @@ module Checkoff
         # @param story [Asana::Resources::Story]
         # @return [Time]
         def created_time(story)
-          created_at = story.created_at
-          raise "Story #{story.gid} has no created_at" if created_at.nil?
-
-          Time.parse(created_at)
+          Time.parse(story.created_at)
         end
       end
 
