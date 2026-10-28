@@ -238,15 +238,31 @@ jobs:
       - quality
   build:
     working_directory: ~/checkoff
-    parameters:
-      refresh_rbs_lock:
-        type: boolean
-        default: false
-        description: "Update rbs_collection.lock.yaml to gem_rbs_collection's latest, then push it if the build passes"
     docker:
       - image: cimg/base:current
     steps:
       - set_up_environment
+      - run_with_languages:
+          label: Update RBS collection lock
+          command: |
+            # Track gem_rbs_collection upstream: check in any newer lock
+            # and let the build of that commit do the testing.
+            bin/rbs collection update
+            if [ -z "$(git status --porcelain rbs_collection.lock.yaml)" ]
+            then
+              exit 0
+            fi
+            git config user.email 'vince@broz.cc'
+            git config user.name 'Vince Broz'
+            # bundle exec so that overcommit is used from Gemfile for
+            # git hooks
+            bin/overcommit --sign pre-commit
+            bin/overcommit --sign pre-push
+            bundle exec git add rbs_collection.lock.yaml
+            bundle exec git commit -m "Update rbs_collection.lock.yaml"
+            OVERCOMMIT_DEBUG=1 bundle exec git push --set-upstream origin "${CIRCLE_BRANCH:?}"
+            >&2 echo "Pushed an updated rbs_collection.lock.yaml; its build replaces this one"
+            exit 1
       - run:
           label: Verify deltas
           command: |
@@ -257,15 +273,6 @@ jobs:
               >&2 echo "Please check in all files"
               exit 1
             fi
-      - when:
-          # After Verify deltas, so a refreshed lock only feeds the
-          # typecheck below; PR builds keep the committed lock.
-          condition: << parameters.refresh_rbs_lock >>
-          steps:
-            - run_with_languages:
-                label: Refresh RBS collection lock
-                command: |
-                  bin/rbs collection update
       - run_with_languages:
           label: Typecheck
           command: |
@@ -300,28 +307,6 @@ jobs:
             date
 
             make citest cicoverage
-      - when:
-          condition: << parameters.refresh_rbs_lock >>
-          steps:
-            - run_with_languages:
-                label: Push refreshed RBS collection lock
-                command: |
-                  set -x
-                  if [ -z "$(git status --porcelain rbs_collection.lock.yaml)" ]
-                  then
-                    echo "RBS collection lock already current"
-                    exit 0
-                  fi
-                  git config user.email 'vince@broz.cc'
-                  git config user.name 'Vince Broz'
-                  git status
-                  # bundle exec so that overcommit is used from Gemfile for
-                  # git hooks
-                  bin/overcommit --sign pre-commit
-                  bin/overcommit --sign pre-push
-                  bundle exec git add rbs_collection.lock.yaml
-                  bundle exec git commit -m "Refresh rbs_collection.lock.yaml"
-                  OVERCOMMIT_DEBUG=1 bundle exec git push --set-upstream origin "${CIRCLE_BRANCH:?}"
     # This seemed to shave 5ish% of the build time off when added
     resource_class: large.gen2
   publish_gem:
@@ -371,8 +356,7 @@ workflows:
               only:
                 - main
     jobs:
-      - build:
-          refresh_rbs_lock: true
+      - build
       - quality
   quality:
     jobs:
