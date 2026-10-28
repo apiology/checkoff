@@ -81,7 +81,10 @@ rbs_collection.lock.yaml: Gemfile.lock rbs_collection.yaml
 	bin/rbs collection update
 	touch rbs_collection.lock.yaml
 
-rbs_collection.yaml: Gemfile.lock.installed
+# Order-only: bin/rbs must be installed before init, but a freshly
+# touched Gemfile.lock.installed (every CI checkout) must not make the
+# lock look stale and rerun 'rbs collection update'.
+rbs_collection.yaml: | Gemfile.lock.installed
 	@if [ ! -f rbs_collection.yaml ]; then bin/rbs collection init; fi
 
 .gem_rbs_collection/.keepme: rbs_collection.lock.yaml
