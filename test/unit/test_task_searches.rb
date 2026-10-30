@@ -180,29 +180,41 @@ class TestTaskSearches < ClassTest
     assert_equal(paginated, result.to_a)
   end
 
-  # @param task_searches [Checkoff::TaskSearches]
-  # @return [void]
-  def expect_two_searches_by_created_at(task_searches)
-    good_task.expects(:created_at).returns('2024-01-01T00:00:00.000Z')
-    task_searches.expects(:raw_task_search)
-      .with({ 'sort_by' => 'created_at' },
-            workspace_gid: 'abc', extra_fields: ['created_at'], fetch_all: false)
-      .returns([good_task])
-    task_searches.expects(:raw_task_search)
-      .with({ 'sort_by' => 'created_at', 'created_at.before' => '2024-01-01T00:00:00.000Z' },
-            workspace_gid: 'abc', extra_fields: ['created_at'], fetch_all: false)
-      .returns([])
-  end
-
   # @return [void]
   def test_iterated_raw_task_search
     task_searches = get_test_object(Checkoff::TaskSearches) do
       mocks[:projects] = projects
     end
-    expect_two_searches_by_created_at(task_searches)
+    task_searches.expects(:raw_task_search).times(2).returns([good_task]).then.returns([])
+    good_task.expects(:created_at).returns('2026-01-01T00:00:00.000Z')
 
-    assert_equal([good_task],
-                 task_searches.send(:iterated_raw_task_search, {}, workspace_gid: 'abc', extra_fields: []))
+    result = task_searches.send(:iterated_raw_task_search, {}, workspace_gid: 'abc', extra_fields: [])
+
+    assert_equal([good_task], result)
+  end
+
+  # @param task_searches [Checkoff::TaskSearches]
+  # @return [void]
+  def mock_iterated_raw_task_search_task_without_created_at(task_searches)
+    task_searches.expects(:raw_task_search)
+      .with({ 'sort_by' => 'created_at' }, workspace_gid: 'abc', extra_fields: ['created_at'], fetch_all: false)
+      .returns([good_task])
+    good_task.expects(:created_at).returns(nil)
+    good_task.expects(:gid).returns('123')
+  end
+
+  # @return [void]
+  def test_iterated_raw_task_search_task_without_created_at
+    task_searches = get_test_object(Checkoff::TaskSearches) do
+      mocks[:projects] = projects
+    end
+    mock_iterated_raw_task_search_task_without_created_at(task_searches)
+
+    e = assert_raises(RuntimeError) do
+      task_searches.send(:iterated_raw_task_search, {}, workspace_gid: 'abc', extra_fields: [])
+    end
+
+    assert_equal('Task 123 has no created_at', e.message)
   end
 
   def respond_like_instance_of

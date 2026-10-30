@@ -190,7 +190,7 @@ module Checkoff
 
             empty_task_selector = [] #: Array[Array[String] | String | Array[untyped]]
             if selected_options.length == 1
-              [{ "custom_fields.#{gid}.value" => selected_options[0] },
+              [{ "custom_fields.#{gid}.value" => selected_options.fetch(0) },
                empty_task_selector]
             else
               # As of 2023-01,
