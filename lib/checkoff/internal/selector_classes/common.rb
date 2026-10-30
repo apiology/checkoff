@@ -224,7 +224,7 @@ module Checkoff
         # @param prefix [String]
         # @return [boolish]
         def evaluate(resource, prefix)
-          resource.name&.start_with?(prefix)
+          resource.name.start_with?(prefix)
         end
       end
 
