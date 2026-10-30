@@ -187,6 +187,24 @@ class TestProjectSelectors < ClassTest
   end
 
   # @return [void]
+  def test_filter_via_in_portfolio_named_uses_project_workspace
+    real_project = Asana::Resources::Project.new({ 'name' => 'My Project',
+                                                   'workspace' => { 'gid' => '1', 'name' => 'Workspace 1' } },
+                                                 client: mock('client'))
+    project_selectors = get_test_object(Checkoff::ProjectSelectors) do
+      matching_project = mock('matching_project')
+      matching_project.stubs(:name).returns('My Project')
+      portfolios
+        .expects(:projects_in_portfolio)
+        .with('Workspace 1', 'My Portfolio', extra_project_fields: [])
+        .returns([matching_project])
+    end
+
+    assert(project_selectors.filter_via_project_selector(real_project,
+                                                         [:in_portfolio_named?, 'My Portfolio']))
+  end
+
+  # @return [void]
   def test_bogus_raises
     project_selectors = get_test_object(Checkoff::ProjectSelectors)
 

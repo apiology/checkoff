@@ -126,12 +126,14 @@ module Checkoff
 
     # @return [void]
     def run
-      # 0. Look up project and section gids
+      # 0. Get list of tasks which match; raises first if moving
+      #    :all_sections, which isn't a real section to look up below
+      tasks = fetch_tasks(from_workspace_name, from_project_name, from_section_name)
+
+      # 1. Look up project and section gids
       to_project = projects.project_or_raise(to_workspace_name, to_project_name)
       to_section = sections.section_or_raise(to_workspace_name, to_project_name, to_section_name)
 
-      # 1. Get list of tasks which match
-      tasks = fetch_tasks(from_workspace_name, from_project_name, from_section_name)
       # 2. for each task,
       move_tasks(tasks, to_project, to_section)
       # 3. tell the user we're done'

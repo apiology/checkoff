@@ -53,7 +53,7 @@ module Checkoff
         #
         # @return [Boolean]
         def evaluate(project, portfolio_name, workspace_name: nil, extra_project_fields: [])
-          workspace_name ||= project.workspace&.name
+          workspace_name ||= project.workspace&.fetch('name')
           workspace_name ||= workspaces.default_workspace.name
           matching_projects = portfolios.projects_in_portfolio(T.must(workspace_name), portfolio_name,
                                                                extra_project_fields:)

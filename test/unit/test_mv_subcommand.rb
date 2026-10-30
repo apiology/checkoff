@@ -182,6 +182,8 @@ class TestMvSubcommand < ClassTest
 
   # @return [void]
   def expect_to_objects_pulled
+    return if from_section_name == :all_sections # not implemented yet
+
     expect_project_pulled(to_workspace_name, to_project_name, to_project)
     expect_section_pulled(to_workspace_name, to_project_name, to_section_name, to_section)
   end
@@ -230,6 +232,7 @@ class TestMvSubcommand < ClassTest
     @to_section_arg = :source_section
 
     expect_run
+    projects.stubs(:project_or_raise)
   end
 
   # @return [void]
