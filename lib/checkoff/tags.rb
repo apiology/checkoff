@@ -123,7 +123,7 @@ module Checkoff
     #
     # @param response [Asana::HttpClient::Response]
     #
-    # @return [Array<Hash, Hash>]
+    # @return [Array(Array<Hash>, Hash)]
     def parse(response)
       data = response.body.fetch('data')
       extra = response.body.except('data')
