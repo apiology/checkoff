@@ -7,8 +7,9 @@ require_relative '../../../lib/checkoff/monkeypatches/resource_marshalling'
 
 class TestResourceMarshalling < Minitest::Test
   # Marshal refuses instances of anonymous classes and anything holding a
-  # proc, so the client placeholder is a plain dumpable value.
-  STUB_CLIENT = 'stub-client'
+  # proc, so the client placeholder is an uninitialized Asana::Client:
+  # correctly typed, but with no connection state to dump.
+  STUB_CLIENT = Asana::Client.allocate
 
   # Accessors for data keys are synthesized at runtime by Asana's
   # method_missing, so this one is only reachable through public_send.
@@ -27,7 +28,7 @@ class TestResourceMarshalling < Minitest::Test
 
     assert_equal(DATA, copy.to_h)
     assert_equal('bar', copy.public_send(UNDECLARED_FIELD))
-    assert_equal(STUB_CLIENT, copy.instance_variable_get(:@_client))
+    assert_instance_of(Asana::Client, copy.instance_variable_get(:@_client))
   end
 
   # @return [void]
@@ -37,7 +38,7 @@ class TestResourceMarshalling < Minitest::Test
     dumped = task.marshal_dump
 
     assert_equal(DATA, dumped.fetch('data'))
-    assert_equal(STUB_CLIENT, dumped.fetch('client'))
+    assert_same(STUB_CLIENT, dumped.fetch('client'))
   end
 
   # @return [void]
