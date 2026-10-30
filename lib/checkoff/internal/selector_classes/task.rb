@@ -1,4 +1,3 @@
-# typed: true
 # frozen_string_literal: true
 
 require_relative 'task/function_evaluator'
@@ -241,11 +240,10 @@ module Checkoff
           stories = task.stories(per_page: 100).to_a.reject do |story|
             excluding_resource_subtypes.include? story.resource_subtype
           end
-          return true if stories.empty? # no stories == infinitely old!
-
           last_story = stories.last
+          return true if last_story.nil? # no stories == infinitely old!
+
           n_days_ago = Time.at(Time.now.to_i - (num_days * 86_400))
-          # @sg-ignore https://github.com/apiology/solargraph/pull/175
           created_time(last_story) < n_days_ago
         end
 

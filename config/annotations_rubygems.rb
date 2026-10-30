@@ -1,5 +1,4 @@
 # frozen_string_literal: true
-# typed: strict
 
 # rbs's bundled core/rubygems signatures declare Gem::Specification.new's
 # block param as untyped, so every call on the yielded spec in

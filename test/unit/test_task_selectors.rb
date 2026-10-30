@@ -1,4 +1,3 @@
-# typed: false
 # frozen_string_literal: true
 
 require_relative 'test_helper'
@@ -268,6 +267,28 @@ class TestTaskSelectors < ClassTest
     refute(task_selectors.filter_via_task_selector(task,
                                                    [:nil?, [:custom_field_gid_value,
                                                             custom_field_gid]]))
+  end
+
+  # @return [void]
+  def mock_filter_via_custom_field_gid_value_not_string
+    stub_custom_fields
+    custom_field.expects(:fetch).with('gid').returns(custom_field_gid)
+    task.expects(:custom_fields).returns([custom_field])
+    custom_field.expects(:[]).with('display_value').returns(123)
+  end
+
+  # @return [void]
+  def test_filter_via_custom_field_gid_value_not_string
+    task_selectors = get_test_object(Checkoff::TaskSelectors) do
+      mock_filter_via_custom_field_gid_value_not_string
+    end
+    e = assert_raises(TypeError) do
+      task_selectors.filter_via_task_selector(task,
+                                              [:nil?, [:custom_field_gid_value,
+                                                       custom_field_gid]])
+    end
+
+    assert_equal('Expected String display_value, got 123', e.message)
   end
 
   # @return [void]
@@ -887,6 +908,27 @@ class TestTaskSelectors < ClassTest
   end
 
   # @return [void]
+  def mock_filter_via_task_selector_last_story_created_less_than_n_days_ago_no_created_at
+    task.expects(:stories).returns([story])
+    story.expects(:resource_subtype).returns('blah')
+    story.expects(:created_at).returns(nil)
+    story.expects(:gid).returns('123')
+  end
+
+  # @return [void]
+  def test_filter_via_task_selector_last_story_created_less_than_n_days_ago_no_created_at
+    task_selectors = get_test_object(Checkoff::TaskSelectors) do
+      mock_filter_via_task_selector_last_story_created_less_than_n_days_ago_no_created_at
+    end
+    e = assert_raises(RuntimeError) do
+      task_selectors.filter_via_task_selector(task,
+                                              [:last_story_created_less_than_n_days_ago?, 7, []])
+    end
+
+    assert_equal('Story 123 has no created_at', e.message)
+  end
+
+  # @return [void]
   def mock_filter_via_task_selector_last_story_created_less_than_n_days_ago_recent
     task.expects(:stories).returns([story])
     story.expects(:resource_subtype).returns('blah')
@@ -902,27 +944,6 @@ class TestTaskSelectors < ClassTest
 
     refute(task_selectors.filter_via_task_selector(task,
                                                    [:last_story_created_less_than_n_days_ago?, 7, []]))
-  end
-
-  # @return [void]
-  def mock_filter_via_task_selector_last_story_created_less_than_n_days_ago_no_created_at
-    task.expects(:stories).returns([story])
-    story.expects(:resource_subtype).returns('blah')
-    story.expects(:created_at).returns(nil)
-    story.expects(:gid).returns('123')
-  end
-
-  # @return [void]
-  def test_filter_via_task_selector_last_story_created_less_than_n_days_ago_no_created_at
-    task_selectors = get_test_object(Checkoff::TaskSelectors) do
-      mock_filter_via_task_selector_last_story_created_less_than_n_days_ago_no_created_at
-    end
-
-    e = assert_raises(RuntimeError) do
-      task_selectors.filter_via_task_selector(task, [:last_story_created_less_than_n_days_ago?, 7, []])
-    end
-
-    assert_equal('Story 123 has no created_at', e.message)
   end
 
   # @return [void]

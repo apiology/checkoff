@@ -1,5 +1,4 @@
 #!/usr/bin/env ruby
-# typed: false
 
 # frozen_string_literal: true
 

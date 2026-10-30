@@ -1,4 +1,3 @@
-# typed: false
 # frozen_string_literal: true
 
 require_relative 'test_helper'
@@ -305,6 +304,19 @@ class TestTimelines < ClassTest
     default_workspace.expects(:name).returns(default_workspace_name)
     portfolios.expects(:projects_in_portfolio).with(default_workspace_name,
                                                     portfolio_name).returns(projects)
+  end
+
+  # @return [void]
+  def test_any_milestone_depends_on_this_task_default_workspace_without_name
+    timelines = get_test_object(Checkoff::Timelines) do
+      workspaces.expects(:default_workspace).returns(default_workspace)
+      default_workspace.expects(:name).returns(nil)
+    end
+    e = assert_raises(RuntimeError) do
+      timelines.any_milestone_depends_on_this_task?(task, limit_to_portfolio_name: portfolio_name)
+    end
+
+    assert_equal('Default workspace has no name', e.message)
   end
 
   # @return [void]

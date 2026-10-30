@@ -1,5 +1,23 @@
 # Download sources
 sources:
+  # asana 0.10 RBS pending upstream in ruby/gem_rbs_collection
+  - type: git
+    name: apiology/gem_rbs_collection
+    remote: https://github.com/apiology/gem_rbs_collection.git
+    revision: add-asana-signatures
+    repo_dir: gems
+  # gli RBS pending upstream in ruby/gem_rbs_collection
+  - type: git
+    name: apiology/gem_rbs_collection#add-gli-signatures
+    remote: https://github.com/apiology/gem_rbs_collection.git
+    revision: add-gli-signatures
+    repo_dir: gems
+  # cache_method RBS pending upstream in ruby/gem_rbs_collection
+  - type: git
+    name: apiology/gem_rbs_collection#add-cache-method-signatures
+    remote: https://github.com/apiology/gem_rbs_collection.git
+    revision: add-cache-method-signatures
+    repo_dir: gems
   - type: git
     name: ruby/gem_rbs_collection
     remote: https://github.com/ruby/gem_rbs_collection.git
@@ -17,3 +35,9 @@ path: .gem_rbs_collection
 #   # If you want to avoid installing rbs files for gems, you can specify them here.
 #   - name: GEM_NAME
 #     ignore: true
+gems:
+  # Steep comes from a git checkout, whose sig/ (excluded from the
+  # released gem) re-declares language_server-protocol constants;
+  # checkoff calls no Steep API.
+  - name: steep
+    ignore: true

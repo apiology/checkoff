@@ -1,4 +1,3 @@
-# typed: false
 # frozen_string_literal: true
 
 require_relative 'test_helper'
@@ -592,6 +591,31 @@ class TestTasks < BaseAsana
     end
 
     assert_equal([dependent_1], tasks.all_dependent_tasks(task))
+  end
+
+  # @return [void]
+  def test_all_dependent_tasks_skips_missing_dependent
+    tasks = get_test_object(Checkoff::Tasks) do
+      task.expects(:instance_variable_get).with(:@dependents).returns([{ 'gid' => dependent_1_gid }])
+
+      expect_task_options_pulled
+      expect_asana_tasks_client_pulled
+      asana_tasks_client.expects(:find_by_id).returns(nil)
+    end
+    tasks.expects(:debug).times(0)
+
+    assert_empty(tasks.all_dependent_tasks(task))
+  end
+
+  # @return [void]
+  def test_in_portfolio_named_default_workspace_without_name
+    tasks = get_test_object(Checkoff::Tasks) do
+      workspaces.expects(:default_workspace).returns(default_workspace)
+      default_workspace.expects(:name).returns(nil)
+    end
+    e = assert_raises(RuntimeError) { tasks.in_portfolio_named?(task, 'portfolio name') }
+
+    assert_equal('Default workspace has no name', e.message)
   end
 
   # @return [void]
