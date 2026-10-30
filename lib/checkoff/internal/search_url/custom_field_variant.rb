@@ -184,13 +184,13 @@ module Checkoff
 
         # custom_field_#{gid}.variant = 'is'
         class Is < CustomFieldVariant
-          # @return [Array(Hash{String => String}, Array<Array<String>, String, Array>)]
+          # @return [Array(Hash{String => String}, Array<Array<String>, String, Array, Symbol>)]
           def convert
             selected_options = fetch_solo_param("custom_field_#{gid}.selected_options").split('~')
 
             empty_task_selector = []
             if selected_options.length == 1
-              [{ "custom_fields.#{gid}.value" => selected_options[0] },
+              [{ "custom_fields.#{gid}.value" => selected_options.fetch(0) },
                empty_task_selector]
             else
               # As of 2023-01,

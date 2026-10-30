@@ -52,6 +52,18 @@ class TestAsanaEventEnrichment < ClassTest
   end
 
   # @return [void]
+  def test_enrich_webhook_subscription_resource_not_found
+    enrichment = get_test_object(Checkoff::Internal::AsanaEventEnrichment) do
+      resources.expects(:resource_by_gid).with('789', resource_type: nil).returns([nil, nil])
+    end
+
+    webhook_subscription = { 'resource' => '789' }
+    enrichment.enrich_webhook_subscription!(webhook_subscription)
+
+    assert_equal({ 'resource' => '789' }, webhook_subscription)
+  end
+
+  # @return [void]
   def test_enrich_filter_parent_gid_found
     enrichment = get_test_object(Checkoff::Internal::AsanaEventEnrichment) do
       resources.expects(:resource_by_gid).with('123', resource_type: nil).returns([resource, 'task'])

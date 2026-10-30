@@ -69,6 +69,64 @@ class TestTiming < ClassTest
     assert_equal('Teach me how to handle period [:invalid, 123]', e.message)
   end
 
+  # @return [void]
+  def test_in_period_compound_period_missing_arg
+    date = Date.parse('2019-01-04') # Friday
+    timing = get_test_object(Checkoff::Timing)
+    e = assert_raises(RuntimeError) { timing.in_period?(date, [:less_than_n_days_ago]) }
+
+    assert_equal('Teach me how to handle period [:less_than_n_days_ago]', e.message)
+  end
+
+  # @return [void]
+  def test_in_period_compound_period_extra_arg
+    date = Date.parse('2019-01-04') # Friday
+    timing = get_test_object(Checkoff::Timing)
+    e = assert_raises(RuntimeError) { timing.in_period?(date, [:less_than_n_days_ago, 1, 2]) }
+
+    assert_equal('Teach me how to handle period [:less_than_n_days_ago, 1, 2]', e.message)
+  end
+
+  # @return [void]
+  def test_in_period_compound_period_non_integer_arg
+    date = Date.parse('2019-01-04') # Friday
+    timing = get_test_object(Checkoff::Timing)
+    e = assert_raises(RuntimeError) { timing.in_period?(date, %i[less_than_n_days_ago seven]) }
+
+    assert_equal('Teach me how to handle period [:less_than_n_days_ago, :seven]', e.message)
+  end
+
+  # @return [void]
+  def test_in_period_between_relative_days_non_integer_arg
+    date = Date.parse('2019-01-04') # Friday
+    timing = get_test_object(Checkoff::Timing)
+    e = assert_raises(RuntimeError) { timing.in_period?(date, [:between_relative_days, :soon, 5]) }
+
+    assert_equal('Teach me how to handle period [:between_relative_days, :soon, 5]', e.message)
+  end
+
+  # @return [void]
+  def test_in_period_less_than_n_days_ago_true
+    date = Date.parse('2019-01-01')
+    # @type [Checkoff::Timing]
+    timing = get_test_object(Checkoff::Timing) do
+      today_getter.expects(:today).returns(Date.new(2019, 1, 10))
+    end
+
+    assert(timing.in_period?(date, [:less_than_n_days_ago, 7]))
+  end
+
+  # @return [void]
+  def test_in_period_between_relative_days_open_ended
+    date = Date.parse('2019-01-04')
+    # @type [Checkoff::Timing]
+    timing = get_test_object(Checkoff::Timing) do
+      today_getter.expects(:today).returns(Date.new(2019, 1, 1)).at_least_once
+    end
+
+    assert(timing.in_period?(date, [:between_relative_days, nil, 5]))
+  end
+
   def respond_like_instance_of
     {}
   end

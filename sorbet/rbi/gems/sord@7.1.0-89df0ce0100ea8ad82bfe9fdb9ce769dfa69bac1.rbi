@@ -41,7 +41,7 @@ class Sord::Generator
   # @param [YARD::CodeObjects::NamespaceObject] item
   # @return [void]
   #
-  # pkg:gem/sord#lib/sord/generator.rb:512
+  # pkg:gem/sord#lib/sord/generator.rb:537
   # sord warn - YARD::CodeObjects::NamespaceObject wasn't able to be resolved to a constant in this project
   # _@param_ `item`
   sig { params(item: YARD::CodeObjects::NamespaceObject).void }
@@ -75,7 +75,7 @@ class Sord::Generator
   # @param [YARD::CodeObjects::NamespaceObject] item
   # @return [void]
   #
-  # pkg:gem/sord#lib/sord/generator.rb:317
+  # pkg:gem/sord#lib/sord/generator.rb:335
   # sord warn - YARD::CodeObjects::NamespaceObject wasn't able to be resolved to a constant in this project
   # _@param_ `item`
   sig { params(item: YARD::CodeObjects::NamespaceObject).void }
@@ -97,11 +97,22 @@ class Sord::Generator
   # @param [YARD::CodeObjects::NamespaceObject] item
   # @return [void]
   #
-  # pkg:gem/sord#lib/sord/generator.rb:620
+  # pkg:gem/sord#lib/sord/generator.rb:672
   # sord warn - YARD::CodeObjects::NamespaceObject wasn't able to be resolved to a constant in this project
   # _@param_ `item`
   sig { params(item: YARD::CodeObjects::NamespaceObject).void }
   def add_namespace(item); end
+
+  # Adds RBS methods for an attribute's reader and/or writer.
+  # @param [Symbol] name
+  # @param [YARD::CodeObjects::MethodObject, nil] reader
+  # @param [YARD::CodeObjects::MethodObject, nil] writer
+  # @param [Parlour::Types::Type] parlour_type
+  # @param [Boolean] class_method
+  # @return [void]
+  #
+  # pkg:gem/sord#lib/sord/generator.rb:630
+  def add_rbs_attribute_methods(name, reader, writer, parlour_type, class_method:); end
 
   # Increment the method counter.
   # @return [void]
@@ -123,7 +134,7 @@ class Sord::Generator
   # @param [String] default
   # @return [String, nil]
   #
-  # pkg:gem/sord#lib/sord/generator.rb:792
+  # pkg:gem/sord#lib/sord/generator.rb:844
   # _@param_ `default`
   sig { params(default: String).returns(T.nilable(String)) }
   def fix_default_if_unary_minus(default); end
@@ -133,7 +144,7 @@ class Sord::Generator
   # load the YARD registry first!
   # @return [void]
   #
-  # pkg:gem/sord#lib/sord/generator.rb:680
+  # pkg:gem/sord#lib/sord/generator.rb:732
   sig { void }
   def generate; end
 
@@ -181,19 +192,42 @@ class Sord::Generator
   sig { returns(Integer) }
   def object_count; end
 
+  # YARD cannot mark a block as optional, so a @yield description starting
+  # with "Optional" does instead. Blocks are otherwise required.
+  # @param method [YARD::CodeObjects::MethodObject]
+  # @return [Boolean]
+  #
+  # pkg:gem/sord#lib/sord/generator.rb:317
+  def optional_block?(method); end
+
+  # Whether an ancestor of a namespace declares an instance attribute
+  # with the given name.
+  # @param [YARD::CodeObjects::NamespaceObject] item
+  # @param [Symbol] name
+  # @return [Boolean]
+  #
+  # pkg:gem/sord#lib/sord/generator.rb:661
+  def overrides_ancestor_attribute?(item, name); end
+
   # Populates the generator with the contents of the YARD registry. You
   # must load the YARD registry first!
   # @return [void]
   #
-  # pkg:gem/sord#lib/sord/generator.rb:669
+  # pkg:gem/sord#lib/sord/generator.rb:721
   sig { void }
   def populate; end
+
+  # @param type [Parlour::Types::Proc, Parlour::Types::Nilable]
+  # @return [Parlour::RbsGenerator::Block]
+  #
+  # pkg:gem/sord#lib/sord/generator.rb:323
+  def rbs_block_for(type); end
 
   # Loads the YARD registry, populates the file, and prints any relevant
   # final logs.
   # @return [void]
   #
-  # pkg:gem/sord#lib/sord/generator.rb:688
+  # pkg:gem/sord#lib/sord/generator.rb:740
   sig { void }
   def run; end
 
@@ -206,7 +240,7 @@ class Sord::Generator
   # @param [Array] pair2
   # @return Integer
   #
-  # pkg:gem/sord#lib/sord/generator.rb:737
+  # pkg:gem/sord#lib/sord/generator.rb:789
   # _@param_ `pair1`
   # _@param_ `pair2`
   # _@return_ — Integer
@@ -222,7 +256,7 @@ class Sord::Generator
   # @param [String] name
   # @return [Parlour::Types::Type]
   #
-  # pkg:gem/sord#lib/sord/generator.rb:777
+  # pkg:gem/sord#lib/sord/generator.rb:829
   def unwrap_splat_param_type(type, name); end
 
   # @return [Array<Array(String, YARD::CodeObjects::Base, Integer)>] The
