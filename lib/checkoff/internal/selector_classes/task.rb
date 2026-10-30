@@ -3,6 +3,7 @@
 
 require_relative 'task/function_evaluator'
 require 'checkoff/internal/task_timing'
+require 'checkoff/internal/memberships'
 
 module Checkoff
   module SelectorClasses
@@ -98,7 +99,7 @@ module Checkoff
         # @param project_name [String]
         # @return [Boolean]
         def evaluate(task, project_name)
-          project_names = task.memberships.map do |membership|
+          project_names = Checkoff::Internal::Memberships.new.memberships_or_raise(task).map do |membership|
             membership.fetch('project').fetch('name')
           end
           project_names.include?(project_name)
@@ -242,10 +243,21 @@ module Checkoff
           end
           return true if stories.empty? # no stories == infinitely old!
 
-          last_story = T.must(stories.last)
-          last_story_created_at = Time.parse(last_story.created_at)
+          last_story = stories.last
           n_days_ago = Time.at(Time.now.to_i - (num_days * 86_400))
-          last_story_created_at < n_days_ago
+          # @sg-ignore https://github.com/apiology/solargraph/pull/175
+          created_time(last_story) < n_days_ago
+        end
+
+        private
+
+        # @param story [Asana::Resources::Story]
+        # @return [Time]
+        def created_time(story)
+          created_at = story.created_at
+          raise "Story #{story.gid} has no created_at" if created_at.nil?
+
+          Time.parse(created_at)
         end
       end
 
