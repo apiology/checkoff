@@ -204,7 +204,7 @@ module Checkoff
     #
     # @return [Asana::Resources::Section, nil]
     def section_by_gid(gid)
-      options = {}
+      options = {} #: Hash[Symbol, untyped]
       Asana::Resources::Section.new(parse(client.get("/sections/#{gid}", options:)).first,
                                     client:)
     rescue Asana::Errors::NotFound => e
@@ -287,7 +287,7 @@ module Checkoff
     # @param project_gid [String]
     # @return [Hash{String, nil => Enumerable<Asana::Resources::Task>}]
     def by_section(tasks, project_gid)
-      by_section = {}
+      by_section = {} #: Hash[String?, Array[Asana::Resources::Task]]
       sections = client.sections.get_sections_for_project(project_gid:,
                                                           options: { fields: ['name'] })
       sections.each_entry { |section| by_section[section_key(section.name)] = [] }

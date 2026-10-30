@@ -61,7 +61,7 @@ module Checkoff
           # @return [Array(Hash{String => String}, Array<Array<String>,String>)]
           def convert
             max_value = fetch_solo_param("custom_field_#{gid}.max")
-            empty_task_selector = []
+            empty_task_selector = [] #: Array[Array[String] | String]
             [{ "custom_fields.#{gid}.less_than" => max_value }, empty_task_selector]
           end
         end
@@ -71,7 +71,7 @@ module Checkoff
           # @return [Array(Hash{String => String}, Array<Array<String>,String>)]
           def convert
             max_value = fetch_solo_param("custom_field_#{gid}.min")
-            empty_task_selector = []
+            empty_task_selector = [] #: Array[Array[String] | String]
             [{ "custom_fields.#{gid}.greater_than" => max_value }, empty_task_selector]
           end
         end
@@ -81,7 +81,7 @@ module Checkoff
           # @return [Array(Hash{String => String}, Array<Array<String>,String>)]
           def convert
             value = fetch_solo_param("custom_field_#{gid}.value")
-            empty_task_selector = []
+            empty_task_selector = [] #: Array[Array[String] | String]
             [{ "custom_fields.#{gid}.value" => value }, empty_task_selector]
           end
         end
@@ -177,7 +177,7 @@ module Checkoff
             ensure_no_remaining_params!
 
             api_params = { "custom_fields.#{gid}.is_set" => 'true' }
-            task_selector = []
+            task_selector = [] #: Array[Array[String] | String | Array[untyped]]
             [api_params, task_selector]
           end
         end
@@ -188,7 +188,7 @@ module Checkoff
           def convert
             selected_options = fetch_solo_param("custom_field_#{gid}.selected_options").split('~')
 
-            empty_task_selector = []
+            empty_task_selector = [] #: Array[Array[String] | String | Array[untyped]]
             if selected_options.length == 1
               [{ "custom_fields.#{gid}.value" => selected_options.fetch(0) },
                empty_task_selector]

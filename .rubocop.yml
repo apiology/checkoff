@@ -5,6 +5,9 @@ Gemspec/RequireMFA:
   # We publish via CI/CD, so MFA is not possible.
   Enabled: false
 
+Layout/LeadingCommentSpace:
+  AllowRBSInlineAnnotation: true
+
 Layout/LineLength:
   Max: 120
 

@@ -151,7 +151,7 @@ module Checkoff
         'resource_subtype' => 'external',
         'name' => attachment_name,
       }
-      options = {}
+      options = {} #: Hash[Symbol, untyped]
       Asana::Resources::Resource.new(parse(client.post('/attachments', body: with_params, options:)).first,
                                      client:)
     end
