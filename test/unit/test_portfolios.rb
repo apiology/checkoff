@@ -70,7 +70,7 @@ class TestPortfolios < ClassTest
   end
 
   # @return [void]
-  # @param portfolio_arr [Array<Mocha::Mock>]
+  # @param portfolio_arr [Array<Asana::Resources::Portfolio>]
   def expect_portfolios_pulled(portfolio_arr)
     expect_workspace_pulled
     expect_portfolios_api_pulled

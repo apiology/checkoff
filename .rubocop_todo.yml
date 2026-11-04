@@ -85,8 +85,3 @@ Performance/CollectionLiteralInLoop:
 Performance/InefficientHashSearch:
   Exclude:
     - 'lib/checkoff/internal/asana_event_filter.rb'
-
-# Offense count: 2
-YARD/TagTypeSyntax:
-  Exclude:
-    - 'test/unit/class_test.rb'

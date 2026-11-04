@@ -52,7 +52,7 @@ class TestSubtasks < ClassTest
   #   refute(subtasks.all_subtasks_completed?(task))
   # end
 
-  # @param active_subtasks [Array<Mocha::Mock>]
+  # @param active_subtasks [Array<Asana::Resources::Task>]
   # @return [void]
   def expect_active_subtasks_pulled(active_subtasks)
     projects.expects(:active_tasks).with(raw_subtasks).returns(active_subtasks)
@@ -82,7 +82,7 @@ class TestSubtasks < ClassTest
   # end
 
   # @param result [Boolean]
-  # @param subtask [Mocha::Mock]
+  # @param subtask [Asana::Resources::Task]
   # @return [void]
   def allow_subtask_section_status_queried(subtask, result)
     subtask.expects(:is_rendered_as_separator).returns(result).at_least(0)

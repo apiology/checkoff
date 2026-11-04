@@ -135,11 +135,9 @@ module Checkoff
 
     private
 
-    # rubocop:disable Layout/LineLength, YARD/TagTypeSyntax
-    # @param custom_field [Hash{"resource_subtype" => String} & Hash{"enum_value" => Hash} & Hash{"multi_enum_values" => Array<Hash>}]
+    # @param custom_field [Hash{String => Object}]
     #
-    # @return [Array<Hash{"gid" => String} & Hash{"name" => String}>]
-    # rubocop:enable Layout/LineLength, YARD/TagTypeSyntax
+    # @return [Array<Hash{String => String}>]
     def resource_custom_field_enum_values(custom_field)
       resource_subtype = custom_field.fetch('resource_subtype')
       case resource_subtype

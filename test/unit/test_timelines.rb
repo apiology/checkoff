@@ -79,7 +79,7 @@ class TestTimelines < ClassTest
   end
 
   # @return [void]
-  # @param task [Mocha::Mock]
+  # @param task [Asana::Resources::Task]
   # @param task_data [Hash]
   def expect_task_data_created(task, task_data)
     tasks.expects(:task_to_h).with(task).returns(task_data)
@@ -208,8 +208,8 @@ class TestTimelines < ClassTest
     assert(timelines.last_task_milestone_depends_on_this_task?(task))
   end
 
-  # @param dependents [Array<Mocha::Mock>]
-  # @param task [Mocha::Mock]
+  # @param dependents [Array<Asana::Resources::Task>]
+  # @param task [Asana::Resources::Task]
   # @return [void]
   def expect_all_dependent_tasks_pulled(task, dependents)
     tasks.expects(:all_dependent_tasks).with(task).returns(dependents)
@@ -217,13 +217,13 @@ class TestTimelines < ClassTest
 
   # @return [void]
   # @param memberships [Array<Hash>]
-  # @param task [Mocha::Mock]
+  # @param task [Asana::Resources::Task]
   def expect_memberships_pulled(task, memberships)
     task.expects(:memberships).returns(memberships)
   end
 
   # @return [void]
-  # @param tasks [Array<Mocha::Mock>]
+  # @param tasks [Array<Asana::Resources::Task>]
   def expect_tasks_by_section_gid_pulled(tasks)
     sections.expects(:tasks_by_section_gid)
       .with(section_1_gid, extra_fields: ['resource_subtype'])
@@ -299,7 +299,7 @@ class TestTimelines < ClassTest
   end
 
   # @return [void]
-  # @param projects [Array<Mocha::Mock>]
+  # @param projects [Array<Asana::Resources::Project>]
   def export_portfolio_projects_pulled(projects)
     workspaces.expects(:default_workspace).returns(default_workspace)
     default_workspace.expects(:name).returns(default_workspace_name)

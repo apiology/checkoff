@@ -14,7 +14,7 @@ class ClassTest < Minitest::Test
   attr_reader :mocks
 
   # @generic T
-  # @param clazz [Class<generic<T>> & #new]
+  # @param clazz [Class<generic<T>>]
   # @return [generic<T>]
   def get_test_object(clazz, &twiddle_mocks)
     @mocks = get_initializer_mocks(clazz,
@@ -46,7 +46,7 @@ class ClassTest < Minitest::Test
   end
 
   # @generic T
-  # @param clazz [Class<generic<T>> & #new]
+  # @param clazz [Class<generic<T>>]
   # @return [generic<T>]
   # @sg-ignore tool-limitation:pr-72
   #   https://github.com/apiology/solargraph/pull/72
