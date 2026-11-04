@@ -76,12 +76,12 @@ commands:
           # the Makefile (see the comment there for why).
           name: Restore ruby-types cache
           keys:
-            - ruby-types-v11-{{ checksum "checkoff.gemspec" }}-{{ checksum "Gemfile" }}-{{ checksum "Gemfile.lock" }}-{{ checksum "rbs_collection.lock.yaml" }}-{{ checksum "Makefile" }}-{{ checksum ".circleci/config.yml" }}- # yamllint disable-line rule:line-length
-            - ruby-types-v11-{{ checksum "checkoff.gemspec" }}-{{ checksum "Gemfile" }}-{{ checksum "Gemfile.lock" }}-{{ checksum "Makefile" }}- # yamllint disable-line rule:line-length
-            - ruby-types-v11-{{ checksum "checkoff.gemspec" }}-{{ checksum "Gemfile" }}-{{ checksum "Gemfile.lock" }}- # yamllint disable-line rule:line-length
-            - ruby-types-v11-{{ checksum "checkoff.gemspec" }}-{{ checksum "Gemfile" }}-
-            - ruby-types-v11-{{ checksum "checkoff.gemspec" }}-
-            - ruby-types-v11-
+            - ruby-types-v12-{{ checksum "checkoff.gemspec" }}-{{ checksum "Gemfile" }}-{{ checksum "Gemfile.lock" }}-{{ checksum "rbs_collection.lock.yaml" }}-{{ checksum "Makefile" }}-{{ checksum ".circleci/config.yml" }}- # yamllint disable-line rule:line-length
+            - ruby-types-v12-{{ checksum "checkoff.gemspec" }}-{{ checksum "Gemfile" }}-{{ checksum "Gemfile.lock" }}-{{ checksum "Makefile" }}- # yamllint disable-line rule:line-length
+            - ruby-types-v12-{{ checksum "checkoff.gemspec" }}-{{ checksum "Gemfile" }}-{{ checksum "Gemfile.lock" }}- # yamllint disable-line rule:line-length
+            - ruby-types-v12-{{ checksum "checkoff.gemspec" }}-{{ checksum "Gemfile" }}-
+            - ruby-types-v12-{{ checksum "checkoff.gemspec" }}-
+            - ruby-types-v12-
       - restore_cache:
           name: Restore pyenv cache
           keys:
@@ -242,6 +242,27 @@ jobs:
       - image: cimg/base:current
     steps:
       - set_up_environment
+      - run_with_languages:
+          label: Update RBS collection lock
+          command: |
+            # Track gem_rbs_collection upstream: check in any newer lock
+            # and let the build of that commit do the testing.
+            bin/rbs collection update
+            if [ -z "$(git status --porcelain rbs_collection.lock.yaml)" ]
+            then
+              exit 0
+            fi
+            git config user.email 'vince@broz.cc'
+            git config user.name 'Vince Broz'
+            # bundle exec so that overcommit is used from Gemfile for
+            # git hooks
+            bin/overcommit --sign pre-commit
+            bin/overcommit --sign pre-push
+            bundle exec git add rbs_collection.lock.yaml
+            bundle exec git commit -m "Update rbs_collection.lock.yaml"
+            OVERCOMMIT_DEBUG=1 bundle exec git push --set-upstream origin "${CIRCLE_BRANCH:?}"
+            >&2 echo "Pushed an updated rbs_collection.lock.yaml; its build replaces this one"
+            exit 1
       - run:
           label: Verify deltas
           command: |
@@ -260,7 +281,7 @@ jobs:
           path: rbi/checkoff.rbi
       - save_cache:
           name: 'Save ruby-types cache'
-          key: ruby-types-v11-{{ checksum "checkoff.gemspec" }}-{{ checksum "Gemfile" }}-{{ checksum "Gemfile.lock" }}-{{ checksum "rbs_collection.lock.yaml" }}-{{ checksum "Makefile" }}-{{ checksum ".circleci/config.yml" }}-{{ checksum ".ruby-version" }}-{{ checksum "rbi/checkoff.rbi" }}  # yamllint disable-line rule:line-length
+          key: ruby-types-v12-{{ checksum "checkoff.gemspec" }}-{{ checksum "Gemfile" }}-{{ checksum "Gemfile.lock" }}-{{ checksum "rbs_collection.lock.yaml" }}-{{ checksum "Makefile" }}-{{ checksum ".circleci/config.yml" }}-{{ checksum ".ruby-version" }}-{{ checksum "rbi/checkoff.rbi" }}  # yamllint disable-line rule:line-length
           paths:
             - ".yardoc"
             - "yardoc"
@@ -273,7 +294,7 @@ jobs:
             - "sorbet/machine_specific_config"
             - "rbi/checkoff.rbi"
             - ".gem_rbs_collection"
-            - "rbs_collection.lock.yaml"
+            - "/home/circleci/.cache/rbs"
       - run_with_languages:
           label: Test
           command: |

@@ -91,7 +91,7 @@ module Checkoff
     # @param custom_field_name [String]
     # @return [Hash{String => Object}, nil]
     def resource_custom_field_by_name(resource, custom_field_name)
-      # @type [Array<Hash{String => Object}>]
+      # @type [Array<Hash{String => Object}>, nil]
       custom_fields = resource.custom_fields
       if custom_fields.nil?
         raise "custom fields not found on resource - did you add 'custom_fields' in your extra_fields argument?"
@@ -117,7 +117,7 @@ module Checkoff
     # @param custom_field_gid [String]
     # @return [Hash{String => Object}]
     def resource_custom_field_by_gid_or_raise(resource, custom_field_gid)
-      # @type [Array<Hash{String => Object}>]
+      # @type [Array<Hash{String => Object}>, nil]
       custom_fields = resource.custom_fields
       if custom_fields.nil?
         raise "Could not find custom_fields under project (was 'custom_fields' included in 'extra_fields'?)"

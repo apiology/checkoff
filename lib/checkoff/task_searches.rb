@@ -171,7 +171,10 @@ module Checkoff
 
         break if oldest.nil?
 
-        new_api_params['created_at.before'] = oldest.created_at
+        oldest_created_at = oldest.created_at
+        raise "Task #{oldest.gid} has no created_at" if oldest_created_at.nil?
+
+        new_api_params['created_at.before'] = oldest_created_at
 
         tasks.concat(task_batch.to_a)
       end

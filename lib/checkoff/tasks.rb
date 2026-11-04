@@ -10,6 +10,7 @@ require_relative 'workspaces'
 require_relative 'internal/config_loader'
 require_relative 'internal/task_timing'
 require_relative 'internal/task_hashes'
+require_relative 'internal/memberships'
 require_relative 'internal/logging'
 require_relative 'internal/thread_local'
 require 'asana'
@@ -297,7 +298,7 @@ module Checkoff
                             portfolio_name,
                             workspace_name: T.must(@workspaces.default_workspace.name))
       portfolio_projects = @portfolios.projects_in_portfolio(workspace_name, portfolio_name)
-      task.memberships.any? do |membership|
+      memberships.memberships_or_raise(task).any? do |membership|
         project_gid = membership.fetch('project').fetch('gid')
         portfolio_projects.any? { |portfolio_project| portfolio_project.gid == project_gid }
       end
@@ -315,7 +316,7 @@ module Checkoff
       portfolio_projects = @portfolios.projects_in_portfolio(workspace_name, portfolio_name)
       portfolio_project_gids = portfolio_projects.map(&:gid)
       seen = T.let(false, T::Boolean)
-      task.memberships.each do |membership|
+      memberships.memberships_or_raise(task).each do |membership|
         project_gid = membership.fetch('project').fetch('gid')
         next unless portfolio_project_gids.include?(project_gid)
         return true if seen
@@ -342,6 +343,11 @@ module Checkoff
     # @return [Checkoff::Internal::TaskHashes]
     def task_hashes
       @task_hashes ||= Checkoff::Internal::TaskHashes.new
+    end
+
+    # @return [Checkoff::Internal::Memberships]
+    def memberships
+      @memberships ||= Checkoff::Internal::Memberships.new
     end
 
     # @param workspace_name [String, Symbol]

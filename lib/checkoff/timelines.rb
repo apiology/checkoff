@@ -6,6 +6,7 @@
 require 'forwardable'
 require 'cache_method'
 require_relative 'internal/config_loader'
+require_relative 'internal/memberships'
 require_relative 'workspaces'
 require_relative 'clients'
 
@@ -73,9 +74,7 @@ module Checkoff
       end
 
       all_dependent_task_gids = nil
-      # @type [Array<Hash{String => Object}>]
-      memberships = task.memberships
-      memberships.all? do |membership_data|
+      memberships.memberships_or_raise(task).all? do |membership_data|
         # @type [Hash{String => Object}]
         md = membership_data
         unless limit_to_portfolio_name.nil?
@@ -94,9 +93,9 @@ module Checkoff
 
         next true if last_milestone.gid == task.gid
 
-        all_dependent_task_gids ||= @tasks.all_dependent_tasks(task).map(&:gid)
+        dependent_task_gids = all_dependent_task_gids ||= @tasks.all_dependent_tasks(task).map(&:gid)
 
-        all_dependent_task_gids.include? last_milestone.gid
+        dependent_task_gids.include? last_milestone.gid
       end
     end
 
@@ -110,9 +109,7 @@ module Checkoff
       end
 
       all_dependent_milestones = nil
-      # @type [Array<Hash{String => Object}>]
-      memberships = task.memberships
-      memberships.all? do |membership_data|
+      memberships.memberships_or_raise(task).all? do |membership_data|
         # @type [Hash{String => Object}]
         md = membership_data
         unless limit_to_portfolio_name.nil?
@@ -124,15 +121,15 @@ module Checkoff
 
         # do this once, but lazily, so we don't have to do it if all
         # projects are excluded
-        all_dependent_milestones ||=
+        dependent_milestones = all_dependent_milestones ||=
           @tasks.all_dependent_tasks(task,
                                      extra_task_fields: ['resource_subtype',
                                                          'memberships.project.gid']).select do |dependent_task|
             dependent_task.resource_subtype == 'milestone'
           end
 
-        all_dependent_milestones.any? do |milestone|
-          milestone.memberships.any? do |milestone_membership_data|
+        dependent_milestones.any? do |milestone|
+          memberships.memberships_or_raise(milestone).any? do |milestone_membership_data|
             milestone_membership_data.fetch('project').fetch('gid') == project_gid
           end
         end
@@ -175,6 +172,11 @@ module Checkoff
 
     # @return [Asana::Client]
     attr_reader :client
+
+    # @return [Checkoff::Internal::Memberships]
+    def memberships
+      @memberships ||= Checkoff::Internal::Memberships.new
+    end
 
     # bundle exec ./timelines.rb
     # :nocov:

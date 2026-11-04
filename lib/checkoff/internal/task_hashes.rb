@@ -45,8 +45,8 @@ module Checkoff
         task_hash['unwrapped']['custom_fields'] = unwrapped_custom_fields
       end
 
-      # @param [Hash{String => String, Hash, Array}] task_hash
-      # @param [Array<Hash>] memberships
+      # @param task_hash [Hash{String => Object}]
+      # @param memberships [Array<Hash>]
       #
       # @return [void]
       def add_user_task_list(task_hash, memberships)
@@ -63,7 +63,7 @@ module Checkoff
         }
       end
 
-      # @param task_hash [Hash{String => String, Hash, Array}]
+      # @param task_hash [Hash{String => Object}]
       # @return [Hash{String => Object}]
       def assignee_hash(task_hash)
         assignee = task_hash.fetch('assignee')
