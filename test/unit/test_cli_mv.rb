@@ -7,7 +7,7 @@ require_relative 'test_helper'
 
 # Test the Checkoff::CLI class with mv subcommand
 class TestCLIMv < Minitest::Test
-  typed_mock :subcommand_factory, Checkoff::SubcommandFactory
+  typed_mock :mv_subcommand_class, Class
 
   # @return [void]
   def teardown
@@ -17,7 +17,8 @@ class TestCLIMv < Minitest::Test
 
   # @return [Class<Checkoff::CheckoffGLIApp>]
   def get_test_object(&_twiddle_mocks)
-    Checkoff::CheckoffGLIApp.subcommand_factory = subcommand_factory
+    Checkoff::CheckoffGLIApp.subcommand_factory =
+      Checkoff::SubcommandFactory.new(mv_subcommand_class:)
     yield
     Checkoff::CheckoffGLIApp
   end
@@ -26,12 +27,12 @@ class TestCLIMv < Minitest::Test
 
   # @return [void]
   def mock_mv_original_use_case
-    subcommand_factory.expects(:mv).with(from_workspace_arg: 'from_workspace_name',
-                                         from_project_arg: ':my_tasks',
-                                         from_section_arg: 'Recently assigned',
-                                         to_workspace_arg: :source_workspace,
-                                         to_project_arg: :source_project,
-                                         to_section_arg: 'Later').returns(mv_subcommand)
+    mv_subcommand_class.expects(:new).with(from_workspace_arg: 'from_workspace_name',
+                                           from_project_arg: ':my_tasks',
+                                           from_section_arg: 'Recently assigned',
+                                           to_workspace_arg: :source_workspace,
+                                           to_project_arg: :source_project,
+                                           to_section_arg: 'Later').returns(mv_subcommand)
     mv_subcommand.expects(:run)
   end
 

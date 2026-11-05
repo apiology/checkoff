@@ -301,8 +301,10 @@ module Checkoff
   # view subcommands the collaborators they accept out of those passed
   # here; the rest fall back to the subcommand's own defaults.
   class SubcommandFactory
+    # @param mv_subcommand_class [Class<MvSubcommand>]
     # @param collaborators [Hash{Symbol => Object}]
-    def initialize(**collaborators)
+    def initialize(mv_subcommand_class: MvSubcommand, **collaborators)
+      @mv_subcommand_class = mv_subcommand_class
       @collaborators = collaborators
     end
 
@@ -333,8 +335,8 @@ module Checkoff
     # @return [MvSubcommand]
     def mv(from_workspace_arg:, from_project_arg:, from_section_arg:,
            to_workspace_arg:, to_project_arg:, to_section_arg:)
-      MvSubcommand.new(from_workspace_arg:, from_project_arg:, from_section_arg:,
-                       to_workspace_arg:, to_project_arg:, to_section_arg:)
+      @mv_subcommand_class.new(from_workspace_arg:, from_project_arg:, from_section_arg:,
+                               to_workspace_arg:, to_project_arg:, to_section_arg:)
     end
   end
 
