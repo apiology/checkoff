@@ -18,7 +18,6 @@ class TestTasks < BaseAsana
 
   typed_delegate :client, Asana::Client
 
-  typed_delegate :task_hashes, Checkoff::Internal::TaskHashes
   typed_mock :project_gid, String
   typed_mock :wrong_project, Asana::Resources::Project
   typed_mock :wrong_project_gid, String
@@ -478,12 +477,13 @@ class TestTasks < BaseAsana
   end
 
   # @return [void]
-  def test_task_to_h_delegates
+  def test_task_to_h
     tasks = get_test_object(Checkoff::Tasks) do
-      task_hashes.expects(:task_to_h).with(task).returns(123)
+      task.expects(:to_h).returns({ 'name' => 'foo' })
+      task.expects(:name).returns('foo')
     end
 
-    assert_equal(123, tasks.task_to_h(task))
+    assert_equal('foo', tasks.task_to_h(task).fetch('task'))
   end
 
   # @return [void]
@@ -559,9 +559,7 @@ class TestTasks < BaseAsana
 
   # @return [void]
   def test_h_to_task
-    tasks = get_test_object(Checkoff::Tasks) do
-      mocks[:task_hashes] = Checkoff::Internal::TaskHashes.new
-    end
+    tasks = get_test_object(Checkoff::Tasks)
     task = tasks.h_to_task({ 'name' => 'foo' })
 
     assert_equal('foo', task.name)
