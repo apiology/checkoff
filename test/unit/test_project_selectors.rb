@@ -168,16 +168,23 @@ class TestProjectSelectors < ClassTest
   end
 
   # @param matching_project_name [String]
+  # @param workspace_name [String]
   # @return [void]
-  def stub_in_portfolio_named(matching_project_name)
-    stub_default_workspace_lookup
+  def stub_portfolio_projects(matching_project_name, workspace_name)
     matching_project = mock('matching_project')
     matching_project.stubs(:name).returns(matching_project_name)
     portfolios
       .expects(:projects_in_portfolio)
-      .with('My Workspace', 'My Portfolio', extra_project_fields: [])
+      .with(workspace_name, 'My Portfolio', extra_project_fields: [])
       .returns([matching_project])
     project.expects(:name).returns('My Project')
+  end
+
+  # @param matching_project_name [String]
+  # @return [void]
+  def stub_in_portfolio_named(matching_project_name)
+    stub_default_workspace_lookup
+    stub_portfolio_projects(matching_project_name, 'My Workspace')
   end
 
   # @return [void]
@@ -197,6 +204,17 @@ class TestProjectSelectors < ClassTest
     end
 
     refute(project_selectors.filter_via_project_selector(project,
+                                                         [:in_portfolio_named?, 'My Portfolio']))
+  end
+
+  # @return [void]
+  def test_filter_via_in_portfolio_named_project_workspace
+    project_selectors = get_test_object(Checkoff::ProjectSelectors) do
+      project.expects(:workspace).returns({ 'gid' => '123', 'name' => 'Project Workspace' })
+      stub_portfolio_projects('My Project', 'Project Workspace')
+    end
+
+    assert(project_selectors.filter_via_project_selector(project,
                                                          [:in_portfolio_named?, 'My Portfolio']))
   end
 

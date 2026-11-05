@@ -52,7 +52,7 @@ module Checkoff
         #
         # @return [Boolean]
         def evaluate(project, portfolio_name, workspace_name: nil, extra_project_fields: [])
-          workspace_name ||= project.workspace&.name
+          workspace_name ||= project.workspace&.fetch('name', nil)
           workspace_name ||= workspaces.default_workspace.name
           raise 'No workspace name found' if workspace_name.nil?
 
