@@ -38,13 +38,13 @@ class TestProjects < BaseAsana
   typed_mock :period, Symbol
   typed_mock :returned_date, Date
 
-  # @return [Hash{Mocha::Mock => Mocha::Mock}]
+  # @return [Hash{Asana::Resources::Project => String}]
   def sample_projects
     { project_a => a_name, project_b => b_name, project_c => c_name }
   end
 
   # @return [void]
-  # @param workspace_gid [Mocha::Mock]
+  # @param workspace_gid [String]
   def setup_projects_queried(workspace_gid: my_workspace_gid)
     asana_projects
       .expects(:find_by_workspace).with(workspace: workspace_gid,

@@ -195,7 +195,7 @@ class TestAsanaEventFilter < ClassTest
 
   # @return [void]
   # @param gid [String]
-  # @param task_obj [Mocha::Mock]
+  # @param task_obj [Asana::Resources::Task]
   # @param fields [Array<String>]
   def expect_task_fetched(gid, fields, task_obj)
     client.expects(:tasks).returns(asana_tasks)

@@ -133,25 +133,19 @@
 #     end
 #   end
 #   class Object
-#     # @param method_name [Symbol, String]
-#     # @return [Mocha::Expectation]
-#     def expects(method_name); end
-#     # @param method_name [Symbol, String]
-#     # @return [Mocha::Expectation]
-#     def stubs(method_name); end
 #     # @param name [String]
 #     # @return [Mocha::Mock]
 #     def mock(name = nil); end
 #     # @!macro [new] typed_mock
 #     #   @!method $1
-#     #     @return [Mocha::Mock & $2]
+#     #     @rbs () -> (Mocha::Mock & $2)
 #     # @param mock_sym [Symbol]
 #     # @param type [Class]
 #     # @return [void]
 #     def typed_mock(mock_sym, type); end
 #     # @!macro [new] typed_delegate
 #     #   @!method $1
-#     #     @return [Mocha::Mock & $2]
+#     #     @rbs () -> (Mocha::Mock & $2)
 #     # @param mock_sym [Symbol]
 #     # @param type [Class]
 #     # @return [void]

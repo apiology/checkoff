@@ -56,7 +56,7 @@ class TestTags < ClassTest
   end
 
   # @return [void]
-  # @param tag_arr [Array<Mocha::Mock>]
+  # @param tag_arr [Array<Asana::Resources::Tag>]
   def expect_tags_pulled(tag_arr)
     expect_workspace_pulled
     client.expects(:tags).returns(tags_api)
@@ -90,8 +90,8 @@ class TestTags < ClassTest
   # @return [Hash{Symbol => Object}]
   # @param only_uncompleted [Boolean]
   def build_task_params(only_uncompleted)
-    # @type [Hash{:limit => Integer} & Hash{:completed_since => String}]
-    task_params = { limit: 100 }
+    # @type [Hash{Symbol => Object}]
+    task_params = { limit: 100 } #: { limit: Integer, ?completed_since: String }
     task_params[:completed_since] = '9999-12-01' if only_uncompleted
     task_params
   end

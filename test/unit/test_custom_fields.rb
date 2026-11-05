@@ -53,7 +53,7 @@ class TestCustomFields < ClassTest
   end
 
   # @return [void]
-  # @param custom_field_arr [Array<Mocha::Mock>]
+  # @param custom_field_arr [Array<Asana::Resources::CustomField>]
   def expect_custom_fields_pulled(custom_field_arr)
     expect_workspace_pulled
     client.expects(:custom_fields).returns(custom_fields_api)
