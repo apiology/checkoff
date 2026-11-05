@@ -164,10 +164,8 @@ class TestTags < ClassTest
     tags = get_test_object(Checkoff::Tags) do
       mocks[:projects] = projects
       mock_tasks(only_uncompleted: true)
+      expect_tags_pulled([wrong_tag, tag])
     end
-
-    # Stub the tag_or_raise method to return the tag mock object
-    tags.stubs(:tag_or_raise).returns(tag)
 
     # Call the tasks method with the necessary arguments
     result = tags.tasks(workspace_name, tag_name, only_uncompleted: true, extra_fields: %w[field1 field2])
@@ -181,10 +179,8 @@ class TestTags < ClassTest
     tags = get_test_object(Checkoff::Tags) do
       mocks[:projects] = projects
       mock_tasks(only_uncompleted: false)
+      expect_tags_pulled([wrong_tag, tag])
     end
-
-    # Stub the tag_or_raise method to return the tag mock object
-    tags.stubs(:tag_or_raise).returns(tag)
 
     # Call the tasks method with the necessary arguments and only_uncompleted set to false
     result = tags.tasks(workspace_name, tag_name, only_uncompleted: false, extra_fields: %w[field1 field2])
