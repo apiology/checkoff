@@ -7,55 +7,19 @@ require_relative 'test_helper'
 
 # Test the Checkoff::CLI class with mv subcommand
 class TestCLIMv < Minitest::Test
-  # @return [Hash]
-  attr_reader :mocks
-
-  typed_mock :config, Hash
-  typed_mock :workspaces, Checkoff::Workspaces
-  typed_mock :sections, Checkoff::Sections
-  typed_mock :tasks, Checkoff::Tasks
+  typed_mock :mv_subcommand_class, Class
 
   # @return [void]
-  def expect_workspaces_created
-    Checkoff::Workspaces.expects(:new).returns(workspaces).at_least(0)
-  end
-
-  # @return [void]
-  def expect_config_loaded
-    Checkoff::Internal::ConfigLoader.expects(:load).returns(config).at_least(0)
-  end
-
-  # @return [void]
-  def expect_sections_created
-    Checkoff::Sections.expects(:new).returns(sections).at_least(0)
-  end
-
-  # @return [void]
-  def expect_tasks_created
-    Checkoff::Tasks.expects(:new).returns(tasks).at_least(0)
-  end
-
-  # @return [void]
-  def set_mocks
-    @mocks = {
-      config:,
-      workspaces:,
-      sections:,
-      tasks:,
-      stderr: $stderr,
-      stdout: $stdout,
-    }
+  def teardown
+    Checkoff::CheckoffGLIApp.subcommand_factory = nil
+    super
   end
 
   # @return [Class<Checkoff::CheckoffGLIApp>]
   def get_test_object(&_twiddle_mocks)
-    set_mocks
-    expect_workspaces_created
-    expect_config_loaded
-    expect_sections_created
-    expect_tasks_created
-
-    yield @mocks
+    Checkoff::CheckoffGLIApp.subcommand_factory =
+      Checkoff::SubcommandFactory.new(mv_subcommand_class:)
+    yield
     Checkoff::CheckoffGLIApp
   end
 
@@ -63,12 +27,12 @@ class TestCLIMv < Minitest::Test
 
   # @return [void]
   def mock_mv_original_use_case
-    Checkoff::MvSubcommand.expects(:new).with(from_workspace_arg: 'from_workspace_name',
-                                              from_project_arg: ':my_tasks',
-                                              from_section_arg: 'Recently assigned',
-                                              to_workspace_arg: :source_workspace,
-                                              to_project_arg: :source_project,
-                                              to_section_arg: 'Later').returns(mv_subcommand)
+    mv_subcommand_class.expects(:new).with(from_workspace_arg: 'from_workspace_name',
+                                           from_project_arg: ':my_tasks',
+                                           from_section_arg: 'Recently assigned',
+                                           to_workspace_arg: :source_workspace,
+                                           to_project_arg: :source_project,
+                                           to_section_arg: 'Later').returns(mv_subcommand)
     mv_subcommand.expects(:run)
   end
 

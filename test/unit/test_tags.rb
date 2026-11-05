@@ -7,6 +7,7 @@ require_relative 'class_test'
 class TestTags < ClassTest
   typed_delegate :workspaces, Checkoff::Workspaces
   typed_delegate :client, Asana::Client
+  typed_delegate :asana_resources_collection_class, Class
 
   typed_mock :workspace_name, String
   typed_mock :tag_name, String
@@ -119,9 +120,9 @@ class TestTags < ClassTest
 
   # @return [void]
   def setup_collection_expects
-    Asana::Resources::Collection.expects(:new).with([response_body_data, {}],
-                                                    type: Asana::Resources::Task,
-                                                    client:)
+    asana_resources_collection_class.expects(:new).with([response_body_data, {}],
+                                                        type: Asana::Resources::Task,
+                                                        client:)
       .returns(task_collection)
   end
 
@@ -163,10 +164,8 @@ class TestTags < ClassTest
     tags = get_test_object(Checkoff::Tags) do
       mocks[:projects] = projects
       mock_tasks(only_uncompleted: true)
+      expect_tags_pulled([wrong_tag, tag])
     end
-
-    # Stub the tag_or_raise method to return the tag mock object
-    tags.stubs(:tag_or_raise).returns(tag)
 
     # Call the tasks method with the necessary arguments
     result = tags.tasks(workspace_name, tag_name, only_uncompleted: true, extra_fields: %w[field1 field2])
@@ -180,10 +179,8 @@ class TestTags < ClassTest
     tags = get_test_object(Checkoff::Tags) do
       mocks[:projects] = projects
       mock_tasks(only_uncompleted: false)
+      expect_tags_pulled([wrong_tag, tag])
     end
-
-    # Stub the tag_or_raise method to return the tag mock object
-    tags.stubs(:tag_or_raise).returns(tag)
 
     # Call the tasks method with the necessary arguments and only_uncompleted set to false
     result = tags.tasks(workspace_name, tag_name, only_uncompleted: false, extra_fields: %w[field1 field2])
@@ -203,6 +200,8 @@ class TestTags < ClassTest
   end
 
   def respond_like
-    {}
+    {
+      asana_resources_collection_class: Asana::Resources::Collection,
+    }
   end
 end

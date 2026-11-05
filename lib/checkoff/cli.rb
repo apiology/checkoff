@@ -297,9 +297,62 @@ module Checkoff
     attr_reader :workspace_name, :task_name
   end
 
+  # Builds the subcommands CheckoffGLIApp runs, giving the quickadd and
+  # view subcommands the collaborators they accept out of those passed
+  # here; the rest fall back to the subcommand's own defaults.
+  class SubcommandFactory
+    # @param mv_subcommand_class [Class<MvSubcommand>]
+    # @param collaborators [Hash{Symbol => Object}]
+    def initialize(mv_subcommand_class: MvSubcommand, **collaborators)
+      @mv_subcommand_class = mv_subcommand_class
+      @collaborators = collaborators
+    end
+
+    # @param workspace_name [String]
+    # @param task_name [String]
+    # @return [QuickaddSubcommand]
+    def quickadd(workspace_name, task_name)
+      QuickaddSubcommand.new(workspace_name, task_name,
+                             **@collaborators.slice(:config, :workspaces, :tasks))
+    end
+
+    # @param workspace_name [String]
+    # @param project_name [String]
+    # @param section_name [String, nil]
+    # @param task_name [String, nil]
+    # @return [ViewSubcommand]
+    def view(workspace_name, project_name, section_name, task_name)
+      ViewSubcommand.new(workspace_name, project_name, section_name, task_name,
+                         **@collaborators.slice(:config, :projects, :sections, :tasks, :stderr))
+    end
+
+    # @param from_workspace_arg [Symbol, String]
+    # @param from_project_arg [Symbol, String]
+    # @param from_section_arg [nil, String]
+    # @param to_workspace_arg [Symbol, String]
+    # @param to_project_arg [Symbol, String]
+    # @param to_section_arg [Symbol, String, nil]
+    # @return [MvSubcommand]
+    def mv(from_workspace_arg:, from_project_arg:, from_section_arg:,
+           to_workspace_arg:, to_project_arg:, to_section_arg:)
+      @mv_subcommand_class.new(from_workspace_arg:, from_project_arg:, from_section_arg:,
+                               to_workspace_arg:, to_project_arg:, to_section_arg:)
+    end
+  end
+
   # Provide ability for CLI to pull Asana items
   class CheckoffGLIApp
     extend ::GLI::App
+
+    class << self
+      # @return [SubcommandFactory]
+      def subcommand_factory
+        @subcommand_factory ||= SubcommandFactory.new
+      end
+
+      # @return [SubcommandFactory, nil] nil restores the default
+      attr_writer :subcommand_factory
+    end
 
     program_desc 'Command-line client for Asana (unofficial)'
 
@@ -316,7 +369,7 @@ module Checkoff
         workspace_name = args.fetch(0)
         task_name = args.fetch(1)
 
-        QuickaddSubcommand.new(workspace_name, task_name).run
+        subcommand_factory.quickadd(workspace_name, task_name).run
       end
     end
 
@@ -334,7 +387,7 @@ module Checkoff
         section_name = args[2]
         task_name = args[3]
 
-        puts ViewSubcommand.new(workspace_name, project_name, section_name, task_name).run
+        puts subcommand_factory.view(workspace_name, project_name, section_name, task_name).run
       end
     end
 
@@ -375,12 +428,12 @@ module Checkoff
         to_workspace = options.fetch('to_workspace')
         to_project = options.fetch('to_project')
         to_section = options.fetch('to_section')
-        MvSubcommand.new(from_workspace_arg: from_workspace,
-                         from_project_arg: from_project,
-                         from_section_arg: from_section,
-                         to_workspace_arg: to_workspace,
-                         to_project_arg: to_project,
-                         to_section_arg: to_section).run
+        subcommand_factory.mv(from_workspace_arg: from_workspace,
+                              from_project_arg: from_project,
+                              from_section_arg: from_section,
+                              to_workspace_arg: to_workspace,
+                              to_project_arg: to_project,
+                              to_section_arg: to_section).run
       end
     end
     # rubocop:enable Metrics/BlockLength
