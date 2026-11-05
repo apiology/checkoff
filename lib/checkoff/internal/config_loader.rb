@@ -18,7 +18,7 @@ module Checkoff
       end
 
       # @param key [Symbol]
-      # @return [Object]
+      # @return [Object, nil]
       def [](key)
         config_value = @config[key]
         return config_value unless config_value.nil?

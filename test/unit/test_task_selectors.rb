@@ -28,7 +28,7 @@ class TestTaskSelectors < ClassTest
   end
 
   # @param name [String]
-  # @param value [String]
+  # @param value [Object]
   # @return [void]
   def stub_custom_field_value(name, value)
     custom_field.expects(:fetch).with('name').returns(name)
@@ -227,6 +227,22 @@ class TestTaskSelectors < ClassTest
     refute(task_selectors.filter_via_task_selector(task,
                                                    [:nil?, [:custom_field_value,
                                                             'custom_field_name']]))
+  end
+
+  # @return [void]
+  def test_filter_via_custom_field_value_non_string_display_value
+    task_selectors = get_test_object(Checkoff::TaskSelectors) do
+      stub_custom_fields
+      stub_custom_field_value('custom_field_name', 123)
+      task.expects(:custom_fields).returns([custom_field])
+    end
+
+    e = assert_raises(RuntimeError) do
+      task_selectors.filter_via_task_selector(task,
+                                              [:nil?, [:custom_field_value,
+                                                       'custom_field_name']])
+    end
+    assert_match(/Expected display_value to be a String or nil, got Integer/, e.message)
   end
 
   # @return [void]
@@ -1123,6 +1139,24 @@ class TestTaskSelectors < ClassTest
     end
 
     refute(task_selectors.filter_via_task_selector(task, [:section_name_starts_with?, 'Done']))
+  end
+
+  # @return [void]
+  def test_name_starts_with_true
+    task_selectors = get_test_object(Checkoff::TaskSelectors) do
+      task.expects(:name).returns('Done: ship it')
+    end
+
+    assert(task_selectors.filter_via_task_selector(task, [:name_starts_with?, 'Done']))
+  end
+
+  # @return [void]
+  def test_name_starts_with_false
+    task_selectors = get_test_object(Checkoff::TaskSelectors) do
+      task.expects(:name).returns('Ship it')
+    end
+
+    refute(task_selectors.filter_via_task_selector(task, [:name_starts_with?, 'Done']))
   end
 
   # @return [void]

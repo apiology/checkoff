@@ -82,7 +82,7 @@
 #         def start_on; end
 #         # @return [String,nil]
 #         def modified_at; end
-#         # @return [String,nil]
+#         # @return [String]
 #         def name; end
 #         # @return [Hash<String, String>, nil]
 #         def assignee; end
@@ -114,7 +114,7 @@
 #       class Story
 #         # @return [String,nil]
 #         def resource_subtype; end
-#         # @return [String,nil]
+#         # @return [String]
 #         def created_at; end
 #       end
 #       class Section
@@ -122,7 +122,7 @@
 #         def name; end
 #       end
 #       class Project
-#         # @return [String,nil]
+#         # @return [String]
 #         def name; end
 #         # @return [String,nil]
 #         def due_date; end
