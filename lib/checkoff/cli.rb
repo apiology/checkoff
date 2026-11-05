@@ -297,9 +297,9 @@ module Checkoff
     attr_reader :workspace_name, :task_name
   end
 
-  # Builds the subcommands CheckoffGLIApp runs, giving each the
-  # collaborators it accepts out of those passed here; the rest fall back
-  # to the subcommand's own defaults.
+  # Builds the subcommands CheckoffGLIApp runs, giving the quickadd and
+  # view subcommands the collaborators they accept out of those passed
+  # here; the rest fall back to the subcommand's own defaults.
   class SubcommandFactory
     # @param collaborators [Hash{Symbol => Object}]
     def initialize(**collaborators)
@@ -334,8 +334,7 @@ module Checkoff
     def mv(from_workspace_arg:, from_project_arg:, from_section_arg:,
            to_workspace_arg:, to_project_arg:, to_section_arg:)
       MvSubcommand.new(from_workspace_arg:, from_project_arg:, from_section_arg:,
-                       to_workspace_arg:, to_project_arg:, to_section_arg:,
-                       **@collaborators.slice(:config, :projects, :sections, :logger))
+                       to_workspace_arg:, to_project_arg:, to_section_arg:)
     end
   end
 
