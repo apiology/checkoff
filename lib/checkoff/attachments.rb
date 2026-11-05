@@ -187,15 +187,18 @@ module Checkoff
 
     # bundle exec ./attachments.rb
     class << self
+      # @param tasks_class [Class<Checkoff::Tasks>]
+      # @param attachments_class [Class<Checkoff::Attachments>]
+      #
       # @return [void]
-      def run
+      def run(tasks_class: Checkoff::Tasks, attachments_class: Checkoff::Attachments)
         # @type [String]
         gid = ARGV[0] || raise('Please pass task gid as first argument')
         # @type [String]
         url = ARGV[1] || raise('Please pass attachment URL as second argument')
 
-        tasks = Checkoff::Tasks.new
-        attachments = Checkoff::Attachments.new
+        tasks = tasks_class.new
+        attachments = attachments_class.new
         task = tasks.task_by_gid(gid)
         raise "Could not find task #{gid}" if task.nil?
 
