@@ -455,6 +455,18 @@ class TestSections < BaseAsana
   end
 
   # @return [void]
+  def test_section_symbol_name
+    checkoff_sections = get_test_object(Checkoff::Sections)
+    checkoff_sections.stubs(:sections_or_raise).returns([section_1])
+    section_1.stubs(:name).returns('Section 1')
+    e = assert_raises(ArgumentError) do
+      checkoff_sections.section('Workspace 1', a_name, :all_sections)
+    end
+
+    assert_equal('Unsupported section name :all_sections', e.message)
+  end
+
+  # @return [void]
   def mock_tasks_section_without_name
     expect_project_pulled('Workspace 1', project_a, a_name)
     expect_project_gid_pulled(project_a, a_gid)

@@ -224,6 +224,8 @@ module Checkoff
     #
     # @return [Asana::Resources::Section, nil]
     def section(workspace_name, project_name, section_name, extra_section_fields: [])
+      raise ArgumentError, "Unsupported section name #{section_name.inspect}" if section_name.is_a?(Symbol)
+
       sections = sections_or_raise(workspace_name, project_name,
                                    extra_fields: extra_section_fields)
       sections.find do |section|
