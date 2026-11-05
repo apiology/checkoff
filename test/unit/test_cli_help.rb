@@ -9,38 +9,9 @@ class TestCLIHelp < Minitest::Test
   # @return [Hash]
   attr_reader :mocks
 
-  typed_mock :config, Hash
-  typed_mock :workspaces, Checkoff::Workspaces
-  typed_mock :sections, Checkoff::Sections
-  typed_mock :tasks, Checkoff::Tasks
-
-  # @return [void]
-  def expect_workspaces_created
-    Checkoff::Workspaces.expects(:new).returns(workspaces).at_least(0)
-  end
-
-  # @return [void]
-  def expect_config_loaded
-    Checkoff::Internal::ConfigLoader.expects(:load).returns(config).at_least(0)
-  end
-
-  # @return [void]
-  def expect_sections_created
-    Checkoff::Sections.expects(:new).returns(sections).at_least(0)
-  end
-
-  # @return [void]
-  def expect_tasks_created
-    Checkoff::Tasks.expects(:new).returns(tasks).at_least(0)
-  end
-
   # @return [void]
   def set_mocks
     @mocks = {
-      config:,
-      workspaces:,
-      sections:,
-      tasks:,
       stderr: $stderr,
       stdout: $stdout,
     }
@@ -49,10 +20,6 @@ class TestCLIHelp < Minitest::Test
   # @return [Class<Checkoff::CheckoffGLIApp>]
   def get_test_object(&twiddle_mocks)
     set_mocks
-    expect_workspaces_created
-    expect_config_loaded
-    expect_sections_created
-    expect_tasks_created
 
     yield @mocks if twiddle_mocks
     Checkoff::CheckoffGLIApp

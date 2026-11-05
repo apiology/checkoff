@@ -11,7 +11,6 @@ class TestCLIQuickadd < Minitest::Test
 
   typed_mock :config, Hash
   typed_mock :workspaces, Checkoff::Workspaces
-  typed_mock :sections, Checkoff::Sections
   typed_mock :tasks, Checkoff::Tasks
   typed_mock :workspace, Asana::Resources::Workspace
   typed_mock :workspace_gid, String
@@ -32,11 +31,6 @@ class TestCLIQuickadd < Minitest::Test
   end
 
   # @return [void]
-  def expect_sections_created
-    Checkoff::Sections.expects(:new).returns(sections).at_least(0)
-  end
-
-  # @return [void]
   def expect_tasks_created
     Checkoff::Tasks.expects(:new).returns(tasks).at_least(0)
   end
@@ -46,7 +40,6 @@ class TestCLIQuickadd < Minitest::Test
     @mocks = {
       config:,
       workspaces:,
-      sections:,
       tasks:,
       stderr: $stderr,
       stdout: $stdout,
@@ -58,7 +51,6 @@ class TestCLIQuickadd < Minitest::Test
     set_mocks
     expect_workspaces_created
     expect_config_loaded
-    expect_sections_created
     expect_tasks_created
 
     yield @mocks
