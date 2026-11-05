@@ -74,7 +74,11 @@ module TypedMock
   end
 end
 
-Minitest::Test.extend TypedMock
+module Minitest
+  class Test
+    extend TypedMock
+  end
+end
 
 # Class-body DSL for ClassTest, which provides #mocks.
 module TypedDelegate
