@@ -8,7 +8,8 @@ require 'checkoff/task_selectors'
 # rubocop:disable-next Metrics/ClassLength
 class TestTaskSelectors < ClassTest
   # Answers .now and .today for the Time and Date classes given to a
-  # real Checkoff::Tasks, so tests can pin either through a mock.
+  # real Checkoff::Tasks, so tests can fix the current time or date
+  # through a mock.
   class Clock
     # @return [Time]
     def now = Time.now
