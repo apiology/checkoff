@@ -1,5 +1,4 @@
 #!/usr/bin/env ruby
-# typed: true
 
 # frozen_string_literal: true
 
@@ -9,24 +8,21 @@ require_relative 'internal/config_loader'
 require_relative 'workspaces'
 require_relative 'clients'
 require_relative 'projects'
-require 'sorbet-runtime'
 
 # https://developers.asana.com/reference/portfolios
 
 module Checkoff
   # Pull portfolios from Asana
   class Portfolios
-    extend T::Sig
-
     # @!parse
     #   extend CacheMethod::ClassMethods
 
     MINUTE = 60
-    HOUR = T.let(MINUTE * 60, Numeric)
-    DAY = T.let(24 * HOUR, Numeric)
-    REALLY_LONG_CACHE_TIME = T.let(HOUR, Numeric)
-    LONG_CACHE_TIME = T.let(MINUTE * 15, Numeric)
-    SHORT_CACHE_TIME = T.let(MINUTE, Numeric)
+    HOUR = MINUTE * 60
+    DAY = 24 * HOUR
+    REALLY_LONG_CACHE_TIME = HOUR
+    LONG_CACHE_TIME = MINUTE * 15
+    SHORT_CACHE_TIME = MINUTE
 
     # @param config [Checkoff::Internal::EnvFallbackConfigLoader,Hash]
     # @param workspaces [Checkoff::Workspaces]
@@ -38,9 +34,9 @@ module Checkoff
                    client: clients.client,
                    projects: Checkoff::Projects.new(config:, client:),
                    workspaces: Checkoff::Workspaces.new(config:, client:))
-      @workspaces = T.let(workspaces, Checkoff::Workspaces)
-      @client = T.let(client, Asana::Client)
-      @projects = T.let(projects, Checkoff::Projects)
+      @workspaces = workspaces
+      @client = client
+      @projects = projects
     end
 
     # @param workspace_name [String]

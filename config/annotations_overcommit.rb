@@ -1,5 +1,4 @@
 # frozen_string_literal: true
-# typed: strict
 
 # Solargraph typing for Overcommit hook subprocess helpers.
 #

@@ -1,4 +1,3 @@
-# typed: true
 # frozen_string_literal: true
 
 require 'overcommit'
@@ -11,16 +10,11 @@ module Overcommit
       class RegenerateTypecheck < Base
         # Tracked paths updated by `make build-typecheck` (see Makefile).
         BUILD_TYPECHECK_PATHS = [
-          'sorbet/rbi/gems',
-          'sorbet/rbi/annotations',
-          'sorbet/rbi/dsl',
-          'sorbet/rbi/todo.rbi',
           'rbs_collection.lock.yaml',
           'rbi',
         ].freeze
 
         STAMP_FILES = %w[
-          tapioca.installed
           Gemfile.lock.installed
           types.installed
         ].freeze

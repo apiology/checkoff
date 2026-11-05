@@ -6,13 +6,12 @@
 # Note that changes in the inspected code, or installation of new
 # versions of RuboCop, may require this file to be generated again.
 
-# Offense count: 17
+# Offense count: 16
 # Configuration parameters: AllowedMethods, AllowedPatterns, CountRepeatedAttributes, Max.
 Metrics/AbcSize:
   Exclude:
     - 'lib/checkoff/internal/asana_event_filter.rb'
     - 'lib/checkoff/task_searches.rb'
-    - 'lib/checkoff/tasks.rb'
     - 'lib/checkoff/timelines.rb'
     - 'test/unit/test_portfolios.rb'
     - 'test/unit/test_tasks.rb'
@@ -39,14 +38,13 @@ Metrics/CyclomaticComplexity:
     - 'lib/checkoff/internal/task_timing.rb'
     - 'lib/checkoff/timelines.rb'
 
-# Offense count: 13
+# Offense count: 11
 # Configuration parameters: CountComments, Max, CountAsOne, AllowedMethods, AllowedPatterns.
 Metrics/MethodLength:
   Exclude:
     - 'lib/checkoff/attachments.rb'
     - 'lib/checkoff/internal/asana_event_filter.rb'
     - 'lib/checkoff/internal/search_url/date_param_converter.rb'
-    - 'lib/checkoff/internal/search_url/parser.rb'
     - 'lib/checkoff/my_tasks.rb'
     - 'lib/checkoff/task_searches.rb'
     - 'lib/checkoff/tasks.rb'

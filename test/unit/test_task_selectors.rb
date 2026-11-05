@@ -1,4 +1,3 @@
-# typed: false
 # frozen_string_literal: true
 
 require_relative 'test_helper'
@@ -284,6 +283,28 @@ class TestTaskSelectors < ClassTest
     refute(task_selectors.filter_via_task_selector(task,
                                                    [:nil?, [:custom_field_gid_value,
                                                             custom_field_gid]]))
+  end
+
+  # @return [void]
+  def mock_filter_via_custom_field_gid_value_not_string
+    stub_custom_fields
+    custom_field.expects(:fetch).with('gid').returns(custom_field_gid)
+    task.expects(:custom_fields).returns([custom_field])
+    custom_field.expects(:[]).with('display_value').returns(123)
+  end
+
+  # @return [void]
+  def test_filter_via_custom_field_gid_value_not_string
+    task_selectors = get_test_object(Checkoff::TaskSelectors) do
+      mock_filter_via_custom_field_gid_value_not_string
+    end
+    e = assert_raises(TypeError) do
+      task_selectors.filter_via_task_selector(task,
+                                              [:nil?, [:custom_field_gid_value,
+                                                       custom_field_gid]])
+    end
+
+    assert_equal('Expected String display_value, got 123', e.message)
   end
 
   # @return [void]
