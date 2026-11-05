@@ -53,7 +53,7 @@ GIT
 
 GIT
   remote: https://github.com/apiology/sord.git
-  revision: 89df0ce0100ea8ad82bfe9fdb9ce769dfa69bac1
+  revision: 9fedb2f06cb60c615a4e7f1ac68e4051f5680785
   branch: sord-integration-2026-10-19
   specs:
     sord (7.1.0)

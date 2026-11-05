@@ -625,7 +625,7 @@ module Sord::TypeConverter
     # @param [String] type
     # @return [Parlour::Types::Type, nil]
     #
-    # pkg:gem/sord#lib/sord/type_converter.rb:382
+    # pkg:gem/sord#lib/sord/type_converter.rb:383
     # sord warn - Parlour::Types::Type wasn't able to be resolved to a constant in this project
     # _@param_ `type`
     sig { params(type: String).returns(T.nilable(Parlour::Types::Type)) }
@@ -639,7 +639,7 @@ module Sord::TypeConverter
     # @param [Boolean] replace_errors_with_untyped
     # @return [Parlour::Types::Type]
     #
-    # pkg:gem/sord#lib/sord/type_converter.rb:338
+    # pkg:gem/sord#lib/sord/type_converter.rb:339
     # sord warn - Parlour::Types::Type wasn't able to be resolved to a constant in this project
     # sord warn - YARD::CodeObjects::Base wasn't able to be resolved to a constant in this project
     # _@param_ `name`
@@ -677,7 +677,7 @@ module Sord::TypeConverter
     # @param [YARD::CodeObjects::Base, nil] item
     # @return [:method, :namespace, nil]
     #
-    # pkg:gem/sord#lib/sord/type_converter.rb:316
+    # pkg:gem/sord#lib/sord/type_converter.rb:317
     def type_variable_scope(name, item); end
 
     # Converts a YARD type into a Parlour type.
@@ -765,7 +765,7 @@ end
 # Interfaces which use generic arguments have those arguments as `untyped`, since I'm not aware
 # of any standard way that these are specified.
 #
-# pkg:gem/sord#lib/sord/type_converter.rb:351
+# pkg:gem/sord#lib/sord/type_converter.rb:352
 Sord::TypeConverter::DUCK_TYPES_TO_RBS_TYPE_NAMES = T.let(T.unsafe(nil), Hash)
 
 # Match duck types which require the object implement one or more methods,
