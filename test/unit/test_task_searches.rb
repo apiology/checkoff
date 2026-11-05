@@ -105,7 +105,7 @@ class TestTaskSearches < ClassTest
     expect_tasks_filtered
   end
 
-  # @return [void]
+  # @return [Checkoff::Projects]
   def projects
     Checkoff::Projects.new(client:)
   end
@@ -139,7 +139,7 @@ class TestTaskSearches < ClassTest
   # @param params [Hash{String => Object}]
   # @param extra_fields [Array<String>]
   # @param data [Array]
-  # @param result [Enumerable]
+  # @param result [Enumerable, Mocha::Mock]
   # @return [void]
   def expect_search_request(params, extra_fields:, data:, result:)
     response = mock('response')
