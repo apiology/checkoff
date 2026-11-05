@@ -63,7 +63,6 @@ class TestTaskSearches < ClassTest
       'something_else' => something_else,
     }
     search_response.expects(:body).returns(body).at_least(1)
-    body.expects(:fetch).with('data').returns(data)
   end
 
   # @param response_array [Array<Mocha::Mock>]
