@@ -133,12 +133,6 @@
 #     end
 #   end
 #   class Object
-#     # @param method_name [Symbol, String]
-#     # @return [Mocha::Expectation]
-#     def expects(method_name); end
-#     # @param method_name [Symbol, String]
-#     # @return [Mocha::Expectation]
-#     def stubs(method_name); end
 #     # @param name [String]
 #     # @return [Mocha::Mock]
 #     def mock(name = nil); end
