@@ -42,6 +42,7 @@ module Checkoff
     # @param time_class [Class<Time>]
     # @param date_class [Class<Date>]
     # @param asana_task [Class<Asana::Resources::Task>]
+    # @param task_hashes [Checkoff::Internal::TaskHashes]
     def initialize(config: Checkoff::Internal::ConfigLoader.load(:asana),
                    client: Checkoff::Clients.new(config:).client,
                    workspaces: Checkoff::Workspaces.new(config:,
@@ -54,7 +55,8 @@ module Checkoff
                                                              client:),
                    time_class: Time,
                    date_class: Date,
-                   asana_task: Asana::Resources::Task)
+                   asana_task: Asana::Resources::Task,
+                   task_hashes: Checkoff::Internal::TaskHashes.new)
       @config = config
       @sections = sections
       @time_class = time_class
@@ -64,6 +66,7 @@ module Checkoff
       @portfolios = portfolios
       @custom_fields = custom_fields
       @workspaces = workspaces
+      @task_hashes = task_hashes
       @timing = Checkoff::Timing.new(today_getter: date_class, now_getter: time_class)
     end
 
@@ -340,11 +343,6 @@ module Checkoff
                                                           custom_fields:)
     end
 
-    # @return [Checkoff::Internal::TaskHashes]
-    def task_hashes
-      @task_hashes ||= Checkoff::Internal::TaskHashes.new
-    end
-
     # @return [Checkoff::Internal::Memberships]
     def memberships
       @memberships ||= Checkoff::Internal::Memberships.new
@@ -377,6 +375,9 @@ module Checkoff
 
     # @return [Checkoff::Timing]
     attr_reader :timing
+
+    # @return [Checkoff::Internal::TaskHashes]
+    attr_reader :task_hashes
 
     # @return [Checkoff::CustomFields]
     attr_reader :custom_fields
