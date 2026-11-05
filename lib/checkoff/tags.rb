@@ -33,14 +33,17 @@ module Checkoff
     # @param client [Asana::Client]
     # @param projects [Checkoff::Projects]
     # @param workspaces [Checkoff::Workspaces]
+    # @param asana_resources_collection_class [Class<Asana::Resources::Collection>]
     def initialize(config: Checkoff::Internal::ConfigLoader.load(:asana),
                    clients: Checkoff::Clients.new(config:),
                    client: clients.client,
                    projects: Checkoff::Projects.new(config:, client:),
-                   workspaces: Checkoff::Workspaces.new(config:, client:))
+                   workspaces: Checkoff::Workspaces.new(config:, client:),
+                   asana_resources_collection_class: Asana::Resources::Collection)
       @workspaces = T.let(workspaces, Checkoff::Workspaces)
       @projects = T.let(projects, Checkoff::Projects)
       @client = T.let(client, Asana::Client)
+      @asana_resources_collection_class = asana_resources_collection_class
     end
 
     # @param workspace_name [String]
@@ -69,10 +72,10 @@ module Checkoff
       options = projects.task_options(extra_fields:,
                                       only_uncompleted:)
       params = build_params(options)
-      Asana::Resources::Collection.new(parse(client.get("/tags/#{tag_gid}/tasks",
-                                                        params:, options: options[:options])),
-                                       type: Asana::Resources::Task,
-                                       client:)
+      @asana_resources_collection_class.new(parse(client.get("/tags/#{tag_gid}/tasks",
+                                                             params:, options: options[:options])),
+                                            type: Asana::Resources::Task,
+                                            client:)
     end
 
     # @param workspace_name [String]
