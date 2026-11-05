@@ -105,6 +105,7 @@ class TestSections < BaseAsana
   # @return [void]
   # @param name [String, Mocha::Mock]
   # @param section [Asana::Resources::Section]
+  # @rbs section: Asana::Resources::Section & Mocha::Mock
   def expect_section_named(section, name)
     section.expects(:name).returns(name).at_least(1)
   end
@@ -112,6 +113,7 @@ class TestSections < BaseAsana
   # @return [void]
   # @param section [Asana::Resources::Section]
   # @param task [Asana::Resources::Task]
+  # @rbs task: Asana::Resources::Task & Mocha::Mock
   def expect_assignee_section_pulled(task, section)
     task.expects(:assignee_section).returns(section).at_least(0)
   end
@@ -204,6 +206,7 @@ class TestSections < BaseAsana
   # @return [void]
   # @param task [Asana::Resources::Task]
   # @param name [String]
+  # @rbs task: Asana::Resources::Task & Mocha::Mock
   def expect_named(task, name)
     task.expects(:name).returns(name).at_least(1)
   end
@@ -272,6 +275,7 @@ class TestSections < BaseAsana
   # @return [void]
   # @param gid [String]
   # @param project [Asana::Resources::Project]
+  # @rbs project: Asana::Resources::Project & Mocha::Mock
   def expect_project_gid_pulled(project, gid)
     project.expects(:gid).returns(gid).at_least(1)
   end
@@ -339,6 +343,7 @@ class TestSections < BaseAsana
   # @param section_gid [String]
   # @param section [Asana::Resources::Section]
   # @return [void]
+  # @rbs section: Asana::Resources::Section & Mocha::Mock
   def expect_section_tasks_pulled(section, section_gid, task_list, only_uncompleted:)
     expect_client_tasks_api_pulled
     section.expects(:gid).returns(section_gid).at_least(0)

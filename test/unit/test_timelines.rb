@@ -218,6 +218,7 @@ class TestTimelines < ClassTest
   # @return [void]
   # @param memberships [Array<Hash>]
   # @param task [Asana::Resources::Task]
+  # @rbs task: Asana::Resources::Task & Mocha::Mock
   def expect_memberships_pulled(task, memberships)
     task.expects(:memberships).returns(memberships)
   end

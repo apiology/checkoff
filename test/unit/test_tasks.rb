@@ -159,6 +159,7 @@ class TestTasks < BaseAsana
   # @return [void]
   # @param dependency_gids [Array<Hash>]
   # @param task [Asana::Resources::Task]
+  # @rbs task: Asana::Resources::Task & Mocha::Mock
   def expect_dependency_gids_pulled(task, dependency_gids)
     task.expects(:instance_variable_get).with(:@dependencies).returns(dependency_gids)
   end
@@ -194,6 +195,7 @@ class TestTasks < BaseAsana
   # @param dependency_full_task [Asana::Resources::Task]
   # @param dependency_gid [String]
   # @param completed [Boolean]
+  # @rbs dependency_full_task: Asana::Resources::Task & Mocha::Mock
   def expect_dependency_completion_pulled(dependency_gid, dependency_full_task,
                                           completed)
     expect_task_options_pulled
@@ -275,6 +277,7 @@ class TestTasks < BaseAsana
   # @return [void]
   # @param start_at [String, NilClass]
   # @param task [Asana::Resources::Task]
+  # @rbs task: Asana::Resources::Task & Mocha::Mock
   def allow_start_at_pulled(task, start_at)
     task.expects(:start_at).returns(start_at).at_least(0)
   end
@@ -282,6 +285,7 @@ class TestTasks < BaseAsana
   # @param start_on [String, NilClass]
   # @return [void]
   # @param task [Asana::Resources::Task]
+  # @rbs task: Asana::Resources::Task & Mocha::Mock
   def allow_start_on_pulled(task, start_on)
     task.expects(:start_on).returns(start_on).at_least(0)
   end
@@ -289,6 +293,7 @@ class TestTasks < BaseAsana
   # @return [void]
   # @param due_at [String, NilClass]
   # @param task [Asana::Resources::Task]
+  # @rbs task: Asana::Resources::Task & Mocha::Mock
   def allow_due_at_pulled(task, due_at)
     task.expects(:due_at).returns(due_at).at_least(0)
   end
@@ -296,6 +301,7 @@ class TestTasks < BaseAsana
   # @param due_on [String, NilClass]
   # @param task [Asana::Resources::Task]
   # @return [void]
+  # @rbs task: Asana::Resources::Task & Mocha::Mock
   def allow_due_on_pulled(task, due_on)
     task.expects(:due_on).returns(due_on).at_least(0)
   end

@@ -75,6 +75,7 @@ class TestMvSubcommand < ClassTest
   # @return [void]
   # @param task [Asana::Resources::Task]
   # @param task_name [String]
+  # @rbs task: Asana::Resources::Task & Mocha::Mock
   def expect_task_named(task, task_name)
     task.expects(:name).returns(task_name)
   end
@@ -82,6 +83,7 @@ class TestMvSubcommand < ClassTest
   # @return [void]
   # @param section_name [String, Symbol]
   # @param section [Asana::Resources::Section]
+  # @rbs section: Asana::Resources::Section & Mocha::Mock
   def expect_section_named(section, section_name)
     section.expects(:name).returns(section_name)
   end
@@ -89,6 +91,7 @@ class TestMvSubcommand < ClassTest
   # @return [void]
   # @param project_gid [String]
   # @param project [Asana::Resources::Project]
+  # @rbs project: Asana::Resources::Project & Mocha::Mock
   def expect_project_gid_pulled(project, project_gid)
     project.expects(:gid).returns(project_gid)
   end
@@ -96,6 +99,7 @@ class TestMvSubcommand < ClassTest
   # @return [void]
   # @param section [Asana::Resources::Section]
   # @param section_gid [String]
+  # @rbs section: Asana::Resources::Section & Mocha::Mock
   def expect_section_gid_pulled(section, section_gid)
     section.expects(:gid).returns(section_gid)
   end
@@ -104,6 +108,7 @@ class TestMvSubcommand < ClassTest
   # @param section_gid [String]
   # @param project_gid [String]
   # @param task [Asana::Resources::Task]
+  # @rbs task: Asana::Resources::Task & Mocha::Mock
   def expect_task_added_to_project(task, project_gid, section_gid)
     task.expects(:add_project).with(project: project_gid, section: section_gid)
   end

@@ -66,6 +66,7 @@ class TestCLIView < Minitest::Test
   # @return [void]
   # @param task_name [String]
   # @param task [Asana::Resources::Task]
+  # @rbs task: Asana::Resources::Task & Mocha::Mock
   def expect_task_named(task, task_name)
     task.expects(:name).returns(task_name).at_least(0)
   end
@@ -73,6 +74,7 @@ class TestCLIView < Minitest::Test
   # @return [void]
   # @param due_on [String, NilClass]
   # @param task [Asana::Resources::Task]
+  # @rbs task: Asana::Resources::Task & Mocha::Mock
   def expect_task_due_on(task, due_on)
     task.expects(:due_on).returns(due_on).at_least(0)
   end
@@ -80,6 +82,7 @@ class TestCLIView < Minitest::Test
   # @return [void]
   # @param task [Asana::Resources::Task]
   # @param due_at [String, NilClass]
+  # @rbs task: Asana::Resources::Task & Mocha::Mock
   def expect_task_due_at(task, due_at)
     task.expects(:due_at).returns(due_at).at_least(0)
   end

@@ -84,6 +84,7 @@ class TestSubtasks < ClassTest
   # @param result [Boolean]
   # @param subtask [Asana::Resources::Task]
   # @return [void]
+  # @rbs subtask: Asana::Resources::Task & Mocha::Mock
   def allow_subtask_section_status_queried(subtask, result)
     subtask.expects(:is_rendered_as_separator).returns(result).at_least(0)
   end

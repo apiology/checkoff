@@ -91,7 +91,7 @@ class TestTags < ClassTest
   # @param only_uncompleted [Boolean]
   def build_task_params(only_uncompleted)
     # @type [Hash{Symbol => Object}]
-    task_params = { limit: 100 }
+    task_params = { limit: 100 } #: { limit: Integer, ?completed_since: String }
     task_params[:completed_since] = '9999-12-01' if only_uncompleted
     task_params
   end
