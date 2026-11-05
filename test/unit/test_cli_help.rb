@@ -6,31 +6,17 @@ require 'checkoff/cli'
 
 # Test the Checkoff::CLI class with the help option
 class TestCLIHelp < Minitest::Test
-  # @return [Hash]
-  attr_reader :mocks
-
-  # @return [void]
-  def set_mocks
-    @mocks = {
-      stderr: $stderr,
-      stdout: $stdout,
-    }
-  end
-
-  # @return [Class<Checkoff::CheckoffGLIApp>]
-  def get_test_object(&twiddle_mocks)
-    set_mocks
-
-    yield @mocks if twiddle_mocks
-    Checkoff::CheckoffGLIApp
-  end
-
+  # GLI binds its help command to the process's standard output when
+  # the app is defined, so capture at the file-descriptor level.
+  #
   # @return [void]
   def test_run_with_help_arg
-    cli = get_test_object do
-      mocks[:stdout].expects(:puts).at_least(1)
+    exit_code = nil
+    out, _err = capture_subprocess_io do
+      exit_code = Checkoff::CheckoffGLIApp.run(['--help'])
     end
 
-    assert_equal(0, cli.run(['--help']))
+    assert_equal(0, exit_code)
+    assert_match(/Command-line client for Asana/, out)
   end
 end
