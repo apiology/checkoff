@@ -1,24 +1,24 @@
 # typed: false
 # frozen_string_literal: true
 
+require 'tempfile'
 require_relative '../class_test'
 
 # Test the Checkoff::Internal::ConfigLoader class
 class TestConfigLoader < Minitest::Test
-  # @return [void]
-  def mock_yaml_loaded
-    filename = File.expand_path('~/.foo.yml')
-    File.expects(:exist?).with(filename).returns(true)
-    YAML.expects(:load_file).returns({ 'bar' => 'yaml_value' })
+  # @param env [Hash{String => String}]
+  # @return [Checkoff::Internal::EnvFallbackConfigLoader]
+  def load_config(env: {})
+    Tempfile.create(['foo', '.yml']) do |file|
+      file.write({ 'bar' => 'yaml_value' }.to_yaml)
+      file.close
+      Checkoff::Internal::ConfigLoader.load(:foo, filename: file.path, env:)
+    end
   end
 
   # @return [void]
   def test_requests_from_env_variable_neither_populated
-    mock_yaml_loaded
-
-    config_hash = Checkoff::Internal::ConfigLoader.load(:foo)
-
-    ENV.expects(:fetch).with('FOO__NO_KEY_FOUND', nil).returns(nil).at_least(2)
+    config_hash = load_config
 
     assert_nil(config_hash[:no_key_found])
     assert_raises(KeyError) do
@@ -28,11 +28,7 @@ class TestConfigLoader < Minitest::Test
 
   # @return [void]
   def test_requests_from_env_variable_if_yaml_not_populated
-    mock_yaml_loaded
-
-    config_hash = Checkoff::Internal::ConfigLoader.load(:foo)
-
-    ENV.expects(:fetch).with('FOO__ENV_ONLY_KEY', nil).returns('123').at_least(2)
+    config_hash = load_config(env: { 'FOO__ENV_ONLY_KEY' => '123' })
 
     assert_equal('123', config_hash[:env_only_key])
     assert_equal('123', config_hash.fetch(:env_only_key))
@@ -40,9 +36,7 @@ class TestConfigLoader < Minitest::Test
 
   # @return [void]
   def test_defers_to_yaml
-    mock_yaml_loaded
-
-    config_hash = Checkoff::Internal::ConfigLoader.load(:foo)
+    config_hash = load_config
 
     assert_equal('yaml_value', config_hash[:bar])
     assert_equal('yaml_value', config_hash.fetch(:bar))
