@@ -5,6 +5,9 @@ require_relative 'test_helper'
 
 # Test a class that uses initializer mocks.
 class ClassTest < Minitest::Test
+  extend TypedDelegate
+  include InitializerMocks
+
   # obj = get_test_object(SomeClass) do
   #    # Go ahead and use concrete value for constructor arg
   #    @mocks[:some_constructor_arg] = 123

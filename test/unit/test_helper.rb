@@ -50,39 +50,51 @@ NON_ALLOCATABLE_EXAMPLES = {
   FalseClass => false,
 }.freeze
 
-# @param mock_sym [Symbol]
-# @param type [Class]
-#
-# @return [void]
-def typed_mock(mock_sym, type)
-  define_method(mock_sym.to_s) do
-    var = "@#{mock_sym}"
-    mock = instance_variable_get(var)
-    unless mock
-      mock = mock(mock_sym.to_s)
-      instance_variable_set var, mock
-      if NON_ALLOCATABLE_EXAMPLES.key?(type)
-        mock.responds_like(NON_ALLOCATABLE_EXAMPLES.fetch(type))
-      else
-        mock.responds_like_instance_of(type)
+# Class-body DSL for test classes; extended into Minitest::Test.
+module TypedMock
+  # @param mock_sym [Symbol]
+  # @param type [Class]
+  #
+  # @return [void]
+  def typed_mock(mock_sym, type)
+    define_method(mock_sym.to_s) do
+      var = "@#{mock_sym}"
+      mock = instance_variable_get(var)
+      unless mock
+        mock = mock(mock_sym.to_s)
+        instance_variable_set var, mock
+        if NON_ALLOCATABLE_EXAMPLES.key?(type)
+          mock.responds_like(NON_ALLOCATABLE_EXAMPLES.fetch(type))
+        else
+          mock.responds_like_instance_of(type)
+        end
       end
+      mock
     end
-    mock
   end
 end
 
-# Exposes an existing @mocks entry (from get_initializer_mocks) as a
-# precisely-typed bare method, like def_delegators but with a real
-# type instead of the generic Mocha::Mock the def_delegators macro
-# provides.
-#
-# @param mock_sym [Symbol]
-# @param type [Class]
-#
-# @return [void]
-def typed_delegate(mock_sym, type)
-  define_method(mock_sym.to_s) do
-    mocks.public_send(mock_sym)
+module Minitest
+  class Test
+    extend TypedMock
+  end
+end
+
+# Class-body DSL for ClassTest, which provides #mocks.
+module TypedDelegate
+  # Exposes an existing @mocks entry (from get_initializer_mocks) as a
+  # precisely-typed bare method, like def_delegators but with a real
+  # type instead of the generic Mocha::Mock the def_delegators macro
+  # provides.
+  #
+  # @param mock_sym [Symbol]
+  # @param type [Class]
+  #
+  # @return [void]
+  def typed_delegate(mock_sym, type)
+    define_method(mock_sym.to_s) do
+      mocks.public_send(mock_sym)
+    end
   end
 end
 
@@ -258,27 +270,30 @@ def ensure_respond_like(mocks, respond_like_instance_of, respond_like)
   end
 end
 
-def create_hash_of_mocks(mock_syms)
-  Hash[*mock_syms.map { |sym| [sym, mock(sym.to_s)] }.flatten]
-end
-
-def get_initializer_mocks(clazz,
-                          respond_like_instance_of:,
-                          respond_like:,
-                          skip_these_keys: [])
-  method = clazz.instance_method(:initialize)
-
-  # rubocop:disable-next Style/HashSlice
-  named_parameters = method.parameters.select { |name, _value| %i[key keyreq].include? name }
-
-  mock_syms = named_parameters.map { |_name, value| value } - skip_these_keys
-
-  # create a hash of argument name to a new mock
-  mocks = MyOpenStruct.new create_hash_of_mocks(mock_syms)
-  unless respond_like_instance_of.nil? && respond_like.nil?
-    ensure_respond_like(mocks, respond_like_instance_of, respond_like)
+# Mocks for a class's initializer keyword arguments; included by ClassTest.
+module InitializerMocks
+  def create_hash_of_mocks(mock_syms)
+    Hash[*mock_syms.map { |sym| [sym, mock(sym.to_s)] }.flatten]
   end
-  mocks
+
+  def get_initializer_mocks(clazz,
+                            respond_like_instance_of:,
+                            respond_like:,
+                            skip_these_keys: [])
+    method = clazz.instance_method(:initialize)
+
+    # rubocop:disable-next Style/HashSlice
+    named_parameters = method.parameters.select { |name, _value| %i[key keyreq].include? name }
+
+    mock_syms = named_parameters.map { |_name, value| value } - skip_these_keys
+
+    # create a hash of argument name to a new mock
+    mocks = MyOpenStruct.new create_hash_of_mocks(mock_syms)
+    unless respond_like_instance_of.nil? && respond_like.nil?
+      ensure_respond_like(mocks, respond_like_instance_of, respond_like)
+    end
+    mocks
+  end
 end
 
 module Mocha

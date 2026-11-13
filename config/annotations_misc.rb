@@ -136,29 +136,6 @@
 #     # @param name [String]
 #     # @return [Mocha::Mock]
 #     def mock(name = nil); end
-#     # @!macro [new] typed_mock
-#     #   @!method $1
-#     #     @return [Mocha::Mock & $2]
-#     # @param mock_sym [Symbol]
-#     # @param type [Class]
-#     # @return [void]
-#     def typed_mock(mock_sym, type); end
-#     # @!macro [new] typed_delegate
-#     #   @!method $1
-#     #     @return [Mocha::Mock & $2]
-#     # @param mock_sym [Symbol]
-#     # @param type [Class]
-#     # @return [void]
-#     def typed_delegate(mock_sym, type); end
-#     # @param clazz [Class]
-#     # @param respond_like_instance_of [Hash, nil]
-#     # @param respond_like [Hash, nil]
-#     # @param skip_these_keys [Array<Symbol>]
-#     # @return [MyOpenStruct]
-#     def get_initializer_mocks(clazz, respond_like_instance_of:, respond_like:, skip_these_keys: []); end
-#     # @param mock_syms [Array<Symbol>]
-#     # @return [Hash{Symbol => Mocha::Mock}]
-#     def create_hash_of_mocks(mock_syms); end
 #     # Mocha::ParameterMatchers::Methods, mixed into Minitest::Test at
 #     # runtime by mocha/minitest -- real signature already correct in the
 #     # gem's own YARD, but Solargraph can't trace the dynamic include.
@@ -189,6 +166,40 @@
 #     # @param hash [Hash]
 #     # @return [self]
 #     def merge!(hash); end
+#   end
+#   module TypedMock
+#     # @!macro [new] typed_mock
+#     #   @!method $1
+#     #     @return [Mocha::Mock & $2]
+#     # @param mock_sym [Symbol]
+#     # @param type [Class]
+#     # @return [void]
+#     def typed_mock(mock_sym, type); end
+#   end
+#   module Minitest
+#     class Test
+#       extend TypedMock
+#     end
+#   end
+#   module TypedDelegate
+#     # @!macro [new] typed_delegate
+#     #   @!method $1
+#     #     @return [Mocha::Mock & $2]
+#     # @param mock_sym [Symbol]
+#     # @param type [Class]
+#     # @return [void]
+#     def typed_delegate(mock_sym, type); end
+#   end
+#   module InitializerMocks
+#     # @param clazz [Class]
+#     # @param respond_like_instance_of [Hash, nil]
+#     # @param respond_like [Hash, nil]
+#     # @param skip_these_keys [Array<Symbol>]
+#     # @return [MyOpenStruct]
+#     def get_initializer_mocks(clazz, respond_like_instance_of:, respond_like:, skip_these_keys: []); end
+#     # @param mock_syms [Array<Symbol>]
+#     # @return [Hash{Symbol => Mocha::Mock}]
+#     def create_hash_of_mocks(mock_syms); end
 #   end
 #   # sorbet-runtime's T.cast is declared `(value untyped, type untyped,
 #   # ?checked: untyped) -> untyped` in its own gem YARD -- Solargraph has no
