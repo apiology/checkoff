@@ -6,15 +6,11 @@ require_relative 'test_helper'
 
 # Test the Checkoff::CLI class with view subcommand
 class TestCLIView < Minitest::Test
-  # @return [Hash]
-  attr_reader :mocks
-
   typed_mock :config, Hash
-  typed_mock :workspaces, Checkoff::Workspaces
+  typed_mock :projects, Checkoff::Projects
   typed_mock :sections, Checkoff::Sections
   typed_mock :tasks, Checkoff::Tasks
-  typed_mock :clients, Checkoff::Clients
-  typed_mock :client, Asana::Client
+  typed_mock :stdout, IO
   typed_mock :task_a, Asana::Resources::Task
   typed_mock :task_b, Asana::Resources::Task
   typed_mock :task_c, Asana::Resources::Task
@@ -43,22 +39,16 @@ class TestCLIView < Minitest::Test
 
   # @return [void]
   def expect_tasks_by_section_pulled
-    mocks[:sections]
+    sections
       .expects(:tasks_by_section)
       .with(workspace_name, project_name)
       .returns(nil => [task_a], section_name_str => [task_b, task_c])
   end
 
   # @return [void]
-  def expect_client_pulled
-    clients.expects(:client).returns(client)
-  end
-
-  # @return [void]
   # @param due_on [String, NilClass]
   # @param due_at [String, NilClass]
   def mock_run_with_no_section_specified_normal_project(due_on:, due_at:)
-    expect_client_pulled
     expect_tasks_by_section_pulled
     expect_three_tasks_queried(due_on:, due_at:)
   end
@@ -115,66 +105,43 @@ class TestCLIView < Minitest::Test
   end
 
   # @return [void]
-  def allow_workspaces_created
-    Checkoff::Workspaces.expects(:new).returns(workspaces).at_least(0)
-  end
-
-  # @return [void]
-  def allow_config_loaded
-    Checkoff::Internal::ConfigLoader.expects(:load).returns(config).at_least(0)
-  end
-
-  # @return [void]
-  def allow_sections_created
-    Checkoff::Sections.expects(:new).returns(sections).at_least(0)
-  end
-
-  # @return [void]
-  def allow_tasks_created
-    Checkoff::Tasks.expects(:new).returns(tasks).at_least(0)
-  end
-
-  # @return [void]
-  def allow_clients_created
-    Checkoff::Clients.expects(:new).returns(clients).at_least(0)
-  end
-
-  # @return [void]
-  def set_mocks
-    @mocks = {
-      config:,
-      workspaces:,
-      sections:,
-      tasks:,
-      stderr: $stderr,
-      stdout: $stdout,
-    }
+  def teardown
+    Checkoff::CheckoffGLIApp.subcommand_factory = nil
+    super
   end
 
   # @return [Class<Checkoff::CheckoffGLIApp>]
   def get_test_object(&_twiddle_mocks)
-    set_mocks
-    allow_workspaces_created
-    allow_config_loaded
-    allow_sections_created
-    allow_tasks_created
-    allow_clients_created
-
-    yield @mocks
+    Checkoff::CheckoffGLIApp.subcommand_factory =
+      Checkoff::SubcommandFactory.new(config:, projects:, sections:, tasks:)
+    yield if block_given?
     Checkoff::CheckoffGLIApp
+  end
+
+  # Kernel#puts in the view action writes to $stdout, so point it at
+  # the stdout mock for the duration of the run.
+  #
+  # @param cli [Class<Checkoff::CheckoffGLIApp>]
+  # @param args [Array<String>]
+  # @return [void]
+  def assert_run_succeeds(cli, args)
+    old_stdout = $stdout
+    $stdout = stdout
+    assert_equal(0, cli.run(args))
+  ensure
+    $stdout = old_stdout
   end
 
   # @return [void]
   def test_run_with_no_section_specified_normal_project
     cli = get_test_object do
       mock_run_with_no_section_specified_normal_project(due_on: 'fake_date', due_at: nil)
-      mocks[:stdout].expects(:puts).with(expected_json_no_section_specified)
+      stdout.expects(:puts).with(expected_json_no_section_specified)
     end
 
-    assert_equal(0,
-                 cli.run(['view',
-                          workspace_name,
-                          project_name]))
+    assert_run_succeeds(cli, ['view',
+                              workspace_name,
+                              project_name])
   end
 
   # @return [void]
@@ -186,9 +153,8 @@ class TestCLIView < Minitest::Test
                                             section_name:,
                                             due_on:,
                                             due_at:)
-    expect_client_pulled
-    mocks[:sections].expects(:tasks).with(workspace_name, project_name,
-                                          section_name)
+    sections.expects(:tasks).with(workspace_name, project_name,
+                                  section_name)
       .returns(three_tasks.keys)
     expect_three_tasks_queried(due_on:, due_at:)
   end
@@ -209,11 +175,10 @@ class TestCLIView < Minitest::Test
   # @return [void]
   # @param section_name [String, NilClass]
   def mock_view_specific_task(section_name:)
-    expect_client_pulled
     tasks.expects(:task).with(workspace_name, project_name, task_name,
                               section_name:).returns(task_a)
     expect_task_queried(task_a, task_name, nil, nil)
-    mocks[:stdout].expects(:puts).with('{"name":"my_task"}')
+    stdout.expects(:puts).with('{"name":"my_task"}')
   end
 
   # @return [void]
@@ -222,12 +187,11 @@ class TestCLIView < Minitest::Test
       mock_view_specific_task(section_name: nil)
     end
 
-    assert_equal(0,
-                 cli.run(['view',
-                          workspace_name,
-                          project_name,
-                          '',
-                          task_name]))
+    assert_run_succeeds(cli, ['view',
+                              workspace_name,
+                              project_name,
+                              '',
+                              task_name])
   end
 
   # @return [void]
@@ -236,12 +200,11 @@ class TestCLIView < Minitest::Test
       mock_view_specific_task(section_name: section_name_str)
     end
 
-    assert_equal(0,
-                 cli.run(['view',
-                          workspace_name,
-                          project_name,
-                          section_name_str,
-                          task_name]))
+    assert_run_succeeds(cli, ['view',
+                              workspace_name,
+                              project_name,
+                              section_name_str,
+                              task_name])
   end
 
   # @return [void]
@@ -263,14 +226,13 @@ class TestCLIView < Minitest::Test
   def test_view_run_with_section_specified_empty_section
     cli = get_test_object do
       mock_view_run_with_section_specified_empty_section
-      mocks[:stdout].expects(:puts).with(expected_json_section_specified)
+      stdout.expects(:puts).with(expected_json_section_specified)
     end
 
-    assert_equal(0,
-                 cli.run(['view',
-                          workspace_name,
-                          project_name,
-                          '']))
+    assert_run_succeeds(cli, ['view',
+                              workspace_name,
+                              project_name,
+                              ''])
   end
 
   # @return [void]
@@ -285,14 +247,13 @@ class TestCLIView < Minitest::Test
   def test_view_run_with_section_specified_normal_project_colon_project
     cli = get_test_object do
       mock_view_run_with_section_specified_normal_project_colon_project
-      mocks[:stdout].expects(:puts).with(expected_json_section_specified)
+      stdout.expects(:puts).with(expected_json_section_specified)
     end
 
-    assert_equal(0,
-                 cli.run(['view',
-                          workspace_name,
-                          ":#{project_name}",
-                          section_name_str]))
+    assert_run_succeeds(cli, ['view',
+                              workspace_name,
+                              ":#{project_name}",
+                              section_name_str])
   end
 
   # @return [void]
@@ -307,29 +268,29 @@ class TestCLIView < Minitest::Test
   def test_view_run_with_section_specified_normal_project
     cli = get_test_object do
       mock_view_run_with_section_specified_normal_project
-      mocks[:stdout].expects(:puts).with(expected_json_section_specified)
+      stdout.expects(:puts).with(expected_json_section_specified)
     end
 
-    assert_equal(0,
-                 cli.run(['view',
-                          workspace_name,
-                          project_name,
-                          section_name_str]))
+    assert_run_succeeds(cli, ['view',
+                              workspace_name,
+                              project_name,
+                              section_name_str])
   end
 
-  # @return [void]
-  def mock_run_with_no_project_specified
-    mocks[:stderr].expects(:puts).at_least(1)
-  end
-
+  # GLI writes usage errors and help to the process's standard streams,
+  # bound when the app is defined, so capture at the file-descriptor level.
+  #
   # @return [void]
   def test_run_with_no_project_specified
-    cli = get_test_object do
-      mock_run_with_no_project_specified
-      mocks[:stdout].expects(:puts)
+    cli = get_test_object
+    exit_code = nil
+    out, err = capture_subprocess_io do
+      exit_code = cli.run(['view', workspace_name])
     end
 
-    assert_equal(64, cli.run(['view', workspace_name]))
+    assert_equal(64, exit_code)
+    assert_match(/error/, err)
+    refute_empty(out)
   end
 
   # @return [void]
@@ -341,13 +302,12 @@ class TestCLIView < Minitest::Test
   def test_view_not_due
     cli = get_test_object do
       mock_run_with_no_section_specified_normal_project(due_on: nil, due_at: nil)
-      mocks[:stdout].expects(:puts).with(expected_json_view_not_due)
+      stdout.expects(:puts).with(expected_json_view_not_due)
     end
 
-    assert_equal(0,
-                 cli.run(['view',
-                          workspace_name,
-                          project_name]))
+    assert_run_succeeds(cli, ['view',
+                              workspace_name,
+                              project_name])
   end
 
   # @return [void]
@@ -361,12 +321,11 @@ class TestCLIView < Minitest::Test
   def test_view_due_at
     cli = get_test_object do
       mock_run_with_no_section_specified_normal_project(due_on: nil, due_at: 'fake time')
-      mocks[:stdout].expects(:puts).with(expected_json_view_due_at)
+      stdout.expects(:puts).with(expected_json_view_due_at)
     end
 
-    assert_equal(0,
-                 cli.run(['view',
-                          workspace_name,
-                          project_name]))
+    assert_run_succeeds(cli, ['view',
+                              workspace_name,
+                              project_name])
   end
 end

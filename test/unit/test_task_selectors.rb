@@ -7,9 +7,21 @@ require 'checkoff/task_selectors'
 
 # rubocop:disable-next Metrics/ClassLength
 class TestTaskSelectors < ClassTest
+  # Answers .now and .today for the Time and Date classes given to a
+  # real Checkoff::Tasks, so tests can mock the current time or date.
+  class Clock
+    # @return [Time]
+    def now = Time.now
+
+    # @return [Date]
+    def today = Date.today
+  end
+
   typed_delegate :tasks, Checkoff::Tasks
   typed_delegate :timelines, Checkoff::Timelines
   typed_delegate :client, Asana::Client
+  typed_delegate :time_class, Time
+  typed_mock :clock, Clock
 
   typed_mock :custom_field, Hash
   typed_mock :task, Asana::Resources::Task
@@ -23,9 +35,23 @@ class TestTaskSelectors < ClassTest
     mocks[:custom_fields] = Checkoff::CustomFields.new(client:)
   end
 
+  # @return [Class<Time>] Time, with .now answered by #clock
+  def clock_time_class
+    clock = self.clock
+    Class.new(Time) { define_singleton_method(:now) { clock.now } }
+  end
+
+  # @return [Class<Date>] Date, with .today answered by #clock
+  def clock_date_class
+    clock = self.clock
+    Class.new(Date) { define_singleton_method(:today) { clock.today } }
+  end
+
   # @return [void]
   def stub_tasks
-    mocks[:tasks] = Checkoff::Tasks.new(client:)
+    clock.stubs(:now).returns(Time.now)
+    clock.stubs(:today).returns(Date.today)
+    mocks[:tasks] = Checkoff::Tasks.new(client:, time_class: clock_time_class, date_class: clock_date_class)
   end
 
   # @param name [String]
@@ -379,7 +405,7 @@ class TestTaskSelectors < ClassTest
 
   # @return [void]
   def expect_now_jan_1_2019
-    Time.expects(:now).returns(Time.new(2019, 1, 1, 0, 0, 0, 0)).at_least(0)
+    clock.expects(:now).returns(Time.new(2019, 1, 1, 0, 0, 0, 0)).at_least(0)
   end
 
   # @return [void]
@@ -577,7 +603,7 @@ class TestTaskSelectors < ClassTest
     task_selectors = get_test_object(Checkoff::TaskSelectors) do
       stub_custom_fields
       expect_tasks_not_mocked
-      Time.expects(:now).returns(Time.new(2000, 1, 1, 0, 0, 0, '+00:00')).at_least(1)
+      clock.expects(:now).returns(Time.new(2000, 1, 1, 0, 0, 0, '+00:00')).at_least(1)
       task.expects(:custom_fields).returns([{ 'name' => 'start date',
                                               'display_value' => '2000-01-15' }]).at_least(1)
     end
@@ -626,7 +652,7 @@ class TestTaskSelectors < ClassTest
     task_selectors = get_test_object(Checkoff::TaskSelectors) do
       stub_custom_fields
       expect_tasks_not_mocked
-      Time.expects(:now).returns(Time.new(2000, 1, 1, 0, 0, 0, '+00:00')).at_least(1)
+      clock.expects(:now).returns(Time.new(2000, 1, 1, 0, 0, 0, '+00:00')).at_least(1)
       task.expects(:custom_fields).returns([{ 'name' => 'start date',
                                               'display_value' => '2000-01-15' }]).at_least(1)
     end
@@ -675,7 +701,7 @@ class TestTaskSelectors < ClassTest
   # @return [void]
   def mock_filter_via_task_selector_modified_less_than_n_days_ago
     expect_tasks_not_mocked
-    Time.expects(:now).returns(Time.new(2000, 1, 1, 0, 0, 0, '+00:00')).at_least(1)
+    clock.expects(:now).returns(Time.new(2000, 1, 1, 0, 0, 0, '+00:00')).at_least(1)
     task.expects(:modified_at).returns(Time.new(1999, 12, 1, 0, 0, 0, '+00:00').to_s).at_least(1)
   end
 
@@ -755,7 +781,6 @@ class TestTaskSelectors < ClassTest
   def test_filter_via_task_selector_modified_less_than_n_days_ago_nil
     task_selectors = get_test_object(Checkoff::TaskSelectors) do
       expect_tasks_not_mocked
-      Time.expects(:now).returns(Time.new(2000, 1, 1, 0, 0, 0, '+00:00').to_s).at_least(0)
       task.expects(:modified_at).returns(nil).at_least(1)
     end
 
@@ -796,7 +821,7 @@ class TestTaskSelectors < ClassTest
 
   # @return [void]
   def mock_filter_via_task_selector_field_greater_than_or_equal_to_n_days_from_today_due_on
-    Date.expects(:today).returns(Date.new(2000, 1, 1)).at_least(1)
+    clock.expects(:today).returns(Date.new(2000, 1, 1)).at_least(1)
     task.expects(:due_at).returns(nil)
     task.expects(:due_on).returns(Date.new(2000, 1, 8).to_s).at_least(1)
   end
@@ -816,7 +841,7 @@ class TestTaskSelectors < ClassTest
   # @return [void]
   def mock_filter_via_task_selector_field_greater_than_or_equal_to_n_days_from_today_due_at
     expect_tasks_not_mocked
-    Date.expects(:today).returns(Date.new(2000, 1, 1)).at_least(0)
+    clock.expects(:today).returns(Date.new(2000, 1, 1)).at_least(0)
     task.expects(:due_at).returns(Time.new(1999, 12, 1, 0, 0, 0, '+00:00').to_s).at_least(1)
   end
 
@@ -833,7 +858,6 @@ class TestTaskSelectors < ClassTest
 
   # @return [void]
   def mock_filter_via_task_selector_field_greater_than_or_equal_to_n_days_from_today_due_nil
-    Time.expects(:now).returns(Time.new(2000, 1, 1, 0, 0, 0, '+00:00').to_s).at_least(0)
     task.expects(:due_at).returns(nil).at_least(1)
     task.expects(:due_on).returns(nil).at_least(1)
   end
@@ -888,7 +912,7 @@ class TestTaskSelectors < ClassTest
   def mock_filter_via_task_selector_last_story_created_less_than_n_days_ago_ancient
     task.expects(:stories).returns([story])
     story.expects(:resource_subtype).returns('blah')
-    Time.expects(:now).returns(Time.new(2000, 1, 1, 0, 0, 0, '+00:00')).at_least(1)
+    time_class.expects(:now).returns(Time.new(2000, 1, 1, 0, 0, 0, '+00:00')).at_least(1)
     story.expects(:created_at).returns(Time.new(1950, 1, 1, 0, 0, 0, '+00:00').to_s)
   end
 
@@ -906,7 +930,7 @@ class TestTaskSelectors < ClassTest
   def mock_filter_via_task_selector_last_story_created_less_than_n_days_ago_recent
     task.expects(:stories).returns([story])
     story.expects(:resource_subtype).returns('blah')
-    Time.expects(:now).returns(Time.new(2000, 1, 1, 0, 0, 0, '+00:00')).at_least(1)
+    time_class.expects(:now).returns(Time.new(2000, 1, 1, 0, 0, 0, '+00:00')).at_least(1)
     story.expects(:created_at).returns(Time.new(1999, 12, 31, 0, 0, 0, '+00:00').to_s)
   end
 
@@ -1219,7 +1243,9 @@ class TestTaskSelectors < ClassTest
   end
 
   def respond_like
-    {}
+    {
+      time_class: Time,
+    }
   end
 
   # @return [void]

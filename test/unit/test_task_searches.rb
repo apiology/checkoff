@@ -63,7 +63,6 @@ class TestTaskSearches < ClassTest
       'something_else' => something_else,
     }
     search_response.expects(:body).returns(body).at_least(1)
-    body.expects(:fetch).with('data').returns(data)
   end
 
   # @param response_array [Array<Mocha::Mock>]
@@ -106,7 +105,7 @@ class TestTaskSearches < ClassTest
     expect_tasks_filtered
   end
 
-  # @return [void]
+  # @return [Checkoff::Projects]
   def projects
     Checkoff::Projects.new(client:)
   end
@@ -137,6 +136,23 @@ class TestTaskSearches < ClassTest
     assert_empty(task_searches.as_cache_key)
   end
 
+  # @param params [Hash{String => Object}]
+  # @param extra_fields [Array<String>]
+  # @param data [Array]
+  # @param result [Enumerable, Mocha::Mock]
+  # @return [void]
+  def expect_search_request(params, extra_fields:, data:, result:)
+    response = mock('response')
+    client.expects(:get)
+      .with('/workspaces/abc/tasks/search',
+            params:, options: { fields: projects.task_fields(extra_fields: ['custom_fields'] + extra_fields) })
+      .returns(response)
+    response.expects(:body).returns({ 'data' => data }).at_least(1)
+    asana_resources_collection_class.expects(:new)
+      .with([data, {}], type: Asana::Resources::Task, client:)
+      .returns(result)
+  end
+
   # @return [void]
   def test_raw_task_search_without_selector
     task_searches = get_test_object(Checkoff::TaskSearches) do
@@ -144,28 +160,23 @@ class TestTaskSearches < ClassTest
     end
     collection = mock('collection')
     collection.expects(:count).returns(1)
-    task_searches.expects(:api_task_search_request)
-      .with(api_params, workspace_gid: 'abc', extra_fields: [])
-      .returns(collection)
+    expect_search_request(api_params, extra_fields: [], data: [1], result: collection)
 
     result = task_searches.send(:raw_task_search, api_params, workspace_gid: 'abc', task_selector: [])
 
     assert_same(collection, result)
   end
 
-  # @param task_searches [Checkoff::TaskSearches]
-  # @return [Array]
-  def mock_full_page_raw_task_search(task_searches)
+  # @return [void]
+  def mock_full_page_raw_task_search
     first_page = mock('first_page')
     first_page.expects(:count).returns(100)
-    paginated = [good_task]
-    task_searches.expects(:api_task_search_request)
-      .with(api_params, workspace_gid: 'abc', extra_fields: [])
-      .returns(first_page)
-    task_searches.expects(:iterated_raw_task_search)
-      .with(api_params, workspace_gid: 'abc', extra_fields: [])
-      .returns(paginated)
-    paginated
+    expect_search_request({}, extra_fields: [], data: [1], result: first_page)
+    expect_search_request({ 'sort_by' => 'created_at' },
+                          extra_fields: ['created_at'], data: [2], result: [good_task])
+    good_task.expects(:created_at).returns('2026-01-01T00:00:00.000Z')
+    expect_search_request({ 'sort_by' => 'created_at', 'created_at.before' => '2026-01-01T00:00:00.000Z' },
+                          extra_fields: ['created_at'], data: [3], result: [])
   end
 
   # @return [void]
@@ -173,11 +184,11 @@ class TestTaskSearches < ClassTest
     task_searches = get_test_object(Checkoff::TaskSearches) do
       mocks[:projects] = projects
     end
-    paginated = mock_full_page_raw_task_search(task_searches)
+    mock_full_page_raw_task_search
 
-    result = task_searches.send(:raw_task_search, api_params, workspace_gid: 'abc', task_selector: [])
+    result = task_searches.send(:raw_task_search, {}, workspace_gid: 'abc', task_selector: [])
 
-    assert_equal(paginated, result.to_a)
+    assert_equal([good_task], result.to_a)
   end
 
   # @return [void]
@@ -185,20 +196,21 @@ class TestTaskSearches < ClassTest
     task_searches = get_test_object(Checkoff::TaskSearches) do
       mocks[:projects] = projects
     end
-    task_searches.expects(:raw_task_search).times(2).returns([good_task]).then.returns([])
+    expect_search_request({ 'sort_by' => 'created_at' },
+                          extra_fields: ['created_at'], data: [1], result: [good_task])
     good_task.expects(:created_at).returns('2026-01-01T00:00:00.000Z')
+    expect_search_request({ 'sort_by' => 'created_at', 'created_at.before' => '2026-01-01T00:00:00.000Z' },
+                          extra_fields: ['created_at'], data: [2], result: [])
 
     result = task_searches.send(:iterated_raw_task_search, {}, workspace_gid: 'abc', extra_fields: [])
 
     assert_equal([good_task], result)
   end
 
-  # @param task_searches [Checkoff::TaskSearches]
   # @return [void]
-  def mock_iterated_raw_task_search_task_without_created_at(task_searches)
-    task_searches.expects(:raw_task_search)
-      .with({ 'sort_by' => 'created_at' }, workspace_gid: 'abc', extra_fields: ['created_at'], fetch_all: false)
-      .returns([good_task])
+  def mock_iterated_raw_task_search_task_without_created_at
+    expect_search_request({ 'sort_by' => 'created_at' },
+                          extra_fields: ['created_at'], data: [1], result: [good_task])
     good_task.expects(:created_at).returns(nil)
     good_task.expects(:gid).returns('123')
   end
@@ -208,7 +220,7 @@ class TestTaskSearches < ClassTest
     task_searches = get_test_object(Checkoff::TaskSearches) do
       mocks[:projects] = projects
     end
-    mock_iterated_raw_task_search_task_without_created_at(task_searches)
+    mock_iterated_raw_task_search_task_without_created_at
 
     e = assert_raises(RuntimeError) do
       task_searches.send(:iterated_raw_task_search, {}, workspace_gid: 'abc', extra_fields: [])

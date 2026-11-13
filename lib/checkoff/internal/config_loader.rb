@@ -12,10 +12,12 @@ module Checkoff
       # @param config [Hash{Symbol => undefined}]
       # @param sym [Symbol]
       # @param yaml_filename [String]
-      def initialize(config, sym, yaml_filename)
+      # @param env [RBS::Unnamed::ENVClass, Hash{String => String}]
+      def initialize(config, sym, yaml_filename, env: ENV)
         @config = config
         @envvar_prefix = sym.upcase
         @yaml_filename = yaml_filename
+        @env = env
       end
 
       # @param key [Symbol]
@@ -24,7 +26,7 @@ module Checkoff
         config_value = @config[key]
         return config_value unless config_value.nil?
 
-        ENV.fetch(envvar_name(key), nil)
+        @env.fetch(envvar_name(key), nil)
       end
 
       # @param key [Symbol]
@@ -50,19 +52,20 @@ module Checkoff
     class ConfigLoader
       class << self
         # @param sym [Symbol]
+        # @param filename [String]
+        # @param env [RBS::Unnamed::ENVClass, Hash{String => String}]
         #
         # @return [EnvFallbackConfigLoader]
-        def load(sym)
-          yaml_result = load_yaml_file(sym)
-          EnvFallbackConfigLoader.new(yaml_result, sym, yaml_filename(sym))
+        def load(sym, filename: yaml_filename(sym), env: ENV)
+          yaml_result = load_yaml_file(filename)
+          EnvFallbackConfigLoader.new(yaml_result, sym, filename, env:)
         end
 
         private
 
-        # @param sym [Symbol]
+        # @param filename [String]
         # @return [Hash{Symbol => undefined}]
-        def load_yaml_file(sym)
-          filename = yaml_filename(sym)
+        def load_yaml_file(filename)
           return {} unless File.exist?(filename)
 
           YAML.load_file(filename).with_indifferent_access
