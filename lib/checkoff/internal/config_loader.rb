@@ -12,8 +12,9 @@ module Checkoff
       # @param config [Hash{Symbol => undefined}]
       # @param sym [Symbol]
       # @param yaml_filename [String]
-      # @param env [RBS::Unnamed::ENVClass, Hash{String => String}]
-      def initialize(config, sym, yaml_filename, env: ENV)
+      # @param env [Hash{String => String}, nil] read instead of ENV;
+      #   ENV itself is never stored, so the loader stays marshalable
+      def initialize(config, sym, yaml_filename, env: nil)
         @config = config
         @envvar_prefix = sym.upcase
         @yaml_filename = yaml_filename
@@ -26,7 +27,7 @@ module Checkoff
         config_value = @config[key]
         return config_value unless config_value.nil?
 
-        @env.fetch(envvar_name(key), nil)
+        (@env || ENV).fetch(envvar_name(key), nil)
       end
 
       # @param key [Symbol]
@@ -53,10 +54,10 @@ module Checkoff
       class << self
         # @param sym [Symbol]
         # @param filename [String]
-        # @param env [RBS::Unnamed::ENVClass, Hash{String => String}]
+        # @param env [Hash{String => String}, nil] read instead of ENV
         #
         # @return [EnvFallbackConfigLoader]
-        def load(sym, filename: yaml_filename(sym), env: ENV)
+        def load(sym, filename: yaml_filename(sym), env: nil)
           yaml_result = load_yaml_file(filename)
           EnvFallbackConfigLoader.new(yaml_result, sym, filename, env:)
         end

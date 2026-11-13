@@ -35,6 +35,17 @@ class TestConfigLoader < Minitest::Test
   end
 
   # @return [void]
+  def test_default_env_loader_can_be_marshaled
+    config_hash = Tempfile.create(['foo', '.yml']) do |file|
+      file.write({ 'bar' => 'yaml_value' }.to_yaml)
+      file.close
+      Checkoff::Internal::ConfigLoader.load(:foo, filename: file.path)
+    end
+
+    refute_empty(Marshal.dump(config_hash))
+  end
+
+  # @return [void]
   def test_defers_to_yaml
     config_hash = load_config
 
