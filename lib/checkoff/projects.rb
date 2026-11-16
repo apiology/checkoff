@@ -262,7 +262,7 @@ module Checkoff
     # @return [Asana::Client]
     attr_reader :client
 
-    # @return [Asana::ProxiedResourceClasses::Project]
+    # @return [Asana::Client::_Projects]
     def projects
       client.projects
     end
