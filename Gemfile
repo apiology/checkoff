@@ -31,10 +31,11 @@ group :development, :test do
   gem 'simplecov', ['>=0.18.0']
   gem 'simplecov_json_formatter'
   gem 'simplecov-lcov'
-  # Open upstream PRs soutaro/steep#2334 and #2335 (splat arguments)
+  # Open upstream PRs soutaro/steep#2334, #2335 (splat arguments) and
+  # #2363 (union-of-tuples returns)
   gem 'steep',
       github: 'apiology/steep',
-      branch: '2026-10-21'
+      branch: '2026-11-16'
   # need --exclude-files
   gem 'undercover', ['>=0.6.3']
   gem 'webmock'

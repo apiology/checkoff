@@ -66,8 +66,8 @@ GIT
 
 GIT
   remote: https://github.com/apiology/steep.git
-  revision: ac26ad884b09f6cd76464b04411747ff5ad73010
-  branch: 2026-10-21
+  revision: 128caf10b6193f05e87b106a3e325440bb01e5cb
+  branch: 2026-11-16
   specs:
     steep (2.1.0)
       concurrent-ruby (>= 1.1.10)
