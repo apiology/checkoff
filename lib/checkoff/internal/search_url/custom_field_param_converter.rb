@@ -18,9 +18,9 @@ module Checkoff
         # @return [Array(Hash{String => String}, Array<Symbol, Array>)]
         def convert
           # @type args [Hash{String => String}]
-          args = {}
+          args = {} #: Hash[String, String]
           # @type task_selector [Array<Symbol, Array>]
-          task_selector = []
+          task_selector = [] #: Array[Symbol | Array[untyped]]
           by_custom_field.each do |gid, single_custom_field_params|
             new_args, new_task_selector = convert_single_custom_field_params(gid,
                                                                              single_custom_field_params)

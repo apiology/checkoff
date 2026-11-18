@@ -37,7 +37,7 @@ module Checkoff
       #   }}}]
       def project_to_h(project_obj, project: :not_specified)
         project = project_obj.name if project == :not_specified
-        project_hash = { **project_obj.to_h, 'project' => project }
+        project_hash = { **project_obj.to_h, 'project' => project } #: Hash[String, untyped]
         project_hash['unwrapped'] = {}
         unwrap_custom_fields(project_hash)
         project_hash

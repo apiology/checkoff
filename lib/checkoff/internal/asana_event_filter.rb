@@ -35,7 +35,7 @@ module Checkoff
         logger.debug { "Filtering using #{@filters.inspect}" }
         return true if @filters.nil?
 
-        failures = []
+        failures = [] #: Array[untyped]
 
         @filters.any? do |filter|
           filter_matches = filter_matches_asana_event?(filter, asana_event, failures)
@@ -74,19 +74,20 @@ module Checkoff
       #
       # @return [Boolean]
       def asana_event_matches_filter_item?(key, value, asana_event)
+        no_hash = {} #: Hash[String, untyped]
         case key
         when 'resource_type'
-          asana_event.fetch('resource', {})['resource_type'] == value
+          asana_event.fetch('resource', no_hash)['resource_type'] == value
         when 'resource_subtype'
-          asana_event.fetch('resource', {})['resource_subtype'] == value
+          asana_event.fetch('resource', no_hash)['resource_subtype'] == value
         when 'action'
           asana_event['action'] == value
         when 'fields'
-          value.include? asana_event.fetch('change', {})['field']
+          value.include? asana_event.fetch('change', no_hash)['field']
         when 'checkoff:parent.gid'
-          asana_event.fetch('parent', {})['gid'] == value
+          asana_event.fetch('parent', no_hash)['gid'] == value
         when 'checkoff:resource.gid'
-          asana_event.fetch('resource', {})['gid'] == value
+          asana_event.fetch('resource', no_hash)['gid'] == value
         when 'checkoff:fetched.section.gid'
           fields = ['memberships.project.gid', 'memberships.project.name',
                     'memberships.section.name', 'assignee', 'assignee_section']

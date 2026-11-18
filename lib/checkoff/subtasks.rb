@@ -44,7 +44,7 @@ module Checkoff
     # @return [Hash{nil,String => Enumerable<Asana::Resources::Task>}]
     def by_section(tasks)
       current_section = nil
-      by_section = { nil => [] }
+      by_section = { nil => [] } #: Hash[String?, Array[Asana::Resources::Task]]
       tasks.each do |task|
         current_section, by_section = file_task_by_section(current_section,
                                                            by_section, task)
@@ -75,7 +75,8 @@ module Checkoff
       # @type [Hash{Symbol => undefined}]
       all_options = projects.task_options(extra_fields: extra_fields + %w[is_rendered_as_separator],
                                           only_uncompleted:)
-      options = all_options.fetch(:options, {})
+      no_options = {} #: Hash[Symbol, untyped]
+      options = all_options.fetch(:options, no_options)
       client.tasks.get_subtasks_for_task(task_gid:,
                                          # per_page: 100, # stub doesn't have this arg available
                                          options:)

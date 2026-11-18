@@ -70,10 +70,10 @@ module Checkoff
           # @param verb [String]
           # @return [Array<String>]
           def convert_from_projects_and_sections(verb)
-            projects = []
-            sections = []
+            projects = [] #: Array[String]
+            sections = [] #: Array[String]
             parse_projects_and_sections(projects, sections)
-            out = {}
+            out = {} #: Hash[String, String]
             out["projects.#{verb}"] = projects.join(',') unless projects.empty?
             out["sections.#{verb}"] = sections.join(',') unless sections.empty?
             out.to_a.flatten

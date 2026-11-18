@@ -150,7 +150,7 @@ module Checkoff
     # @return [Enumerable<Asana::Resources::Task>]
     def iterated_raw_task_search(api_params, workspace_gid:, extra_fields:)
       # https://developers.asana.com/reference/searchtasksforworkspace
-      tasks = []
+      tasks = [] #: Array[Asana::Resources::Task]
       new_api_params = api_params.dup
       original_sort_by = new_api_params.delete('sort_by')
       # defaults to false
