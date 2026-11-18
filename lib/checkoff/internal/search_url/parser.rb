@@ -66,7 +66,8 @@ module Checkoff
               :simple
             end
           end.transform_values(&:to_h)
-          [groups.fetch(:custom_field, {}), groups.fetch(:date, {}), groups.fetch(:simple, {})]
+          no_params = {} #: Hash[String, Array[String]]
+          [groups.fetch(:custom_field, no_params), groups.fetch(:date, no_params), groups.fetch(:simple, no_params)]
         end
       end
     end

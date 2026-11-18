@@ -243,7 +243,7 @@ module Checkoff
           last_story = stories.last
           return true if last_story.nil? # no stories == infinitely old!
 
-          n_days_ago = Time.at(Time.now.to_i - (num_days * 86_400))
+          n_days_ago = Time.at(time_class.now.to_i - (num_days * 86_400))
           created_time(last_story) < n_days_ago
         end
 
