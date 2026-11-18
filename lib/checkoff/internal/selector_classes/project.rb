@@ -1,4 +1,3 @@
-# typed: true
 # frozen_string_literal: true
 
 require_relative 'project/function_evaluator'
@@ -53,9 +52,11 @@ module Checkoff
         #
         # @return [Boolean]
         def evaluate(project, portfolio_name, workspace_name: nil, extra_project_fields: [])
-          workspace_name ||= project.workspace&.name
+          workspace_name ||= project.workspace&.fetch('name', nil)
           workspace_name ||= workspaces.default_workspace.name
-          matching_projects = portfolios.projects_in_portfolio(T.must(workspace_name), portfolio_name,
+          raise 'No workspace name found' if workspace_name.nil?
+
+          matching_projects = portfolios.projects_in_portfolio(workspace_name, portfolio_name,
                                                                extra_project_fields:)
           matching_projects.any? { |p| p.name == project.name }
         end

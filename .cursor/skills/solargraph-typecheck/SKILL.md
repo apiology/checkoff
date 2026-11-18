@@ -23,7 +23,7 @@ direnv exec . make solargraph-strong
 ```
 
 - `./fix.sh` needs `bin/install_package` and friends; do not run bare `./fix.sh` without direnv.
-- `make build-typecheck` depends on `.ruby-version`, yard/tapioca artifacts, `rbi/checkoff.rbi`, and updates the RBS gem collection via `bin/rbs collection update`.
+- `make build-typecheck` depends on `.ruby-version`, yard artifacts, `sig/checkoff.rbs`, `rbi/checkoff.rbi`, and updates the RBS gem collection via `bin/rbs collection update`.
 
 ## Which level to use
 
@@ -31,7 +31,7 @@ direnv exec . make solargraph-strong
 |--------|---------|-------|
 | Local default | `make solargraph-strong` | Same as `make solargraph`; must be clean |
 | CI | `make ci-solargraph` | Strong level; see `Makefile` |
-| Full gate | `make typecheck` | Sorbet + Solargraph strong |
+| Full gate | `make typecheck` | Steep + Solargraph strong |
 
 ## Scope
 

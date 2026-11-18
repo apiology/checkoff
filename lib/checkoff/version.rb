@@ -1,4 +1,3 @@
-# typed: strict
 # frozen_string_literal: true
 
 # Command-line and gem client for Asana (unofficial)

@@ -1,6 +1,5 @@
 #!/usr/bin/env ruby
 # frozen_string_literal: true
-# typed: true
 
 require 'asana'
 require 'asana/resources/tag'
@@ -22,11 +21,11 @@ module Checkoff
     #   extend CacheMethod::ClassMethods
 
     MINUTE = 60
-    HOUR = T.let(MINUTE * 60, Numeric)
-    DAY = T.let(24 * HOUR, Numeric)
-    REALLY_LONG_CACHE_TIME = T.let(HOUR, Numeric)
-    LONG_CACHE_TIME = T.let(MINUTE * 15, Numeric)
-    SHORT_CACHE_TIME = T.let(MINUTE, Numeric)
+    HOUR = MINUTE * 60
+    DAY = 24 * HOUR
+    REALLY_LONG_CACHE_TIME = HOUR
+    LONG_CACHE_TIME = MINUTE * 15
+    SHORT_CACHE_TIME = MINUTE
 
     # @param config [Checkoff::Internal::EnvFallbackConfigLoader,Hash]
     # @param clients [Checkoff::Clients]
@@ -40,9 +39,9 @@ module Checkoff
                    projects: Checkoff::Projects.new(config:, client:),
                    workspaces: Checkoff::Workspaces.new(config:, client:),
                    asana_resources_collection_class: Asana::Resources::Collection)
-      @workspaces = T.let(workspaces, Checkoff::Workspaces)
-      @projects = T.let(projects, Checkoff::Projects)
-      @client = T.let(client, Asana::Client)
+      @workspaces = workspaces
+      @projects = projects
+      @client = client
       @asana_resources_collection_class = asana_resources_collection_class
     end
 

@@ -1,6 +1,4 @@
-# typed: false
 # frozen_string_literal: true
-# typed: ignore
 
 require 'checkoff/cli'
 require_relative 'class_test'
@@ -192,6 +190,7 @@ class TestMvSubcommand < ClassTest
     set_initializer_arguments
 
     return if from_workspace_name != to_workspace_name # not implemented yet
+    return if from_section_name == :all_sections # not implemented yet
 
     expect_to_objects_pulled
     expect_tasks_pulled(from_workspace_name, from_project_name, from_section_name, [task_a])

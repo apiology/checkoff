@@ -1,4 +1,3 @@
-# typed: strict
 # frozen_string_literal: true
 
 # rubocop:disable Layout/LineLength
@@ -25,8 +24,6 @@
 #       def workspaces; end
 #       # @return [Asana::ProxiedResourceClasses::Section]
 #       def sections; end
-#       # @return [Asana::ProxiedResourceClasses::Project]
-#       def projects; end
 #       # @return [Asana::ProxiedResourceClasses::UserTaskList]
 #       def user_task_lists; end
 #       # @return [Asana::ProxiedResourceClasses::Portfolio]

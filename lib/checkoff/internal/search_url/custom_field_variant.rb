@@ -1,4 +1,3 @@
-# typed: true
 # frozen_string_literal: true
 
 module Checkoff
@@ -11,8 +10,8 @@ module Checkoff
           # @param [String] gid
           # @param [Hash{String => Array<String>}] remaining_params
           def initialize(gid, remaining_params)
-            @gid = T.let(gid, String)
-            @remaining_params = T.let(remaining_params, T::Hash[String, T::Array[String]])
+            @gid = gid
+            @remaining_params = remaining_params
           end
 
           # Implemented by every subclass.
