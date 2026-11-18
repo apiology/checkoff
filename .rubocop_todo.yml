@@ -38,7 +38,7 @@ Metrics/CyclomaticComplexity:
     - 'lib/checkoff/internal/task_timing.rb'
     - 'lib/checkoff/timelines.rb'
 
-# Offense count: 11
+# Offense count: 12
 # Configuration parameters: CountComments, Max, CountAsOne, AllowedMethods, AllowedPatterns.
 Metrics/MethodLength:
   Exclude:
