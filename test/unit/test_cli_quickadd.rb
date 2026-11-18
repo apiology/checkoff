@@ -6,12 +6,8 @@ require_relative 'test_helper'
 
 # Test the Checkoff::CLI class with quickadd subcommand
 class TestCLIQuickadd < Minitest::Test
-  # @return [Hash]
-  attr_reader :mocks
-
   typed_mock :config, Hash
   typed_mock :workspaces, Checkoff::Workspaces
-  typed_mock :sections, Checkoff::Sections
   typed_mock :tasks, Checkoff::Tasks
   typed_mock :workspace, Asana::Resources::Workspace
   typed_mock :workspace_gid, String
@@ -22,56 +18,26 @@ class TestCLIQuickadd < Minitest::Test
   end
 
   # @return [void]
-  def expect_workspaces_created
-    Checkoff::Workspaces.expects(:new).returns(workspaces).at_least(0)
-  end
-
-  # @return [void]
-  def expect_config_loaded
-    Checkoff::Internal::ConfigLoader.expects(:load).returns(config).at_least(0)
-  end
-
-  # @return [void]
-  def expect_sections_created
-    Checkoff::Sections.expects(:new).returns(sections).at_least(0)
-  end
-
-  # @return [void]
-  def expect_tasks_created
-    Checkoff::Tasks.expects(:new).returns(tasks).at_least(0)
-  end
-
-  # @return [void]
-  def set_mocks
-    @mocks = {
-      config:,
-      workspaces:,
-      sections:,
-      tasks:,
-      stderr: $stderr,
-      stdout: $stdout,
-    }
+  def teardown
+    Checkoff::CheckoffGLIApp.subcommand_factory = nil
+    super
   end
 
   # @return [Class<Checkoff::CheckoffGLIApp>]
   def get_test_object(&_twiddle_mocks)
-    set_mocks
-    expect_workspaces_created
-    expect_config_loaded
-    expect_sections_created
-    expect_tasks_created
-
-    yield @mocks
+    Checkoff::CheckoffGLIApp.subcommand_factory =
+      Checkoff::SubcommandFactory.new(config:, workspaces:, tasks:)
+    yield
     Checkoff::CheckoffGLIApp
   end
 
   # @return [void]
   def mock_quickadd
-    mocks[:workspaces].expects(:workspace_or_raise).with(workspace_name).returns(workspace)
+    workspaces.expects(:workspace_or_raise).with(workspace_name).returns(workspace)
 
     workspace.expects(:gid).returns(workspace_gid)
-    mocks[:tasks].expects(:add_task).with('my task name',
-                                          workspace_gid:)
+    tasks.expects(:add_task).with('my task name',
+                                  workspace_gid:)
   end
 
   # @return [void]

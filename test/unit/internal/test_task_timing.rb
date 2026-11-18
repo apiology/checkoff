@@ -15,6 +15,14 @@ class TestTaskTiming < ClassTest
     assert_equal 'Teach me how to handle field :blah', e.message
   end
 
+  # @return [void]
+  def test_date_or_time_field_by_name_raises_if_custom_field_missing_name
+    task_timing = get_test_object(Checkoff::Internal::TaskTiming)
+    e = assert_raises(RuntimeError) { task_timing.date_or_time_field_by_name(task, [:custom_field]) }
+
+    assert_equal 'Teach me how to handle field [:custom_field]', e.message
+  end
+
   def respond_like_instance_of
     {
       client: Asana::Client,

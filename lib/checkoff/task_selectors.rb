@@ -25,6 +25,7 @@ module Checkoff
     # @param [Checkoff::Tasks] tasks
     # @param [Checkoff::Timelines] timelines
     # @param [Checkoff::CustomFields] custom_fields
+    # @param [Class<Time>] time_class
     def initialize(config: Checkoff::Internal::ConfigLoader.load(:asana),
                    client: Checkoff::Clients.new(config:).client,
                    tasks: Checkoff::Tasks.new(config:,
@@ -32,11 +33,13 @@ module Checkoff
                    timelines: Checkoff::Timelines.new(config:,
                                                       client:),
                    custom_fields: Checkoff::CustomFields.new(config:,
-                                                             client:))
+                                                             client:),
+                   time_class: Time)
       @config = config
       @tasks = tasks
       @timelines = timelines
       @custom_fields = custom_fields
+      @time_class = time_class
     end
 
     # @param [Asana::Resources::Task] task
@@ -45,7 +48,7 @@ module Checkoff
     # @return [Boolean]
     def filter_via_task_selector(task, task_selector)
       evaluator = TaskSelectorEvaluator.new(task:, tasks:, timelines:,
-                                            custom_fields:)
+                                            custom_fields:, time_class: @time_class)
       !!evaluator.evaluate(task_selector)
     end
 

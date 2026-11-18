@@ -82,7 +82,10 @@ module Checkoff
     # @param uri [URI::Generic]
     # @param verify_mode [Integer] - e.g., OpenSSL::SSL::VERIFY_NONE,OpenSSL::SSL::VERIFY_PEER
     #
-    # @return [Object]
+    # @yieldparam tempfile [File]
+    # @yieldreturn [Asana::Resources::Attachment, nil]
+    #
+    # @return [Asana::Resources::Attachment, nil]
     def download_uri(uri, verify_mode: OpenSSL::SSL::VERIFY_PEER, &block)
       out = nil
       host = uri.host || raise("URI has no host: #{uri}")
@@ -101,7 +104,7 @@ module Checkoff
 
     # @param response [#read_body]
     #
-    # @yields [IO]
+    # @yieldparam tempfile [File]
     #
     # @return [void]
     def write_tempfile_from_response(response)
@@ -128,7 +131,7 @@ module Checkoff
       uri = URI(url)
       # @type [String]
       resolved_attachment_name = attachment_name || File.basename(uri.path || '')
-      download_uri(uri, verify_mode:) do |tempfile|
+      attachment = download_uri(uri, verify_mode:) do |tempfile|
         content_type = content_type_from_filename(resolved_attachment_name)
         content_type ||= content_type_from_filename(uri.path || '')
         # neither the attachment name nor the URL's path has a MIME-recognizable extension
@@ -137,6 +140,7 @@ module Checkoff
         resource.attach(filename: resolved_attachment_name, mime: content_type,
                         io: tempfile)
       end
+      attachment || raise("No attachment created from #{url}")
     end
 
     # @param url [String]
@@ -152,8 +156,8 @@ module Checkoff
         'name' => attachment_name,
       }
       options = {} #: Hash[Symbol, untyped]
-      Asana::Resources::Resource.new(parse(client.post('/attachments', body: with_params, options:)).first,
-                                     client:)
+      Asana::Resources::Attachment.new(parse(client.post('/attachments', body: with_params, options:)).first,
+                                       client:)
     end
 
     # @param filename [String]
@@ -183,15 +187,18 @@ module Checkoff
 
     # bundle exec ./attachments.rb
     class << self
+      # @param tasks_class [Class<Checkoff::Tasks>]
+      # @param attachments_class [Class<Checkoff::Attachments>]
+      #
       # @return [void]
-      def run
+      def run(tasks_class: Checkoff::Tasks, attachments_class: Checkoff::Attachments)
         # @type [String]
         gid = ARGV[0] || raise('Please pass task gid as first argument')
         # @type [String]
         url = ARGV[1] || raise('Please pass attachment URL as second argument')
 
-        tasks = Checkoff::Tasks.new
-        attachments = Checkoff::Attachments.new
+        tasks = tasks_class.new
+        attachments = attachments_class.new
         task = tasks.task_by_gid(gid)
         raise "Could not find task #{gid}" if task.nil?
 

@@ -41,10 +41,12 @@ class TestAttachments < ClassTest
     end
     attachment = attachments.create_attachment_from_url!(url, resource, attachment_name:, just_the_url: true)
 
+    assert_instance_of(Asana::Resources::Attachment, attachment)
+
     # @sg-ignore deliberate:fabricated-accessor
     #   'foo' is an arbitrary JSON field name this test injects into the mocked
     #   response body to prove attribute passthrough works, not a real attribute --
-    #   attachment is an Asana::Resources::Resource, whose #method_missing proxies
+    #   attachment is an Asana::Resources::Attachment, whose #method_missing proxies
     #   arbitrary JSON response keys to accessor methods (asana gem's
     #   resource_includes/resource.rb); no fixed method set to annotate.
     assert_equal('bar', attachment.foo)
@@ -54,10 +56,27 @@ class TestAttachments < ClassTest
   def test_create_attachment_from_downloaded_url
     url = 'http://example.com/picture.png'
     stub_request(:get, url).to_return(body: 'fake image bytes', status: 200)
-    resource.expects(:attach).with(filename: 'custom.png', mime: 'image/png', io: instance_of(File))
+    attachment = mock('attachment')
+    resource.expects(:attach).with(filename: 'custom.png', mime: 'image/png',
+                                   io: instance_of(File)).returns(attachment)
 
     attachments = get_test_object(Checkoff::Attachments)
-    attachments.create_attachment_from_url!(url, resource, attachment_name: 'custom.png')
+
+    assert_same(attachment, attachments.create_attachment_from_url!(url, resource, attachment_name: 'custom.png'))
+  end
+
+  # @return [void]
+  def test_create_attachment_from_downloaded_url_no_attachment
+    url = 'http://example.com/picture.png'
+    stub_request(:get, url).to_return(body: 'fake image bytes', status: 200)
+    resource.expects(:attach).with(filename: 'custom.png', mime: 'image/png', io: instance_of(File)).returns(nil)
+
+    attachments = get_test_object(Checkoff::Attachments)
+
+    e = assert_raises(RuntimeError) do
+      attachments.create_attachment_from_url!(url, resource, attachment_name: 'custom.png')
+    end
+    assert_match(/No attachment created/, e.message)
   end
 
   # @return [void]
@@ -83,18 +102,26 @@ class TestAttachments < ClassTest
     assert_match(/Error downloading/, e.message)
   end
 
+  typed_mock :tasks_class, Class
+  typed_mock :attachments_class, Class
+  typed_mock :tasks_client, Checkoff::Tasks
+  typed_mock :attachments_client, Checkoff::Attachments
+
+  # @return [void]
+  def expect_clients_created
+    tasks_class.expects(:new).returns(tasks_client)
+    attachments_class.expects(:new).returns(attachments_client)
+  end
+
   # @param gid [String]
   # @param url [String]
   # @return [Mocha::Mock]
   def expect_run_on_attachment(gid, url)
     task = mock('task')
     attachment = mock('attachment')
-    tasks_client = mock('tasks_client')
-    attachments_client = mock('attachments_client')
 
-    Checkoff::Tasks.expects(:new).returns(tasks_client)
+    expect_clients_created
     tasks_client.expects(:task_by_gid).with(gid).returns(task)
-    Checkoff::Attachments.expects(:new).returns(attachments_client)
     attachments_client.expects(:create_attachment_from_url!).with(url, task).returns(attachment)
     attachment.expects(:inspect).returns('#<Attachment>')
     attachment
@@ -105,7 +132,7 @@ class TestAttachments < ClassTest
     old_stdout = $stdout
     new_stdout = StringIO.new
     $stdout = new_stdout
-    Checkoff::Attachments.run
+    Checkoff::Attachments.run(tasks_class:, attachments_class:)
     new_stdout.string
   ensure
     $stdout = old_stdout if old_stdout
@@ -128,12 +155,9 @@ class TestAttachments < ClassTest
   def test_run_task_not_found
     gid = '123'
     url = 'http://example.com'
-    tasks_client = mock('tasks_client')
-    attachments_client = mock('attachments_client')
 
     ARGV.replace([gid, url])
-    Checkoff::Tasks.expects(:new).returns(tasks_client)
-    Checkoff::Attachments.expects(:new).returns(attachments_client)
+    expect_clients_created
     tasks_client.expects(:task_by_gid).with(gid).returns(nil)
 
     e = assert_raises(RuntimeError) { capture_attachments_run }

@@ -244,7 +244,7 @@ module Checkoff
           return true if stories.empty? # no stories == infinitely old!
 
           last_story = stories.last
-          n_days_ago = Time.at(Time.now.to_i - (num_days * 86_400))
+          n_days_ago = Time.at(time_class.now.to_i - (num_days * 86_400))
           # @sg-ignore https://github.com/apiology/solargraph/pull/175
           created_time(last_story) < n_days_ago
         end
@@ -254,10 +254,7 @@ module Checkoff
         # @param story [Asana::Resources::Story]
         # @return [Time]
         def created_time(story)
-          created_at = story.created_at
-          raise "Story #{story.gid} has no created_at" if created_at.nil?
-
-          Time.parse(created_at)
+          Time.parse(story.created_at)
         end
       end
 

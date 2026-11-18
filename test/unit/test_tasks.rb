@@ -18,7 +18,6 @@ class TestTasks < BaseAsana
 
   typed_delegate :client, Asana::Client
 
-  typed_mock :task_hashes, Checkoff::Internal::TaskHashes
   typed_mock :project_gid, String
   typed_mock :wrong_project, Asana::Resources::Project
   typed_mock :wrong_project_gid, String
@@ -196,7 +195,7 @@ class TestTasks < BaseAsana
   # @param completed [Boolean]
   def expect_dependency_completion_pulled(dependency_gid, dependency_full_task,
                                           completed)
-    expect_task_options_pulled
+    expect_task_options_pulled(extra_fields: [], only_uncompleted: false)
     expect_asana_tasks_client_pulled
     asana_tasks_client.expects(:find_by_id)
       .with(dependency_gid, options: { fields: fields_including(['dependencies']) })
@@ -237,7 +236,7 @@ class TestTasks < BaseAsana
   # @return [void]
   # @param dependency_gid [Mocha::Mock]
   def expect_dependency_missing(dependency_gid)
-    expect_task_options_pulled
+    expect_task_options_pulled(extra_fields: [], only_uncompleted: false)
     expect_asana_tasks_client_pulled
     asana_tasks_client.expects(:find_by_id)
       .with(dependency_gid, options: { fields: fields_including(['dependencies']) })
@@ -357,7 +356,7 @@ class TestTasks < BaseAsana
   # @return [void]
   def expect_task_by_gid_pulled(extra_fields: [])
     task.expects(:gid).returns(task_gid)
-    expect_task_options_pulled
+    expect_task_options_pulled(extra_fields: [], only_uncompleted: true)
     expect_asana_tasks_client_pulled
     asana_tasks_client.expects(:find_by_id).with(task_gid,
                                                  options: {
@@ -376,21 +375,21 @@ class TestTasks < BaseAsana
     expect_task_by_gid_pulled(extra_fields: ['dependencies'])
   end
 
-  # @return [Checkoff::Projects]
-  def projects
-    @projects ||= Checkoff::Projects.new(client:,
-                                         workspaces:)
-  end
+  typed_mock :projects, Checkoff::Projects
 
+  # @param extra_fields [Array<String>]
+  # @param only_uncompleted [Boolean]
   # @return [void]
-  def expect_task_options_pulled
+  def expect_task_options_pulled(extra_fields:, only_uncompleted:)
     sections.expects(:projects).returns(projects).at_least(0)
+    real_projects = Checkoff::Projects.new(client:, workspaces:)
+    projects.expects(:task_options).with(extra_fields:, only_uncompleted:)
+      .returns(real_projects.task_options(extra_fields:, only_uncompleted:))
   end
 
   # @return [void]
   def mock_task_with_section
     expect_tasks_from_section_pulled
-    expect_task_options_pulled
   end
 
   # @return [void]
@@ -451,10 +450,9 @@ class TestTasks < BaseAsana
   # @return [void]
   def test_gid_for_task
     tasks = get_test_object(Checkoff::Tasks) do
-      projects_instance = Checkoff::Projects.new(client:)
-      sections.expects(:projects).returns(projects_instance).at_least_once
-      projects_instance.expects(:project_or_raise).with(workspace_name, project_name).returns(project)
-      projects_instance.expects(:tasks_from_project)
+      sections.expects(:projects).returns(projects).at_least_once
+      projects.expects(:project_or_raise).with(workspace_name, project_name).returns(project)
+      projects.expects(:tasks_from_project)
         .with(project, only_uncompleted: false, extra_fields: [])
         .returns([task])
       task.expects(:name).returns(task_name)
@@ -468,10 +466,9 @@ class TestTasks < BaseAsana
   # @return [void]
   def test_gid_for_task_not_found
     tasks = get_test_object(Checkoff::Tasks) do
-      projects_instance = Checkoff::Projects.new(client:)
-      sections.expects(:projects).returns(projects_instance).at_least_once
-      projects_instance.expects(:project_or_raise).with(workspace_name, project_name).returns(project)
-      projects_instance.expects(:tasks_from_project)
+      sections.expects(:projects).returns(projects).at_least_once
+      projects.expects(:project_or_raise).with(workspace_name, project_name).returns(project)
+      projects.expects(:tasks_from_project)
         .with(project, only_uncompleted: false, extra_fields: [])
         .returns([])
     end
@@ -480,13 +477,13 @@ class TestTasks < BaseAsana
   end
 
   # @return [void]
-  def test_task_to_h_delegates
+  def test_task_to_h
     tasks = get_test_object(Checkoff::Tasks) do
-      Checkoff::Internal::TaskHashes.expects(:new).returns(task_hashes)
-      task_hashes.expects(:task_to_h).with(task).returns(123)
+      task.expects(:to_h).returns({ 'name' => 'foo' })
+      task.expects(:name).returns('foo')
     end
 
-    assert_equal(123, tasks.task_to_h(task))
+    assert_equal('foo', tasks.task_to_h(task).fetch('task'))
   end
 
   # @return [void]
@@ -582,7 +579,7 @@ class TestTasks < BaseAsana
     tasks = get_test_object(Checkoff::Tasks) do
       task.expects(:instance_variable_get).with(:@dependents).returns([{ 'gid' => dependent_1_gid }])
 
-      expect_task_options_pulled
+      expect_task_options_pulled(extra_fields: ['dependents'], only_uncompleted: true)
       expect_asana_tasks_client_pulled
       asana_tasks_client.expects(:find_by_id).with(dependent_1_gid,
                                                    options: { fields: fields_including(%w[dependencies dependents]),
