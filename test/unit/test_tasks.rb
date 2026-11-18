@@ -599,7 +599,6 @@ class TestTasks < BaseAsana
       expect_asana_tasks_client_pulled
       asana_tasks_client.expects(:find_by_id).returns(nil)
     end
-    tasks.expects(:debug).times(0)
 
     assert_empty(tasks.all_dependent_tasks(task))
   end

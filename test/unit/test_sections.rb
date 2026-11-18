@@ -457,8 +457,6 @@ class TestSections < BaseAsana
   # @return [void]
   def test_section_symbol_name
     checkoff_sections = get_test_object(Checkoff::Sections)
-    checkoff_sections.stubs(:sections_or_raise).returns([section_1])
-    section_1.stubs(:name).returns('Section 1')
     e = assert_raises(ArgumentError) do
       checkoff_sections.section('Workspace 1', a_name, :all_sections)
     end
