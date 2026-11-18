@@ -595,7 +595,7 @@ class TestTasks < BaseAsana
     tasks = get_test_object(Checkoff::Tasks) do
       task.expects(:instance_variable_get).with(:@dependents).returns([{ 'gid' => dependent_1_gid }])
 
-      expect_task_options_pulled
+      expect_task_options_pulled(extra_fields: ['dependents'], only_uncompleted: true)
       expect_asana_tasks_client_pulled
       asana_tasks_client.expects(:find_by_id).returns(nil)
     end
