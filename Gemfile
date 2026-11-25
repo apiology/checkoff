@@ -20,8 +20,9 @@ group :development, :test do
   gem 'parlour',
       github: 'apiology/parlour',
       branch: 'add_type_parameter_type'
-  # ensure recent definitions
-  gem 'rbs', ['>=3.8.1']
+  # Steep's integration branch includes upstream Steep master, which
+  # needs unreleased rbs (RBS::Environment::TypeNameDependencies)
+  gem 'rbs', github: 'ruby/rbs', branch: 'master'
   gem 'rspec'
   gem 'sord', # ['>= 6.0.0'] # ,
       github: 'apiology/sord',
@@ -31,8 +32,8 @@ group :development, :test do
   gem 'simplecov', ['>=0.18.0']
   gem 'simplecov_json_formatter'
   gem 'simplecov-lcov'
-  # Open upstream PRs soutaro/steep#2334, #2335 (splat arguments) and
-  # #2363 (union-of-tuples returns)
+  # Open upstream PRs soutaro/steep#2334, #2335 (splat arguments),
+  # #2363 (union-of-tuples returns) and #2370 (h[k] after h[k] ||= v)
   gem 'steep',
       github: 'apiology/steep',
       branch: '2026-11-16'
