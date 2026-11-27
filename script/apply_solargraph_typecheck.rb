@@ -48,6 +48,8 @@ end
 # @param path [String]
 # @return [Array<String>]
 def read_lines(path)
+  # @sg-ignore tool-limitation:pr-1292
+  #   https://github.com/castwide/solargraph/pull/1292
   File.readlines(path, chomp: false)
 end
 

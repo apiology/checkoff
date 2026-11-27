@@ -25,6 +25,8 @@ changed = 0
 paths.each do |file|
   next unless file.file?
 
+  # @sg-ignore tool-limitation:pr-1292
+  #   https://github.com/castwide/solargraph/pull/1292
   lines = File.readlines(file, chomp: false)
   filtered = lines.reject { |line| line.strip == '# @sg-ignore' }
   next if filtered.size == lines.size
