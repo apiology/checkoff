@@ -1,5 +1,4 @@
 #!/usr/bin/env ruby
-# typed: true
 
 # frozen_string_literal: true
 
@@ -58,18 +57,23 @@ module Checkoff
         # @param url_params [Hash{String => Array<String>}]
         # @return [Array(Hash{String => Array<String>}, Hash{String => Array<String>}, Hash{String => Array<String>})]
         def partition_url_params(url_params)
-          groups = T.let(url_params.to_a.group_by do |key, _values|
-                           if key.start_with? 'custom_field_'
-                             :custom_field
-                           elsif key.include? '_date'
-                             :date
-                           else
-                             :simple
-                           end
-                         end.transform_values(&:to_h),
-                         T::Hash[Symbol, T::Hash[String, T::Array[String]]])
+          groups = group_url_params(url_params)
           no_params = {} #: Hash[String, Array[String]]
           [groups.fetch(:custom_field, no_params), groups.fetch(:date, no_params), groups.fetch(:simple, no_params)]
+        end
+
+        # @param url_params [Hash{String => Array<String>}]
+        # @return [Hash{Symbol => Hash{String => Array<String>}}]
+        def group_url_params(url_params)
+          url_params.to_a.group_by do |key, _values|
+            if key.start_with? 'custom_field_'
+              :custom_field
+            elsif key.include? '_date'
+              :date
+            else
+              :simple
+            end
+          end.transform_values(&:to_h)
         end
       end
     end

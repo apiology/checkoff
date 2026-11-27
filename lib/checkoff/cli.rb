@@ -1,5 +1,4 @@
 #!/usr/bin/env ruby
-# typed: true
 
 # frozen_string_literal: true
 
@@ -117,15 +116,20 @@ module Checkoff
     # @param from_section_name [String, Symbol, nil]
     # @return [Enumerable<Asana::Resources::Task>]
     def fetch_tasks(from_workspace_name, from_project_name, from_section_name)
-      if from_section_name == :all_sections
-        raise NotImplementedError, 'Not implemented: Teach me how to move all sections of a project'
-      end
-
       sections.tasks(from_workspace_name, from_project_name, from_section_name)
     end
 
     # @return [void]
+    def raise_if_all_sections
+      return unless from_section_name == :all_sections
+
+      raise NotImplementedError, 'Not implemented: Teach me how to move all sections of a project'
+    end
+
+    # @return [void]
     def run
+      raise_if_all_sections
+
       # 0. Look up project and section gids
       to_project = projects.project_or_raise(to_workspace_name, to_project_name)
       to_section = sections.section_or_raise(to_workspace_name, to_project_name, to_section_name)

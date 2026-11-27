@@ -16,12 +16,13 @@ group :development, :test do
   gem 'minitest-profile'
   gem 'minitest-reporters'
   gem 'mocha', ['>= 2']
+  # sord dependency
   gem 'parlour',
       github: 'apiology/parlour',
       branch: 'add_type_parameter_type'
-  gem 'rbi'
-  # ensure recent definitions
-  gem 'rbs', ['>=3.8.1']
+  # Steep's integration branch includes upstream Steep master, which
+  # needs unreleased rbs (RBS::Environment::TypeNameDependencies)
+  gem 'rbs', github: 'ruby/rbs', branch: 'master'
   gem 'rspec'
   gem 'sord', # ['>= 6.0.0'] # ,
       github: 'apiology/sord',
@@ -31,7 +32,11 @@ group :development, :test do
   gem 'simplecov', ['>=0.18.0']
   gem 'simplecov_json_formatter'
   gem 'simplecov-lcov'
-  gem 'tapioca', ['>= 0.16.0'], require: false
+  # Open upstream PRs soutaro/steep#2334, #2335 (splat arguments),
+  # #2363 (union-of-tuples returns) and #2370 (h[k] after h[k] ||= v)
+  gem 'steep',
+      github: 'apiology/steep',
+      branch: '2026-11-16'
   # need --exclude-files
   gem 'undercover', ['>=0.6.3']
   gem 'webmock'
@@ -61,7 +66,6 @@ group :development do
   gem 'yard',
       github: 'lsegal/yard',
       branch: 'main'
-  gem 'yard-sorbet'
 end
 
 # not a direct dependency - but updates a lot and confuses

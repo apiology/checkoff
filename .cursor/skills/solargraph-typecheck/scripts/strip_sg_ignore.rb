@@ -1,5 +1,4 @@
 #!/usr/bin/env ruby
-# typed: true
 # frozen_string_literal: true
 
 # Removes standalone Solargraph ignore-comment lines from paths given as arguments.
